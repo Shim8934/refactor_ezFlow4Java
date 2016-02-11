@@ -4,14 +4,5 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class ezBoardController {
-    public void test() {
-    	System.out.println("test");
-    }
-	public void yoonjin(){
-		System.out.println("say HI");
-	}
-	
-	public void seokz(){
-		System.out.println("say HIII");
-	}
+ 
 }
