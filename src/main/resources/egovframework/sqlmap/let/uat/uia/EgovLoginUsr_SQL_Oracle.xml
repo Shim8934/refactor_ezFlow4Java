@@ -10,7 +10,8 @@
 	<resultMap id="login" class="egovframework.com.cmm.LoginVO">
 		<result property="id" column="id" columnIndex="1"/>
 		<result property="name" column="name" columnIndex="2"/>		
-		<result property="password" column="password" columnIndex="5"/>				
+		<result property="password" column="password" columnIndex="3"/>
+		<result property="updateDT" column="updateDT" columnIndex="4"/>				
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
@@ -20,13 +21,26 @@
 			SELECT 
 				cn as id,
 		     	displayname as name,			     
-		     	'1234!' as password
+		     	password,
+		     	updateDT
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 
 		 		cn = #id#
 		 	AND
-		 		'1234!' = #password#		 
-		]]>		
-	</select>	
+		 		password = #password#		 
+		]]>
+	</select>
+	
+	<update id="loginDAO.updateUser" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE ezHrMaster.TBLUSERMASTER
+			SET
+				ipaddress = #ip#,
+				lastlogin = sysdate,
+				logincnt = logincnt + 1
+			WHERE
+				cn = #id#
+		]]>
+	</update>
 </sqlMap>

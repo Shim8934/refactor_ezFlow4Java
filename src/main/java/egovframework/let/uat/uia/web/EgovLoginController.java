@@ -1,7 +1,10 @@
 package egovframework.let.uat.uia.web;
 
+import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.util.Date;
 
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ibm.icu.util.Calendar;
 /**
  * 일반 로그인을 처리하는 컨트롤러 클래스
  * @author 공통서비스 개발팀 박지욱
@@ -57,7 +62,6 @@ public class EgovLoginController {
     
     @RequestMapping(value="/uat/uia/login.do")
 	public String loginView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {    	    	
-    	
     	String pbm = egovFileScrty.getPbm();
  	
 		model.addAttribute("publicModulus", pbm);
@@ -75,36 +79,53 @@ public class EgovLoginController {
 	 */
     @RequestMapping(value="/uat/uia/actionLogin.do")
     public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-    	
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
-		String _pwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
-
+		String _pwd = EgovFileScrty.encryptPassword(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass()), _uid);
+		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
 		
     	// 1. 일반 로그인 처리
         LoginVO resultVO = loginService.actionLogin(loginVO);
- 
+
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-        	Cookie cookieID = new Cookie("userID", loginVO.getEncryptID());
-        	cookieID.setPath("/");
-        	response.addCookie(cookieID);
+        	Calendar cal = Calendar.getInstance();
+        	cal.add(Calendar.MONTH, -6);
         	
-        	Cookie cookiePass = new Cookie("userPass", loginVO.getEncryptPass());
-        	cookiePass.setPath("/");
-        	response.addCookie(cookiePass);
-        	
-        	Cookie cookieName = new Cookie("userName", resultVO.getName());
-        	cookieName.setPath("/");
-        	response.addCookie(cookieName); 
-        	
-        	return "redirect:/cmm/main/mainPage.do";
-        } else {
+        	Date baseDT = cal.getTime();        	
+        	Date lastDT = resultVO.getUpdateDT();
+        	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+			int diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
+			//0보다 작아지면 패스워드 변경기한 Expired
+			if(diff <= 0){
+				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired"));
+	        	return "forward:/uat/uia/login.do";
+			}else{
+				String ip = EgovDateUtil.getClientIP(request);		
+				loginVO.setIp(ip);
+				//IP Address,  마지막 login시간 저장
+				loginService.updateUser(loginVO);
+				
+	        	Cookie cookieID = new Cookie("userID", loginVO.getEncryptID());
+	        	cookieID.setPath("/");
+	        	response.addCookie(cookieID);
+	
+	        	Cookie cookiePass = new Cookie("userPass", loginVO.getEncryptPass());
+	        	cookiePass.setPath("/");
+	        	response.addCookie(cookiePass);
+	
+	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getName(), "utf-8"));
+	        	cookieName.setPath("/");
+	        	response.addCookie(cookieName); 
+	        	
+	        	return "redirect:/cmm/main/mainPage.do";
+			}
+        }else{
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
         	return "forward:/uat/uia/login.do";
         }        

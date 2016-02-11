@@ -64,4 +64,8 @@ public class LoginDAO extends EgovAbstractDAO {
     public void updatePassword(LoginVO vo) throws Exception {
     	update("loginDAO.updatePassword", vo);
     }
+    
+    public void updateUser(LoginVO vo) throws Exception {
+    	update("loginDAO.updateUser", vo);
+    }
 }

@@ -27,8 +27,7 @@ public interface EgovLoginService {
 	 * @param vo    LoginVO
 	 * @exception Exception Exception
 	 */
-	public LoginVO actionLogin(LoginVO vo)
-	  throws Exception;
+	public LoginVO actionLogin(LoginVO vo) throws Exception;
 
 	/**
 	 * 아이디를 찾는다.
@@ -37,8 +36,7 @@ public interface EgovLoginService {
 	 * @param vo    LoginVO
 	 * @exception Exception Exception
 	 */
-	public LoginVO searchId(LoginVO vo)
-	  throws Exception;
+	public LoginVO searchId(LoginVO vo) throws Exception;	
 
 	/**
 	 * 비밀번호를 찾는다.
@@ -47,7 +45,8 @@ public interface EgovLoginService {
 	 * @param vo    LoginVO
 	 * @exception Exception Exception
 	 */
-	public boolean searchPassword(LoginVO vo)
-	  throws Exception;
+	public boolean searchPassword(LoginVO vo) throws Exception;
+	
+	public void updateUser(LoginVO vo) throws Exception;
 
 }

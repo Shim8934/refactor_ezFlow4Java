@@ -1,6 +1,7 @@
 package egovframework.com.cmm;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Class Name : LoginVO.java
@@ -56,6 +57,8 @@ public class LoginVO implements Serializable{
 	private String encryptID;
 	/** RSA 암호화 password 변수 */
 	private String encryptPass;
+	/** 마지막 개인정보 수정 일자 */
+	private Date updateDT; 
 	/**
 	 * id attribute 를 리턴한다.
 	 * @return String
@@ -261,6 +264,12 @@ public class LoginVO implements Serializable{
 	}
 	public void setEncryptPass(String encryptPass) {
 		this.encryptPass = encryptPass;
+	}
+	public Date getUpdateDT() {
+		return updateDT;
+	}
+	public void setUpdateDT(Date updateDT) {
+		this.updateDT = updateDT;
 	}
 	
 	

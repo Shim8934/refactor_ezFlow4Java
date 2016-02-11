@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,6 +196,14 @@ public class EgovDateUtil {
 		}
 		int days1 = (int) ((date1.getTime() / 3600000) / 24);
 		int days2 = (int) ((date2.getTime() / 3600000) / 24);
+
+		return days2 - days1;
+	}
+	
+	public static int getDaysDiff(Date sDate1, Date sDate2) {				
+	
+		int days1 = (int) ((sDate1.getTime() / 3600000) / 24);
+		int days2 = (int) ((sDate2.getTime() / 3600000) / 24);
 
 		return days2 - days1;
 	}
@@ -851,5 +861,22 @@ public class EgovDateUtil {
 
 		return _timeStr;
 	}
+	
+	 public static String getClientIP(HttpServletRequest request) {
+	     String ip = request.getHeader("X-FORWARDED-FOR");      
+
+	     if(ip == null || ip.length() == 0) {
+	         ip = request.getHeader("Proxy-Client-IP");
+	     }
+	     if(ip == null || ip.length() == 0) {
+	         ip = request.getHeader("WL-Proxy-Client-IP");  // 웹로직
+	     }
+	     if(ip == null || ip.length() == 0) {
+	         ip = request.getRemoteAddr();
+	     }
+
+	     return ip;
+	 }
+
 
 }
