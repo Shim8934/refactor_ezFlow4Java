@@ -122,9 +122,11 @@ public class EgovLoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			cookie.setMaxAge(0);
-    			cookie.setPath("/");
-    			response.addCookie(cookie); 
+    			if(!cookie.getName().equals("saveid")){
+    				cookie.setMaxAge(0);
+    				cookie.setPath("/");
+    				response.addCookie(cookie);
+    			}
     	    }
     	}
     	
