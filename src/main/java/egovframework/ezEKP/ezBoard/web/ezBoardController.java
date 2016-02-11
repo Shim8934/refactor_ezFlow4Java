@@ -7,4 +7,7 @@ public class ezBoardController {
     public void test() {
     	System.out.println("test");
     }
+	public void yoonjin(){
+		System.out.println("say HI");
+	}
 }
