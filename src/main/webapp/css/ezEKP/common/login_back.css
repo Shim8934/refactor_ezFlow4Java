@@ -1,0 +1,22 @@
+body {padding:0; margin:0; }
+* {margin:0; padding:0; font-family:dotum; }
+.layout{ width:765px; height: 536px; margin:0 auto; margin-top:60px; background: url(../images/login/back.jpg) no-repeat left;}
+.layout h1 {padding-top:40px; padding-left:12px;}
+/*.mainimg{float:left; width:400px; height:306px; }*/
+.login{ margin-left:412px; width:284px; height:150px;  margin-top:15px;padding-top:25px; padding-left:30px; 
+	background: url(../images/login/login_back.gif) no-repeat left top; }
+.login .idpw{float:left; width:173px; margin-top:10px; }
+.login .idpw textbox input{border:1px solid #c0bba6; background-color:#faf8ee; width:110px; height:19px}
+.login .button{float:left;width:51px;margin-top:10px;}
+.login .idsave {clear:both; padding-left:52px}
+
+
+.notice { margin-left:412px;margin-top:20px;}
+.notice td {font-size:9pt; height:17px;}
+.notice .list{font-size:9pt; height:16px; padding-left:10px; padding-top:4px; background: url(../images/login/dot_01.gif) no-repeat left;}
+
+.notice_wp td {font-size:9pt; height:17px;}
+.notice_wp .list{font-size:9pt; height:16px; padding-left:10px; padding-top:4px; background: url(../images/login/dot_01.gif) no-repeat left;}
+
+.banner {margin-left:412px; width:300px; }
+.copyrights { float:right; margin-top:0px; border-top:1px solid #d0dae2; width:353px }
