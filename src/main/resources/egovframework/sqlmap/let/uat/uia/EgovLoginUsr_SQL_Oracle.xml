@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Login">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="loginVO" type="egovframework.com.cmm.LoginVO"/>
+
+	<!-- 로그인 처리를 위한 resultMap -->
+	<resultMap id="login" class="egovframework.com.cmm.LoginVO">
+		<result property="id" column="id" columnIndex="1"/>
+		<result property="name" column="name" columnIndex="2"/>		
+		<result property="password" column="password" columnIndex="5"/>				
+	</resultMap>	
+	
+	<!-- 일반 로그인 -->
+	<select id="loginDAO.actionLogin" resultMap="login">
+		<!-- 일반회원 -->		
+		<![CDATA[
+			SELECT 
+				cn as id,
+		     	displayname as name,			     
+		     	'1234!' as password
+		  	FROM 
+		  		ezHrMaster.TBLUSERMASTER
+		 	WHERE 
+		 		cn = #id#
+		 	AND
+		 		'1234!' = #password#		 
+		]]>		
+	</select>	
+</sqlMap>
