@@ -10,4 +10,8 @@ public class ezBoardController {
 	public void yoonjin(){
 		System.out.println("say HI");
 	}
+	
+	public void seokz(){
+		System.out.println("say HIII");
+	}
 }
