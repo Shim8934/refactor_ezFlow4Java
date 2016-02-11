@@ -38,7 +38,7 @@
 	<input name="link" type="hidden" />
 </form>
 <ul>
-	<li><a href="#LINK" onclick="javascript:fn_main_headPageMove('11','main/sample_menu/EgovAboutSite')" >게시판</a></li>
+	<li><a href="#LINK" onclick="javascript:fn_main_headPageMove('11','ezEKP/ezBoard/BoardMain')" >게시판</a></li>
     <%
        LoginVO loginVO = (LoginVO)session.getAttribute("LoginVO"); 
        if(loginVO != null){ 
