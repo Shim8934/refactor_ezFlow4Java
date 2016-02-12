@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Login">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+
+	<!-- 로그인 처리를 위한 resultMap -->
+	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+		<result property="id"			column="cn"   			columnIndex="1"/>
+		<result property="password" 	column="password" 		columnIndex="2"/>
+		<result property="displayName1" column="displayname"	columnIndex="3"/>
+		<result property="displayName2" column="displayname2" 	columnIndex="4"/>
+		<result property="deptID" 		column="department" 	columnIndex="5"/>
+		<result property="deptName1" 	column="description" 	columnIndex="6"/>
+		<result property="deptName2" 	column="description2" 	columnIndex="7"/>
+		<result property="title1" 		column="title" 			columnIndex="8"/>
+		<result property="title2" 		column="title2" 		columnIndex="9"/>
+		<result property="companyID" 	column="companyid" 		columnIndex="10"/>
+		<result property="companyName1" column="company" 		columnIndex="11"/>
+		<result property="companyName2" column="company2" 		columnIndex="12"/>		
+		<result property="updateDT" 	column="updatedt"		columnIndex="13"/>
+	</resultMap>	
+	
+	<!-- 일반 로그인 -->
+	<select id="loginDAO.actionLogin" resultMap="login">
+		<!-- 일반회원 -->		
+		<![CDATA[
+			SELECT 
+				cn,
+				password,				
+		     	displayname,
+		     	displayname2,
+		     	department,			     
+		     	description,
+		     	description2,
+		     	title,
+		     	title2,
+		     	physicaldeliveryofficename as companyid,
+		     	company,
+		     	company2,
+		     	updatedt
+		  	FROM 
+		  		ezHrMaster.TBLUSERMASTER
+		 	WHERE 
+		 		cn = #id#
+		 	AND
+		 		password = #password#		 				 
+		]]>
+	</select>
+	
+	<insert id="loginDAO.insertLog" parameterClass="loginVO">
+		<![CDATA[
+			INSERT INTO ezStatistics.TBL_CONNECTION_INFO(
+				USERID, 		USERNM, 			USERNM2, 			DEPTID, 			DEPTNM, 			DEPTNM2, 
+				TITLE, 			TITLE2, 			COMPANYID, 			COMPANYNM, 			COMPANYNM2, 		CONNECTIP, 
+				CONNECTTIME, 	CONNECTBROWSER, 	CONNECTOS, 			CONNECTAGENT
+			)
+			VALUES(
+				#id#,			#displayName1#,		#displayName2#,		#deptID#,			#deptName1#,		#deptName2#,	
+				#title1#,		#title2#,			#companyID#,		#companyName1#,		#companyName2#,		#ip#,	
+				SYSDATE,		#browser#,			#os#,				#agent#	
+			)				
+		]]>
+	</insert>
+	
+	<update id="loginDAO.updateUser" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE ezHrMaster.TBLUSERMASTER
+			SET
+				ipaddress = #ip#,
+				lastlogin = sysdate,
+				logincnt = logincnt + 1
+			WHERE
+				cn = #id#									
+		]]>
+	</update>
+</sqlMap>
