@@ -1,0 +1,149 @@
+package egovframework.ezEKP.ezBoard.vo;
+
+public class MyFavoriteVO {
+	
+	/**
+	 * 게시판아이디
+	 */
+	private String boardId;
+	/**
+	 * 게시판명
+	 */
+	private String boardName;
+	/**
+	 * 게시판명(외국어)
+	 */
+	private String boardName2;
+	/**
+	 * 탭번호
+	 */
+	private String tabUsed;
+	/**
+	 * 구분
+	 */
+	private String guBun;
+	/**
+	 * 트리아이디
+	 */
+	private String treeId;
+	/**
+	 * 유저아이디
+	 */
+	private String userId;
+	/**
+	 * 트리명
+	 */
+	private String treeName;
+	/**
+	 * 트리명
+	 */
+	private String treeName2;
+	/**
+	 * 트리 레벨
+	 */
+	private String treeLevel;
+	/**  
+	* 트리 단계
+	*/
+	private int treeStep;
+	/**  
+	* 트리어퍼
+	*/
+	private String treeUpper;
+	/**  
+	* 자식갯수
+	*/
+	private int childCnt;
+	/**  
+	* 트리게시판아이디
+	*/
+	private String treeBoardId;
+	
+	public String getBoardId() {
+		return boardId;
+	}
+	public void setBoardId(String boardId) {
+		this.boardId = boardId;
+	}
+	public String getBoardName() {
+		return boardName;
+	}
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
+	}
+	public String getBoardName2() {
+		return boardName2;
+	}
+	public void setBoardName2(String boardName2) {
+		this.boardName2 = boardName2;
+	}
+	public String getTabUsed() {
+		return tabUsed;
+	}
+	public void setTabUsed(String tabUsed) {
+		this.tabUsed = tabUsed;
+	}
+	public String getGuBun() {
+		return guBun;
+	}
+	public void setGuBun(String guBun) {
+		this.guBun = guBun;
+	}
+	public String getTreeId() {
+		return treeId;
+	}
+	public void setTreeId(String treeId) {
+		this.treeId = treeId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getTreeName() {
+		return treeName;
+	}
+	public void setTreeName(String treeName) {
+		this.treeName = treeName;
+	}
+	public String getTreeName2() {
+		return treeName2;
+	}
+	public void setTreeName2(String treeName2) {
+		this.treeName2 = treeName2;
+	}
+	public String getTreeLevel() {
+		return treeLevel;
+	}
+	public void setTreeLevel(String treeLevel) {
+		this.treeLevel = treeLevel;
+	}
+	public int getTreeStep() {
+		return treeStep;
+	}
+	public void setTreeStep(int treeStep) {
+		this.treeStep = treeStep;
+	}
+	public String getTreeUpper() {
+		return treeUpper;
+	}
+	public void setTreeUpper(String treeUpper) {
+		this.treeUpper = treeUpper;
+	}
+	public int getChildCnt() {
+		return childCnt;
+	}
+	public void setChildCnt(int childCnt) {
+		this.childCnt = childCnt;
+	}
+	public String getTreeBoardId() {
+		return treeBoardId;
+	}
+	public void setTreeBoardId(String treeBoardId) {
+		this.treeBoardId = treeBoardId;
+	}
+	
+	
+
+}

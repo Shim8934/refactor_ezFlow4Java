@@ -26,6 +26,9 @@
             </props>
         </property>
     </bean>
+    
+	<!--     뷰리절버로 jsp 찾기전에 JSON 찾는다 -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
 
     <!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 mvc 설정  -->
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"

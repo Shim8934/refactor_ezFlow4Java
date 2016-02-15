@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
+import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardAdminDAO")
@@ -74,6 +75,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_RESULT", string2);
 		//DB에 XML형식이 박혀서 사용되는데 어떻게 해야될지 모르겠음
 //		update("EzBoardAdminDAO.getBoardTree_Set", map);
+	}
+
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

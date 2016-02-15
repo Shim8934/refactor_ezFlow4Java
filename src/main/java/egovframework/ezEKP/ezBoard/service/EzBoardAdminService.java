@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
+import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 public interface EzBoardAdminService {
 
@@ -22,5 +23,7 @@ public interface EzBoardAdminService {
 	void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;
 
 	int checkIfLeafBoard(String pBoardID) throws Exception;
+
+	List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID);
 
 }

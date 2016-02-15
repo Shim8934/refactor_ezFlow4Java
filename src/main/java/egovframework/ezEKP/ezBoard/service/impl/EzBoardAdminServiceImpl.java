@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
+import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl implements EzBoardAdminService {
@@ -57,4 +58,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		return ezBoardAdminDAO.checkIfLeafBoard(pBoardID);
 	}
 
+	@Override
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) {
+		return ezBoardAdminDAO.getMyBoardTree_get3(userID,pRootTreeID);
+	}
 }
