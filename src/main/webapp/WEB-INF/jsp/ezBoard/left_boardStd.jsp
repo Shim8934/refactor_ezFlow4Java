@@ -387,10 +387,10 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(nodeIdx.NodeID);
 		        if (treeNode.GetNodeData("DATA1") == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		            alert("새 게시 게시판은 삭제할 수 없습니다.");
+		            alert("<spring:message code='ezBoard.t362' />");
 		            return;
 		        }
-		        var ret = confirm(treeNode.GetNodeData("DATA2") + " 게시판을 마이게시판에서 삭제하시겠습니까?");
+		        var ret = confirm(treeNode.GetNodeData("DATA2") + "<spring:message code='ezBoard.t363' />");
 		        if (ret) {
 		            var xmlhttp5 = createXMLHttpRequest();
 		            xmlhttp5.open("POST", "/myoffice/ezBoardSTD/interASP/DeleteMyBoard.aspx?BoardID=" + treeNode.GetNodeData("DATA1"), false);
@@ -462,7 +462,7 @@
 		        }
 		    }
 		    function favoriteList() {
-		        window.parent.frames["right"].location.href = "/ezEKP/ezBoard/web/boardItemList_favorite.do?MODE=USE";
+		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do?MODE=USE";
 		    }
 		    function ConfigMyBoard() {
 		        var OpenWin = window.open("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));
@@ -492,16 +492,16 @@
 	            <h2>마이게시판</h2>
 	        </div>
 	        <ul id="TreeCtrl_MyBoardTree_ul">
-	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()">즐겨찾기</span></h3>
+	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
 	            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
-	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="DeleteMyBoard()"><%=RM.GetString("t361")%></span></h3>--%>
-	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="OrderMyBoard()"><%=RM.GetString("t491")%></span></h3>--%>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()">마이게시판 </span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()">나의 게시물</span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()">예약게시물</span></h3>
-	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()">임시보관함</span></h3>
-	<%--        <li><span style="width: 100%; display: inline-block;" onclick="DeleteMyBoard()"><%=RM.GetString("t361")%></span></li>
-	            <li><span style="width: 100%; display: inline-block;" onclick="OrderMyBoard()"><%=RM.GetString("t491")%></span></li>--%>
+	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="DeleteMyBoard()"><spring:message code="ezBoard.t361" /></span></h3>--%>
+	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></h3>--%>
+	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
+	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
+	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
+	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
+	<%--        <li><span style="width: 100%; display: inline-block;" onclick="DeleteMyBoard()"><spring:message code="ezBoard.t361" /></span></li>
+	            <li><span style="width: 100%; display: inline-block;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></li>--%>
 	        </ul>
 	        <div id='TopBoardsList'>
 		        <c:forEach var="boardTreeVO" items="${boardTreeVOList}" varStatus="status">
@@ -513,14 +513,19 @@
 					</ul>        	
 				</c:forEach>
 	        </div>
-	        <h2><span onclick="Open_Func(1)">전자설문</span></h2>
+	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
 	        <ul>
-	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)">설문리스트</span></li>
-	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)">설문생성</span></li>
+	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
+	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	        </ul>
 	        <h3>
-	        <span onclick="board_config()" style="width:100%; display:inline-block;">환경설정</span>
+	        <span onclick="board_config()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
+<%-- 	    <% if( _ApplyFlag == "OK") { %> --%>
+<!--         <h3> -->
+<%--             <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span> --%>
+<!--         </h3> -->
+<%--     	<%} %> --%>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

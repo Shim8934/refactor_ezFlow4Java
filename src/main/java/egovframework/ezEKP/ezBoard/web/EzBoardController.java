@@ -35,7 +35,7 @@ public class EzBoardController {
 	@Resource(name="EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 	
-	@RequestMapping(value="/ezEKP/ezBoard/web/left_boardStd.do")
+	@RequestMapping(value="/ezBoard/left_boardStd.do")
 	public String left_BoardSTD(@CookieValue("userID") String userID, HttpServletRequest request, ModelMap modelMap, LoginVO loginVO) throws Exception{
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
@@ -203,7 +203,7 @@ public class EzBoardController {
 		}
 	}
 	
-	@RequestMapping(value="/ezEKP/ezBoard/web/boardItemList_favorite.do")
+	@RequestMapping(value="/ezBoard/boardItemList_favorite.do")
 	public String boardItemList_favorite(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,LoginVO loginVO) throws Exception{
 		loginVO.setId(userID);
 		loginVO = CreateUserInfo(loginVO);
@@ -212,15 +212,19 @@ public class EzBoardController {
         String pUserID = loginVO.getId();
         //즐겨찾기 리스트
         resultList = ezBoardService.get_favoriteList(pUserID,pMode);
-        String parentName = ParentBoardName(resultList);
+        String parentName = parentBoardName(resultList);
         
         modelMap.addAttribute("parentName", parentName);
         modelMap.addAttribute("resultList", resultList);
         
-    	return "json";
+    	return "ezBoard/boardItemList_favorite";
 	}
 	
-	private String ParentBoardName(List<MyFavoriteVO> resultList) throws Exception
+	public String get_favoriteList(){
+		return "";
+	}
+	
+	private String parentBoardName(List<MyFavoriteVO> resultList) throws Exception
     {
         String rtv = "";
         String BoardIdList = "";
@@ -236,7 +240,7 @@ public class EzBoardController {
         
         return rtv;
     }
-	public String GetMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
+	public String getMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
 	        try
 	        {
 	            List<MyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID,pRootTreeID.trim());

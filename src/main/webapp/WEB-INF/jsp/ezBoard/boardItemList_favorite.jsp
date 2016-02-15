@@ -15,9 +15,9 @@
 	            GetMyBoardItem();
 	        }
 	        function GetMyBoardItem() {
-	            xmlhttp.open("POST", "/ezEKP/ezBoard/web/boardItemList_Favorite.do", true);
+	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do", true);
 	            xmlhttp.onreadystatechange = GetMyBoardItem_event;
-	            xmlhttp.send("MODE=123");
+	            xmlhttp.send();
 	        }
 	        var overCnt = 0;
 	        var widthCheck = false;

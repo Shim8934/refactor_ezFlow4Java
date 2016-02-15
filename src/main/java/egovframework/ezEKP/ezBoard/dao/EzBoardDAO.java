@@ -22,8 +22,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) {
-		map.put("userID", userID);
-		map.put("pMode", pMode);
+		map.put("v_USERID", userID);
+		map.put("v_MODE", pMode);
 		return (List<MyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}
 
