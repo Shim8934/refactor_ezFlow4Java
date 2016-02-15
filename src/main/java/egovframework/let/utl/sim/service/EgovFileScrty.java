@@ -383,31 +383,32 @@ public class EgovFileScrty {
 		
 		return privateKey;
 	}
+    
+    public String getUserID(String userID){    	    	
+		PrivateKey pk = getPrivateKey(prm, pre);
+		String uid = decryptRsa(pk, userID);
+		
+		return uid;
+    	
+    }
 
 	public String getPrm() {
 		return prm;
 	}
-
 	public void setPrm(String prm) {
 		this.prm = prm;
 	}
-
 	public String getPbm() {
 		return pbm;
 	}
-
 	public void setPbm(String pbm) {
 		this.pbm = pbm;
 	}
-
 	public String getPre() {
 		return pre;
 	}
-
 	public void setPre(String pre) {
 		this.pre = pre;
-	}
-
-    
+	}    
 	
 }

@@ -29,7 +29,7 @@ public interface LoginService {
 	 * @param vo    LoginVO
 	 * @exception Exception Exception
 	 */
-	public LoginVO actionLogin(LoginVO vo) throws Exception;
+	public LoginVO selectUser(LoginVO vo) throws Exception;
 
 	/**
 	 * 아이디를 찾는다.

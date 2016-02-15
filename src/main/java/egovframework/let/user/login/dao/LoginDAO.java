@@ -31,8 +31,8 @@ public class LoginDAO extends EgovAbstractDAO {
 	 * @return LoginVO
 	 * @exception Exception
 	 */
-    public LoginVO actionLogin(LoginVO vo) throws Exception {
-    	return (LoginVO)select("loginDAO.actionLogin", vo);
+    public LoginVO selectUser(LoginVO vo) throws Exception {
+    	return (LoginVO)select("loginDAO.selectUser", vo);
     }
 
     /**

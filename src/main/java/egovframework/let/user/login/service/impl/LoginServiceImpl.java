@@ -41,10 +41,10 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	 * @exception Exception
 	 */
     @Override
-	public LoginVO actionLogin(LoginVO vo) throws Exception {
+	public LoginVO selectUser(LoginVO vo) throws Exception {
 
     	// 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
-    	LoginVO loginVO = loginDAO.actionLogin(vo);
+    	LoginVO loginVO = loginDAO.selectUser(vo);
     	// 2. 결과를 리턴한다.
     	if (loginVO != null && !loginVO.getId().equals("") && !loginVO.getPassword().equals("")) {
     		return loginVO;

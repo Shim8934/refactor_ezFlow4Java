@@ -92,7 +92,7 @@ public class LoginController {
 		loginVO.setPassword(_pwd);
 
     	// 1. 일반 로그인 처리
-        LoginVO resultVO = loginService.actionLogin(loginVO);
+        LoginVO resultVO = loginService.selectUser(loginVO);
 
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
         	Calendar cal = Calendar.getInstance();
