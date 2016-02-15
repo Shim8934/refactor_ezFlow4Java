@@ -10,7 +10,7 @@
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
 		    <frameset cols="200,*" frameborder="0" border="0">
-			    <frame src="<c:url value='/ezEKP/ezBoardAdmin/web/left_boardSTD.do' />" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" resize>
+			    <frame src="<c:url value='/ezBoardAdmin/left_boardSTD.do' />" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" resize>
 	            <frame src="about:blank" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 		    </frameset>
     </frameset>

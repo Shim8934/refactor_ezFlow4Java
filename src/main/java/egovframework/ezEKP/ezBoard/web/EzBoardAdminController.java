@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezBoard.web;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
+
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -32,16 +30,18 @@ public class EzBoardAdminController {
 	@Resource(name="EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 	
-	@RequestMapping(value="/ezEKP/ezBoardAdmin/web/left_boardSTD.do")
+	@RequestMapping(value="/ezBoardAdmin/left_boardSTD.do")
 	public String left_boardSTD_admin(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
 		
-		String id = egovFileScrty.getUserID(userID);
-		String redirectBoardGroupID = "";
-		String redirectBoardID = "";
+		String id = egovFileScrty.getUserID(userID);		
 		
 		loginVO.setId(id);
 		loginVO.setPassword("LOGIN");		
 		LoginVO user = loginService.selectUser(loginVO);
+		
+		/*
+		String redirectBoardGroupID = "";
+		String redirectBoardID = "";
 		
 		if(request.getParameter("BoardID") != null){			
 			redirectBoardID  = request.getParameter("BoardID");			
@@ -56,10 +56,16 @@ public class EzBoardAdminController {
 			}			
 		}
 		model.addAttribute("redirectBoardID", redirectBoardID);
-		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
+		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID); */
 		model.addAttribute("user", user);		
 		
 		return "admin/ezBoard/left_boardStd";
+	}
+	
+	@RequestMapping(value="/ezBoardAdmin/get_Admin_TopBoardList.do")
+	public void get_Admin_TopBoardList(HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{		
+				
+		
 	}
 	
 }

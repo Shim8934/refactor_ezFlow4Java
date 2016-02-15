@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
-		<title></title>
+		<title><spring:message code="ezBoard.t52" /></title>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -28,9 +28,9 @@
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
 	        
+	        /*
 	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
-	        var RedirectBoardID = "${redirectBoardID}";
-	   
+	        var RedirectBoardID = "${redirectBoardID}";	   
 		    window.onload = function () {  
 		    	if (RedirectBoardID != "") {
 	                if (RedirectBoardGroupID != "") {
@@ -38,15 +38,16 @@
 	                    return;
 	                }	                
 	            }
-		    }
+		    } 
 		    function BoardRedirect() {
-		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
+		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
 		            }
 		        }
 		    }
+		    
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
 	            pObjSpan.parentElement.onclick();
 	            var TreeCtrl = getFirstChild(pObjSpan.parentElement);
@@ -125,321 +126,191 @@
 	                }
 	            }
 	        }
-		    function SearchTreeViewByPath(imgtag, parentNodeid) {
-		        if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
-		            document.getElementById(imgtag).onclick();
-		            document.getElementById(imgtag).onclick();
-		            return 0;
-		        }
-		        else {
-		            return document.getElementById(parentNodeid).childNodes.length;
-		        }
-		    }
-		
-		    function GetBoardTreeByPath(pBoardID, pBoardGroupID) {
-		    }
+		    */
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
-		        var xmlRtn = createXmlDom();
-		        var TreeIdx = pNodeID;
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(TreeIdx);
-		        xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
-		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
-		            if (CrossYN()) {
-		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-		            }
-		            else {
-		                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
-		            }
-		        }
-		        var treeView = new TreeView();
-		        treeView.LoadFromID(pTreeID);
-		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-		    }
-		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
-		        try {
-		            var treeNode = new TreeNode();
-		            treeNode.LoadFromID(pNodeID);
-		            var SelectedBoardID = treeNode.GetNodeData("DATA3");
-		            var selectedBoardtype = treeNode.GetNodeData("DATA4");
-		            var SelectedBoardName = treeNode.GetNodeData("VALUE");
-		            //var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
-		            //var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            if (selectedBoardtype == "BOARD" || SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		
-		                GetBoardInfo(SelectedBoardID);
-		
-		                if (gubun == 3)
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
-		                else if (gubun == 4)
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
-		                else {
-		                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/New_BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=N";
-		                    }
-		                    else
-		                        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
-		                }
-		            }
-		        }
-		        catch (e) {
-		            alert(e.description);
-		        }
-		    }
-		    var pBoardName = "";
-		    var AttachLimit = "";
-		    var ExpireDays = "";
-		    var gubun = "";
-		    function GetBoardInfo(SelBoardID) {
-		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "interASP/GetBoardInfo.aspx?BoardID=" + SelBoardID, false);
-		        xmlhttp_boardinfo.send();
-		        if (xmlhttp_boardinfo.status == 200) {
-		            pBoardName = getNodeText(SelectNodes(xmlhttp_boardinfo.responseXML, "BOARDNAME")[0]);
-		            AttachLimit = getNodeText(SelectNodes(xmlhttp_boardinfo.responseXML, "ATTACHLIMIT")[0]);
-		            ExpireDays = getNodeText(SelectNodes(xmlhttp_boardinfo.responseXML, "EXPIREDAYS")[0]);
-		            gubun = getNodeText(SelectNodes(xmlhttp_boardinfo.responseXML, "GUBUN")[0]);
-		        }
-		        xmlhttp_boardinfo = null;
-		    }
-		    function TreeCtrl_onNodeExpandedNew(pNodeID, pTreeID) {
-		        var xmlRtn = createXmlDom();
-		        var TreeIdx = pNodeID;
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(TreeIdx);
-		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"))
-		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
-		            if (CrossYN()) {
-		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-		            }
-		            else {
-		                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
-		            }
-		        }
-		        var treeView = new TreeView();
-		        treeView.LoadFromID(pTreeID);
-		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-		    }
-		
-		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
-		        try {
-		            var treeNode = new TreeNode();
-		            treeNode.LoadFromID(pNodeID);
-		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
-		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
-		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		
-		            if (chkPhotoBrd == 3)
-		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
-		            else if (chkPhotoBrd == 4)
-		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
-		            else {
-		                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/New_BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=N";
-		                }
-		                else
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
-		            }
-		        }
-		        catch (e) {
-		            alert(e.description);
-		        }
-		    }
-		    function DisplayTopBoard() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=top&SubFlag=0", false);
-		        xmlhttp.send();
-		
-		        if (xmlhttp.responseText != "ERROR") {
-		            MakeTopBoardView(xmlhttp.responseText);
-		        }
-		        xmlhttp = null;
-		    }
-		
-		    function ShowMyBoardItem() {
-		        SetTreeConfig();
-		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
-		        var treeView = new TreeView();
-		        treeView.SetID("FromTreeView");
-		
-		        treeView.SetNodeClick("TreeCtrl_onNodeClickNew");
-		        treeView.SetRequestData("TreeCtrl_onNodeExpandedNew");
-		        treeView.DataSource(GetMyBoardItem("0"));
-		        treeView.DataBind("TreeCtrl_MyBoardTree");
-		        first++;
-		    }
-		    function GetMyBoardItem(pRootTreeID) {
-		        var xmlhttp4 = new XMLHttpRequest();
-		        xmlhttp4.open("POST", "/kaoni/test/web/GetMyBoards_Config.do?RootTreeID=" + pRootTreeID + "&COUNTFLAG=YES", false);
-		        //xmlhttp4.open("POST", "/myoffice/ezBoardSTD/interASP/GetMyBoards.aspx", false);
-		        xmlhttp4.send();
-		        var ret = xmlhttp4.responseXML;
-		        xmlhttp4 = null;
-		        return ret;
-		    }
-		    var tempID;
-		    var clickFlag = false;
-		    function TopBoard_onclick(obj, ID) {
-		        if (tempID == ID)
-		            clickFlag = true;
-		        else
-		            clickFlag = false;
-		
-		        if (!clickFlag) {    
-		            var rootBoardID = ID;
-		            var num = obj.split("TreeCtrl");
-		            document.getElementById(obj + "obj").innerHTML = "";
-		            SetTreeConfig();
-		            var treeView = new TreeView();
-		            treeView.SetID("TreeView" + obj);
-		            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
-		            treeView.SetNodeClick("TreeCtrl_onNodeClick");
-		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
-		            treeView.DataBind(obj + "obj");
-		            tempID = ID;
-		        }
-		    }
-		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		        var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
-		        xmlhttp3.send();
-		        var ret = xmlhttp3.responseXML;
-		        xmlhttp3 = null;
-		        return ret;
-		    }
-		    function MakeTopBoardView(strXML) {
-		        var xmldom = createXmlDom();
-		        var strHTML = "";
-		        xmldom = loadXMLString(strXML);
-		        strHTML = "";
-		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
-		        for (i = 0; i < xmldomNodes.length; i++) {
-		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
-		            tid = tid.substring(1, 37);
-		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
-		            strHTML += "  <ul>";
-		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:auto;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
-		            strHTML += "  </ul>";
-		        }
-		        xmldomNodes = null;
-		        xmldom = null;
-		        document.getElementById("TopBoardsList").innerHTML = strHTML;
-		    }
-		    function AdminMenu_onclick() {
-		        window.open("/myoffice/ezBoardSTD/admin/index_admin.aspx", "", "height=" + window.screen.availHeight + ",width=" + window.screen.availWidth + ", status = no, toolbar=no, menubar=no, location=no, resizable=1, left=0, top=0", "");
-		    }
-		    function DeleteMyBoard() {
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
-		        if (treeNode.GetNodeData("DATA1") == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		            alert("새 게시 게시판은 삭제할 수 없습니다.");
-		            return;
-		        }
-		        var ret = confirm(treeNode.GetNodeData("DATA2") + " 게시판을 마이게시판에서 삭제하시겠습니까?");
-		        if (ret) {
-		            var xmlhttp5 = createXMLHttpRequest();
-		            xmlhttp5.open("POST", "/myoffice/ezBoardSTD/interASP/DeleteMyBoard.aspx?BoardID=" + treeNode.GetNodeData("DATA1"), false);
-		            xmlhttp5.send();
-		            xmlhttp5 = null;
-		            document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
-		            treeView.DataSource(GetMyBoardItem());
-		            treeView.DataBind('TreeCtrl_MyBoardTree');
-		        }
-		    }
-		    function OrderMyBoard() {
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        var ret;
-		        ret = showModalDialog("MyBoardOrder_Cross.aspx", null, "dialogHeight:350px; dialogWidth:305px; status:no; help:no; scroll:no; edge:sunken");
-		        if (ret == 1) {
-		            document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
-		            treeView.DataSource(GetMyBoardItem());
-		            treeView.DataBind('TreeCtrl_MyBoardTree');
-		        }
-		    }
-		    function Open_Func(idx) {
-		        if (CrossYN()) {
-		            if (idx == 1) {
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_List_Cross.aspx?brd_ID=5";
-		            }
-		            else {
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1_Cross.aspx?brd_ID=5";
-		            }
-		        } else {
-		            if (idx == 1)
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_List.aspx?brd_ID=5";
-		            else
-						window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1_Cross.aspx?brd_ID=5";
-		                //window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1.aspx?brd_ID=5"
-		            SetTreeviewUnSelect("");
-		        }
-		    }
-		    function WebPartToggle(obj) {
-		        for (var i = 0; i < level1El.length; i++) {
-		            if (i != obj.listNum) {
-		                level1El.item(i).className = "off";
-		                level2El.item(i).className = "off";
-		            }
-		            else {
-		                level1El.item(i).className = "on";
-		                level2El.item(i).className = "on";
-		            }
-		        }
-		        currentListNum = obj.listNum;
-		        setMenu(level2El.item(obj.listNum));
-		    }
-		    function SetTreeviewUnSelect(TreeviewID) {
-		        if (TreeviewID != "TreeCtrl_MyBoardTree_ul") {
-		        }
-		        for (var i = 0; i < items; i++) {
-		            if (TreeviewID != "TreeCtrl" + i + "obj") {
-		            }
-		        }
-		    }
-		    function SetTreeConfig() {
-		        var xmlHTTP = new XMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
-		        xmlHTTP.send();
-		
-		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            var treeView = new TreeView();
-		            treeView.SetConfig(xmlHTTP.responseXML);
-		        }
-		    }
-		    function favoriteList() {
-		        window.parent.frames["right"].location.href = "/ezEKP/ezBoard/web/boardItemList_Favorite.do";
-		    }
-		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));
-		        try { OpenWin.focus(); } catch (e) { }
-		    }
-		    function MyBoard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_MyList.aspx";
-		    }
-		    function TempBoard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Temp.aspx";
-		    }
-		    function board_config() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/Board_config.aspx";
-		    }
-		    function ReservationItem_onclick() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardReservedItemList_Cross.aspx?";
-		    }
-		    function Apprboard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Appr.aspx";
-		    }
+	            var xmlRtn = createXmlDom();
+	            var TreeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(TreeIdx);
+	            xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
+	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+	                if (CrossYN()) {
+	                    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+	                }
+	                else {
+	                    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+	                }
+	            }
+	            var treeView = new TreeView();
+	            treeView.LoadFromID(pTreeID);
+	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	        }
+
+	        var AccessLevel = "0";
+	        function TopBoard_onclick(obj, ID) {
+	            AccessLevel = "1";
+	            var rootBoardID = ID;
+	            SelectedBoardID = ID;
+	            SelectedBoardGroupID = ID;
+	            SelectedBoardParentBoardID = 'top';
+	            var num = obj.split("TreeCtrl");
+	            document.getElementById(obj + "obj").innerHTML = "";
+	            SetTreeConfig();
+	            var treeView = new TreeView();
+	            treeView.SetID("TreeView" + obj);
+	            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
+	            treeView.SetNodeClick("TreeCtrl_onNodeClick");
+	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
+	            treeView.DataBind(obj + "obj");
+	        }
+
+	        function SetTreeConfig() {
+	            try{
+	                var xmlHTTP = createXMLHttpRequest();
+	                xmlHTTP.open("GET", "/myoffice/ezBoardSTD/controls/organtree_config2.xml", false);
+	                xmlHTTP.send();
+
+	                if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+	                    var treeView = new TreeView();
+	                    treeView.SetConfig(xmlHTTP.responseXML);
+	                }
+	            }catch(e){
+	                alert(e);
+	            }
+	        }
+
+	        function GetSubBoard(pRootBoardID, pSubFlag) {
+	            try{
+	                var xmlHTTP3 = createXMLHttpRequest();
+	                xmlHTTP3.open("GET", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
+	                xmlHTTP3.send();
+
+	                if (xmlHTTP3.readyState == 4 && xmlHTTP3.status == 200) {                    
+	                    var ret = xmlHTTP3.responseXML;
+	                    xmlHTTP3 = null;
+	                    return ret;
+	                } else {
+	                    return null;
+	                }
+	            } catch (e) {
+	                alert(e);
+	            }
+	        }
+
+	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
+	            try {
+	                AccessLevel = "0";
+	                var treeNode = new TreeNode();
+	                treeNode.LoadFromID(pNodeID);
+	                SelectedBoardID = treeNode.GetNodeData("DATA1");
+	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
+	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
+
+	                if (RedirectBoardID != "") {
+	                    if (RedirectBoardGroupID != "") {
+	                        window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID + "&TabId=1tab2";
+	                    }
+	                }
+	                else {
+	                    window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID;
+	                }
+	                
+	                
+	                
+	            }
+	            catch (e) {
+	                alert(e.description);
+	            }
+	        }
+
+	        function OpenRightMenu(pIndex) {
+
+	            if (SelectedBoardID == "" && pIndex == 5 && pIndex != 8) {
+	                alert("<spring:message code='ezBoard.t56' />");
+	                return;
+	            }
+
+	            curMenuIndex = pIndex;
+
+	            if (SelectedBoardID == "" && pIndex != 1 && pIndex != 5 && pIndex != 8) {
+	                alert("<spring:message code='ezBoard.t56' />");
+	                return;
+	            }
+
+	            if (SelectedBoardID == SelectedBoardGroupID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 5 && pIndex != 6 && pIndex != 7 && pIndex != 8) {
+	                alert("<spring:message code='ezBoard.t138' />");
+	                return;
+	            }
+
+	            switch (pIndex) {
+	                case 1:
+	                    window.open("BoardGroupCreate.aspx", "board_main");
+	                    break;
+	                case 2:
+	                    window.open("BoardCreate.aspx?ParentBoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    break;
+	                case 3:
+	                    window.open("BoardOrder_Cross.aspx?BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                    break;
+	                case 4:
+	                    if (window.ActiveXObject)
+	                        window.open("BoardMove.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    else
+	                        window.open("BoardMove_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    break;
+	                case 5:
+	                    if (CrossYN())
+	                        window.open("BoardDelete_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    else
+	                        window.open("BoardDelete.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    break;
+	                case 6:
+	                    window.open("/myoffice/ezBoardSTD/admin/BoardProperty.aspx?BoardID=" + SelectedBoardID, "board_main");
+	                    break;
+	                case 7:
+	                    window.open("/myoffice/ezBoardSTD/admin/BoardACL.aspx?PARENTNEED=Y&BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID + "&AccessLevel=" + AccessLevel, "board_main");
+	                    break;
+	                case 8:
+	                    window.open("/myoffice/ezBoardSTD/admin/BoardBackGround.aspx?PARENTNEED=Y&BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                    break;
+	                default:
+	                    break;
+	            }
+	        }
+	        function SearchTreeViewByPath(imgtag, parentNodeid) {
+	            if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
+	                document.getElementById(imgtag).onclick();
+	                document.getElementById(imgtag).onclick();
+	                return 0;
+	            }
+	            else {
+	                return document.getElementById(parentNodeid).childNodes.length;
+	            }
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
 	    <div id="left">
 	        <div class="left_admin"><spring:message code="ezBoard.t58" /></div>
 	        <div id="TopBoard">
-	        	<script>
-	        	
-	        	</script>
+	        	<script type="text/javascript">
+	                xmlhttp.open("POST", "/ezBoardAdmin/get_Admin_TopBoardList.aspx?boardType=top", false);
+	                xmlhttp.send();
+	                var strHTML = "";
+	                if (xmlhttp.status == 200) {
+	                    var listdom = xmlhttp.responseXML;
+	                    for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
+	                        strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + i + "' value='" + getNodeText(listdom.getElementsByTagName("BOARDID").item(i));
+	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + i + "','" + getNodeText(listdom.getElementsByTagName("BOARDID").item(i)) + "')\">";
+	                        strHTML += getNodeText(listdom.getElementsByTagName("BOARDNAME").item(i)) + "</div></h2>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
+	                        strHTML += "</div></ul>";
+	                    }
+	                    document.getElementById("TopBoard").innerHTML = strHTML;
+	                    if (listdom.getElementsByTagName("ROW").length > 0)
+	                        TopBoard_onclick("TreeCtrl0", getNodeText(listdom.getElementsByTagName("BOARDID").item(0)));
+	                }
+	            </script>
 	        </div>	
 	        <h3><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span></h3>
