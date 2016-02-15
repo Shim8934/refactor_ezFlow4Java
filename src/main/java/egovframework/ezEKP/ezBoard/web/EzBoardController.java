@@ -14,7 +14,6 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 @Controller
 public class EzBoardController {
@@ -25,7 +24,7 @@ public class EzBoardController {
 	@Resource(name="EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 	
-	@RequestMapping(value="/ezEKP/ezBoard/web/left_boardStd.do")
+	@RequestMapping(value="/ezEKP/ezBoard/web/left_boardSTD.do")
 	public String left_BoardSTD(HttpServletRequest request, ModelMap modelMap) throws Exception{
 		String RedirectBoardID = "";
         String RedirectBoardGroupID = "";
@@ -88,7 +87,7 @@ public class EzBoardController {
         List<BoardTreeVO> boardTreeVOList = getBoardTree(pRootBoardID,pUserID,pDeptID,pCompanyID,pMode,Integer.parseInt(pSubFlag),pSelectBy,pExcludeBoardID,getMultiData(strLang));
         modelMap.addAttribute("boardTreeVOList", boardTreeVOList);
         
-		return "ezBoard/left_boardStd";
+		return "ezBoard/left_BoardStd";
 	}
 	
 	private List<BoardTreeVO> getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
@@ -100,8 +99,8 @@ public class EzBoardController {
         //DB에 XML 형식으로 박혀있어서 XML로 할지 VO로 할지 고민중 @수정요망@
 //        if (retValue.length() > 30)
 //        {
-//        		map.addAttribute("retValue", retValue);
-//          	return "ezBoard/left_boardStd";
+//        	map.addAttribute("retValue", retValue);
+//            return "kaoni/left_boardSTD";
 //        }
         String pAccessID = pUserID + "," + ezBoardAdminService.getDeptFullPath(pDeptID, "Top") + ",everyone";
         //ActiveDirectory 부분 삭제해야할듯? @수정요망@ 
@@ -168,7 +167,7 @@ public class EzBoardController {
             return "";
     }
 	
-	public String checkIfLeafBoard(String pBoardID) throws Exception{
+	public String checkIfLeafBoard(String pBoardID){
 		try
 		{
 	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID);
@@ -181,92 +180,5 @@ public class EzBoardController {
 		{
 			return "FALSE";
 		}
-	}
-	
-	@RequestMapping(value="/ezEKP/ezBoard/web/boardItemList_favorite.do")
-	public String boardItemList_favorite(ModelMap modelMap,HttpServletRequest request) throws Exception{
-		List<MyFavoriteVO> resultList = new ArrayList<MyFavoriteVO>();
-    	
-        String pMode = request.getParameter("MODE");
-        String UserID = "yoonz44";
-        try
-        {
-            resultList = ezBoardService.get_favoriteList(UserID,pMode);
-        }
-        catch (Exception ex)
-        {
-        	ex.printStackTrace();
-        }
-        String parentName = ParentBoardName(resultList);
-        modelMap.addAttribute("parentName", parentName);
-        modelMap.addAttribute("resultList", resultList);
-    	return "JSON";
-	}
-	
-	private String ParentBoardName(List<MyFavoriteVO> resultList) throws Exception
-    {
-        String rtv = "";
-        String BoardIdList = "";
-        int BoardIdListCount = 0;
-        try
-        {
-            for (int i = 0; i < resultList.size(); i++)
-            {
-                BoardIdList += resultList.get(i).getBoardId().trim();
-                if (i != resultList.size() - 1)
-                    BoardIdList += ";";
-            }
-            BoardIdListCount = BoardIdList.split(";").length - 1;
-            rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount);
-        }
-        catch (Exception ex)
-        {
-        	ex.printStackTrace();
-        }
-        return rtv;
-    }
-	public String GetMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
-	        try
-	        {
-	            List<MyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID,pRootTreeID.trim());
-	            StringBuilder sb = new StringBuilder();
-	
-	            sb.append("<TREEVIEWDATA>");
-	
-	            for (int i = 0; i < resultList.size(); i++)
-	            {
-	                sb.append("<NODE>");
-	                sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName().trim() + "]]></VALUE>");
-	                sb.append("<STYLE><![CDATA[]]></STYLE>");
-	                sb.append("<DATA1>" + resultList.get(i).getTreeId() + "</DATA1>");
-	                sb.append("<DATA2><![CDATA[" + resultList.get(i).getTreeName().trim() + "]]></DATA2>");
-	                sb.append("<DATA3><![CDATA[" + resultList.get(i).getTreeBoardId() + "]]></DATA3>");
-	            	if(resultList.get(i).getTreeBoardId() == "")
-	                    sb.append("<DATA4>TREE</DATA4>");
-	                else
-	                    sb.append("<DATA4>BOARD</DATA4>");
-	                sb.append("<DATA5></DATA5>");
-	
-	                sb.append("<EXPANDED>FALSE</EXPANDED>");
-	
-	                if(resultList.get(i).getChildCnt() > 0)
-	                    sb.append("<ISLEAF>FALSE</ISLEAF>");
-	                else
-	                    sb.append("<ISLEAF>TRUE</ISLEAF>");
-	
-	                if (resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	//새 게시판 자동선택
-	                    sb.append("<SELECT>TRUE</SELECT>");
-	                sb.append("</NODE>");
-	            }
-	
-	            sb.append("</TREEVIEWDATA>");
-	
-	            return sb.toString();
-	        }
-	        catch (Exception Ex)
-	        {
-	            Ex.printStackTrace();
-	        }
-	   return "";
 	}
 }

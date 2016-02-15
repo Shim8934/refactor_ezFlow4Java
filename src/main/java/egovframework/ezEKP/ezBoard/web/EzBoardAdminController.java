@@ -1,15 +1,18 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -30,15 +33,31 @@ public class EzBoardAdminController {
 	private EzBoardAdminService ezBoardAdminService;
 	
 	@RequestMapping(value="/ezEKP/ezBoardAdmin/web/left_boardSTD.do")
-	public String left_boardSTD_admin(@CookieValue("userID") String userID, HttpServletRequest request, ModelMap modelMap, LoginVO loginVO) throws Exception{
+	public String left_boardSTD_admin(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
 		
 		String id = egovFileScrty.getUserID(userID);
+		String redirectBoardGroupID = "";
+		String redirectBoardID = "";
 		
 		loginVO.setId(id);
 		loginVO.setPassword("LOGIN");		
 		LoginVO user = loginService.selectUser(loginVO);
 		
-		
+		if(request.getParameter("BoardID") != null){			
+			redirectBoardID  = request.getParameter("BoardID");			
+			List<EzBoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
+			
+			for(int i=0; i< leftBoardList.size(); i++){
+				redirectBoardGroupID += leftBoardList.get(i).getBoardGroupId();
+				
+				if(i != leftBoardList.size()-1){
+					redirectBoardGroupID += ",";
+				}
+			}			
+		}
+		model.addAttribute("redirectBoardID", redirectBoardID);
+		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
+		model.addAttribute("user", user);		
 		
 		return "admin/ezBoard/left_boardStd";
 	}
