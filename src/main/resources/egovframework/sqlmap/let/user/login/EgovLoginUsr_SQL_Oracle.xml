@@ -24,7 +24,7 @@
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
-	<select id="loginDAO.actionLogin" resultMap="login">
+	<select id="loginDAO.selectUser" resultMap="login">
 		<!-- 일반회원 -->		
 		<![CDATA[
 			SELECT 
@@ -44,10 +44,11 @@
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 
-		 		cn = #id#
-		 	AND
-		 		password = #password#		 				 
+		 		cn = #id#		 			 				 
 		]]>
+		<isNotEqual prepend="AND" property="password" compareValue="LOGIN" >			
+			password = #password#
+		</isNotEqual>
 	</select>
 	
 	<insert id="loginDAO.insertLog" parameterClass="loginVO">
