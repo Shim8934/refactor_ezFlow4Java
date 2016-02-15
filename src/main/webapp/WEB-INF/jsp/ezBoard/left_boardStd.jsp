@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html style="height:100%">
 	<head>
@@ -10,12 +11,12 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" language="javascript">
-	        var SSUserID = "yoonz44";
-	        var SSUserName = "황윤진";
-	        var SSDeptID = "OPENSOL";
-	        var SSDeptName = "오픈솔루션";
-	        var SSCompanyID = "S907000";
-	        var SSCompanyName = "가온아이";
+	        var SSUserID = "${userInfo}";
+	        var SSUserName = "${userInfo.name}";
+	        var SSDeptID = "${userInfo.deptID}";
+	        var SSDeptName = "${userInfo.deptName1}";
+	        var SSCompanyID = "${userInfo.companyID}";
+	        var SSCompanyName = "${userInfo.companyName1}";
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
 	        var SS_ServerName = "test.yoonz44.com";
@@ -461,7 +462,7 @@
 		        }
 		    }
 		    function favoriteList() {
-		        window.parent.frames["right"].location.href = "/ezEKP/ezBoard/web/boardItemList_Favorite.do";
+		        window.parent.frames["right"].location.href = "/ezEKP/ezBoard/web/boardItemList_favorite.do?MODE=USE";
 		    }
 		    function ConfigMyBoard() {
 		        var OpenWin = window.open("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));

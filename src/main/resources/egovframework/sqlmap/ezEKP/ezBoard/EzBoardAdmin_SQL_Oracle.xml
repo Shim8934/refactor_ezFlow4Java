@@ -39,12 +39,6 @@
 		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
 	</parameterMap>
 	
-	<parameterMap id="get_FavoriteListMap" class="java.util.Map">
-		<parameter property="v_USERID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_MODE" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
 	<parameterMap id="getMyBoardTree_Get3Map" class="java.util.Map">
 		<parameter property="v_PUSERID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
 		<parameter property="v_PTREEUPPER" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>

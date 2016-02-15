@@ -4,9 +4,16 @@
 <sqlMap namespace="ezBoard">
 
 <typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
 	
 	<parameterMap id="getLeft_BoardSTDMap" class="java.util.Map">
 		<parameter property="v_REDIRECTBOARDID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
+		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
+	</parameterMap>
+	
+	<parameterMap id="get_FavoriteListMap" class="java.util.Map">
+		<parameter property="v_USERID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
+		<parameter property="v_MODE" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
 		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
 	</parameterMap>
 	
@@ -14,8 +21,20 @@
 		<result property="boardGroupId" column="BOARDGROUPID" columnIndex="1"/>
 	</resultMap>
 	
+	<resultMap id="get_favoriteList" class="MyFavoriteVO">
+		<result property="boardId" column="BOARDID" columnIndex="1"/>
+		<result property="boardName" column="BOARDNAME" columnIndex="2"/>
+		<result property="boardName2" column="BOARDNAME2" columnIndex="3"/>
+		<result property="tabUsed" column="TABUSED" columnIndex="4"/>
+		<result property="guBun" column="GUBUN" columnIndex="5"/>
+	</resultMap>
+	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterMap="getLeft_BoardSTDMap" resultMap="getLeft_BoardSTD">
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(?,?)}
+	</procedure>
+
+	<procedure id="EzBoardDAO.get_favoriteList" parameterMap="get_FavoriteListMap" resultMap="get_favoriteList">
+		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(?,?,?)}
 	</procedure>
 	
 </sqlMap>
