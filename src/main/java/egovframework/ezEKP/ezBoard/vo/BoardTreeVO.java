@@ -1,16 +1,26 @@
 package egovframework.ezEKP.ezBoard.vo;
 
 public class BoardTreeVO {
-	private String boardId = "";
-	private String boardName = "";
-	private String boardName2 = "";
-	private String treeViewOrder = "";
-	private String boardColor = "";
-	private String guBun = "";
-	private String boardGroupAcl = "";
-	private String expanded = "";
-	private String select = "";
-	private String isLeaf = "";
+	/** 게시판아이디	*/
+	private String boardId;
+	/** 게시판이름	*/
+	private String boardName;
+	/** 게시판이름 2	*/
+	private String boardName2;
+	/** 트리순서	*/
+	private String treeViewOrder;
+	/** 게시판 색	*/
+	private String boardColor;
+	/** 구분	*/
+	private String guBun;
+	/** 그룹acl	*/
+	private String boardGroupAcl;
+	/** 확장여부	*/
+	private String expanded;
+	/** 셀렉트	*/
+	private String select;
+	/** 이즈맆	*/
+	private String isLeaf;
 	
 	public String getBoardId() {
 		return boardId;

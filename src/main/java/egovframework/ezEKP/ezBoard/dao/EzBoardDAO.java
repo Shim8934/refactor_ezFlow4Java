@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
@@ -35,8 +36,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public String get_parentBoardName(String boardIdList, int boardIdListCount) {
-		// TODO Auto-generated method stub
-		return null;
+		map.put("v_BOARDIDLIST", boardIdList);
+		map.put("v_BOARDCOUNTLIST", boardIdListCount);
+		return (String) select("EzBoardDAO.get_parentBoardName", map);
+	}
+
+	public BoardPropertyVO getBoardProperty(String pBoardID) {
+		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
 	}
 	
 	

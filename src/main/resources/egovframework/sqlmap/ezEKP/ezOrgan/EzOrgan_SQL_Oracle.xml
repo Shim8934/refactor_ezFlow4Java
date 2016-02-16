@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOrgan">
+
+	<parameterMap id="getPropertyValueMap" class="java.util.Map">
+		<parameter property="v_CN" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
+		<parameter property="v_FIELD" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
+		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
+	</parameterMap>
+	<parameterMap id="getSIPUriListMap" class="java.util.Map">
+		<parameter property="iv_CNLIST" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
+		<parameter property="iv_EMAILLIST" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
+		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
+	</parameterMap>
+
+<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@   resultMAP   @@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+	
+	<procedure id="EzOrganDAO.getPropertyValue" parameterMap="getPropertyValueMap" resultClass="String">
+		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(?,?,?)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.getSIPUriList" parameterMap="getSIPUriListMap" resultClass="String">
+		{CALL EZHRMASTER.EZSP_GETSIPURILIST(?,?,?)}
+	</procedure>
+
+</sqlMap>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
@@ -85,6 +86,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {
 		// TODO Auto-generated method stub
 		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
+	}
+
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) {
+		map.put("pBoardID", pBoardID);
+		map.put("userDeptPath", userDeptPath);
+		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
 	
 	

@@ -5,6 +5,7 @@
 	
 	<typeAlias  alias="BoardTreeVO" type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
 	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	
 	<parameterMap id="cursor" class="java.util.Map">
 		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
@@ -119,10 +120,12 @@
 	</procedure>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
-		SELECT 
-			DISTINCT appruserid 
-		FROM 
-			ezBoardSTD.TBL_BOARD_APPRLIST
+		<![CDATA[
+			SELECT 
+				DISTINCT appruserid 
+			FROM 
+				ezBoardSTD.TBL_BOARD_APPRLIST
+		]]>
 	</select>
 	
 	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="java.lang.String">
@@ -137,6 +140,36 @@
 			ezBoardSTD.TBL_Board_BoardInfo
 		WHERE
 			parentboardid = #parentBoardID#
+	</select>
+	<!-- 	권한가져오기 -->
+	<select id="EzBoardAdminDAO.getACL"  parameterClass="java.util.Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				boardid,
+	            accessid ,
+	            accessname ,
+	            accessname2 ,
+	            accesslevel ,
+	            access_ ,
+	            parantboardid ,
+	            boardadmin_fg ,
+	            listview_fg ,
+	            read_fg ,
+	            write_fg ,
+	            reply_fg ,
+	            delete_fg ,
+	            inherit_fg ,
+	            postnotice ,
+	            boardgroupacl  
+	       FROM 
+	        	ezBoardSTD.TBL_BOARD_BOARDMANAGE 
+	       WHERE  
+	       		boardid = #pBoardID# 
+	       AND 
+	       		accessid = #userDeptPath# 
+	       AND 
+	       		rownum <= 1 
+		]]>
 	</select>
 
 </sqlMap>

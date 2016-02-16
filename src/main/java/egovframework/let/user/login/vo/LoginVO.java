@@ -84,8 +84,12 @@ public class LoginVO implements Serializable{
 	private String encryptPass;
 	/** 마지막 개인정보 수정 일자 */
 	private Date updateDT; 
-	
-	
+	/** 조직도 DeptPath*/
+	private String deptPathCode;
+	/** 유저권한*/
+	private String rollInfo;
+	/** 언어*/
+	private String primary;
 
 	public String getId() {
 		return id;
@@ -266,7 +270,24 @@ public class LoginVO implements Serializable{
 	}
 	public void setAgent(String agent) {
 		this.agent = agent;
+	}
+	public String getDeptPathCode() {
+		return deptPathCode;
+	}
+	public void setDeptPathCode(String deptPathCode) {
+		this.deptPathCode = deptPathCode;
+	}
+	public String getRollInfo() {
+		return rollInfo;
+	}
+	public void setRollInfo(String rollInfo) {
+		this.rollInfo = rollInfo;
+	}
+	public String getPrimary() {
+		return primary;
+	}
+	public void setPrimary(String primary) {
+		this.primary = primary;
 	}	
-	
 	
 }

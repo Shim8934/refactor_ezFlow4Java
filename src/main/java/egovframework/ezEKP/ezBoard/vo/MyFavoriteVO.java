@@ -2,61 +2,33 @@ package egovframework.ezEKP.ezBoard.vo;
 
 public class MyFavoriteVO {
 	
-	/**
-	 * 게시판아이디
-	 */
+	/**게시판아이디	 */
 	private String boardId;
-	/**
-	 * 게시판명
-	 */
+	/**게시판명	 */
 	private String boardName;
-	/**
-	 * 게시판명(외국어)
-	 */
+	/**게시판명(외국어)	 */
 	private String boardName2;
-	/**
-	 * 탭번호
-	 */
+	/**탭번호	 */
 	private String tabUsed;
-	/**
-	 * 구분
-	 */
+	/** 구분	 */
 	private String guBun;
-	/**
-	 * 트리아이디
-	 */
+	/**트리아이디	 */
 	private String treeId;
-	/**
-	 * 유저아이디
-	 */
+	/**유저아이디	 */
 	private String userId;
-	/**
-	 * 트리명
-	 */
+	/**트리명	 */
 	private String treeName;
-	/**
-	 * 트리명
-	 */
+	/** 트리명	 */
 	private String treeName2;
-	/**
-	 * 트리 레벨
-	 */
+	/**트리 레벨	 */
 	private String treeLevel;
-	/**  
-	* 트리 단계
-	*/
+	/**  트리 단계	*/
 	private int treeStep;
-	/**  
-	* 트리어퍼
-	*/
+	/**  트리어퍼	*/
 	private String treeUpper;
-	/**  
-	* 자식갯수
-	*/
+	/**  자식갯수	*/
 	private int childCnt;
-	/**  
-	* 트리게시판아이디
-	*/
+	/**  트리게시판아이디	*/
 	private String treeBoardId;
 	
 	public String getBoardId() {

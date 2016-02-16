@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
@@ -24,8 +25,10 @@ public interface EzBoardAdminService {
 
 	public int checkIfLeafBoard(String pBoardID) throws Exception;
 
-	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID);
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception;
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
+
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 
 }

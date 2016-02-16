@@ -25,8 +25,6 @@
 	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	            try {
 	            	var result = JSON.parse(xmlhttp.responseText);
-	            	alert(result.parentName);
-	            	alert(result.resultList.length);
 	                if (result.resultList.length != 0) {
 	                    for (var i = 0; i < result.resultList.length; i++) {
 	                        var BoardName = result.resultList[i].boardName;

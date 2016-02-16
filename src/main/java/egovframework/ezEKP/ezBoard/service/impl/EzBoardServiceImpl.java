@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
@@ -24,20 +25,23 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) {
+	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
 		return ezBoardDAO.get_favoriteList(userID,pMode);
 	}
 
 	@Override
-	public String get_parentBoardName(String BoardIdList, int boardIdListCount) {
+	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception{
 		return ezBoardDAO.get_parentBoardName(BoardIdList,boardIdListCount);
 	}
 
+	@Override
+	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
+		return ezBoardDAO.getBoardProperty(pBoardID);
+	}
 	@Override
 	public BoardConfigVO getBoardList_Config(String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return ezBoardDAO.getBoardList_Config(userId);
 	}
-	
 	
 }

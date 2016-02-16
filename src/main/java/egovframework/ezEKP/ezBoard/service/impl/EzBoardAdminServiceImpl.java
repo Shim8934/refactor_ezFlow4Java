@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
@@ -59,7 +60,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) {
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
 		return ezBoardAdminDAO.getMyBoardTree_get3(userID,pRootTreeID);
 	}
 
@@ -68,6 +69,11 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		// TODO Auto-generated method stub
 		return ezBoardAdminDAO.get_Admin_TopBoardList(parentBoardID);
 		
+	}
+
+	@Override
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
+		return ezBoardAdminDAO.getACL(pBoardID,userDeptPath);
 	}
 	
 	

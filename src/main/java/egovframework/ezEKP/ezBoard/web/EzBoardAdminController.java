@@ -57,7 +57,7 @@ public class EzBoardAdminController {
 		}
 		model.addAttribute("redirectBoardID", redirectBoardID);
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID); */
-		model.addAttribute("user", user);		
+		model.addAttribute("user", user);
 		
 		return "admin/ezBoard/boardLeft";
 	}
