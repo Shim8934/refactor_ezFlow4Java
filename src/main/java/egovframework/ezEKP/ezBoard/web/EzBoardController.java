@@ -220,6 +220,22 @@ public class EzBoardController {
     	return "ezBoard/boardItemList_favorite";
 	}
 	
+	
+	@RequestMapping(value="/ezBoard/boardConfig.do")
+	public String boardConfig() throws Exception {
+		return "ezBoard/boardConfig";
+	}
+	
+	@RequestMapping(value="/ezBoard/boardGeneral.do")
+	public String boardGeneral() throws Exception {
+		return "ezBoard/boardGeneral";
+	}
+	
+	@RequestMapping(value="/ezBoard/boardFavorite.do")
+	public String boardFavorite() throws Exception {
+		return "ezBoard/boardFavorite";
+	}
+	
 	public String get_favoriteList(){
 		return "";
 	}
