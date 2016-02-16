@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-    <link rel="stylesheet" href="/css/tab.css" type="text/css" />
+    <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     <script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<title>Insert title here</title>
@@ -21,7 +21,10 @@
                 document.body.style.UserSelect = 'none';
             }
         }
-        function PrevieOption(obj) {
+        var ListCount = listcount.value;
+        var PreviewHlistsize = $('#HListUser').value();
+        
+        function PreviewOption(obj) {
             if (obj.value == "OFF") {
                 document.getElementById("PreviewHSizeDiv").style.display = "none";
                 document.getElementById("PreviewWSizeDiv").style.display = "none";
@@ -95,8 +98,8 @@
             <tr>
                 <th><spring:message code="ezBoard.t431" /></th>
                 <td>
-                    <select id="PreviewMode" style="WIDTH: 100px" onchange="PrevieOption(this);">
-                        <option value="OFF" ><spring:message code="ezBoard.t00011" /></option>
+                    <select id="PreviewMode" style="WIDTH: 100px" onchange="PreviewOption(this);">
+                        <option value="OFF" selected><spring:message code="ezBoard.t00011" /></option>
                         <option value="H" selected><spring:message code="ezBoard.t00012" /></option>
                         <option value="W" selected><spring:message code="ezBoard.t00013" /></option>
                     </select>
@@ -146,6 +149,7 @@
                 </td>
             </tr>
         </table>
+        ${boardListConfig.PREVIEWWLIST}
     <br />
     <div style="width:623px;text-align:center;">
         <a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
