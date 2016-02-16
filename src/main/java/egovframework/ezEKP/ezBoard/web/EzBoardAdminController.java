@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezBoard.web;
 
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,10 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzBoardAdminController {
 	
 	@Autowired
-	private CommonUtil commonUtil;	
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
 
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
@@ -35,9 +39,9 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardLeft.do")
-	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
-	
+	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{	
 		LoginVO user = commonUtil.userInfo(userID);
+		String serverName = config.getProperty("config.ServerName");
 		
 		/*
 		String redirectBoardGroupID = "";
@@ -58,9 +62,15 @@ public class EzBoardAdminController {
 		model.addAttribute("redirectBoardID", redirectBoardID);
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID); */
 		model.addAttribute("user", user);
+		model.addAttribute("serverName", serverName);
 		
 		return "admin/ezBoard/boardLeft";
 	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardRight.do")
+	public String boardRight(HttpServletRequest request, Model model) throws Exception{		
+		return "admin/ezBoard/boardRight";
+	}	
 	
 	@RequestMapping(value="/admin/ezBoard/get_Admin_TopBoardList.do")
 	public String get_Admin_TopBoardList(HttpServletRequest request, Model model) throws Exception{		
@@ -69,6 +79,20 @@ public class EzBoardAdminController {
 
 		model.addAttribute("topBoardList", list);
 		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardGroupCreate.do")
+	public String boardGroupCreate(HttpServletRequest request, Model model) throws Exception{		
+		String lang = config.getProperty("config.primary");
+		String use_multiData = config.getProperty("config.Use_MultiData");
+		String lang_primary = config.getProperty("config.lang_Primary" + lang);
+		String lang_secondary = config.getProperty("config.lang_Secondary" + lang);
+
+		model.addAttribute("use_multiData", use_multiData);
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		
+		return "admin/ezBoard/boardGroupCreate";
 	}
 	
 }
