@@ -15,7 +15,7 @@
 	            GetMyBoardItem();
 	        }
 	        function GetMyBoardItem() {
-	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do", true);
+	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=USE", true);
 	            xmlhttp.onreadystatechange = GetMyBoardItem_event;
 	            xmlhttp.send();
 	        }
@@ -24,13 +24,15 @@
 	        function GetMyBoardItem_event() {
 	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	            try {
-	            	var resutList = JSON.parse(xmlhttp.responseText);
-	                if (resutList.length != 0) {
-	                    for (var i = 0; i < resutList.length; i++) {
-	                        var BoardName = resutList.resultList.length;
-	                        var BoardName2 = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
-	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
-	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
+	            	var result = JSON.parse(xmlhttp.responseText);
+	            	alert(result.parentName);
+	            	alert(result.resultList.length);
+	                if (result.resultList.length != 0) {
+	                    for (var i = 0; i < result.resultList.length; i++) {
+	                        var BoardName = result.resultList[i].boardName;
+	                        var BoardName2 = result.resultList[i].boardName2;
+	                        var BoardId = result.resultList[i].boardId;
+	                        var BoardType = result.resultList[i].guBun;
 	                        var _p = document.createElement("P");
 	                        _p.id = "FBoard_sub" + i;
 	
@@ -189,7 +191,7 @@
 	                document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
 	            else {
 	                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-	                    document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/New_BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=N" + "&AdminType=y&ButtonHidden=N";
+	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=N" + "&AdminType=y&ButtonHidden=N";
 	                }
 	                else
 	                    document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
