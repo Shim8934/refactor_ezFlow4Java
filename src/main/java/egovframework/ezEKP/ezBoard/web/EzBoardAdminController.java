@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -13,34 +14,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzBoardAdminController {	
+public class EzBoardAdminController {
 	
-	@Resource(name="loginService")
-	private LoginService loginService;
-	
-	@Resource(name="crypto") 
-    private EgovFileScrty egovFileScrty;
+	@Autowired
+	private CommonUtil commonUtil;	
 
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
 	
 	@Resource(name="EzBoardAdminService")
-	private EzBoardAdminService ezBoardAdminService;	
+	private EzBoardAdminService ezBoardAdminService;
 	
-	@RequestMapping(value="/ezBoardAdmin/left_boardSTD.do")
-	public String left_boardSTD_admin(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
-		
-		String id = egovFileScrty.getUserID(userID);		
-		
-		loginVO.setId(id);
-		loginVO.setPassword("LOGIN");		
-		LoginVO user = loginService.selectUser(loginVO);
+	@RequestMapping(value="/admin/ezBoard/boardMain.do")
+	public String boardMain(HttpServletRequest request, Model model) throws Exception{		
+		return "admin/ezBoard/boardMain";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardLeft.do")
+	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
+	
+		LoginVO user = commonUtil.userInfo(userID);
 		
 		/*
 		String redirectBoardGroupID = "";
@@ -62,10 +59,10 @@ public class EzBoardAdminController {
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID); */
 		model.addAttribute("user", user);		
 		
-		return "admin/ezBoard/left_boardStd";
+		return "admin/ezBoard/boardLeft";
 	}
 	
-	@RequestMapping(value="/ezBoardAdmin/get_Admin_TopBoardList.do")
+	@RequestMapping(value="/admin/ezBoard/get_Admin_TopBoardList.do")
 	public String get_Admin_TopBoardList(HttpServletRequest request, Model model) throws Exception{		
 		String parentBoardID = request.getParameter("boardType");
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID);

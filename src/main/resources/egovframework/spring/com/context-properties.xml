@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-
+	xmlns:util="http://www.springframework.org/schema/util"    
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	 					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    
 	<!-- 프로퍼티 정보 설정 -->
 	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
 		<property name="properties">
@@ -21,4 +23,7 @@
         <property name="pbm" value="${CRYPTO.pbm}" />
         <property name="pre" value="${CRYPTO.pre}"/>        
     </bean>
+    
+    <util:properties id="config" location="classpath:/egovframework/egovProps/config.properties" />
+    
 </beans>	

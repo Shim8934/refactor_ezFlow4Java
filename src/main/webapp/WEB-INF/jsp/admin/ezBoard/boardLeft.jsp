@@ -177,7 +177,7 @@
 					type : "GET",
 					dataType : "json",
 					async : false,
-					url : "/ezBoardAdmin/getSubBoards.do",	        			
+					url : "/admin/ezBoard/getSubBoards.do",	        			
 					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
 					success: function(result){
 						
@@ -298,7 +298,7 @@
 				type : "POST",
 				dataType : "json",
 				async : false,
-				url : "/ezBoardAdmin/get_Admin_TopBoardList.do",	        			
+				url : "/admin/ezBoard/get_Admin_TopBoardList.do",	        			
 				data : { boardType : "top"},
 				success: function(result){
 					$.each(result, function(idx, item){	        					
@@ -320,7 +320,7 @@
 				}        			
 			});
 			
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");		
+			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>	    
 	</body>
 </html>
