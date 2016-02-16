@@ -474,8 +474,8 @@
 		    function TempBoard() {
 		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Temp.aspx";
 		    }
-		    function board_config() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/Board_config.aspx";
+		    function boardConfig() {
+		        window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";
 		    }
 		    function ReservationItem_onclick() {
 		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardReservedItemList_Cross.aspx?";
