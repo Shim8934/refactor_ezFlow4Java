@@ -519,7 +519,7 @@
 	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	        </ul>
 	        <h3>
-	        <span onclick="board_config()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
+	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
 <%-- 	    <% if( _ApplyFlag == "OK") { %> --%>
 <!--         <h3> -->
