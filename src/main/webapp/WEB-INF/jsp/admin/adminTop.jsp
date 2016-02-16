@@ -9,10 +9,12 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){				
-				// Use_Portal != YES 일때
-				// window.open("index_personal.aspx","bottom")
-				// Use_Portal == YES 일때
-				window.open("/admin/ezBoard/boardMain.do", "bottom");
+				if("${use_portal}" != 'Y'){
+					window.open("index_personal.aspx","bottom")
+				}else{
+					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
+					window.open("/admin/ezBoard/boardMain.do", "bottom");
+				}
 			}
 			function menu_change(width, e){
 		        var menuname = e.target.id;
@@ -80,20 +82,32 @@
 		<form method="post">
 			<h1 title="logo"></h1>
 			<div id="adminmenu">
-		    	<ul>
-		      	<!-- Use_Portal == Yes 일때 menu10 사용 -->
-		      		<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>		      
+		    	<ul>		    		
+		      		<c:if test="${use_portal == 'Y'}">
+		      			<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
+		      		</c:if>			      
 		      		<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
 		      		<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>      
 		      		<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
 		      		<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      		<li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li>
-		      		<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t26" /></span></li>
+		      		<c:if test="${use_approvalG == 'Y'}"
+		      			<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t26" /></span></li>
+		      		</c:if>	
 		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>          
 		      		<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      		<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>		      		
+		      		<c:if test="${use_ezKMS == 'Y'}"
+		      			<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
+		      		</c:if>
+		      		<c:if test="${use_ezDMS == 'Y'}"
+		      			<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
+		      		</c:if>		      		
 		      		<li><span id="menu20" onClick="menu_change(920, event);"><spring:message code="main.t10010" /></span></li>
+		      		<c:if test="${use_mobileMgmt == 'Y'}"
+		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li>
+		      		</c:if>		      		
 		    	</ul>
 		  	</div>		  	
 		</form>		

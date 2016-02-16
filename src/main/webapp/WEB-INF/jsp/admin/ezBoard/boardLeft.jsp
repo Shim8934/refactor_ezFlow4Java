@@ -23,12 +23,12 @@
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
 	        var SelectedBoardGroupID = "";
-	        var SS_ServerName = "test.yoonz44.com";
+	        var SS_ServerName = "${serverName}";
 	        var xmlDom_treeview = createXmlDom();
 	        var curMenuIndex = 1;
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
-	        	        
+    
 	        //var RedirectBoardGroupID = "${redirectBoardGroupID}";
 	        //var RedirectBoardID = "${redirectBoardID}";	   
  
@@ -212,7 +212,7 @@
 	        }
 
 	        function OpenRightMenu(pIndex) {
-
+alert(pIndex);
 	            if (SelectedBoardID == "" && pIndex == 5 && pIndex != 8) {
 	                alert("<spring:message code='ezBoard.t56' />");
 	                return;
@@ -232,7 +232,7 @@
 
 	            switch (pIndex) {
 	                case 1:
-	                    window.open("BoardGroupCreate.aspx", "board_main");
+	                    window.open("/admin/ezBoard/boardGroupCreate.do", "board_main");
 	                    break;
 	                case 2:
 	                    window.open("BoardCreate.aspx?ParentBoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
