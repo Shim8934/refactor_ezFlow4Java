@@ -36,10 +36,10 @@
             var pSelectTab = obj.getAttribute("divname");
             switch (pSelectTab) {
                 case "BoardEnv_div1":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/board_general.do";
+                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardGeneral.do";
                     break;
                 case "BoardEnv_div2":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/board_favorite.do";
+                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardFavorite.do";
                     break;
             }
         }
