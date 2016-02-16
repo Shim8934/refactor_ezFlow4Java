@@ -5,12 +5,13 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">	   	
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 		<title><spring:message code="ezBoard.t52" /></title>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "${user.id}";
 	        var SSUserName = "${user.displayName1}";
@@ -27,18 +28,10 @@
 	        var curMenuIndex = 1;
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
-	        
-	        /*
-	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
-	        var RedirectBoardID = "${redirectBoardID}";	   
-		    window.onload = function () {  
-		    	if (RedirectBoardID != "") {
-	                if (RedirectBoardGroupID != "") {
-	                    BoardRedirect();
-	                    return;
-	                }	                
-	            }
-		    } 
+	        	        
+	        //var RedirectBoardGroupID = "${redirectBoardGroupID}";
+	        //var RedirectBoardID = "${redirectBoardID}";	   
+ 
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");
 		        for (var i = 0 ; i < spans.length ; i++) {
@@ -126,7 +119,7 @@
 	                }
 	            }
 	        }
-		    */
+		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
 	            var xmlRtn = createXmlDom();
 	            var TreeIdx = pNodeID;
@@ -159,7 +152,7 @@
 	            var treeView = new TreeView();
 	            treeView.SetID("TreeView" + obj);
 	            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
-	            treeView.SetNodeClick("TreeCtrl_onNodeClick");
+	            treeView.SetNodeClick("TreeCtrl_onNodeClick");            
 	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 	            treeView.DataBind(obj + "obj");
 	        }
@@ -167,7 +160,7 @@
 	        function SetTreeConfig() {
 	            try{
 	                var xmlHTTP = createXMLHttpRequest();
-	                xmlHTTP.open("GET", "/myoffice/ezBoardSTD/controls/organtree_config2.xml", false);
+	                xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
 	                xmlHTTP.send();
 
 	                if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -180,21 +173,16 @@
 	        }
 
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
-	            try{
-	                var xmlHTTP3 = createXMLHttpRequest();
-	                xmlHTTP3.open("GET", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
-	                xmlHTTP3.send();
-
-	                if (xmlHTTP3.readyState == 4 && xmlHTTP3.status == 200) {                    
-	                    var ret = xmlHTTP3.responseXML;
-	                    xmlHTTP3 = null;
-	                    return ret;
-	                } else {
-	                    return null;
-	                }
-	            } catch (e) {
-	                alert(e);
-	            }
+	        	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezBoardAdmin/getSubBoards.do",	        			
+					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
+					success: function(result){
+						
+					}        			
+				});	            
 	        }
 
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -286,32 +274,13 @@
 	            else {
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
-	        }
+	        }	        
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
 	    <div id="left">
 	        <div class="left_admin"><spring:message code="ezBoard.t58" /></div>
-	        <div id="TopBoard">
-	        	<script type="text/javascript">
-	                xmlhttp.open("POST", "/ezBoardAdmin/get_Admin_TopBoardList.aspx?boardType=top", false);
-	                xmlhttp.send();
-	                var strHTML = "";
-	                if (xmlhttp.status == 200) {
-	                    var listdom = xmlhttp.responseXML;
-	                    for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
-	                        strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + i + "' value='" + getNodeText(listdom.getElementsByTagName("BOARDID").item(i));
-	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + i + "','" + getNodeText(listdom.getElementsByTagName("BOARDID").item(i)) + "')\">";
-	                        strHTML += getNodeText(listdom.getElementsByTagName("BOARDNAME").item(i)) + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
-	                        strHTML += "</div></ul>";
-	                    }
-	                    document.getElementById("TopBoard").innerHTML = strHTML;
-	                    if (listdom.getElementsByTagName("ROW").length > 0)
-	                        TopBoard_onclick("TreeCtrl0", getNodeText(listdom.getElementsByTagName("BOARDID").item(0)));
-	                }
-	            </script>
-	        </div>	
+	        <div id="TopBoard"></div>	
 	        <h3><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></h3>
@@ -321,8 +290,37 @@
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span></h3>
 		</div>
-	    <script type="text/javascript">
-	    	initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script>
+		<script>		
+	    	var strHTML = "", data = "";
+			var cnt = 0;	        		
+			
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				async : false,
+				url : "/ezBoardAdmin/get_Admin_TopBoardList.do",	        			
+				data : { boardType : "top"},
+				success: function(result){
+					$.each(result, function(idx, item){	        					
+						$.each(item, function(idx, i){
+							strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
+	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
+	                        strHTML += i.boardName + "</div></h2>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
+	                        strHTML += "</div></ul>";
+						});
+						cnt = item.length;
+						data = item[0].boardId;
+					});
+					$("#TopBoard").html(strHTML);
+	
+	                if (cnt > 0){         	
+						TopBoard_onclick("TreeCtrl0", data);
+	                }
+				}        			
+			});
+			
+			initToggleList(document.getElementById("left"), "h2", "ul", "li");		
+		</script>	    
 	</body>
 </html>

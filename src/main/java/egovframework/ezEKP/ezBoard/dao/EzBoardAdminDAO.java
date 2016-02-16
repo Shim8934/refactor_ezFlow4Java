@@ -81,5 +81,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@SuppressWarnings("unchecked")
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {
+		// TODO Auto-generated method stub
+		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
+	}
+	
+	
 
 }

@@ -62,4 +62,13 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) {
 		return ezBoardAdminDAO.getMyBoardTree_get3(userID,pRootTreeID);
 	}
+
+	@Override
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception {
+		// TODO Auto-generated method stub
+		return ezBoardAdminDAO.get_Admin_TopBoardList(parentBoardID);
+		
+	}
+	
+	
 }

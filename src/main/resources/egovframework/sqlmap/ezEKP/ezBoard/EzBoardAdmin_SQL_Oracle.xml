@@ -124,5 +124,19 @@
 		FROM 
 			ezBoardSTD.TBL_BOARD_APPRLIST
 	</select>
+	
+	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="java.lang.String">
+		SELECT 
+			boardid,
+			boardname,
+			boardname2,
+			'' as treeViewOrder,
+			'' as boardColor,
+			'' as guBun
+		FROM 
+			ezBoardSTD.TBL_Board_BoardInfo
+		WHERE
+			parentboardid = #parentBoardID#
+	</select>
 
 </sqlMap>

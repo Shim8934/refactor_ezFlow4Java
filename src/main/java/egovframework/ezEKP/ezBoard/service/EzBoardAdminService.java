@@ -8,22 +8,24 @@ import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 public interface EzBoardAdminService {
 
-	String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception;
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception;
 
-	List<EzBoardVO> checkApplyUser() throws Exception;
+	public List<EzBoardVO> checkApplyUser() throws Exception;
 
-	String getBoardTree_Get1(String pStrLang, String string) throws Exception;
+	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
 
-	String getDeptFullPath(String pDeptID, String string) throws Exception;
+	public String getDeptFullPath(String pDeptID, String string) throws Exception;
 
-	List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
+	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
 
-	List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception;
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception;
 
-	void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;
+	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;
 
-	int checkIfLeafBoard(String pBoardID) throws Exception;
+	public int checkIfLeafBoard(String pBoardID) throws Exception;
 
-	List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID);
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID);
+	
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
 
 }
