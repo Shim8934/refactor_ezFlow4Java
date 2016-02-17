@@ -4,13 +4,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
     <link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
     <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     <script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<title>Insert title here</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script type="text/javascript">
+	 $(document).ready(function() {
+     	$('#sendBtn').on('click', function() {
+     		var listCount = document.getElementById("listcount").value;
+     		var PreviewMode = document.getElementById("PreviewMode").value;
+     		var PreviewWList = document.getElementById("WListUser").value;
+     		var PreviewWContent = document.getElementById("WPreUser").value;
+     		var PreviewHList = document.getElementById("HListUser").value;
+     		var PreviewHContent = document.getElementById("HPreUser").value;
+   		  	alert("변경 되었습니다.");
+   		  	alert(PreviewMode);
+             $('#form').submit();
+     	 	});
+          }); 
+	
          document.onselectstart = function () { return false; };
         window.onload = function () {
             if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -21,8 +36,6 @@
                 document.body.style.UserSelect = 'none';
             }
         }
-        var ListCount = listcount.value;
-        var PreviewHlistsize = $('#HListUser').value();
         
         function PreviewOption(obj) {
             if (obj.value == "OFF") {
@@ -72,26 +85,27 @@
             xmlHTTP.send(xmlpara);
 
             if (xmlHTTP.status == 200 && xmlHTTP.responseText == "OK")
-                alert(<spring:message code="ezBoard.t0013" />)
+                alert("")
             else
-                alert(<spring:message code="ezBoard.t0013" />);
+                alert("");
         }
+             
     </script>
 </head>
 <body style="margin-left: 10px; margin-right: 10px;">
+	<form id=form action="${pageContext.request.contextPath }/ezBoard/board_generallist_save.do" method="post" enctype="multipart/form-data" >
     <h2 class="h2_dot"><spring:message code="ezBoard.t0006" /></h2>
     <span class="txt" style="margin-left: 13px;" >* <spring:message code="ezBoard.t0007" /></span>
-        <br />
+        <br />    
         <table class="content" style="width: 623px; margin-left: 13px;">
             <tr>
                 <th><spring:message code="ezBoard.t10021" /></th>
                 <td>
+                
                     <select id="listcount" style="WIDTH: 100px">
-                      <option value='10'  selected >10</option>
-                        <option value='20' >20</option>
-                        <option value='30' >30</option>
-                        <option value='40' >40</option>
-                        <option value='50' >50</option>
+                     
+                      <option value='${boardListConfig.LISTCOUNT}'  selected >${boardListConfig.LISTCOUNT}</option>
+                        
                     </select>
                     <spring:message code="ezBoard.t00019" /></td>
             </tr>
@@ -149,11 +163,14 @@
                 </td>
             </tr>
         </table>
-        ${boardListConfig.PREVIEWWLIST}
+        
     <br />
     <div style="width:623px;text-align:center;">
-        <a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
+         <input type="button" id="sendBtn" value="저장" />
+         <input type="reset"  value="취소" />
+        <!--  <a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>-->
         <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
     </div>
+    </form>
 </body>
 </html>
