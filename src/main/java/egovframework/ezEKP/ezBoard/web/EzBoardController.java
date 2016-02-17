@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezBoard.web;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,9 @@ public class EzBoardController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -119,6 +124,7 @@ public class EzBoardController {
         }
         //Library 연결 부분 Method화
         List<BoardTreeVO> boardTreeVOList = getBoardTree(pRootBoardID,pUserID,pDeptID,pCompanyID,pMode,Integer.parseInt(pSubFlag),pSelectBy,pExcludeBoardID,getMultiData(strLang));
+        
         modelMap.addAttribute("boardTreeVOList", boardTreeVOList);
         modelMap.addAttribute("userInfo", loginVO);
         
@@ -146,7 +152,7 @@ public class EzBoardController {
 //        		map.addAttribute("retValue", retValue);
 //          	return "ezBoard/left_boardStd";
 //        }
-        String pAccessID = pUserID + "," + ezBoardAdminService.getDeptFullPath(pDeptID, "Top") + ",everyone";
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
         //ActiveDirectory 부분 삭제해야할듯? @수정요망@ 
 //        String strRollInfo = getPropertyValue(pUserID, "extensionattribute1");
         
@@ -166,28 +172,23 @@ public class EzBoardController {
             if(tempstr.length() != 0)
             	tempstr = tempstr.substring(0, tempstr.length()-1);
             
-            if (tempstr.indexOf(";") > -1)
-            {
-                for (int r = 0; r < tempstr.split(";").length - 1; r++)
-                {
+            if (tempstr.indexOf(";") > -1){
+                for (int r = 0; r < tempstr.split(";").length - 1; r++){
                    strForbiddenBoardIDList += tempstr.split(";")[r].trim() + ";";
                 }
             }
-            
-//            if (pAccessID.split(";")[i].trim() != pUserID && pAccessID.split(";")[i].trim() != pCompanyID && pAccessID.split(";")[i].trim() != pDeptID)
-//            {
-//                for (int j = 0; j < brdBoardTreeList.size(); j++)
-//                {
-//                    if (pAccessID.split(",")[i].trim() != "top")
-//                    {
-//                    	if (brdBoardTreeList.get(j).getBoardGroupAcl().toUpperCase() == "N")
-//                        {
-//                    		brdBoardTreeList.remove(j);
-//                            j--;
-//                        }
-//                    }
-//                }
-//            }
+            if(brdBoardTreeList.get(0).getBoardGroupAcl() != null){
+            	if (pAccessID.split(";")[i].trim() != pUserID && pAccessID.split(";")[i].trim() != pCompanyID && pAccessID.split(";")[i].trim() != pDeptID){
+            		for (int j = 0; j < brdBoardTreeList.size(); j++){
+            			if (pAccessID.split(",")[i].trim() != "top"){
+            				if (brdBoardTreeList.get(j).getBoardGroupAcl().toUpperCase() == "N"){
+            					brdBoardTreeList.remove(j);
+            					j--;
+            				}
+            			}
+            		}
+            	}
+            }
         }
 
         for (int i = 0; i < brdBoardTreeList.size(); i++)
@@ -281,7 +282,7 @@ public class EzBoardController {
         return rtv;
     }
 	
-   @RequestMapping("/ezBoard/getMyBoards_Config.do")
+   @RequestMapping(value="/ezBoard/getMyBoards_Config.do")
    public void getMyBoards_Config(HttpServletRequest req){
 	   String UserID = "yoonz44";
 	   String lang = "";
@@ -421,97 +422,41 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
 
         return sb.toString();
 	}
-	@RequestMapping(value = "/ezBoard/boardItemList_new.do")
-	public String boardItemList_new(@CookieValue("VPNLogin") String vpnLogin, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO,BoardPropertyVO boardPropertyVO, @CookieValue("userID") String userID, ModelMap modelMap) throws Exception{
-		String pBoardID = "";
-		String pBoardName = "";
-        String pBoardName2 = "";
-		String pSortBy = "";
-		int totalCount = 0;
-		int pPage = 0;
-//		XmlDocument xmldoc = new XmlDocument();
-		int totalPage = 0;
-		String strXML = "";
-        String listInfo = "";
-		String gubun = "";
-		String url = "";
-		String showAdjacent = "";
-		String isVPN = "";
-//        System.Web.UI.WebControls.DataList DataList1; //포토게시판 관련 추가 멤버필드
-        String pageNavi = "";
-        int pPageCnt = 10;
-        String listCount = "";
-	    String use_ocs = "";
+	@RequestMapping(value="/ezBoard/boardItemList_new.do")
+	public String boardItemList_new(HttpServletRequest request, HttpServletResponse response, LoginVO loginVO,BoardPropertyVO boardPropertyVO, @CookieValue("userID") String userID, Model model) throws Exception{
+		String pBoardID = boardPropertyVO.getBoardID();
+        String use_ocs = config.getProperty("config.Use_OCS");; 
+        String use_Editor = config.getProperty("config.editor");; 
+        String use_IE11Browser = config.getProperty("config.IE11editor");;
         String use_oneLineCount = "";
-        int noticeCNT = 0;
-//        XmlDocument xmlnotice = new XmlDocument();
-        String pBoardType = "";
-        int pStartRow = 0;
-        int pEndRow = 0;
-        String pLang = "";
-        String boardName = "";
-        String brdName = "";
-        String use_Editor = "";
-        String use_IE11Browser = "";
-        String adminType = "";
-        String buttonHidden = "N";
-        String noneActiveX = "";
-        try
-        {
-            noneActiveX = "YES";
-            use_ocs = "YES";
-            use_Editor = "";
-            if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && "".equals("CK"))
-                use_IE11Browser = "CK";
-            
+        
+        loginVO = commonUtil.userInfo(userID);
+        if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK"))
+            use_IE11Browser = "CK";
+        
 //            response.Buffer = true;
-            if (vpnLogin != null)
-                isVPN = vpnLogin;
-
-            if (request.getParameter("BoardID")== null) return "";
-            pBoardID = request.getParameter("BoardID").toString();
-
-            if (request.getParameter("BoardType") == null) return "";
-            pBoardType = request.getParameter("Boardtype").toString();
-            pLang = "1";
-
-            if (request.getParameter("AdminType") != null)
-                adminType = request.getParameter("AdminType").toString();
-
-            if (request.getParameter("ButtonHidden") != null)
-                buttonHidden = request.getParameter("ButtonHidden").toString();
-
-            if (request.getParameter("BoardName") != null)
-                brdName = request.getParameter("BoardName").toString();
-
-            loginVO = commonUtil.userInfo(userID);
-            BoardPropertyVO boardInfo = getBoardInfo(pBoardID,loginVO);
-            boardName = boardInfo.getBoardName();
-            String ret = "";
-            boardPropertyVO = getBoardProperty(pBoardID);
-            if (boardPropertyVO != null)
-                use_oneLineCount = "YES";
-            else
-                use_oneLineCount = "NO";
-            
-            gubun = boardInfo.getGuBun();
-            if (boardInfo.getListViewFG()== "true")
-            {
-                pBoardName = boardInfo.getBoardName();
-
-                if (request.getParameter("SortBy") != null)
-                    pSortBy = request.getParameter("SortBy");
-
-                if (request.getParameter("Page") == null)
-                    pPage = 1;
-                else
-                    pPage = Integer.parseInt((request.getParameter("Page")));
-            }
-            url = boardInfo.getUrl();
-        }catch(Exception e){
-        	
+//            if (vpnLogin != null)
+//                isVPN = vpnLogin;
+        boardPropertyVO = getBoardInfo(pBoardID,loginVO);
+        boardPropertyVO = getBoardProperty(pBoardID);
+        if (boardPropertyVO != null)
+            use_oneLineCount = "YES";
+        else
+            use_oneLineCount = "NO";
+        
+        if (boardPropertyVO.getListViewFG()== "true")
+        {
+            if (request.getParameter("Page") == null)
+            	boardPropertyVO.setPage(1);
         }
-        return "/ezBoard/boardItemList_new";
+        model.addAttribute("boardInfo", boardPropertyVO);
+        model.addAttribute("userInfo", loginVO);
+        model.addAttribute("use_ocs", use_ocs);
+        model.addAttribute("use_Editor", use_Editor);
+        model.addAttribute("use_IE11Browser", use_IE11Browser);
+        model.addAttribute("use_oneLineCount", use_oneLineCount);
+        
+        return "ezBoard/boardItemList_new";
 	}
 
 	// OCS Presence
@@ -553,35 +498,6 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
     {
         BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(pBoardID);
         return boardPropertyVO;
-        //사용하지 않아서 주석 해놨음 바꾼게 아까워서
-//        StringBuilder sb = new StringBuilder();
-//
-//        sb.append("<NODES>");
-//        sb.append("<NODE>");
-//        sb.append("<ITEMEXPIRES>" + boardPropertyVO.getItemExpires() + "</ITEMEXPIRES>");
-//        sb.append("<ATTACHLIMIT>" + boardPropertyVO.getAttachSizeLimit() + "</ATTACHLIMIT>");
-//        sb.append("<DESCRIPTION><![CDATA[" + boardPropertyVO.getBoardDescription() + "]]></DESCRIPTION>");
-//        sb.append("<BOARDNAME><![CDATA[" + boardPropertyVO.getBoardName() + "]]></BOARDNAME>");
-//        sb.append("<BOARDNAME2><![CDATA[" + boardPropertyVO.getBoardName2() + "]]></BOARDNAME2>");
-//        sb.append("<ALERTPOSTITEM><![CDATA[" + boardPropertyVO.getAlertPostItem() + "]]></ALERTPOSTITEM>");
-//        sb.append("<REPLYNOTIFY><![CDATA[" + boardPropertyVO.getReplyNotify() + "]]></REPLYNOTIFY>");
-//        sb.append("<URL><![CDATA[" + boardPropertyVO.getUrl() + "]]></URL>");
-//        sb.append("<GUBUN><![CDATA[" + boardPropertyVO.getGuBun() + "]]></GUBUN>");
-//        sb.append("<DELETEAFTER><![CDATA[" + boardPropertyVO.getDeleteAfter() + "]]></DELETEAFTER>");
-//        sb.append("<BOARDCOLOR><![CDATA[" + boardPropertyVO.getBoardColor() + "]]></BOARDCOLOR>");
-//        sb.append("<BOARDNO><![CDATA[" + boardPropertyVO.getBoardNo() + "]]></BOARDNO>");
-//        // 20090407 : 포틀릿게시판 기능 추가
-//        sb.append("<PORTLET><![CDATA[" + boardPropertyVO.getPortlet() + "]]></PORTLET>");
-//        // 2011-04 : 한줄 답변 옵션화 처리.
-//        sb.append("<ONELINEREPLY>" + boardPropertyVO.getOneLineReply() + "</ONELINEREPLY>");
-//        sb.append("<BACKGROUND>" + boardPropertyVO.getBackGround() + "</BACKGROUND>");
-//        sb.append("<FORMFLAG>" + boardPropertyVO.getFormFlag() + "</FORMFLAG>");
-//        // 승인 게시판
-//        sb.append("<APPRFLAG>" + boardPropertyVO.getApprFlag() + "</APPRFLAG>");
-//        sb.append("<APPRMAILFLAG>" + boardPropertyVO.getApprMailFlag() + "</APPRMAILFLAG>");
-//        sb.append("</NODE>");
-//        sb.append("</NODES>");
-//        return sb.toString();
     }
     
     // 게시판의 정보를 가져오는 함수
@@ -591,7 +507,7 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
 		boardInfo.setSs_board_maxRows(20);
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
-		if (pBoardID == "") 
+		if (pBoardID == "")
 		{
 			boardInfo.setBoardName(egovMessageSource.getMessage("t229"));		
 			return null;
@@ -607,16 +523,18 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
 	        else
 	            deptPathOrgan+=","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim();
 	    }
-	    String userDeptPath = deptPathOrgan+",everyone";
+	    
+//	    String userDeptPath = deptPathOrgan+",everyone";
+	    
+//		for (int i=0; i<userDeptPath.split(",").length; i++)
+//		{
+//			boardInfo = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim());
+//			if(boardInfo == null)
+//				break;
+//		}
 		
-		for (int i=0; i<userDeptPath.split(",").length; i++)
-		{
-			boardInfo = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim());
-			if(boardInfo == null)
-				break;
-		}
-
-		boardInfo.setBoardGroupAdmin_FG(ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID()));
+		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
          if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	// 새 게시 게시판인 경우
 		{
 			boardInfo.setAccess_FG("1");
@@ -647,7 +565,7 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
 		}
-		else if (boardInfo == null)
+		else if (boardInfo.equals(null))
 		{
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");

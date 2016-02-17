@@ -22,8 +22,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_pUserID", pUserID);
 		map.put("v_pDeptID", pDeptID);
 		map.put("v_pCompanyID", pCompanyID);
-		
-		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		int ret = (int) map.get("v_pCount");
 		if(ret > 0 ){
 			return "OK";
 		}else{
@@ -40,10 +40,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_STRLANG", pStrLang);
 		map.put("v_PQUERY", pQuery);
 		return (String) select("EzBoardAdminDAO.getBoardTree_Get1", map);
-	}
-	public String getDeptFullPath(String pDeptID,String string) throws Exception{
-		map.put("v_CN", pDeptID);
-		return (String) select("EzBoardAdminDAO.getDeptFullPath", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,9 +74,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 //		update("EzBoardAdminDAO.getBoardTree_Set", map);
 	}
 
-	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
+		map.put("v_PUSERID", userID);
+		map.put("v_PTREEUPPER", pRootTreeID);
+		return (List<MyFavoriteVO>) list("EzBoardAdminDAO.getMyBoardTree_get3", map);
 	}
 	@SuppressWarnings("unchecked")
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {
@@ -88,7 +86,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
 	}
 
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) {
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);

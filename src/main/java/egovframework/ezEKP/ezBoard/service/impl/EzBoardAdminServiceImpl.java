@@ -35,11 +35,6 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public String getDeptFullPath(String pDeptID, String string) throws Exception{
-		return ezBoardAdminDAO.getDeptFullPath(pDeptID, string);
-	}
-
-	@Override
 	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
 		return ezBoardAdminDAO.getBoardTree_Get2(pAccessID, pRootBoardID);
 	}

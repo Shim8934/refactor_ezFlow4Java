@@ -90,6 +90,8 @@ public class LoginVO implements Serializable{
 	private String rollInfo;
 	/** 언어*/
 	private String primary;
+	/** 다국어*/
+	private String lang;
 
 	public String getId() {
 		return id;
@@ -288,6 +290,12 @@ public class LoginVO implements Serializable{
 	}
 	public void setPrimary(String primary) {
 		this.primary = primary;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
 	}	
 	
 }

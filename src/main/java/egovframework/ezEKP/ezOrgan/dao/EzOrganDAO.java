@@ -12,16 +12,26 @@ public class EzOrganDAO extends EgovAbstractDAO {
 
 	Map<String, Object> map = new HashMap<String, Object>();
 	
-	public String getPropertyValue(String userid, String propName) {
+	public String getPropertyValue(String userid, String propName) throws Exception{
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
 		return (String) select("EzOrganDAO.getPropertyValue", map);
 	}
 
-	public String getSIPUriList(String pCNList, String eMailList) {
+	public String getSIPUriList(String pCNList, String eMailList) throws Exception{
 		map.put("iv_CNLIST", pCNList);
 		map.put("iv_EMAILLIST", eMailList);
 		return (String) select("EzOrganDAO.getSIPUriList", map);
+	}
+
+	public String getDeptFullPath(String deptID) throws Exception{
+		return (String) select("EzOrganDAO.getDeptFullPath", deptID);
+	}
+
+	public String getPropertyList(String userID, String primary) {
+		map.put("userID", userID);
+		map.put("primary", primary);
+		return (String) select("EzOrganDAO.getDeptInfo", map);
 	}
 	
 }

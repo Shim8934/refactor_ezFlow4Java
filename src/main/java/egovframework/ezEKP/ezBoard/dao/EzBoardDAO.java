@@ -17,13 +17,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	Map<String, Object> map = new HashMap<String, Object>();
 
 	@SuppressWarnings("unchecked")
-	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) {
+	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
 		map.put("redirectBoardID", redirectBoardID);
 		return (List<EzBoardVO>) list("EzBoardDAO.getLeft_BoardSTD", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) {
+	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
 		return (List<MyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
@@ -35,13 +35,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", map);
 	}
 
-	public String get_parentBoardName(String boardIdList, int boardIdListCount) {
+	public String get_parentBoardName(String boardIdList, int boardIdListCount) throws Exception{
 		map.put("v_BOARDIDLIST", boardIdList);
 		map.put("v_BOARDCOUNTLIST", boardIdListCount);
 		return (String) select("EzBoardDAO.get_parentBoardName", map);
 	}
 
-	public BoardPropertyVO getBoardProperty(String pBoardID) {
+	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
 		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
 	}
 	

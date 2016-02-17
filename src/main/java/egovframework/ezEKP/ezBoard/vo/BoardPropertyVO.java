@@ -106,6 +106,16 @@ public class BoardPropertyVO {
 	private String attachLimit;
 	/** 메일 여부*/
 	private String apprMail_FG;
+	/** 게시판유형 Y or N*/
+	private String boardType;
+	/** 관리자 유형 Y or N*/
+	private String adminType;
+	/** 버튼 숨김여부 Y or N*/
+	private String buttonHidden;
+	/** 정렬 기준*/
+	private String sortBy;
+	/** 페이지 번호*/
+	private int page;
 	
 	public String getListViewFG() {
 		return listViewFG;
@@ -406,6 +416,36 @@ public class BoardPropertyVO {
 	}
 	public void setApprMail_FG(String apprMail_FG) {
 		this.apprMail_FG = apprMail_FG;
+	}
+	public String getBoardType() {
+		return boardType;
+	}
+	public void setBoardType(String boardType) {
+		this.boardType = boardType;
+	}
+	public String getAdminType() {
+		return adminType;
+	}
+	public void setAdminType(String adminType) {
+		this.adminType = adminType;
+	}
+	public String getButtonHidden() {
+		return buttonHidden;
+	}
+	public void setButtonHidden(String buttonHidden) {
+		this.buttonHidden = buttonHidden;
+	}
+	public String getSortBy() {
+		return sortBy;
+	}
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
 	}
 	
 }

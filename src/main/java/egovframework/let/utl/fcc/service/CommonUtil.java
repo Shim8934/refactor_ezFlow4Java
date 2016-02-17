@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -49,6 +50,9 @@ public class CommonUtil {
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
+	
 	public LoginVO userInfo(String userID) throws Exception {		
 		String id = egovFileScrty.getUserID(userID);
 		
@@ -56,6 +60,7 @@ public class CommonUtil {
 		login.setId(id);
 		login.setPassword("LOGIN");		
 		LoginVO user = loginService.selectUser(login);
+		user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 		
 		return user;
 	}	

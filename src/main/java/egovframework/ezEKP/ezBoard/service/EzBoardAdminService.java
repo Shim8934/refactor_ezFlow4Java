@@ -15,8 +15,6 @@ public interface EzBoardAdminService {
 
 	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
 
-	public String getDeptFullPath(String pDeptID, String string) throws Exception;
-
 	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
 
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception;
