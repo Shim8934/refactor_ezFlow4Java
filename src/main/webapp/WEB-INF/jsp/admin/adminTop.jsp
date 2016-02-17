@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>		
@@ -91,21 +92,21 @@
 		      		<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
 		      		<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      		<li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li>
-		      		<c:if test="${use_approvalG == 'Y'}"
+		      		<c:if test="${use_approvalG == 'Y'}">
 		      			<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t26" /></span></li>
 		      		</c:if>	
 		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>          
 		      		<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      		<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
 		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>		      		
-		      		<c:if test="${use_ezKMS == 'Y'}"
+		      		<c:if test="${use_ezKMS == 'Y'}">
 		      			<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 		      		</c:if>
-		      		<c:if test="${use_ezDMS == 'Y'}"
+		      		<c:if test="${use_ezDMS == 'Y'}">
 		      			<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      		</c:if>		      		
 		      		<li><span id="menu20" onClick="menu_change(920, event);"><spring:message code="main.t10010" /></span></li>
-		      		<c:if test="${use_mobileMgmt == 'Y'}"
+		      		<c:if test="${use_mobileMgmt == 'Y'}">
 		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li>
 		      		</c:if>		      		
 		    	</ul>

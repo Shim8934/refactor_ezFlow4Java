@@ -7,7 +7,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <link rel="stylesheet" href="/css/tab_over.css" type="text/css">
-	    <script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" language="javascript">
 	        var userLang = "1";
 	        var xmlhttp = new XMLHttpRequest();
@@ -50,7 +50,6 @@
 	
 	                        _p.appendChild(_span);
 	                        document.getElementById("tab1").appendChild(_p);
-	
 	
 	                        if (tabAllWidth() >= document.getElementById("tab1").offsetWidth - 55 || widthCheck) {
 	                            widthCheck = true;
@@ -108,7 +107,7 @@
 	                            //Tab1_MouseClick_more(document.getElementById("overSpan"), false);
 	                        }
 	                    }
-	                    if (xmlnode.length > 0)
+	                    if (result.resultList.length > 0)
 	                        Tab1_NewTabIni("tab1");
 	
 	                    document.getElementById("1tab0").setAttribute("class", "tabon");
@@ -132,7 +131,7 @@
 	
 	                    _p.appendChild(_span);
 	                    document.getElementById("tab1").appendChild(_p);
-	                    if (xmlnode.length > 0)
+	                    if (result.resultList.length > 0)
 	                        Tab1_NewTabIni("tab1");
 	
 	                    document.getElementById("1tab0").setAttribute("class", "tabon");
@@ -189,10 +188,11 @@
 	                document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
 	            else {
 	                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=N" + "&AdminType=y&ButtonHidden=N";
+	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(obj.getAttribute("DATA2")) + "&boardType=N" + "&adminType=y&buttonHidden=N";
 	                }
-	                else
+	                else{
 	                    document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
+	                }
 	            }
 	        }
 	

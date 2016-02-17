@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -9,53 +10,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<style type="text/css">
-		    .datepicker {
-		        BEHAVIOR: url(./controls/datepicker.htc);
-		    }
-		    .pagetd {
-		        padding-top: 6px;
-		    }
-		
-		    .pcol {
-		        padding-top: 6px;
-		    }
-		    .Right_Point01 {
-		        font: bold;
-		        color: #017bec;
-		    }
-		    #layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-			}
-			#layer_Viewpopup .popupwrap1 {
-				border:1px solid #555a64;
-				padding:0px;
-				margin:0px;
-				
-			}
-			#layer_Viewpopup .shadow {
-				height:2px;
-				background:#d7d7d7;
-				
-			}
-			#layer_Viewpopup .popupwrap2 {
-				border:2px solid #e5e5e5;
-				padding:10px;
-				
-			}
-			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-			
-			#layer_Viewpopup .popupwrap3 {
-				position:relative;
-				padding:10px;
-				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-			}
-			#layer_Viewpopup .popupwrap3 h1 {
-				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-			}
-		</style>
 		<script src="/js/XmlHttpRequest.js" type="text/javascript"></script>
 		<script type="text/javascript" src="js/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/ListView_list.js"></script>
@@ -64,8 +18,8 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript">
-			var pBoardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
-		    var SSUserID = "yoonz44";    
+			var pBoardID = "${boardInfo.boardID}";
+		    var SSUserID = "${userInfo.id}";    
 		    var CurPage = "1";
 		    var totalPage = "0";
 		    var strListInfo = "";
@@ -598,6 +552,53 @@
 			    pSIPUriList = null;;
 			}
 		</script>
+		<style type="text/css">
+		    .datepicker {
+		        BEHAVIOR: url(./controls/datepicker.htc);
+		    }
+		    .pagetd {
+		        padding-top: 6px;
+		    }
+		
+		    .pcol {
+		        padding-top: 6px;
+		    }
+		    .Right_Point01 {
+		        font: bold;
+		        color: #017bec;
+		    }
+		    #layer_Viewpopup { 
+			z-index:1000; 
+			margin:0px; 
+			padding:0px;
+			}
+			#layer_Viewpopup .popupwrap1 {
+				border:1px solid #555a64;
+				padding:0px;
+				margin:0px;
+				
+			}
+			#layer_Viewpopup .shadow {
+				height:2px;
+				background:#d7d7d7;
+				
+			}
+			#layer_Viewpopup .popupwrap2 {
+				border:2px solid #e5e5e5;
+				padding:10px;
+				
+			}
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
+			
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
+		</style>
 	</head>
 	<body class="" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 <%-- 		<% if (boardinfo.ListView_FG != "true") { %> --%>
