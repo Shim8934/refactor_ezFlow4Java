@@ -1,122 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezBoardAdmin">
 	
 	<typeAlias  alias="BoardTreeVO" type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
 	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
 	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
 	
-	<parameterMap id="cursor" class="java.util.Map">
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="getBoardTree_SetMap" class="java.util.Map">
-		<parameter property="v_STRLANG" javaType="java.lang.String" jdbcType="NCHAR" mode="IN"/>
-		<parameter property="v_PQUERY" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="v_RESULT" javaType="java.lang.String" jdbcType="NCLOB" mode="IN"/>
-	</parameterMap>
-	
-	<parameterMap id="getBoardTree_Get1Map" class="java.util.Map">
-		<parameter property="v_STRLANG" javaType="java.lang.String" jdbcType="NCHAR" mode="IN"/>
-		<parameter property="v_PQUERY" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="get_ParentBoardNameMap" class="java.util.Map">
-		<parameter property="v_BOARDIDLIST" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_BOARDCOUNTLIST" javaType="java.lang.Integer" jdbcType="NUMBER" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="getDeptFullPathMap" class="java.util.Map">
-		<parameter property="v_CN" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="getBoardTree_Get2Map" class="java.util.Map">
-		<parameter property="v_PACCESSID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_PROOTBOARDID" javaType="java.lang.String" jdbcType="NCHAR" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="getMyBoardTree_Get3Map" class="java.util.Map">
-		<parameter property="v_PUSERID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_PTREEUPPER" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="checkIfLeafBoardMap" class="java.util.Map">
-		<parameter property="v_PBOARDID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pCount" javaType="java.lang.Integer" jdbcType="NUMBER" mode="OUT" />
-	</parameterMap>
-
-	<parameterMap id="brdCheckIfBoardGroupAdminMap" class="java.util.Map">
-		<parameter property="v_pBoardID" javaType="java.lang.String" jdbcType="NCHAR" mode="IN"/>
-		<parameter property="v_pUserID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pDeptID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pCompanyID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pCount" javaType="java.lang.Integer" jdbcType="NUMBER" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="brdBoardTreeMap" class="java.util.Map">
-		<parameter property="v_pRootBoardID" javaType="java.lang.String" jdbcType="NCHAR" mode="IN"/>
-		<parameter property="v_pUserID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pDeptID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pCompanyID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_pMode" javaType="java.lang.Integer" jdbcType="NUMBER" mode="IN"/>
-		<parameter property="v_pSelectBy" javaType="java.lang.Integer" jdbcType="NUMBER" mode="IN"/>
-		<parameter property="v_pExcludeBoardID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<resultMap id="getBoardTree_Get2" class="egovframework.ezEKP.ezBoard.vo.EzBoardVO">
+	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
 		<result property="boardId" column="BOARDID" columnIndex="1"/>
 	</resultMap>
 	
-	<resultMap id="checkApplyUser" class="egovframework.ezEKP.ezBoard.vo.EzBoardVO">
+	<resultMap id="checkApplyUser" class="EzBoardVO">
 		<result property="apprUserId" column="APPRUSERID" columnIndex="1"/>
 	</resultMap>
 	
-	<resultMap id="brdBoardTree" class="egovframework.ezEKP.ezBoard.vo.BoardTreeVO">
+	<resultMap id="brdBoardTree" class="BoardTreeVO">
 		<result property="boardId" column="BOARDID" columnIndex="1"/>
 		<result property="boardName" column="BOARDNAME" columnIndex="2"/>
 		<result property="boardName2" column="BOARDNAME2" columnIndex="3"/>
 		<result property="treeViewOrder" column="TREEVIEWORDER" columnIndex="4"/>
 		<result property="boardColor" column="BOARDCOLOR" columnIndex="5"/>
 		<result property="guBun" column="GUBUN" columnIndex="6"/>
-<!-- 		<result property="boardGroupAcl" column="BOARDGROUPACL" columnIndex="7"/> -->
-<!-- 		<result property="expanded" column="EXPANDED" columnIndex="8"/> -->
-<!-- 		<result property="select" column="SELECT" columnIndex="9"/> -->
-<!-- 		<result property="isLeaf" column="ISLEAF" columnIndex="10"/> -->
+		<result property="boardGroupAcl" column="BOARDGROUPACL" columnIndex="7"/>
 	</resultMap>
 	
-	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterMap="getBoardTree_Get1Map" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET1(?,?,?)}
+	<resultMap class="MyFavoriteVO" id="getMyBoardTree_get3">
+		<result property="treeId" column="TREEID" columnIndex="1"/>
+		<result property="userId" column="USERID" columnIndex="2"/>
+		<result property="treeName" column="TREENAME" columnIndex="3"/>
+		<result property="treeName2" column="TREENAME2" columnIndex="4"/>
+		<result property="treeLevel" column="TREELEVEL" columnIndex="5"/>
+		<result property="treeStep" column="TREESTEP" columnIndex="6"/>
+		<result property="treeUpper" column="TREEUPPER" columnIndex="7"/>
+		<result property="childCnt" column="CHILDCNT" columnIndex="8"/>
+		<result property="treeBoardId" column="TREEBOARDID" columnIndex="9"/>
+	</resultMap>
+	
+	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String">
+		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET1(#v_STRLANG#,#v_PQUERY#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2">
+		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET2(#v_PACCESSID#, #v_PROOTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.getDeptFullPath" parameterMap="getDeptFullPathMap" resultClass="String">
-		{CALL EZHRMASTER.EZSP_GETDEPTFULLPATH(?,?)}
+	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3">
+		{CALL EZBOARDSTD.EZSP_GETMYBOARDTREE_GET3(#v_PUSERID#, #v_PTREEUPPER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+		
+	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree">
+		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, 
+																						 #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.getBoardTree_Get2" parameterMap="getBoardTree_Get2Map" resultMap="getBoardTree_Get2">
-		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET2(?,?,?)}
+	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_CHECKIFLEAFBOARD(#v_PBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterMap="brdBoardTreeMap" resultMap="brdBoardTree">
-		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(?,?,?,?,?,?,?,?)}
+	<procedure id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_SET(#v_STRLANG#, #v_PQUERY#, #v_RESULT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterMap="checkIfLeafBoardMap" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_CHECKIFLEAFBOARD(?,?)}
-	</procedure>
-	
-	<procedure id="EzBoardAdminDAO.getBoardTree_Set" parameterMap="getBoardTree_SetMap" >
-		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_SET(?,?,?)}
-	</procedure>
-	
-	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterMap="brdCheckIfBoardGroupAdminMap"  resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(?,?,?,?,?)}
+	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
@@ -129,17 +77,19 @@
 	</select>
 	
 	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="java.lang.String">
-		SELECT 
-			boardid,
-			boardname,
-			boardname2,
-			'' as treeViewOrder,
-			'' as boardColor,
-			'' as guBun
-		FROM 
-			ezBoardSTD.TBL_Board_BoardInfo
-		WHERE
-			parentboardid = #parentBoardID#
+		<![CDATA[
+			SELECT 
+				boardid,
+				boardname,
+				boardname2,
+				'' as treeViewOrder,
+				'' as boardColor,
+				'' as guBun
+			FROM 
+				ezBoardSTD.TBL_Board_BoardInfo
+			WHERE
+				parentboardid = #parentBoardID#
+		]]>
 	</select>
 	
 	<select id="EzBoardAdminDAO.createBoardGroup" resultClass="int" parameterClass="EzBoardVO">
@@ -158,7 +108,7 @@
 	            accessname2 ,
 	            accesslevel ,
 	            access_ ,
-	            parantboardid ,
+	            parentboardid ,
 	            boardadmin_fg ,
 	            listview_fg ,
 	            read_fg ,

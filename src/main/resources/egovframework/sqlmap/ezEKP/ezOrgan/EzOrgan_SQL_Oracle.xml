@@ -3,6 +3,8 @@
 
 <sqlMap namespace="ezOrgan">
 
+	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+
 	<parameterMap id="getPropertyValueMap" class="java.util.Map">
 		<parameter property="v_CN" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
 		<parameter property="v_FIELD" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
@@ -14,7 +16,7 @@
 		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
 	</parameterMap>
 
-<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@   resultMAP   @@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+	<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@   resultMAP   @@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 	
 	<procedure id="EzOrganDAO.getPropertyValue" parameterMap="getPropertyValueMap" resultClass="String">
@@ -24,5 +26,62 @@
 	<procedure id="EzOrganDAO.getSIPUriList" parameterMap="getSIPUriListMap" resultClass="String">
 		{CALL EZHRMASTER.EZSP_GETSIPURILIST(?,?,?)}
 	</procedure>
+	
+	<select id="EzOrganDAO.getDeptFullPath" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				'top,Top,' || dept_cd_path 
+	      	FROM 
+	      		ezHrmaster.TBLDEPTMASTER 
+	      	WHERE  
+	      		cn = #deptID#
+	     ]]> 
+	</select>
 
+	<select id="EzOrganDAO.getDeptInfo" parameterClass="Map" resultClass="loginVO">
+		<![CDATA[
+			SELECT 
+				cn ,
+	            cn deptid  ,
+				CASE #primary#
+					WHEN '1' THEN 
+						displayname
+					ELSE 
+						displayname2   
+					END 
+						displayname  ,
+	            CASE #primary#
+					WHEN '1' THEN 
+						displayname
+					ELSE 
+						displayname2   
+					END 
+						deptnm
+	            displayname displayname1  ,
+	            displayname2 ,
+	            mail ,
+	            extensionattribute1 ,
+	            extensionattribute2 ,
+	            extensionattribute3 ,
+	            extensionattribute4 ,
+	            extensionattribute5 ,
+	            extensionattribute6 ,
+	            extensionattribute7 ,
+	            extensionattribute8 ,
+	            extensionattribute9 ,
+	            extensionattribute10 ,
+	            extensionattribute11 ,
+	            extensionattribute12 ,
+	            extensionattribute13 ,
+	            extensionattribute14 ,
+	            extensionattribute15 ,
+	            adspath ,
+	            updatedt ,
+	            'dept' type  
+			FROM 
+				ezHrmaster.TBLDEPTMASTER 
+			WHERE  
+				cn = #userID#
+		]]>
+	</select>
 </sqlMap>

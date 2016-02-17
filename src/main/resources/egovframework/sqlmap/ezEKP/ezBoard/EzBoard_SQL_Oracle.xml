@@ -55,7 +55,7 @@
 			FROM 
 				ezBoardSTD.TBL_BOARD_BOARDINFO 
 			WHERE  
-				boardid = #pBoardID#;
+				boardid = #pBoardID#
 		]]>		
 	</select>
 	

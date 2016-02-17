@@ -21,6 +21,7 @@
 		<result property="companyName1" column="company" 		columnIndex="11"/>
 		<result property="companyName2" column="company2" 		columnIndex="12"/>		
 		<result property="updateDT" 	column="updatedt"		columnIndex="13"/>
+		<result property="rollInfo" 	column="rollinfo"		columnIndex="14"/>
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
@@ -40,7 +41,8 @@
 		     	physicaldeliveryofficename as companyid,
 		     	company,
 		     	company2,
-		     	updatedt
+		     	updatedt,
+		     	extensionattribute1 as rollinfo
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 
