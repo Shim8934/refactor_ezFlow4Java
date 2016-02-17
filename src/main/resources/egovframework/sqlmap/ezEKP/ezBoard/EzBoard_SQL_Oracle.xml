@@ -3,27 +3,10 @@
 
 <sqlMap namespace="ezBoard">
 
-<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
-<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
-<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
+	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	
-	<parameterMap id="getLeft_boardSTDMap" class="java.util.Map">
-		<parameter property="v_REDIRECTBOARDID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="get_favoriteListMap" class="java.util.Map">
-		<parameter property="v_USERID" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_MODE" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	
-	<parameterMap id="get_parentBoardNameMap" class="java.util.Map">
-		<parameter property="v_BOARDIDLIST" javaType="java.lang.String" jdbcType="NVARCHAR2" mode="IN"/>
-		<parameter property="v_BOARDCOUNTLIST" javaType="java.lang.Integer" jdbcType="NUMBER" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@   resultMAP   @@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.EzBoardVO">
 		<result property="boardGroupId" column="BOARDGROUPID" columnIndex="1"/>
 	</resultMap>
@@ -36,16 +19,16 @@
 		<result property="guBun" column="GUBUN" columnIndex="5"/>
 	</resultMap>
 	
-	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterMap="getLeft_boardSTDMap" resultMap="getLeft_boardSTD">
-		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(?,?)}
+	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
+		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardDAO.get_favoriteList" parameterMap="get_favoriteListMap" resultMap="get_favoriteList">
-		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(?,?,?)}
+	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultMap="get_favoriteList">
+		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.get_parentBoardName" parameterMap="get_parentBoardNameMap" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(?,?,?)}
+	<procedure id="EzBoardDAO.get_parentBoardName" parameterClass="Map" resultClass="String">
+		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" resultClass="BoardPropertyVO">
