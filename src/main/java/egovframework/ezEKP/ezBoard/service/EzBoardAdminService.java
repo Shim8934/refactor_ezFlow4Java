@@ -30,5 +30,7 @@ public interface EzBoardAdminService {
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
 
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
+	
+	public int createBoardGroup(EzBoardVO ezBoardVO) throws Exception;
 
 }

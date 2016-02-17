@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
+import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -93,6 +94,14 @@ public class EzBoardAdminController {
 		model.addAttribute("lang_secondary", lang_secondary);
 		
 		return "admin/ezBoard/boardGroupCreate";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/createBoardGroup.do")
+	public void createBoardGroup(HttpServletRequest request, Model model, EzBoardVO ezBoardVO) throws Exception{		
+
+		int cnt = ezBoardAdminService.createBoardGroup(ezBoardVO);
+		
+		
 	}
 	
 }

@@ -212,7 +212,6 @@
 	        }
 
 	        function OpenRightMenu(pIndex) {
-alert(pIndex);
 	            if (SelectedBoardID == "" && pIndex == 5 && pIndex != 8) {
 	                alert("<spring:message code='ezBoard.t56' />");
 	                return;

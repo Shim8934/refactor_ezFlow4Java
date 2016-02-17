@@ -4,6 +4,10 @@ public class EzBoardVO {
 	
 	/**게시판 그룹아이디	 */
 	private String boardGroupId;
+	/**게시판 그룹이름	 */
+	private String boardGroupName;
+	/**게시판 그룹이름2	 */
+	private String boardGroupName2;
 	/**승인유저아이디	 */
 	private String apprUserId;
 	/** 게시판아이디	 */
@@ -14,53 +18,55 @@ public class EzBoardVO {
 	private int ss_searchBoard_maxRows;
 	/** 게시판명	*/
 	private String boardName;
+	
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}
-
 	public String getBoardName() {
 		return boardName;
 	}
-
 	public void setBoardName(String boardName) {
 		this.boardName = boardName;
 	}
-
 	public void setSs_board_maxRows(int ss_board_maxRows) {
 		this.ss_board_maxRows = ss_board_maxRows;
 	}
-
 	public int getSs_searchBoard_maxRows() {
 		return ss_searchBoard_maxRows;
 	}
-
 	public void setSs_searchBoard_maxRows(int ss_searchBoard_maxRows) {
 		this.ss_searchBoard_maxRows = ss_searchBoard_maxRows;
 	}
-
 	public String getApprUserId() {
 		return apprUserId;
 	}
-
 	public void setApprUserId(String apprUserId) {
 		this.apprUserId = apprUserId;
 	}
-
 	public String getBoardGroupId() {
 		return boardGroupId;
 	}
-
 	public void setBoardGroupId(String boardGroupId) {
 		this.boardGroupId = boardGroupId;
 	}
-
 	public String getBoardId() {
 		return boardId;
 	}
-
 	public void setBoardId(String boardId) {
 		this.boardId = boardId;
 	}
-
+	public String getBoardGroupName() {
+		return boardGroupName;
+	}
+	public void setBoardGroupName(String boardGroupName) {
+		this.boardGroupName = boardGroupName;
+	}
+	public String getBoardGroupName2() {
+		return boardGroupName2;
+	}
+	public void setBoardGroupName2(String boardGroupName2) {
+		this.boardGroupName2 = boardGroupName2;
+	}
+	
 }

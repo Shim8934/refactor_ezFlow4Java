@@ -75,6 +75,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
 		return ezBoardAdminDAO.getACL(pBoardID,userDeptPath);
 	}
+
+	@Override
+	public int createBoardGroup(EzBoardVO ezBoardVO) throws Exception {
+		// TODO Auto-generated method stub
+		return ezBoardAdminDAO.createBoardGroup(ezBoardVO);
+	}
 	
 	
 }

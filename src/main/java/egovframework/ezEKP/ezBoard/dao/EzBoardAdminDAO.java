@@ -94,6 +94,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
 	
-	
-
+	public int createBoardGroup(EzBoardVO ezBoardVO) {		
+		return (int) select("EzBoardAdminDAO.createBoardGroup", ezBoardVO);
+	}
 }

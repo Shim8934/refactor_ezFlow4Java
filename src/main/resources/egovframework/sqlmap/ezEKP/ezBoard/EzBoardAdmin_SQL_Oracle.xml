@@ -141,6 +141,13 @@
 		WHERE
 			parentboardid = #parentBoardID#
 	</select>
+	
+	<select id="EzBoardAdminDAO.createBoardGroup" resultClass="int" parameterClass="EzBoardVO">
+		SELECT 
+			count(*)
+		FROM 
+			ezBoardSTD.TBL_Board_BoardInfo		
+	</select>
 	<!-- 	권한가져오기 -->
 	<select id="EzBoardAdminDAO.getACL"  parameterClass="java.util.Map" resultClass="BoardPropertyVO">
 		<![CDATA[

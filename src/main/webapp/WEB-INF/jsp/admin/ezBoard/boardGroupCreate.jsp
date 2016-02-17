@@ -8,11 +8,52 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	
-	    <script type="text/javascript" src="../../ezBoard/js/common.js"></script>	    
+	    <script type="text/javascript" src="/js/ezBoard/common.js"></script>
+	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-		
+			function hasSpecialCharacters(str){
+				for(var i=0; i<str.length; i++){
+				    if(str.charCodeAt(i) != 40 && str.charCodeAt(i) != 41 && str.charCodeAt(i) != 91 && str.charCodeAt(i) != 93 && str.charCodeAt(i) != 38 && str.charCodeAt(i) == 47){
+				    	if (str.charCodeAt(i) >= 33 & str.charCodeAt(i) <= 47) return true;
+					    if (str.charCodeAt(i) >= 58 & str.charCodeAt(i) <= 59) return true;
+					    if (str.charCodeAt(i) >= 60 & str.charCodeAt(i) <= 64) return true;
+					    if (str.charCodeAt(i) >= 91 & str.charCodeAt(i) <= 95) return true;
+					    if (str.charCodeAt(i) >= 123 & str.charCodeAt(i) <= 125) return true;
+				    }				    
+				}
+				return false;			
+			}
+			function Save(){
+				var name1 = $.trim($("#txtNewGroupName").val());
+				var name2 = $.trim($("#txtNewGroupName2").val());
+				
+				if (name1 == ""){
+					alert("<spring:message code='ezBoard.t119'/>");
+					return;
+				}				
+				if (hasSpecialCharacters(name1)){
+					alert("<spring:message code='ezBoard.t120'/>");
+					return;
+				}
+				if (hasSpecialCharacters(name2)){
+					alert("<spring:message code='ezBoard.t120'/>");
+					return;
+				}
+			
+				var newID = "{" + GetGUID() + "}";
+				
+				$.ajax({
+					type : "GET",					
+					url : "/admin/ezBoard/createBoardGroup.do",
+					data : { boardGroupID : newID, boardGroupName : escape(name1), boardGroupName2 : escape(name2) },
+					success: function(result){
+						alert("<spring:message code='ezBoard.t121'/>");	
+						window.parent.frames[0].location.reload();
+					}  
+				});				
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
