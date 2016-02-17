@@ -1,82 +1,71 @@
 package egovframework.ezEKP.ezBoard.vo;
 
 public class BoardConfigVO {
-	private String USERID;
-	private int LISTCOUNT;
-	private String PREVIEW;
-	private int PREVIEWWLIST;
-	private int PREVIEWWCONTENT;
-	private int PREVIEWHLIST;
-	private int PREVIEWHCONTENT;
+	private String userId; //유저아이디
+	private int listCount; // 보여줄 리스트 수
+	private String preview; // OFF , W, H 표시
+	private int previewWlist; // 오른쪽 리스트
+	private int previewWContent; // 오른쪽 미리보기 영역
+	private int previewHlist; // 아래쪽 리스트
+	private int previewHContent; // 아래쪽 미리보기 영역
 	
 	public BoardConfigVO() {
 		
 	}
 
-	public String getUSERID() {
-		return USERID;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUSERID(String uSERID) {
-		USERID = uSERID;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public int getLISTCOUNT() {
-		return LISTCOUNT;
+	public int getListCount() {
+		return listCount;
 	}
 
-	public void setLISTCOUNT(int lISTCOUNT) {
-		LISTCOUNT = lISTCOUNT;
+	public void setListCount(int listCount) {
+		this.listCount = listCount;
 	}
 
-	public String getPREVIEW() {
-		return PREVIEW;
+	public String getPreview() {
+		return preview;
 	}
 
-	public void setPREVIEW(String pREVIEW) {
-		PREVIEW = pREVIEW;
+	public void setPreview(String preview) {
+		this.preview = preview;
 	}
 
-	public int getPREVIEWWLIST() {
-		return PREVIEWWLIST;
+	public int getPreviewWlist() {
+		return previewWlist;
 	}
 
-	public void setPREVIEWWLIST(int pREVIEWWLIST) {
-		PREVIEWWLIST = pREVIEWWLIST;
+	public void setPreviewWlist(int previewWlist) {
+		this.previewWlist = previewWlist;
 	}
 
-	public int getPREVIEWWCONTENT() {
-		return PREVIEWWCONTENT;
+	public int getPreviewWContent() {
+		return previewWContent;
 	}
 
-	public void setPREVIEWWCONTENT(int pREVIEWWCONTENT) {
-		PREVIEWWCONTENT = pREVIEWWCONTENT;
+	public void setPreviewWContent(int previewWContent) {
+		this.previewWContent = previewWContent;
 	}
 
-	public int getPREVIEWHLIST() {
-		return PREVIEWHLIST;
+	public int getPreviewHlist() {
+		return previewHlist;
 	}
 
-	public void setPREVIEWHLIST(int pREVIEWHLIST) {
-		PREVIEWHLIST = pREVIEWHLIST;
+	public void setPreviewHlist(int previewHlist) {
+		this.previewHlist = previewHlist;
 	}
 
-	public int getPREVIEWHCONTENT() {
-		return PREVIEWHCONTENT;
+	public int getPreviewHContent() {
+		return previewHContent;
 	}
 
-	public void setPREVIEWHCONTENT(int pREVIEWHCONTENT) {
-		PREVIEWHCONTENT = pREVIEWHCONTENT;
+	public void setPreviewHContent(int previewHContent) {
+		this.previewHContent = previewHContent;
 	}
-
-	@Override
-	public String toString() {
-		return "BoardConfigVO [USERID=" + USERID + ", LISTCOUNT=" + LISTCOUNT
-				+ ", PREVIEW=" + PREVIEW + ", PREVIEWWLIST=" + PREVIEWWLIST
-				+ ", PREVIEWWCONTENT=" + PREVIEWWCONTENT + ", PREVIEWHLIST="
-				+ PREVIEWHLIST + ", PREVIEWHCONTENT=" + PREVIEWHCONTENT + "]";
-	}
-	
-	
-	
 }
