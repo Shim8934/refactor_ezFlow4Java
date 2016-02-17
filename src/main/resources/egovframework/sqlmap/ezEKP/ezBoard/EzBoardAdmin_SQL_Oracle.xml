@@ -52,7 +52,7 @@
 		
 	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree">
 		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, 
-																						 #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer">
@@ -65,6 +65,11 @@
 	
 	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" >
 		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_CREATEBOARDGROUP(#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#,
+											   #v_PARENTBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}		
 	</procedure>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
@@ -84,20 +89,15 @@
 				boardname2,
 				'' as treeViewOrder,
 				'' as boardColor,
-				'' as guBun
+				'' as guBun,
+				'' as boardGroupAcl
 			FROM 
 				ezBoardSTD.TBL_Board_BoardInfo
 			WHERE
 				parentboardid = #parentBoardID#
 		]]>
-	</select>
+	</select>	
 	
-	<select id="EzBoardAdminDAO.createBoardGroup" resultClass="int" parameterClass="EzBoardVO">
-		SELECT 
-			count(*)
-		FROM 
-			ezBoardSTD.TBL_Board_BoardInfo		
-	</select>
 	<!-- 	권한가져오기 -->
 	<select id="EzBoardAdminDAO.getACL"  parameterClass="java.util.Map" resultClass="BoardPropertyVO">
 		<![CDATA[

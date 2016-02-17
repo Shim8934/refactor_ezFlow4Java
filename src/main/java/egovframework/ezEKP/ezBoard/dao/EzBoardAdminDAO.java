@@ -81,8 +81,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (List<MyFavoriteVO>) list("EzBoardAdminDAO.getMyBoardTree_get3", map);
 	}
 	@SuppressWarnings("unchecked")
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {
-		// TODO Auto-generated method stub
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {		
 		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
 	}
 
@@ -92,7 +91,16 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
 	
-	public int createBoardGroup(EzBoardVO ezBoardVO) {		
-		return (int) select("EzBoardAdminDAO.createBoardGroup", ezBoardVO);
+	public int createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception{
+		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
+		map.put("v_BOARDGROUPNAME", boardPropertyVO.getBoardGroupName());
+		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
+		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
+		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
+		map.put("v_PARENTBOARDID", "top");		
+		select("EzBoardAdminDAO.createBoardGroup", map);
+		
+		return 0;				
 	}
 }

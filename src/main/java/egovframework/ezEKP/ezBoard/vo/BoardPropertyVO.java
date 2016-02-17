@@ -30,6 +30,10 @@ public class BoardPropertyVO {
 	private String replyNotify;
 	/** 게시판이 속해있는 게시판 그룹아이디	*/
 	private String boardGroupID;
+	/** 게시판이 속해있는 게시판 그룹이름 */
+	private String boardGroupName;
+	/** 게시판이 속해있는 게시판 그룹이름2 */
+	private String boardGroupName2;
 	/** 관리자에게 게시판 알람여부	*/
 	private String alertPostItem;
 	/** 게시판 구분(일반(0),그룹(1),익명(2))	*/
@@ -71,7 +75,7 @@ public class BoardPropertyVO {
 	/** 접근아이디*/
 	private String accessID;
 	/** 접근표시이름*/
-	private String	accessName;
+	private String accessName;
 	/** 접근표시이름(다국어)*/
 	private String accessName2;
 	/** 접근레벨(사용안함)*/
@@ -446,6 +450,18 @@ public class BoardPropertyVO {
 	}
 	public void setPage(int page) {
 		this.page = page;
+	}
+	public String getBoardGroupName() {
+		return boardGroupName;
+	}
+	public void setBoardGroupName(String boardGroupName) {
+		this.boardGroupName = boardGroupName;
+	}
+	public String getBoardGroupName2() {
+		return boardGroupName2;
+	}
+	public void setBoardGroupName2(String boardGroupName2) {
+		this.boardGroupName2 = boardGroupName2;
 	}
 	
 }

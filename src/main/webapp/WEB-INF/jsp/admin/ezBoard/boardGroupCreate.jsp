@@ -43,12 +43,12 @@
 				}
 			
 				var newID = "{" + GetGUID() + "}";
-				
+
 				$.ajax({
-					type : "GET",					
+					type : "POST",
 					url : "/admin/ezBoard/createBoardGroup.do",
-					data : { boardGroupID : newID, boardGroupName : escape(name1), boardGroupName2 : escape(name2) },
-					success: function(result){
+					data : { boardGroupID : newID, boardGroupName : encodeURIComponent(name1), boardGroupName2 : encodeURIComponent(name2) },
+					success: function(result){						
 						alert("<spring:message code='ezBoard.t121'/>");	
 						window.parent.frames[0].location.reload();
 					}  

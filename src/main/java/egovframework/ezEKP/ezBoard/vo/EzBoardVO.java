@@ -3,11 +3,7 @@ package egovframework.ezEKP.ezBoard.vo;
 public class EzBoardVO {
 	
 	/**게시판 그룹아이디	 */
-	private String boardGroupId;
-	/**게시판 그룹이름	 */
-	private String boardGroupName;
-	/**게시판 그룹이름2	 */
-	private String boardGroupName2;
+	private String boardGroupId;	
 	/**승인유저아이디	 */
 	private String apprUserId;
 	/** 게시판아이디	 */
@@ -56,17 +52,4 @@ public class EzBoardVO {
 	public void setBoardId(String boardId) {
 		this.boardId = boardId;
 	}
-	public String getBoardGroupName() {
-		return boardGroupName;
-	}
-	public void setBoardGroupName(String boardGroupName) {
-		this.boardGroupName = boardGroupName;
-	}
-	public String getBoardGroupName2() {
-		return boardGroupName2;
-	}
-	public void setBoardGroupName2(String boardGroupName2) {
-		this.boardGroupName2 = boardGroupName2;
-	}
-	
 }
