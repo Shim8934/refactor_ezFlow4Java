@@ -50,14 +50,14 @@
 			SELECT 
 				listcount , 
 			    preview , 
-			    preivewwlist ,
+			    previewwlist ,
 			 	previewwcontent ,
-			 	prevewhlist ,
+			 	previewhlist ,
               	previewhcontent 
         	FROM 
         	    ezBoardSTD.TBL_BOARD_CONFIGURATION 
        		WHERE  
-       		    uesrid = #userID#
+       		    userid = #userID#
 		]]>		
 	</select>
 </sqlMap>
