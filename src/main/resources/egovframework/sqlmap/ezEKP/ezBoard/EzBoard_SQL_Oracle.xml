@@ -55,7 +55,7 @@
 			 	prevewhlist ,
               	previewhcontent 
         	FROM 
-        	    ezBoardSTD.TBL_Board_Configuration 
+        	    ezBoardSTD.TBL_BOARD_CONFIGURATION 
        		WHERE  
        		    uesrid = #userID#
 		]]>		
