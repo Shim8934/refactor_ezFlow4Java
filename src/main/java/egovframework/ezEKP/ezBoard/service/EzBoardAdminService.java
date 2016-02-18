@@ -29,6 +29,8 @@ public interface EzBoardAdminService {
 
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 	
-	public int createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception;
+	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception;
+	
+	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception;
 
 }

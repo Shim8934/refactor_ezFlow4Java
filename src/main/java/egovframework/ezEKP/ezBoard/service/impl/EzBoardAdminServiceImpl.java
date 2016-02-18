@@ -72,10 +72,15 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public int createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception {
+	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception {
 		// TODO Auto-generated method stub
-		return ezBoardAdminDAO.createBoardGroup(boardPropertyVO);
+		ezBoardAdminDAO.createBoardGroup(boardPropertyVO);
 	}
-	
+
+	@Override
+	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.createBoard(boardPropertyVO);
+	}	
 	
 }

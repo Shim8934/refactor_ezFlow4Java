@@ -72,6 +72,11 @@
 											   #v_PARENTBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}		
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.createBoard" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_CREATEBOARD_INSERT(#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_ACCESSID#,
+											   #v_ACCESSNAME#, #v_ACCESSNAME2#)}		
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 
@@ -87,10 +92,10 @@
 				boardid,
 				boardname,
 				boardname2,
-				'' as treeViewOrder,
-				'' as boardColor,
-				'' as guBun,
-				'' as boardGroupAcl
+				'' as treevieworder,
+				'' as boardcolor,
+				'' as gubun,
+				'' as boardgroupacl
 			FROM 
 				ezBoardSTD.TBL_Board_BoardInfo
 			WHERE

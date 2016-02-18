@@ -234,7 +234,7 @@
 	                    window.open("/admin/ezBoard/boardGroupCreate.do", "board_main");
 	                    break;
 	                case 2:
-	                    window.open("BoardCreate.aspx?ParentBoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                    window.open("/admin/ezBoard/boardCreate.do?parentBoardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");
 	                    break;
 	                case 3:
 	                    window.open("BoardOrder_Cross.aspx?BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID, "board_main");

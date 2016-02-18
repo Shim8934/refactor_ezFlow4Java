@@ -85,7 +85,7 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardGroupCreate.do")
-	public String boardGroupCreate(HttpServletRequest request, Model model) throws Exception{		
+	public String boardGroupCreate(HttpServletRequest request, Model model) throws Exception{
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -114,6 +114,53 @@ public class EzBoardAdminController {
 		boardPropertyVO.setAccessName2(accessName2);
 		
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);		
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardCreate.do")
+	public String boardCreate(HttpServletRequest request, Model model) throws Exception{		
+		String lang = config.getProperty("config.primary");
+		String use_multiData = config.getProperty("config.Use_MultiData");
+		String lang_primary = config.getProperty("config.lang_Primary" + lang);
+		String lang_secondary = config.getProperty("config.lang_Secondary" + lang);
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String parentBoardName = "";
+		
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID);
+
+		if (lang == "2" && !boardPropertyVO.getBoardName2().equals("")){
+			parentBoardName = boardPropertyVO.getBoardName2();
+        }else{
+        	parentBoardName = boardPropertyVO.getBoardName();
+        }
+
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("parentBoardName", parentBoardName);
+		model.addAttribute("use_multiData", use_multiData);
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		
+		return "admin/ezBoard/boardCreate";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/createBoard.do")
+	public void createBoard(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{
+		LoginVO user = commonUtil.userInfo(userID);
+		
+		String boardName1 = URLDecoder.decode(boardPropertyVO.getBoardName(),"utf-8");
+		String boardName2 = URLDecoder.decode(boardPropertyVO.getBoardName2(),"utf-8");
+		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1() + ", " + user.getDeptName1() + ")";
+		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2() + ", " + user.getDeptName2() + ")";
+		String uID = user.getId();
+		
+		boardPropertyVO.setBoardName(boardName1);
+		boardPropertyVO.setBoardName2(boardName2);
+		boardPropertyVO.setAccessID(uID);
+		boardPropertyVO.setAccessName(accessName1);
+		boardPropertyVO.setAccessName2(accessName2);
+		
+		ezBoardAdminService.createBoard(boardPropertyVO);
 	}
 	
 }

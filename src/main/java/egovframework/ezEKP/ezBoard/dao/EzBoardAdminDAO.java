@@ -91,7 +91,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
 	
-	public int createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception{
+	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception{
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_BOARDGROUPNAME", boardPropertyVO.getBoardGroupName());
 		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
@@ -99,8 +99,20 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");		
-		select("EzBoardAdminDAO.createBoardGroup", map);
-		
-		return 0;				
+		select("EzBoardAdminDAO.createBoardGroup", map);		
 	}
+	
+	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception{
+		map.put("v_BOARDID", boardPropertyVO.getBoardID());
+		map.put("v_BOARDNAME", boardPropertyVO.getBoardName());
+		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
+		map.put("v_PARENTBOARDID", boardPropertyVO.getParentBoardID());
+		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
+		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
+		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
+		
+		select("EzBoardAdminDAO.createBoard", map);		
+	}	
+	
 }
