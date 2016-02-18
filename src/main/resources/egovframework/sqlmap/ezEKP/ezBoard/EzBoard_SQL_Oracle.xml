@@ -48,16 +48,16 @@
 	<select id="EzBoardDAO.getBoardList_Config"  resultClass="BoardConfigVO">
 		<![CDATA[
 			SELECT 
-					   LISTCOUNT , 
-			 		   PREVIEW , 
-			 		   PREVIEWWLIST ,
-			 		   PREVIEWWCONTENT ,
-			 		   PREVIEWHLIST ,
-             		   PREVIEWHCONTENT 
+				listcount , 
+			    preview , 
+			    preivewwlist ,
+			 	previewwcontent ,
+			 	prevewhlist ,
+              	previewhcontent 
         	FROM 
-        	           ezBoardSTD.TBL_Board_Configuration 
+        	    ezBoardSTD.TBL_Board_Configuration 
        		WHERE  
-       		           USERID = #userID#
+       		    uesrid = #userID#
 		]]>		
 	</select>
 </sqlMap>
