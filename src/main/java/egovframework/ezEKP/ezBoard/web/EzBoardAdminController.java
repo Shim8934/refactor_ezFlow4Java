@@ -163,4 +163,17 @@ public class EzBoardAdminController {
 		ezBoardAdminService.createBoard(boardPropertyVO);
 	}
 	
+	@RequestMapping(value="/admin/ezBoard/boardOrder.do")
+	public String boardOrder(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardID = request.getParameter("boardID");		
+		
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		
+		model.addAttribute("upperBoardID", parentBoardID);
+		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		
+		return "admin/ezBoard/boardOrder";
+	}
+	
 }

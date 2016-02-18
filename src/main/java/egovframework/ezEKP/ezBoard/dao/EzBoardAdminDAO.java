@@ -99,7 +99,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");		
-		select("EzBoardAdminDAO.createBoardGroup", map);		
+		select("EzBoardAdminDAO.createBoardGroup", map);
 	}
 	
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception{
@@ -112,7 +112,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		
-		select("EzBoardAdminDAO.createBoard", map);		
+		select("EzBoardAdminDAO.createBoard", map);
 	}	
 	
 }

@@ -236,8 +236,8 @@
 	                case 2:
 	                    window.open("/admin/ezBoard/boardCreate.do?parentBoardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");
 	                    break;
-	                case 3:
-	                    window.open("BoardOrder_Cross.aspx?BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                case 3:	                	
+	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
 	                    break;
 	                case 4:
 	                    if (window.ActiveXObject)
