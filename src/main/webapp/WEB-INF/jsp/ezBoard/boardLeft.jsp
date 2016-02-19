@@ -34,10 +34,10 @@
 		        var height = parseInt(document.documentElement.clientHeight - menuSize);
 		        for (var i = 0; i < items; i++) {
 		            if (document.documentElement.clientHeight > 740) {
-		                    document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = "200px";
+		            	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = "200px";
 		            }
 		            else {
-		                    document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
+		                document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
 		            }
 		        }
 		    }
@@ -79,7 +79,7 @@
 		
 		                for (var i = 0; i < items; i++) {
 		                    if (document.documentElement.clientHeight > 740) {
-		                    	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = "200px";
+// 		                    	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = "200px";
 		                    }
 		                    else {
 		                    	document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
@@ -504,14 +504,7 @@
 	            <li><span style="width: 100%; display: inline-block;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></li>--%>
 	        </ul>
 	        <div id='TopBoardsList'>
-		        <c:forEach var="boardTreeVO" items="${boardTreeVOList}" varStatus="status">
-					<h2>
-						<div id="TreeCtr${status.index}" value="${boardTreeVO.boardId}" onclick="TopBoard_onclick('TreeCtrl${status.index},${boardTreeVO.boardId}')">${boardTreeVO.boardName}</div>
-					</h2>
-					<ul>
-						<div  class="tree" name="BoardTree" id="TreeCtrl${status.index}obj" style="width:auto; overflow-x:auto; overflow-y:auto; padding-left:10px; padding-bottom:20px"></div>
-					</ul>        	
-				</c:forEach>
+	        
 	        </div>
 	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
 	        <ul>

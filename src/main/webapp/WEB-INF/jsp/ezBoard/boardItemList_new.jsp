@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -10,37 +11,38 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script src="/js/XmlHttpRequest.js" type="text/javascript"></script>
-		<script type="text/javascript" src="js/PreviewItem.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="js/ezBoardSTD.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var pBoardID = "${boardInfo.boardID}";
 		    var SSUserID = "${userInfo.id}";    
-		    var CurPage = "1";
-		    var totalPage = "0";
+		    var CurPage = "${boardInfo.page}";
+		    var totalPage = "${boardInfo.totalPage}";
 		    var strListInfo = "";
-		    var Access_FG = "1";
-			var BoardAdmin_FG = "false";
-		    var ListView_FG = "true";
-		    var Read_FG = "true";
-		    var Write_FG = "true";
-		    var Reply_FG = "true";
-		    var Delete_FG = "true";
-		    var BoardGroupAdmin_FG = "NO";
-		    var pSortBy = "";
-		    var url = "";
+		    var Access_FG = "${boardInfo.access_FG}";
+			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
+		    var ListView_FG = "${boardInfo.listView_FG}";
+		    var Read_FG = "${boardInfo.read_FG}";
+		    var Write_FG = "${boardInfo.write_FG}";
+		    var Reply_FG = "${boardInfo.reply_FG}";
+		    var Delete_FG = "${boardInfo.delete_FG}";
+		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
+		    var pSortBy = "${boardInfo.sortBy}";
+		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
-		    var gubun = "";
+		    var gubun = "${boardInfo.guBun}";
 		    var totalCount = "0";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "N";
-		    var USE_OCS = "YES";
-		    var Use_OneLineCount = "NO";
+		    var pBoardType = "${boardInfo.boardType}";
+		    var USE_OCS = "${use_ocs}";
+		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var previewType = "";
 		    var clickPreviweType = "";
 		    var CurrentHeight = 0;
@@ -55,8 +57,6 @@
 		    var pMailPreVDiv_H = 0;
 		    var p_ListorderValue = "";
 		    var pPreviewShow_HOW = "OFF"
-		    var xmlhttp = createXMLHttpRequest();
-		    var xmlhttp2 = createXMLHttpRequest();
 		    var onclickFlag = false;
 		    var selobj = null;
 		    var PreviewH_Move = false;
@@ -69,7 +69,7 @@
 		    var starttime;
 		    var endtime;
 		    var pAdminType = "y";
-		    var pButtonHidden = "N";
+		    var pButtonHidden = "${boardInfo.buttonHidden}";
 		    var pNoneActiveX = "NO";
 	
 		    window.onresize = Window_resize;
@@ -85,77 +85,52 @@
 		        var height = parseInt(document.documentElement.clientHeight - 180);
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
-		
-		        
 		    }
 		
-		    var xmlhttp = createXMLHttpRequest();
 		    function getBoardList() {
 		        starttime = new Date().getTime();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "pBoardType", pBoardType);
-		        createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID);        
-		        createNodeAndInsertText(xmlpara, objNode, "pPageNum", CurPage);
-		        createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
-		        createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-		
-		        xmlhttp = null;
-		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "aspx/Get_BoardList.aspx", true);
-		        xmlhttp.onreadystatechange = getBoardList_after;
-		        xmlhttp.send(xmlpara);
+		    	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezBoard/getBoardList.do",	        			
+					data : { boardType : pBoardType, boardId : pBoardID, pageNum : CurPage, orderCell : OrderCell, orderOption : OrderOption},
+					success: function(result){
+						getBoardList_after(result);
+					}        			
+				});	
 		    }
 		
 		    var perCnt = "";
 		    var firstFlag = false;
 		    var allListCnt = "";
-		    function getBoardList_after() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) return;
-		
+		    function getBoardList_after(result) {
 		        try {
-		            if (xmlhttp.responseText == "") return;
-		            if (GetElementsByTagName(SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/LISTVIEWDATA"), "ROW").length == 0) {
+		            if (result.length == 0) {
 		                if (CurPage > 1) {
 		                    CurPage = CurPage - 1;
 		                    getBoardList();
 		                    return;
 		                }
 		            }
-		
-		            var cntNode = SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/TOTALCNT");
-		            var perNode = SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/PERSONALCNT");
-		            var listNode = SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/LISTVIEWDATA");
-		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/PREVIEWTYPE"));
-		            if (listNode == null) return;
-		
-		            var lstCnt = getNodeText(cntNode);
+		            var headerList = result.headerList;
+		            pPreviewShow_HOW = result.boardConfigVO.previewType;
+		            if (headerList == null) return;
+
+		            var lstCnt = result.boardConfigVO.totalCnt;
 		            totalCount = lstCnt;
 		            if (perCnt == "")
-		                perCnt = getNodeText(perNode);
-		
+		                perCnt = result.boardConfigVO.listCount;
+
 		            listcount.value = perCnt;
-		
+
 		            totalPage = Math.ceil(new Number(lstCnt / perCnt));
 		            pTotalCnt = lstCnt;
-		
+
 		            makePageSelPage();
-		
-		            var xmlDoc
-		            if (CrossYN()) {
-		                var xmlLIST = createXmlDom();
-		                var nodeToImport = xmlLIST.importNode(listNode, true);
-		                xmlLIST.appendChild(nodeToImport);
-		
-		                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-		            }
-		            else {
-		                xmlDoc = createXmlDom();
-		                xmlDoc.appendChild(listNode);
-		            }
+
 		            if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
-		
+		            
 		            var DocList = new ListView();
 		            DocList.SetID("BoardList");
 		            DocList.SetHeaderOnClick("SortPage");
@@ -163,34 +138,32 @@
 		            DocList.SetRowOnClick("ItemPreviewRead_click");
 		            DocList.SetTitleIdx(0);
 		            DocList.SetSelectFlag(false);
-		            DocList.DataSource(xmlDoc);
+		            DocList.DataSource(headerList);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
-		              
-		
-		            allListCnt = GetElementsByTagName(xmlDoc, "ROW").length;
-		
+
+		            allListCnt = headerList.length;
 		            var tempno = 0;
-		            for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-		                if (CrossYN()) {
-		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
-		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
-		                }
-		                else {
-		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
-		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
-		                }
-		            }
+// 		            for (var i = 0; i < allListCnt; i++) {
+// 		                if (CrossYN()) {
+// 		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
+// 		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
+// 		                }
+// 		                else {
+// 		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
+// 		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
+// 		                }
+// 		            }
 		            tempno = tempno + "";
-		
+
 		            if (tempno.length > 4) {
 		                document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
 		            }
-		
-		            if ("YES" == "YES" && lstCnt > 0) {
+
+		            if ("${use_ocs}" == "YES" && lstCnt > 0) {
 		                check_presence();
 		            }
-		
+
 		            if (!firstFlag) {
 		                if(pButtonHidden == "N")
 		                    PreviewRayerChange(pPreviewShow_HOW);
@@ -198,14 +171,14 @@
 		                    PreviewRayerChange("NONE");
 		                if (CrossYN()) {
 		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "선택된 게시물이 없습니다.";
+		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
 		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "선택된 게시물이 없습니다.";
+		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
 		                } else {
 		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 게시물이 없습니다.";
+		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "선택된 게시물이 없습니다.";
+		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 		                }
 		                firstFlag = true;
 		            }
@@ -601,33 +574,33 @@
 		</style>
 	</head>
 	<body class="" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-<%-- 		<% if (boardinfo.ListView_FG != "true") { %> --%>
-<%-- 		<div style="margin-top:100px;text-align:center"><%=RM.GetString("t272")%></div> --%>
-<%-- 		<% Response.End(); %> --%>
-<%-- 		<% } %> --%>
-<%-- 		<%if (ButtonHidden == "N") { %> --%>
-		<script type="text/javascript">
-<%-- 		    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1><%= pBoardName %><span id='mailBoxInfo'></span>"; --%>
-		</script>
-		<br />
-		<div id="mainmenu">
-		  <ul>
-		    <li><span onclick="SetRead_onclick()">읽음표시</span></li>
-			<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-		    <li><span onClick="refresh_onclick()">새로고침</span></li>
-		    <li><span onClick="ReservationItem_onclick()">예약게시</span></li>  
-		    <li id="right">보기설정<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>      
-		  </ul>
-		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
-<%-- 		<% } else {%> --%>
-<!-- 		    <script type="text/javascript"> -->
-<%-- 		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1><%= pBoardName %><span id='mailBoxInfo'></span>"; --%>
-<!-- 		    </script> -->
-<!-- 		    <br /> -->
-<%-- 		<%} %> --%>
+		<c:if test="${boardInfo.listView_FG != true}'">
+			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
+		</c:if>
+		<c:if test="${boardInfo.buttonHidden == N}">
+			<script type="text/javascript">
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>${boardInfo.boardName}<span id='mailBoxInfo'></span>";
+			</script>
+			<br />
+			<div id="mainmenu">
+			  <ul>
+			    <li><span onclick="SetRead_onclick()">읽음표시</span></li>
+				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			    <li><span onClick="refresh_onclick()">새로고침</span></li>
+			    <li><span onClick="ReservationItem_onclick()">예약게시</span></li>  
+			    <li id="right">보기설정<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>      
+			  </ul>
+			</div>
+			<script type="text/javascript">
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
+		</c:if>	
+		<c:if test="${boardInfo.buttonHidden != N}">
+		    <script type="text/javascript">
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>${boardInfo.boardName}<span id='mailBoxInfo'></span>";
+		    </script>
+		    <br />
+		</c:if>
 		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		        <div class="popupwrap1">
 		            <div class="popupwrap2">
