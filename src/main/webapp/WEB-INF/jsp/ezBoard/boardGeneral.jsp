@@ -12,8 +12,7 @@
     	<script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
     	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript">
-	 		$(document).ready(function() {
-		 		
+	 		$(document).ready(function() {	 		
 		 	var HListUser = $('#HListUser option:selected').val();
 		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
 		 
@@ -24,13 +23,11 @@
 		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
 		 
 		 	var WPreUser = $('#WPreUser option:selected').val();
-		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");
-		      
+		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	      
 		 		});
-     	
-	
+	 		
          	document.onselectstart = function () { return false; };
-        		window.onload = function () {
+        	window.onload = function () {
             		if (navigator.userAgent.indexOf('Firefox') != -1) {
                 		document.body.style.MozUserSelect = 'none';
 		                document.body.style.WebkitUserSelect = 'none';
@@ -198,13 +195,13 @@
                     						<spring:message code="ezBoard.t0008" /> : 
                     						<select id="HListUser" name="pPreviewHList" style="width: 50px;" onchange="HChange(this);">
               		 							<% for (int i = 39; i <= 64; i++) { %>                               
-                        						<option value='<%=i %>' selected> <%=i %></option>
+                        						<option value='<%=i %>' > <%=i %></option>
                      							<% } %>                                 
               								</select>
                         					<spring:message code="ezBoard.t0009" /> : 
               								<select id="HPreUser" name="pPreviewHContent" style="width: 50px;" onchange="HChange(this);">
                   								<% for (int i = 36; i <= 61; i++) { %>
-                        						<option value='<%=i %>' selected> <%=i %></option>  
+                        						<option value='<%=i %>' > <%=i %></option>  
                      							<% } %>
 			  								</select>                     
                      					</span>
@@ -217,13 +214,13 @@
                     						<spring:message code="ezBoard.t0008" /> : 
               								<select id="WListUser" name="pPreviewWList" style="width: 50px;" onchange="WChange(this);">
                   								<% for (int i = 24; i <= 65; i++) { %>
-                        						<option value='<%=i %>' selected> <%=i %></option>
+                        						<option value='<%=i %>' > <%=i %></option>
                      							<% } %>
               								</select>       	            
               								<spring:message code="ezBoard.t0009" /> :                    
               								<select id="WPreUser"  name="pPreviewWContent" style="width: 50px;" onchange="WChange(this);">
                   								<% for (int i = 35; i <= 76; i++) { %>
-                        						<option value='<%=i %>' selected> <%=i %></option>
+                        						<option value='<%=i %>' > <%=i %></option>
                      							<% } %>
               								</select>
                       					</span>
@@ -233,13 +230,13 @@
                     						<spring:message code="ezBoard.t0008" /> : 
               								<select id="WListUser" name="pPreviewWList" style="width: 50px;" onchange="WChange(this);">
                   								<% for (int i = 24; i <= 65; i++) { %>
-                        						<option value='<%=i %>' selected> <%=i %></option>
+                        						<option value='<%=i %>' > <%=i %></option>
                      							<% } %>
               								</select>     	            
               								<spring:message code="ezBoard.t0009" /> :                    
               								<select id="WPreUser"  name="pPreviewWContent" style="width: 50px;" onchange="WChange(this);">
                   								<% for (int i = 35; i <= 76; i++) { %>
-                        						<option value='<%=i %>' selected> <%=i %></option>
+                        						<option value='<%=i %>' > <%=i %></option>
                      							<% } %>
               								</select>
                       					</span>
