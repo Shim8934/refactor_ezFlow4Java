@@ -10,6 +10,7 @@
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "${userInfo}";
 	        var SSUserName = "${userInfo.name}";
@@ -504,7 +505,20 @@
 	            <li><span style="width: 100%; display: inline-block;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></li>--%>
 	        </ul>
 	        <div id='TopBoardsList'>
-	        
+	        	<script type="text/javascript">
+	        		parser=new DOMParser();
+        		    xmlDoc=parser.parseFromString("${resultXML}","text/xml");
+        			$(xmlDoc).find("NODE").each(function(){
+        				var i = 0;
+       			        document.write("<h2>");
+           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
+           				document.write("</h2>\n");
+           				document.write("<ul>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px;padding-bottom:20px'></div>\n");
+           				document.write("</ul>\n");
+           				i++;
+        			});
+	        	</script>
 	        </div>
 	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
 	        <ul>
