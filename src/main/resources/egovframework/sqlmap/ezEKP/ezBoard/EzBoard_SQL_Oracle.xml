@@ -31,8 +31,8 @@
 		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.setBoardConfig" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETBOARDCONFIG(#v_PUSERID#, #v_PLISTCOUNT#, #v_PPREVIEW#)}
+	<procedure id="EzBoardDAO.setBoardList_Config" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" resultClass="BoardPropertyVO">
