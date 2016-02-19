@@ -120,6 +120,10 @@ public class BoardPropertyVO {
 	private String sortBy;
 	/** 페이지 번호*/
 	private int page;
+	/** 총페이지*/
+	private int totalPage;
+	/** 총갯수 */
+	private int totalCount;
 	
 	public String getListViewFG() {
 		return listViewFG;
@@ -450,6 +454,18 @@ public class BoardPropertyVO {
 	}
 	public void setPage(int page) {
 		this.page = page;
+	}
+	public int getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 	public String getBoardGroupName() {
 		return boardGroupName;

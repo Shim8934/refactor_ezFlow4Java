@@ -8,6 +8,10 @@ public class BoardConfigVO {
 	private int previewWContent; // 오른쪽 미리보기 영역
 	private int previewHList; // 아래쪽 리스트
 	private int previewHContent; // 아래쪽 미리보기 영역
+	/** 게시글 총 갯수*/
+	private int totalCnt;
+	/** 페이지 수*/
+	private int pageCnt;
 	
 	public String getUserId() {
 		return userId;
@@ -50,6 +54,18 @@ public class BoardConfigVO {
 	}
 	public void setPreviewHContent(int previewHContent) {
 		this.previewHContent = previewHContent;
+	}
+	public int getTotalCnt() {
+		return totalCnt;
+	}
+	public void setTotalCnt(int totalCnt) {
+		this.totalCnt = totalCnt;
+	}
+	public int getPageCnt() {
+		return pageCnt;
+	}
+	public void setPageCnt(int pageCnt) {
+		this.pageCnt = pageCnt;
 	}
 	
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
@@ -42,7 +44,26 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
 		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception{
+		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
+		map.put("v_PSTRLANG", ezBoardVO.getLang());
+		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeader", map);
+	}
+
+	public int getNewItemListCount(String id, String nowDate, String fromNow) throws Exception{
+		map.put("v_pUserID", id);
+		map.put("v_pNow", nowDate);
+		map.put("v_pFromNow", fromNow);
+		select("EzBoardDAO.getNewItemListCount", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public BoardConfigVO getPersonalCount(String userID) {
+		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);
+	}
+
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) {		
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PLISTCNT", map.get("pListCount"));
@@ -53,4 +74,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		map.put("v_PREVIEWHCONTENT", map.get("pPreviewHContent"));
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception{
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNewItemList", map);
+	}
+	
 }

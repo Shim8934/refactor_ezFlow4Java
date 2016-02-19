@@ -14,7 +14,16 @@ public class EzBoardVO {
 	private int ss_searchBoard_maxRows;
 	/** 게시판명	*/
 	private String boardName;
-	
+	/** 게시판 유형*/
+	private String boardType;
+	/** 페이지 번호*/
+	private int pageNum;
+	/** 셀순서*/
+	private String orderCell;
+	/** 순서옵션*/
+	private String orderOption;
+	/** 언어 */
+	private String lang;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -51,5 +60,35 @@ public class EzBoardVO {
 	}
 	public void setBoardId(String boardId) {
 		this.boardId = boardId;
+	}
+	public String getBoardType() {
+		return boardType;
+	}
+	public void setBoardType(String boardType) {
+		this.boardType = boardType;
+	}
+	public int getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+	public String getOrderCell() {
+		return orderCell;
+	}
+	public void setOrderCell(String orderCell) {
+		this.orderCell = orderCell;
+	}
+	public String getOrderOption() {
+		return orderOption;
+	}
+	public void setOrderOption(String orderOption) {
+		this.orderOption = orderOption;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 }

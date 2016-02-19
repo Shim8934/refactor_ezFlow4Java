@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezBoard.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
@@ -21,5 +24,13 @@ public interface EzBoardService {
 	BoardConfigVO getBoardList_Config(String userId) throws Exception;
 	
 	void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
+
+	List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception;
+
+	int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
+
+	BoardConfigVO getPersonalCount(String userID) throws Exception;
+
+	List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 }

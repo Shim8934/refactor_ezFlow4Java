@@ -70,8 +70,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_STRLANG", trim);
 		map.put("v_PQUERY", string);
 		map.put("v_RESULT", string2);
-		//DB에 XML형식이 박혀서 사용되는데 어떻게 해야될지 모르겠음
-//		update("EzBoardAdminDAO.getBoardTree_Set", map);
+		update("EzBoardAdminDAO.getBoardTree_Set", map);
 	}
 
 	@SuppressWarnings("unchecked")

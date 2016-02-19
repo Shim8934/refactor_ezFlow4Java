@@ -17,8 +17,11 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.util.Properties;
+
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -47,6 +50,9 @@ public class CommonUtil {
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
+	@Autowired
+	private Properties config;
+	
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
@@ -63,7 +69,15 @@ public class CommonUtil {
 		user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 		
 		return user;
-	}	
+	}
+	
+	public String getMultiData(String lang) throws Exception{
+		if(lang != config.getProperty("config.primary")){
+			return "2";
+		}else{
+			return "";
+		}
+	}
 	
 }
 
