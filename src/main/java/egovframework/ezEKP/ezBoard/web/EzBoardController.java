@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -18,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -26,6 +30,7 @@ import org.xml.sax.InputSource;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
@@ -252,12 +257,52 @@ public class EzBoardController {
 	
 	@RequestMapping(value="/ezBoard/boardConfig.do")
 	public String boardConfig() throws Exception {
+		
 		return "ezBoard/boardConfig";
 	}
 	
+	@SuppressWarnings("null")
 	@RequestMapping(value="/ezBoard/boardGeneral.do")
-	public String boardGeneral() throws Exception {
+	public String boardGeneral(@CookieValue("userID") String userID, LoginVO loginVO, Model model) throws Exception {
+		loginVO.setId(userID);
+		loginVO = commonUtil.userInfo(userID); 
+		String pUserID = loginVO.getId();
+		
+		BoardConfigVO boardListConfig = ezBoardService.getBoardList_Config(pUserID);
+		if (boardListConfig == null) {
+			boardListConfig.setListCount(20);
+			boardListConfig.setPreview("OFF");
+			boardListConfig.setPreviewHList(50);
+			boardListConfig.setPreviewHContent(50);
+			boardListConfig.setPreviewWList(50);
+			boardListConfig.setPreviewWContent(50);
+		}
+		model.addAttribute("boardListConfig", boardListConfig);
+			
 		return "ezBoard/boardGeneral";
+	}
+	
+	@RequestMapping(value="/ezBoard/board_generallist_save.do", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object>boardGeneralListSave(@CookieValue("userID") String userID, LoginVO loginVO,HttpServletRequest req) throws Exception {
+		loginVO.setId(userID);
+		loginVO = commonUtil.userInfo(userID);
+		String pUserID = loginVO.getId();
+		String pPreview = req.getParameter("pPreview");
+		int pListCount = Integer.parseInt(req.getParameter("pListCount"));
+		int pPreviewWList = Integer.parseInt(req.getParameter("pPreviewWList"));
+		int pPreviewWContent = Integer.parseInt(req.getParameter("pPreviewWContent"));
+		int pPreviewHList = Integer.parseInt(req.getParameter("pPreviewHList"));
+		int pPreviewHContent = Integer.parseInt(req.getParameter("pPreviewHContent"));
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pListCount", pListCount);
+		map.put("pPreview", pPreview);
+		map.put("pPreviewWList", pPreviewWList);
+		map.put("pPreviewWContent", pPreviewWContent);
+		map.put("pPreviewHList", pPreviewHList);
+		map.put("pPreviewHContent", pPreviewHContent);		
+		ezBoardService.setBoardList_Config(pUserID, map);
+		return map;
 	}
 	
 	@RequestMapping(value="/ezBoard/boardFavorite.do")
