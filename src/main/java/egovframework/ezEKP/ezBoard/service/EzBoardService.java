@@ -1,9 +1,10 @@
 package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
@@ -18,5 +19,7 @@ public interface EzBoardService {
 	BoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
 	BoardConfigVO getBoardList_Config(String userId) throws Exception;
+	
+	void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
 
 }
