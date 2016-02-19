@@ -21,7 +21,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		map.put("redirectBoardID", redirectBoardID);
 		return (List<EzBoardVO>) list("EzBoardDAO.getLeft_BoardSTD", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
 		map.put("v_USERID", userID);
@@ -29,10 +29,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<MyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public BoardConfigVO getBoardList_Config(String userID) {
-		map.put("v_USERID", userID);
-		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", map);
+		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", userID);
 	}
 
 	public String get_parentBoardName(String boardIdList, int boardIdListCount) throws Exception{
@@ -45,6 +43,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
 	}
 	
-	
-
+	public void setBoardList_Config(String pUserID, Map<String, Object> map) {		
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PLISTCNT", map.get("pListCount"));
+		map.put("v_PREVIEWMODE", map.get("pPreview"));
+		map.put("v_PREVIEWWLIST", map.get("pPreviewWList"));
+		map.put("v_PREVIEWWCONTENT", map.get("pPreviewWContent"));
+		map.put("v_PREVIEWHLIST", map.get("pPreviewHList"));
+		map.put("v_PREVIEWHCONTENT", map.get("pPreviewHContent"));
+		update("EzBoardDAO.setBoardList_Config", map);
+	}
 }
