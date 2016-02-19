@@ -134,26 +134,13 @@ public class EzBoardController {
         //Library 연결 부분 Method화
         String resultXML = getBoardTree(pRootBoardID,pUserID,pDeptID,pCompanyID,pMode,Integer.parseInt(pSubFlag),pSelectBy,pExcludeBoardID,commonUtil.getMultiData(strLang));
         
-        response.setContentType("text/xml");
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Cache-Control", "no-cache");
-        response.getWriter().write(resultXML.toString());
-        
         modelMap.addAttribute("userInfo", loginVO);
+        modelMap.addAttribute("resultXML", resultXML);
         
 		return "ezBoard/boardLeft";
 	}
 	
-	private LoginVO createUserInfo(LoginVO loginVO) throws Exception{
-		String userId = egovFileScrty.getUserID(loginVO.getId());
-		loginVO.setId(userId);
-		loginVO.setPassword("LOGIN");		
-		LoginVO user = loginService.selectUser(loginVO);
-		
-		return user;
-	}
-
-	private String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
+	public  String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
         String strForbiddenBoardIDList = "";
 		int count = 0;
 		
@@ -210,7 +197,7 @@ public class EzBoardController {
                 if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) continue;
             }
         	result.append("<NODE>");
-        	if(pStrLang == ""){
+        	if(pStrLang.equals("")){
         		result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
         	}else{
         		result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
@@ -218,7 +205,7 @@ public class EzBoardController {
         	
             result.append("<STYLE><![CDATA[]]></STYLE>");
             result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
-            if(pStrLang == ""){
+            if(pStrLang.equals("")){
             	result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
             }else{
             	result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
@@ -270,8 +257,7 @@ public class EzBoardController {
 	
 	@RequestMapping(value="/ezBoard/get_favoriteList.do")
 	public String get_favoriteList(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,LoginVO loginVO) throws Exception{
-		loginVO.setId(userID);
-		loginVO = createUserInfo(loginVO);
+		loginVO = commonUtil.userInfo(userID);
 		List<MyFavoriteVO> resultList = new ArrayList<MyFavoriteVO>();
         String pMode = request.getParameter("MODE");
         String pUserID = loginVO.getId();
@@ -341,7 +327,7 @@ public class EzBoardController {
 		return "ezBoard/boardFavorite";
 	}
 	
-	private String parentBoardName(List<MyFavoriteVO> resultList) throws Exception
+	public String parentBoardName(List<MyFavoriteVO> resultList) throws Exception
     {
         String rtv = "";
         String BoardIdList = "";
@@ -968,7 +954,7 @@ System.out.println(list.item(0).getChildNodes().item(4).getFirstChild().getNodeV
         return "json";
     }
 
-	private ModelMap getNewItemList(EzBoardVO ezBoardVO, LoginVO userInfo, ModelMap modelMap) throws Exception{
+	public ModelMap getNewItemList(EzBoardVO ezBoardVO, LoginVO userInfo, ModelMap modelMap) throws Exception{
         String orderOption1 = "";
         String orderOption2 = "";
         // 수정(2007.06.18) : multidata 기능추가 

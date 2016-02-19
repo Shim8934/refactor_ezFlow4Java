@@ -72,7 +72,7 @@ public class CommonUtil {
 	}
 	
 	public String getMultiData(String lang) throws Exception{
-		if(lang != config.getProperty("config.primary")){
+		if(!lang.equals(config.getProperty("config.primary"))){
 			return "2";
 		}else{
 			return "";
