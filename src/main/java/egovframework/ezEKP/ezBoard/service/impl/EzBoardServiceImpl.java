@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
@@ -40,8 +41,12 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 	@Override
 	public BoardConfigVO getBoardList_Config(String userId) throws Exception {
-		// TODO Auto-generated method stub
 		return ezBoardDAO.getBoardList_Config(userId);
 	}
-	
+
+	@Override
+	public void setBoardList_Config(String pUserID, Map<String, Object> map)
+			throws Exception {
+		ezBoardDAO.setBoardList_Config(pUserID, map); 
+	}	
 }
