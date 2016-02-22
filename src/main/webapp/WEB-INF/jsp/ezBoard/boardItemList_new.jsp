@@ -11,14 +11,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript">
 			var pBoardID = "${boardInfo.boardID}";
 		    var SSUserID = "${userInfo.id}";    
@@ -91,12 +91,12 @@
 		        starttime = new Date().getTime();
 		    	$.ajax({
 					type : "POST",
-					dataType : "json",
+					dataType : "xml",
 					async : false,
 					url : "/ezBoard/getBoardList.do",	        			
 					data : { boardType : pBoardType, boardId : pBoardID, pageNum : CurPage, orderCell : OrderCell, orderOption : OrderOption},
-					success: function(result){
-						getBoardList_after(result);
+					success: function(xml){
+						getBoardList_after(xml);
 					}        			
 				});	
 		    }
@@ -104,23 +104,25 @@
 		    var perCnt = "";
 		    var firstFlag = false;
 		    var allListCnt = "";
-		    function getBoardList_after(result) {
+		    function getBoardList_after(xmlHttp) {
 		        try {
-		            if (result.length == 0) {
+		            if (GetElementsByTagName(SelectSingleNodeNew(xmlHttp, "DOCLIST/LISTVIEWDATA"), "ROW").length == 0) {
 		                if (CurPage > 1) {
 		                    CurPage = CurPage - 1;
 		                    getBoardList();
 		                    return;
 		                }
 		            }
-		            var headerList = result.headerList;
-		            pPreviewShow_HOW = result.boardConfigVO.previewType;
-		            if (headerList == null) return;
+		            var cntNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/TOTALCNT");
+		            var perNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/PERSONALCNT");
+		            var listNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/LISTVIEWDATA");
+		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xmlHttp, "DOCLIST/PREVIEWTYPE"));
+		            if (listNode == null) return;
 
-		            var lstCnt = result.boardConfigVO.totalCnt;
+		            var lstCnt = getNodeText(cntNode);
 		            totalCount = lstCnt;
 		            if (perCnt == "")
-		                perCnt = result.boardConfigVO.listCount;
+		                perCnt = getNodeText(perNode);
 
 		            listcount.value = perCnt;
 
@@ -129,8 +131,20 @@
 
 		            makePageSelPage();
 
+		            var xmlDoc;
+// 		            if (CrossYN()) {
+	                var xmlLIST = createXmlDom();
+	                var nodeToImport = xmlLIST.importNode(listNode, true);
+	                xmlLIST.appendChild(nodeToImport);
+
+	                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+// 		            }
+// 		            else {
+// 		                xmlDoc = createXmlDom();
+// 		                xmlDoc.appendChild(listNode);
+// 		            }
 		            if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
-		            
+
 		            var DocList = new ListView();
 		            DocList.SetID("BoardList");
 		            DocList.SetHeaderOnClick("SortPage");
@@ -138,22 +152,24 @@
 		            DocList.SetRowOnClick("ItemPreviewRead_click");
 		            DocList.SetTitleIdx(0);
 		            DocList.SetSelectFlag(false);
-		            DocList.DataSource(headerList);
+		            DocList.DataSource(xmlDoc);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
+		              
 
-		            allListCnt = headerList.length;
+		            allListCnt = GetElementsByTagName(xmlDoc, "ROW").length;
+
 		            var tempno = 0;
-// 		            for (var i = 0; i < allListCnt; i++) {
-// 		                if (CrossYN()) {
-// 		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
-// 		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
-// 		                }
-// 		                else {
-// 		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
-// 		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
-// 		                }
-// 		            }
+		            for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
+		                if (CrossYN()) {
+		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
+		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
+		                }
+		                else {
+		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
+		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
+		                }
+		            }
 		            tempno = tempno + "";
 
 		            if (tempno.length > 4) {
@@ -207,25 +223,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -250,26 +266,26 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";

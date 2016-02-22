@@ -322,13 +322,16 @@
 		        first++;
 		    }
 		    function GetMyBoardItem(pRootTreeID) {
-		        var xmlhttp4 = new XMLHttpRequest();
-		        xmlhttp4.open("POST", "/ezBoard/getMyBoards_Config.do?RootTreeID=" + pRootTreeID + "&COUNTFLAG=YES", false);
-		        //xmlhttp4.open("POST", "/myoffice/ezBoardSTD/interASP/GetMyBoards.aspx", false);
-		        xmlhttp4.send();
-		        var ret = xmlhttp4.responseXML;
-		        xmlhttp4 = null;
-		        return ret;
+		    	$.ajax({
+					type : "POST",
+					dataType : "xml",
+					async : false,
+					url : "/ezBoard/getMyBoards_Config.do",	        			
+					data : { RootTreeID : pRootTreeID, COUNTFLAG : "YES"},
+					success: function(xml){
+			        	return xml;
+					}        			
+				});	
 		    }
 		    var tempID;
 		    var clickFlag = false;
@@ -353,12 +356,16 @@
 		        }
 		    }
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		        var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
-		        xmlhttp3.send();
-		        var ret = xmlhttp3.responseXML;
-		        xmlhttp3 = null;
-		        return ret;
+		    	$.ajax({
+					type : "POST",
+					dataType : "xml",
+					async : false,
+					url : "/ezBoard/getSubBoards.do",	        			
+					data : { RootBoardID : pRootBoardID, SubFlag : pSubFlag, SelectFlag : "0"},
+					success: function(xml){
+			        	return xml;
+					}        			
+				});
 		    }
 		    function MakeTopBoardView(strXML) {
 		        var xmldom = createXmlDom();
