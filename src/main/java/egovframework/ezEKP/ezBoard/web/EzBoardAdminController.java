@@ -29,6 +29,9 @@ public class EzBoardAdminController {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzBoardController ezBoardController;
 
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
@@ -114,6 +117,8 @@ public class EzBoardAdminController {
 		boardPropertyVO.setAccessName2(accessName2);
 		
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);		
+		
+		response.getWriter().write("<node>5</node>");
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardCreate.do")
@@ -174,6 +179,21 @@ public class EzBoardAdminController {
 		model.addAttribute("boardName", boardPropertyVO.getBoardName());
 		
 		return "admin/ezBoard/boardOrder";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
+	public void getSubBoards(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(userID);
+		
+		String upperBoardID = request.getParameter("upperBoardID");		
+		String pExcludeBoardID = " ";
+		int pMode = 0;		
+		
+		String boardTree = ezBoardController.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), pMode, 1, 0, pExcludeBoardID, "");
+
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(boardTree);		
 	}
 	
 }

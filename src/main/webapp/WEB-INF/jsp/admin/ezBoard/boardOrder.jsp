@@ -9,14 +9,92 @@
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	    
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" language="javascript">
 			var UpperBoardID = "${upperBoardID}";
+			
+			var xmlhttp = createXMLHttpRequest();
+	        var xmldom = createXmlDom();
+	        var pboardList;
+	        var OrderCell = "";
 	    		    	
 	    	$(document).ready(function(){
-	    		//GetSubBoards();
+	    		GetSubBoards();
 	    	});
+	    	
+	    	function GetSubBoards() {
+                document.getElementById("BoardList").innerHTML = "";
+
+                xmlhttp.open("POST", "/admin/ezBoard/getSubBoards.do?upperBoardID=" + UpperBoardID, false);
+                xmlhttp.send();
+
+                xmldom = loadXMLString(xmlhttp.responseText);
+                var boardList = new ListView();
+                boardList.SetID("lvBoardList2");
+                boardList.DataSource(listviewheader);
+                boardList.DataBind("BoardList");
+                DisplayBoardList();
+            }	    	
+	    	function listAdd(boardName, boardId) {
+                pparsingXML = "<ROW><CELL>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(boardName) + "</VALUE>";
+                pparsingXML = pparsingXML + "<DATA1>" + boardId + "</DATA1>";
+                pparsingXML = pparsingXML + "</CELL></ROW>";
+
+                return pparsingXML;
+            }	    	
+	    	function DisplayBoardList() {
+                var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
+                var strXML = "<LISTVIEWDATA><ROWS>";
+                for (i = 0; i < xmldomNode.length; i++) {
+                    var boardName = SelectSingleNodeValue(xmldomNode.item(i), "DATA2");
+                    var boardId = SelectSingleNodeValue(xmldomNode.item(i), "DATA1");
+
+                    strXML += listAdd(boardName, boardId);
+                }
+                strXML += "</ROWS></LISTVIEWDATA>";
+                var xmlRtn = loadXMLString(strXML);
+
+
+                pboardList = new ListView();
+                pboardList.SetID("lvBoardList");
+                pboardList.SetMulSelectable(false);
+                pboardList.DataSource(xmlRtn);
+                pboardList.DataBind("BoardList");
+
+
+                NewBoardID = GetGUID();
+                ezUtil = null;
+                xmldomNode = null;
+                xmldom = null;
+            }	    	
+	    	function MakeXMLString(pOrgString) {
+                return ReplaceText(ReplaceText(ReplaceText(pOrgString, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+            }
+            function ReplaceText(orgStr, findStr, replaceStr) {
+                try {
+                    if (findStr == ".") {
+                        var a = 0;
+                        for (a = 0; a < 10; a++)
+                            orgStr = orgStr.replace(".", replaceStr);
+                        return orgStr;
+                    }
+                    else {
+                        var re = new RegExp(findStr, "gi");
+                        return (orgStr.replace(re, replaceStr));
+                    }
+                } catch (e) {
+                    return orgStr
+                }
+            }
+            function MoveUp_onclick() {
+                pboardList.RowMoveUp();
+            }
+            function MoveDown_onclick() {
+                pboardList.RowMoveDown();
+            }
 	    </script>
 	</head>
 	<body class="mainbody">

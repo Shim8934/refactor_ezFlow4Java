@@ -177,7 +177,7 @@
 					type : "GET",
 					dataType : "json",
 					async : false,
-					url : "/admin/ezBoard/getSubBoards.do",	        			
+					url : "/ezBoard/getSubBoards.do",	        			
 					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
 					success: function(result){
 						
@@ -314,7 +314,7 @@
 					$("#TopBoard").html(strHTML);
 	
 	                if (cnt > 0){         	
-						TopBoard_onclick("TreeCtrl0", data);
+						//TopBoard_onclick("TreeCtrl0", data);
 	                }
 				}        			
 			});
