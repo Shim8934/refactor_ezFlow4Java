@@ -24,6 +24,27 @@
 	    		GetSubBoards();
 	    	});
 	    	
+	    	function Save(){
+	            var iRowCount = pboardList.GetRowCount();
+	            var strBoardList = "";
+
+	            if (iRowCount != 0) {
+	                for (i = 0; i < iRowCount; i++) {
+	                    strBoardList += pboardList.GetDataRows()[i].getAttribute("DATA1") + ";";
+	                }
+
+	                $.ajax({
+	                	type :	"POST",
+	                	dataType : "text",
+	                	url : "/admin/ezBoard/saveBoardOrder.do",
+	                	data : { boardList : strBoardList },
+	                	success : function(result){
+               				alert("<spring:message code='ezBoard.t79'/>");
+	                	}
+	                });
+	            }
+	        }
+	    	
 	    	function GetSubBoards() {
                 document.getElementById("BoardList").innerHTML = "";
 

@@ -81,6 +81,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.createBoard(boardPropertyVO);
-	}	
+	}
+
+	@Override
+	public void saveBoardOrder(String pBoardIDList) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.saveBoardOrder(pBoardIDList);
+	}
 	
 }

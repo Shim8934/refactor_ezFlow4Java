@@ -112,6 +112,16 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		
 		select("EzBoardAdminDAO.createBoard", map);
-	}	
+	}
+	
+	public void saveBoardOrder(String pBoardIDList) throws Exception{
+		
+		int pBoardListCount = pBoardIDList.split(";").length - 2;
+		
+		map.put("v_pBoardIDList", pBoardIDList);
+		map.put("v_pBoardListCount", pBoardListCount);		
+				
+		select("EzBoardAdminDAO.saveBoardOrder", map);
+	}
 	
 }

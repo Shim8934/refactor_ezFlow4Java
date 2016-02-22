@@ -181,6 +181,14 @@ public class EzBoardAdminController {
 		return "admin/ezBoard/boardOrder";
 	}
 	
+	@RequestMapping(value="/admin/ezBoard/saveBoardOrder.do")
+	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		String pBoardIDList = request.getParameter("boardList");		
+		
+		ezBoardAdminService.saveBoardOrder(pBoardIDList);
+				
+	}
+	
 	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
 	public void getSubBoards(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(userID);
