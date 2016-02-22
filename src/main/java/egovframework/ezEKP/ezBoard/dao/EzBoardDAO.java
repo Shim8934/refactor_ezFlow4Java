@@ -64,7 +64,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);
 	}
 
-	public void setBoardList_Config(String pUserID, Map<String, Object> map) {		
+	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PLISTCNT", map.get("pListCount"));
 		map.put("v_PREVIEWMODE", map.get("pPreview"));
@@ -84,6 +84,32 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
 		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNewItemList", map);
+	}
+
+	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception{
+		map.put("v_pUserID", myFavoriteVO.getUserId());
+		map.put("v_pNow", myFavoriteVO.getNowDate());
+		map.put("v_pFromNow", myFavoriteVO.getFromNow());
+		select("EzBoardDAO.getBrdNewItemCount",map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception{
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		select("EzBoardDAO.getThumbNailCount",map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception{
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		select("EzBoardDAO.getBrdTotalItemCount",map);
+		return (int)map.get("v_pCount");
 	}
 	
 }

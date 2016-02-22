@@ -69,8 +69,22 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public void setBoardList_Config(String pUserID, Map<String, Object> map)
-			throws Exception {
+	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception {
 		ezBoardDAO.setBoardList_Config(pUserID, map); 
-	}	
+	}
+
+	@Override
+	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		return ezBoardDAO.getBrdNewItemCount(myFavoriteVO);
+	}
+
+	@Override
+	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		return ezBoardDAO.getThumbNailCount(myFavoriteVO);
+	}
+
+	@Override
+	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		return ezBoardDAO.getBrdTotalItemCount(myFavoriteVO);
+	}
 }

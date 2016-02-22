@@ -30,6 +30,20 @@ public class MyFavoriteVO {
 	private int childCnt;
 	/**  트리게시판아이디	*/
 	private String treeBoardId;
+	/**뭐뭐여부 */
+	private String isLeaf;
+	/** 선택여부*/
+	private String select;
+	/**확정여부 */
+	private String expended;
+	/** xml대타*/
+	private String data4;
+	/** 현재 날짜및 시간*/
+	private String nowDate;
+	/** 현재시간 -5*/
+	private String fromNow;
+	/** */
+	private String type;
 	
 	public String getBoardId() {
 		return boardId;
@@ -115,7 +129,47 @@ public class MyFavoriteVO {
 	public void setTreeBoardId(String treeBoardId) {
 		this.treeBoardId = treeBoardId;
 	}
+	public String getIsLeaf() {
+		return isLeaf;
+	}
+	public void setIsLeaf(String isLeaf) {
+		this.isLeaf = isLeaf;
+	}
+	public String getSelect() {
+		return select;
+	}
+	public void setSelect(String select) {
+		this.select = select;
+	}
+	public String getExpended() {
+		return expended;
+	}
+	public void setExpended(String expended) {
+		this.expended = expended;
+	}
+	public String getData4() {
+		return data4;
+	}
+	public void setData4(String data4) {
+		this.data4 = data4;
+	}
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
+	}
+	public String getFromNow() {
+		return fromNow;
+	}
+	public void setFromNow(String fromNow) {
+		this.fromNow = fromNow;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	
-	
-
 }

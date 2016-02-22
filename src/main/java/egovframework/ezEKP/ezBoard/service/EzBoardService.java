@@ -33,4 +33,10 @@ public interface EzBoardService {
 
 	List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
+	int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception;
+
+	int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception;
+
+	int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO)  throws Exception;
+
 }

@@ -83,6 +83,10 @@
 		{CALL EZBOARDSTD.EZSP_GETNEWITEMLISTXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 
