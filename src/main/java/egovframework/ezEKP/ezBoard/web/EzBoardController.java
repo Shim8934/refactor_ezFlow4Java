@@ -122,7 +122,7 @@ public class EzBoardController {
         	}
         }
         int pMode = 0;
-        if (BoardGroupAdmin_FG == "OK" || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1){
+        if(BoardGroupAdmin_FG == "OK" || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1){
         	pMode = 0;
         }else{
         	pMode = 1;
@@ -136,40 +136,41 @@ public class EzBoardController {
 		return "ezBoard/boardLeft";
 	}
 	
-	public  String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
-        String strForbiddenBoardIDList = "";
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
 		int count = 0;
-		
+        String strForbiddenBoardIDList = "";				
 		StringBuilder strResult = new StringBuilder();
-		//EZSP_GETBOARDTREE_GET1 프로시져
+		/* EZSP_GETBOARDTREE_GET1 프로시져 */
         String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang,pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID);
         
-        if (retValue != null && retValue.length() > 30){
+        if(retValue != null && retValue.length() > 30){
     		return retValue;
         }
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");
         
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
         List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
-        for (int i = 0; i < pAccessID.split(",").length; i++){
+        
+        for(int i = 0; i < pAccessID.split(",").length; i++){
             String boardID = "";
             
-            brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID,pAccessID.split(",")[i].trim(),pMode,pSelectBy,pExcludeBoardID);
-            
+            brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID,pAccessID.split(",")[i].trim(),pMode,pSelectBy,pExcludeBoardID);            
             List<EzBoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(),pRootBoardID);
-            if (boardTreeList.size() > 0){
-                for (int r = 0; r < boardTreeList.size() - 1; r++){
+            
+            if(boardTreeList.size() > 0){
+                for(int r = 0; r < boardTreeList.size() - 1; r++){
                 	boardID = boardTreeList.get(r).getBoardId();
-                    if (strResult.toString().indexOf(boardID.trim()) == -1) 
+                	
+                    if(strResult.toString().indexOf(boardID.trim()) == -1) 
                         strForbiddenBoardIDList += boardID.trim();
                 }
             }
-            if(brdBoardTreeList.size() >0){
+            if(brdBoardTreeList.size() > 0){
             	if(brdBoardTreeList.get(0).getBoardGroupAcl() != null){
-            		if (pAccessID.split(";")[i].trim() != pUserID && pAccessID.split(";")[i].trim() != pCompanyID && pAccessID.split(";")[i].trim() != pDeptID){
+            		if(pAccessID.split(";")[i].trim() != pUserID && pAccessID.split(";")[i].trim() != pCompanyID && pAccessID.split(";")[i].trim() != pDeptID){
             			for (int j = 0; j < brdBoardTreeList.size(); j++){
-            				if (pAccessID.split(",")[i].trim() != "top"){
-            					if (brdBoardTreeList.get(j).getBoardGroupAcl().toUpperCase() == "N"){
+            				if(pAccessID.split(",")[i].trim() != "top"){
+            					if(brdBoardTreeList.get(j).getBoardGroupAcl().toUpperCase() == "N"){
             						brdBoardTreeList.remove(j);
             						j--;
             					}
@@ -186,40 +187,40 @@ public class EzBoardController {
         }else{
         	result.append("<TREEVIEWDATA>");
         }
-        for (int i = 0; i < brdBoardTreeList.size(); i++){
-        	if (strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1){
-                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) continue;
+        
+        for(int i = 0; i < brdBoardTreeList.size(); i++){
+        	if(strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1){
+                if(strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) continue;
             }
         	result.append("<NODE>");
+        	
         	if(pStrLang.equals("")){
         		result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
         	}else{
         		result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
-        	}
-        	
+        	}        	
             result.append("<STYLE><![CDATA[]]></STYLE>");
             result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
+            
             if(pStrLang.equals("")){
             	result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
             }else{
             	result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
-            }
-            
+            }            
             result.append("<DATA3>" + pRootBoardID + "</DATA3>");
             result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
             result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
-
             result.append("<EXPANDED>FALSE</EXPANDED>");
             result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId()) + "</ISLEAF>");
 
-            if (count == 0 && pSubFlag != 1)    //게시판그룹을 클릭했을 때 첫번째 게시판을 자동선택 되게함
+            if(count == 0 && pSubFlag != 1)    //게시판그룹을 클릭했을 때 첫번째 게시판을 자동선택 되게함
                 result.append("<SELECT>TRUE</SELECT>");
 
             result.append("</NODE>");
             count++;
         }
         
-        if (pSubFlag == 1)
+        if(pSubFlag == 1)
             result.append("</NODES>");
         else
             result.append("</TREEVIEWDATA>");
@@ -230,16 +231,13 @@ public class EzBoardController {
 	}
 
 	public String checkIfLeafBoard(String pBoardID) throws Exception{
-		try
-		{
+		try{
 	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID);
-	        if (ret > 0) 
+	        if(ret > 0) 
 	        	return "FALSE";
 			else 
 				return "TRUE";
-		}
-		catch(Exception Ex)
-		{
+		}catch(Exception ex){
 			return "FALSE";
 		}
 	}
@@ -267,8 +265,7 @@ public class EzBoardController {
 	
 	
 	@RequestMapping(value="/ezBoard/boardConfig.do")
-	public String boardConfig() throws Exception{
-		
+	public String boardConfig() throws Exception{		
 		return "ezBoard/boardConfig";
 	}
 	
@@ -280,7 +277,7 @@ public class EzBoardController {
 		String pUserID = loginVO.getId();
 		
 		BoardConfigVO boardListConfig = ezBoardService.getBoardList_Config(pUserID);
-		if (boardListConfig == null) {
+		if(boardListConfig == null) {
 			boardListConfig.setListCount(20);
 			boardListConfig.setPreview("OFF");
 			boardListConfig.setPreviewHList(50);
@@ -325,9 +322,9 @@ public class EzBoardController {
         String rtv = "";
         String BoardIdList = "";
         int BoardIdListCount = 0;
-        for (int i = 0; i < resultList.size(); i++){
+        for(int i = 0; i < resultList.size(); i++){
             BoardIdList += resultList.get(i).getBoardId().trim();
-            if (i != resultList.size() - 1)
+            if(i != resultList.size() - 1)
                 BoardIdList += ";";
         }
         BoardIdListCount = BoardIdList.split(";").length - 1;
@@ -340,8 +337,7 @@ public class EzBoardController {
    public void getMyBoards_Config(HttpServletRequest req, @CookieValue("userID") String userID, LoginVO loginVO, HttpServletResponse res) throws Exception{
 	   loginVO = commonUtil.userInfo(userID);
 	   String lang = loginVO.getLang();
-	   try
-       {
+	   try{
            String pRootTreeID = "";
            String pCountFlag = "";
            
@@ -352,7 +348,7 @@ public class EzBoardController {
 
            List<MyFavoriteVO> resultList = getMyBoardTreeConfig(loginVO.getId(), pRootTreeID, commonUtil.getMultiData(lang));
            
-           if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES" && pCountFlag == "YES"){
+           if(config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES" && pCountFlag == "YES"){
                String strName = "";
                int intCount;
                
@@ -361,11 +357,11 @@ public class EzBoardController {
                myFavoriteVO.setNowDate(EgovDateUtil.getToday());
                myFavoriteVO.setFromNow(EgovDateUtil.addDay(EgovDateUtil.getToday(), -5));
                
-               for (int i = 0; i < resultList.size(); i++){
-                   if (resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"){
+               for(int i = 0; i < resultList.size(); i++){
+                   if(resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"){
                 	   intCount = ezBoardService.getBrdNewItemCount(myFavoriteVO);
 
-                       if (intCount != 0)
+                       if(intCount != 0)
                            strName = "(" + intCount + ")";
                        if(lang == "1"){
                     	   resultList.get(i).setTreeName(resultList.get(i).getTreeName() + strName);
@@ -373,22 +369,21 @@ public class EzBoardController {
                     	   resultList.get(i).setTreeName2(resultList.get(i).getTreeName2() + strName);
                        }
 
-                   }
-                   else{
-                       if (resultList.get(i).getData4() == "BOARD"){
+                   }else{
+                       if(resultList.get(i).getData4() == "BOARD"){
                     	   BoardPropertyVO boardInfo = getBoardInfo(resultList.get(i).getBoardId(),loginVO);
                     	   
                     	   myFavoriteVO.setBoardId(resultList.get(i).getBoardId());
                     	   myFavoriteVO.setType("1");
                     	   
-                           if (boardInfo.getGuBun() == "4"){
+                           if(boardInfo.getGuBun() == "4"){
                         	   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
                            }
                            else{
                         	   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
                            }
                            strName = "";
-                           if (intCount != 0)
+                           if(intCount != 0)
                                strName = "(" + intCount + ")";
                            if(lang == "1"){
                         	   resultList.get(i).setTreeName(resultList.get(i).getTreeName() + strName);
@@ -398,13 +393,12 @@ public class EzBoardController {
                        }
                    }
                }
-           }
-           
+           }           
            StringBuilder sb = new StringBuilder();
 
            sb.append("<TREEVIEWDATA>");
 
-           for (int i = 0; i < resultList.size(); i++){
+           for(int i = 0; i < resultList.size(); i++){
                sb.append("<NODE>");
                if(lang =="1"){
             	   sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName() + "]]></VALUE>");
@@ -432,11 +426,10 @@ public class EzBoardController {
                else
                    sb.append("<ISLEAF>TRUE</ISLEAF>");
 
-               if (resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	//새 게시판 자동선택
+               if(resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	//새 게시판 자동선택
                    sb.append("<SELECT>TRUE</SELECT>");
                sb.append("</NODE>");
            }
-
            sb.append("</TREEVIEWDATA>");
 
            res.setContentType("text/xml"); 
@@ -444,8 +437,7 @@ public class EzBoardController {
            res.setHeader("Cache-Control", "no-cache");
            res.getWriter().write(sb.toString());
        }
-       catch (Exception ex)
-       {
+       catch (Exception ex){
     	   ex.printStackTrace();
        }
    }
@@ -453,7 +445,7 @@ public class EzBoardController {
 	public List<MyFavoriteVO> getMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
         List<MyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID,pRootTreeID.trim());
 
-        for (int i = 0; i < resultList.size(); i++){
+        for(int i = 0; i < resultList.size(); i++){
         	if(resultList.get(i).getTreeBoardId() == "")
         		resultList.get(i).setData4("TREE");
             else
@@ -466,10 +458,9 @@ public class EzBoardController {
             else
             	resultList.get(i).setIsLeaf("TRUE");
 
-            if (resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	//새 게시판 자동선택
+            if(resultList.get(i).getTreeBoardId() == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")	//새 게시판 자동선택
             	resultList.get(i).setSelect("TRUE");
         }
-
         return resultList;
 	}
 	@RequestMapping(value="/ezBoard/boardItemList_new.do")
@@ -481,21 +472,21 @@ public class EzBoardController {
         String use_oneLineCount = "";
         
         loginVO = commonUtil.userInfo(userID);
-        if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK"))
+        if((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK"))
             use_IE11Browser = "CK";
         
 //            response.Buffer = true;
-//            if (vpnLogin != null)
+//            if(vpnLogin != null)
 //                isVPN = vpnLogin;
         boardPropertyVO = getBoardInfo(pBoardID,loginVO);
         boardPropertyVO = getBoardProperty(pBoardID);
-        if (boardPropertyVO != null)
+        if(boardPropertyVO != null)
             use_oneLineCount = "YES";
         else
             use_oneLineCount = "NO";
         
-        if (boardPropertyVO.getListViewFG()== "true"){
-            if (request.getParameter("page") == null)
+        if(boardPropertyVO.getListViewFG()== "true"){
+            if(request.getParameter("page") == null)
             	boardPropertyVO.setPage(1);
         }
         
@@ -521,7 +512,7 @@ public class EzBoardController {
     public String getSIPListByCNList(String[] pCNList) throws Exception{
         String strRet = "";
         
-        if (pCNList == null || pCNList.length == 0){
+        if(pCNList == null || pCNList.length == 0){
             return null;
         }
         strRet = ezOrganService.getSIPUriList(StringUtils.join(pCNList, ";"), "");
@@ -535,12 +526,12 @@ public class EzBoardController {
     }
     
     // 게시판의 정보를 가져오는 함수
-	protected BoardPropertyVO getBoardInfo(String pBoardID, LoginVO userInfo) throws Exception{
+	public BoardPropertyVO getBoardInfo(String pBoardID, LoginVO userInfo) throws Exception{
 		BoardPropertyVO boardInfo = new BoardPropertyVO();
 		boardInfo.setSs_board_maxRows(20);
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
-		if (pBoardID == ""){
+		if(pBoardID == ""){
 			boardInfo.setBoardName(egovMessageSource.getMessage("t229"));		
 			return null;
 		}
@@ -565,16 +556,15 @@ public class EzBoardController {
 //		}
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-         if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"){
-			boardInfo.setAccess_FG("1");
+	    if(pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"){
+	    	boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("true");
 			boardInfo.setRead_FG("true");
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		}
-		else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1){
+		}else if(userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1){
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -582,8 +572,7 @@ public class EzBoardController {
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		}
-         else if (boardInfo.getBoardGroupAdmin_FG() == "OK"){	// 게시판 그룹관리자는 하위게시판들에 대해 풀권한을 가짐
+		}else if(boardInfo.getBoardGroupAdmin_FG() == "OK"){	// 게시판 그룹관리자는 하위게시판들에 대해 풀권한을 가짐
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -591,8 +580,7 @@ public class EzBoardController {
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		}
-		else if (boardInfo.equals(null)){
+		}else if(boardInfo.equals(null)){
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("false");
@@ -601,29 +589,29 @@ public class EzBoardController {
 			boardInfo.setReply_FG("false");
 			boardInfo.setDelete_FG("false");
 		}
-
-         BoardPropertyVO strProp = getBoardProperty(pBoardID);
-
-         if(strProp != null){
-        	 boardInfo.setExpireDays(strProp.getItemExpires());
-        	 boardInfo.setAttachLimit(strProp.getAttachLimit());
-        	 boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
-        	 boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
-        	 
-         if (userInfo.getPrimary() == "2" && boardInfo.getBoardName2() != ""){
-             boardInfo.setBoardName(boardInfo.getBoardName2());
-         }
-         else{
-             boardInfo.setBoardName(boardInfo.getBoardName1());
-         }
-			 boardInfo.setReplyNotify(strProp.getReplyNotify());
-			 boardInfo.setGuBun(strProp.getGuBun());
-			 boardInfo.setUrl(strProp.getUrl());
-	         boardInfo.setApprMail_FG(strProp.getApprMailFlag());
-	         boardInfo.setAttributeYN(strProp.getAttributeYN());
+	
+	    BoardPropertyVO strProp = getBoardProperty(pBoardID);
+	
+	    if(strProp != null){
+	    	boardInfo.setExpireDays(strProp.getItemExpires());
+	    	boardInfo.setAttachLimit(strProp.getAttachLimit());
+	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
+	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
+	    	 
+		    if(userInfo.getPrimary() == "2" && boardInfo.getBoardName2() != ""){
+		    	boardInfo.setBoardName(boardInfo.getBoardName2());
+		    }else{
+		    	boardInfo.setBoardName(boardInfo.getBoardName1());
+		    }
+			boardInfo.setReplyNotify(strProp.getReplyNotify());
+			boardInfo.setGuBun(strProp.getGuBun());
+			boardInfo.setUrl(strProp.getUrl());
+	        boardInfo.setApprMail_FG(strProp.getApprMailFlag());
+	        boardInfo.setAttributeYN(strProp.getAttributeYN());
 		}
-         return boardInfo;
+        return boardInfo;
 	}
+	
     protected boolean CheckDBColum(String pProvValue) throws Exception{
         boolean bRet = false;
         // 사용자 속성명
@@ -863,6 +851,7 @@ public class EzBoardController {
         }
         return bRet;
     }
+    
     @RequestMapping(value = "/ezBoard/getBoardList.do")
     public void getBoardList(@CookieValue("userID") String userID, LoginVO userInfo, EzBoardVO ezBoardVO, HttpServletResponse res) throws Exception{
         String boardID = ezBoardVO.getBoardId();
@@ -874,50 +863,47 @@ public class EzBoardController {
         userInfo.setLang("1");
 //        BoardPropertyVO boardInfo = getBoardInfo(boardID,userInfo);
         
-        if (ezBoardVO.getOrderOption() != null)
+        if(ezBoardVO.getOrderOption() != null)
             type = ezBoardVO.getOrderOption();
 
         ezBoardVO.setLang(userInfo.getLang());
 
-        if (boardType == "4"){ // 썸네일 
+        if(boardType == "4"){ // 썸네일 
 //            boardXml = getThumbList(ezBoardVO);
-        }
-        else if (boardType == "5"){ //Q&A
+        }else if(boardType == "5"){ //Q&A
 //            boardXml = getQnAListItem(ezBoardVO);
-        }
-        else{
-            if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")){
+        }else{
+            if(boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")){
             	ezBoardVO.setBoardType("N");
             	resultXML = getNewItemList(ezBoardVO,userInfo);
-            }
-            else{
+            }else{
 //            	boardXml = getBoardListItem(ezBoardVO);
             }
         }
 
 //        int writedateSN = -1;
 //        int titleSN = -1;
-//        if (boardListMap.size() > 0 && boardListMap.get(0).get("WRITEDATENUM") != "")
+//        if(boardListMap.size() > 0 && boardListMap.get(0).get("WRITEDATENUM") != "")
 //        {
 //            writedateSN = (int) (boardListMap.get(0).get("WRITEDATENUM"));
 //        }
-//        if (boardListMap.size() > 0 && boardListMap.get(0).get("TITLENUM") != "")
+//        if(boardListMap.size() > 0 && boardListMap.get(0).get("TITLENUM") != "")
 //        {
 //            titleSN = (int) boardListMap.get(0).get("TITLENUM");
 //        }
 
-//        if (boardListMap != null)
+//        if(boardListMap != null)
 //        {
 //            for (int i = 0; i < boardListMap.size(); i++)
 //            {
-//                if (writedateSN > -1)
+//                if(writedateSN > -1)
 //                {
-//                    if (boardListMap.Item(i).ChildNodes.Item(writedateSN).ChildNodes.Item(0).InnerText.Trim() != "")
+//                    if(boardListMap.Item(i).ChildNodes.Item(writedateSN).ChildNodes.Item(0).InnerText.Trim() != "")
 //                    {
 //                        docListNode.Item(i).ChildNodes.Item(writedateSN).ChildNodes.Item(0).InnerText = GetLocalTime(docListNode.Item(i).ChildNodes.Item(writedateSN).ChildNodes.Item(0).InnerText.Trim());
 //                    }
 //                }
-//                if (titleSN > -1)
+//                if(titleSN > -1)
 //                {
 //                    docListNode.Item(i).ChildNodes.Item(titleSN).ChildNodes.Item(0).InnerText = Server.HtmlEncode(docListNode.Item(i).ChildNodes.Item(titleSN).ChildNodes.Item(0).InnerText.Trim());
 //                }
@@ -942,16 +928,15 @@ public class EzBoardController {
         
         int i = 0;
         int hlength = headerList.size();
-        for (i = 0; i < hlength; i++){
-            if (ezBoardVO.getOrderCell() != "" && ezBoardVO.getOrderCell() == headerList.get(i).getName()){
-                if (ezBoardVO.getOrderCell() == ""){                            
+        for(i = 0; i < hlength; i++){
+            if(ezBoardVO.getOrderCell() != "" && ezBoardVO.getOrderCell() == headerList.get(i).getName()){
+                if(ezBoardVO.getOrderCell() == ""){                            
                     if(headerList.get(i).getName().indexOf("BOARDNAME") > -1)
                         orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " ";
                     else
                         orderOption1 = headerList.get(i).getColName() + " ";
-                }
-                else{
-                    if (headerList.get(i).getColName().indexOf("BOARDNAME") > -1)
+                }else{
+                    if(headerList.get(i).getColName().indexOf("BOARDNAME") > -1)
                         orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " DESC ";
                     else
                         orderOption1 = headerList.get(i).getColName() + " DESC ";
@@ -1011,26 +996,25 @@ public class EzBoardController {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
-        for (int j = 0; j < dlength; j++){
+        for(int j = 0; j < dlength; j++){
         	resultXML.append("<ROW>");
-            for (i = 0; i < hlength; i++){
+            for(i = 0; i < hlength; i++){
             	resultXML.append("<CELL>");
             	fieldName = headerList.get(i).getColName().toUpperCase();
 
             	// 수정(2007.06.18) : multidata 기능 추가
-                if (fieldName.toUpperCase() == "WRITERNAME" || fieldName.toUpperCase() == "WRITERJOBTITLE" || fieldName.toUpperCase() == "WRITERDEPTNAME" || fieldName.toUpperCase() == "BOARDNAME"){
+                if(fieldName.toUpperCase() == "WRITERNAME" || fieldName.toUpperCase() == "WRITERJOBTITLE" || fieldName.toUpperCase() == "WRITERDEPTNAME" || fieldName.toUpperCase() == "BOARDNAME"){
                     fieldName = fieldName + strMultiData;
                 }
-                if (fieldName.toUpperCase() == "WRITEDATE"){
+                if(fieldName.toUpperCase() == "WRITEDATE"){
                     Date dt = (Date) boardList.get(j).get(fieldName);
                     fieldValue = dt.toString();
-                }
-                else
+                }else
                     fieldValue = (String) boardList.get(j).get(fieldName);
                 
                 resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
                 
-                if (i == 0){
+                if(i == 0){
                 	resultXML.append("<DATA1>"+boardList.get(j).get("BOARDID")+"</DATA1>");
                 	resultXML.append("<DATA2>"+boardList.get(j).get("ITEMID")+"</DATA2>");
         			resultXML.append("<DATA3>"+boardList.get(j).get("WRITERID")+"</DATA3>");
@@ -1079,25 +1063,25 @@ public class EzBoardController {
 	    String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 	    int pMode = 0;
 	
-	    if (boardGroupAdmin_FG == "OK" || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)
+	    if(boardGroupAdmin_FG == "OK" || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)
 	        pMode = 0;
 	    else
 	        pMode = 1;
 	
 	    String strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()));
 	
-	    if (strXML.substring(0, 5).toUpperCase() != "ERROR"){
-	        if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES"){
+	    if(strXML.substring(0, 5).toUpperCase() != "ERROR"){
+	        if(config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES"){
 //	            System.Xml.XmlNodeList docListNode;
 //	            docListNode = xmlret.SelectNodes("TREEVIEWDATA/NODE");
-//	            if (docListNode.Count < 1)
+//	            if(docListNode.Count < 1)
 //	                docListNode = xmlret.SelectNodes("NODES/NODE");
-//                if (docListNode != null){
+//                if(docListNode != null){
 //                    for (int i = 0; i < docListNode.Count; i++){
-//                        if (docListNode.Item(i).ChildNodes.Item(6).InnerText == "4"){
+//                        if(docListNode.Item(i).ChildNodes.Item(6).InnerText == "4"){
 //                        	cmd1 = new OracleCommand("EZSP_GETTHUMBNAILCOUNT");
 //                        }
-//                        else if (docListNode.Item(i).ChildNodes.Item(6).InnerText == "5"){
+//                        else if(docListNode.Item(i).ChildNodes.Item(6).InnerText == "5"){
 //                            GetBoardInfo(docListNode.Item(i).ChildNodes.Item(2).InnerText);   
 //                            cmd1 = new OracleCommand("EZSP_GETQNABRDTOTALITEMCOUNT");
 //                            cmd1.Parameters.Add("v_pADMINTYPE", OracleType.NVarChar, 5).Value = boardinfo.BoardAdmin_FG;
@@ -1114,7 +1098,7 @@ public class EzBoardController {
 //                        int intCount = GetQueryValueSP(ref cmd1);
 //
 //                        string strName = "";
-//                        if (intCount != 0)
+//                        if(intCount != 0)
 //                            strName = "(" + intCount.ToString() + ")";
 //                        docListNode.Item(i).ChildNodes.Item(0).InnerText = docListNode.Item(i).ChildNodes.Item(0).InnerText + strName;
 //                    }
