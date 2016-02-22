@@ -67,6 +67,7 @@ public class CommonUtil {
 		login.setPassword("LOGIN");		
 		LoginVO user = loginService.selectUser(login);
 		user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
+		user.setLang(config.getProperty("config.primary"));
 		
 		return user;
 	}
