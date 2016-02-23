@@ -7,15 +7,18 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
-    <link rel="stylesheet" href="/css/tab.css" type="text/css" />
+    <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
         var xmlhttp = null;
         document.onselectstart = function () { return false; };
         window.onload = window_onload();
+        
         function window_onload() {
-            xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("POST", "/myoffice/ezBoardSTD/aspx/Get_FavoriteList.aspx?MODE=ALL", true);
+        	alert("!!");
+ 			xmlhttp = createXMLHttpRequest();
+        	xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=ALL", true);
             xmlhttp.onreadystatechange = get_listComplete_after;
             xmlhttp.send();
         }
@@ -26,19 +29,23 @@
             checkArr = new Array();
             document.getElementById("contentlist").innerHTML = "<table id='favorite_list' class='mainlist' style='width:100%;'><tr><td style='text-align:center;'><img src='/images/email/progress_img.gif' /></td></tr></table>";
             xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("POST", "/myoffice/ezBoardSTD/aspx/Get_FavoriteList.aspx?MODE=ALL", true);
+            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=ALL", true);
             xmlhttp.onreadystatechange = get_listComplete_after;
             xmlhttp.send();
         }
         function get_listComplete_after() {
+
             if (xmlhttp.readyState != 4) return;
             var listdom = xmlhttp.responseXML;
+alert(listdom);            
             var parentXmlhttp = null;
             parentXmlhttp = createXMLHttpRequest();
             xmlpara = createXmlDom();
             var objRoot, objNode;
             createNodeInsert(xmlpara, objNode, "DATA");
+            
             if (listdom.getElementsByTagName("ROW").length > 0) {
+            	alert("??");            	
                 var strHTML = "<table id='favorite_list'  class='mainlist' style='width:100%;'>";
                 var parentBoardName = getNodeText(listdom.getElementsByTagName("TOPBOARDLIST")[0]).split(';');
                 for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
@@ -77,13 +84,13 @@
             checkHttp.send(xmlpara);
 
             if (checkHttp.responseText != "OK" && checkHttp.status != "200")
-                alert(<spring:message code="ezBoard.t0013" />);
+                alert("");
             //alert(obj.getAttribute("BoardID"));
         }
         function Priority_UP() {
             if (navigator.userAgent.indexOf("MSIE") != -1) {
                 if (_RowObject == null) {
-                    alert(<spring:message code="ezBoard.t0015" />);
+                    alert("행을 선택해주세요.");
                     return;
                 }
                 var ChangeRow = null;
@@ -100,7 +107,7 @@
             }
             else if (navigator.userAgent.indexOf("MSIE") == -1) {
                 if (_RowObject == null) {
-                        alert(<spring:message code="ezBoard.t0015" />);
+                        alert("행을 선택해주세요.");
                         return;
                     }
                     var ChangeRow = null;
@@ -119,7 +126,7 @@
         }
         function Priority_DOWN() {
             if (_RowObject == null) {
-                alert(<spring:message code="ezBoard.t0015" />);
+                alert("행을 선택해주세요.");
                 return;
             }
             var ChangeRow = null;
@@ -201,18 +208,18 @@
             xmlhttp.send(xmlpara);
 
             if (xmlhttp.responseText != "OK" && xmlhttp.status != 200)
-                alert(<spring:message code="ezBoard.t0013" />);
+                alert("변경 중 오류가 생겼습니다.");
             else
-                alert(<spring:message code="ezBoard.t0014" />);
+                alert("변경 되었습니다.");
         }
         var delArr = new Array();
         function favorite_Delete() {
             if (_RowObject == null) {
-                alert(<spring:message code="ezBoard.t5005" />);
+                alert("리스트를 선택해주세요.");
                 return;
             }
             if (_RowObject.getAttribute("BoardID") == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-                alert(<spring:message code="ezBoard.t999068" />);
+                alert("새게시물은 삭제할 수 없습니다.");
                 return;
             }
             var listview = document.getElementById("favorite_list");
@@ -273,6 +280,7 @@
                 <th style="width: 28%;"><span><spring:message code="ezBoard.t00018" /></span></th>
             </tr>
         </table>
+ 
         <div id="contentlist" name="contentlist" style="height: 353px; overflow-y: auto;">
             <table id='favorite_list' class="mainlist" style="width: 100%;">
                 <tr>
