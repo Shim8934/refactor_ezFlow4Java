@@ -124,4 +124,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		select("EzBoardAdminDAO.saveBoardOrder", map);
 	}
 	
+	public void deleteBoard(String boardID) throws Exception{		
+		
+		map.put("v_pBoardID", boardID);		
+		
+		select("EzBoardAdminDAO.deleteBoard", map);
+	}
+	
 }

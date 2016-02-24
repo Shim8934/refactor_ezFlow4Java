@@ -9,13 +9,12 @@
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	    
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
+	    <script type="text/javascript" src="/js/ezBoard/common.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" language="javascript">
-			var UpperBoardID = "${upperBoardID}";
-			
-			var xmlhttp = createXMLHttpRequest();
+			var UpperBoardID = "${upperBoardID}";						
 	        var xmldom = createXmlDom();
 	        var pboardList;
 	        var OrderCell = "";
@@ -47,16 +46,22 @@
 	    	
 	    	function GetSubBoards() {
                 document.getElementById("BoardList").innerHTML = "";
-
-                xmlhttp.open("POST", "/admin/ezBoard/getSubBoards.do?upperBoardID=" + UpperBoardID, false);
-                xmlhttp.send();
-
-                xmldom = loadXMLString(xmlhttp.responseText);
-                var boardList = new ListView();
-                boardList.SetID("lvBoardList2");
-                boardList.DataSource(listviewheader);
-                boardList.DataBind("BoardList");
-                DisplayBoardList();
+GetGUID();
+                $.ajax({
+                	type :	"POST",
+                	dataType :	"text",
+                	async : false,
+                	url :	"/admin/ezBoard/getSubBoards.do",
+                	data :	{ upperBoardID : UpperBoardID },
+                	success : function(result){
+                		xmldom = loadXMLString(result);
+                        var boardList = new ListView();
+                        boardList.SetID("lvBoardList2");
+                        boardList.DataSource(listviewheader);
+                        boardList.DataBind("BoardList");
+                        DisplayBoardList();	
+                	}                	
+                });                
             }	    	
 	    	function listAdd(boardName, boardId) {
                 pparsingXML = "<ROW><CELL>";

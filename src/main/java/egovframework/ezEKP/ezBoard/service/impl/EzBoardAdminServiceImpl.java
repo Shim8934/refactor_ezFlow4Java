@@ -88,5 +88,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveBoardOrder(pBoardIDList);
 	}
+
+	@Override
+	public void deleteBoard(String boardID) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.deleteBoard(boardID);
+	}
+	
 	
 }

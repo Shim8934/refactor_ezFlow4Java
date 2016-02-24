@@ -34,5 +34,7 @@ public interface EzBoardAdminService {
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception;
 	
 	public void saveBoardOrder(String pBoardIDList) throws Exception;
+	
+	public void deleteBoard(String boardID) throws Exception;
 
 }

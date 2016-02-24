@@ -174,7 +174,7 @@
 
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 	        	$.ajax({
-					type : "GET",
+					type : "POST",
 					dataType : "json",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",	        			
@@ -239,17 +239,11 @@
 	                case 3:	                	
 	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
 	                    break;
-	                case 4:
-	                    if (window.ActiveXObject)
-	                        window.open("BoardMove.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
-	                    else
-	                        window.open("BoardMove_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                case 4:	                    
+                        window.open("BoardMove_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
 	                    break;
-	                case 5:
-	                    if (CrossYN())
-	                        window.open("BoardDelete_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
-	                    else
-	                        window.open("BoardDelete.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+	                case 5:	                    
+	                    window.open("/admin/ezBoard/boardDelete.do?boardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");	                    
 	                    break;
 	                case 6:
 	                    window.open("/myoffice/ezBoardSTD/admin/BoardProperty.aspx?BoardID=" + SelectedBoardID, "board_main");

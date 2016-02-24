@@ -45,7 +45,7 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardLeft.do")
-	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{	
+	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{	
 		LoginVO user = commonUtil.userInfo(userID);
 		String serverName = config.getProperty("config.ServerName");
 		
@@ -74,12 +74,12 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardRight.do")
-	public String boardRight(HttpServletRequest request, Model model) throws Exception{		
+	public String boardRight(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		return "admin/ezBoard/boardRight";
 	}	
 	
 	@RequestMapping(value="/admin/ezBoard/get_Admin_TopBoardList.do")
-	public String get_Admin_TopBoardList(HttpServletRequest request, Model model) throws Exception{		
+	public String get_Admin_TopBoardList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
 		String parentBoardID = request.getParameter("boardType");
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID);
 
@@ -88,7 +88,7 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardGroupCreate.do")
-	public String boardGroupCreate(HttpServletRequest request, Model model) throws Exception{
+	public String boardGroupCreate(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -117,12 +117,10 @@ public class EzBoardAdminController {
 		boardPropertyVO.setAccessName2(accessName2);
 		
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);		
-		
-		response.getWriter().write("<node>5</node>");
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardCreate.do")
-	public String boardCreate(HttpServletRequest request, Model model) throws Exception{		
+	public String boardCreate(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -182,26 +180,52 @@ public class EzBoardAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/saveBoardOrder.do")
-	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
-		String pBoardIDList = request.getParameter("boardList");		
+	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String pBoardIDList = request.getParameter("boardList");
 		
-		ezBoardAdminService.saveBoardOrder(pBoardIDList);
-				
+		ezBoardAdminService.saveBoardOrder(pBoardIDList);				
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
-	public void getSubBoards(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public void getSubBoards(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO user = commonUtil.userInfo(userID);
 		
 		String upperBoardID = request.getParameter("upperBoardID");		
-		String pExcludeBoardID = " ";
-		int pMode = 0;		
-		
-		String boardTree = ezBoardController.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), pMode, 1, 0, pExcludeBoardID, "");
+		String boardTree = ezBoardController.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
 
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(boardTree);		
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardDelete.do")
+	public String boardDelete(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(userID);
+		
+		String boardID = request.getParameter("boardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		String boardTree = ezBoardController.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
+
+		if(boardTree.trim().equals("<NODES></NODES>")){
+			model.addAttribute("hasSubBoard", 0);
+		}else{
+			model.addAttribute("hasSubBoard", 1);
+		}
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		
+		return "admin/ezBoard/boardDelete";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/deleteBoard.do")
+	public void deleteBoard(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String boardID = request.getParameter("boardID");
+		
+		ezBoardAdminService.deleteBoard(boardID);
 	}
 	
 }

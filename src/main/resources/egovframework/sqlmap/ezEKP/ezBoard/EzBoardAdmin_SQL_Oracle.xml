@@ -81,6 +81,10 @@
 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" >
+		{CALL EZBOARDSTD.EzSp_BRDDELETEBOARD(#v_pBoardID#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 
