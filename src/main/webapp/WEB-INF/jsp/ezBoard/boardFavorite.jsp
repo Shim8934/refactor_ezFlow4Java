@@ -87,7 +87,7 @@
         	function Priority_UP() {
             	if (navigator.userAgent.indexOf("MSIE") != -1) {
                 	if (_RowObject == null) {
-                    	alert("행을 선택해주세요.");
+                		alert('<spring:message code="ezBoard.t0015" />');
                     	return;
                 	}
                 	var ChangeRow = null;
@@ -104,7 +104,7 @@
             	}
             	else if (navigator.userAgent.indexOf("MSIE") == -1) {
                 	if (_RowObject == null) {
-                    	    alert("행을 선택해주세요.");
+                		alert('<spring:message code="ezBoard.t0015" />');
                         	return;
                     	}
                     	var ChangeRow = null;
@@ -123,7 +123,7 @@
         	}
         	function Priority_DOWN() {
             	if (_RowObject == null) {
-                	alert("행을 선택해주세요.");
+            		alert('<spring:message code="ezBoard.t0015" />');
                 	return;
             	}
             	var ChangeRow = null;
@@ -200,7 +200,7 @@
 		 				pDelboardList : delBoardID,
  					} ,
      				success : function(data, textStatus, jqXHR) {
-	 					alert("변경 되었습니다.");		
+	 					alert('<spring:message code="ezBoard.t0014" />');
  					},
  					error : function(jqXHR, textStatus, errorThrown) {
             	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
@@ -210,11 +210,11 @@
         	var delArr = new Array();
         	function favorite_Delete() {
             	if (_RowObject == null) {
-                	alert("리스트를 선택해주세요.");
+            		alert('<spring:message code="ezBoard.t5005" />');
                 	return;
             	}
             	if (_RowObject.getAttribute("BoardID") == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-                	alert("새게시물은 삭제할 수 없습니다.");
+            		alert('<spring:message code="ezBoard.t999068" />');
                 	return;
             	}
             	var listview = document.getElementById("favorite_list");
