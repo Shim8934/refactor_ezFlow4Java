@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezQuestion.service;
 
 
-public interface ezQuestionService {
+public interface EzQuestionService {
 
 }

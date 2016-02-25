@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EZQuestionDAO")
-public class ezQuestionDAO extends EgovAbstractDAO{
+public class EzQuestionDAO extends EgovAbstractDAO{
 	Map<String, Object> map = new HashMap<String, Object>();
 }
