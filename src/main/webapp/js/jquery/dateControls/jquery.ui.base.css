@@ -8,6 +8,6 @@
  *
  * http://docs.jquery.com/UI/Theming
  */
-@import url("/JQuery/dateControls/jquery.ui.core.css");
-@import url("/JQuery/dateControls/jquery.ui.datepicker.css");
+@import url("/js/jquery/dateControls/jquery.ui.core.css");
+@import url("/js/jquery/dateControls/jquery.ui.datepicker.css");
 
