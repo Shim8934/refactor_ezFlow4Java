@@ -6,8 +6,12 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.ezQuestionService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzQuestionController {
@@ -17,6 +21,15 @@ public class EzQuestionController {
 	@Autowired
 	private Properties config;
 	
+	@Resource(name="loginService")
+	private LoginService loginService;
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+	
 	@Resource(name="EzQuestionService")
 	private ezQuestionService ezQuestionService;
+	
+	@Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;
 }
