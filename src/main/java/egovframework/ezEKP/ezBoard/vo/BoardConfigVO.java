@@ -1,13 +1,20 @@
 package egovframework.ezEKP.ezBoard.vo;
 
 public class BoardConfigVO {
-	private String userId; //유저아이디
-	private int listCount; // 보여줄 리스트 수
-	private String preview; // OFF , W, H 표시
-	private int previewWList; // 오른쪽 리스트
-	private int previewWContent; // 오른쪽 미리보기 영역
-	private int previewHList; // 아래쪽 리스트
-	private int previewHContent; // 아래쪽 미리보기 영역
+	/** 유저아이디*/
+	private String userId; 
+	/** 보여줄 리스트 수*/
+	private int listCount; 
+	/** OFF, W, H 표시*/
+	private String preview; 
+	/** 아래쪽 리스트*/
+	private int previewWList; 
+	/** 아래쪽 미리보기 영역*/
+	private int previewWContent; 
+	/** 오른쪽 리스트*/
+	private int previewHList; 
+	/** 오른쪽 미리보기 영역*/
+	private int previewHContent; 
 	/** 게시글 총 갯수*/
 	private int totalCnt;
 	/** 페이지 수*/
@@ -67,5 +74,4 @@ public class BoardConfigVO {
 	public void setPageCnt(int pageCnt) {
 		this.pageCnt = pageCnt;
 	}
-	
 }
