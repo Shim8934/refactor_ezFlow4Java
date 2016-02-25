@@ -258,7 +258,7 @@ public class EzBoardController {
         resultList = ezBoardService.get_favoriteList(pUserID,pMode);
         String parentName = parentBoardName(resultList);
         StringBuffer xmlStr = new StringBuffer();
-System.out.println(resultList.size());        
+        
         if(resultList.size() > 0 ) {        	
         	xmlStr.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         	xmlStr.append("<ROOT>");
@@ -334,7 +334,7 @@ System.out.println(resultList.size());
 		map.put("pPreviewWContent", pPreviewWContent);
 		map.put("pPreviewHList", pPreviewHList);
 		map.put("pPreviewHContent", pPreviewHContent);	
-System.out.println(map.get("pListCount"));
+
 		ezBoardService.setBoardList_Config(pUserID, map);
 		return map;
 	}
