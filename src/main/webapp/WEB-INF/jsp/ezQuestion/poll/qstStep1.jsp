@@ -5,8 +5,6 @@
 <html>
 <head>
 	<title>STEP1</title>
-	<meta name="GENERATOR" content="Microsoft Visual Studio 7.0" />
-	<meta name="CODE_LANGUAGE" content="C#" />
 	<meta name="vs_defaultClientScript" content="JavaScript" />
 	<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
@@ -15,14 +13,14 @@
 	<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<!-- data picker-->
-	<link rel="stylesheet" href="/js/jQuery/dateControls/jquery.ui.all.css">
-	<script type="text/javascript" src="/js/jQuery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jQuery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="js//jQuery/dateControls/jquery.ui.datepicker.js"></script>
-	<link rel="stylesheet" href="js/jQuery/dateControls/demos.css"/>
+	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 	<!-- time picker-->
-	<script type="text/javascript" src="/js/jQuery/timeControls/jquery.timepicker.js"></script>
-	<link rel="stylesheet" type="text/css" href="/js/jQuery/timeControls/jquery.timepicker.css" />
+	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript">
 		var L_SearchStartDt = "";
     	var L_SearchEndDt = "";
@@ -40,9 +38,11 @@
 	        	document.body.style.UserSelect = 'none';
 	    	}
 	    	document.getElementById("txtSubject").focus();
+			alert("!!");
 		}
 		function Datepicker_DateInit() {
 		}
+		$(document).ready(function() {	
 		$(function () {
 	    	$("#Sdatepicker").datepicker({
 	        	changeMonth: true,
@@ -112,7 +112,7 @@
         	};
         	$.datepicker.setDefaults($.datepicker.regional['en']);
     	});
-    	
+    	});	
     	function Date_calcu(Year) {
 	        if ((Year % 4) && Year % 100 || !(Year % 400))
     	        return true;
@@ -231,30 +231,30 @@
         var szSDay = tempS[2];
         m_PollStartDate = szSYear + szSMonth + szSDay
         if (m_PostDate > m_PollStartDate) {
-        	alert('<spring:message code="ezQuestion.t199" />');
+        	alert("<spring:message code='ezQuestion.t199' />");
             return false;
         }
     }
     function fun_cancel() {
-        if (confirm('<spring:message code="ezQuestion.t434" />')) {
+        if (confirm("<spring:message code='ezQuestion.t434' />")) {
             menuQst_List();
         }
     }
     function menuQst_List() {
-        if(CrossYN())
-           <%--  var szUrl = "/myoffice/ezQuestion/poll/Qst_List_Cross.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>" --%>
+        <%-- if(CrossYN())
+            var szUrl = "/myoffice/ezQuestion/poll/Qst_List_Cross.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>"
         else
-            <%-- var szUrl = "/myoffice/ezQuestion/poll/Qst_List.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>" --%>
-        window.location.href = szUrl;
-    }
+            var szUrl = "/myoffice/ezQuestion/poll/Qst_List.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>"
+        window.location.href = szUrl; --%>
+    } 
     function menu_SelectRange() {
-        if (CrossYN()) {
+      <%--   if (CrossYN()) {
             var item_no = document.getElementById("item_no").value;
 
             if (CrossYN())
-                <%-- var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no; --%>
+                var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no;
             else
-                <%-- var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no; --%>
+                var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no;
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
             if (useragentstr.indexOf(_MSIE) != -1) {
@@ -289,7 +289,7 @@
         }
         else {
             menu_SelectRange_IE();
-        }
+        } --%>
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
