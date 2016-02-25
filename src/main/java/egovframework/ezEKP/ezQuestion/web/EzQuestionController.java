@@ -34,14 +34,14 @@ public class EzQuestionController {
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value="/ezQuestion/qstList.do")
+	@RequestMapping(value="/ezQuestion/poll/qstList.do")
 	public String qstList(){
-		return "ezQuestion/qstList";
+		return "/ezQuestion/poll/qstList";
 	}
 	
-	@RequestMapping(value="/ezQuestion/qstList.do")
+	@RequestMapping(value="/ezQuestion/poll/qstStep1.do")
 	public String qstStep1(){
-		return "ezQuestion/qstStep1";
+		return "/ezQuestion/poll/qstStep1";
 	}
 	
 }
