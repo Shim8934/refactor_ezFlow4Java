@@ -36,7 +36,6 @@
                 		document.body.style.UserSelect = 'none';
             		}
         		}
-        
         	function PreviewOption(obj) {
             	if (obj.value == "OFF") {
                 	document.getElementById("PreviewHSizeDiv").style.display = "none";
@@ -91,7 +90,7 @@
      					pPreviewHContent : PreviewHContent	
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
-    	 				alert("변경 되었습니다.");		
+	     				alert('<spring:message code="ezBoard.t0014" />');
      				},
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
