@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -32,4 +33,15 @@ public class EzQuestionController {
 	
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@RequestMapping(value="/ezQuestion/qstList.do")
+	public String qstList(){
+		return "ezQuestion/qstList";
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstList.do")
+	public String qstStep1(){
+		return "ezQuestion/qstStep1";
+	}
+	
 }
