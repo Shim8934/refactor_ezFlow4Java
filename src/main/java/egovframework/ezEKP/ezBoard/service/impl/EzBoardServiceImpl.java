@@ -54,6 +54,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception {
+		ezBoardDAO.setListOrder(pUserID, map);
+	}
+
+	@Override
 	public int getNewItemListCount(String userID, String nowDate, String fromNow)  throws Exception{
 		return ezBoardDAO.getNewItemListCount(userID, nowDate, fromNow);
 	}
@@ -87,4 +92,12 @@ public class EzBoardServiceImpl implements EzBoardService {
 	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
 		return ezBoardDAO.getBrdTotalItemCount(myFavoriteVO);
 	}
+
+	@Override
+	public void setTabUsed(String pUserID, Map<String, Object> map)
+			throws Exception {
+		ezBoardDAO.setTabUsed(pUserID, map);
+	}
+	
+	
 }
