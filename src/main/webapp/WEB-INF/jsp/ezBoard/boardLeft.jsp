@@ -423,16 +423,16 @@
 		    function Open_Func(idx) {
 		        if (CrossYN()) {
 		            if (idx == 1) {
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_List_Cross.aspx?brd_ID=5";
+		                window.parent.frames["right"].location.href = "/ezQuestion/poll/qstList.do?brd_ID=5";
 		            }
 		            else {
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1_Cross.aspx?brd_ID=5";
+		                window.parent.frames["right"].location.href = "/ezQuestion/poll/qstStep1.do?brd_ID=5";
 		            }
 		        } else {
 		            if (idx == 1)
-		                window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_List.aspx?brd_ID=5";
+		                window.parent.frames["right"].location.href = "/ezQuestion/poll/qstList.do?brd_ID=5";
 		            else
-						window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1_Cross.aspx?brd_ID=5";
+						window.parent.frames["right"].location.href = "/ezQuestion/poll/qstStep1.do?brd_ID=5";
 		                //window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1.aspx?brd_ID=5"
 		            SetTreeviewUnSelect("");
 		        }
