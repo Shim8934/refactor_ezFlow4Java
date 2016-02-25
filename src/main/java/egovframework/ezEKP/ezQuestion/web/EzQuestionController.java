@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezQuestion.service.ezQuestionService;
+import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -28,7 +28,7 @@ public class EzQuestionController {
     private EgovFileScrty egovFileScrty;
 	
 	@Resource(name="EzQuestionService")
-	private ezQuestionService ezQuestionService;
+	private EzQuestionService ezQuestionService;
 	
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
