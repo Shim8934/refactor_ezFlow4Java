@@ -38,5 +38,9 @@ public interface EzBoardService {
 	int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception;
 
 	int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO)  throws Exception;
+	
+	void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
+	
+	void setTabUsed(String pUserID, Map<String, Object> map) throws Exception;
 
 }
