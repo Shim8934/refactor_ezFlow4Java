@@ -1,8 +1,22 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import egovframework.ezEKP.ezQuestion.service.ezQuestionService;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
 public class EzQuestionController {
-
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
+	
+	@Resource(name="EzQuestionService")
+	private ezQuestionService ezQuestionService;
 }
