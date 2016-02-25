@@ -248,7 +248,8 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/get_favoriteList.do")
-	public String get_favoriteList(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,LoginVO loginVO) throws Exception{
+	public void get_favoriteList(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
+	
 		loginVO = commonUtil.userInfo(userID);
 		List<MyFavoriteVO> resultList = new ArrayList<MyFavoriteVO>();
         String pMode = request.getParameter("MODE");
@@ -256,11 +257,35 @@ public class EzBoardController {
         //즐겨찾기 리스트
         resultList = ezBoardService.get_favoriteList(pUserID,pMode);
         String parentName = parentBoardName(resultList);
+        StringBuffer xmlStr = new StringBuffer();
+System.out.println(resultList.size());        
+        if(resultList.size() > 0 ) {        	
+        	xmlStr.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        	xmlStr.append("<ROOT>");
+        	xmlStr.append("<DATA>");
+        	for(int i=0; i<resultList.size(); i++) {        		
+        	xmlStr.append("<ROW>");
+        	xmlStr.append("<BOARDID>"+resultList.get(i).getBoardId()+"</BOARDID>");
+        	xmlStr.append("<BOARDNAME>"+resultList.get(i).getBoardName()+"</BOARDNAME>");    	
+        	xmlStr.append("<BOARDNAME2>"+resultList.get(i).getBoardName2()+"</BOARDNAME2>");
+        	xmlStr.append("<TABUSED>"+resultList.get(i).getTabUsed()+"</TABUSED>");
+        	xmlStr.append("</ROW>");
+        	}      	
+        	xmlStr.append("</DATA>");
+        	xmlStr.append("<DATA>");
+        	xmlStr.append("<TOPBOARDLIST>"+parentName+"</TOPBOARDLIST>");
+        	xmlStr.append("</DATA>");
+        	xmlStr.append("</ROOT>");
+        	
+        	response.setContentType("text/xml"); 
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write(xmlStr.toString());
+        }
         
         modelMap.addAttribute("parentName", parentName);
         modelMap.addAttribute("resultList", resultList);
-        
-		return "json";
+        		
 	}
 	
 	
@@ -308,7 +333,8 @@ public class EzBoardController {
 		map.put("pPreviewWList", pPreviewWList);
 		map.put("pPreviewWContent", pPreviewWContent);
 		map.put("pPreviewHList", pPreviewHList);
-		map.put("pPreviewHContent", pPreviewHContent);		
+		map.put("pPreviewHContent", pPreviewHContent);	
+System.out.println(map.get("pListCount"));
 		ezBoardService.setBoardList_Config(pUserID, map);
 		return map;
 	}
@@ -325,7 +351,7 @@ public class EzBoardController {
         for(int i = 0; i < resultList.size(); i++){
             BoardIdList += resultList.get(i).getBoardId().trim();
             if(i != resultList.size() - 1)
-                BoardIdList += ";";
+                BoardIdList += ";";            
         }
         BoardIdListCount = BoardIdList.split(";").length - 1;
         rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount);
@@ -1112,5 +1138,38 @@ public class EzBoardController {
 //	    xmlret.Save(Response.OutputStream);
 //	    xmlret = null;
 
+	}
+	
+	@RequestMapping(value="/ezBoard/saveListOrder.do", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> saveListOrder(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(userID);
+        String pUserID = loginVO.getId();
+        String pBoardList = request.getParameter("pBoardList");
+        String pDelBoardList = request.getParameter("pDelboardList");
+        int pBoardListCount = pBoardList.split(";").length-1;
+        int pDelBoardListCount = pDelBoardList.split(";").length-1;
+ 
+ 		Map<String, Object> map = new HashMap<String, Object>();
+        map.put("pBoardList",pBoardList);
+        map.put("pDelBoardList",pDelBoardList);
+        map.put("pBoardListCount",pBoardListCount);
+        map.put("pBoardList",pBoardList);
+        map.put("pDelBoardListCount",pDelBoardListCount);
+        ezBoardService.setListOrder(pUserID, map);
+		return map;
+	}
+	
+	@RequestMapping(value="/ezBoard/set_TabUse.do")
+	public @ResponseBody Map<String, Object> set_TabUse(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
+		loginVO = commonUtil.userInfo(userID);
+		String pUserID = loginVO.getId();
+		String pBoardList = request.getParameter("pBoardList");
+		String tabUsed = request.getParameter("tabUsed");
+        
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId",pBoardList);
+        map.put("tabUsed",tabUsed);
+        ezBoardService.setTabUsed(pUserID, map);
+        return map;
 	}
 }
