@@ -114,7 +114,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception {
 		map.put("v_ORDERBOARDIDLIST", map.get("pBoardList"));
-System.out.println(map.get("pBoardList")+"!!!!");		
 		map.put("v_ORDERBOARDLISTCOUNT", map.get("pBoardListCount"));
 		map.put("v_DELBOARDIDLIST", map.get("pDelBoardList"));
 		map.put("v_DELBOARDLISTCOUNT", map.get("pDelBoardListCount"));
