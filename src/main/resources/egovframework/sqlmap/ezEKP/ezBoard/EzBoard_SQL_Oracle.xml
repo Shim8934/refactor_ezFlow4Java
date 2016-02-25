@@ -18,7 +18,7 @@
 		<result property="boardName" column="BOARDNAME" columnIndex="2"/>
 		<result property="boardName2" column="BOARDNAME2" columnIndex="3"/>
 		<result property="tabUsed" column="TABUSED" columnIndex="4"/>
-		<result property="guBun" column="GUBUN" columnIndex="5"/>
+		<!-- <result property="guBun" column="GUBUN" columnIndex="5"/> -->
 	</resultMap>
 	
 	<resultMap class="BoardListVO" id="getNewItemList">
@@ -85,6 +85,14 @@
 	
 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SET_LISTORDER(#v_ORDERBOARDIDLIST#, #v_ORDERBOARDLISTCOUNT#, #v_DELBOARDIDLIST#, #v_DELBOARDLISTCOUNT#, #v_USERID#, #v_ERR_CD,javaType=java.lang.Integer,jdbcType=INTEGER,mode=INOUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.set_TabUsed" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SET_TABUSED(#v_BOARDID#, #v_TABUSED#, #v_USERID#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
