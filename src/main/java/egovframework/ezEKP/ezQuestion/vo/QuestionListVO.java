@@ -9,7 +9,7 @@ public class QuestionListVO {
 	public String userID;
 	/** 제목*/
 	public String title;
-	/** 이라ㅓㅁㄴ이ㅏㅓㄹ 주소값*/
+	/** 제목클릭시 인자로들어가는 값*/
 	public String receve;
 	/** 기명여부*/
 	public String publicFlg;
@@ -21,6 +21,8 @@ public class QuestionListVO {
 	public String userName;
 	/** 결과공개*/
 	public String resultFlg;
+	/** 페이지네이션부분 추가 필요*/
+
 	
 	public int getItemNo() {
 		return itemNo;
