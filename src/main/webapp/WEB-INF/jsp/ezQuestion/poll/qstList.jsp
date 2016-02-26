@@ -21,6 +21,7 @@
 		}
 		</style>
 		<script language="JavaScript" type="text/javascript">
+		/* c:out value */
 		    var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "${pBrdID}";
 		    var g_BrdNM = "${pBrdNM}";
@@ -364,25 +365,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -407,26 +408,26 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -529,21 +530,21 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezQuestion.t300" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
-		  <ul>
-		    <li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
-		    <li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
-		    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
-		    <li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
-		    <li><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
-		    <li><span onClick="menu_Delete()"><spring:message code="ezQuestion.t177" /></span></li>
-		     <li><span onClick="menu_reuse()"><spring:message code="ezQuestion.t700" /></span></li>
-		  </ul>
+			<ul>
+				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
+				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
+				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
+				<li><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
+				<li><span onClick="menu_Delete()"><spring:message code="ezQuestion.t177" /></span></li>
+				<li><span onClick="menu_reuse()"><spring:message code="ezQuestion.t700" /></span></li>
+			</ul>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
+		</script>		 
+	<form method="post">
 		<table id="QstList" class="mainlist" width="100%"> 
-		  <%-- <form method="post" runat="server"> 
 		    <tr> 
 		      <th width="30" align="center"> <spring:message code="ezQuestion.t306" /></th> 
 		      <th width="60%" > <spring:message code="ezQuestion.t307" /></th> 
@@ -552,10 +553,9 @@
 		      <th width="60" > <spring:message code="ezQuestion.t310" /></th> 
 		      <th width="90" > <spring:message code="ezQuestion.t265" /></th> 
 		      <th width="65" > <spring:message code="ezQuestion.t311" /></th> 
-		    </tr> 
-		    <asp:Repeater id="reList" runat="server"> 
-		      <ItemTemplate> 
-		        <tr id="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>" class="white"> 
+		    </tr>
+		    <c:forEach var="ezQuestionVO" items="list"> 
+		        <%-- <tr id="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>" class="white"> 
 		          <td style="padding:0"> <input type="checkbox" id="menuCheck<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>" value="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>"></td> 
 		          <td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText %>"  onclick=title_Onclick("<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("RECEVE").InnerText.Replace("'", "") %>")  ><nobr><%# Server.HtmlDecode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText) %></nobr></td> 
 		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PUBLIC_FLG").InnerText %> </td> 
@@ -563,16 +563,16 @@
 		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("RESPONSE_RANGE").InnerText %> </td> 
 		          <td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("USER_ID").InnerText %>')"> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("USER_NM").InnerText %> </a> </td> 
 		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PUBLIC_RESULT_FLG").InnerText %> </td> 
-		        </tr>
-		        <% if(pTotalCnt ==0) { %> 
+		        </tr> --%>
+	        </c:forEach>
+		    <c:if test="${pTotalCnt == 0}"> 
 		        <tr> 
-		          <td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <%=RM.GetString("t312")%></td> 
+		          <td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
 		        </tr> 
-		        <% } %> 
-		      </ItemTemplate> 
-		    </asp:Repeater> 
-		  </form>  --%>
+	        </c:if> 
 		</table> 
+	</form>
+		 
 		    <div id="tblPageRayer"></div>
 	</body>
 </html>
