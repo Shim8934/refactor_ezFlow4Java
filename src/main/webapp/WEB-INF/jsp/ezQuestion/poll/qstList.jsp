@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
+		<script type="text/javascript" src="/js/ezQuestion/ezQuestion.js"></script>
 		<style>
 		.pagetd{padding-top:6px; }
 		.pcol{padding-top:6px; }
@@ -29,7 +30,7 @@
 		    var totalPage = "${pTotalPage}";
 		    var totalCount = "${pTotalCnt}";
 		    var szSelectedItemNo = "";
-		    var szSearchParam = "&title=" + "${pTitle}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}";
+// 		    var szSearchParam = "&title=" + "${pTitle}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}";
 		    var szPubFlag = "";
 			var EndPollYN, ResponseYN, ResultOpenYN
 			var MultiResYN, WriteYN, AdminYN
@@ -51,7 +52,7 @@
 			function Check_UserPollStatus(pItemNo, pflag) {
 			    try {
 			        var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-			        var szUrl = "Call_UsersPollStatus.aspx?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
+			        var szUrl = "Call_UsersPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
 			        xmlHttp.Open("POST", szUrl, false);
 			        xmlHttp.Send();
 			        var strXML = xmlHttp.responseXML.xml;
@@ -198,7 +199,7 @@
 		        }
 		    }
 		    function menu_NewQuestion() {
-		        var szUrl = g_ezBoard + "/Poll/Qst_Step1.aspx?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
+		        var szUrl = g_ezBoard + "/Poll/Qst_Step1.do?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
 		        window.location.href = szUrl;
 		    }
 		
@@ -258,14 +259,14 @@
 		        <%-- if (menu_Checking()) {
 		            if (Check_UserPollStatus(szSelectedItemNo, "Response") == false) return;
 		
-		            var szUrl = "Qst_Response.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "Qst_Response.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
 		    function menu_Result() {
 		        <%-- if (menu_Checking()) {
 		            if (Check_UserPollStatus(szSelectedItemNo, "Result") == false) return;
-		            var szUrl = "Qst_Result.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "Qst_Result.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
@@ -274,7 +275,7 @@
 		        <%-- if (menu_Checking()) {
 		            if (Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false) return;
 		
-		            var szUrl = "Qst_Change_Permission.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "Qst_Change_Permission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
@@ -313,7 +314,7 @@
 		            if (Check_UserPollStatus(p_SelectedItemNo, "Delete") == false) return;
 		
 		
-		            var szUrl = "Qst_Delete_ItemMsg.aspx?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo;
+		            var szUrl = "Qst_Delete_ItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo;
 		            var szParam = "dialogHeight:260px;dialogWidth:400px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no;";
 		
 		            var rgParams = new Array();
@@ -330,17 +331,17 @@
 		        }
 		    }
 		    function menu_Analysis() {
-		       <%--  if (menu_Checking()) {
-		            if (Check_UserPollStatus(szSelectedItemNo, "Analysis") == false) return;
-		            if(pNoneActiveX == "YES")
-		                var szUrl = "Qst_Analysis_Cross.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
+		       <%-- if (menu_checking()) {
+		            if (check_userpollstatus(szselecteditemno, "analysis") == false) return;
+		            if(pnoneactivex == "yes")
+		                var szurl = "qst_analysis_cross.do?<%=receve_str2%>&item_no=" + szselecteditemno + "&pubflag=" + szpubflag;
 		            else
-		                var szUrl = "Qst_Analysis_Cross.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
-		            window.location.href = szUrl;
+		                var szurl = "qst_analysis_cross.do?<%=receve_str2%>&item_no=" + szselecteditemno + "&pubflag=" + szpubflag;
+		            window.location.href = szurl;
 		        } --%>
 		    }
 		    function menu_Search() {
-		        var szUrl = "/myOffice/ezQuestion/poll/Qst_Search_Cross.aspx?brd_id=" + g_BrdID;
+		        var szUrl = "/myOffice/ezQuestion/poll/Qst_Search_Cross.do?brd_id=" + g_BrdID;
 		        window.location.href = szUrl;
 		    }
 		
@@ -349,7 +350,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 400) / 2;
-		        window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        window.open("/myoffice/common/ShowPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 		    var BlockSize = 10;
 		    function td_Create1(strtext) {
@@ -463,10 +464,10 @@
 		            return;
 		    }
 		    function search_Set(pPage) {
-		       <%--  if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('<%=pTotalPage%>')) {
-		            var szUrl = "Qst_List.aspx?brd_id=" + g_BrdID + "&page=" + pPage + szSearchParam;
+		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${pTotalPage}')) {
+		            var szUrl = "Qst_List.do?brd_id=" + g_BrdID + "&page=" + pPage + szSearchParam;
 		            window.location.href = szUrl;
-		        } --%>
+		        }
 		    }
 		    function changePage() {
 		        if (event.keyCode == 13) {
@@ -481,7 +482,7 @@
 		    }
 		
 		    function title_Onclick(pReceve) {
-		        document.location.href = "Poll_open.aspx?" + pReceve;
+		        document.location.href = "Poll_open.do?" + pReceve;
 		    }
 		    function menu_reuse() {
 		        var szCheckCnt = 0;
@@ -516,7 +517,7 @@
 		        if (szCheckCnt == 1) {
 		            if (Check_UserPollStatus(p_SelectedItemNo, "Reuse") == false) return;
 		
-		            var szUrl = "Qst_Step1_reuse_cross.aspx?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
+		            var szUrl = "Qst_Step1_reuse_cross.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
 		            window.location.href = szUrl;
 		        }
 		        else {
@@ -543,36 +544,36 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>		 
-	<form method="post">
-		<table id="QstList" class="mainlist" width="100%"> 
-		    <tr> 
-		      <th width="30" align="center"> <spring:message code="ezQuestion.t306" /></th> 
-		      <th width="60%" > <spring:message code="ezQuestion.t307" /></th> 
-		      <th width="60" > <spring:message code="ezQuestion.t308" /></th> 
-		      <th width="80" > <spring:message code="ezQuestion.t309" /></th> 
-		      <th width="60" > <spring:message code="ezQuestion.t310" /></th> 
-		      <th width="90" > <spring:message code="ezQuestion.t265" /></th> 
-		      <th width="65" > <spring:message code="ezQuestion.t311" /></th> 
-		    </tr>
-		    <c:forEach var="ezQuestionVO" items="list"> 
-		        <%-- <tr id="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>" class="white"> 
-		          <td style="padding:0"> <input type="checkbox" id="menuCheck<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>" value="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ITEM_NO").InnerText %>"></td> 
-		          <td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText %>"  onclick=title_Onclick("<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("RECEVE").InnerText.Replace("'", "") %>")  ><nobr><%# Server.HtmlDecode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText) %></nobr></td> 
-		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PUBLIC_FLG").InnerText %> </td> 
-		          <td> <%# GetLocalTime(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("POLL_ENDDATE").InnerText).Substring(0,10) %> </td> 
-		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("RESPONSE_RANGE").InnerText %> </td> 
-		          <td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("USER_ID").InnerText %>')"> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("USER_NM").InnerText %> </a> </td> 
-		          <td> <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PUBLIC_RESULT_FLG").InnerText %> </td> 
-		        </tr> --%>
-	        </c:forEach>
-		    <c:if test="${pTotalCnt == 0}"> 
-		        <tr> 
-		          <td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
-		        </tr> 
-	        </c:if> 
-		</table> 
-	</form>
+		<form method="post">
+			<table id="QstList" class="mainlist" width="100%"> 
+			    <tr> 
+					<th width="30" align="center"> <spring:message code="ezQuestion.t306" /></th> 
+					<th width="60%" > <spring:message code="ezQuestion.t307" /></th> 
+					<th width="60" > <spring:message code="ezQuestion.t308" /></th> 
+					<th width="80" > <spring:message code="ezQuestion.t309" /></th> 
+					<th width="60" > <spring:message code="ezQuestion.t310" /></th> 
+					<th width="90" > <spring:message code="ezQuestion.t265" /></th> 
+					<th width="65" > <spring:message code="ezQuestion.t311" /></th> 
+			    </tr>
+			    <%-- <c:forEach var="QuestionListVO" items="list"> 
+			        <tr id="${QuestionListVO.itemNo }" class="white"> 
+			          <td style="padding:0"> <input type="checkbox" id="menuCheck${QuestionListVO.itemNo}" value="${QuestionListVO.itemNo}"></td> 
+			          <td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${QuestionListVO.title}"  onclick=title_Onclick(${QuestionListV.receve})  ><nobr>${QuestionListVO.title}</nobr></td> 
+			          <td> ${publicFlg} </td> 
+			          <td> <%# GetLocalTime(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("POLL_ENDDATE").InnerText).Substring(0,10) %> </td> 
+			          <td> ${responseRange} </td> 
+			          <td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${QuestionListVO.userID}')"> ${QuestionListVO.userName} </a> </td> 
+			          <td> ${QuestionListVO.resultFlg} </td> 
+			        </tr>
+		        </c:forEach> --%>
+			    <c:if test="${pTotalCnt == 0}"> 
+			        <tr> 
+						<td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
+		       		</tr> 
+		        </c:if> 
+			</table> 
+		</form>
 		 
-		    <div id="tblPageRayer"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>
