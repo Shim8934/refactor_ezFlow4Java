@@ -1,7 +1,12 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+<<<<<<< .mine
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+=======
 import java.util.HashMap;
 import java.util.Map;
+>>>>>>> .r1508
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -9,14 +14,22 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+<<<<<<< .mine
+import org.springframework.ui.ModelMap;
+=======
 import org.springframework.ui.Model;
+>>>>>>> .r1508
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+<<<<<<< .mine
+import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
+=======
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
+>>>>>>> .r1508
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -42,8 +55,25 @@ public class EzQuestionController {
     private EgovMessageSource egovMessageSource;
 	
 	@RequestMapping(value="/ezQuestion/poll/qstList.do")
-	public String qstList(){
-		return "/ezQuestion/poll/qstList";
+	public String qstList(ModelMap map,QuestionListVO questionListVO) throws Exception{
+/*		if(questionListVO.getUserId()==null)
+			questionListVO.setUserId(" ");
+		if(questionListVO.getTitle()==null)
+			questionListVO.setTitle(" ");
+		if(questionListVO.getResponseRange()==null)
+			questionListVO.setResponseRange(" ");
+		if(questionListVO.getPostDate()==null){
+			questionListVO.setPostDate();
+		}
+		if(questionListVO.getPollEndDate()==null){
+			questionListVO.setPollEndDate();
+		}
+		if(questionListVO.getLang()==null)
+			questionListVO.setLang(" ");
+			
+		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
+		System.out.println(questionListVO.getTotalCnt());*/
+		return "/ezQuestion/qstList";
 	}
 	
 	@RequestMapping(value="/ezQuestion/poll/qstStep1.do")
