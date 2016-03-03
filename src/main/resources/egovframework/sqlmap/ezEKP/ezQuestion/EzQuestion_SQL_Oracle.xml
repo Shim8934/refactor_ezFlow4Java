@@ -2,6 +2,33 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezQuestion">
+
+	<typeAlias  alias="QuestionListVO" type="egovframework.ezEKP.ezQuestion.vo.QuestionListVO"/>
+	
+	<resultMap class="QuestionListVO" id="qstList">
+		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
+		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
+		<result property="userId"			column="USER_ID"			columnIndex="3"/>
+		<result property="userEmail"		column="USER_EMAIL"			columnIndex="4"/>
+		<result property="title"			column="TITLE"				columnIndex="5"/>
+		<result property="content"			column="CONTENT"			columnIndex="6"/>
+		<result property="pollEndDate"		column="POLL_ENDDATE"		columnIndex="7"/>
+		<result property="postDate"			column="POST_DATE"			columnIndex="8"/>
+		<result property="publicResultFlg"	column="PUBLIC_RESULT_FLG"	columnIndex="9"/>
+		<result property="publicFlg"		column="PUBLIC_FLG"			columnIndex="10"/>
+		<result property="multiResponseFlg"	column="MULTI_RESPONSE_FLG"	columnIndex="11"/>
+		<result property="endFlg"			column="END_FLG"			columnIndex="12"/>
+		<result property="responseRange"	column="RESPONSE_RANGE"		columnIndex="13"/>
+	</resultMap>
+	
+	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
+		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_PSTRBRDID#, #v_PITEMNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -10,6 +37,5 @@
 		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,
 												    #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>
-	
 	
 </sqlMap>
