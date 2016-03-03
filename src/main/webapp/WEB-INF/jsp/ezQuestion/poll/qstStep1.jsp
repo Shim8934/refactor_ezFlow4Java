@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
+	<head>
 	<title>STEP1</title>
 	<meta name="vs_defaultClientScript" content="JavaScript" />
 	<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
@@ -27,7 +27,15 @@
 		var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 		var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31);
 		var g_windowReference = null;
-
+		
+		//현재 시간 구하는 함수
+		Date.prototype.yyyymmdd = function() {
+		    var yyyy = this.getFullYear().toString();
+		    var mm = (this.getMonth() + 1).toString();
+		    var dd = this.getDate().toString();
+		    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
+		}
+		
 		document.onselectstart = function () { return false; };
 		window.onload = function () {
 		    if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -38,11 +46,10 @@
 	        	document.body.style.UserSelect = 'none';
 	    	}
 	    	document.getElementById("txtSubject").focus();
-			alert("!!");
 		}
 		function Datepicker_DateInit() {
 		}
-		$(document).ready(function() {	
+		
 		$(function () {
 	    	$("#Sdatepicker").datepicker({
 	        	changeMonth: true,
@@ -112,7 +119,7 @@
         	};
         	$.datepicker.setDefaults($.datepicker.regional['en']);
     	});
-    	});	
+    	
     	function Date_calcu(Year) {
 	        if ((Year % 4) && Year % 100 || !(Year % 400))
     	        return true;
@@ -223,7 +230,8 @@
 
             PollEndDate = szEYear + szEMonth + szEDay;
         }
-        <%-- var m_PostDate = String('<%=DateTime.Now.ToString("yyyyMMdd")%>'); --%>
+        
+        var m_PostDate = new Date().yyyymmdd(); 
         var m_PollStartDate = L_SearchStartDt;
         var tempS = m_PollStartDate.split("-");
         var szSYear = tempS[0];
@@ -248,13 +256,13 @@
         window.location.href = szUrl; --%>
     } 
     function menu_SelectRange() {
-      <%--   if (CrossYN()) {
+         if (CrossYN()) {
             var item_no = document.getElementById("item_no").value;
 
             if (CrossYN())
-                var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no;
+                var szUrl = "/ezQuestion/poll/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
             else
-                var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no;
+                var szUrl = "/ezQuestion/poll/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
             if (useragentstr.indexOf(_MSIE) != -1) {
@@ -289,7 +297,7 @@
         }
         else {
             menu_SelectRange_IE();
-        } --%>
+        } 
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
@@ -354,7 +362,7 @@
 </style>
 </HEAD>
 <body class="mainbody"> 
-<form id="frmCreate" method="post" action="Qst_Step2_Cross.aspx" name="frmCreate"> 
+<form id="frmCreate" method="post" action="/ezQuestion/poll/qstStep2.do" name="frmCreate"> 
         <h1><spring:message code="ezQuestion.t436" /></h1>
         <div id="mainmenu">
             <ul>
@@ -397,9 +405,9 @@
                         <input type="text" name="hidopenResult" id="hidopenResult" value="1" style="display:none"> 
                         <input type="text" name="hidMultiResponse" id="hidMultiResponse" value="0" style="display:none"> 
                         <input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-                        <input type="text" name="brd_id" id="brd_id" value="" style="display:none"> 
-                        <input type="text" name="brd_nm" id="brd_nm" value="" style="display:none"> 
-                        <input type="text" name="brd_postterm" id="brd_postterm" value="" style="display:none"> 
+                        <input type="text" name="brd_id" id="brd_id" value="${requestScope.brdId}" style="display:none"> 
+                        <input type="text" name="brd_nm" id="brd_nm" value="${requestScope.brdNm}" style="display:none"> 
+                        <input type="text" name="brd_postterm" id="brd_postterm" value="${requestScope.brdPostterm}" style="display:none"> 
                         <input type="text" name="item_no" id="item_no" style="display:none"> 
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
