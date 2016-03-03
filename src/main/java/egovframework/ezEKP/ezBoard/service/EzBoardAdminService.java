@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
+import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
@@ -26,6 +28,8 @@ public interface EzBoardAdminService {
 	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception;
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
+	
+	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 	
@@ -36,5 +40,9 @@ public interface EzBoardAdminService {
 	public void saveBoardOrder(String pBoardIDList) throws Exception;
 	
 	public void deleteBoard(String boardID) throws Exception;
+	
+	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
+	
+	public void saveBackGroundImage(Map<String, Object> map) throws Exception;
 
 }

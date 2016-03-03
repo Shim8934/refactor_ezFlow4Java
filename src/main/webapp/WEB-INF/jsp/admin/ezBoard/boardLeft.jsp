@@ -252,7 +252,7 @@
 	                    window.open("/myoffice/ezBoardSTD/admin/BoardACL.aspx?PARENTNEED=Y&BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID + "&AccessLevel=" + AccessLevel, "board_main");
 	                    break;
 	                case 8:
-	                    window.open("/myoffice/ezBoardSTD/admin/BoardBackGround.aspx?PARENTNEED=Y&BoardID=" + SelectedBoardID + "&ParentBoardID=" + SelectedBoardParentBoardID, "board_main");
+	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
 	                    break;
 	                default:
 	                    break;

@@ -68,76 +68,75 @@ public class EgovFileMngUtil {
      * @throws Exception
      */
     public List<FileVO> parseFileInf(Map<String, MultipartFile> files, String KeyStr, int fileKeyParam, String atchFileId, String storePath) throws Exception {
-	int fileKey = fileKeyParam;
+		int fileKey = fileKeyParam;
+	
+		String storePathString = "";
+		String atchFileIdString = "";
+	
+		if ("".equals(storePath) || storePath == null) {
+		    storePathString = propertyService.getString("Globals.fileStorePath");
+		} else {
+		    storePathString = propertyService.getString(storePath);
+		}
+	
+		if ("".equals(atchFileId) || atchFileId == null) {
+		    atchFileIdString = idgenService.getNextStringId();
+		} else {
+		    atchFileIdString = atchFileId;
+		}
+	
+		File saveFolder = new File(storePathString);
+	
+		if (!saveFolder.exists() || saveFolder.isFile()) {
+		    saveFolder.mkdirs();
+		}
+	
+		Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
+		MultipartFile file;
+		String filePath = "";
+		List<FileVO> result  = new ArrayList<FileVO>();
+		FileVO fvo;
 
-	String storePathString = "";
-	String atchFileIdString = "";
-
-	if ("".equals(storePath) || storePath == null) {
-	    storePathString = propertyService.getString("Globals.fileStorePath");
-	} else {
-	    storePathString = propertyService.getString(storePath);
-	}
-
-	if ("".equals(atchFileId) || atchFileId == null) {
-	    atchFileIdString = idgenService.getNextStringId();
-	} else {
-	    atchFileIdString = atchFileId;
-	}
-
-	File saveFolder = new File(storePathString);
-
-	if (!saveFolder.exists() || saveFolder.isFile()) {
-	    saveFolder.mkdirs();
-	}
-
-	Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
-	MultipartFile file;
-	String filePath = "";
-	List<FileVO> result  = new ArrayList<FileVO>();
-	FileVO fvo;
-
-	while (itr.hasNext()) {
-	    Entry<String, MultipartFile> entry = itr.next();
-
-	    file = entry.getValue();
-	    String orginFileName = file.getOriginalFilename();
-
-	    //--------------------------------------
-	    // 원 파일명이 없는 경우 처리
-	    // (첨부가 되지 않은 input file type)
-	    //--------------------------------------
-	    if ("".equals(orginFileName)) {
-		continue;
-	    }
-	    ////------------------------------------
-
-	    int index = orginFileName.lastIndexOf(".");
-	    //String fileName = orginFileName.substring(0, index);
-	    String fileExt = orginFileName.substring(index + 1);
-	    String newName = KeyStr + EgovStringUtil.getTimeStamp() + fileKey;
-	    long _size = file.getSize();
-
-	    if (!"".equals(orginFileName)) {
-		filePath = storePathString + File.separator + newName;
-		file.transferTo(new File(filePath));
-	    }
-	    fvo = new FileVO();
-	    fvo.setFileExtsn(fileExt);
-	    fvo.setFileStreCours(storePathString);
-	    fvo.setFileMg(Long.toString(_size));
-	    fvo.setOrignlFileNm(orginFileName);
-	    fvo.setStreFileNm(newName);
-	    fvo.setAtchFileId(atchFileIdString);
-	    fvo.setFileSn(String.valueOf(fileKey));
-
-	    //writeFile(file, newName, storePathString);
-	    result.add(fvo);
-
-	    fileKey++;
-	}
-
-	return result;
+		while (itr.hasNext()) {
+		    Entry<String, MultipartFile> entry = itr.next();
+	
+		    file = entry.getValue();
+		    String orginFileName = file.getOriginalFilename();
+	
+		    //--------------------------------------
+		    // 원 파일명이 없는 경우 처리
+		    // (첨부가 되지 않은 input file type)
+		    //--------------------------------------
+		    if ("".equals(orginFileName)) {
+			continue;
+		    }
+		    ////------------------------------------
+	
+		    int index = orginFileName.lastIndexOf(".");
+		    //String fileName = orginFileName.substring(0, index);
+		    String fileExt = orginFileName.substring(index + 1);
+		    String newName = KeyStr + EgovStringUtil.getTimeStamp() + fileKey;
+		    long _size = file.getSize();
+	
+		    if (!"".equals(orginFileName)) {
+			filePath = storePathString + File.separator + newName;
+			file.transferTo(new File(filePath));
+		    }
+		    fvo = new FileVO();
+		    fvo.setFileExtsn(fileExt);
+		    fvo.setFileStreCours(storePathString);
+		    fvo.setFileMg(Long.toString(_size));
+		    fvo.setOrignlFileNm(orginFileName);
+		    fvo.setStreFileNm(newName);
+		    fvo.setAtchFileId(atchFileIdString);
+		    fvo.setFileSn(String.valueOf(fileKey));
+	
+		    //writeFile(file, newName, storePathString);
+		    result.add(fvo);
+	
+		    fileKey++;
+		}
+		return result;
     }
 
     /**
@@ -149,50 +148,51 @@ public class EgovFileMngUtil {
      * @throws Exception
      */
     protected void writeUploadedFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
-	InputStream stream = null;
-	OutputStream bos = null;
-	String stordFilePathReal = (stordFilePath==null?"":stordFilePath).replaceAll("..","");
-	try {
-	    stream = file.getInputStream();
-	    File cFile = new File(stordFilePathReal);
-
-	    if (!cFile.isDirectory()) {
-		boolean _flag = cFile.mkdir();
-		if (!_flag) {
-		    throw new IOException("Directory creation Failed ");
-		}
-	    }
-
-	    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-
-	    int bytesRead = 0;
-	    byte[] buffer = new byte[BUFF_SIZE];
-
-	    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-		bos.write(buffer, 0, bytesRead);
-	    }
-	} catch (FileNotFoundException fnfe) {
-		LOGGER.debug("fnfe: {}", fnfe);
-	} catch (IOException ioe) {
-		LOGGER.debug("ioe: {}", ioe);
-	} catch (Exception e) {
-		LOGGER.debug("e: {}", e);
-	} finally {
-	    if (bos != null) {
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
 		try {
-		    bos.close();
-		} catch (Exception ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+		    stream = file.getInputStream();
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdir();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+	
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
 		}
-	    }
-	    if (stream != null) {
-		try {
-		    stream.close();
-		} catch (Exception ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
-		}
-	    }
-	}
     }
 
     /**
@@ -204,8 +204,8 @@ public class EgovFileMngUtil {
      */
     public static void downFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
-    String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
+    	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
+    	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
 
 	/*if ((String)request.getAttribute("downFile") == null) {
 	    downFileName = "";
@@ -219,49 +219,49 @@ public class EgovFileMngUtil {
 	    orgFileName = (String)request.getAttribute("orginFile");
 	}*/
 
-	File file = new File(downFileName);
-
-	if (!file.exists()) {
-	    throw new FileNotFoundException(downFileName);
-	}
-
-	if (!file.isFile()) {
-	    throw new FileNotFoundException(downFileName);
-	}
-
-	byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
-    String fName = (new String(orgFileName.getBytes(), "UTF-8")).replaceAll("\r\n","");
-	response.setContentType("application/x-msdownload");
-	response.setHeader("Content-Disposition:", "attachment; filename=" + fName);
-	response.setHeader("Content-Transfer-Encoding", "binary");
-	response.setHeader("Pragma", "no-cache");
-	response.setHeader("Expires", "0");
-
-	BufferedInputStream fin = null;
-	BufferedOutputStream outs = null;
-
-	try {
-		fin = new BufferedInputStream(new FileInputStream(file));
-	    outs = new BufferedOutputStream(response.getOutputStream());
-	    int read = 0;
-
-		while ((read = fin.read(b)) != -1) {
-		    outs.write(b, 0, read);
+		File file = new File(downFileName);
+	
+		if (!file.exists()) {
+		    throw new FileNotFoundException(downFileName);
 		}
-	} finally {
-	    if (outs != null) {
-			try {
-			    outs.close();
-			} catch (Exception ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
+	
+		if (!file.isFile()) {
+		    throw new FileNotFoundException(downFileName);
+		}
+	
+		byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
+	    String fName = (new String(orgFileName.getBytes(), "UTF-8")).replaceAll("\r\n","");
+		response.setContentType("application/x-msdownload");
+		response.setHeader("Content-Disposition:", "attachment; filename=" + fName);
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "0");
+	
+		BufferedInputStream fin = null;
+		BufferedOutputStream outs = null;
+	
+		try {
+			fin = new BufferedInputStream(new FileInputStream(file));
+		    outs = new BufferedOutputStream(response.getOutputStream());
+		    int read = 0;
+	
+			while ((read = fin.read(b)) != -1) {
+			    outs.write(b, 0, read);
 			}
+		} finally {
+		    if (outs != null) {
+				try {
+				    outs.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
 		    }
 		    if (fin != null) {
-			try {
-			    fin.close();
-			} catch (Exception ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
-			}
+				try {
+				    fin.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
 		    }
 		}
     }
@@ -308,47 +308,48 @@ public class EgovFileMngUtil {
      * @throws Exception
      */
     protected static void writeFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
-	InputStream stream = null;
-	OutputStream bos = null;
-	newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
-	stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
-	try {
-	    stream = file.getInputStream();
-	    File cFile = new File(stordFilePath);
-
-	    if (!cFile.isDirectory())
-		cFile.mkdir();
-
-	    bos = new FileOutputStream(stordFilePath + File.separator + newName);
-
-	    int bytesRead = 0;
-	    byte[] buffer = new byte[BUFF_SIZE];
-
-	    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-		bos.write(buffer, 0, bytesRead);
-	    }
-	} catch (FileNotFoundException fnfe) {
-		LOGGER.debug("fnfe: {}", fnfe);
-	} catch (IOException ioe) {
-		LOGGER.debug("ioe: {}", ioe);
-	} catch (Exception e) {
-		LOGGER.debug("e: {}", e);
-	} finally {
-	    if (bos != null) {
+		InputStream stream = null;
+		OutputStream bos = null;
+		newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
+		stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
+		
 		try {
-		    bos.close();
-		} catch (Exception ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+		    stream = file.getInputStream();
+		    File cFile = new File(stordFilePath);
+	
+		    if (!cFile.isDirectory())
+			cFile.mkdir();
+	
+		    bos = new FileOutputStream(stordFilePath + File.separator + newName);
+	
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
 		}
-	    }
-	    if (stream != null) {
-		try {
-		    stream.close();
-		} catch (Exception ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
-		}
-	    }
-	}
     }
 
     /**
@@ -361,107 +362,105 @@ public class EgovFileMngUtil {
      * @throws Exception
      */
     public void downFile(HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
-    //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
-    //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
-    String downFileName = EgovStringUtil.isNullToString(streFileNm).replaceAll("..","");
-	String orgFileName = EgovStringUtil.isNullToString(orignFileNm).replaceAll("..","");
-
-	File file = new File(downFileName);
-	//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
-	//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
-
-	if (!file.exists()) {
-	    throw new FileNotFoundException(downFileName);
-	}
-
-	if (!file.isFile()) {
-	    throw new FileNotFoundException(downFileName);
-	}
-
-	//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
-	int fSize = (int)file.length();
-	if (fSize > 0) {
-	    BufferedInputStream in = null;
-
-	    try {
-		in = new BufferedInputStream(new FileInputStream(file));
-
-    	    	String mimetype = "text/html"; //"application/x-msdownload"
-
-    	    	response.setBufferSize(fSize);
-		response.setContentType(mimetype);
-		response.setHeader("Content-Disposition:", "attachment; filename=" + orgFileName);
-		response.setContentLength(fSize);
-		//response.setHeader("Content-Transfer-Encoding","binary");
-		//response.setHeader("Pragma","no-cache");
-		//response.setHeader("Expires","0");
-		FileCopyUtils.copy(in, response.getOutputStream());
-	    } finally {
-		if (in != null) {
-		    try {
-			in.close();
-		    } catch (Exception ignore) {
-		    	LOGGER.debug("IGNORED: {}", ignore.getMessage());
-		    }
+	    //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
+	    //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
+	    String downFileName = EgovStringUtil.isNullToString(streFileNm).replaceAll("..","");
+		String orgFileName = EgovStringUtil.isNullToString(orignFileNm).replaceAll("..","");
+	
+		File file = new File(downFileName);
+		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
+		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
+	
+		if (!file.exists()) {
+		    throw new FileNotFoundException(downFileName);
 		}
-	    }
-	    response.getOutputStream().flush();
-	    response.getOutputStream().close();
-	}
-
-	/*
-	String uploadPath = propertiesService.getString("fileDir");
-
-	File uFile = new File(uploadPath, requestedFile);
-	int fSize = (int) uFile.length();
-
-	if (fSize > 0) {
-	    BufferedInputStream in = new BufferedInputStream(new FileInputStream(uFile));
-
-	    String mimetype = "text/html";
-
-	    response.setBufferSize(fSize);
-	    response.setContentType(mimetype);
-	    response.setHeader("Content-Disposition", "attachment; filename=\""
-					+ requestedFile + "\"");
-	    response.setContentLength(fSize);
-
-	    FileCopyUtils.copy(in, response.getOutputStream());
-	    in.close();
-	    response.getOutputStream().flush();
-	    response.getOutputStream().close();
-	} else {
-	    response.setContentType("text/html");
-	    PrintWriter printwriter = response.getWriter();
-	    printwriter.println("<html>");
-	    printwriter.println("<br><br><br><h2>Could not get file name:<br>" + requestedFile + "</h2>");
-	    printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
-	    printwriter.println("<br><br><br>&copy; webAccess");
-	    printwriter.println("</html>");
-	    printwriter.flush();
-	    printwriter.close();
-	}
-	//*/
-
-
-	/*
-	response.setContentType("application/x-msdownload");
-	response.setHeader("Content-Disposition:", "attachment; filename=" + new String(orgFileName.getBytes(),"UTF-8" ));
-	response.setHeader("Content-Transfer-Encoding","binary");
-	response.setHeader("Pragma","no-cache");
-	response.setHeader("Expires","0");
-
-	BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file));
-	BufferedOutputStream outs = new BufferedOutputStream(response.getOutputStream());
-	int read = 0;
-
-	while ((read = fin.read(b)) != -1) {
-	    outs.write(b,0,read);
-	}
-	log.debug(this.getClass().getName()+" BufferedOutputStream Write Complete!!! ");
-
-	outs.close();
-    	fin.close();
-	//*/
+	
+		if (!file.isFile()) {
+		    throw new FileNotFoundException(downFileName);
+		}
+	
+		//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
+		int fSize = (int)file.length();
+		if (fSize > 0) {
+		    BufferedInputStream in = null;
+	
+		    try {
+		    	in = new BufferedInputStream(new FileInputStream(file));	
+	    	    String mimetype = "text/html"; //"application/x-msdownload"	
+	    	    response.setBufferSize(fSize);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition:", "attachment; filename=" + orgFileName);
+				response.setContentLength(fSize);
+				//response.setHeader("Content-Transfer-Encoding","binary");
+				//response.setHeader("Pragma","no-cache");
+				//response.setHeader("Expires","0");
+				FileCopyUtils.copy(in, response.getOutputStream());
+		    } finally {
+				if (in != null) {
+				    try {
+				    	in.close();
+				    } catch (Exception ignore) {
+				    	LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				    }
+				}
+		    }
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();
+		}
+	
+		/*
+		String uploadPath = propertiesService.getString("fileDir");
+	
+		File uFile = new File(uploadPath, requestedFile);
+		int fSize = (int) uFile.length();
+	
+		if (fSize > 0) {
+		    BufferedInputStream in = new BufferedInputStream(new FileInputStream(uFile));
+	
+		    String mimetype = "text/html";
+	
+		    response.setBufferSize(fSize);
+		    response.setContentType(mimetype);
+		    response.setHeader("Content-Disposition", "attachment; filename=\""
+						+ requestedFile + "\"");
+		    response.setContentLength(fSize);
+	
+		    FileCopyUtils.copy(in, response.getOutputStream());
+		    in.close();
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();
+		} else {
+		    response.setContentType("text/html");
+		    PrintWriter printwriter = response.getWriter();
+		    printwriter.println("<html>");
+		    printwriter.println("<br><br><br><h2>Could not get file name:<br>" + requestedFile + "</h2>");
+		    printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
+		    printwriter.println("<br><br><br>&copy; webAccess");
+		    printwriter.println("</html>");
+		    printwriter.flush();
+		    printwriter.close();
+		}
+		//*/
+	
+	
+		/*
+		response.setContentType("application/x-msdownload");
+		response.setHeader("Content-Disposition:", "attachment; filename=" + new String(orgFileName.getBytes(),"UTF-8" ));
+		response.setHeader("Content-Transfer-Encoding","binary");
+		response.setHeader("Pragma","no-cache");
+		response.setHeader("Expires","0");
+	
+		BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file));
+		BufferedOutputStream outs = new BufferedOutputStream(response.getOutputStream());
+		int read = 0;
+	
+		while ((read = fin.read(b)) != -1) {
+		    outs.write(b,0,read);
+		}
+		log.debug(this.getClass().getName()+" BufferedOutputStream Write Complete!!! ");
+	
+		outs.close();
+	    	fin.close();
+		//*/
     }
 }

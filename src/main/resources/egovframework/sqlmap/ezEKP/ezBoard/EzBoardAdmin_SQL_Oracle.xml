@@ -3,10 +3,11 @@
 
 <sqlMap namespace="ezBoardAdmin">
 	
-	<typeAlias  alias="BoardTreeVO" type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
-	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
-	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
-	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
+	<typeAlias  alias="BoardTreeVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
+	<typeAlias  alias="EzBoardVO" 			type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+	<typeAlias  alias="BoardPropertyVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="MyFavoriteVO" 		type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
+	<typeAlias  alias="BoardBackgroundVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	
 	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
 		<result property="boardId" column="BOARDID" columnIndex="1"/>
@@ -17,25 +18,37 @@
 	</resultMap>
 	
 	<resultMap id="brdBoardTree" class="BoardTreeVO">
-		<result property="boardId" column="BOARDID" columnIndex="1"/>
-		<result property="boardName" column="BOARDNAME" columnIndex="2"/>
-		<result property="boardName2" column="BOARDNAME2" columnIndex="3"/>
-		<result property="treeViewOrder" column="TREEVIEWORDER" columnIndex="4"/>
-		<result property="boardColor" column="BOARDCOLOR" columnIndex="5"/>
-		<result property="guBun" column="GUBUN" columnIndex="6"/>
-		<result property="boardGroupAcl" column="BOARDGROUPACL" columnIndex="7"/>
+		<result property="boardId" 			column="BOARDID" 		columnIndex="1"/>
+		<result property="boardName" 		column="BOARDNAME" 		columnIndex="2"/>
+		<result property="boardName2" 		column="BOARDNAME2"		columnIndex="3"/>
+		<result property="treeViewOrder" 	column="TREEVIEWORDER" 	columnIndex="4"/>
+		<result property="boardColor" 		column="BOARDCOLOR" 	columnIndex="5"/>
+		<result property="guBun" 			column="GUBUN" 			columnIndex="6"/>
+		<result property="boardGroupAcl" 	column="BOARDGROUPACL" 	columnIndex="7"/>
 	</resultMap>
 	
-	<resultMap class="MyFavoriteVO" id="getMyBoardTree_get3">
-		<result property="treeId" column="TREEID" columnIndex="1"/>
-		<result property="userId" column="USERID" columnIndex="2"/>
-		<result property="treeName" column="TREENAME" columnIndex="3"/>
-		<result property="treeName2" column="TREENAME2" columnIndex="4"/>
-		<result property="treeLevel" column="TREELEVEL" columnIndex="5"/>
-		<result property="treeStep" column="TREESTEP" columnIndex="6"/>
-		<result property="treeUpper" column="TREEUPPER" columnIndex="7"/>
-		<result property="childCnt" column="CHILDCNT" columnIndex="8"/>
-		<result property="treeBoardId" column="TREEBOARDID" columnIndex="9"/>
+	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
+		<result property="treeId" 			column="TREEID" 		columnIndex="1"/>
+		<result property="userId" 			column="USERID" 		columnIndex="2"/>
+		<result property="treeName" 		column="TREENAME" 		columnIndex="3"/>
+		<result property="treeName2" 		column="TREENAME2" 		columnIndex="4"/>
+		<result property="treeLevel" 		column="TREELEVEL" 		columnIndex="5"/>
+		<result property="treeStep" 		column="TREESTEP" 		columnIndex="6"/>
+		<result property="treeUpper" 		column="TREEUPPER" 		columnIndex="7"/>
+		<result property="childCnt" 		column="CHILDCNT" 		columnIndex="8"/>
+		<result property="treeBoardId" 		column="TREEBOARDID" 	columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="backGroundImage" class="BoardBackgroundVO">
+		<result property="backgroundID" 	column="BACKGROUNDID" 	columnIndex="1"/>
+		<result property="orgFileName" 		column="ORGFILENAME" 	columnIndex="2"/>
+		<result property="saveFileName" 	column="SAVEFILENAME" 	columnIndex="3"/>
+		<result property="regUserID" 		column="REGUSERID" 		columnIndex="4"/>
+		<result property="regDate" 			column="REGDATE" 		columnIndex="5"/>
+		<result property="isUse" 			column="ISUSE" 			columnIndex="6"/>
+		<result property="sn" 				column="SN" 			columnIndex="7"/>
+		<result property="width" 			column="WIDTH" 			columnIndex="8"/>
+		<result property="height" 			column="HEIGHT" 		columnIndex="9"/>
 	</resultMap>
 	
 	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String">
@@ -79,6 +92,10 @@
 	
 	<procedure id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.saveBackGroundImage" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_SETBACKGROUNDIMAGE(#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, #v_WIDTH#, #v_HEIGHT#, #v_MODE#)}
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" >
@@ -141,5 +158,36 @@
 	       		rownum <= 1 
 		]]>
 	</select>
+	
+	<select id="EzBoardAdminDAO.getBackGroundImage"  resultMap="backGroundImage">
+		<![CDATA[
+			SELECT 
+				backgroundid,
+	            orgfilename ,
+	            savefilename ,
+	            reguserid ,
+	            regdate ,
+	            isuse ,
+	            sn ,
+	            width ,
+	            height
+	       FROM 
+	        	ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO	       
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
+		</dynamic>
+		ORDER BY sn
+	</select>
+	
+	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">
+		<![CDATA[
+			UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
+			SET
+				isuse = #isUse#
+			WHERE
+				backgroundid = #backgroundID#	
+		]]>
+	</update>
 
 </sqlMap>

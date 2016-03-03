@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
@@ -22,8 +23,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_pUserID", pUserID);
 		map.put("v_pDeptID", pDeptID);
 		map.put("v_pCompanyID", pCompanyID);
+		
 		select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		
 		int ret = (int) map.get("v_pCount");
+		
 		if(ret > 0 ){
 			return "OK";
 		}else{
@@ -39,6 +43,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public String getBoardTree_Get1(String pStrLang, String pQuery) throws Exception{
 		map.put("v_STRLANG", pStrLang);
 		map.put("v_PQUERY", pQuery);
+		
 		return (String) select("EzBoardAdminDAO.getBoardTree_Get1", map);
 	}
 
@@ -46,6 +51,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public List<EzBoardVO> getBoardTree_Get2(String trim, String pRootBoardID) throws Exception{
 		map.put("v_PACCESSID", trim);
 		map.put("v_PROOTBOARDID", pRootBoardID);
+		
 		return (List<EzBoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2",	map);
 	}
 
@@ -58,11 +64,13 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_pMode", pMode);
 		map.put("v_pSelectBy", pSelectBy);
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		
 		return (List<BoardTreeVO>) list("EzBoardAdminDAO.brdBoardTree", map);
 	}
 
 	public int checkIfLeafBoard(String pBoardID) throws Exception{
 		map.put("v_PBOARDID", pBoardID);
+		
 		return (int) select("EzBoardAdminDAO.checkIfLeafBoard", map);
 	}
 
@@ -70,6 +78,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_STRLANG", trim);
 		map.put("v_PQUERY", string);
 		map.put("v_RESULT", string2);
+		
 		update("EzBoardAdminDAO.getBoardTree_Set", map);
 	}
 
@@ -77,16 +86,24 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
 		map.put("v_PUSERID", userID);
 		map.put("v_PTREEUPPER", pRootTreeID);
+		
 		return (List<MyFavoriteVO>) list("EzBoardAdminDAO.getMyBoardTree_get3", map);
 	}
+	
 	@SuppressWarnings("unchecked")
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {		
 		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) {		
+		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBackGroundImage", boardBackgroundVO);
 	}
 
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
+		
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
 	
@@ -98,6 +115,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");		
+		
 		select("EzBoardAdminDAO.createBoardGroup", map);
 	}
 	
@@ -109,26 +127,32 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
-		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());	
 		
 		select("EzBoardAdminDAO.createBoard", map);
 	}
 	
-	public void saveBoardOrder(String pBoardIDList) throws Exception{
-		
+	public void saveBoardOrder(String pBoardIDList) throws Exception{		
 		int pBoardListCount = pBoardIDList.split(";").length - 2;
 		
 		map.put("v_pBoardIDList", pBoardIDList);
-		map.put("v_pBoardListCount", pBoardListCount);		
-				
+		map.put("v_pBoardListCount", pBoardListCount);	
+		
 		select("EzBoardAdminDAO.saveBoardOrder", map);
 	}
 	
 	public void deleteBoard(String boardID) throws Exception{		
-		
 		map.put("v_pBoardID", boardID);		
 		
 		select("EzBoardAdminDAO.deleteBoard", map);
+	}
+	
+	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception{	
+		update("EzBoardAdminDAO.statusChangeBackGroundImage", boardBackgroundVO);
+	}
+	
+	public void saveBackGroundImage(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBackGroundImage", map);
 	}
 	
 }

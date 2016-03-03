@@ -46,7 +46,7 @@
 	    	
 	    	function GetSubBoards() {
                 document.getElementById("BoardList").innerHTML = "";
-GetGUID();
+
                 $.ajax({
                 	type :	"POST",
                 	dataType :	"text",

@@ -1,10 +1,15 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,16 +18,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzBoardAdminController {
+public class EzBoardAdminController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -31,7 +43,7 @@ public class EzBoardAdminController {
 	private Properties config;
 	
 	@Autowired
-	private EzBoardController ezBoardController;
+	private EzBoardController ezBoardController;	
 
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
@@ -227,5 +239,147 @@ public class EzBoardAdminController {
 		
 		ezBoardAdminService.deleteBoard(boardID);
 	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardBackGround.do")
+	public String boardBackGround(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+		return "admin/ezBoard/boardBackGround";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/getBackGroundImage.do")
+	public void getBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
+		
+		StringBuffer xmlStr = new StringBuffer();
+		
+		if(list.size() > 0 ) {        	
+        	xmlStr.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");        	
+        	xmlStr.append("<DATA>");
+        	
+        	for(int i=0; i < list.size(); i++) {        		
+	        	xmlStr.append("<ROW>");
+	        	xmlStr.append("<BACKGROUNDID>"+list.get(i).getBackgroundID()+"</BACKGROUNDID>");
+	        	xmlStr.append("<ORGFILENAME>"+list.get(i).getOrgFileName()+"</ORGFILENAME>");    	
+	        	xmlStr.append("<SAVEFILENAME>"+list.get(i).getSaveFileName()+"</SAVEFILENAME>");
+	        	xmlStr.append("<REGUSERID>"+list.get(i).getRegUserID()+"</REGUSERID>");
+	        	xmlStr.append("<REGDATE>"+list.get(i).getRegDate()+"</REGDATE>");
+	        	xmlStr.append("<ISUSE>"+list.get(i).getIsUse()+"</ISUSE>");
+	        	xmlStr.append("<SN>"+list.get(i).getSn()+"</SN>");
+	        	xmlStr.append("<WIDTH>"+list.get(i).getWidth()+"</WIDTH>");
+	        	xmlStr.append("<HEIGHT>"+list.get(i).getHeight()+"</HEIGHT>");
+	        	xmlStr.append("</ROW>");
+        	}     
+        	
+        	xmlStr.append("</DATA>");        	
+        	
+        	response.setContentType("text/xml"); 
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write(xmlStr.toString());
+        }		
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/statusChangeBackGroundImage.do")
+	public void statusChangeBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{
+		String mode = request.getParameter("mode");
+		
+		if(mode.equals("U")){
+			boardBackgroundVO.setType(mode);
+			ezBoardAdminService.statusChangeBackGroundImage(boardBackgroundVO);			
+		}		
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/selectBackGroundImage.do")
+	public String selectBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO, Model model) throws Exception{
+		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
+		
+		if(list != null){
+			String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+			String fileName = ((BoardBackgroundVO)list.get(0)).getSaveFileName();			
+			
+			model.addAttribute("width", boardBackgroundVO.getWidth());
+			model.addAttribute("height", boardBackgroundVO.getHeight());
+			model.addAttribute("backgroundID", boardBackgroundVO.getBackgroundID());
+			model.addAttribute("filePath", filePath);
+			model.addAttribute("fileName", fileName);
+		}else{
+			model.addAttribute("fileName", "");			
+		}
+		
+		return "admin/ezBoard/selectBackGroundImage";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/uploadBackGroundImage.do")
+	public void uploadBackGroundImage(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception{		
+		MultipartFile file = request.getFile("file1");
+		
+		String fileType = file.getContentType().split("/")[1];
+		String fileName = request.getParameter("guid") +"."+ fileType;		
+		String filePath = config.getProperty("upload_board.TEMPUPLOADFILE");
+		String realPath = request.getServletContext().getRealPath("");
+		String realFullPath = realPath + filePath + "/S_" + fileName;
+		
+		int width = 0;
+		int height = 0;
+		
+		writeUploadedFile(file, "S_"+fileName, realPath + filePath);
+		
+		try{
+			File imageFile = new File(realFullPath);			
+		
+			if(imageFile.exists()){			
+				BufferedImage bi = ImageIO.read(new File(realFullPath));			    
+				width = bi.getWidth();
+				height = bi.getHeight();
+				
+				response.getWriter().write(filePath + "," + fileName + "," + width + "/" + height);
+			}
+		}catch(Exception e){
+			
+		}		
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/saveBackGroundImage.do")
+	public void saveBackGroundImage(@CookieValue("userID") String userID, MultipartHttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		LoginVO user = commonUtil.userInfo(userID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String now = sdf.format(cal.getTime());
+			
+		MultipartFile file = request.getFile("file1");
+
+		if(file != null){			
+			String fileName = boardBackgroundVO.getSaveFileName();		
+			String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+			String tempFilePath = config.getProperty("upload_board.TEMPUPLOADFILE");
+			String realPath = request.getServletContext().getRealPath("");
+						
+			writeUploadedFile(file, "S_"+fileName, realPath + filePath);
+			
+			try{
+				File tempFile = new File(realPath + tempFilePath + "/S_" + fileName);
+				
+				if(tempFile != null){
+					tempFile.delete();
+				}
+			}catch(Exception e){
+				
+			}
+			map.put("v_ORGFILENAME",file.getOriginalFilename());
+			map.put("v_SAVEFILENAME",fileName);
+		}else{
+			map.put("v_ORGFILENAME", " ");
+			map.put("v_SAVEFILENAME", " ");
+		}
+        map.put("v_BACKGROUNDID",boardBackgroundVO.getBackgroundID());
+        map.put("v_REGUSERID",user.getId());
+        map.put("v_REGDATE",now);
+        map.put("v_WIDTH",boardBackgroundVO.getWidth());
+        map.put("v_HEIGHT",boardBackgroundVO.getHeight());
+        map.put("v_MODE", "UPT");
+        
+        ezBoardAdminService.saveBackGroundImage(map);	
+	}	
 	
 }
