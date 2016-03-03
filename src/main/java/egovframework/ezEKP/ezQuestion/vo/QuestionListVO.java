@@ -3,38 +3,88 @@ package egovframework.ezEKP.ezQuestion.vo;
 import java.sql.Date;
 
 public class QuestionListVO {
+	/** 게시판아이디*/
+	private int brdId;
 	/** 설문번호*/
-	public int itemNo;
+	private int itemNo;
 	/** 유저아이디*/
-	public String userID;
-	/** 제목*/
-	public String title;
-	/** 제목클릭시 인자로들어가는 값*/
-	public String receve;
-	/** 기명여부*/
-	public String publicFlg;
-	/** 유효일*/
-	public Date pollEndDate;
-	/** 대상자*/
-	public String responsRange;
+	private String userId;
 	/** 유저이름*/
-	public String userName;
+	private String userNm;
+	/** 유저이름(다국어)*/
+	private String userNm2;
+	/** 유저이메일*/
+	private String userEmail;
+	/** 제목*/
+	private String title;
+	/** 제목*/
+	private String content;
+	/** 유효한 마지막 날*/
+	private Date pollEndDate;
+	/** 유효한 첫 날*/
+	private Date postDate;
 	/** 결과공개*/
-	public String resultFlg;
-	/** 페이지네이션부분 추가 필요*/
-
+	private String publicResultFlg;
+	/** 기명여부*/
+	private String publicFlg;
+	/** */
+	private String multiResponseFlg;
+	/** */
+	private String endFlg;
+	/** 대상자*/
+	private String responseRange;
+	/** 게시글 총갯수*/
+	private int totalCnt;
+	/** 페이지 갯수*/
+	private int totalPage;
+	/** 현제 페이지*/
+	private int currPage;
+	/** 페이지사이즈*/
+	private int pageSize;
+	/** */
+	private int blockSize;
+	/** */
+	private int currBlock;
+	/** */
+	private int totalBlock;
+	/** 언어*/
+	private String lang;
 	
+	public int getBrdId() {
+		return brdId;
+	}
+	public void setBrdId(int brdId) {
+		this.brdId = brdId;
+	}
 	public int getItemNo() {
 		return itemNo;
 	}
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserID() {
-		return userID;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserNm() {
+		return userNm;
+	}
+	public void setUserNm(String userNm) {
+		this.userNm = userNm;
+	}
+	public String getUserNm2() {
+		return userNm2;
+	}
+	public void setUserNm2(String userNm2) {
+		this.userNm2 = userNm2;
+	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 	public String getTitle() {
 		return title;
@@ -42,17 +92,11 @@ public class QuestionListVO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getReceve() {
-		return receve;
+	public String getContent() {
+		return content;
 	}
-	public void setReceve(String receve) {
-		this.receve = receve;
-	}
-	public String getPublicFlg() {
-		return publicFlg;
-	}
-	public void setPublicFlg(String publicFlg) {
-		this.publicFlg = publicFlg;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public Date getPollEndDate() {
 		return pollEndDate;
@@ -60,23 +104,88 @@ public class QuestionListVO {
 	public void setPollEndDate(Date pollEndDate) {
 		this.pollEndDate = pollEndDate;
 	}
-	public String getResponsRange() {
-		return responsRange;
+	public Date getPostDate() {
+		return postDate;
 	}
-	public void setResponsRange(String responsRange) {
-		this.responsRange = responsRange;
+	public void setPostDate(Date postDate) {
+		this.postDate = postDate;
 	}
-	public String getUserName() {
-		return userName;
+	public String getPublicResultFlg() {
+		return publicResultFlg;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setPublicResultFlg(String publicResultFlg) {
+		this.publicResultFlg = publicResultFlg;
 	}
-	public String getResultFlg() {
-		return resultFlg;
+	public String getPublicFlg() {
+		return publicFlg;
 	}
-	public void setResultFlg(String resultFlg) {
-		this.resultFlg = resultFlg;
+	public void setPublicFlg(String publicFlg) {
+		this.publicFlg = publicFlg;
 	}
-	
+	public String getMultiResponseFlg() {
+		return multiResponseFlg;
+	}
+	public void setMultiResponseFlg(String multiResponseFlg) {
+		this.multiResponseFlg = multiResponseFlg;
+	}
+	public String getEndFlg() {
+		return endFlg;
+	}
+	public void setEndFlg(String endFlg) {
+		this.endFlg = endFlg;
+	}
+	public String getResponseRange() {
+		return responseRange;
+	}
+	public void setResponseRange(String responseRange) {
+		this.responseRange = responseRange;
+	}
+	public int getTotalCnt() {
+		return totalCnt;
+	}
+	public void setTotalCnt(int totalCnt) {
+		this.totalCnt = totalCnt;
+	}
+	public int getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+	public int getCurrPage() {
+		return currPage;
+	}
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public int getBlockSize() {
+		return blockSize;
+	}
+	public void setBlockSize(int blockSize) {
+		this.blockSize = blockSize;
+	}
+	public int getCurrBlock() {
+		return currBlock;
+	}
+	public void setCurrBlock(int currBlock) {
+		this.currBlock = currBlock;
+	}
+	public int getTotalBlock() {
+		return totalBlock;
+	}
+	public void setTotalBlock(int totalBlock) {
+		this.totalBlock = totalBlock;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
 }
