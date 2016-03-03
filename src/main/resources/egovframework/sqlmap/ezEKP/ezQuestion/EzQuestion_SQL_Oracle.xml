@@ -2,5 +2,14 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezQuestion">
+	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_PSTRBRDID#, #v_PITEMNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,
+												    #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
+	</procedure>
+	
 	
 </sqlMap>
