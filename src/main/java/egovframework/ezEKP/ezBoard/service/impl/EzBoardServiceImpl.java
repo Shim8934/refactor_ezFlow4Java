@@ -19,23 +19,30 @@ import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl implements EzBoardService {
+
+	Map<String, Object> map = new HashMap<String, Object>();
 	
 	@Resource(name="EzBoardDAO")
 	private EzBoardDAO ezBoardDAO;
 
 	@Override
 	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
-		return ezBoardDAO.getLeft_BoardSTD(redirectBoardID);
+		map.put("redirectBoardID", redirectBoardID);
+		return ezBoardDAO.getLeft_BoardSTD(map);
 	}
 
 	@Override
 	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
-		return ezBoardDAO.get_favoriteList(userID,pMode);
+		map.put("v_USERID", userID);
+		map.put("v_MODE", pMode);
+		return ezBoardDAO.get_favoriteList(map);
 	}
 
 	@Override
-	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception{
-		return ezBoardDAO.get_parentBoardName(BoardIdList,boardIdListCount);
+	public String get_parentBoardName(String boardIdList, int boardIdListCount) throws Exception{
+		map.put("v_BOARDIDLIST", boardIdList);
+		map.put("v_BOARDCOUNTLIST", boardIdListCount);
+		return ezBoardDAO.get_parentBoardName(map);
 	}
 
 	@Override
@@ -50,7 +57,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception {
-		return ezBoardDAO.getListHeader(ezBoardVO);
+		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
+		map.put("v_PSTRLANG", ezBoardVO.getLang());
+		return ezBoardDAO.getListHeader(map);
 	}
 
 	@Override
@@ -60,7 +69,10 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getNewItemListCount(String userID, String nowDate, String fromNow)  throws Exception{
-		return ezBoardDAO.getNewItemListCount(userID, nowDate, fromNow);
+		map.put("v_pUserID", userID);
+		map.put("v_pNow", nowDate);
+		map.put("v_pFromNow", fromNow);
+		return ezBoardDAO.getNewItemListCount(map);
 	}
 
 	@Override
@@ -70,7 +82,13 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception{
-		return ezBoardDAO.getNewItemList(boardListVO);
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		return ezBoardDAO.getNewItemList(map);
 	}
 
 	@Override
@@ -80,27 +98,42 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
-		return ezBoardDAO.getBrdNewItemCount(myFavoriteVO);
+		map.put("v_pUserID", myFavoriteVO.getUserId());
+		map.put("v_pNow", myFavoriteVO.getNowDate());
+		map.put("v_pFromNow", myFavoriteVO.getFromNow());
+		return ezBoardDAO.getBrdNewItemCount(map);
 	}
 
 	@Override
 	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception {
-		return ezBoardDAO.getThumbNailCount(myFavoriteVO);
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		return ezBoardDAO.getThumbNailCount(map);
 	}
 
 	@Override
 	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
-		return ezBoardDAO.getBrdTotalItemCount(myFavoriteVO);
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		return ezBoardDAO.getBrdTotalItemCount(map);
 	}
 
 	@Override
 	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
-		return ezBoardDAO.getQNABrdTotalItemCount(myFavoriteVO);
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		map.put("v_PADMINTYPE", myFavoriteVO.getBoardAdmin_FG());
+		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
 
 	@Override
-	public void setTabUsed(String pUserID, Map<String, Object> map)
-			throws Exception {
+	public void setTabUsed(String pUserID, Map<String, Object> map) throws Exception {
 		ezBoardDAO.setTabUsed(pUserID, map);
 	}
 	
