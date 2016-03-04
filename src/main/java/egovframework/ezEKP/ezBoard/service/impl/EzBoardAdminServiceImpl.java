@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -18,12 +22,19 @@ import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	
+	Map<String, Object> map = new HashMap<String, Object>();
+	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
 
 	@Override
-	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{
-		return ezBoardAdminDAO.checkIfBoardGroupAdmin(pRootBoardID,pUserID,pDeptID,pCompanyID);
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{		
+		map.put("v_pBoardID", pRootBoardID);
+		map.put("v_pUserID", pUserID);
+		map.put("v_pDeptID", pDeptID);
+		map.put("v_pCompanyID", pCompanyID);
+		
+		return ezBoardAdminDAO.checkIfBoardGroupAdmin(map);
 	}
 
 	@Override
@@ -33,32 +44,55 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public String getBoardTree_Get1(String pStrLang, String pQuery) throws Exception{
-		return ezBoardAdminDAO.getBoardTree_Get1(pStrLang,pQuery);
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", pQuery);
+		
+		return ezBoardAdminDAO.getBoardTree_Get1(map);
 	}
 
 	@Override
 	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
-		return ezBoardAdminDAO.getBoardTree_Get2(pAccessID, pRootBoardID);
+		map.put("v_PACCESSID", pAccessID);
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		
+		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
 
 	@Override
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception{
-		return ezBoardAdminDAO.brdBoardTree(pRootBoardID, pAccessID, pMode, pSelectBy, pExcludeBoardID);
+		map.put("v_pRootBoardID", pRootBoardID);
+		map.put("v_pUserID", pAccessID);
+		map.put("v_pDeptID", "");
+		map.put("v_pCompanyID","");
+		map.put("v_pMode", pMode);
+		map.put("v_pSelectBy", pSelectBy);
+		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		
+		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
 	@Override
 	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception{
-		ezBoardAdminDAO.getBoardTree_Set(pStrLang, string, string2);		
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", string);
+		map.put("v_RESULT", string2);
+		
+		ezBoardAdminDAO.getBoardTree_Set(map);		
 	}
 
 	@Override
 	public int checkIfLeafBoard(String pBoardID) throws Exception{
-		return ezBoardAdminDAO.checkIfLeafBoard(pBoardID);
+		map.put("v_PBOARDID", pBoardID);
+		
+		return ezBoardAdminDAO.checkIfLeafBoard(map);
 	}
 
 	@Override
 	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
-		return ezBoardAdminDAO.getMyBoardTree_get3(userID,pRootTreeID);
+		map.put("v_PUSERID", userID);
+		map.put("v_PTREEUPPER", pRootTreeID);
+		
+		return ezBoardAdminDAO.getMyBoardTree_get3(map);
 	}
 
 	@Override
@@ -77,31 +111,54 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
-		return ezBoardAdminDAO.getACL(pBoardID,userDeptPath);
+		map.put("pBoardID", pBoardID);
+		map.put("userDeptPath", userDeptPath);
+		
+		return ezBoardAdminDAO.getACL(map);
 	}
 
 	@Override
 	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception {
+		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
+		map.put("v_BOARDGROUPNAME", boardPropertyVO.getBoardGroupName());
+		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
+		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
+		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
+		map.put("v_PARENTBOARDID", "top");
 		// TODO Auto-generated method stub
-		ezBoardAdminDAO.createBoardGroup(boardPropertyVO);
+		ezBoardAdminDAO.createBoardGroup(map);
 	}
 
 	@Override
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception {
+		map.put("v_BOARDID", boardPropertyVO.getBoardID());
+		map.put("v_BOARDNAME", boardPropertyVO.getBoardName());
+		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
+		map.put("v_PARENTBOARDID", boardPropertyVO.getParentBoardID());
+		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
+		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
+		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
+		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());	
 		// TODO Auto-generated method stub
-		ezBoardAdminDAO.createBoard(boardPropertyVO);
+		ezBoardAdminDAO.createBoard(map);
 	}
 
 	@Override
 	public void saveBoardOrder(String pBoardIDList) throws Exception {
+		int pBoardListCount = pBoardIDList.split(";").length - 2;
+		
+		map.put("v_pBoardIDList", pBoardIDList);
+		map.put("v_pBoardListCount", pBoardListCount);
 		// TODO Auto-generated method stub
-		ezBoardAdminDAO.saveBoardOrder(pBoardIDList);
+		ezBoardAdminDAO.saveBoardOrder(map);
 	}
 
 	@Override
 	public void deleteBoard(String boardID) throws Exception {
+		map.put("v_pBoardID", boardID);
 		// TODO Auto-generated method stub
-		ezBoardAdminDAO.deleteBoard(boardID);
+		ezBoardAdminDAO.deleteBoard(map);
 	}
 
 	@Override
@@ -111,7 +168,28 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public void saveBackGroundImage(Map<String, Object> map) throws Exception {
+	public void saveBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String now = sdf.format(cal.getTime());
+		String fName = boardBackgroundVO.getOrgFileName();
+		
+		if(fName == null){		
+			map.put("v_ORGFILENAME"," ");
+			map.put("v_SAVEFILENAME"," ");
+		}else{
+			map.put("v_ORGFILENAME",boardBackgroundVO.getOrgFileName());
+			map.put("v_SAVEFILENAME",boardBackgroundVO.getSaveFileName());
+		}
+		map.put("v_BACKGROUNDID",boardBackgroundVO.getBackgroundID());
+        map.put("v_REGUSERID",boardBackgroundVO.getRegUserID());
+        map.put("v_REGDATE",now);
+        map.put("v_WIDTH",boardBackgroundVO.getWidth());
+        map.put("v_HEIGHT",boardBackgroundVO.getHeight());
+        map.put("v_MODE",boardBackgroundVO.getType());
+		
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveBackGroundImage(map);
 	}

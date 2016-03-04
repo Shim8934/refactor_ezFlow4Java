@@ -3,9 +3,7 @@ package egovframework.ezEKP.ezBoard.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -20,9 +18,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.ibm.icu.text.SimpleDateFormat;
-import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -358,11 +353,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	@RequestMapping(value="/admin/ezBoard/saveBackGroundImage.do")
 	public void saveBackGroundImage(@CookieValue("userID") String userID, MultipartHttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
 		LoginVO user = commonUtil.userInfo(userID);
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String now = sdf.format(cal.getTime());		
+		boardBackgroundVO.setRegUserID(user.getId());
 			
 		MultipartFile file = request.getFile("file1");
 
@@ -383,20 +374,11 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 			}catch(Exception e){
 				
 			}
-			map.put("v_ORGFILENAME",file.getOriginalFilename());
-			map.put("v_SAVEFILENAME",fileName);
-		}else{
-			map.put("v_ORGFILENAME", " ");
-			map.put("v_SAVEFILENAME", " ");
+			boardBackgroundVO.setOrgFileName(file.getOriginalFilename());
+			boardBackgroundVO.setSaveFileName(fileName);
 		}
-        map.put("v_BACKGROUNDID",boardBackgroundVO.getBackgroundID());
-        map.put("v_REGUSERID",user.getId());
-        map.put("v_REGDATE",now);
-        map.put("v_WIDTH",boardBackgroundVO.getWidth());
-        map.put("v_HEIGHT",boardBackgroundVO.getHeight());
-        map.put("v_MODE",boardBackgroundVO.getType());
         
-        ezBoardAdminService.saveBackGroundImage(map);	
+        ezBoardAdminService.saveBackGroundImage(boardBackgroundVO);	
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/deleteBackGroundImage.do")

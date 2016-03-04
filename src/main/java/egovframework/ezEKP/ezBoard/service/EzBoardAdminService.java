@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -43,7 +42,7 @@ public interface EzBoardAdminService {
 	
 	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 	
-	public void saveBackGroundImage(Map<String, Object> map) throws Exception;
+	public void saveBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 	
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 
