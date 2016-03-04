@@ -359,7 +359,7 @@
 		    }
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
+		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
 		        xmlhttp3.send();
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;

@@ -907,7 +907,7 @@ public class EzBoardController {
             type = ezBoardVO.getOrderOption();
 
         ezBoardVO.setLang(userInfo.getLang());
-
+System.out.println(boardType + "@#$%");
         if(boardType == "4"){ // 썸네일 
 //            boardXml = getThumbList(ezBoardVO);
         }else if(boardType == "5"){ //Q&A
@@ -917,6 +917,7 @@ public class EzBoardController {
             	ezBoardVO.setBoardType("N");
             	resultXML = getNewItemList(ezBoardVO,userInfo);
             }else{
+            	System.out.println("여기에 안들어오는가보다!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 //            	boardXml = getBoardListItem(ezBoardVO);
             }
         }
@@ -1086,14 +1087,14 @@ public class EzBoardController {
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
 	    String pExcludeBoardID = " ";
-	    if(req.getParameter("RootBoardID") != null){
-	    	pRootBoardID = req.getParameter("RootBoardID");
+	    if(req.getParameter("rootBoardID") != null){
+	    	pRootBoardID = req.getParameter("rootBoardID");
 	    }
-	    if(req.getParameter("SubFlag") != null){
-	    	pSubFlag = req.getParameter("SubFlag");
+	    if(req.getParameter("subFlag") != null){
+	    	pSubFlag = req.getParameter("subFlag");
 	    }
-	    if(req.getParameter("SelectFlag") != null){
-	    	pSelectBy = Integer.parseInt(req.getParameter("SelectFlag"));
+	    if(req.getParameter("selectFlag") != null){
+	    	pSelectBy = Integer.parseInt(req.getParameter("selectFlag"));
 	    }
 	    if(req.getParameter("pExcludeBoardID") != null){
 	    	pExcludeBoardID = req.getParameter("pExcludeBoardID");
