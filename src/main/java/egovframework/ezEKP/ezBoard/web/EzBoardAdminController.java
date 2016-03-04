@@ -281,29 +281,46 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	@RequestMapping(value="/admin/ezBoard/statusChangeBackGroundImage.do")
 	public void statusChangeBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{
 		String mode = request.getParameter("mode");
+		boardBackgroundVO.setType(mode);
 		
-		if(mode.equals("U")){
-			boardBackgroundVO.setType(mode);
-			ezBoardAdminService.statusChangeBackGroundImage(boardBackgroundVO);			
-		}		
+		if(mode.equals("U")){			
+			ezBoardAdminService.statusChangeBackGroundImage(boardBackgroundVO);
+		}else{
+			String[] bIDs = boardBackgroundVO.getBackgroundID().split("/");
+			String[] isUses = boardBackgroundVO.getIsUse().split("/");			
+			
+			for(int i=0; i< bIDs.length; i++){
+				boardBackgroundVO.setBackgroundID(bIDs[i]);
+				boardBackgroundVO.setIsUse(isUses[i]);	
+				
+				ezBoardAdminService.statusChangeBackGroundImage(boardBackgroundVO);
+			}			
+		}
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/selectBackGroundImage.do")
 	public String selectBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO, Model model) throws Exception{
-		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
-		
-		if(list != null){
-			String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
-			String fileName = ((BoardBackgroundVO)list.get(0)).getSaveFileName();			
+		String type = boardBackgroundVO.getType();
+	
+		if(type.equals("UPT")){
+			List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 			
-			model.addAttribute("width", boardBackgroundVO.getWidth());
-			model.addAttribute("height", boardBackgroundVO.getHeight());
-			model.addAttribute("backgroundID", boardBackgroundVO.getBackgroundID());
-			model.addAttribute("filePath", filePath);
-			model.addAttribute("fileName", fileName);
+			if(list.size() > 0){
+				String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+				String fileName = ((BoardBackgroundVO)list.get(0)).getSaveFileName();			
+				
+				model.addAttribute("width", boardBackgroundVO.getWidth());
+				model.addAttribute("height", boardBackgroundVO.getHeight());
+				model.addAttribute("backgroundID", boardBackgroundVO.getBackgroundID());
+				model.addAttribute("filePath", filePath);
+				model.addAttribute("fileName", fileName);
+			}else{
+				model.addAttribute("fileName", "");			
+			}
 		}else{
-			model.addAttribute("fileName", "");			
-		}
+			model.addAttribute("fileName", "");
+		}	
+		model.addAttribute("type", type);
 		
 		return "admin/ezBoard/selectBackGroundImage";
 	}
@@ -345,7 +362,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String now = sdf.format(cal.getTime());
+		String now = sdf.format(cal.getTime());		
 			
 		MultipartFile file = request.getFile("file1");
 
@@ -377,9 +394,28 @@ public class EzBoardAdminController extends EgovFileMngUtil{
         map.put("v_REGDATE",now);
         map.put("v_WIDTH",boardBackgroundVO.getWidth());
         map.put("v_HEIGHT",boardBackgroundVO.getHeight());
-        map.put("v_MODE", "UPT");
+        map.put("v_MODE",boardBackgroundVO.getType());
         
         ezBoardAdminService.saveBackGroundImage(map);	
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/deleteBackGroundImage.do")
+	public void deleteBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		String fileName = boardBackgroundVO.getSaveFileName();
+		String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+		String realPath = request.getServletContext().getRealPath("");		
+		
+		try{
+			File tempFile = new File(realPath + filePath + "/S_" + fileName);
+			
+			if(tempFile != null){
+				tempFile.delete();
+			}			
+			ezBoardAdminService.deleteBackGroundImage(boardBackgroundVO);
+			
+		}catch(Exception e){
+			
+		}		
 	}	
 	
 }

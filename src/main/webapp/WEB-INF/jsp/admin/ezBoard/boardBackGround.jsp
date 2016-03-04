@@ -152,7 +152,7 @@
 		        var imgwidth = document.getElementById("backimage").width;
 		        var imgheight = document.getElementById("backimage").height;
 
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?backgroundID=" + clickitem.getAttribute("backgroundid") + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=UPT&backgroundID=" + clickitem.getAttribute("backgroundid") + "&width=" + imgwidth + "&height=" + imgheight, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    
 		    function MakeDescription(filepath) {
@@ -180,32 +180,32 @@
 		                    if (i == 0) {
 		                        return;
 		                    }
-		                    ChangeRow = i - 1;
-		                    if (event_ChangePriority(_RowObject.getAttribute("backgroundid"), _RowObject.getAttribute("priority"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("backgroundid"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("priority")))
+		                    ChangeRow = i - 1;        		                    
+		                    if (event_ChangePriority(_RowObject.getAttribute("backgroundid"), _RowObject.getAttribute("priority"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("backgroundid"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("priority"))){
 		                        swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
+		                    }
 		                    break;
 		                }
 		            }
-		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        }else if (navigator.userAgent.indexOf("MSIE") == -1) {
 		            if (_RowObject == null) {
-		                alert("<spring:message code='ezBoard.t5005'/>");
-		                    return;
-		                }
-		                var ChangeRow = null;
-		                for (var i = 0; i < _RowObject.parentNode.children.length ; i++) {
-		                    if (_RowObject.parentNode.children.item(i) == _RowObject) {
-		                        if (i == 0) {
-		                            return;
-		                        }
-		                        ChangeRow = i - 1;
-		                        if (event_ChangePriority(_RowObject.getAttribute("backgroundid"), _RowObject.getAttribute("priority"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("backgroundid"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("priority"))) {
-		                            swapNodes(_RowObject, _RowObject.parentNode.children.item(ChangeRow));
-		                        }
-		                        break;
-		                    }
-		                }
-		            }
+	               		alert("<spring:message code='ezBoard.t5005'/>");
+	                    return;
+	                }
+	                var ChangeRow = null;
+	                for (var i = 0; i < _RowObject.parentNode.children.length ; i++) {
+	                    if (_RowObject.parentNode.children.item(i) == _RowObject) {
+	                        if (i == 0) {
+	                            return;
+	                        }
+	                        ChangeRow = i - 1;
+	                        if (event_ChangePriority(_RowObject.getAttribute("backgroundid"), _RowObject.getAttribute("priority"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("backgroundid"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("priority"))) {
+	                            swapNodes(_RowObject, _RowObject.parentNode.children.item(ChangeRow));
+	                        }
+	                        break;
+	                    }
+	                }
+	            }
 		    }
 		    
 		    function Priority_DOWN() {
@@ -228,60 +228,26 @@
 		    }
 		    
 		    function event_ChangePriority(A_itemid, A_priority, B_itemid, B_priority) {
-		        /*var Xmldom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(Xmldom, objNode, "DATA");
-		        createNodeAndInsertText(Xmldom, objNode, "ARULEID", A_itemid);
-		        createNodeAndInsertText(Xmldom, objNode, "APRIORITY", B_priority);
-		        createNodeAndInsertText(Xmldom, objNode, "BRULEID", B_itemid);
-		        createNodeAndInsertText(Xmldom, objNode, "BPRIORITY", A_priority);
-		        createNodeAndInsertText(Xmldom, objNode, "MODE", "P");
-		        var XmlhttpPriority = createXMLHttpRequest();
-		        XmlhttpPriority.open("POST", "interASP/StatusChangeBackGroundImage.aspx", false);
-		        XmlhttpPriority.send(Xmldom); */
+		    	var status;
 		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
+		        	async : false,
 		        	url : "/admin/ezBoard/statusChangeBackGroundImage.do",
-		        	data : { aRuleID : A_itemid, aPriority : B_priority, bRuleID : B_itemid, bPriority : A_priority, mode : "P" },
+		        	data : { backgroundID : A_itemid+"/"+B_itemid, isUse : B_priority+"/"+A_priority, mode : 'P' },
 		        	success : function(){
-		        		
+		        		status = "Y";
+		        	},
+		        	error : function(){
+		        		status = "N";
 		        	}
 		        });
 		        
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
-		            if (XmlhttpPriority.responseText == "OK") {
-		                XmlhttpPriority = null;
-		                return true;
-		            }
-		            else {
-		                alert(strLang217);
-		                XmlhttpPriority = null;
-		                return false;
-		            }
-		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
-		            var result = XmlhttpPriority.responseText;
-
-		            if (result == "OK") {
-		                XmlhttpPriority = null;
-		                return true;
-		            }
-		            else {
-		                alert(strLang217);
-		                XmlhttpPriority = null;
-		                return false;
-		            };
-		        }
-		        if (XmlhttpPriority.responseXML.text == "OK") {
-		            XmlhttpPriority = null;
-		            return true;
-		        }
-		        else {
-		            alert(strLang217);
-		            XmlhttpPriority = null;
-		            return false;
+		        if(status == "Y"){
+		        	return true;
+		        }else{
+		        	return false;
 		        }
 		    }
 		    
@@ -295,13 +261,41 @@
 		        parent.replaceChild(item1, itemtmp);
 		        itemtmp = null;
 		    }
+		    
+		    function sliderdelete() {
+		        if (tempid == "") {
+		        	alert("<spring:message code='ezBoard.t5005'/>");
+		           	return;
+		        }
+		        if (!confirm("<spring:message code='ezBoard.t197'/>"))
+		            return;
+
+				$.ajax({
+					type : "POST",
+		        	dataType : "text",
+		        	async : false,
+		        	url : "/admin/ezBoard/deleteBackGroundImage.do",
+		        	data : { backgroundID : tempid, saveFileName : tempfilepath },
+		        	success : function(){
+		        		window.location.reload(false);	
+		        	}
+				});		      
+		    }
+		    
+		    function btn_Select() {
+		        var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 330) / 2;
+		        var pLeft = (pwidth - 610) / 2;
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">		
 		<h1><spring:message code="ezBoard.t5006"/></h1>
 		<div id="mainmenu">
 	    	<ul>
-	        	<li><span id ="NEW" onClick="btn_Select(this)"><spring:message code="ezBoard.t321"/></span></li>
+	        	<li><span id ="NEW" onclick="btn_Select(this)"><spring:message code="ezBoard.t321"/></span></li>
 	        	<li><span onclick="sliderdelete();"><img src="/images/ImgIcon/delete.gif"   style="margin-top:-2px;"  /><spring:message code="ezBoard.t89"/></span></li>
 	        	<li><span onclick="Reload();"><img src="/images/ImgIcon/recur.gif"    style="margin-top:-2px;"  /><spring:message code="ezBoard.t205"/></span></li>
 	        	<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t493'/>"/></span></li>

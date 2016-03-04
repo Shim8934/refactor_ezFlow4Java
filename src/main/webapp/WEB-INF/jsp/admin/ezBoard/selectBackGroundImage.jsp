@@ -64,7 +64,7 @@
 			            document.getElementById("saveFileName").value = fileName;			            		            
 					},
 					error : function(){
-						alert("파일 업로드 시 에러가 발생했습니다.");						
+						alert("upload error");						
 					}
 		        });						           
 		    }
@@ -80,7 +80,12 @@
 		        return check;
 		    }
 			
-			function btnSave_click(){	
+			function btnSave_click(){
+				if($("#backgroundID").val() == ""){
+					var guid = "{" + GetGUID() + "}";
+					$("#backgroundID").val(guid);
+				}
+				
 				$('#form').ajaxSubmit({
 					type : "POST",
 					dataType : "text",
@@ -94,7 +99,7 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" style="overflow:hidden">
+	<body class="popup" style="overflow:hidden">		
 		<h1><spring:message code="ezBoard.t5000"/></h1>
 		<table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
@@ -116,9 +121,10 @@
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
 					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px" onchange="btn_AttachAdd_onclick()" multiple="false" />
-					<input type="hidden" name="backgroundID" value="${backgroundID}"/>
+					<input type="hidden" name="backgroundID" id="backgroundID" value="${backgroundID}"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
+					<input type="hidden" name="type" value="${type}" /> 
 				</td>
 			</tr>
 	        <tr>

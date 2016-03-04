@@ -180,14 +180,20 @@
 		ORDER BY sn
 	</select>
 	
-	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">
-		<![CDATA[
-			UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
-			SET
-				isuse = #isUse#
-			WHERE
-				backgroundid = #backgroundID#	
-		]]>
+	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">		
+		UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
+		SET
+			<isEqual property="type" compareValue="U"> isuse = #isUse#</isEqual>
+			<isNotEqual property="type" compareValue="U"> sn = #isUse#</isNotEqual>
+		WHERE
+			backgroundid = #backgroundID#			
 	</update>
+	
+	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">		
+		DELETE FROM 
+			ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
+		WHERE
+			backgroundid = #backgroundID#			
+	</delete>
 
 </sqlMap>

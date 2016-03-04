@@ -105,8 +105,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO)
-			throws Exception {
+	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.statusChangeBackGroundImage(boardBackgroundVO);
 	}
@@ -115,6 +114,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public void saveBackGroundImage(Map<String, Object> map) throws Exception {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveBackGroundImage(map);
+	}
+	
+	@Override
+	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.deleteBackGroundImage(boardBackgroundVO);
 	}	
 	
 	
