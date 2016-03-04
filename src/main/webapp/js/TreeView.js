@@ -69,8 +69,7 @@ function TreeNode() {
 
     //트리 노드 만들기
     function CreateTreeNode(pNodeData, pEndNode, pParentNode, pUseAgency, pNodeClick, pNodeDblClick, pRequestHandler) {
-    
-        var color ="";
+    	var color ="";
         //한 노드의 전체적인 DIV를 만든다.
         var treeDiv = document.createElement("DIV");
         treeDiv.className = "node_div";
@@ -80,7 +79,6 @@ function TreeNode() {
         treeDiv.setAttribute("NODENAME", this.NodeName);
         treeDiv.setAttribute("NODELEVEL", this.NodeLevel);
         treeDiv.setAttribute("ENDNODE", String(pEndNode));
-
         //노드 DIV에 노드 데이터 세팅.
         var arrNodeData = GetChildNodes(pNodeData);
         for (var i = 0; i < arrNodeData.length; i++) {
@@ -262,7 +260,7 @@ function TreeNode() {
             subDiv.style.display = "none";
 
         treeDiv.innerHTML += subDiv.outerHTML;
-
+        
         return treeDiv;
     }
 
@@ -284,27 +282,25 @@ function TreeNode() {
     //부모 노드의 모든 이미지 가져오기
     function GetChildImageNodes(pParentNode) {
         var elements = new Array();
-
-        if (window.DOMParser) {
-            objNode = pParentNode.firstChild;
-
-            var idx = 0;
-            while (objNode) {
-                if (objNode.toString() == "[object HTMLImageElement]" && objNode.tagName.toUpperCase() == "IMG") {
-                    elements[idx++] = objNode;
-                }
-
-                objNode = objNode.nextSibling;
+//        if (window.DOMParser) {
+        objNode = pParentNode.firstChild;
+        var idx = 0;
+        while (objNode) {
+            if (objNode.toString() == "[object HTMLImageElement]" && objNode.tagName.toUpperCase() == "IMG") {
+                elements[idx++] = objNode;
             }
+
+            objNode = objNode.nextSibling;
         }
-        else if (window.ActiveXObject) {
-            var idx = 0;
-            for (var i = 0; i < GetChildNodes_Tree(pParentNode).length; i++) {
-                if (GetChildNodes_Tree(pParentNode)[i].tagName.toUpperCase() == "IMG") {
-                    elements[idx++] = GetChildNodes_Tree(pParentNode)[i];
-                }
-            }
-        }
+//        }
+//        else if (window.ActiveXObject) {
+//            var idx = 0;
+//            for (var i = 0; i < GetChildNodes_Tree(pParentNode).length; i++) {
+//                if (GetChildNodes_Tree(pParentNode)[i].tagName.toUpperCase() == "IMG") {
+//                    elements[idx++] = GetChildNodes_Tree(pParentNode)[i];
+//                }
+//            }
+//        }
 
         return elements;
     }
@@ -438,7 +434,6 @@ function TreeView() {
             treeDiv.setAttribute("REQUESTDATA", _requestDataHandler);
 
             var iLevel = 0;
-
             AppendTreeNode(_dataSource.documentElement, treeDiv, iLevel);
 
             objElm.appendChild(treeDiv);
@@ -469,12 +464,10 @@ function TreeView() {
 
     function AppendTreeNode(pElmData, pNode, pLevel) {
         var arrNodes = GetChildNodes(pElmData);
-
         for (var i = 0; i < arrNodes.length; i++) {
             //오간에 NODEICONIMAGE노드가 붙어오므로 제거함.  2010.04.07
             //if (arrNodes[i].baseName == "NODE") {
             if (arrNodes[i].nodeName.toUpperCase() == "NODE") {
-
                 //형제 노드들 중 마지막 노드인지 확인
                 var bEndNode = false;
                 if (i == arrNodes.length - 1)
@@ -487,7 +480,6 @@ function TreeView() {
                     var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE");
                 else
                     var strNodeNM = "　　　";
-
                 //TreeNode 객체 생성하여 프로퍼티 지정
                 var organNode = new TreeNode();
                 organNode.NodeID = strNodeID;
@@ -500,10 +492,8 @@ function TreeView() {
                     _selectedNodeID = strNodeID;
                     _selectedNodeNM = strNodeNM;
                 }
-
                 //트리노드 생성
                 var treeNode = organNode.CreateTreeNode(arrNodes[i], bEndNode, pNode, _useAgency, _nodeClick, _nodeDblClick, _requestDataHandler);
-
                 if (pLevel == 0)
                 //Level이 0인 노드(회사)는 트리 DIV에 append
                     pNode.appendChild(treeNode);

@@ -7,10 +7,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "${userInfo}";
 	        var SSUserName = "${userInfo.name}";
@@ -300,7 +300,7 @@
 		    }
 		    function DisplayTopBoard() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezBoardSTD/interASP/GetSubBoards.aspx?RootBoardID=top&SubFlag=0", false);
+		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?RootBoardID=top&SubFlag=0", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText != "ERROR") {
@@ -327,7 +327,8 @@
 					dataType : "xml",
 					async : false,
 					url : "/ezBoard/getMyBoards_Config.do",	        			
-					data : { RootTreeID : pRootTreeID, COUNTFLAG : "YES"},
+					data : { RootTreeID : pRootTreeID, 
+								 COUNTFLAG : "YES"},
 					success: function(xml){
 			        	return xml;
 					}        			
@@ -335,6 +336,7 @@
 		    }
 		    var tempID;
 		    var clickFlag = false;
+		    
 		    function TopBoard_onclick(obj, ID) {
 		        if (tempID == ID)
 		            clickFlag = true;
@@ -356,16 +358,12 @@
 		        }
 		    }
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		    	$.ajax({
-					type : "POST",
-					dataType : "xml",
-					async : false,
-					url : "/ezBoard/getSubBoards.do",	        			
-					data : { RootBoardID : pRootBoardID, SubFlag : pSubFlag, SelectFlag : "0"},
-					success: function(xml){
-			        	return xml;
-					}        			
-				});
+		    	var xmlhttp3 = createXMLHttpRequest();
+		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?RootBoardID=" + pRootBoardID + "&SubFlag=" + pSubFlag + "&SelectFlag=0", false);
+		        xmlhttp3.send();
+		        var ret = xmlhttp3.responseXML;
+		        xmlhttp3 = null;
+		        return ret;
 		    }
 		    function MakeTopBoardView(strXML) {
 		        var xmldom = createXmlDom();
@@ -515,8 +513,8 @@
 	        	<script type="text/javascript">
 	        		parser=new DOMParser();
         		    xmlDoc=parser.parseFromString("${resultXML}","text/xml");
+        			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-        				var i = 0;
        			        document.write("<h2>");
            				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
            				document.write("</h2>\n");

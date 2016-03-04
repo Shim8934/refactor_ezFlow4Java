@@ -87,6 +87,18 @@
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_GETQNABRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#, #v_PADMINTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_SET_LISTORDER(#v_ORDERBOARDIDLIST#, #v_ORDERBOARDLISTCOUNT#, #v_DELBOARDIDLIST#, #v_DELBOARDLISTCOUNT#, #v_USERID#, #v_ERR_CD,javaType=java.lang.Integer,jdbcType=INTEGER,mode=INOUT#)}
 	</procedure>

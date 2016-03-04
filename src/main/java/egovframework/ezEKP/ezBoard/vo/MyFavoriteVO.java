@@ -44,6 +44,8 @@ public class MyFavoriteVO {
 	private String fromNow;
 	/** */
 	private String type;
+	/** */
+	private String boardAdmin_FG;
 	
 	public String getBoardId() {
 		return boardId;
@@ -170,6 +172,12 @@ public class MyFavoriteVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getBoardAdmin_FG() {
+		return boardAdmin_FG;
+	}
+	public void setBoardAdmin_FG(String boardAdmin_FG) {
+		this.boardAdmin_FG = boardAdmin_FG;
 	}
 	
 }

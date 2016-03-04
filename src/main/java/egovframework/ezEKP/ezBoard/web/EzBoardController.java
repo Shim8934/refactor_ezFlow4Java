@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +13,13 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +30,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.filter.HTMLTagFilterRequestWrapper;
@@ -1066,24 +1080,23 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value = "/ezBoard/getSubBoards.do")
-	public void getSubBoards(@CookieValue("userID") String userID, LoginVO userInfo,HttpServletRequest req, HttpServletResponse res) throws Exception{
+	public void getSubBoards(@CookieValue("userID") String userID, LoginVO userInfo, BoardPropertyVO boardInfo, HttpServletRequest req, HttpServletResponse res) throws Exception{
 		userInfo = commonUtil.userInfo(userID);
-		
 	    String pRootBoardID = "";
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
 	    String pExcludeBoardID = " ";
 	    if(req.getParameter("RootBoardID") != null){
-	    	pRootBoardID = htmlTagFilter.getParameter(req.getParameter("RootBoardID"));
+	    	pRootBoardID = req.getParameter("RootBoardID");
 	    }
 	    if(req.getParameter("SubFlag") != null){
-	    	pSubFlag = htmlTagFilter.getParameter(req.getParameter("SubFlag"));
+	    	pSubFlag = req.getParameter("SubFlag");
 	    }
 	    if(req.getParameter("SelectFlag") != null){
-	    	pSelectBy = Integer.parseInt(htmlTagFilter.getParameter(req.getParameter("SelectFlag")));
+	    	pSelectBy = Integer.parseInt(req.getParameter("SelectFlag"));
 	    }
 	    if(req.getParameter("pExcludeBoardID") != null){
-	    	pExcludeBoardID = htmlTagFilter.getParameter(req.getParameter("pExcludeBoardID"));
+	    	pExcludeBoardID = req.getParameter("pExcludeBoardID");
 	    }
 	
 	    String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
@@ -1095,48 +1108,62 @@ public class EzBoardController {
 	        pMode = 1;
 	
 	    String strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()));
-	
-	    if(strXML.substring(0, 5).toUpperCase() != "ERROR"){
-	        if(config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES"){
-//	            System.Xml.XmlNodeList docListNode;
-//	            docListNode = xmlret.SelectNodes("TREEVIEWDATA/NODE");
-//	            if(docListNode.Count < 1)
-//	                docListNode = xmlret.SelectNodes("NODES/NODE");
-//                if(docListNode != null){
-//                    for (int i = 0; i < docListNode.Count; i++){
-//                        if(docListNode.Item(i).ChildNodes.Item(6).InnerText == "4"){
-//                        	cmd1 = new OracleCommand("EZSP_GETTHUMBNAILCOUNT");
-//                        }
-//                        else if(docListNode.Item(i).ChildNodes.Item(6).InnerText == "5"){
-//                            GetBoardInfo(docListNode.Item(i).ChildNodes.Item(2).InnerText);   
-//                            cmd1 = new OracleCommand("EZSP_GETQNABRDTOTALITEMCOUNT");
-//                            cmd1.Parameters.Add("v_pADMINTYPE", OracleType.NVarChar, 5).Value = boardinfo.BoardAdmin_FG;
-//                        }
-//                        else{
-//                            cmd1 = new OracleCommand("ezSp_BrdTotalItemCount");
-//                        }
-//                        cmd1.CommandType = CommandType.StoredProcedure;
-//                        cmd1.Parameters.Add("v_pBoardID", OracleType.NChar, 38).Value = docListNode.Item(i).ChildNodes.Item(2).InnerText;
-//                        cmd1.Parameters.Add("v_pNow", OracleType.NVarChar, 20).Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-//                        cmd1.Parameters.Add("v_pUserid", OracleType.NVarChar, 50).Value = userinfo.UserID;
-//                        cmd1.Parameters.Add("v_pType", OracleType.Char, 1).Value = "1";
-//                        cmd1.Parameters.Add("v_pCount", OracleType.Number).Direction = ParameterDirection.Output;
-//                        int intCount = GetQueryValueSP(ref cmd1);
-//
-//                        string strName = "";
-//                        if(intCount != 0)
-//                            strName = "(" + intCount.ToString() + ")";
-//                        docListNode.Item(i).ChildNodes.Item(0).InnerText = docListNode.Item(i).ChildNodes.Item(0).InnerText + strName;
-//                    }
-//	            }
+	    
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	    Document doc = builder.parse(new InputSource(new StringReader(strXML)));
+	    NodeList nList = doc.getElementsByTagName("NODE");
+	    
+	    if (strXML.substring(0, 5).toUpperCase() != "ERROR"){
+	        if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString().equals("YES")){
+            	
+            	long time = System.currentTimeMillis(); 
+            	SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            	String dateTime = dayTime.format(new Date(time));
+    			
+            	MyFavoriteVO myFavoriteVO = new MyFavoriteVO();
+            	int intCount = 0;
+	            if(nList != null){
+	            	for (int i = 0; i < nList.getLength(); i++){
+	            		Node node = nList.item(i);
+	            		
+	            		myFavoriteVO.setBoardId(node.getChildNodes().item(2).getTextContent());
+            			myFavoriteVO.setNowDate(dateTime);
+            			myFavoriteVO.setUserId(userInfo.getId());
+            			myFavoriteVO.setType("1");
+            			
+	            		if(node.getChildNodes().item(6).getTextContent().equals("4")){
+	            			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+	            		}else if(node.getChildNodes().item(6).getTextContent().equals("5")){
+	            			boardInfo = getBoardInfo(node.getChildNodes().item(2).getTextContent(), userInfo);
+	            			myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+	            			intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+	            		}else{
+	            			intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+	            		}
+	            		String strName = "";
+	            		if (intCount != 0)
+	            			strName = "(" + intCount + ")";
+	            		node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);
+	            	}
+	            }
 	        }
 	    }
-//	    else
-//	        xmlret = GetXmlReaderString("<RESULT>ERROR</RESULT>");
-//	
-//	    Response.ContentType = "text/xml";
-//	    xmlret.Save(Response.OutputStream);
-//	    xmlret = null;
+	    else{
+	    	doc = builder.parse(new InputSource(new StringReader("<RESULT>ERROR</RESULT>")));
+	    }
+	    
+	    TransformerFactory tf = TransformerFactory.newInstance();
+	    Transformer transformer = tf.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	    StringWriter writer = new StringWriter();
+	    transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	    String output = writer.getBuffer().toString();
+
+	    res.setContentType("text/xml"); 
+        res.setCharacterEncoding("UTF-8");
+        res.setHeader("Cache-Control", "no-cache");
+        res.getWriter().write(output);
 
 	}
 	

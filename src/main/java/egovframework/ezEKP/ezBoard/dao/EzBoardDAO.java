@@ -111,6 +111,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		select("EzBoardDAO.getBrdTotalItemCount",map);
 		return (int)map.get("v_pCount");
 	}
+
+	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception{
+		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
+		map.put("v_PNOW", myFavoriteVO.getNowDate());
+		map.put("v_PUSERID", myFavoriteVO.getUserId());
+		map.put("v_PTYPE", myFavoriteVO.getType());
+		map.put("v_PADMINTYPE", myFavoriteVO.getBoardAdmin_FG());
+		select("EzBoardDAO.getQNABrdTotalItemCount",map);
+		return (int)map.get("v_pCount");
+	}
 	
 	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception {
 		map.put("v_ORDERBOARDIDLIST", map.get("pBoardList"));
