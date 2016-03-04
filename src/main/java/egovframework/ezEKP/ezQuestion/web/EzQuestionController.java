@@ -1,12 +1,7 @@
 package egovframework.ezEKP.ezQuestion.web;
 
-<<<<<<< .mine
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-=======
 import java.util.HashMap;
 import java.util.Map;
->>>>>>> .r1508
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -14,22 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-<<<<<<< .mine
-import org.springframework.ui.ModelMap;
-=======
 import org.springframework.ui.Model;
->>>>>>> .r1508
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
-<<<<<<< .mine
-import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
-=======
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
->>>>>>> .r1508
+import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -38,25 +27,25 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class EzQuestionController {
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
 	@Autowired
 	private Properties config;
-	
+
 	@Resource(name="loginService")
 	private LoginService loginService;
-	
+
 	@Resource(name="crypto") 
-    private EgovFileScrty egovFileScrty;
-	
+	private EgovFileScrty egovFileScrty;
+
 	@Resource(name="EzQuestionService")
 	private EzQuestionService ezQuestionService;
-	
+
 	@Resource(name="egovMessageSource")
-    private EgovMessageSource egovMessageSource;
-	
+	private EgovMessageSource egovMessageSource;
+
 	@RequestMapping(value="/ezQuestion/poll/qstList.do")
 	public String qstList(ModelMap map,QuestionListVO questionListVO) throws Exception{
-/*		if(questionListVO.getUserId()==null)
+		/*		if(questionListVO.getUserId()==null)
 			questionListVO.setUserId(" ");
 		if(questionListVO.getTitle()==null)
 			questionListVO.setTitle(" ");
@@ -70,25 +59,25 @@ public class EzQuestionController {
 		}
 		if(questionListVO.getLang()==null)
 			questionListVO.setLang(" ");
-			
+
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
 		System.out.println(questionListVO.getTotalCnt());*/
 		return "/ezQuestion/qstList";
 	}
-	
+
 	@RequestMapping(value="/ezQuestion/poll/qstStep1.do")
 	public String qstStep1(HttpServletRequest req,Model model)  {
 		String brdId = req.getParameter("brd_ID");
 		String brdNm = req.getParameter("brd_nm");
 		String brdPostterm = req.getParameter("brd_postterm");
-System.out.println(brdNm);		
+		System.out.println(brdNm);		
 		model.addAttribute("brdId", brdId);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
-		
+
 		return "/ezQuestion/poll/qstStep1";
 	}
-	
+
 	@RequestMapping(value="/ezQuestion/poll/qstStep2.do")
 	public String qstStep2(HttpServletRequest req, EzQuestionVO ezQuestionVO, Model model) {
 		/*String txtExpiredate = req.getParameter("txtExpiredate");
@@ -111,7 +100,7 @@ System.out.println(brdNm);
 		String set_Target = req.getParameter("set_Target");
 		String txtSubject = req.getParameter("txtSubject");
 		String txtContent = req.getParameter("txtContent");*/
-		model.addAttribute("txtExpiredate", ezQuestionVO.getTxtExpiredate());
+//		model.addAttribute("txtExpiredate", ezQuestionVO.getTxtExpiredate());
 		model.addAttribute("set_anonymity", req.getParameter("set_anonymity"));
 		model.addAttribute("hidanonymity", req.getParameter("hidanonymity"));
 		model.addAttribute("hidopenResult", req.getParameter("hidopenResult"));
@@ -132,17 +121,17 @@ System.out.println(brdNm);
 		model.addAttribute("txtSubject", req.getParameter("txtSubject"));
 		model.addAttribute("txtContent", req.getParameter("txtContent"));
 		model.addAttribute("item_id", req.getParameter("item_id"));
-		
-System.out.println(req.getParameter("item_id"));		
+
+		System.out.println(req.getParameter("item_id"));		
 		return "/ezQuestion/poll/qstStep2";
 	}
-	
+
 	@RequestMapping(value="/ezQuestion/poll/qstRangeSelect.do")
 	public String qstRangeSelect()  {
-		
+
 		return "/ezQuestion/poll/qstRangeSelect/rangeSelect";
 	}
-	
+
 	@RequestMapping(value="/ezQuestion/poll/qstStep2QuestionAdd.do")
 	public String qstStep2QuestionAdd(HttpServletRequest req,Model model)  {
 		String brdId = "";
@@ -155,11 +144,11 @@ System.out.println(req.getParameter("item_id"));
 		String pQstAttach = "";
 		String pDataXML = "";
 		String pNoneActiveX = "";
-		
+
 		pMode = "NEW";
 		pAnswerType = "1";
 		brdId = req.getParameter("brd_id"); 
-System.out.println(pMode);
+		System.out.println(pMode);
 		itemId = req.getParameter("item_id");
 		model.addAttribute("item_id",itemId);
 		model.addAttribute("pEditIndex",req.getParameter("pEditIndex"));
@@ -170,13 +159,13 @@ System.out.println(pMode);
 		model.addAttribute("pQstTitle",req.getParameter("pQstTitle"));
 		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
-		
+
 		return "/ezQuestion/poll/qstStep2QuestionAdd";
 	}
-	
+
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req)  {
-System.out.println("!!");
+		System.out.println("!!");
 		String pBrdID = "";
 		String vItemID = "";
 		if(req.getParameter("pBrdID") == null) {
@@ -194,8 +183,8 @@ System.out.println("!!");
 		String multiresponse = req.getParameter("parameter[multiresponse]");
 		String importance = req.getParameter("parameter[importance]");
 		String target = req.getParameter("parameter[target]");
-		
-System.out.println(subject);		
+
+		System.out.println(subject);		
 		map.put("subject", subject);
 		map.put("content", content);
 
