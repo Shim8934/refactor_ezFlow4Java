@@ -301,7 +301,7 @@
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
-        <%-- var szUrl = "/myoffice/ezQuestion/poll/Qst_Range_Select/RangeSelect_Cross.aspx?brd_id=<%=v_brdid%>&item_no=" + item_no; --%>
+         var szUrl = "/ezQuestion/poll/qstRangeSelect/rangeSelect.do?brd_id='${ezQuestionVO.brdID}'&item_no=" + item_no; 
         if ((g_windowReference == null) || (g_windowReference.closed == true)) {
             if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                 var feature = GetOpenPosition(560, 630);
@@ -401,28 +401,28 @@
                     </select>
                     <div style="display:none">
                         <!-- hidden타입 사용시 크롬등에서 history.back()시 이전값을 캐쉬하지 않아 text타입으로 변경 -->
-                        <input type="text" name="hidanonymity" id="hidanonymity" value="0" style="display:none"> 
-                        <input type="text" name="hidopenResult" id="hidopenResult" value="1" style="display:none"> 
+                        <input type="text" name="hidAnonymity" id="hidanonymity" value="0" style="display:none"> 
+                        <input type="text" name="hidOpenResult" id="hidopenResult" value="1" style="display:none"> 
                         <input type="text" name="hidMultiResponse" id="hidMultiResponse" value="0" style="display:none"> 
                         <input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-                        <input type="text" name="brd_id" id="brd_id" value="${requestScope.brdId}" style="display:none"> 
-                        <input type="text" name="brd_nm" id="brd_nm" value="${requestScope.brdNm}" style="display:none"> 
-                        <input type="text" name="brd_postterm" id="brd_postterm" value="${requestScope.brdPostterm}" style="display:none"> 
-                        <input type="text" name="item_no" id="item_no" style="display:none"> 
+                        <input type="text" name="brdId" id="brd_id" value="${ezQuestionVO.brdId}" style="display:none"> 
+                        <input type="text" name="brdNm" id="brd_nm" value="${ezQuestionVO.brdNm}" style="display:none"> 
+                        <input type="text" name="brdPostterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" style="display:none"> 
+                        <input type="text" name="itemNo" id="item_no" style="display:none"> 
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
-                        <input type="text" name="select_YN" id="select_YN" style="display:none">
+                        <input type="text" name="selectYN" id="select_YN" style="display:none">
                         <input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
                     </div>
                     <spring:message code="ezQuestion.t240" />
-                    <select name="set_MultiResponse" id="set_MultiResponse" onChange="return set_MultiResponse_onchange()"> 
+                    <select name="setMultiResponse" id="set_MultiResponse" onChange="return set_MultiResponse_onchange()"> 
                       <option value="1"><spring:message code="ezQuestion.t241" /></option> 
                       <option value="0" selected="selected"><spring:message code="ezQuestion.t242" /></option> 
                     </select> 
                     
                     &nbsp;&nbsp;&nbsp;
                     <spring:message code="ezQuestion.t243" />
-                    <select name="set_openResult" id="set_openResult"  onChange="return set_openResult_onchange()"> 
+                    <select name="setopenResult" id="set_openResult"  onChange="return set_openResult_onchange()"> 
                       <option value="1" selected="selected"><spring:message code="ezQuestion.t244" /></option> 
                       <option value="0"><spring:message code="ezQuestion.t245" /></option> 
                     </select> 
@@ -437,7 +437,7 @@
             <tr>     <!----------- 설문 응답자 범위(전체/선정) --------------> 
                 <th><spring:message code="ezQuestion.t441" /></th> 
                 <td>
-                    <select name="set_Target" id="set_Target" onchange="return set_Target_onchange()"> 
+                    <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()"> 
                         <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option> 
                         <option value="1"><spring:message code="ezQuestion.t252" /></option> 
                     </select> 
