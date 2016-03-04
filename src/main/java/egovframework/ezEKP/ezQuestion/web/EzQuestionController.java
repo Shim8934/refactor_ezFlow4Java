@@ -80,49 +80,23 @@ public class EzQuestionController {
 
 	@RequestMapping(value="/ezQuestion/poll/qstStep2.do")
 	public String qstStep2(HttpServletRequest req, EzQuestionVO ezQuestionVO, Model model) {
-		/*String txtExpiredate = req.getParameter("txtExpiredate");
-		String setAnonymity = req.getParameter("set_anonymity");
-		String hidanonymity = req.getParameter("hidanonymity");
-		String hidopenResult = req.getParameter("hidopenResult");
-		String hidMultiResponse = req.getParameter("hidMultiResponse");
-		String hidTarget = req.getParameter("hidTarget");
-		String brd_id = req.getParameter("brd_id");
-		String brd_nm = req.getParameter("brd_nm");
-		String brd_postterm = req.getParameter("brd_postterm");
-		String item_no = req.getParameter("item_no");
-		String hidStartDate = req.getParameter("hidStartDate");
-		String hidEndDate = req.getParameter("hidEndDate");
-		String select_YN = req.getParameter("select_YN");
-		String RangeXMLStr = req.getParameter("RangeXMLStr");
-		String set_MultiResponse = req.getParameter("set_MultiResponse");
-		String set_openResult = req.getParameter("set_openResult");
-		String importance = req.getParameter("importance");
-		String set_Target = req.getParameter("set_Target");
-		String txtSubject = req.getParameter("txtSubject");
-		String txtContent = req.getParameter("txtContent");*/
-//		model.addAttribute("txtExpiredate", ezQuestionVO.getTxtExpiredate());
-		model.addAttribute("set_anonymity", req.getParameter("set_anonymity"));
-		model.addAttribute("hidanonymity", req.getParameter("hidanonymity"));
-		model.addAttribute("hidopenResult", req.getParameter("hidopenResult"));
-		model.addAttribute("hidMultiResponse", req.getParameter("hidMultiResponse"));
-		model.addAttribute("hidTarget", req.getParameter("hidTarget"));
-		model.addAttribute("brd_id", req.getParameter("brd_id"));
-		model.addAttribute("brd_nm", req.getParameter("brd_nm"));
-		model.addAttribute("brd_postterm", req.getParameter("brd_postterm"));
-		model.addAttribute("item_no", req.getParameter("item_no"));
-		model.addAttribute("hidStartDate", req.getParameter("hidStartDate"));
-		model.addAttribute("hidEndDate", req.getParameter("hidEndDate"));
-		model.addAttribute("select_YN", req.getParameter("select_YN"));
-		model.addAttribute("RangeXMLStr", req.getParameter("RangeXMLStr"));
-		model.addAttribute("set_MultiResponse", req.getParameter("set_MultiResponse"));
-		model.addAttribute("set_openResult", req.getParameter("set_openResult"));
-		model.addAttribute("importance", req.getParameter("importance"));
-		model.addAttribute("set_Target", req.getParameter("set_Target"));
-		model.addAttribute("txtSubject", req.getParameter("txtSubject"));
-		model.addAttribute("txtContent", req.getParameter("txtContent"));
-		model.addAttribute("item_id", req.getParameter("item_id"));
+		
+		StringBuilder pStep1DataXML = new StringBuilder();
+		pStep1DataXML.append("<PARAMETER>");
+		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
+		pStep1DataXML.append("<CONTENT><![CDATA[" + req.getParameter("txtContent") + "]]></CONTENT>");
+		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
+		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
+		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
+		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("setAnonymity")+"</ANONYMITY>");
+		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("setOpenResult")+"</OPENRESULT>");
+		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("setMultiResponse")+"</MULTIRESPONSE>");
+		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
+		pStep1DataXML.append("<TARGET>" + req.getParameter("setTarget")+"</TARGET>");
+		pStep1DataXML.append("</PARAMETER>");
 
-		System.out.println(req.getParameter("item_id"));		
+		model.addAttribute("ezQuestionVO", ezQuestionVO);
+		model.addAttribute("pStep1DataXML", pStep1DataXML);
 		return "/ezQuestion/poll/qstStep2";
 	}
 
