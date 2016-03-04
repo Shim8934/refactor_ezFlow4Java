@@ -907,7 +907,6 @@ public class EzBoardController {
             type = ezBoardVO.getOrderOption();
 
         ezBoardVO.setLang(userInfo.getLang());
-System.out.println(boardType + "@#$%");
         if(boardType == "4"){ // 썸네일 
 //            boardXml = getThumbList(ezBoardVO);
         }else if(boardType == "5"){ //Q&A
@@ -917,7 +916,6 @@ System.out.println(boardType + "@#$%");
             	ezBoardVO.setBoardType("N");
             	resultXML = getNewItemList(ezBoardVO,userInfo);
             }else{
-            	System.out.println("여기에 안들어오는가보다!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 //            	boardXml = getBoardListItem(ezBoardVO);
             }
         }
