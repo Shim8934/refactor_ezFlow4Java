@@ -40,7 +40,6 @@ public class EzQuestionVO {
 	public void setHidAnonymity(String hidAnonymity) {
 		this.hidAnonymity = hidAnonymity;
 	}
-	
 	public String getHidOpenResult() {
 		return hidOpenResult;
 	}
