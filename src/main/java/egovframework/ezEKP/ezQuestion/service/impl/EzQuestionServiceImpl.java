@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezQuestion.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -15,17 +17,34 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	
 	@Resource(name="EzQuestionDAO")
 	private EzQuestionDAO ezQuestionDAO;
-
+	
+	Map<String, Object> map;
+	
 	@Override
 	public int getQstListCnt(QuestionListVO questionListVO) throws Exception {
-		// TODO Auto-generated method stub
-		return ezQuestionDAO.getQstListCnt(questionListVO);
+		map = new HashMap<String, Object>();
+		map.put("v_PSTRBRDID", questionListVO.getBrdId());
+		map.put("v_PUSERID", questionListVO.getUserId());
+		map.put("v_PTITLE", questionListVO.getTitle());
+		map.put("v_PRANGE", questionListVO.getResponseRange());
+		map.put("v_PSDATE", questionListVO.getPostDate());
+		map.put("v_PEDATE", questionListVO.getPollEndDate());
+		map.put("v_PLANG", questionListVO.getLang());
+		return ezQuestionDAO.getQstListCnt(map);
 	}
 
 	@Override
-	public List<QuestionListVO> getQstList(QuestionListVO questionListVO)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return ezQuestionDAO.getQstList(questionListVO);
+	public List<QuestionListVO> getQstList(QuestionListVO questionListVO) throws Exception {
+		map = new HashMap<String, Object>();
+		map.put("v_PSTRBRDID", questionListVO.getBrdId());
+		map.put("v_PUSERID", questionListVO.getUserId());
+		map.put("v_PTOTALCNT", questionListVO.getTotalCnt());
+		map.put("v_PPAGESIZE", questionListVO.getPageSize());
+		map.put("v_PTITLE", questionListVO.getTitle());
+		map.put("v_PRANGE", questionListVO.getResponseRange());
+		map.put("v_PSDATE", questionListVO.getPostDate());
+		map.put("v_PEDATE", questionListVO.getPollEndDate());
+		map.put("v_PLANG", questionListVO.getLang());
+		return ezQuestionDAO.getQstList(map);
 	}
 }
