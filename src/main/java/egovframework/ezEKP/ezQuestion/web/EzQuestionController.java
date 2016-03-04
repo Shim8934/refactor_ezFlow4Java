@@ -6,11 +6,13 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +22,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -43,25 +46,26 @@ public class EzQuestionController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
-	@RequestMapping(value="/ezQuestion/qstList.do")
-	public String qstList(ModelMap map,QuestionListVO questionListVO) throws Exception{
-		/*		if(questionListVO.getUserId()==null)
-			questionListVO.setUserId(" ");
+	@RequestMapping(value="/ezQuestion/poll/qstList.do")
+	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		loginVO = commonUtil.userInfo(userID);
+		questionListVO.setUserId(loginVO.getId());
+		questionListVO.setBrdId(5);
 		if(questionListVO.getTitle()==null)
-			questionListVO.setTitle(" ");
+			questionListVO.setTitle("");
 		if(questionListVO.getResponseRange()==null)
-			questionListVO.setResponseRange(" ");
-		if(questionListVO.getPostDate()==null){
-			questionListVO.setPostDate();
-		}
-		if(questionListVO.getPollEndDate()==null){
-			questionListVO.setPollEndDate();
-		}
+			questionListVO.setResponseRange("");
+		if(questionListVO.getPostDate()==null)
+			questionListVO.setPostDate("");
+		if(questionListVO.getPollEndDate()==null)
+			questionListVO.setPollEndDate("");
 		if(questionListVO.getLang()==null)
-			questionListVO.setLang(" ");
+			questionListVO.setLang("");
 
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
-		System.out.println(questionListVO.getTotalCnt());*/
+		model.addAttribute("questionListVO", questionListVO);
+		System.out.println(questionListVO.getTotalCnt());
+		
 		return "/ezQuestion/qstList";
 	}
 
