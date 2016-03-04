@@ -14,17 +14,18 @@
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-			var pBrdID = "<c:out value='${requestScope.brd_id}'/>";
-			var pBrdSubject = "<c:out value='${requestScope.txtSubject}'/>";
-			var pBrdContent = "<c:out value='${requestScope.txtContent}'/>";
-			var pHideStartDate = "<c:out value='${requestScope.hidStartDate}'/>";
-			var pHideEndDate = "<c:out value='${requestScope.hidEndDate}'/>";
-			var pExpireDate = "<c:out value='${requestScope.txtExpiredate}'/>";
-			var anonymity = "<c:out value='${requestScope.set_anonymity}'/>";
-			var openResult = "<c:out value='${requestScope.set_openResult}'/>";
-			var multiResponse = "<c:out value='${requestScope.set_MultiResponse}'/>";
-			var importance = "<c:out value='${requestScope.importance}'/>";
-			var target = "<c:out value='${requestScope.set_Target}'/>";
+
+			var pBrdID = "<c:out value='${ezQuestionVO.brdId}'/>";
+			var pBrdSubject = "<c:out value='${ezQuestionVO.txtSubject}'/>";
+			var pBrdContent = "<c:out value='${ezQuestionVO.txtContent}'/>";
+			var pHideStartDate = "<c:out value='${ezQuestionVO.hidStartDate}'/>";
+			var pHideEndDate = "<c:out value='${ezQuestionVO.hidEndDate}'/>";
+			var pExpireDate = "<c:out value='${ezQuestionVO.txtExpiredate}'/>";
+			var anonymity = "<c:out value='${ezQuestionVO.setAnonymity}'/>";
+			var openResult = "<c:out value='${ezQuestionVO.setOpenResult}'/>";
+			var multiResponse = "<c:out value='${ezQuestionVO.setMultiResponse}'/>";
+			var importance = "<c:out value='${ezQuestionVO.importance}'/>";
+			var target = "<c:out value='${ezQuestionVO.setTarget}'/>";
 			var index = -1;
 			var flgClose= true;
 			var surveyState = "";
@@ -122,37 +123,36 @@
         		for (i=0; i < Qlen ; i++) {
             		v_QuesID += frmCreate.selQues[i].value + ";"
         		}
-alert(v_QuesID);
-        		//var xmlHttp = createXMLHttpRequest();
-        		//var xmlDoc = createXmlDom();
-        	//	var objNode;
-        	//	xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
-        	//	var QuestionNode = createNode(xmlDoc, "QUESTION");
+        		var xmlHttp = createXMLHttpRequest();
+        		var xmlDoc = createXmlDom();
+        		var objNode;
+        		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
+        		var QuestionNode = createNode(xmlDoc, "QUESTION");
         		var pQstCnt = document.frmCreate.selQues.length;
 alert(pQstCnt);
         		for(var i = 0;i < pQstCnt; i++) {
             		if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
                 		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		//QuestionNode.appendChild(importedNode);
+                		QuestionNode.appendChild(importedNode);
             		}
         		}
-        		//xmlDoc.documentElement.appendChild(QuestionNode);
-        		//xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
-        		//xmlHttp.send(xmlDoc);
-        		//if(getXmlString(xmlHttp.responseXML) == "")
-            		//alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
-        		//else {
-            		//var resultXML = xmlHttp.responseXML;
-            		//State = SelectSingleNodeValue(resultXML, "DATA");
-            	//	if (State !="OK")
-                //		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
-            	//	else {
-                	//	menuQst_List();
-            	//	}		
-        	//	}	
+        		xmlDoc.documentElement.appendChild(QuestionNode);
+        		xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
+        		xmlHttp.send(xmlDoc);
+        		if(getXmlString(xmlHttp.responseXML) == "")
+            		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
+        		else {
+            		var resultXML = xmlHttp.responseXML;
+            		State = SelectSingleNodeValue(resultXML, "DATA");
+            		if (State !="OK")
+                		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
+            		else {
+                		menuQst_List();
+            		}		
+        		}	
         		//surveyState = "OK";
-        		var pBrdSubject = "<c:out value='${requestScope.txtSubject}'/>";
+/*         		var pBrdSubject = "<c:out value='${requestScope.txtSubject}'/>";
 alert(pBrdSubject);
         		 $.ajax({
      				url : '/ezQuestion/qstComplete.do',
@@ -160,7 +160,7 @@ alert(pBrdSubject);
      				dataType : 'json',
      				data : {
      					"parameter": {
-     				        "subject" : pBrdSubject,
+     				        "subject" : <c:out value='${ezQuestionVO.txtSubject}'/>,
      				        "content": pBrdContent,
      				        "startdate": pHideStartDate,
      				        "enddate": pHideEndDate,
@@ -195,7 +195,7 @@ alert(pBrdSubject);
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
      				}
-     			});        
+     			});   */      
     		}
     		function fun_Ques_UP() {
         		if (index > 0) {
@@ -315,8 +315,8 @@ alert(pBrdSubject);
                 		var xmlDoc = createXmlDom();
                 		var objNode;
                 		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${requestScope.brd_id}'/>'); 
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${requestScope.item_id}'/>'); 
+                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>'); 
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>'); 
                 		xmlHttp.open("POST","Qst_Cancel.aspx",false);
                 		xmlHttp.send(xmlDoc);
                 		var resultXML = xmlHttp.responseXML;
@@ -360,9 +360,9 @@ alert(pBrdSubject);
     		}
     		function menuQst_List() {
         		if(CrossYN())
-            		var szUrl = "/Myoffice/ezQuestion/poll/qstList.do?brd_id=5"
+            		var szUrl = "/ezQuestion/poll/qstList.do?brd_id=5"
         		else
-            		var szUrl = "/Myoffice/ezQuestion/poll/qstList.do?brd_id=5"
+            		var szUrl = "/ezQuestion/poll/qstList.do?brd_id=5"
         		window.location.href = szUrl;	
     		}
     		function menuQst_FileOpen() {
@@ -722,7 +722,7 @@ alert(pBrdSubject);
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<%-- <%= pStep1DataXML %> --%>" />
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<c:out value='${requestScope.pStep1DataXML}'/>" />
 			</div>
 		</form>
 	    	<div id="Privew_List" style="display: none;">
