@@ -18,6 +18,6 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public List<QuestionListVO> getQstList(Map<String, Object> map){
-		return (List<QuestionListVO>) list("getQstList", map);
+		return (List<QuestionListVO>) list("EzQuestionDAO.getQstList", map);
 	}
 }
