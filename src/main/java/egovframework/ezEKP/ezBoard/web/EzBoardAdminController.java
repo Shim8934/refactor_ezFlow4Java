@@ -371,11 +371,12 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 				if(tempFile != null){
 					tempFile.delete();
 				}
+				
+				boardBackgroundVO.setOrgFileName(file.getOriginalFilename());
+				boardBackgroundVO.setSaveFileName(fileName);				
 			}catch(Exception e){
 				
-			}
-			boardBackgroundVO.setOrgFileName(file.getOriginalFilename());
-			boardBackgroundVO.setSaveFileName(fileName);
+			}			
 		}
         
         ezBoardAdminService.saveBackGroundImage(boardBackgroundVO);	
