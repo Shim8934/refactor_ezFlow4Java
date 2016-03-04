@@ -3,8 +3,8 @@ package egovframework.ezEKP.ezQuestion.vo;
 public class EzQuestionVO {
 	private String txtExpiredate; 
 	private String setAnonymity;
-	private String hidanonymity; 
-	private String hidopenResult; 
+	private String hidAnonymity; 
+	private String hidOpenResult; 
 	private String hidMultiResponse;
 	private String hidTarget; 
 	private String brdId; 
@@ -16,7 +16,7 @@ public class EzQuestionVO {
 	private String selectYN; 
 	private String RangeXMLStr; 
 	private String setMultiResponse; 
-	private String setopenResult; 
+	private String setOpenResult; 
 	private String importance; 
 	private String setTarget; 
 	private String txtSubject; 
@@ -34,17 +34,18 @@ public class EzQuestionVO {
 	public void setSetAnonymity(String setAnonymity) {
 		this.setAnonymity = setAnonymity;
 	}
-	public String getHidanonymity() {
-		return hidanonymity;
+	public String getHidAnonymity() {
+		return hidAnonymity;
 	}
-	public void setHidanonymity(String hidanonymity) {
-		this.hidanonymity = hidanonymity;
+	public void setHidAnonymity(String hidAnonymity) {
+		this.hidAnonymity = hidAnonymity;
 	}
-	public String getHidopenResult() {
-		return hidopenResult;
+	
+	public String getHidOpenResult() {
+		return hidOpenResult;
 	}
-	public void setHidopenResult(String hidopenResult) {
-		this.hidopenResult = hidopenResult;
+	public void setHidOpenResult(String hidOpenResult) {
+		this.hidOpenResult = hidOpenResult;
 	}
 	public String getHidMultiResponse() {
 		return hidMultiResponse;
@@ -112,11 +113,11 @@ public class EzQuestionVO {
 	public void setSetMultiResponse(String setMultiResponse) {
 		this.setMultiResponse = setMultiResponse;
 	}
-	public String getSetopenResult() {
-		return setopenResult;
+	public String getSetOpenResult() {
+		return setOpenResult;
 	}
-	public void setSetopenResult(String setopenResult) {
-		this.setopenResult = setopenResult;
+	public void setSetOpenResult(String setOpenResult) {
+		this.setOpenResult = setOpenResult;
 	}
 	public String getImportance() {
 		return importance;
