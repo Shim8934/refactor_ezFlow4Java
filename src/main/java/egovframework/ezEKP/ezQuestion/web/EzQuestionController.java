@@ -43,7 +43,7 @@ public class EzQuestionController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
-	@RequestMapping(value="/ezQuestion/poll/qstList.do")
+	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(ModelMap map,QuestionListVO questionListVO) throws Exception{
 		/*		if(questionListVO.getUserId()==null)
 			questionListVO.setUserId(" ");
@@ -65,7 +65,7 @@ public class EzQuestionController {
 		return "/ezQuestion/qstList";
 	}
 
-	@RequestMapping(value="/ezQuestion/poll/qstStep1.do")
+	@RequestMapping(value="/ezQuestion/qstStep1.do")
 	public String qstStep1(HttpServletRequest req,Model model)  {
 		String brdId = req.getParameter("brd_ID");
 		String brdNm = req.getParameter("brd_nm");
@@ -75,10 +75,10 @@ public class EzQuestionController {
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
 
-		return "/ezQuestion/poll/qstStep1";
+		return "/ezQuestion/qstStep1";
 	}
 
-	@RequestMapping(value="/ezQuestion/poll/qstStep2.do")
+	@RequestMapping(value="/ezQuestion/qstStep2.do")
 	public String qstStep2(HttpServletRequest req, EzQuestionVO ezQuestionVO, Model model) {
 		
 		StringBuilder pStep1DataXML = new StringBuilder();
@@ -97,16 +97,16 @@ public class EzQuestionController {
 
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
 		model.addAttribute("pStep1DataXML", pStep1DataXML);
-		return "/ezQuestion/poll/qstStep2";
+		return "/ezQuestion/qstStep2";
 	}
 
-	@RequestMapping(value="/ezQuestion/poll/qstRangeSelect.do")
+	@RequestMapping(value="/ezQuestion/qstRangeSelect.do")
 	public String qstRangeSelect()  {
 
-		return "/ezQuestion/poll/qstRangeSelect/rangeSelect";
+		return "/ezQuestion/qstRangeSelect/rangeSelect";
 	}
 
-	@RequestMapping(value="/ezQuestion/poll/qstStep2QuestionAdd.do")
+	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
 	public String qstStep2QuestionAdd(HttpServletRequest req,Model model)  {
 		String brdId = "";
 		String itemId = "";
@@ -134,7 +134,7 @@ public class EzQuestionController {
 		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
 
-		return "/ezQuestion/poll/qstStep2QuestionAdd";
+		return "/ezQuestion/qstStep2QuestionAdd";
 	}
 
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
