@@ -48,6 +48,8 @@ public class QuestionListVO {
 	private int totalBlock;
 	/** 언어*/
 	private String lang;
+	/** jsp Onclick 시 주소*/
+	private String receve;
 	
 	public int getBrdId() {
 		return brdId;
@@ -186,5 +188,11 @@ public class QuestionListVO {
 	}
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+	public String getReceve() {
+		return receve;
+	}
+	public void setReceve(String receve) {
+		this.receve = receve;
 	}
 }
