@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
-import java.sql.Date;
 
 public class QuestionListVO {
 	/** 게시판아이디*/
@@ -20,9 +19,9 @@ public class QuestionListVO {
 	/** 제목*/
 	private String content;
 	/** 유효한 마지막 날*/
-	private Date pollEndDate;
+	private String pollEndDate;
 	/** 유효한 첫 날*/
-	private Date postDate;
+	private String postDate;
 	/** 결과공개*/
 	private String publicResultFlg;
 	/** 기명여부*/
@@ -98,16 +97,16 @@ public class QuestionListVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getPollEndDate() {
+	public String getPollEndDate() {
 		return pollEndDate;
 	}
-	public void setPollEndDate(Date pollEndDate) {
+	public void setPollEndDate(String pollEndDate) {
 		this.pollEndDate = pollEndDate;
 	}
-	public Date getPostDate() {
+	public String getPostDate() {
 		return postDate;
 	}
-	public void setPostDate(Date postDate) {
+	public void setPostDate(String postDate) {
 		this.postDate = postDate;
 	}
 	public String getPublicResultFlg() {
