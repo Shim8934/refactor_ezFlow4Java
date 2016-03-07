@@ -173,16 +173,20 @@
 	        }
 
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
+	        	var ret;
+	        	
 	        	$.ajax({
 					type : "POST",
-					dataType : "json",
+					dataType : "xml",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",	        			
 					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
 					success: function(result){
-						
-					}        			
-				});	            
+						ret = result;				        
+					}
+				});
+	        	
+	        	return ret;
 	        }
 
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -308,7 +312,7 @@
 					$("#TopBoard").html(strHTML);
 	
 	                if (cnt > 0){         	
-						//TopBoard_onclick("TreeCtrl0", data);
+						TopBoard_onclick("TreeCtrl0", data);
 	                }
 				}        			
 			});
