@@ -42,7 +42,9 @@ public interface EzBoardService {
 	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception;
 	
 	void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
+
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 	
-	void setTabUsed(String pUserID, Map<String, Object> map) throws Exception;
+	
 
 }
