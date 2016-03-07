@@ -53,13 +53,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
-		map.put("v_PUSERID", pUserID);
-		map.put("v_PLISTCNT", map.get("pListCount"));
-		map.put("v_PREVIEWMODE", map.get("pPreview"));
-		map.put("v_PREVIEWWLIST", map.get("pPreviewWList"));
-		map.put("v_PREVIEWWCONTENT", map.get("pPreviewWContent"));
-		map.put("v_PREVIEWHLIST", map.get("pPreviewHList"));
-		map.put("v_PREVIEWHCONTENT", map.get("pPreviewHContent"));
+		
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
 	
@@ -88,20 +82,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
-	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception {
-		map.put("v_ORDERBOARDIDLIST", map.get("pBoardList"));
-		map.put("v_ORDERBOARDLISTCOUNT", map.get("pBoardListCount"));
-		map.put("v_DELBOARDIDLIST", map.get("pDelBoardList"));
-		map.put("v_DELBOARDLISTCOUNT", map.get("pDelBoardListCount"));
-		map.put("v_USERID", pUserID);
-		map.put("v_ERR_CD", map.get("v_ERR_CD"));
+	public void setListOrder(Map<String, Object> map) throws Exception {
+		
 		update("EzBoardDAO.set_ListOrder",map);
 	}
 	
-	public void setTabUsed(String pUserID, Map<String, Object> map) throws Exception{
-		map.put("v_BOARDID", map.get("boardId"));
-		map.put("v_TABUSED", map.get("tabUsed"));
-		map.put("v_USERID", pUserID);
+	public void setTabUsed(Map<String, Object> map) throws Exception{
+		
 		update("EzBoardDAO.set_TabUsed",map);
 	}
 	
