@@ -1,11 +1,18 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +149,18 @@ public class EzQuestionController {
 	}
 
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req)  {
+	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req) throws Exception  {
+		
+			
+			
+		File file = new File(req.getParameter("xmlDoc"));
+		DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
+		org.w3c.dom.Document doc = docBuild.parse(file);
+		doc.getDocumentElement().normalize();
+		
+System.out.println(doc.getDocumentElement().getNodeName());
+		
 		System.out.println("!!");
 		String pBrdID = "";
 		String vItemID = "";
@@ -161,7 +179,7 @@ public class EzQuestionController {
 		String multiresponse = req.getParameter("parameter[multiresponse]");
 		String importance = req.getParameter("parameter[importance]");
 		String target = req.getParameter("parameter[target]");
-
+		
 		System.out.println(subject);		
 		map.put("subject", subject);
 		map.put("content", content);
