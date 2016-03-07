@@ -67,8 +67,14 @@ public class EzQuestionController {
 			questionListVO.setLang("");
 		if(questionListVO.getPageSize()==0)
 			questionListVO.setPageSize(15);
+		if(questionListVO.getCurrPage()==0)
+			questionListVO.setCurrPage(1);
 		
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
+		
+		if(questionListVO.getTotalPage()==0)
+			questionListVO.setTotalPage((questionListVO.getTotalCnt()+questionListVO.getPageSize()-1)/questionListVO.getPageSize());
+		
 		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);
 		
 		model.addAttribute("questionListVO", questionListVO);
