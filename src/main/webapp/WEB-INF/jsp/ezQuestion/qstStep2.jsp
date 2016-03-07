@@ -131,10 +131,11 @@
         		var pQstCnt = document.frmCreate.selQues.length;
 alert(pQstCnt);
         		for(var i = 0;i < pQstCnt; i++) {
-            		if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
+            		/* if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
                 		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		QuestionNode.appendChild(importedNode);
+                		QuestionNode.appendChild(importedNode); */
+                		//var question = {"row" : };
             		}
         		}
         		xmlDoc.documentElement.appendChild(QuestionNode);
@@ -459,8 +460,8 @@ alert(pBrdSubject);
 		        		var xmlDoc = createXmlDom();
 		        		var objNode;
 		        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${requestScope.brd_id}'/>');
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${requestScope.item_id}'/>');
+		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>');
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>');
 		        		xmlHttp.open("POST", "Qst_Cancel.aspx", false);
 		        		xmlHttp.send(xmlDoc);
 		        		var resultXML = xmlHttp.responseXML;
@@ -692,7 +693,7 @@ alert(pBrdSubject);
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${requestScope.txtSubject}'/>"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${ezQuestionVO.txtSubject}'/>"/></td>
            			</tr>
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
