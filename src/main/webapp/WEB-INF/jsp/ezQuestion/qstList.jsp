@@ -27,7 +27,7 @@
 		    var g_BrdNM = "${pBrdNM}";
 		    var CurPage = "${pCurrPage}";
 		    var totalPage = "${pTotalPage}";
-		    var totalCount = "${pTotalCnt}";
+// 		    var totalCount = "${pTotalCnt}";
 		    var szSelectedItemNo = "";
 // 		    var szSearchParam = "&title=" + "${pTitle}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}";
 		    var szPubFlag = "";
@@ -360,7 +360,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + ${questionListVO.totalCnt} + " </span>" + strLang42 + "]";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -554,18 +554,33 @@
 					<th width="90"><spring:message code="ezQuestion.t265" /></th> 
 					<th width="65"><spring:message code="ezQuestion.t311" /></th> 
 			    </tr>
-<%-- 			 	<c:forEach var="QuestionListVO" items="list">  --%>
-<%-- 			        <tr id="${QuestionListVO.itemNo }" class="white">  --%>
-<%-- 			        	<td style="padding:0"> <input type="checkbox" id="menuCheck${QuestionListVO.itemNo}" value="${QuestionListVO.itemNo}"></td>  --%>
-<%-- 			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${QuestionListVO.title}"  onclick="title_Onclick('${QuestionListVO.receve }')"  ><nobr>${QuestionListVO.title}</nobr></td>  --%>
-<%-- 			          	<td> ${QuestionListVO.publicFlg} </td>  --%>
-<%-- 			          	<td> <fmt:formatDate value="${QuestionListVO.pollEndDate}" pattern="yyyy-MM-dd"/> </td>  --%>
-<%-- 			          	<td> ${QuestionListVO.responseRange} </td>  --%>
-<%-- 			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${QuestionListVO.userID}')"> ${QuestionListVO.userName} </a> </td>  --%>
-<%-- 			          	<td> ${QuestionListVO.resultFlg} </td>  --%>
-<!-- 			        </tr> -->
-<%-- 		        </c:forEach> --%>
-			    <c:if test="${pTotalCnt == 0}"> 
+			 	<c:forEach var="list" items="${list}"> 
+			        <tr id="${list.itemNo}" class="white"> 
+			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+${list.itemNo}+" value="${list.itemNo}"></td> 
+			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${list.title}"  ><nobr>${list.title}</nobr></td> 
+			          	<c:if test="${list.publicFlg == 0}">
+			          		<td> 기명 </td>	
+			          	</c:if>
+			          	<c:if test="${list.publicFlg == 1}">
+			          		<td> 무기명 </td>	
+			          	</c:if>
+			          	<td> ${list.pollEndDate} </td>
+			          	<c:if test="${list.responseRange == 0}">
+			          		<td> 전체 </td>	
+			          	</c:if>
+			          	<c:if test="${list.responseRange == 1}">
+			          		<td> 선정 </td>	
+			          	</c:if> 
+			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userId}')"> ${list.userNm} </a> </td> 
+			          	<c:if test="${list.publicResultFlg == 0}">
+			          		<td> 비공개 </td>	
+			          	</c:if> 
+			          	<c:if test="${list.publicResultFlg == 1}">
+			          		<td> 공개 </td>	
+			          	</c:if> 
+			        </tr>
+		        </c:forEach>
+			    <c:if test="${QuestionListVO.TotalCnt == 0}"> 
 			        <tr> 
 						<td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
 		       		</tr> 
