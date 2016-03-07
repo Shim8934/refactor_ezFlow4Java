@@ -1186,16 +1186,15 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/set_TabUse.do")
-	public @ResponseBody Map<String, Object> set_TabUse(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
+	public String set_TabUse(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
 		loginVO = commonUtil.userInfo(userID);
 		String pUserID = loginVO.getId();
 		String pBoardList = request.getParameter("pBoardList");
 		String tabUsed = request.getParameter("tabUsed");
-        
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("boardId",pBoardList);
-        map.put("tabUsed",tabUsed);
-        ezBoardService.setTabUsed(pUserID, map);
-        return map;
+
+		modelMap.addAttribute("pBoardList",pBoardList);
+		modelMap.addAttribute("tabUsed",tabUsed);
+        ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed);
+        return "json";
 	}
 }
