@@ -25,11 +25,11 @@
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "${pBrdID}";
 		    var g_BrdNM = "${pBrdNM}";
-		    var CurPage = "${pCurrPage}";
-		    var totalPage = "${pTotalPage}";
-// 		    var totalCount = "${pTotalCnt}";
+		    var CurPage = "${questionListVO.currPage}";
+		    var totalPage = "${questionListVO.totalPage}"
+		    var totalCount = "${questionListVO.totalCnt}";
 		    var szSelectedItemNo = "";
-// 		    var szSearchParam = "&title=" + "${pTitle}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}";
+		    /* var szSearchParam = "&title=" + "${Title}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}"; */
 		    var szPubFlag = "";
 			var EndPollYN, ResponseYN, ResultOpenYN
 			var MultiResYN, WriteYN, AdminYN
@@ -44,7 +44,6 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
-		
 				makePageSelPage();
 			}
 		
@@ -360,7 +359,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + ${questionListVO.totalCnt} + " </span>" + strLang42 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -578,6 +577,7 @@
 			          	<c:if test="${list.publicResultFlg == 1}">
 			          		<td> 공개 </td>	
 			          	</c:if> 
+
 			        </tr>
 		        </c:forEach>
 			    <c:if test="${QuestionListVO.TotalCnt == 0}"> 
