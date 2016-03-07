@@ -1,19 +1,16 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.Document;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,7 +50,7 @@ public class EzQuestionController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
-	@RequestMapping(value="/ezQuestion/poll/qstList.do")
+	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		loginVO = commonUtil.userInfo(userID);
 		questionListVO.setUserId(loginVO.getId());
@@ -68,10 +65,14 @@ public class EzQuestionController {
 			questionListVO.setPollEndDate("");
 		if(questionListVO.getLang()==null)
 			questionListVO.setLang("");
-
+		if(questionListVO.getPageSize()==0)
+			questionListVO.setPageSize(15);
+		
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
+		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);
+		
 		model.addAttribute("questionListVO", questionListVO);
-		System.out.println(questionListVO.getTotalCnt());
+		model.addAttribute("list", list);
 		
 		return "/ezQuestion/qstList";
 	}
