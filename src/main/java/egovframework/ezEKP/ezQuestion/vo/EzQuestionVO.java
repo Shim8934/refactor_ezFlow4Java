@@ -21,7 +21,14 @@ public class EzQuestionVO {
 	private String setTarget; 
 	private String txtSubject; 
 	private String txtContent;
+	private String itemId;
 	
+	public String getItemId() {
+		return itemId;
+	}
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
 	public String getTxtExpiredate() {
 		return txtExpiredate;
 	}
