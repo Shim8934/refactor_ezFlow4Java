@@ -29,8 +29,8 @@
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
     
-	        //var RedirectBoardGroupID = "${redirectBoardGroupID}";
-	        //var RedirectBoardID = "${redirectBoardID}";	   
+	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
+	        var RedirectBoardID = "${redirectBoardID}";	   
  
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");
@@ -121,6 +121,7 @@
 	        }
 		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
+/* 작업필요    */		    	
 	            var xmlRtn = createXmlDom();
 	            var TreeIdx = pNodeID;
 	            var treeNode = new TreeNode();
@@ -189,26 +190,23 @@
 	        	return ret;
 	        }
 
-	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
+	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {	
 	            try {
 	                AccessLevel = "0";
 	                var treeNode = new TreeNode();
 	                treeNode.LoadFromID(pNodeID);
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
-	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
+	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
 
 	                if (RedirectBoardID != "") {
-	                    if (RedirectBoardGroupID != "") {
+	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID + "&TabId=1tab2";
 	                    }
-	                }
-	                else {
+	                }else{
+/* 수정필요	*/
 	                    window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID;
 	                }
-	                
-	                
-	                
 	            }
 	            catch (e) {
 	                alert(e.description);
@@ -244,7 +242,7 @@
 	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID, "board_main");
 	                    break;
 	                case 4:	                    
-                        window.open("BoardMove_Cross.aspx?BoardID=" + SelectedBoardID + "&BoardGroupID=" + SelectedBoardGroupID, "board_main");
+                        window.open("/admin/ezBoard/boardMove.do?boardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");
 	                    break;
 	                case 5:	                    
 	                    window.open("/admin/ezBoard/boardDelete.do?boardID=" + SelectedBoardID + "&boardGroupID=" + SelectedBoardGroupID, "board_main");	                    

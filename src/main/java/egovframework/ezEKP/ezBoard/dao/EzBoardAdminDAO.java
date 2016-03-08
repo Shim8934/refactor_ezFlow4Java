@@ -101,4 +101,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.deleteBackGroundImage", boardBackgroundVO);
 	}
 	
+	public void moveBoard(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.moveBoard", map);
+	}
+	
 }

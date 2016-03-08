@@ -37,9 +37,13 @@
 	                	dataType : "text",
 	                	url : "/admin/ezBoard/saveBoardOrder.do",
 	                	data : { boardList : strBoardList },
-	                	success : function(result){
+	                	success : function(){
                				alert("<spring:message code='ezBoard.t79'/>");
-	                	}
+               				parent.window.location.reload();
+	                	},
+	                	error : function(){
+	                		alert("<spring:message code='ezBoard.t80'/>");
+	                	}	                	
 	                });
 	            }
 	        }

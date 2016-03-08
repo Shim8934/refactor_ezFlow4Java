@@ -36,7 +36,7 @@
 					return;
 				}
 			    var newID = "{" + GetGUID() + "}";
-			    
+
 			    $.ajax({
 					type : "POST",
 					url : "/admin/ezBoard/createBoard.do",

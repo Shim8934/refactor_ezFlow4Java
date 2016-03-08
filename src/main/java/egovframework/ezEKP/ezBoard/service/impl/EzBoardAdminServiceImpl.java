@@ -146,7 +146,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void saveBoardOrder(String pBoardIDList) throws Exception {
-		int pBoardListCount = pBoardIDList.split(";").length - 2;
+		int pBoardListCount = pBoardIDList.split(";").length - 1;
 		
 		map.put("v_pBoardIDList", pBoardIDList);
 		map.put("v_pBoardListCount", pBoardListCount);
@@ -198,7 +198,18 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.deleteBackGroundImage(boardBackgroundVO);
-	}	
-	
+	}
+
+	@Override
+	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
+		// TODO Auto-generated method stub
+		map.put("v_pOrgBoardID", orgBoardID);
+        map.put("v_pNewParentBoardID", newParentBoardID);
+        map.put("v_pNewBoardGroupID", newBoardGroupID);
+        
+		ezBoardAdminDAO.moveBoard(map);
+	}
+
+		
 	
 }

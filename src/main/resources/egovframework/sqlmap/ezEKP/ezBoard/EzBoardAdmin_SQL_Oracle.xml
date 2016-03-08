@@ -99,7 +99,11 @@
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" >
-		{CALL EZBOARDSTD.EzSp_BRDDELETEBOARD(#v_pBoardID#)}
+		{CALL EZBOARDSTD.EZSP_BRDDELETEBOARD(#v_pBoardID#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)}
 	</procedure>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
