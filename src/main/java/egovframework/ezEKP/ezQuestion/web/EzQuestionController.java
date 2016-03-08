@@ -51,10 +51,11 @@ public class EzQuestionController {
 	private EgovMessageSource egovMessageSource;
 
 	@RequestMapping(value="/ezQuestion/qstList.do")
-	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request) throws Exception{
 		loginVO = commonUtil.userInfo(userID);
 		questionListVO.setUserId(loginVO.getId());
-		questionListVO.setBrdId(5);
+		if(questionListVO.getBrdId()==0)
+			questionListVO.setBrdId(Integer.parseInt(request.getParameter("brd_ID")));
 		if(questionListVO.getTitle()==null)
 			questionListVO.setTitle("");
 		if(questionListVO.getResponseRange()==null)
@@ -69,11 +70,18 @@ public class EzQuestionController {
 			questionListVO.setPageSize(15);
 		if(questionListVO.getCurrPage()==0)
 			questionListVO.setCurrPage(1);
-		
+		/** 전체 글 갯수*/
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
-		
+		/**페이지네이션 row*/
+//		questionListVO.setStartRow((questionListVO.getCurrPage()-1)*questionListVO.getPageSize()+1);
+//		if(questionListVO.getCurrPage()*questionListVO.getPageSize() < questionListVO.getTotalCnt())
+//			questionListVO.setEndRow(questionListVO.getCurrPage()*questionListVO.getPageSize());
+//		else
+//			questionListVO.setEndRow(questionListVO.getTotalCnt());
+//		System.out.println(questionListVO.getStartRow()+"@@@@@@@@@@"+questionListVO.getEndRow());
 		if(questionListVO.getTotalPage()==0)
 			questionListVO.setTotalPage((questionListVO.getTotalCnt()+questionListVO.getPageSize()-1)/questionListVO.getPageSize());
+
 		
 		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);
 		

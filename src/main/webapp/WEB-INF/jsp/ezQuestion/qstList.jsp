@@ -23,16 +23,16 @@
 		<script language="JavaScript" type="text/javascript">
 		/* c:out value */
 			var g_ezBoard = "/gwQuestion";
-		    var g_BrdID = "${pBrdID}";
+		    var g_BrdID = "${questionListVO.brdId}";
 		    var g_BrdNM = "${pBrdNM}";
 		    var CurPage = "${questionListVO.currPage}";
-		    var totalPage = "${questionListVO.totalPage}"
+		    var totalPage = "${questionListVO.totalPage}";
 		    var totalCount = "${questionListVO.totalCnt}";
 		    var szSelectedItemNo = "";
-		    /* var szSearchParam = "&title=" + "${Title}" + "&range=" + "${pRange}" + "&sdate=" + "${psDate}" + "&edate=" + "${peDate}"; */
+		    var szSearchParam = "&title=" + "${questionListVO.title}" + "&responseRange=" + "${questionListVO.responseRange}" + "&postDate=" + "${questionListVO.postDate}" + "&pollEndDate=" + "${questionListVO.pollEndDate}";
 		    var szPubFlag = "";
-			var EndPollYN, ResponseYN, ResultOpenYN
-			var MultiResYN, WriteYN, AdminYN
+			var EndPollYN, ResponseYN, ResultOpenYN;
+			var MultiResYN, WriteYN, AdminYN;
 			var TR_Contents_Start = 1;
 			var pNoneActiveX = "${pNoneActiveX}";
 			document.onselectstart = function () { return false; };
@@ -166,7 +166,7 @@
 		                if (WriteYN == "Y" || AdminYN == "Y")
 		                    return true;
 		                else {
-		                    alert('<spring:message code="ezQuestion.t284" />')
+		                    alert('<spring:message code="ezQuestion.t284" />');
 		                    return false;
 		                }
 		            }
@@ -179,7 +179,7 @@
 		                if (WriteYN == "Y" || AdminYN == "Y")
 		                    return true;
 		                else {
-		                    alert('<spring:message code="ezQuestion.t284" />')
+		                    alert('<spring:message code="ezQuestion.t284" />');
 		                    return false;
 		                }
 		            }
@@ -462,8 +462,8 @@
 		            return;
 		    }
 		    function search_Set(pPage) {
-		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${pTotalPage}')) {
-		            var szUrl = "Qst_List.do?brd_id=" + g_BrdID + "&page=" + pPage + szSearchParam;
+		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${questionListVO.totalPage}')) {
+		            var szUrl = "/ezQuestion/qstList.do?brd_ID=" + g_BrdID + "&currPage=" + pPage + szSearchParam;
 		            window.location.href = szUrl;
 		        }
 		    }
@@ -515,7 +515,7 @@
 		        if (szCheckCnt == 1) {
 		           /*  if (Check_UserPollStatus(p_SelectedItemNo, "Reuse") == false) return; */
 		
-		            var szUrl = "Qst_Step1_reuse_cross.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
+		            var szUrl = "Qst_Step1_reuse_cross.do?brdId=" + g_BrdID + "&itemId=" + p_SelectedItemNo;
 		            window.location.href = szUrl;
 		        }
 		        else {

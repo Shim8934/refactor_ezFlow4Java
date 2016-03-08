@@ -38,14 +38,18 @@ public class QuestionListVO {
 	private int totalPage;
 	/** 현제 페이지*/
 	private int currPage;
-	/** 페이지사이즈*/
+	/** 한 페이지사이즈*/
 	private int pageSize;
-	/** */
+	/** 페이지사이즈*/
 	private int blockSize;
-	/** */
+	/** 현재블록(불필요 시 삭제)*/
 	private int currBlock;
-	/** */
+	/** 전체블록(불필요 시 삭제)*/
 	private int totalBlock;
+	/** 시작 글 번호*/
+	private int startRow;
+	/** 끝 글 번호*/
+	private int endRow;
 	/** 언어*/
 	private String lang;
 	/** jsp Onclick 시 주소*/
@@ -182,6 +186,18 @@ public class QuestionListVO {
 	}
 	public void setTotalBlock(int totalBlock) {
 		this.totalBlock = totalBlock;
+	}
+	public int getStartRow() {
+		return startRow;
+	}
+	public void setStartRow(int startRow) {
+		this.startRow = startRow;
+	}
+	public int getEndRow() {
+		return endRow;
+	}
+	public void setEndRow(int endRow) {
+		this.endRow = endRow;
 	}
 	public String getLang() {
 		return lang;
