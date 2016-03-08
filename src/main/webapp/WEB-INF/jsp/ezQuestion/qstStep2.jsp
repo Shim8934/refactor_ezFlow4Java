@@ -22,6 +22,7 @@
 			var pHideEndDate = "<c:out value='${ezQuestionVO.hidEndDate}'/>";
 			var pExpireDate = "<c:out value='${ezQuestionVO.txtExpiredate}'/>";
 			var anonymity = "<c:out value='${ezQuestionVO.setAnonymity}'/>";
+alert(anonymity);
 			var openResult = "<c:out value='${ezQuestionVO.setOpenResult}'/>";
 			var multiResponse = "<c:out value='${ezQuestionVO.setMultiResponse}'/>";
 			var importance = "<c:out value='${ezQuestionVO.importance}'/>";
@@ -123,25 +124,25 @@
         		for (i=0; i < Qlen ; i++) {
             		v_QuesID += frmCreate.selQues[i].value + ";"
         		}
-        		var xmlHttp = createXMLHttpRequest();
+        		/* var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
-        		var QuestionNode = createNode(xmlDoc, "QUESTION");
+        		var QuestionNode = createNode(xmlDoc, "QUESTION"); */
         		var pQstCnt = document.frmCreate.selQues.length;
 alert(pQstCnt);
         		for(var i = 0;i < pQstCnt; i++) {
-            		/* if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
-                		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
-                		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		QuestionNode.appendChild(importedNode); */
+            		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
+                		//var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
+                		//var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
+                		//QuestionNode.appendChild(importedNode); 
                 		//var question = {"row" : };
             		}
         		}
-        		xmlDoc.documentElement.appendChild(QuestionNode);
+        		/* xmlDoc.documentElement.appendChild(QuestionNode);
         		xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
-        		xmlHttp.send(xmlDoc);
-        		if(getXmlString(xmlHttp.responseXML) == "")
+        		xmlHttp.send(xmlDoc); */
+        	/* 	if(getXmlString(xmlHttp.responseXML) == "")
             		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
         		else {
             		var resultXML = xmlHttp.responseXML;
@@ -152,8 +153,8 @@ alert(pQstCnt);
                 		menuQst_List();
             		}		
         		}	
-        		//surveyState = "OK";
-/*         		var pBrdSubject = "<c:out value='${requestScope.txtSubject}'/>";
+        		surveyState = "OK"; */
+	       		
 alert(pBrdSubject);
         		 $.ajax({
      				url : '/ezQuestion/qstComplete.do',
@@ -161,7 +162,7 @@ alert(pBrdSubject);
      				dataType : 'json',
      				data : {
      					"parameter": {
-     				        "subject" : <c:out value='${ezQuestionVO.txtSubject}'/>,
+     				        "subject" : pBrdSubject,
      				        "content": pBrdContent,
      				        "startdate": pHideStartDate,
      				        "enddate": pHideEndDate,
@@ -196,7 +197,7 @@ alert(pBrdSubject);
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
      				}
-     			});   */      
+     			});         
     		}
     		function fun_Ques_UP() {
         		if (index > 0) {
