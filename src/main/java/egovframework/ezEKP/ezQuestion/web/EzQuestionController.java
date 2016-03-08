@@ -26,6 +26,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
+import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
+import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -54,6 +56,7 @@ public class EzQuestionController {
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request) throws Exception{
 		loginVO = commonUtil.userInfo(userID);
+		/** 전달받지 않은 인자 초기화 */
 		questionListVO.setUserId(loginVO.getId());
 		if(questionListVO.getBrdId()==0)
 			questionListVO.setBrdId(Integer.parseInt(request.getParameter("brd_ID")));
@@ -78,36 +81,76 @@ public class EzQuestionController {
 			questionListVO.setTotalPage((questionListVO.getTotalCnt()+questionListVO.getPageSize()-1)/questionListVO.getPageSize());
 
 		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);		
-		/**설문기간에 따른 Title 처리*/
+		
+		StringBuffer strbuffer;
+		
+		for(QuestionListVO qst : list){
+			if(qst.getReceve()==null){
+				strbuffer = new StringBuffer();
+				strbuffer.append("brdId="+qst.getBrdId());
+				strbuffer.append("&title="+qst.getTitle());
+				strbuffer.append("&responseRange="+qst.getResponseRange());
+				strbuffer.append("&postDate="+qst.getPostDate());
+				strbuffer.append("&pollEndDate="+qst.getPollEndDate());
+				strbuffer.append("&CurrPage="+qst.getCurrPage());
+				
+				qst.setReceve(strbuffer.toString());
+			}
+		}
+		
+		/** 설문기간에 따른 Title 처리*/
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date startDate;
 		Date endDate;
 		Date sysDate;
 		sysDate = new Date();
 		int compareStart, compareEnd;
-		StringBuffer appendDate;
 		
 		for(QuestionListVO qst : list){
 			startDate=formatter.parse(qst.getPostDate());
 			endDate=formatter.parse(qst.getPollEndDate());
 			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
-			appendDate = new StringBuffer();
+			strbuffer = new StringBuffer();
 			if(compareStart <= 0 && compareEnd >= 0){
-				appendDate.append("[진행중] ");
-				appendDate.append(qst.getTitle()); 
-				qst.setTitle(appendDate.toString());
+				strbuffer.append("[진행중] ");
+				strbuffer.append(qst.getTitle()); 
+				qst.setTitle(strbuffer.toString());
 			}
 			else{
-				appendDate.append("[완료] ");
-				appendDate.append(qst.getTitle());
-				qst.setTitle(appendDate.toString());
+				strbuffer.append("[완료] ");
+				strbuffer.append(qst.getTitle());
+				qst.setTitle(strbuffer.toString());
 			}				
 		}
+		
 		model.addAttribute("questionListVO", questionListVO);
 		model.addAttribute("list", list);
 		
 		return "/ezQuestion/qstList";
+	}
+	
+	@RequestMapping(value="/ezQuestion/pollOpen.do")
+	public String pollOpen(Model model,QuestionListVO questionListVO) throws Exception{
+		UserPollItemVO userPollItemVO = new UserPollItemVO();
+		userPollItemVO.setBrdId(questionListVO.getBrdId());
+		userPollItemVO.setItemNo(questionListVO.getItemNo());
+		/** 결과값없으면 Error처리*/
+		if(ezQuestionService.getUserPollItem(userPollItemVO).getTitle().equals(null))
+			return "redirect:/error.do"; //나중에 에러처리찾아서 주소만바꾸면됨
+		
+		UserPermissionVO userPermissionVO = new UserPermissionVO();
+		userPermissionVO.setBrdId(questionListVO.getBrdId());
+		userPermissionVO.setItemNo(questionListVO.getItemNo());
+		userPermissionVO.setUserId(questionListVO.getUserId());
+		
+//		ezQuestionService.getUserResponseCnt();
+//		ezQuestionService.getUserIdAdmin();
+		model.addAttribute("userPermission", ezQuestionService.getUserPermission(userPermissionVO));
+		model.addAttribute("userPollItemVO", ezQuestionService.getUserPollItem(userPollItemVO));
+		
+		model.addAttribute(questionListVO);
+		return "redirect:/ezQuestion/qstResult.do";
 	}
 
 	@RequestMapping(value="/ezQuestion/qstStep1.do")

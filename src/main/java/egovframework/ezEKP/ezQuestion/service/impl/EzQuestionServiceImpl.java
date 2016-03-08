@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
+import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
+import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
@@ -47,4 +49,32 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_PLANG", questionListVO.getLang());
 		return ezQuestionDAO.getQstList(map);
 	}
+
+	@Override
+	public UserPollItemVO getUserPollItem(UserPollItemVO userPollItemVO) throws Exception {
+		map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", userPollItemVO.getBrdId());
+		map.put("v_pItemNo", userPollItemVO.getItemNo());
+		return ezQuestionDAO.getUserPollItem(map);
+	}
+
+	@Override
+	public UserPermissionVO getUserPermission(UserPermissionVO userPermissionVO) throws Exception {
+		map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
+		map.put("v_pItemNo", userPermissionVO.getItemNo());
+		return ezQuestionDAO.getUserPermission(map);
+	}
+
+	@Override
+	public int getUserResponseCnt(UserPermissionVO userPermissionVO) throws Exception {
+		map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
+		map.put("v_pItemNo", userPermissionVO.getItemNo());
+		map.put("v_puserID", userPermissionVO.getUserId());
+		return ezQuestionDAO.getUserResponseCnt(map);
+	}
+	
+	
+	
 }
