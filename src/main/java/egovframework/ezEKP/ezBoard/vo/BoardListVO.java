@@ -70,6 +70,22 @@ public class BoardListVO {
 	private String guBun;
 	/** 앨범소개*/
 	private String mainContent;
+	/** 읽은 여부*/
+	private String readFlag;
+	/** 확장속성*/
+	private String extensionAttribute5;
+	/** 공지사항 순서*/
+	private String notiNo;
+	/** 확장속성*/
+	private String extensionAttribute6;
+	/** 확장속성*/
+	private String extensionAttribute7;
+	/** 확장속성*/
+	private String extensionAttribute8;
+	/** 확장속성*/
+	private String extensionAttribute9;
+	/** 확장속성*/
+	private String extensionAttribute10;
 	
 	public int getrNum() {
 		return rNum;
@@ -269,4 +285,53 @@ public class BoardListVO {
 	public void setOrderByMain(String orderByMain) {
 		this.orderByMain = orderByMain;
 	}
+	public String getReadFlag() {
+		return readFlag;
+	}
+	public void setReadFlag(String readFlag) {
+		this.readFlag = readFlag;
+	}
+	public String getExtensionAttribute5() {
+		return extensionAttribute5;
+	}
+	public void setExtensionAttribute5(String extensionAttribute5) {
+		this.extensionAttribute5 = extensionAttribute5;
+	}
+	public String getNotiNo() {
+		return notiNo;
+	}
+	public void setNotiNo(String notiNo) {
+		this.notiNo = notiNo;
+	}
+	public String getExtensionAttribute6() {
+		return extensionAttribute6;
+	}
+	public void setExtensionAttribute6(String extensionAttribute6) {
+		this.extensionAttribute6 = extensionAttribute6;
+	}
+	public String getExtensionAttribute7() {
+		return extensionAttribute7;
+	}
+	public void setExtensionAttribute7(String extensionAttribute7) {
+		this.extensionAttribute7 = extensionAttribute7;
+	}
+	public String getExtensionAttribute8() {
+		return extensionAttribute8;
+	}
+	public void setExtensionAttribute8(String extensionAttribute8) {
+		this.extensionAttribute8 = extensionAttribute8;
+	}
+	public String getExtensionAttribute9() {
+		return extensionAttribute9;
+	}
+	public void setExtensionAttribute9(String extensionAttribute9) {
+		this.extensionAttribute9 = extensionAttribute9;
+	}
+	public String getExtensionAttribute10() {
+		return extensionAttribute10;
+	}
+	public void setExtensionAttribute10(String extensionAttribute10) {
+		this.extensionAttribute10 = extensionAttribute10;
+	}
+	
 }

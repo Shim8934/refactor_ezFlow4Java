@@ -228,10 +228,11 @@
 		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
 		                else {
 		                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/New_BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=N";
+		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=N";
 		                    }
-		                    else
+		                    else{
 		                        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
+		                    }
 		                }
 		            }
 		        }
@@ -281,17 +282,17 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		
 		            if (chkPhotoBrd == 3)
 		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
 		            else if (chkPhotoBrd == 4)
 		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
 		            else {
 		                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/New_BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=N";
+		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(treeNode.GetNodeData("DATA2")) + "&boardType=N";
 		                }
-		                else
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
+		                else{
+		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + escape(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+		                }
 		            }
 		        }
 		        catch (e) {

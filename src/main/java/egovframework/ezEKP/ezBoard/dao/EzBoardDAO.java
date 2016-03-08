@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
@@ -90,6 +91,29 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void setTabUsed(Map<String, Object> map) throws Exception{
 		
 		update("EzBoardDAO.set_TabUsed",map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardListHeaderVO> getListHeaderBoardID(Map<String, Object> map) throws Exception {
+		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
+	}
+
+	public int getNoticePostItemCount(Map<String, Object> map) {
+		return (int) select("EzBoardDAO.getNoticePostItemCount", map);
+	}
+
+	public int getBoardTotalItemCount(Map<String, Object> map) {
+		return (int) select("EzBoardDAO.getBoardTotalItemCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getBoardListItem", map);
 	}
 	
 }

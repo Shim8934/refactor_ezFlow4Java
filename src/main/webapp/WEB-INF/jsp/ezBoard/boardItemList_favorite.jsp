@@ -181,7 +181,6 @@
 	        function ChangeTab(obj) {
 	            var SelectedBoardID = obj.getAttribute("DATA1");
 	            var chkPhotoBrd = obj.getAttribute("DATA5");
-	            
 	            if (chkPhotoBrd == 3)
 	                document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
 	            else if (chkPhotoBrd == 4)

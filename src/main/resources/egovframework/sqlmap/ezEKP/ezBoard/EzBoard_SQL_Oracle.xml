@@ -66,6 +66,10 @@
 	<procedure id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO">
 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER(#v_PBOARDTYPE#, #v_PSTRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzBoardDAO.getListHeaderBoardID" parameterClass="Map" resultClass="BoardListHeaderVO">
+		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_BOARDID(#v_PBOARDID#, #v_PSTRLANG#, #v_PBOARDTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 
 	<procedure id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -81,6 +85,14 @@
 	
 	<procedure id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_GETNEWITEMLISTXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
@@ -131,5 +143,23 @@
        		WHERE  
        		    userid = #userID#
 		]]>		
+	</select>
+	<select id="EzBoardDAO.getNoticePostItemCount" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(itemid) cnt  
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        WHERE  
+	        	boardid = #v_pBoardID#
+	        AND 
+	        	startdate <= TO_CHAR(SYSDATE)
+	        AND 
+	        	enddate > TO_CHAR(SYSDATE)
+	        AND 
+	        	extensionattribute1 = '0'
+	        AND 
+	        	extensionattribute2 = '1'
+        ]]>
 	</select>
 </sqlMap>

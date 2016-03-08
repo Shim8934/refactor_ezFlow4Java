@@ -41,10 +41,18 @@ public interface EzBoardService {
 
 	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception;
 	
-	void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
+	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 	
-	
+	public List<BoardListHeaderVO> getListHeaderBoardID(EzBoardVO ezBoardVO) throws Exception;
+
+	public int getNoticePostItemCount(String boardId) throws Exception;
+
+	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception;
+
+	public List<HashMap<String, Object>> getNoticePostItem(EzBoardVO ezBoardVO, int personalCount) throws Exception;
+
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 
 }

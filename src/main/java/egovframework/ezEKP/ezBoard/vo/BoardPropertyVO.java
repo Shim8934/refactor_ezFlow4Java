@@ -68,8 +68,6 @@ public class BoardPropertyVO {
 	private int ss_board_maxRows;
 	/** 검색게시글 갯수	*/
 	private int ss_searchBoard_maxRows;
-	/** ?	*/
-	private String listViewFG;
 	/** 게시판권한여부*/
 	private String boardGroupAdmin_FG;
 	/** 접근아이디*/
@@ -125,12 +123,6 @@ public class BoardPropertyVO {
 	/** 총갯수 */
 	private int totalCount;
 	
-	public String getListViewFG() {
-		return listViewFG;
-	}
-	public void setListViewFG(String listViewFG) {
-		this.listViewFG = listViewFG;
-	}
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}

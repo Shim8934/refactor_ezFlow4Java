@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl implements EzBoardService {
@@ -152,4 +153,54 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_USERID", pUserID);
 		ezBoardDAO.setTabUsed(map);
 	}
+
+	@Override
+	public List<BoardListHeaderVO> getListHeaderBoardID(EzBoardVO ezBoardVO) throws Exception {
+		map.put("v_PBOARDID", ezBoardVO.getBoardId());
+		map.put("v_PSTRLANG", ezBoardVO.getLang());
+		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
+		return ezBoardDAO.getListHeaderBoardID(map);
+	}
+
+	@Override
+	public int getNoticePostItemCount(String boardId) throws Exception {
+		map.put("v_pBoardID", boardId);
+		return ezBoardDAO.getNoticePostItemCount(map);
+	}
+
+	@Override
+	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception {
+		map.put("v_PBOARDID", boardId);
+		map.put("v_PNOW", EgovDateUtil.getToday());
+		map.put("v_PUSERID", userID);
+		map.put("v_PTYPE", type);
+		return ezBoardDAO.getBrdTotalItemCount(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getNoticePostItem(EzBoardVO ezBoardVO, int personalCount) throws Exception {
+		int start = 0;
+        int end = 0;
+        start = ((ezBoardVO.getPageNum() - 1) * personalCount) + 1;
+        end = (ezBoardVO.getPageNum() * personalCount);
+        
+		map.put("v_PBOARDID", ezBoardVO.getBoardId());
+		map.put("v_START", start);
+		map.put("v_END", end);
+		return ezBoardDAO.getNoticePostItem(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception {
+		map.put("v_PUSERID", userID);
+		map.put("v_PBOARDID", boardId);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("v_PORDERBYMAIN", orderOption2);
+		map.put("v_TYPE", type);
+		return ezBoardDAO.getBoardListItem(map);
+	}
+	
 }
