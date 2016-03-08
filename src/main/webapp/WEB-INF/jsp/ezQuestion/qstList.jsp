@@ -29,7 +29,6 @@
 		    var totalPage = "${questionListVO.totalPage}";
 		    var totalCount = "${questionListVO.totalCnt}";
 		    var szSelectedItemNo = "";
-		    var szSearchParam = "&title=" + "${questionListVO.title}" + "&responseRange=" + "${questionListVO.responseRange}" + "&postDate=" + "${questionListVO.postDate}" + "&pollEndDate=" + "${questionListVO.pollEndDate}";
 		    var szPubFlag = "";
 			var EndPollYN, ResponseYN, ResultOpenYN;
 			var MultiResYN, WriteYN, AdminYN;
@@ -364,7 +363,7 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
 		        else {
@@ -373,16 +372,16 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -400,14 +399,14 @@
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		                strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
@@ -417,12 +416,12 @@
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
@@ -463,7 +462,7 @@
 		    }
 		    function search_Set(pPage) {
 		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${questionListVO.totalPage}')) {
-		            var szUrl = "/ezQuestion/qstList.do?brd_ID=" + g_BrdID + "&currPage=" + pPage + szSearchParam;
+		            var szUrl = "/ezQuestion/qstList.do?brd_ID=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${questionListVO.title}" + "&responseRange=" + "${questionListVO.responseRange}" + "&postDate=" + "${questionListVO.postDate}" + "&pollEndDate=" + "${questionListVO.pollEndDate}";
 		            window.location.href = szUrl;
 		        }
 		    }
@@ -479,8 +478,8 @@
 		        return true;
 		    }
 		
-		    function title_Onclick(pReceve) {
-		        document.location.href = "Poll_open.do?" + pReceve;
+		    function title_OnClick(pReceve) {
+		        document.location.href = "/ezQuestion/pollOpen.do?" + pReceve;
 		    }
 		    function menu_reuse() {
 		        var szCheckCnt = 0;
@@ -556,7 +555,7 @@
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.itemNo}" class="white"> 
 			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+${list.itemNo}+" value="${list.itemNo}"></td> 
-			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${list.title}"  ><nobr>${list.title}</nobr></td> 
+			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${list.title}" onClick="title_OnClick('${list.receve}&itemNo=${list.itemNo}')" ><nobr>${list.title}</nobr></td> 
 			          	<c:if test="${list.publicFlg == 0}">
 			          		<td> 기명 </td>	
 			          	</c:if>
