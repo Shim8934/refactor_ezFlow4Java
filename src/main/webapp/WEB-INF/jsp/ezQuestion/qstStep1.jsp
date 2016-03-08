@@ -395,7 +395,7 @@
                 <th><spring:message code="ezQuestion.t236" /></th> 
                 <td style="border-right:medium none; white-space:nowrap">
                     <spring:message code="ezQuestion.t237" />
-                    <select name="set_anonymity" id="set_anonymity" onChange="return set_anonymity_onchange()"> 
+                    <select name="setAnonymity" id="set_anonymity" onChange="return set_anonymity_onchange()"> 
                       <option value="0" selected="selected"><spring:message code="ezQuestion.t238" /></option> 
                       <option value="1"><spring:message code="ezQuestion.t239" /></option> 
                     </select>
@@ -422,7 +422,7 @@
                     
                     &nbsp;&nbsp;&nbsp;
                     <spring:message code="ezQuestion.t243" />
-                    <select name="setopenResult" id="set_openResult"  onChange="return set_openResult_onchange()"> 
+                    <select name="setOpenResult" id="set_openResult"  onChange="return set_openResult_onchange()"> 
                       <option value="1" selected="selected"><spring:message code="ezQuestion.t244" /></option> 
                       <option value="0"><spring:message code="ezQuestion.t245" /></option> 
                     </select> 
