@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -70,21 +71,39 @@ public class EzQuestionController {
 			questionListVO.setPageSize(15);
 		if(questionListVO.getCurrPage()==0)
 			questionListVO.setCurrPage(1);
-		/** 전체 글 갯수*/
+		
 		questionListVO.setTotalCnt(ezQuestionService.getQstListCnt(questionListVO));
-		/**페이지네이션 row*/
-//		questionListVO.setStartRow((questionListVO.getCurrPage()-1)*questionListVO.getPageSize()+1);
-//		if(questionListVO.getCurrPage()*questionListVO.getPageSize() < questionListVO.getTotalCnt())
-//			questionListVO.setEndRow(questionListVO.getCurrPage()*questionListVO.getPageSize());
-//		else
-//			questionListVO.setEndRow(questionListVO.getTotalCnt());
-//		System.out.println(questionListVO.getStartRow()+"@@@@@@@@@@"+questionListVO.getEndRow());
+		
 		if(questionListVO.getTotalPage()==0)
 			questionListVO.setTotalPage((questionListVO.getTotalCnt()+questionListVO.getPageSize()-1)/questionListVO.getPageSize());
 
+		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);		
+		/**설문기간에 따른 Title 처리*/
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date startDate;
+		Date endDate;
+		Date sysDate;
+		sysDate = new Date();
+		int compareStart, compareEnd;
+		StringBuffer appendDate;
 		
-		List<QuestionListVO> list = ezQuestionService.getQstList(questionListVO);
-		
+		for(QuestionListVO qst : list){
+			startDate=formatter.parse(qst.getPostDate());
+			endDate=formatter.parse(qst.getPollEndDate());
+			compareStart = startDate.compareTo(sysDate);
+			compareEnd = endDate.compareTo(sysDate);
+			appendDate = new StringBuffer();
+			if(compareStart <= 0 && compareEnd >= 0){
+				appendDate.append("[진행중] ");
+				appendDate.append(qst.getTitle()); 
+				qst.setTitle(appendDate.toString());
+			}
+			else{
+				appendDate.append("[완료] ");
+				appendDate.append(qst.getTitle());
+				qst.setTitle(appendDate.toString());
+			}				
+		}
 		model.addAttribute("questionListVO", questionListVO);
 		model.addAttribute("list", list);
 		
