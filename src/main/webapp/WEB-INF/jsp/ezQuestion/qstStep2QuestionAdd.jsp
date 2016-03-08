@@ -16,6 +16,8 @@
 	var pBeforeCheck = "";
 	var pEditIndex = "<c:out value='${requestScope.pEditIndex}'/>";
     <%-- var pAnswerType = "<%=(int.Parse(pAnswerType) -1).ToString()%>"; --%>
+    var pAnswerType = "<c:out value='${requestScope.pAnswerType}'/>";
+    pAnswerType = (parseInt(pAnswerType)-1).toString();
     var pMode = "<c:out value='${requestScope.pMode}'/>";
     var pMultiSel = "<c:out value='${requestScope.pMultiSel}'/>";
     var pDataXml = "<c:out value='${requestScope.pDataXml}'/>";
@@ -484,9 +486,7 @@
         var objNode;
         var RootNode = createNodeInsert(xmlDoc, objNode, "ROW");
         createNodeAndInsertCDataText(xmlDoc, objNode, "CONTENT", document.Ques_Answer.txtQuestion.value);
-        if (Ques_Answer.txtQuestion.AnsInfo != null && Ques_Answer.txtQuestion.AnsInfo != null && typeof (Ques_Answer.txtQuestion.AnsInfo) != "undefined")
-        {
-            
+        if (Ques_Answer.txtQuestion.AnsInfo != null && Ques_Answer.txtQuestion.AnsInfo != null && typeof (Ques_Answer.txtQuestion.AnsInfo) != "undefined") {
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
             if (useragentstr.indexOf(_MSIE) != -1) {
