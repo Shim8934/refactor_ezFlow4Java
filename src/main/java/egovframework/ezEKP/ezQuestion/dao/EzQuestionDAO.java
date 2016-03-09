@@ -57,7 +57,9 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int getUserResponseCnt(Map<String, Object> map){
-		return (Integer) list("EzQuestionDAO.getUserResponseCnt", map).get(0);
+		select("EzQuestionDAO.getUserResponseCnt", map);
+		System.out.println(map.get("count"));
+		return 1;
 	}
 	
 	public void callCreateMother(Map<String,Object> map) {
