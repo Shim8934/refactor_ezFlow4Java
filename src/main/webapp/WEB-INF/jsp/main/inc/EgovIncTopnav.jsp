@@ -39,6 +39,7 @@
 </form>
 <ul>
 	<li><a href="#LINK" onclick="javascript:fn_main_headPageMove('11','ezBoard/boardMain')" >게시판</a></li>
+	<li><a href="#LINK" onclick="javascript:fn_main_headPageAction('13','ezEmail/mailMain.do')" >메일</a></li>
     <li><a href="#LINK" onclick="javascript:fn_main_headPageAction('12','admin/main.do')" >관리자</a></li>    
 </ul>
 
