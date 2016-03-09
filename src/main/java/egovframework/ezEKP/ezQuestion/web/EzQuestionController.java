@@ -88,7 +88,7 @@ public class EzQuestionController {
 				strbuffer.append("&responseRange="+qst.getResponseRange());
 				strbuffer.append("&postDate="+qst.getPostDate());
 				strbuffer.append("&pollEndDate="+qst.getPollEndDate());
-				strbuffer.append("&CurrPage="+qst.getCurrPage());
+				strbuffer.append("&CurrPage="+questionListVO.getCurrPage());
 				
 				qst.setReceve(strbuffer.toString());
 			}
@@ -127,25 +127,27 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
-	public String pollOpen(Model model,QuestionListVO questionListVO) throws Exception{
+	public String pollOpen(@CookieValue("userID") String userID,LoginVO loginVO, ModelMap model,HttpServletRequest request) throws Exception{
+		loginVO = commonUtil.userInfo(userID);
 		UserPollItemVO userPollItemVO = new UserPollItemVO();
-		userPollItemVO.setBrdId(questionListVO.getBrdId());
-		userPollItemVO.setItemNo(questionListVO.getItemNo());
+		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		userPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		/** 결과값없으면 Error처리*/
 		if(ezQuestionService.getUserPollItem(userPollItemVO).getTitle().equals(null))
 			return "redirect:/error.do"; //나중에 에러처리찾아서 주소만바꾸면됨
-		
 		UserPermissionVO userPermissionVO = new UserPermissionVO();
-		userPermissionVO.setBrdId(questionListVO.getBrdId());
-		userPermissionVO.setItemNo(questionListVO.getItemNo());
-		userPermissionVO.setUserId(questionListVO.getUserId());
+		userPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		userPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		userPermissionVO.setUserId(loginVO.getId());
 		
+		System.out.println(ezQuestionService.getUserResponseCnt(userPermissionVO));
+	
 //		ezQuestionService.getUserResponseCnt();
 //		ezQuestionService.getUserIdAdmin();
+		model.addAttribute(request.getParameter("CurrPage"));
 		model.addAttribute("userPermission", ezQuestionService.getUserPermission(userPermissionVO));
 		model.addAttribute("userPollItemVO", ezQuestionService.getUserPollItem(userPollItemVO));
 		
-		model.addAttribute(questionListVO);
 		return "redirect:/ezQuestion/qstResult.do";
 	}
 
