@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
@@ -129,24 +132,37 @@ public class EzQuestionController {
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
 	public String pollOpen(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, ModelMap model,HttpServletRequest request) throws Exception{
 		loginVO = commonUtil.userInfo(loginCookie);
+		/**UserPollItem*/
 		UserPollItemVO userPollItemVO = new UserPollItemVO();
 		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		userPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		userPollItemVO=ezQuestionService.getUserPollItem(userPollItemVO);
 		/** 결과값없으면 Error처리*/
-		if(ezQuestionService.getUserPollItem(userPollItemVO).getTitle().equals(null))
+		if(userPollItemVO.getTitle().equals(null))
 			return "redirect:/error.do"; //나중에 에러처리찾아서 주소만바꾸면됨
+		/**UserPermission*/
 		UserPermissionVO userPermissionVO = new UserPermissionVO();
 		userPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		userPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		userPermissionVO.setUserId(loginVO.getId());
 		
-		System.out.println(ezQuestionService.getUserResponseCnt(userPermissionVO));
+		userPermissionVO = ezQuestionService.getUserPermission(userPermissionVO);
+		/**ResponseCnt*/
+		userPermissionVO.setUserId(loginVO.getId());
+		int responseCnt = ezQuestionService.getUserResponseCnt(userPermissionVO);
+		boolean endPoll = false;
+		Date sysDate=new Date();
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		if(formatter.parse(userPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
+			endPoll = true;
+		if(userPermissionVO.getEndFlg().equals('1'))
+			endPoll = true;
+		/**UserIdAdmin*/
+		
 	
-//		ezQuestionService.getUserResponseCnt();
 //		ezQuestionService.getUserIdAdmin();
 		model.addAttribute(request.getParameter("CurrPage"));
-		model.addAttribute("userPermission", ezQuestionService.getUserPermission(userPermissionVO));
-		model.addAttribute("userPollItemVO", ezQuestionService.getUserPollItem(userPollItemVO));
+		model.addAttribute("userPermissionVO", userPermissionVO);
+		model.addAttribute("userPollItemVO", userPollItemVO);
 		
 		return "redirect:/ezQuestion/qstResult.do";
 	}

@@ -58,10 +58,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (UserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int getUserResponseCnt(Map<String, Object> map){
-		HashMap<String, Object> cntMap= (HashMap<String, Object>) select("EzQuestionDAO.getUserResponseCnt", map);
-		return ((BigDecimal)cntMap.get("cnt")).intValue();
+		return (int) select("EzQuestionDAO.getUserResponseCnt", map);
 	}
 	
 	public void callCreateMother(Map<String,Object> map) {
