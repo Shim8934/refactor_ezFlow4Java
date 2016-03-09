@@ -22,7 +22,6 @@
 			var pHideEndDate = "<c:out value='${ezQuestionVO.hidEndDate}'/>";
 			var pExpireDate = "<c:out value='${ezQuestionVO.txtExpiredate}'/>";
 			var anonymity = "<c:out value='${ezQuestionVO.setAnonymity}'/>";
-alert(anonymity);
 			var openResult = "<c:out value='${ezQuestionVO.setOpenResult}'/>";
 			var multiResponse = "<c:out value='${ezQuestionVO.setMultiResponse}'/>";
 			var importance = "<c:out value='${ezQuestionVO.importance}'/>";
