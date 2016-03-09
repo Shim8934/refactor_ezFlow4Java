@@ -156,7 +156,7 @@ public class EzQuestionController {
 		String brdId = req.getParameter("brd_ID");
 		String brdNm = req.getParameter("brd_nm");
 		String brdPostterm = req.getParameter("brd_postterm");
-		System.out.println(brdNm);		
+				
 		model.addAttribute("brdId", brdId);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
@@ -242,12 +242,7 @@ public class EzQuestionController {
 	}
 
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("userID") String userID, LoginVO loginVO,ModelMap model) throws Exception  {
-		/*File file = new File(req.getParameter("xmlDoc"));
-		DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
-		org.w3c.dom.Document doc = docBuild.parse(file);
-		doc.getDocumentElement().normalize();*/
+	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("loginCookie") String userID, LoginVO loginVO,ModelMap model) throws Exception  {
 		loginVO.setId(userID);
 		loginVO = commonUtil.userInfo(userID);
 		String pUserID = loginVO.getId();
@@ -284,7 +279,6 @@ public class EzQuestionController {
 		map.put("enddate", enddate);
 		map.put("expiredate", expiredate);
 		map.put("anonymity", anonymity);
-System.out.println(anonymity+"!!!!!!!");
 		map.put("openresult", openresult);
 		map.put("multiresponse", multiresponse);
 		map.put("importance", importance);
@@ -297,6 +291,7 @@ System.out.println(anonymity+"!!!!!!!");
 		ezQuestionService.stepSave(pUserID, map); 
 		
 		ezQuestionService.stepSave2(map);
+		
 		return map;
 		
 	}
