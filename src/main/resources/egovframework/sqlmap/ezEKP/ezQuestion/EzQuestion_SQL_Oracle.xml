@@ -24,7 +24,7 @@
 		<result property="responseRange"	column="RESPONSE_RANGE"		columnIndex="14"/>
 	</resultMap>
 	
-		<resultMap class="UserPollItemVO" id="userPollItem">
+	<resultMap class="UserPollItemVO" id="userPollItem">
 		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
 		<result property="userId"			column="USER_ID"			columnIndex="3"/>
@@ -65,6 +65,10 @@
 		<result property="responseRange"	column="RESPONSE_RANGE"		columnIndex="7"/>
 	</resultMap>
 	
+	<resultMap class="HashMap" id="userResponseCnt">
+		<result property="cnt"			column="CNT"				columnIndex="1"/>
+ 	</resultMap>
+	
 	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
@@ -81,18 +85,9 @@
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	<!-- 수정필요 -->
-	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				COUNT(*)  
-			FROM
-				TBLPOLL_RESPONSE 
-			WHERE
-				brd_id = #v_pstrBrdID#
-				AND item_no = #v_pItemNo#
-				AND responseuser_id = #v_puserID#
-        ]]>
-	</select>
+	<procedure id="EzQuestionDAO.getUserResponseCnt" parameterClass="HashMap" resultMap="userResponseCnt">
+		{CALL EZQUESTION.EZSP_GETUSERRESPONSECNT(#v_pstrBrdID#, #v_pItemNo#, #v_puserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
