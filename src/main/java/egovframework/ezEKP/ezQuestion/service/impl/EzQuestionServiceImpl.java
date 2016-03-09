@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
 import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
-	
 	@Resource(name="EzQuestionDAO")
 	private EzQuestionDAO ezQuestionDAO;
 	
@@ -82,7 +82,6 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pTitle", map.get("subject"));
 		map.put("v_pContent", map.get("content"));
 		map.put("v_pPostDate", dateFormat.format(calendar.getTime()));
-		//map.put("v_pPostDate", "2016-03-08");
 		map.put("v_pPostTerm", map.get("expiredate"));
 		map.put("v_pItemRef", map.get("itemId"));
 		map.put("v_pItemImp", map.get("importance"));
@@ -129,5 +128,116 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
 		map.put("v_puserID", userPermissionVO.getUserId());
 		return ezQuestionDAO.getUserResponseCnt(map);
+	}
+	
+	@Override
+	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pGubunFg", qstCompleteVO.getGubunFg());
+		map.put("v_pGubunID", qstCompleteVO.getGubunID());
+		map.put("v_pGubunNm", qstCompleteVO.getGubunNm());
+		map.put("v_pGubunNm2", qstCompleteVO.getGubunNm2());
+		ezQuestionDAO.callCreateMother(map);
+	}
+
+	@Override
+	public void callInsertPollResponsep1(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pUserID", qstCompleteVO.getUserID());
+		map.put("v_pUserNm", qstCompleteVO.getUserNm());
+		map.put("v_pUserNm2", qstCompleteVO.getUserNm2());
+		map.put("v_pUserEmail", qstCompleteVO.getUserEmail());
+		map.put("v_pUserDeptID", qstCompleteVO.getUserDeptID());
+		map.put("v_pUserDeptNM", qstCompleteVO.getUserDeptNm());
+		map.put("v_pUserDeptNM2", qstCompleteVO.getUserDeptNm2());
+		map.put("v_pUserPOS", qstCompleteVO.getUserPOS());
+		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
+		ezQuestionDAO.callInsertPollResponsep1(map);
+	}
+
+	@Override
+	public void callInsertPollResponseper(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pGubunID", qstCompleteVO.getUserID());
+		map.put("v_pGubunNm", qstCompleteVO.getUserNm());
+		map.put("v_pGubunNm2", qstCompleteVO.getUserNm2());
+		map.put("v_pUserEmail", qstCompleteVO.getUserEmail());
+		map.put("v_pUserDeptID", qstCompleteVO.getUserDeptID());
+		map.put("v_pUserDeptNM", qstCompleteVO.getUserDeptNm());
+		map.put("v_pUserDeptNM2", qstCompleteVO.getUserDeptNm2());
+		map.put("v_pUserPOS", qstCompleteVO.getUserPOS());
+		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
+		map.put("v_pUserGender", qstCompleteVO.getUserGender());
+		map.put("v_pUserAge", qstCompleteVO.getUserAge());
+		ezQuestionDAO.callInsertPollResponseper(map);
+	}
+
+	@Override
+	public int getQuestionNo(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		return ezQuestionDAO.getQuestionNo(map);
+	}
+
+	@Override
+	public void insertQuestion(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
+		map.put("v_pQuesContent", qstCompleteVO.getQuesContent());
+		map.put("v_pAnswerType", qstCompleteVO.getAnswerType());
+		map.put("v_pmultiselect", qstCompleteVO.getMultiSelect());
+		ezQuestionDAO.insertQuestion(map);
+	}
+
+	@Override
+	public void pollSaveAttach(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
+		map.put("v_pAnswerNo", qstCompleteVO.getAnswerNo());
+		map.put("v_pAttachNo", qstCompleteVO.getAttachNo());
+		map.put("v_pAttachName", qstCompleteVO.getAttachName());
+		map.put("v_pAttachURL", qstCompleteVO.getAttachURL());
+		map.put("v_pAttachType", qstCompleteVO.getAttachType());
+		ezQuestionDAO.pollSaveAttach(map);
+	}
+
+	@Override
+	public void insertAnswerAnswerContent(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
+		map.put("v_pAnswerNo", qstCompleteVO.getAnswerNo());
+		map.put("v_pAnswer_AnswerContent", qstCompleteVO.getAnswerAnswerContent());
+		ezQuestionDAO.insertAnswerAnswerContent(map);
+	}
+
+	@Override
+	public void insertAnswerContent(QstCompleteVO qstCompleteVO)
+			throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
+		map.put("v_pAnswerNo", qstCompleteVO.getAnswerNo());
+		map.put("v_pAnswerContent", qstCompleteVO.getAnswerContent());
+		ezQuestionDAO.insertAnswerContent(map);
+	}
+
+	@Override
+	public void updatePollItem(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		ezQuestionDAO.updatePollItem(map);
+	}
+
+	@Override
+	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception {
+		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
+		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		ezQuestionDAO.deleteItem(map);
 	}
 }
