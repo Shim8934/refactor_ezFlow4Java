@@ -1,18 +1,14 @@
 package egovframework.ezEKP.ezQuestion.web;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +17,13 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
 import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.StepSaveVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -210,7 +206,6 @@ public class EzQuestionController {
 		pMode = "NEW";
 		pAnswerType = "1";
 		brdId = req.getParameter("brd_id"); 
-		System.out.println(pMode);
 		itemId = req.getParameter("item_id");
 		model.addAttribute("item_id",itemId);
 		model.addAttribute("pEditIndex",req.getParameter("pEditIndex"));
@@ -221,30 +216,53 @@ public class EzQuestionController {
 		model.addAttribute("pQstTitle",req.getParameter("pQstTitle"));
 		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
+		model.addAttribute("pSelectOption",req.getParameter("pSelectOption"));
 
 		return "/ezQuestion/qstStep2QuestionAdd";
 	}
+	
+	public String callGetItemSeq(String pBrdID) throws Exception {
+		int get_itemNo = -1;
+		if(ezQuestionService.getItemSeq(pBrdID) == "") {
+			get_itemNo = 1;
+		} else {
+			get_itemNo = Integer.parseInt(ezQuestionService.getItemSeq(pBrdID).toString());
+		}
+		if(get_itemNo == -1) {
+			ezQuestionService.insertItemSeq(pBrdID);
+			get_itemNo = 1;
+		} else {
+			get_itemNo = get_itemNo + 1;
+			ezQuestionService.updateItemSeq(Integer.parseInt(pBrdID), get_itemNo);
+		}
+		
+		return String.valueOf(get_itemNo);
+	}
 
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req) throws Exception  {
-		
-			
-			
-		File file = new File(req.getParameter("xmlDoc"));
+	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("userID") String userID, LoginVO loginVO,ModelMap model) throws Exception  {
+		/*File file = new File(req.getParameter("xmlDoc"));
 		DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuild = docBuildFact.newDocumentBuilder();
 		org.w3c.dom.Document doc = docBuild.parse(file);
-		doc.getDocumentElement().normalize();
+		doc.getDocumentElement().normalize();*/
+		loginVO.setId(userID);
+		loginVO = commonUtil.userInfo(userID);
+		String pUserID = loginVO.getId();
 		
-System.out.println(doc.getDocumentElement().getNodeName());
-		
-		System.out.println("!!");
 		String pBrdID = "";
 		String vItemID = "";
 		if(req.getParameter("pBrdID") == null) {
 			pBrdID = "5";
-			vItemID = "";
+			vItemID = callGetItemSeq(pBrdID);
 		}
+		
+		int dataCount = 0;
+		int brdId = Integer.parseInt(pBrdID);
+		int itemNo = Integer.parseInt(vItemID);
+
+		dataCount = ezQuestionService.getItemNoCnt(brdId, itemNo);
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		String subject = req.getParameter("parameter[subject]");
 		String content = req.getParameter("parameter[content]");
@@ -256,11 +274,28 @@ System.out.println(doc.getDocumentElement().getNodeName());
 		String multiresponse = req.getParameter("parameter[multiresponse]");
 		String importance = req.getParameter("parameter[importance]");
 		String target = req.getParameter("parameter[target]");
+		String questionContent = req.getParameter("parameter[question][row][content]");
 		
-		System.out.println(subject);		
 		map.put("subject", subject);
 		map.put("content", content);
-
+		map.put("startdate", startdate);
+		map.put("enddate", enddate);
+		map.put("expiredate", expiredate);
+		map.put("anonymity", anonymity);
+System.out.println(anonymity+"!!!!!!!");
+		map.put("openresult", openresult);
+		map.put("multiresponse", multiresponse);
+		map.put("importance", importance);
+		map.put("target", target);
+		map.put("brdId", brdId);
+		map.put("itemNo", itemNo);
+		map.put("itemId", vItemID);
+		map.put("dataCount", dataCount);
+		
+		ezQuestionService.stepSave(pUserID, map); 
+		
+		ezQuestionService.stepSave2(map);
 		return map;
+		
 	}
 }
