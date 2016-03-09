@@ -21,7 +21,8 @@
 	<bean id="crypto" class="egovframework.let.utl.sim.service.EgovFileScrty">
         <property name="prm" value="${CRYPTO.prm}"/>
         <property name="pbm" value="${CRYPTO.pbm}" />
-        <property name="pre" value="${CRYPTO.pre}"/>        
+        <property name="pre" value="${CRYPTO.pre}"/>
+        <property name="apb" value="${CRYPTO.apb}"/>
     </bean>
     
     <util:properties id="config" location="classpath:/egovframework/egovProps/config.properties" />

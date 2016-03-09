@@ -25,8 +25,7 @@
 			<!-- container 시작 -->
 			<div id="main_container">
 				<div class="lefttitle_image">
-				    ${cookie.userName.value}<br/>
-				    ${cookie.userID.value}
+				    ${cookie.loginCookie.value}				    
 				</div>		
 			</div>
 			<!-- footer 시작 -->

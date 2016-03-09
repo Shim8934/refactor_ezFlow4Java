@@ -59,11 +59,12 @@ public class CommonUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
-	public LoginVO userInfo(String userID) throws Exception {		
-		String id = egovFileScrty.getUserID(userID);
+	public LoginVO userInfo(String loginCookie) throws Exception {	
+		String decData = egovFileScrty.decryptAES(loginCookie);
+		String userID = decData.split("///")[1];
 		
 		LoginVO login = new LoginVO();
-		login.setId(id);
+		login.setId(userID);
 		login.setPassword("LOGIN");		
 		LoginVO user = loginService.selectUser(login);
 		user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));

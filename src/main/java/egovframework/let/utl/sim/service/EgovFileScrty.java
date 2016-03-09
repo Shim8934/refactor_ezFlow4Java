@@ -16,6 +16,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -51,8 +52,9 @@ public class EgovFileScrty {
 	@Value("${CRYPTO.pbm}")
 	public String pbm;	
 	@Value("${CRYPTO.pre}")
-	public String pre;
-	
+	public String pre;	
+	@Value("${CRYPTO.apb}")
+	public String apb;	
 	/**
 	 * 파일을 암호화하는 기능
 	 *
@@ -384,13 +386,53 @@ public class EgovFileScrty {
 		return privateKey;
 	}
     
-    public String getUserID(String userID){    	    	
-		PrivateKey pk = getPrivateKey(prm, pre);
-		String uid = decryptRsa(pk, userID);
-		
-		return uid;
-    	
+    public String encryptAES(String s) throws Exception {
+        String encrypted = null;
+
+        try{        	
+            SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes(), "AES");            
+
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec);            
+
+            encrypted = byteArrayToHex(cipher.doFinal(s.getBytes()));
+
+            return encrypted;
+        }catch (Exception e){          
+            throw e;
+        }
+    }     
+
+    // key는 16 바이트로 구성 되어야 한다.
+    public String decryptAES(String s) throws Exception {
+        String decrypted = null;
+
+        try{
+            SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes(), "AES");             
+
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+
+            decrypted = new String(cipher.doFinal(hexToByteArray(s)));
+
+            return decrypted;
+
+        }catch(Exception e){
+            throw e;
+        }
     }
+    
+    private String byteArrayToHex(byte buf[]) {
+        StringBuffer strbuf = new StringBuffer(buf.length * 2);
+
+        for (int i = 0; i < buf.length; i++) {
+            if (((int) buf[i] & 0xff) < 0x10) {
+                strbuf.append("0");
+            }
+            strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
+        }
+        return strbuf.toString();
+    }    
 
 	public String getPrm() {
 		return prm;
@@ -409,6 +451,12 @@ public class EgovFileScrty {
 	}
 	public void setPre(String pre) {
 		this.pre = pre;
-	}    
+	}
+	public String getApb() {
+		return apb;
+	}
+	public void setApb(String apb) {
+		this.apb = apb;
+	}
 	
 }

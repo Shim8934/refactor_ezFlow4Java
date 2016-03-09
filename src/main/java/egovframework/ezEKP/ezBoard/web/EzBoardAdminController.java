@@ -53,8 +53,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardLeft.do")
-	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, Model model) throws Exception{	
-		LoginVO user = commonUtil.userInfo(userID);
+	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{	
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
 		
 		StringBuilder sb = new StringBuilder();
@@ -109,8 +109,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/createBoardGroup.do")
-	public void createBoardGroup(@CookieValue("userID") String userID, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{
-		LoginVO user = commonUtil.userInfo(userID);
+	public void createBoardGroup(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String groupName1 = URLDecoder.decode(boardPropertyVO.getBoardGroupName(),"utf-8");
 		String groupName2 = URLDecoder.decode(boardPropertyVO.getBoardGroupName2(),"utf-8");
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1() + ", " + user.getDeptName1() + ")";
@@ -155,8 +155,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/createBoard.do")
-	public void createBoard(@CookieValue("userID") String userID, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{
-		LoginVO user = commonUtil.userInfo(userID);
+	public void createBoard(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String boardName1 = URLDecoder.decode(boardPropertyVO.getBoardName(),"utf-8");
 		String boardName2 = URLDecoder.decode(boardPropertyVO.getBoardName2(),"utf-8");
@@ -194,8 +194,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
-	public void getSubBoards(@CookieValue("userID") String userID, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		LoginVO user = commonUtil.userInfo(userID);
+	public void getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String upperBoardID = request.getParameter("upperBoardID");		
 		String boardTree = ezBoardController.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
@@ -206,8 +206,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardDelete.do")
-	public String boardDelete(@CookieValue("userID") String userID, HttpServletRequest request, Model model) throws Exception{
-		LoginVO user = commonUtil.userInfo(userID);
+	public String boardDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
@@ -351,8 +351,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/saveBackGroundImage.do")
-	public void saveBackGroundImage(@CookieValue("userID") String userID, HttpServletResponse response, MultipartHttpServletRequest request, BoardBackgroundVO boardBackgroundVO) throws Exception{		
-		LoginVO user = commonUtil.userInfo(userID);
+	public void saveBackGroundImage(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, MultipartHttpServletRequest request, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		boardBackgroundVO.setRegUserID(user.getId());
 			
 		MultipartFile file = request.getFile("file1");
@@ -432,12 +432,52 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/moveBoard.do")
-	public void moveBoard(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+	public void moveBoard(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		String orgBoardID = request.getParameter("orgBoardID");
 		String newParentBoardID = request.getParameter("newParentBoardID");
 		String newBoardGroupID = request.getParameter("newBoardGroupID");
 		
 		ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID);
-	}	
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardProperty.do")
+	public String boardProperty(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		String lang = config.getProperty("config.primary");
+		String use_multiData = config.getProperty("config.Use_MultiData");
+		String lang_primary = config.getProperty("config.lang_Primary" + lang);
+		String lang_secondary = config.getProperty("config.lang_Secondary" + lang);
+		String use_portal = config.getProperty("config.Use_Portal");
+		String boardID = request.getParameter("boardID");
+		String adminType = request.getParameter("adminType");
+		String style = "";
+				
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		
+		if(boardPropertyVO.getBoardName2() == null || boardPropertyVO.getBoardName2().equals("")){
+			boardPropertyVO.setBoardName2(boardPropertyVO.getBoardName1());
+		}
+		
+		if(boardPropertyVO.getDeleteAfter() == null || boardPropertyVO.getDeleteAfter().equals("")){
+			boardPropertyVO.setDeleteAfter("-1");
+		}
+		
+		if(boardPropertyVO.getBoardColor() == null || boardPropertyVO.getBoardColor().equals("")){
+			boardPropertyVO.setBoardColor("#000000");
+		}
+		
+		if(boardPropertyVO.getParentBoardID().equals("top")){
+			style = "display:none";;
+		}
+		
+		model.addAttribute("model", boardPropertyVO);
+		model.addAttribute("use_multiData", use_multiData);
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		model.addAttribute("use_portal", use_portal);
+		model.addAttribute("style", style);
+		model.addAttribute("adminType", adminType);
+		
+		return "admin/ezBoard/boardProperty";
+	}
 	
 }

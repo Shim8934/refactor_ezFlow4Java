@@ -3,6 +3,7 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.Date;
+import java.util.Properties;
 
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -16,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,17 +44,20 @@ import com.ibm.icu.util.Calendar;
 @Controller
 public class LoginController {
 
+	@Autowired
+	private Properties config;
+	
     /** LoginService */
 	@Resource(name = "loginService")
     private LoginService loginService;
 	
 	/** EgovMessageSource */
     @Resource(name="egovMessageSource")
-    EgovMessageSource egovMessageSource;    
+    private EgovMessageSource egovMessageSource;    
         
     /** CRYPTO */
     @Resource(name="crypto") 
-    EgovFileScrty egovFileScrty;
+    private EgovFileScrty egovFileScrty;
     
 	/**
 	 * 로그인 화면으로 들어간다
@@ -117,19 +122,18 @@ public class LoginController {
 				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
 				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
 				
-				loginService.insertLog(resultVO);
-		
-	        	Cookie cookieID = new Cookie("userID", loginVO.getEncryptID());
+				loginService.insertLog(resultVO);								
+				
+				String cInfo = config.getProperty("config.ServerName")+ "///" + loginVO.getId() + "///" + loginVO.getPassword() + "///" + ip;
+				String loginCookie = egovFileScrty.encryptAES(cInfo);
+
+	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
 	        	cookieID.setPath("/");
 	        	response.addCookie(cookieID);
-	
-	        	Cookie cookiePass = new Cookie("userPass", loginVO.getEncryptPass());
-	        	cookiePass.setPath("/");
-	        	response.addCookie(cookiePass);
-
+	        	
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
 	        	cookieName.setPath("/");
-	        	response.addCookie(cookieName); 
+	        	response.addCookie(cookieName);
 
 	        	return "redirect:/cmm/main/mainPage.do";
 			}

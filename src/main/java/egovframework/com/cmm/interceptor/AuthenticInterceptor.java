@@ -1,5 +1,6 @@
 package egovframework.com.cmm.interceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
+
+import egovframework.let.utl.fcc.service.ClientUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * 인증여부 체크 인터셉터
@@ -28,6 +32,10 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
  */
 
 public class AuthenticInterceptor extends WebContentInterceptor {
+	
+	/** CRYPTO */
+    @Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
 
 	/**
 	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
@@ -35,13 +43,24 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
-		String isCookie = null;
-		
+		String isCookie = null;		
 		Cookie[] cookies = request.getCookies();
+		
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			if("userID".equals(cookie.getName())){
-    				isCookie = "Y";
+    			if("loginCookie".equals(cookie.getName())){
+    				String ip = ClientUtil.getClientIP(request);
+					String cValue = "";
+					try {
+						cValue = egovFileScrty.decryptAES(cookie.getValue());
+
+	    				if(cValue.split("///")[3].equals(ip)){    				
+	    					isCookie = "Y";
+	    				}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
     	        }
     	    }
     	}
