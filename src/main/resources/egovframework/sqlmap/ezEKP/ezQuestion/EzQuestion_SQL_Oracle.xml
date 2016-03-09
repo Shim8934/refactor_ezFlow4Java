@@ -81,9 +81,18 @@
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	<!-- 수정필요 -->
-	<procedure id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_puserID#, #cv_1,javaType=java.lang.Integer,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)  
+			FROM
+				TBLPOLL_RESPONSE 
+			WHERE
+				brd_id = #v_pstrBrdID#
+				AND item_no = #v_pItemNo#
+				AND responseuser_id = #v_puserID#
+        ]]>
+	</select>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
