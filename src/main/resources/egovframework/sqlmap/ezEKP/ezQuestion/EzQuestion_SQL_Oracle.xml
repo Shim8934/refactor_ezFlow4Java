@@ -30,13 +30,42 @@
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_PSTRBRDID#, #v_PITEMNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	
+	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,
-												    #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
+		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.stepSave2" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
+	</procedure>
+	
+	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				NVL(max(item_no),-1) as maxno
+			FROM 
+				ezQuestion.TBLITEMSEQ 
+			WHERE  
+				brd_id = #brdId#
+		]]>		
+	</select>
+	
+	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="String">
+		<![CDATA[
+			INSERT INTO ezQuestion.TBLITEMSEQ 
+			VALUES (#v_pstrBrdID#, N'1') 
+		]]>
+	</insert>
+	
+	 <update id="EzQuestionDAO.updateItemSeq" parameterClass="Map">
+		<![CDATA[
+			UPDATE ezQuestion.TBLITEMSEQ
+			SET item_no = #v_pItemNo#
+			WHERE brd_id = #v_pstrBrdID#  
+		]]>
+	</update>
 </sqlMap>
