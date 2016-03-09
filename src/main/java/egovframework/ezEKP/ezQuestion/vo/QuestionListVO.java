@@ -195,4 +195,19 @@ public class QuestionListVO {
 	public void setReceve(String receve) {
 		this.receve = receve;
 	}
+	@Override
+	public String toString() {
+		return "QuestionListVO [brdId=" + brdId + ", itemNo=" + itemNo
+				+ ", userId=" + userId + ", userNm=" + userNm + ", userNm2="
+				+ userNm2 + ", userEmail=" + userEmail + ", title=" + title
+				+ ", content=" + content + ", pollEndDate=" + pollEndDate
+				+ ", postDate=" + postDate + ", publicResultFlg="
+				+ publicResultFlg + ", publicFlg=" + publicFlg
+				+ ", multiResponseFlg=" + multiResponseFlg + ", endFlg="
+				+ endFlg + ", responseRange=" + responseRange + ", totalCnt="
+				+ totalCnt + ", totalPage=" + totalPage + ", currPage="
+				+ currPage + ", pageSize=" + pageSize + ", blockSize="
+				+ blockSize + ", currBlock=" + currBlock + ", totalBlock="
+				+ totalBlock + ", lang=" + lang + ", receve=" + receve + "]";
+	}
 }
