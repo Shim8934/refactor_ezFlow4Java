@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezOrgan.dao;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -10,17 +9,11 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzOrganDAO")
 public class EzOrganDAO extends EgovAbstractDAO {
 
-	Map<String, Object> map = new HashMap<String, Object>();
-	
-	public String getPropertyValue(String userid, String propName) throws Exception{
-		map.put("v_CN",userid);
-		map.put("v_FIELD", propName);
+	public String getPropertyValue(Map<String, Object> map) throws Exception{
 		return (String) select("EzOrganDAO.getPropertyValue", map);
 	}
 
-	public String getSIPUriList(String pCNList, String eMailList) throws Exception{
-		map.put("iv_CNLIST", pCNList);
-		map.put("iv_EMAILLIST", eMailList);
+	public String getSIPUriList(Map<String, Object> map) throws Exception{
 		return (String) select("EzOrganDAO.getSIPUriList", map);
 	}
 
@@ -28,10 +21,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getDeptFullPath", deptID);
 	}
 
-	public String getPropertyList(String userID, String primary) {
-		map.put("userID", userID);
-		map.put("primary", primary);
+	public String getPropertyList(Map<String, Object> map) {
 		return (String) select("EzOrganDAO.getDeptInfo", map);
 	}
-	
 }

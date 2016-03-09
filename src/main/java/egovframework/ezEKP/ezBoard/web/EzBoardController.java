@@ -2,10 +2,7 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +35,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.filter.HTMLTagFilterRequestWrapper;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -82,10 +78,8 @@ public class EzBoardController {
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
-	private HTMLTagFilterRequestWrapper htmlTagFilter;
-	
 	@RequestMapping(value="/ezBoard/boardLeft.do")
-	public String boardLeft(@CookieValue("userID") String userID, HttpServletRequest request, ModelMap modelMap, LoginVO loginVO, HttpServletResponse response) throws Exception{
+	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO loginVO, HttpServletResponse response) throws Exception{
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
         String func = "";
@@ -93,7 +87,7 @@ public class EzBoardController {
         String photoType = "";
         String applyFlag = "";
         //유저정보 가져오기 아직 미구현이므로 고정값으로 테스트 @수정요망@
-        loginVO = commonUtil.userInfo(userID);
+        loginVO = commonUtil.userInfo(loginCookie);
         
         String strLang = "1";
 		String pUserID = loginVO.getId();
@@ -264,9 +258,9 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/get_favoriteList.do")
-	public void get_favoriteList(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
+	public void get_favoriteList(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
 	
-		loginVO = commonUtil.userInfo(userID);
+		loginVO = commonUtil.userInfo(loginCookie);
 		List<MyFavoriteVO> resultList = new ArrayList<MyFavoriteVO>();
         String pMode = request.getParameter("MODE");
         String pUserID = loginVO.getId();
@@ -312,9 +306,8 @@ public class EzBoardController {
 	
 	@SuppressWarnings("null")
 	@RequestMapping(value="/ezBoard/boardGeneral.do")
-	public String boardGeneral(@CookieValue("userID") String userID, LoginVO loginVO, Model model) throws Exception {
-		loginVO.setId(userID);
-		loginVO = commonUtil.userInfo(userID); 
+	public String boardGeneral(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie); 
 		String pUserID = loginVO.getId();
 		
 		BoardConfigVO boardListConfig = ezBoardService.getBoardList_Config(pUserID);
@@ -332,9 +325,8 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/board_generallist_save.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object>boardGeneralListSave(@CookieValue("userID") String userID, LoginVO loginVO,HttpServletRequest req) throws Exception {
-		loginVO.setId(userID);
-		loginVO = commonUtil.userInfo(userID);
+	public @ResponseBody Map<String, Object>boardGeneralListSave(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO,HttpServletRequest req) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
 		String pUserID = loginVO.getId();
 		String pPreview = req.getParameter("pPreview");
 		int pListCount = Integer.parseInt(req.getParameter("pListCount"));
@@ -376,8 +368,8 @@ public class EzBoardController {
     }
 	
    @RequestMapping(value="/ezBoard/getMyBoards_Config.do")
-   public void getMyBoards_Config(HttpServletRequest req, @CookieValue("userID") String userID, LoginVO loginVO, HttpServletResponse res) throws Exception{
-	   loginVO = commonUtil.userInfo(userID);
+   public void getMyBoards_Config(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletResponse res) throws Exception{
+	   loginVO = commonUtil.userInfo(loginCookie);
 	   String lang = loginVO.getLang();
 	   try{
            String pRootTreeID = "";
@@ -506,7 +498,7 @@ public class EzBoardController {
         return resultList;
 	}
 	@RequestMapping(value= {"/ezBoard/boardItemList_new.do","/ezBoard/boardItemList.do"})
-	public String boardItemList(HttpServletRequest request, HttpServletResponse response, LoginVO loginVO,BoardPropertyVO boardInfoVO, @CookieValue("userID") String userID, Model model) throws Exception{
+	public String boardItemList(HttpServletRequest request, LoginVO loginVO,BoardPropertyVO boardInfoVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//request line 가져오기 
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
@@ -522,7 +514,7 @@ public class EzBoardController {
         String use_IE11Browser = config.getProperty("config.IE11EDITOR");
         String use_oneLineCount = "";
         
-        loginVO = commonUtil.userInfo(userID);
+        loginVO = commonUtil.userInfo(loginCookie);
         if((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK"))
             use_IE11Browser = "CK";
         
@@ -989,13 +981,13 @@ public class EzBoardController {
     }
     
     @RequestMapping(value = "/ezBoard/getBoardList.do")
-    public void getBoardList(@CookieValue("userID") String userID, LoginVO userInfo, EzBoardVO ezBoardVO, HttpServletResponse res) throws Exception{
+    public void getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, EzBoardVO ezBoardVO, HttpServletResponse res) throws Exception{
         String boardID = ezBoardVO.getBoardId();
         String boardType = ezBoardVO.getBoardType();
         String type = "1";
         String resultXML = "";
         
-        userInfo = commonUtil.userInfo(userID);
+        userInfo = commonUtil.userInfo(loginCookie);
         userInfo.setLang("1");
 //        BoardPropertyVO boardInfo = getBoardInfo(boardID,userInfo);
         
@@ -1390,8 +1382,8 @@ public class EzBoardController {
     }
 	
 	@RequestMapping(value = "/ezBoard/getSubBoards.do")
-	public void getSubBoards(@CookieValue("userID") String userID, LoginVO userInfo, BoardPropertyVO boardInfo, HttpServletRequest req, HttpServletResponse res) throws Exception{
-		userInfo = commonUtil.userInfo(userID);
+	public void getSubBoards(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardPropertyVO boardInfo, HttpServletRequest req, HttpServletResponse res) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
 	    String pRootBoardID = "";
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
@@ -1474,8 +1466,8 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/saveListOrder.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> saveListOrder(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception {
-		loginVO = commonUtil.userInfo(userID);
+	public @ResponseBody Map<String, Object> saveListOrder(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
         String pUserID = loginVO.getId();
         String pBoardList = request.getParameter("pBoardList");
         String pDelBoardList = request.getParameter("pDelboardList");
@@ -1493,8 +1485,8 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value="/ezBoard/set_TabUse.do")
-	public String set_TabUse(@CookieValue("userID") String userID, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
-		loginVO = commonUtil.userInfo(userID);
+	public String set_TabUse(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
+		loginVO = commonUtil.userInfo(loginCookie);
 		String pUserID = loginVO.getId();
 		String pBoardList = request.getParameter("pBoardList");
 		String tabUsed = request.getParameter("tabUsed");
@@ -1504,4 +1496,311 @@ public class EzBoardController {
         ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed);
         return "json";
 	}
+	
+	public boolean accessCheck(String itemID, String boardType, LoginVO userInfo) throws Exception{
+        String rootBoardID = "top";
+        String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+        
+        if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1){
+            return true;
+        }
+        else{
+            int result = 0;
+            boolean rtv = false;
+
+            String deptPath = userInfo.getDeptPathCode();
+            String deptPathOrgan = "";
+            for (int ch = 0; ch < deptPath.split(",").length; ch++){
+                if (ch == 0){
+                	deptPathOrgan += deptPath.split(",")[ch].trim();
+                }
+                else{
+                	deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+                }
+            }
+            String userDeptPath = deptPathOrgan + ",everyone";
+
+            if(boardType.toUpperCase() == "" || boardType == null){
+            	boardType = "GENERAL";
+            }
+            for (int i = 0; i < userDeptPath.split(",").length; i++){
+            	result = ezBoardService.getCheckItemID(itemID, boardType, userDeptPath.split(",")[i].trim());
+            	
+                if (boardType.toUpperCase() == "GENERAL"){
+                    if (result > 0){
+                        rtv = false;
+                        break;
+                    }
+                    else{
+                        rtv = true;
+                    }
+                }else{
+                    if (result > 0){
+                        rtv = true;
+                        break;
+                    }
+                    else{
+                        rtv = false;
+                        break;
+                    }
+                }
+            }
+            return rtv;
+        }
+    }
+	
+	public String getItemXML(String boardID, String itemID, String multiData) throws Exception{
+		List<BoardListVO> boardItemList = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        StringBuilder sb = new StringBuilder();
+//		sb.Append("<NODES>");
+//    
+//		for (int i=0; i<xmldoc.SelectNodes("DATA/ROW").Count; i++)
+//		{
+//			sb.Append("<NODE>");
+//			sb.Append("<ItemID>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ITEMID").InnerText.Trim() + "</ItemID>");
+//			sb.Append("<WriterID>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERID").InnerText.Trim() + "</WriterID>");
+//            sb.Append("<WriterName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERNAME" + strLang).InnerText.Trim()) + "</WriterName>");
+//            sb.Append("<WriterDeptName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERDEPTNAME" + strLang).InnerText.Trim()) + "</WriterDeptName>");
+//            sb.Append("<WriterCompanyName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERCOMPANYNAME" + strLang).InnerText.Trim()) + "</WriterCompanyName>");
+//			sb.Append("<WriteDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITEDATE").InnerText.Trim() + "</WriteDate>");
+//			sb.Append("<ParentWriteDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("PARENTWRITEDATE").InnerText.Trim() + "</ParentWriteDate>");
+//			sb.Append("<Importance>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("IMPORTANCE").InnerText.Trim() + "</Importance>");
+//			sb.Append("<Title>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("TITLE").InnerText.Trim()) + "</Title>");
+//			sb.Append("<ContentLocation>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("CONTENTLOCATION").InnerText.Trim() + "</ContentLocation>");
+//			sb.Append("<StartDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("STARTDATE").InnerText.Trim() + "</StartDate>");
+//			sb.Append("<EndDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ENDDATE").InnerText.Trim() + "</EndDate>");
+//			sb.Append("<Abstract>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ABSTRACT").InnerText.Trim()) + "</Abstract>");
+//			sb.Append("<Attachments>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ATTACHMENTS").InnerText.Trim()) + "</Attachments>");
+//			sb.Append("<UpperItemIDTree>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("UPPERITEMIDTREE").InnerText.Trim() + "</UpperItemIDTree>");
+//			sb.Append("<ItemLevel>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ITEMLEVEL").InnerText.Trim() + "</ItemLevel>");
+//			sb.Append("<copiedItem>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("COPIEDITEM").InnerText.Trim() + "</copiedItem>");
+//			sb.Append("<ExtensionAttribute1>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE1").InnerText.Trim()) + "</ExtensionAttribute1>");
+//			sb.Append("<ExtensionAttribute2>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE2").InnerText.Trim()) + "</ExtensionAttribute2>");
+//            sb.Append("<ExtensionAttribute3>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE3" + strLang).InnerText.Trim()) + "</ExtensionAttribute3>");
+//			sb.Append("<ExtensionAttribute4>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE4").InnerText.Trim()) + "</ExtensionAttribute4>");
+//			sb.Append("<ExtensionAttribute5>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE5").InnerText.Trim()) + "</ExtensionAttribute5>");
+//            sb.Append("<MainContent>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("MAINCONTENT").InnerText.Trim()) + "</MainContent>");  //2013.04.08 Photo Album 
+//            sb.Append("<APPRFLAG>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("APPRFLAG").InnerText.Trim()) + "</APPRFLAG>");
+//            sb.Append("<GUBUN>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("GUBUN").InnerText.Trim()) + "</GUBUN>");
+//            //확장값 추가
+//            sb.Append("<ExtensionAttribute6>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE6").InnerText.Trim()) + "</ExtensionAttribute6>");
+//            sb.Append("<ExtensionAttribute7>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE7").InnerText.Trim()) + "</ExtensionAttribute7>");
+//            sb.Append("<ExtensionAttribute8>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE8").InnerText.Trim()) + "</ExtensionAttribute8>");
+//            sb.Append("<ExtensionAttribute9>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE9").InnerText.Trim()) + "</ExtensionAttribute9>");
+//            sb.Append("<ExtensionAttribute10>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE10").InnerText.Trim()) + "</ExtensionAttribute10>");
+//            sb.Append("<BoardID>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("BOARDID").InnerText.Trim()) + "</BoardID>");
+//			sb.Append("</NODE>");
+//		}        
+//
+//		sb.Append("</NODES>");
+
+		return sb.toString();
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemView.do")
+	public String getBoardItemView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+        String apprFlag = "Y";
+        String extenLang = "1";
+        String location = "";
+        String useOcs = config.getProperty("config.USE_OCS");
+        String useEditor = config.getProperty("config.EDITOR");
+        String useIE11Browser = "";
+        
+        if((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")){
+        	useIE11Browser = "CK";
+        }
+
+        String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
+        String showAdjacent = request.getParameter("showAdjacent");
+        String boardID = request.getParameter("boardID");
+        String itemID = request.getParameter("itemID");
+        String pReservedItem = request.getParameter("pReservedItem");
+        location = request.getParameter("location");
+        
+        userInfo = commonUtil.userInfo(loginCookie);
+        
+        if (!accessCheck(itemID, location, userInfo)){
+        	return "warning";
+        }
+        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+        String useEzKMS = config.getProperty("config.Use_ezKMS");
+
+        if (boardInfo.getRead_FG().equals("true")){
+        	return "warning";
+        }
+        String guBun = boardInfo.getGuBun();
+        String boardName = boardInfo.getBoardName();
+
+        //추가항목 잇을 경우 추가항목을 가져온다
+        if (boardInfo.getAttributeYN().equals("Y")){
+        	//어드민쪽 소스 수정없을때 구현요망(지금 당장 안쓰임)
+        	//ezBoardAdminService.getBoardAttribute(boardID);
+            if (!userInfo.getLang().equals("1"))
+                extenLang = "2";
+        }
+
+        String ret = getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()));
+//        objEzBoard.SetAsRead(userinfo.UserID, userinfo.DisplayName1, userinfo.DeptName1, userinfo.CompanyName1, userinfo.Title1, pBoardID, pItemID, userinfo.DisplayName2, userinfo.DeptName2, userinfo.CompanyName2, userinfo.Title2);
+//        
+//        xmldom = GetXmlReaderString(ret);
+//
+//        if (xmldom.GetElementsByTagName("WriterID").Count == 0)
+//        {
+//            Response.Redirect("/error.aspx");
+//        }
+//
+//        strWriterName = xmldom.SelectSingleNode("NODES/NODE/WriterName").InnerText;
+//        if (gubun != "2")
+//        {
+//            strWriterID = xmldom.SelectSingleNode("NODES/NODE/WriterID").InnerText;
+//            strWriterDeptName = xmldom.SelectSingleNode("NODES/NODE/WriterDeptName").InnerText;
+//            strWriterCompanyName = xmldom.SelectSingleNode("NODES/NODE/WriterCompanyName").InnerText;
+//        }
+//
+//        strStartDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/StartDate").InnerText);
+//        strWriteDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/WriteDate").InnerText);
+//        strParentWriteDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/ParentWriteDate").InnerText);
+//        strImportance = xmldom.SelectSingleNode("NODES/NODE/Importance").InnerText;
+//        strTitle = Server.HtmlEncode(xmldom.SelectSingleNode("NODES/NODE/Title").InnerText);
+//        strEndDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/EndDate").InnerText);
+//        strAbstract = xmldom.SelectSingleNode("NODES/NODE/Abstract").InnerText;
+//        strUpperItemIDTree = xmldom.SelectSingleNode("NODES/NODE/UpperItemIDTree").InnerText;
+//        strAttachments = xmldom.SelectSingleNode("NODES/NODE/Attachments").InnerText;
+//        strContentLocation = xmldom.SelectSingleNode("NODES/NODE/ContentLocation").InnerText;
+//        CopiedFlag = xmldom.SelectSingleNode("NODES/NODE/copiedItem").InnerText;
+//        ExtensionAttribute1 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute1").InnerText;
+//        ExtensionAttribute2 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute2").InnerText;
+//        ExtensionAttribute3 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute3").InnerText;
+//        ExtensionAttribute4 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute4").InnerText;
+//        ExtensionAttribute5 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute5").InnerText;
+//        ApprFlag = xmldom.SelectSingleNode("NODES/NODE/APPRFLAG").InnerText;
+//        //추가항목
+//        ExtensionAttribute6 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute6").InnerText;
+//        ExtensionAttribute7 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute7").InnerText;
+//        ExtensionAttribute8 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute8").InnerText;
+//        ExtensionAttribute9 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute9").InnerText;
+//        ExtensionAttribute10 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute10").InnerText;
+//        if (ApprFlag == "N")
+//        {
+//            OracleCommand cmd = new OracleCommand("EZSP_CHECKAPPRUSERLIST");
+//            cmd.CommandType = CommandType.StoredProcedure;
+//            cmd.Parameters.Add("v_PUSERID", OracleType.NVarChar, 50).Value = userinfo.UserID;
+//            cmd.Parameters.Add("v_PITEMID", OracleType.NChar, 38).Value = pItemID;
+//            cmd.Parameters.Add("v_pCount", OracleType.Number).Direction = ParameterDirection.Output;
+//        string strXML = Convert.ToString(GetQueryValueSP(ref cmd));
+//        cmd.Dispose();
+//
+//        XmlDocument xmldom2 = new XmlDocument();
+//        xmldom2 = GetXmlReaderString(strXML);
+//
+//        string checkCnt = xmldom2.GetElementsByTagName("CNT").Item(0).InnerText;
+//        if (checkCnt == "0")
+//            ApprFlag = "W";
+//        }
+//        
+//        ret = GetBoardProperty(pBoardID);
+//        xmldom = GetXmlReaderString(ret);
+//        OneLineReplyFlag = xmldom.SelectSingleNode("NODES/NODE/ONELINEREPLY").InnerText;
+//        xmldom = null;
+//
+//        System.DateTime dt = System.DateTime.Now;
+//        string nowTime = GetLocalTime(dt.ToString()).Replace(":", "").Replace(" ", "").Replace("-", "");
+//        string parentTime = strParentWriteDate.Replace(":", "").Replace(" ", "").Replace("-", "");
+//
+//        if (long.Parse(parentTime) > long.Parse(nowTime))
+//        {
+//            pReservedItem = "true";
+//        }
+//        if (System.String.Compare(strParentWriteDate, strWriteDate, false) > 0)
+//        {
+//            strWriteDate = strParentWriteDate;
+//        }
+//
+//        if (strEndDate.Substring(0, 4) == "9999")
+//            strEndDate = RM.GetString("t287");
+//
+//        MenuCount = 0;
+//
+//        if (AdjacentItemsEnableFlag == "1" && ShowAdjacent == "1")
+//        {
+//            objEzBoard = new Kaoni.ezStandard.ezBoardSTD.ItemView();
+//            if (strUpperItemIDTree == "" || strUpperItemIDTree == null)
+//                strUpperItemIDTree = pItemID;
+//
+//            string strXML = "";
+//            if (gubun != "3")
+//                strXML = objEzBoard.GetAdjacentItems(pItemID, pBoardID, strUpperItemIDTree, GetDBTime(strParentWriteDate));
+//            else
+//                strXML = objEzBoard.GetAdjacentItems_PHOTO(pItemID, pBoardID, strUpperItemIDTree, GetDBTime(strParentWriteDate));
+//
+//            objEzBoard = null;
+//
+//            xmldom = new XmlDocument();
+//            xmldom = GetXmlReaderString(strXML);
+//            PreviousItemID = xmldom.GetElementsByTagName("PREVIOUSITEMID").Item(0).InnerText.Trim();
+//            PreviousTitle = xmldom.GetElementsByTagName("PREVIOUSTITLE").Item(0).InnerText.Trim();
+//            NextItemID = xmldom.GetElementsByTagName("NEXTITEMID").Item(0).InnerText.Trim();
+//            NextTitle = xmldom.GetElementsByTagName("NEXTTITLE").Item(0).InnerText.Trim();
+//
+//            if (PreviousTitle == "") PreviousTitle = RM.GetString("t330");
+//            if (NextTitle == "") NextTitle = RM.GetString("t331");
+//
+//            xmldom = null;
+//        }
+//
+//        if (gubun == "3")
+//        {
+//            try
+//            {
+//                g_ImageUrl = ExtensionAttribute5;
+//
+//                if (g_ImageUrl.Length > 0)
+//                {
+//                    int idx = g_ImageUrl.LastIndexOf("/");
+//
+//                    g_ImageUrl = "/Upload_BoardSTD/" + g_ImageUrl.Substring(0, idx + 1) + g_ImageUrl.Substring(idx + 3);
+//                    pFile_Path = Server.MapPath(g_ImageUrl);
+//
+//                    g_ImageUrl = "/Upload_BoardSTD/" + ExtensionAttribute5.Substring(0, idx + 1) + ExtensionAttribute5.Substring(idx + 3).Replace("+", "%20");
+//
+//                    g_ImageUrl = "/myoffice/Common/DownloadAttach.aspx?filepath=" + Server.UrlEncode(g_ImageUrl);
+//
+//                    if (File.Exists(pFile_Path))
+//                    {
+//                        System.Drawing.Image image = System.Drawing.Image.FromFile(pFile_Path);
+//                        int nWidth = image.Width;
+//                        int nHeight = image.Height;
+//
+//                        if (nWidth > 600)
+//                        {
+//                            g_Width = "600";
+//                            nHeight = (nHeight * int.Parse(g_Width)) / nWidth;
+//                            g_Height = nHeight.ToString();
+//                        }
+//                        else
+//                        {
+//                            g_Width = nWidth.ToString();
+//                            g_Height = nHeight.ToString();
+//                        }
+//                    }
+//                    else
+//                    {
+//                        g_Width = "600";
+//                        g_Height = "450";
+//                    }
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                WriteTextLog("BoardItemView", "Page_Load", ex.ToString());
+//            }
+//        }
+        return "";
+    }
+	
+	public String FileNameConvert(String name){
+        return name.replace("\\", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "")
+            .replace("\"", "").replace("<", "").replace(">", "").replace("|", "")
+            .replace("#", "").replace("!", "").replace(".", "");
+    }
 }

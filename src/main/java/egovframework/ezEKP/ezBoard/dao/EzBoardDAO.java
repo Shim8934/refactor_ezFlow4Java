@@ -27,7 +27,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<MyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}
 	
-	public BoardConfigVO getBoardList_Config(String userID) {
+	public BoardConfigVO getBoardList_Config(String userID) throws Exception{
 		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", userID);
 	}
 
@@ -49,7 +49,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 
-	public BoardConfigVO getPersonalCount(String userID) {
+	public BoardConfigVO getPersonalCount(String userID) throws Exception{
 		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);
 	}
 
@@ -98,22 +98,32 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
 	}
 
-	public int getNoticePostItemCount(Map<String, Object> map) {
+	public int getNoticePostItemCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getNoticePostItemCount", map);
 	}
 
-	public int getBoardTotalItemCount(Map<String, Object> map) {
+	public int getBoardTotalItemCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getBoardTotalItemCount", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) {
+	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) {
+	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getBoardListItem", map);
+	}
+
+	public int getCheckItemID(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getCheckItemID", map);
+		return (int)map.get("v_pCount");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getBrdGetItemInfo(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getBrdGetItemInfo", map);
 	}
 	
 }

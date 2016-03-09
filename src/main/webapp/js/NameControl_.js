@@ -1900,7 +1900,7 @@ function GumdropGetStatusImage(state)
     switch (state)
     {
         case 0:
-            img = "Unknown.gif";
+            img = "unknown.gif";
         break;      
         case 6:
             img = "PresenceControlOFF.GIF";

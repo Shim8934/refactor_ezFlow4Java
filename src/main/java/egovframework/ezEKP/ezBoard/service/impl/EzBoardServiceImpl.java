@@ -202,5 +202,20 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_TYPE", type);
 		return ezBoardDAO.getBoardListItem(map);
 	}
+
+	@Override
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception {
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDTYPE", boardType);
+		map.put("v_ACCESSID", userDeptPath);
+		return ezBoardDAO.getCheckItemID(map);
+	}
+
+	@Override
+	public List<BoardListVO> getBrdGetItemInfo(String boardID, String itemID) throws Exception {
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		return ezBoardDAO.getBrdGetItemInfo(map);
+	}
 	
 }

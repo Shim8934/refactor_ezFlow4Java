@@ -86,6 +86,7 @@ public class BoardListVO {
 	private String extensionAttribute9;
 	/** 확장속성*/
 	private String extensionAttribute10;
+	private String contentLocation;
 	
 	public int getrNum() {
 		return rNum;
@@ -332,6 +333,12 @@ public class BoardListVO {
 	}
 	public void setExtensionAttribute10(String extensionAttribute10) {
 		this.extensionAttribute10 = extensionAttribute10;
+	}
+	public String getContentLocation() {
+		return contentLocation;
+	}
+	public void setContentLocation(String contentLocation) {
+		this.contentLocation = contentLocation;
 	}
 	
 }

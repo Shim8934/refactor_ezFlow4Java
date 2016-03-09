@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -12,15 +15,21 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Resource(name = "EzOrganDAO")
 	EzOrganDAO ezOrganDAO;
+	
+	Map<String, Object> map = new HashMap<String, Object>();
 
 	@Override
 	public String getPropertyValue(String userid, String propName) throws Exception{
-		return ezOrganDAO.getPropertyValue(userid,propName);
+		map.put("v_CN",userid);
+		map.put("v_FIELD", propName);
+		return ezOrganDAO.getPropertyValue(map);
 	}
 
 	@Override
 	public String getSIPUriList(String pCNList, String eMailList) throws Exception{
-		return ezOrganDAO.getSIPUriList(pCNList,eMailList);
+		map.put("iv_CNLIST", pCNList);
+		map.put("iv_EMAILLIST", eMailList);
+		return ezOrganDAO.getSIPUriList(map);
 	}
 
 	@Override
@@ -30,7 +39,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getPropertyList(String userID,  String primary) throws Exception {
-		return ezOrganDAO.getPropertyList(userID,primary);
+		map.put("userID", userID);
+		map.put("primary", primary);
+		return ezOrganDAO.getPropertyList(map);
 	}
 	
 }

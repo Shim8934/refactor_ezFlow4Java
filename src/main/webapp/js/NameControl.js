@@ -2142,7 +2142,7 @@ function GumdropGetStatusImage(state)
     switch (state)
     {
         case 0:
-            img = "Unknown.gif";
+            img = "unknown.gif";
         break;      
         case 6:
             img = "PresenceControlOFF.GIF";
@@ -2224,7 +2224,7 @@ function Gumdrop(uri, pObj)
     var id = obj.id;
     var Contact;
     var myID;
-    
+
 	if(bInstall) {
 	    myID = getMySignInName();
 	    if(myID != "") {
@@ -2385,27 +2385,28 @@ function GetGUID() {
 
 // 사번 또는 E-Mail 주소로 SIP URI를 가져온다.
 function getSIPUri(strCNList, strEMailList) {
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CNLIST", strCNList);
-    createNodeAndInsertText(xmlpara, objNode, "EMAILLIST", strEMailList);
-    
-    var xmlhttp = createXMLHttpRequest();
     if(bGroupwarePresence) {
-        xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSIPUriList.aspx", false);
+    	url = "/ezOrgan/getSIPUriList.do";
     }
     else {
-        xmlhttp.open("POST", "/myoffice/ezOCS/OrganInfo/ezOrgan/GetSIPUriList.aspx", false);
+    	url = "/myoffice/ezOCS/OrganInfo/ezOrgan/GetSIPUriList.aspx";
     }
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.statusText == "OK") {
-        return getNodeText(xmlhttp.responseXML.getElementsByTagName("RESULT").item(0));
-    }
-    else
-        return "";
+    $.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : url,
+		data : { cnList : strCNList,
+					  emailList : strEMailList
+					},
+		success: function(result){
+			strRet = result.strRet;
+		},
+		error: function(){
+			strRet = "";
+		} 
+	});
+    return strRet;
 }
 
 function GetLang() {

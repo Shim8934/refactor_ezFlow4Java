@@ -95,6 +95,10 @@
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
@@ -109,6 +113,10 @@
 	
 	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_CHECKITEMID(#v_ITEMID#, #v_BOARDTYPE#, #v_ACCESSID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">

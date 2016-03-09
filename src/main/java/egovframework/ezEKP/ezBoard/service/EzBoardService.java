@@ -55,4 +55,8 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception;
+
+	public List<BoardListVO> getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+
 }
