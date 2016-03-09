@@ -112,8 +112,7 @@
 		                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 		                	<input type="hidden" name="encryptID" />
 		                	<input type="hidden" name="encryptPass"/>
-		                    <fieldset>
-		                        <legend>로그인 폼</legend>
+		                    <fieldset>		                        
 		                        <p class="id"><input id="TextUserID" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" /></p>
 		                        <p class="pw"><input id="TextPassword" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" /></p>	                        
 		                        <img src="/images/kr/login/btn_login.gif" id="LoginButton"  tabindex="3" border="0" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">

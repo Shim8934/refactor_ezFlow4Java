@@ -45,13 +45,15 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
 		String isCookie = null;		
 		Cookie[] cookies = request.getCookies();
-		
+System.out.println("================================================ cookie ====================================================");		
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
     			if("loginCookie".equals(cookie.getName())){
+    				//접속한 클라이언트 IP
     				String ip = ClientUtil.getClientIP(request);
 					String cValue = "";
 					try {
+						//쿠기에 저장되어 있는 IP
 						cValue = egovFileScrty.decryptAES(cookie.getValue());
 
 	    				if(cValue.split("///")[3].equals(ip)){    				

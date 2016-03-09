@@ -48,7 +48,7 @@
 		 	WHERE 
 		 		cn = #id#		 			 				 
 		]]>
-		<isNotEqual prepend="AND" property="password" compareValue="LOGIN" >			
+		<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >			
 			password = #password#
 		</isNotEqual>
 	</select>
