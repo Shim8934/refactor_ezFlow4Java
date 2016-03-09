@@ -24,7 +24,7 @@
 		<result property="responseRange"	column="RESPONSE_RANGE"		columnIndex="14"/>
 	</resultMap>
 	
-	<resultMap class="UserPollItemVO" id="userPollItem">
+		<resultMap class="UserPollItemVO" id="userPollItem">
 		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
 		<result property="userId"			column="USER_ID"			columnIndex="3"/>
@@ -104,6 +104,46 @@
 	
 	<procedure id="EzQuestionDAO.stepSave2" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callCreateMother" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callInsertPollResponseper" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.insertAnswerAnswerContent" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.updatePollItem" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.deleteItem" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
