@@ -23,6 +23,31 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<QuestionListVO>) list("EzQuestionDAO.getQstList", map);
 	}
 	
+	public int getItemNoCnt(Map<String, Object> map) throws Exception {
+		select("EzQuestionDAO.getItemNoCnt", map);
+		return (int) map.get("v_pCount");
+	}
+	
+	public void stepSave(Map<String,Object> map) {
+		update("EzQuestionDAO.stepSave", map);
+	}
+	
+	public String getItemSeq(String brdId) {
+		return (String)select("EzQuestionDAO.getItemSeq", brdId);
+	}
+	
+	public void insertItemSeq(String brdId) {
+		select("EzQuestionDAO.insertItemSeq", brdId);
+	}
+	
+	public void updateItemSeq(Map<String,Object> map) {
+		update("EzQuestionDAO.updateItemSeq", map);
+	}
+	
+	public void stepSave2(Map<String,Object> map) {
+		update("EzQuestionDAO.stepSave2", map);
+	}
+	
 	public UserPollItemVO getUserPollItem(Map<String, Object> map){
 		return  (UserPollItemVO) select("EzQuestionDAO.getUserPollItem", map);
 	}
@@ -34,4 +59,5 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public int getUserResponseCnt(Map<String, Object> map){
 		return (int) select("EzQuestionDAO.getUserResponseCnt", map);
 	}
+	
 }
