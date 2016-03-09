@@ -50,8 +50,8 @@ public class EzQuestionController {
 	private EgovMessageSource egovMessageSource;
 
 	@RequestMapping(value="/ezQuestion/qstList.do")
-	public String qstList(@CookieValue("userID") String userID,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request) throws Exception{
-		loginVO = commonUtil.userInfo(userID);
+	public String qstList(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO,ModelMap model,QuestionListVO questionListVO,HttpServletRequest request) throws Exception{
+		loginVO = commonUtil.userInfo(loginCookie);
 		/** 전달받지 않은 인자 초기화 */
 		questionListVO.setUserId(loginVO.getId());
 		if(questionListVO.getBrdId()==0)
@@ -127,8 +127,8 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
-	public String pollOpen(@CookieValue("userID") String userID,LoginVO loginVO, ModelMap model,HttpServletRequest request) throws Exception{
-		loginVO = commonUtil.userInfo(userID);
+	public String pollOpen(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, ModelMap model,HttpServletRequest request) throws Exception{
+		loginVO = commonUtil.userInfo(loginCookie);
 		UserPollItemVO userPollItemVO = new UserPollItemVO();
 		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		userPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
