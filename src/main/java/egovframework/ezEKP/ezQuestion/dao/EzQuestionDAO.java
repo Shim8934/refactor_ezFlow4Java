@@ -60,4 +60,44 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (int) select("EzQuestionDAO.getUserResponseCnt", map);
 	}
 	
+	public void callCreateMother(Map<String,Object> map) {
+		insert("EzQuestionDAO.callCreateMother", map);
+	}
+	
+	public void callInsertPollResponsep1(Map<String,Object> map) {
+		insert("EzQuestionDAO.callInsertPollResponsep1", map);
+	}
+	
+	public void callInsertPollResponseper(Map<String,Object> map) {
+		insert("EzQuestionDAO.callInsertPollResponseper", map);
+	}
+	
+	public int getQuestionNo(Map<String,Object> map) {
+		select("EzQuestionDAO.getQuestionNo", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public void insertQuestion(Map<String,Object> map) {
+		insert("EzQuestionDAO.insertQuestion", map);
+	}
+	
+	public void pollSaveAttach(Map<String,Object> map) {
+		insert("EzQuestionDAO.pollSaveAttach", map);
+	}
+	
+	public void insertAnswerAnswerContent(Map<String,Object> map) {
+		insert("EzQuestionDAO.insertAnswerAnswerContent", map);
+	}
+	
+	public void insertAnswerContent(Map<String,Object> map) {
+		insert("EzQuestionDAO.insertAnswerContent", map);
+	}
+	
+	public void updatePollItem(Map<String,Object> map) {
+		update("EzQuestionDAO.updatePollItem", map);
+	}
+	
+	public void deleteItem(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem", map);
+	}
 }
