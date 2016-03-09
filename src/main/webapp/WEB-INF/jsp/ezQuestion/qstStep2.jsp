@@ -129,7 +129,7 @@
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
         		var QuestionNode = createNode(xmlDoc, "QUESTION"); */
         		var pQstCnt = document.frmCreate.selQues.length;
-alert(pQstCnt);
+
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		//var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
@@ -154,7 +154,7 @@ alert(pQstCnt);
         		}	
         		surveyState = "OK"; */
 	       		
-alert(pBrdSubject);
+
         		 $.ajax({
      				url : '/ezQuestion/qstComplete.do',
      				method : 'POST',
