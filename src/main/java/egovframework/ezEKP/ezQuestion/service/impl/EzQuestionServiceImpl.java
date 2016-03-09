@@ -124,6 +124,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 
 	@Override
 	public int getUserResponseCnt(UserPermissionVO userPermissionVO) throws Exception {
+		map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
 		map.put("v_puserID", userPermissionVO.getUserId());
