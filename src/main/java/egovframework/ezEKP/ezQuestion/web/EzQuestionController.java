@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class EzQuestionController {
 				strbuffer.append("&responseRange="+qst.getResponseRange());
 				strbuffer.append("&postDate="+qst.getPostDate());
 				strbuffer.append("&pollEndDate="+qst.getPollEndDate());
-				strbuffer.append("&CurrPage="+questionListVO.getCurrPage());
+				strbuffer.append("&currPage="+questionListVO.getCurrPage());
 				
 				qst.setReceve(strbuffer.toString());
 			}
@@ -130,8 +131,16 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
-	public String pollOpen(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, ModelMap model,HttpServletRequest request) throws Exception{
+	public String pollOpen(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, ModelMap model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String receve = "brd_id=" + request.getParameter("brdId") +
+                "&item_no=" + request.getParameter("itemNo") +
+                "&title=" + request.getParameter("title") +
+                "&responseRange=" + request.getParameter("responseRange") +
+                "&postDate=" + request.getParameter("postDate") +
+                "&pollEndDate=" + request.getParameter("pollEndDate") +
+                "&currPage=" + request.getParameter("currPage");
 		loginVO = commonUtil.userInfo(loginCookie);
+		String userId = loginVO.getId();
 		/**UserPollItem*/
 		UserPollItemVO userPollItemVO = new UserPollItemVO();
 		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -140,14 +149,16 @@ public class EzQuestionController {
 		/** 결과값없으면 Error처리*/
 		if(userPollItemVO.getTitle().equals(null))
 			return "redirect:/error.do"; //나중에 에러처리찾아서 주소만바꾸면됨
+		
 		/**UserPermission*/
 		UserPermissionVO userPermissionVO = new UserPermissionVO();
 		userPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		userPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
 		userPermissionVO = ezQuestionService.getUserPermission(userPermissionVO);
+		
 		/**ResponseCnt*/
-		userPermissionVO.setUserId(loginVO.getId());
+		userPermissionVO.setUserId(userId);
 		int responseCnt = ezQuestionService.getUserResponseCnt(userPermissionVO);
 		boolean endPoll = false;
 		Date sysDate=new Date();
@@ -156,11 +167,40 @@ public class EzQuestionController {
 			endPoll = true;
 		if(userPermissionVO.getEndFlg().equals('1'))
 			endPoll = true;
-		/**UserIdAdmin*/
 		
-	
-//		ezQuestionService.getUserIdAdmin();
-		model.addAttribute(request.getParameter("CurrPage"));
+		/**UserIdAdmin*/
+		/*boolean adminYN = false;
+		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
+		if(endPoll == false){
+			if(responseCnt <= 0){
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("				window.location.href='/ezQuestion/qstResponseCross.do?" + receve + "'");
+				response.getWriter().write("</script>");
+			}
+			else if(userPermissionVO.getPublicResultFlg() == "1"){
+				if(userPermissionVO.getMultiResponseFlg() == "1"){
+					response.getWriter().write("<script language='javascript'>");
+					response.getWriter().write("window.open('Msg_AdminConfirm.aspx?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+                    if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
+                    	response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brd_id=5';");
+                    else
+                    	response.getWriter().write("	window.location.href='/ezQuestionqstListCross.do?brd_id=5';");
+                    response.getWriter().write("</script>");
+				}
+			}
+			else{
+				adminYN = false;
+				*//**foreach*//*
+				for(String userIdAdmin : userIdAdminList){
+					if(userId == userPollItemVO.getUserId())
+						adminYN = true;
+				}
+				if()
+			}
+		}
+		*/
+			
+		model.addAttribute(request.getParameter("currPage"));
 		model.addAttribute("userPermissionVO", userPermissionVO);
 		model.addAttribute("userPollItemVO", userPollItemVO);
 		
