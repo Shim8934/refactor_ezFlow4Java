@@ -81,10 +81,6 @@
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	<!-- 수정필요 -->
-<!-- 	<procedure id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Map"> -->
-<!-- 		{CALL EZQUESTION.EZSP_GETUSERRESPONSECNT(#v_pstrBrdID#, #v_pItemNo#, #v_puserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-
 	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
