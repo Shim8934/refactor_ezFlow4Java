@@ -188,7 +188,7 @@ public class EzQuestionController {
 			}else{
 				adminYN = false;
 				for(String userIdAdmin : userIdAdminList){
-					if(userId == userPollItemVO.getUserId())
+					if(userId == userIdAdmin)
 						adminYN = true;
 				}
 				if(userId == rsUserId || adminYN == true){
