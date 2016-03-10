@@ -29,7 +29,7 @@ public class EzEmailController {
 	}
 	
 	@RequestMapping(value="/ezEmail/mailLeft.do")
-	public String showMailLeft(@CookieValue("userID") String userID, Model model, LoginVO loginVO) throws Exception{
+	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception{
 		String funCode = "";
 		String subCode = "";			
         String rootFolderXML = "";
@@ -50,7 +50,7 @@ public class EzEmailController {
         String pcFolderPath = "";
         String noneActiveX = "";
         //유저정보 가져오기 아직 미구현이므로 고정값으로 테스트 @수정요망@
-        loginVO = commonUtil.userInfo(userID);
+        loginVO = commonUtil.userInfo(loginCookie);
         
         String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
         String mailServerAddress = config.getProperty("config.MailServerAddress");
@@ -60,7 +60,7 @@ public class EzEmailController {
 	}
 	
 	@RequestMapping(value="/ezEmail/mailList.do")
-	public String showMailList(@CookieValue("userID") String userID, HttpServletRequest request, Model model, LoginVO loginVO, HttpServletResponse response) throws Exception{
+	public String showMailList(HttpServletRequest request, Model model, LoginVO loginVO, HttpServletResponse response) throws Exception{
 		return "ezEmail/mailList";
 	}
 }
