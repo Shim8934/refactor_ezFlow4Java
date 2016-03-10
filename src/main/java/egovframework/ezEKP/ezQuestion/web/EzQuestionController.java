@@ -182,7 +182,7 @@ public class EzQuestionController {
 					if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
 						response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brd_id=5';");
 					else
-						response.getWriter().write("	window.location.href='/ezQuestionqstListCross.do?brd_id=5';");
+						response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brd_id=5';");
 					response.getWriter().write("</script>");
 				}
 			}else{
@@ -196,13 +196,13 @@ public class EzQuestionController {
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-							response.getWriter().write("	window.location.href='qstList.do?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brd_id=5';");
 						else
-							response.getWriter().write("	window.location.href='qstListCross.do?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brd_id=5';");
 						response.getWriter().write("</script>");
 					}else{
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("	window.location.href='qstResult.do?" + receve + "';");
+						response.getWriter().write("	window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 						response.getWriter().write("</script>");
 					}
 				}else{
@@ -210,17 +210,17 @@ public class EzQuestionController {
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('Msg_AdminConfirm.aspx?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-							response.getWriter().write("	window.location.href='qstList.do?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brd_id=5';");
 						else
-							response.getWriter().write("	window.location.href='qstListCross.do?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brd_id=5';");
 						response.getWriter().write("</script>");
 					}else{
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112", null, Locale.getDefault()) + "');");
 						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-							response.getWriter().write("	window.location.href='Qst_List.aspx?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/Qst_List.aspx?brd_id=5';");
 						else
-							response.getWriter().write("	window.location.href='Qst_List_Cross.aspx?brd_id=5';");
+							response.getWriter().write("	window.location.href='/ezQuestion/Qst_List_Cross.aspx?brd_id=5';");
 						response.getWriter().write("</script>");
 					}
 				}
