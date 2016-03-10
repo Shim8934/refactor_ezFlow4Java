@@ -1549,56 +1549,8 @@ public class EzBoardController {
         }
     }
 	
-	public String getItemXML(String boardID, String itemID, String multiData) throws Exception{
-		List<BoardListVO> boardItemList = ezBoardService.getBrdGetItemInfo(boardID, itemID);
-        StringBuilder sb = new StringBuilder();
-//		sb.Append("<NODES>");
-//    
-//		for (int i=0; i<xmldoc.SelectNodes("DATA/ROW").Count; i++)
-//		{
-//			sb.Append("<NODE>");
-//			sb.Append("<ItemID>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ITEMID").InnerText.Trim() + "</ItemID>");
-//			sb.Append("<WriterID>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERID").InnerText.Trim() + "</WriterID>");
-//            sb.Append("<WriterName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERNAME" + strLang).InnerText.Trim()) + "</WriterName>");
-//            sb.Append("<WriterDeptName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERDEPTNAME" + strLang).InnerText.Trim()) + "</WriterDeptName>");
-//            sb.Append("<WriterCompanyName>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITERCOMPANYNAME" + strLang).InnerText.Trim()) + "</WriterCompanyName>");
-//			sb.Append("<WriteDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("WRITEDATE").InnerText.Trim() + "</WriteDate>");
-//			sb.Append("<ParentWriteDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("PARENTWRITEDATE").InnerText.Trim() + "</ParentWriteDate>");
-//			sb.Append("<Importance>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("IMPORTANCE").InnerText.Trim() + "</Importance>");
-//			sb.Append("<Title>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("TITLE").InnerText.Trim()) + "</Title>");
-//			sb.Append("<ContentLocation>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("CONTENTLOCATION").InnerText.Trim() + "</ContentLocation>");
-//			sb.Append("<StartDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("STARTDATE").InnerText.Trim() + "</StartDate>");
-//			sb.Append("<EndDate>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ENDDATE").InnerText.Trim() + "</EndDate>");
-//			sb.Append("<Abstract>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ABSTRACT").InnerText.Trim()) + "</Abstract>");
-//			sb.Append("<Attachments>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ATTACHMENTS").InnerText.Trim()) + "</Attachments>");
-//			sb.Append("<UpperItemIDTree>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("UPPERITEMIDTREE").InnerText.Trim() + "</UpperItemIDTree>");
-//			sb.Append("<ItemLevel>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("ITEMLEVEL").InnerText.Trim() + "</ItemLevel>");
-//			sb.Append("<copiedItem>" + xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("COPIEDITEM").InnerText.Trim() + "</copiedItem>");
-//			sb.Append("<ExtensionAttribute1>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE1").InnerText.Trim()) + "</ExtensionAttribute1>");
-//			sb.Append("<ExtensionAttribute2>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE2").InnerText.Trim()) + "</ExtensionAttribute2>");
-//            sb.Append("<ExtensionAttribute3>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE3" + strLang).InnerText.Trim()) + "</ExtensionAttribute3>");
-//			sb.Append("<ExtensionAttribute4>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE4").InnerText.Trim()) + "</ExtensionAttribute4>");
-//			sb.Append("<ExtensionAttribute5>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE5").InnerText.Trim()) + "</ExtensionAttribute5>");
-//            sb.Append("<MainContent>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("MAINCONTENT").InnerText.Trim()) + "</MainContent>");  //2013.04.08 Photo Album 
-//            sb.Append("<APPRFLAG>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("APPRFLAG").InnerText.Trim()) + "</APPRFLAG>");
-//            sb.Append("<GUBUN>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("GUBUN").InnerText.Trim()) + "</GUBUN>");
-//            //확장값 추가
-//            sb.Append("<ExtensionAttribute6>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE6").InnerText.Trim()) + "</ExtensionAttribute6>");
-//            sb.Append("<ExtensionAttribute7>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE7").InnerText.Trim()) + "</ExtensionAttribute7>");
-//            sb.Append("<ExtensionAttribute8>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE8").InnerText.Trim()) + "</ExtensionAttribute8>");
-//            sb.Append("<ExtensionAttribute9>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE9").InnerText.Trim()) + "</ExtensionAttribute9>");
-//            sb.Append("<ExtensionAttribute10>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("EXTENSIONATTRIBUTE10").InnerText.Trim()) + "</ExtensionAttribute10>");
-//            sb.Append("<BoardID>" + MakeXMLString(xmldoc.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("BOARDID").InnerText.Trim()) + "</BoardID>");
-//			sb.Append("</NODE>");
-//		}        
-//
-//		sb.Append("</NODES>");
-
-		return sb.toString();
-	}
-	
 	@RequestMapping(value = "/ezBoard/boardItemView.do")
-	public String getBoardItemView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+	public String getBoardItemView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
         String apprFlag = "Y";
         String extenLang = "1";
         String location = "";
@@ -1616,117 +1568,51 @@ public class EzBoardController {
         String itemID = request.getParameter("itemID");
         String pReservedItem = request.getParameter("pReservedItem");
         location = request.getParameter("location");
-        
         userInfo = commonUtil.userInfo(loginCookie);
-        
         if (!accessCheck(itemID, location, userInfo)){
-        	return "warning";
+        	return "main/warning";
         }
         BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
         String useEzKMS = config.getProperty("config.Use_ezKMS");
-
-        if (boardInfo.getRead_FG().equals("true")){
-        	return "warning";
+        if (!boardInfo.getRead_FG().equals("true")){
+        	return "main/warning";
         }
         String guBun = boardInfo.getGuBun();
-        String boardName = boardInfo.getBoardName();
-
         //추가항목 잇을 경우 추가항목을 가져온다
-        if (boardInfo.getAttributeYN().equals("Y")){
+        if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")){
         	//어드민쪽 소스 수정없을때 구현요망(지금 당장 안쓰임)
         	//ezBoardAdminService.getBoardAttribute(boardID);
             if (!userInfo.getLang().equals("1"))
                 extenLang = "2";
         }
+        BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        ezBoardService.setAsRead(userInfo, boardID, itemID);
+        
+        if (boardItem.getApprFlag() != null && boardItem.getApprFlag().equals("N")){
+		    int checkCnt = ezBoardService.getCheckApprUserList(userInfo.getId(), itemID);
+		    if (checkCnt == 0){
+		    	boardItem.setApprFlag("W");
+		    }
+        }
+        BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
 
-        String ret = getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()));
-//        objEzBoard.SetAsRead(userinfo.UserID, userinfo.DisplayName1, userinfo.DeptName1, userinfo.CompanyName1, userinfo.Title1, pBoardID, pItemID, userinfo.DisplayName2, userinfo.DeptName2, userinfo.CompanyName2, userinfo.Title2);
-//        
-//        xmldom = GetXmlReaderString(ret);
-//
-//        if (xmldom.GetElementsByTagName("WriterID").Count == 0)
-//        {
-//            Response.Redirect("/error.aspx");
-//        }
-//
-//        strWriterName = xmldom.SelectSingleNode("NODES/NODE/WriterName").InnerText;
-//        if (gubun != "2")
-//        {
-//            strWriterID = xmldom.SelectSingleNode("NODES/NODE/WriterID").InnerText;
-//            strWriterDeptName = xmldom.SelectSingleNode("NODES/NODE/WriterDeptName").InnerText;
-//            strWriterCompanyName = xmldom.SelectSingleNode("NODES/NODE/WriterCompanyName").InnerText;
-//        }
-//
-//        strStartDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/StartDate").InnerText);
-//        strWriteDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/WriteDate").InnerText);
-//        strParentWriteDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/ParentWriteDate").InnerText);
-//        strImportance = xmldom.SelectSingleNode("NODES/NODE/Importance").InnerText;
-//        strTitle = Server.HtmlEncode(xmldom.SelectSingleNode("NODES/NODE/Title").InnerText);
-//        strEndDate = GetLocalTime(xmldom.SelectSingleNode("NODES/NODE/EndDate").InnerText);
-//        strAbstract = xmldom.SelectSingleNode("NODES/NODE/Abstract").InnerText;
-//        strUpperItemIDTree = xmldom.SelectSingleNode("NODES/NODE/UpperItemIDTree").InnerText;
-//        strAttachments = xmldom.SelectSingleNode("NODES/NODE/Attachments").InnerText;
-//        strContentLocation = xmldom.SelectSingleNode("NODES/NODE/ContentLocation").InnerText;
-//        CopiedFlag = xmldom.SelectSingleNode("NODES/NODE/copiedItem").InnerText;
-//        ExtensionAttribute1 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute1").InnerText;
-//        ExtensionAttribute2 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute2").InnerText;
-//        ExtensionAttribute3 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute3").InnerText;
-//        ExtensionAttribute4 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute4").InnerText;
-//        ExtensionAttribute5 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute5").InnerText;
-//        ApprFlag = xmldom.SelectSingleNode("NODES/NODE/APPRFLAG").InnerText;
-//        //추가항목
-//        ExtensionAttribute6 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute6").InnerText;
-//        ExtensionAttribute7 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute7").InnerText;
-//        ExtensionAttribute8 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute8").InnerText;
-//        ExtensionAttribute9 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute9").InnerText;
-//        ExtensionAttribute10 = xmldom.SelectSingleNode("NODES/NODE/ExtensionAttribute10").InnerText;
-//        if (ApprFlag == "N")
-//        {
-//            OracleCommand cmd = new OracleCommand("EZSP_CHECKAPPRUSERLIST");
-//            cmd.CommandType = CommandType.StoredProcedure;
-//            cmd.Parameters.Add("v_PUSERID", OracleType.NVarChar, 50).Value = userinfo.UserID;
-//            cmd.Parameters.Add("v_PITEMID", OracleType.NChar, 38).Value = pItemID;
-//            cmd.Parameters.Add("v_pCount", OracleType.Number).Direction = ParameterDirection.Output;
-//        string strXML = Convert.ToString(GetQueryValueSP(ref cmd));
-//        cmd.Dispose();
-//
-//        XmlDocument xmldom2 = new XmlDocument();
-//        xmldom2 = GetXmlReaderString(strXML);
-//
-//        string checkCnt = xmldom2.GetElementsByTagName("CNT").Item(0).InnerText;
-//        if (checkCnt == "0")
-//            ApprFlag = "W";
-//        }
-//        
-//        ret = GetBoardProperty(pBoardID);
-//        xmldom = GetXmlReaderString(ret);
-//        OneLineReplyFlag = xmldom.SelectSingleNode("NODES/NODE/ONELINEREPLY").InnerText;
-//        xmldom = null;
-//
-//        System.DateTime dt = System.DateTime.Now;
-//        string nowTime = GetLocalTime(dt.ToString()).Replace(":", "").Replace(" ", "").Replace("-", "");
-//        string parentTime = strParentWriteDate.Replace(":", "").Replace(" ", "").Replace("-", "");
-//
-//        if (long.Parse(parentTime) > long.Parse(nowTime))
-//        {
-//            pReservedItem = "true";
-//        }
-//        if (System.String.Compare(strParentWriteDate, strWriteDate, false) > 0)
-//        {
-//            strWriteDate = strParentWriteDate;
-//        }
-//
-//        if (strEndDate.Substring(0, 4) == "9999")
-//            strEndDate = RM.GetString("t287");
-//
-//        MenuCount = 0;
-//
-//        if (AdjacentItemsEnableFlag == "1" && ShowAdjacent == "1")
-//        {
-//            objEzBoard = new Kaoni.ezStandard.ezBoardSTD.ItemView();
-//            if (strUpperItemIDTree == "" || strUpperItemIDTree == null)
-//                strUpperItemIDTree = pItemID;
-//
+        String nowTime = EgovDateUtil.convertDate(EgovDateUtil.getToday(), "0000", "yyyy-MM-dd HH:mm:ss");
+        String parentTime = boardItem.getParentWriteDate().toString();
+
+        if (EgovDateUtil.getDaysDiff(parentTime.substring(0,10), nowTime.substring(0,10)) < 0){
+            pReservedItem = "true";
+        }
+        if (EgovDateUtil.getDaysDiff(boardItem.getParentWriteDate().substring(0,10), boardItem.getWriteDate().substring(0,10)) < 0){
+            boardItem.setWriteDate(boardItem.getParentWriteDate());
+        }
+
+        if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4) == "9999"){
+        	boardItem.setEndDate(egovMessageSource.getMessage("t287"));
+        }
+        if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")){
+            if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("") ){
+            	boardItem.setUpperItemIDTree(itemID);
+            }
 //            string strXML = "";
 //            if (gubun != "3")
 //                strXML = objEzBoard.GetAdjacentItems(pItemID, pBoardID, strUpperItemIDTree, GetDBTime(strParentWriteDate));
@@ -1746,56 +1632,26 @@ public class EzBoardController {
 //            if (NextTitle == "") NextTitle = RM.GetString("t331");
 //
 //            xmldom = null;
-//        }
-//
-//        if (gubun == "3")
-//        {
-//            try
-//            {
-//                g_ImageUrl = ExtensionAttribute5;
-//
-//                if (g_ImageUrl.Length > 0)
-//                {
-//                    int idx = g_ImageUrl.LastIndexOf("/");
-//
-//                    g_ImageUrl = "/Upload_BoardSTD/" + g_ImageUrl.Substring(0, idx + 1) + g_ImageUrl.Substring(idx + 3);
-//                    pFile_Path = Server.MapPath(g_ImageUrl);
-//
-//                    g_ImageUrl = "/Upload_BoardSTD/" + ExtensionAttribute5.Substring(0, idx + 1) + ExtensionAttribute5.Substring(idx + 3).Replace("+", "%20");
-//
-//                    g_ImageUrl = "/myoffice/Common/DownloadAttach.aspx?filepath=" + Server.UrlEncode(g_ImageUrl);
-//
-//                    if (File.Exists(pFile_Path))
-//                    {
-//                        System.Drawing.Image image = System.Drawing.Image.FromFile(pFile_Path);
-//                        int nWidth = image.Width;
-//                        int nHeight = image.Height;
-//
-//                        if (nWidth > 600)
-//                        {
-//                            g_Width = "600";
-//                            nHeight = (nHeight * int.Parse(g_Width)) / nWidth;
-//                            g_Height = nHeight.ToString();
-//                        }
-//                        else
-//                        {
-//                            g_Width = nWidth.ToString();
-//                            g_Height = nHeight.ToString();
-//                        }
-//                    }
-//                    else
-//                    {
-//                        g_Width = "600";
-//                        g_Height = "450";
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                WriteTextLog("BoardItemView", "Page_Load", ex.ToString());
-//            }
-//        }
-        return "";
+        }
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("boardItem", boardItem);
+        model.addAttribute("boardPropertyVO", boardPropertyVO);
+        model.addAttribute("apprFlag", apprFlag);
+        model.addAttribute("extenLang", extenLang);
+        model.addAttribute("location", location);
+        model.addAttribute("useOcs", useOcs);
+        model.addAttribute("useEditor", useEditor);
+        model.addAttribute("useIE11Browser", useIE11Browser);
+        model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
+        model.addAttribute("showAdjacent", showAdjacent);
+        model.addAttribute("boardID", boardID);
+        model.addAttribute("itemID", itemID);
+        model.addAttribute("pReservedItem", pReservedItem);
+        model.addAttribute("useEzKMS", useEzKMS);
+        model.addAttribute("guBun", guBun);
+        
+        return "ezBoard/boardItemView";
     }
 	
 	public String FileNameConvert(String name){

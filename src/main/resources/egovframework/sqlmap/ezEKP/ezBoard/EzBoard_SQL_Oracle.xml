@@ -21,36 +21,6 @@
 		<!-- <result property="guBun" column="GUBUN" columnIndex="5"/> -->
 	</resultMap>
 	
-	<resultMap class="BoardListVO" id="getNewItemList">
-		<result property="rNum" column="RNUM" columnIndex="1"/>
-		<result property="boardID" column="BOARDID" columnIndex="2"/>
-		<result property="boardName" column="BOARDNAME" columnIndex="3"/>
-		<result property="itemID" column="ITEMID" columnIndex="4"/>
-		<result property="writerID" column="WRITERID" columnIndex="5"/>
-		<result property="writerName" column="WRITERNAME" columnIndex="6"/>
-		<result property="writerDeptName" column="WRITERDEPTNAME" columnIndex="7"/>
-		<result property="writerCompanyName" column="WRITERCOMPANYNAME" columnIndex="8"/>
-		<result property="writeDate" column="WRITEDATE" columnIndex="9"/>
-		<result property="startDate" column="STARTDATE" columnIndex="10"/>
-		<result property="parentWriteDate" column="PARENTWRITEDATE" columnIndex="11"/>
-		<result property="importance" column="IMPORTANCE" columnIndex="12"/>
-		<result property="title" column="TITLE" columnIndex="13"/>
-		<result property="attachments" column="ATTACHMENTS" columnIndex="14"/>
-		<result property="readCount" column="READCOUNT" columnIndex="15"/>
-		<result property="itemLevel" column="ITEMLEVEL" columnIndex="16"/>
-		<result property="_abstract" column="ABSTRACT" columnIndex="17"/>
-		<result property="boardName2" column="BOARDNAME2" columnIndex="18"/>
-		<result property="writerName2" column="WRITERNAME2" columnIndex="19"/>
-		<result property="writerDeptName2" column="WRITERDEPTNAME2" columnIndex="20"/>
-		<result property="writerCompanyName2" column="WRITERCOMPANYNAME2" columnIndex="21"/>
-		<result property="oneLineCnt" column="ONELINECNT" columnIndex="22"/>
-		<result property="upperItemIDTree" column="UPPERITEMIDTREE" columnIndex="23"/>
-		<result property="docNo" column="DocNo" columnIndex="24"/>
-		<result property="notice" column="NOTICE" columnIndex="25"/>
-		<result property="guBun" column="GUBUN" columnIndex="26"/>
-		<result property="mainContent" column="MAINCONTENT" columnIndex="27"/>
-	</resultMap>
-	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -127,6 +97,10 @@
 		{CALL EZBOARDSTD.EZSP_SET_TABUSED(#v_BOARDID#, #v_TABUSED#, #v_USERID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 
@@ -169,5 +143,21 @@
 	        AND 
 	        	extensionattribute2 = '1'
         ]]>
+	</select>
+	<select id="EzBoardDAO.getCheckApprUserList" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(B.appruserid) AS cnt
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ITEM A
+	        JOIN 
+	        	ezBoardSTD.TBL_BOARD_APPRLIST B   
+	        ON 
+	        	A.boardid = B.boardid
+	        WHERE  
+	        	A.itemid = #v_PITEMID#
+	        AND 
+	        	B.appruserid = #v_PUSERID#
+        ]]>	
 	</select>
 </sqlMap>

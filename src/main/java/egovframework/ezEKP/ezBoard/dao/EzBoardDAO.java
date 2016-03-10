@@ -121,9 +121,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<BoardListVO> getBrdGetItemInfo(Map<String, Object> map) throws Exception{
-		return (List<BoardListVO>) list("EzBoardDAO.getBrdGetItemInfo", map);
+	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
+		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
+	}
+
+	public void setAsRead(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.setAsRead", map);
+	}
+
+	public int getCheckApprUserList(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
 	
 }

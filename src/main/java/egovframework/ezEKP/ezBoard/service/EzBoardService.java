@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardService {
 
@@ -57,6 +58,10 @@ public interface EzBoardService {
 
 	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception;
 
-	public List<BoardListVO> getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+
+	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
+
+	public int getCheckApprUserList(String id, String itemID) throws Exception;
 
 }

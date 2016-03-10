@@ -33,11 +33,11 @@ public class BoardListVO {
 	/** 작성자회사명*/
 	private String writerCompanyName;
 	/** 작성일*/
-	private Date writeDate;
+	private String writeDate;
 	/** 게시시작일(예약게시가 아닌경우 작성일과 동일함)*/
-	private Date startDate;
+	private String startDate;
 	/** 답변인경우 원문의 작성일*/
-	private Date parentWriteDate;
+	private String parentWriteDate;
 	/** 긴급게시여부*/
 	private String importance; 
 	/** 제목*/
@@ -48,8 +48,8 @@ public class BoardListVO {
 	private int readCount;
 	/** 게시물레벨(사용안함)*/
 	private String itemLevel; 
-	/** 게시요약*/
-	private String _abstract;
+	/** 게시요약(소문자 불가해서 대문자)*/
+	private String ABSTRACT;
 	/** 게시판이름(다국어)*/
 	private String boardName2;
 	/** 작성자이름(다국어)*/
@@ -72,10 +72,20 @@ public class BoardListVO {
 	private String mainContent;
 	/** 읽은 여부*/
 	private String readFlag;
-	/** 확장속성*/
-	private String extensionAttribute5;
 	/** 공지사항 순서*/
 	private String notiNo;
+	/** 확장속성*/
+	private String extensionAttribute1;
+	/** 확장속성*/
+	private String extensionAttribute2;
+	/** 확장속성*/
+	private String extensionAttribute3;
+	/** 확장속성*/
+	private String extensionAttribute32;
+	/** 확장속성*/
+	private String extensionAttribute4;
+	/** 확장속성*/
+	private String extensionAttribute5;
 	/** 확장속성*/
 	private String extensionAttribute6;
 	/** 확장속성*/
@@ -86,7 +96,14 @@ public class BoardListVO {
 	private String extensionAttribute9;
 	/** 확장속성*/
 	private String extensionAttribute10;
+	/** 게시문서파일의위치*/
 	private String contentLocation;
+	/** 게시만료일*/
+	private String endDate;
+	/** 복사된게시물여부*/
+	private String copiedItem;
+	/** */
+	private String apprFlag;
 	
 	public int getrNum() {
 		return rNum;
@@ -136,22 +153,22 @@ public class BoardListVO {
 	public void setWriterCompanyName(String writerCompanyName) {
 		this.writerCompanyName = writerCompanyName;
 	}
-	public Date getWriteDate() {
+	public String getWriteDate() {
 		return writeDate;
 	}
-	public void setWriteDate(Date writeDate) {
+	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
-	public Date getParentWriteDate() {
+	public String getParentWriteDate() {
 		return parentWriteDate;
 	}
-	public void setParentWriteDate(Date parentWriteDate) {
+	public void setParentWriteDate(String parentWriteDate) {
 		this.parentWriteDate = parentWriteDate;
 	}
 	public String getImportance() {
@@ -183,12 +200,6 @@ public class BoardListVO {
 	}
 	public void setItemLevel(String itemLevel) {
 		this.itemLevel = itemLevel;
-	}
-	public String get_abstract() {
-		return _abstract;
-	}
-	public void set_abstract(String _abstract) {
-		this._abstract = _abstract;
 	}
 	public String getBoardName2() {
 		return boardName2;
@@ -340,5 +351,58 @@ public class BoardListVO {
 	public void setContentLocation(String contentLocation) {
 		this.contentLocation = contentLocation;
 	}
-	
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getCopiedItem() {
+		return copiedItem;
+	}
+	public void setCopiedItem(String copiedItem) {
+		this.copiedItem = copiedItem;
+	}
+	public String getExtensionAttribute1() {
+		return extensionAttribute1;
+	}
+	public void setExtensionAttribute1(String extensionAttribute1) {
+		this.extensionAttribute1 = extensionAttribute1;
+	}
+	public String getExtensionAttribute2() {
+		return extensionAttribute2;
+	}
+	public void setExtensionAttribute2(String extensionAttribute2) {
+		this.extensionAttribute2 = extensionAttribute2;
+	}
+	public String getExtensionAttribute3() {
+		return extensionAttribute3;
+	}
+	public void setExtensionAttribute3(String extensionAttribute3) {
+		this.extensionAttribute3 = extensionAttribute3;
+	}
+	public String getExtensionAttribute32() {
+		return extensionAttribute32;
+	}
+	public void setExtensionAttribute32(String extensionAttribute32) {
+		this.extensionAttribute32 = extensionAttribute32;
+	}
+	public String getExtensionAttribute4() {
+		return extensionAttribute4;
+	}
+	public void setExtensionAttribute4(String extensionAttribute4) {
+		this.extensionAttribute4 = extensionAttribute4;
+	}
+	public String getApprFlag() {
+		return apprFlag;
+	}
+	public void setApprFlag(String apprFlag) {
+		this.apprFlag = apprFlag;
+	}
+	public String getABSTRACT() {
+		return ABSTRACT;
+	}
+	public void setABSTRACT(String aBSTRACT) {
+		ABSTRACT = aBSTRACT;
+	}
 }

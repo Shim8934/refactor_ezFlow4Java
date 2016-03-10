@@ -16,10 +16,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Resource(name = "EzOrganDAO")
 	EzOrganDAO ezOrganDAO;
 	
-	Map<String, Object> map = new HashMap<String, Object>();
-
 	@Override
 	public String getPropertyValue(String userid, String propName) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
 		return ezOrganDAO.getPropertyValue(map);
@@ -27,6 +26,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getSIPUriList(String pCNList, String eMailList) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_CNLIST", pCNList);
 		map.put("iv_EMAILLIST", eMailList);
 		return ezOrganDAO.getSIPUriList(map);
@@ -34,11 +34,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getDeptFullPath(String deptID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		return ezOrganDAO.getDeptFullPath(deptID);
 	}
 
 	@Override
 	public String getPropertyList(String userID,  String primary) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("primary", primary);
 		return ezOrganDAO.getPropertyList(map);

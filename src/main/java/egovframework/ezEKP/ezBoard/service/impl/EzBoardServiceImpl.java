@@ -16,24 +16,25 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl implements EzBoardService {
 
-	Map<String, Object> map = new HashMap<String, Object>();
-	
 	@Resource(name="EzBoardDAO")
 	private EzBoardDAO ezBoardDAO;
 
 	@Override
 	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("redirectBoardID", redirectBoardID);
 		return ezBoardDAO.getLeft_BoardSTD(map);
 	}
 
 	@Override
 	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
 		return ezBoardDAO.get_favoriteList(map);
@@ -41,6 +42,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public String get_parentBoardName(String boardIdList, int boardIdListCount) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BOARDIDLIST", boardIdList);
 		map.put("v_BOARDCOUNTLIST", boardIdListCount);
 		return ezBoardDAO.get_parentBoardName(map);
@@ -58,6 +60,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		return ezBoardDAO.getListHeader(map);
@@ -76,6 +79,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getNewItemListCount(String userID, String nowDate, String fromNow)  throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", userID);
 		map.put("v_pNow", nowDate);
 		map.put("v_pFromNow", fromNow);
@@ -89,6 +93,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -112,6 +117,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", myFavoriteVO.getUserId());
 		map.put("v_pNow", myFavoriteVO.getNowDate());
 		map.put("v_pFromNow", myFavoriteVO.getFromNow());
@@ -120,6 +126,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
@@ -129,6 +136,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
@@ -138,6 +146,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
@@ -148,6 +157,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BOARDID", pBoardList);
 		map.put("v_TABUSED", tabUsed);
 		map.put("v_USERID", pUserID);
@@ -156,6 +166,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(EzBoardVO ezBoardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
@@ -164,12 +175,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getNoticePostItemCount(String boardId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardId);
 		return ezBoardDAO.getNoticePostItemCount(map);
 	}
 
 	@Override
 	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", boardId);
 		map.put("v_PNOW", EgovDateUtil.getToday());
 		map.put("v_PUSERID", userID);
@@ -179,6 +192,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<HashMap<String, Object>> getNoticePostItem(EzBoardVO ezBoardVO, int personalCount) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		int start = 0;
         int end = 0;
         start = ((ezBoardVO.getPageNum() - 1) * personalCount) + 1;
@@ -192,6 +206,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardId);
 		map.put("v_PSTARTROW", startRow);
@@ -205,6 +220,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ITEMID", itemID);
 		map.put("v_BOARDTYPE", boardType);
 		map.put("v_ACCESSID", userDeptPath);
@@ -212,10 +228,36 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public List<BoardListVO> getBrdGetItemInfo(String boardID, String itemID) throws Exception {
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
 		return ezBoardDAO.getBrdGetItemInfo(map);
+	}
+
+	@Override
+	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("iv_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_pUserName", userInfo.getDisplayName1());
+		map.put("v_pUserDeptName", userInfo.getDeptName1());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+		map.put("v_pUserTitle", userInfo.getTitle1());
+		map.put("v_pUserName2", userInfo.getDisplayName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		ezBoardDAO.setAsRead(map);
+	}
+
+	@Override
+	public int getCheckApprUserList(String userID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PITEMID", itemID);
+		return ezBoardDAO.getCheckApprUserList(map);
 	}
 	
 }
