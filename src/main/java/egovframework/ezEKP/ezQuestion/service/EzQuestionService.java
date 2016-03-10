@@ -31,6 +31,8 @@ public interface EzQuestionService {
 	
 	public int getUserResponseCnt(UserPermissionVO userPermissionVO) throws Exception;
 	
+	public List<String> getUserIdAdmin(String brd) throws Exception;
+	
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception;
 	
 	public void callInsertPollResponsep1(QstCompleteVO qstCompleteVO) throws Exception;

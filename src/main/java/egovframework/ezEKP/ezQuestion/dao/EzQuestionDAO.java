@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezQuestion.dao;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +60,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (int) select("EzQuestionDAO.getUserResponseCnt", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getUserIdAdmin(String brdId) {
+		return (List<String>) select("EzQuestionDAO.getUserIdAdmin", brdId);
+	}
+	
 	public void callCreateMother(Map<String,Object> map) {
 		insert("EzQuestionDAO.callCreateMother", map);
 	}
@@ -102,4 +105,5 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+
 }

@@ -40,7 +40,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	public List<QuestionListVO> getQstList(QuestionListVO questionListVO) throws Exception {
 		map.put("v_PSTRBRDID", questionListVO.getBrdId());
 		map.put("v_PUSERID", questionListVO.getUserId());
-		map.put("v_PTOTALCNT", questionListVO.getTotalCnt());
+		map.put("v_PTOTALCNT", questionListVO.getTotalCnt()-(questionListVO.getCurrPage()-1)*questionListVO.getPageSize());
 		map.put("v_PPAGESIZE", questionListVO.getPageSize());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
@@ -131,6 +131,11 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		return ezQuestionDAO.getUserResponseCnt(map);
 	}
 	
+	@Override
+	public List<String> getUserIdAdmin(String brdId) throws Exception {
+		return ezQuestionDAO.getUserIdAdmin(brdId);
+	}
+
 	@Override
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception {
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
