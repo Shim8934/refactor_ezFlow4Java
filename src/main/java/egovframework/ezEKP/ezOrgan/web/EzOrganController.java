@@ -27,8 +27,8 @@ public class EzOrganController {
 	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/ezOrgan/getSIPUriList.do")
-	public String  getSIPUriList(@CookieValue("userID") String userID, LoginVO loginVO, HttpServletRequest request, Model model) throws Exception{
-		loginVO = commonUtil.userInfo(userID);
+	public String  getSIPUriList(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request, Model model) throws Exception{
+		loginVO = commonUtil.userInfo(loginCookie);
 		String cnList = request.getParameter("cnList");
         String emailList = request.getParameter("emailList");
         String strRet = ezOrganService.getSIPUriList(cnList, emailList);
