@@ -1304,6 +1304,12 @@ public class EzBoardController {
             resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
             resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
             resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
+            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
+            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
+            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
+            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
+            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
             resultXML.append("<LISTVIEWDATA>");
             resultXML.append("<HEADERS>");
             

@@ -99,7 +99,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public int getNoticePostItemCount(Map<String, Object> map) throws Exception{
-		return (int) select("EzBoardDAO.getNoticePostItemCount", map);
+		return (int)select("EzBoardDAO.getNoticePostItemCount", map);
 	}
 
 	public int getBoardTotalItemCount(Map<String, Object> map) throws Exception{

@@ -135,9 +135,9 @@
 	        WHERE  
 	        	boardid = #v_pBoardID#
 	        AND 
-	        	startdate <= TO_CHAR(SYSDATE)
+	        	startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
 	        AND 
-	        	enddate > TO_CHAR(SYSDATE)
+	        	enddate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
 	        AND 
 	        	extensionattribute1 = '0'
 	        AND 

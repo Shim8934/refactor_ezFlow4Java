@@ -1027,7 +1027,7 @@
 	        		</c:when>
 	        		<c:otherwise>
 	        			<c:choose>
-		        			<c:when test="${guBun == 2}">
+		        			<c:when test="${guBun == '2'}">
 		        				<c:when test="${guBun != '3'}">
 		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 		        				</c:when>
@@ -1039,25 +1039,31 @@
 		                        </c:when>
 		        			</c:when>
 		        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-		        				<c:when test="${guBun != '3'}">
-		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-		        				</c:when>
+		        				<c:choose>
+			        				<c:when test="${guBun != '3'}">
+			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+			        				</c:when>
+		        				</c:choose>
 		        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
-		                        <c:when test="${guBun != '3'}">
-		                        	<c:when test="${guBun != '2'}">
-				                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
-							            <%--게시물이동추가--%>
-							            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
-		                        	</c:when>
-		                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-		                    	</c:when>
-		                    	<c:when test="${guBun != '2'}">
-		                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-		                    	</c:when>
-		                    	<c:when test="${guBun != '3'}">
-		                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
-		                        </c:when>
+		                        <c:choose>
+			                        <c:when test="${guBun != '3'}">
+			                        	<c:choose>
+				                        	<c:when test="${guBun != '2'}">
+						                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+									            <%--게시물이동추가--%>
+									            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+				                        	</c:when>
+			                        	</c:choose>
+			                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+			                    	</c:when>
+			                    	<c:when test="${guBun != '2'}">
+			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+			                    	</c:when>
+			                    	<c:when test="${guBun != '3'}">
+			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+			                        </c:when>
+		                        </c:choose>
 		        			</c:when>
 		        			<c:otherwise>
 		        				<c:when test="${guBun != '3'}">
@@ -1070,14 +1076,16 @@
 	        			</c:choose>
 	        		</c:otherwise>
 	        	</c:choose>
-	        	<c:when test="${useEzKMS =='YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-	        		<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-	        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t321' /></span></li>
-	        		</c:when>
-	        	</c:when>
-	        	<c:when test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-	        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
-	        	</c:when>
+	        	<c:choose>
+		        	<c:when test="${useEzKMS =='YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+		        		<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+		        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t321' /></span></li>
+		        		</c:when>
+		        	</c:when>
+		        	<c:when test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
+		        	</c:when>
+	        	</c:choose>
 	        </ul>
 	      </div>    
 	      <div id="close">
@@ -1097,7 +1105,7 @@
 				<td style="vertical-align: top; height: 80px;">
 				<table class="content2" style="width:100%;">
 					<tr>
-					<th><spring:message code='ezBoard.t233' /></th>
+					<th><spring:message code='ezBoard.t223' /></th>
 					<c:choose>
 						<c:when test="${guBun != '2'}">
 							<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'>${boardItem.writerName}</div></td>
@@ -1107,11 +1115,11 @@
 						</c:otherwise>
 					</c:choose>
 					<th><spring:message code='ezBoard.t224' /></th>
-					<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writerDate}</div></td>
+					<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div></td>
 					<th><spring:message code='ezBoard.t288' /></th>
 					<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 					<c:choose>
-						<c:when test="${boardItem.endDate == code287}">
+						<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
 							<td id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;height:16px;overflow-y:auto;"><spring:message code='ezBoard.t287' /></div></td>
 						</c:when>
 						<c:otherwise>
@@ -1119,37 +1127,39 @@
 						</c:otherwise>
 					</c:choose>
 					</tr>
-					<c:when test="${guBun != '2'}">
-						<tr>
-						<th><spring:message code='ezBoard.t322' /></th>
-						<c:choose>
-							<c:when test="${guBun != '2'}">
-								<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
-							</c:when>
-							<c:otherwise>
-								<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>&nbsp;</span> </td>
-							</c:otherwise>
-						</c:choose>
-						<th><spring:message code='ezBoard.t290' /></th>
-						<c:choose>
-							<c:when test="${guBun != '2'}">
-								<td id="User_JobTitle"><span>${boardItem.extensionAttribute3}</span> </td>
-							</c:when>
-							<c:otherwise>
-								<th id="User_JobTitle"><span>&nbsp; </span> </th>
-							</c:otherwise>
-						</c:choose>
-						<th><spring:message code='ezBoard.t38' /></th>
-						<c:choose>
-							<c:when test="${guBun != '2'}">
-								<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>
-							</c:when>
-							<c:otherwise>
-								<td id="Telephone"><span>&nbsp; </span> </td>
-							</c:otherwise>
-						</c:choose>
-						</tr>
-					</c:when>
+					<c:choose>
+						<c:when test="${guBun != '2'}">
+							<tr>
+							<th><spring:message code='ezBoard.t322' /></th>
+							<c:choose>
+								<c:when test="${guBun != '2'}">
+									<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
+								</c:when>
+								<c:otherwise>
+									<td id="User_DeptNM" style="width:100px; white-space:nowrap"><span>&nbsp;</span> </td>
+								</c:otherwise>
+							</c:choose>
+							<th><spring:message code='ezBoard.t290' /></th>
+							<c:choose>
+								<c:when test="${guBun != '2'}">
+									<td id="User_JobTitle"><span>${boardItem.extensionAttribute3}</span> </td>
+								</c:when>
+								<c:otherwise>
+									<th id="User_JobTitle"><span>&nbsp; </span> </th>
+								</c:otherwise>
+							</c:choose>
+							<th><spring:message code='ezBoard.t38' /></th>
+							<c:choose>
+								<c:when test="${guBun != '2'}">
+									<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>
+								</c:when>
+								<c:otherwise>
+									<td id="Telephone"><span>&nbsp; </span> </td>
+								</c:otherwise>
+							</c:choose>
+							</tr>
+						</c:when>
+					</c:choose>
 		        <tr>
 		          <th><spring:message code='ezBoard.t323' /></th>
 		             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5><div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div></td>
@@ -1178,11 +1188,13 @@
 	  </c:choose>
 	  </tr>
 	  <tr>
-	  <c:when test="${guBun != '3'}">
-	    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-	        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:460px; overflow:auto;"></iframe>
-	    </td>
-	  </c:when>
+	  <c:choose>
+		  <c:when test="${guBun != '3'}">
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:460px; overflow:auto;"></iframe>
+		    </td>
+		  </c:when>
+	  </c:choose>
 <%-- 	  <c:otherwise> --%>
 <!-- 	    <td class="pad1" style="vertical-align: top;"> -->
 <%-- 	      <div class="viewbox"><img src='<%=g_ImageUrl%>' border=0 width='<%=g_Width%>' height ='<%=g_Height%>' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src,"_blank","","false") > --%>
@@ -1196,38 +1208,40 @@
 	  <c:choose>
 		  <c:when test="${boardPropertyVO.oneLineReply == '1'}">
 			  <tr>
-		      <c:when test="${guBun != '2'}">
-			    <td style="vertical-align: top;">
-			        <table class="content">
-			        <tr>
-			          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td>
-			        </tr>
-			        <tr>
-			          <th><spring:message code='ezBoard.t324' /></th>
-			          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
-			          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
-			        </tr>
-			      </table>
-			    </td>
-		  	</c:when>
-		    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  -->
-		        <td style="vertical-align: top; height:10%;">
-		            <table class="content">
-		            <tr>
-		              <td style="height:50px" colspan="5">
-		                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div>
-		              </td>
-		            </tr>
-		            <tr>
-		              <th><spring:message code='ezBoard.t324' /></th>
-		              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
-		              <th><spring:message code='ezBoard.t438' /></th>
-		              <td><INPUT type="password" id="txtPassWord" style="WIDTH:80px" maxlength="15"></td>
-		              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
-		            </tr>
-		          </table>
-		        </td>
-		    </c:otherwise>
+			  <c:choose>
+			      <c:when test="${guBun != '2'}">
+				    <td style="vertical-align: top;">
+				        <table class="content">
+				        <tr>
+				          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td>
+				        </tr>
+				        <tr>
+				          <th><spring:message code='ezBoard.t324' /></th>
+				          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
+				          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
+				        </tr>
+				      </table>
+				    </td>
+			  	</c:when>
+			    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  -->
+			        <td style="vertical-align: top; height:10%;">
+			            <table class="content">
+			            <tr>
+			              <td style="height:50px" colspan="5">
+			                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div>
+			              </td>
+			            </tr>
+			            <tr>
+			              <th><spring:message code='ezBoard.t324' /></th>
+			              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
+			              <th><spring:message code='ezBoard.t438' /></th>
+			              <td><INPUT type="password" id="txtPassWord" style="WIDTH:80px" maxlength="15"></td>
+			              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
+			            </tr>
+			          </table>
+			        </td>
+			    </c:otherwise>
+		    </c:choose>
 		  </tr>
 		  <tr>
 		  <c:choose>
