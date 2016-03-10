@@ -26,6 +26,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	
 	@Override
 	public int getQstListCnt(QuestionListVO questionListVO) throws Exception {
+		map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdId());
 		map.put("v_PUSERID", questionListVO.getUserId());
 		map.put("v_PTITLE", questionListVO.getTitle());
@@ -38,6 +39,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 
 	@Override
 	public List<QuestionListVO> getQstList(QuestionListVO questionListVO) throws Exception {
+		map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdId());
 		map.put("v_PUSERID", questionListVO.getUserId());
 		map.put("v_PTOTALCNT", questionListVO.getTotalCnt()-(questionListVO.getCurrPage()-1)*questionListVO.getPageSize());
@@ -110,6 +112,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	
 	@Override
 	public UserPollItemVO getUserPollItem(UserPollItemVO userPollItemVO) throws Exception {
+		map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPollItemVO.getBrdId());
 		map.put("v_pItemNo", userPollItemVO.getItemNo());
 		return ezQuestionDAO.getUserPollItem(map);
@@ -117,6 +120,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 
 	@Override
 	public UserPermissionVO getUserPermission(UserPermissionVO userPermissionVO) throws Exception {
+		map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
 		return ezQuestionDAO.getUserPermission(map);
