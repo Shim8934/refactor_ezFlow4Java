@@ -28,7 +28,6 @@ var strLang23 = "한번에 5장 까지만 올릴 수 있습니다."
 var strLang24 = "는 이미지 파일 형식이 아닙니다."
 var strLang25 = "업로드가 정상적일때 해당 파일의 이름을 넣어준다.(버그등록필요)"
 // \ezBoardSTD\js\ErrorHandler.js
-// \ezBoardSTD\js\kaoni_ActiveX.js
 var strLang26 = "답변이 있는 게시물은 이동할 수 없습니다."
 var strLang27 = "취소되었습니다."
 var strLang39 = "이전"

@@ -1028,15 +1028,19 @@
 	        		<c:otherwise>
 	        			<c:choose>
 		        			<c:when test="${guBun == '2'}">
-		        				<c:when test="${guBun != '3'}">
-		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-		        				</c:when>
+		        				<c:choose>
+			        				<c:when test="${guBun != '3'}">
+			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+			        				</c:when>
+		        				</c:choose>
 		        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
-		                        <c:when test="${guBun != '3'}">
-		                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-		                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
-		                        </c:when>
+		                        <c:choose>
+			                        <c:when test="${guBun != '3'}">
+			                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+			                        </c:when>
+		                        </c:choose>
 		        			</c:when>
 		        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
 		        				<c:choose>
