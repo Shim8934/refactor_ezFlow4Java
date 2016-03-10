@@ -7,7 +7,7 @@
 <head>
     <title>left_myoffice</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script type="text/javascript" src="/js/ezEmail/lang/ezEmail_en.js"></script>
+    <script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
     <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
@@ -88,7 +88,7 @@
             PostTreeView.attachEvent('dragdrop', email_dragdrop);
             PostTreeView.dragdrop(true);
             var xmlHTTP = createXMLHttpRequest();
-            xmlHTTP.open("GET", "/myoffice/common/organtree_config2.xml", false);
+            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
             xmlHTTP.send();
             var treeconfig;
             if (navigator.userAgent.indexOf('MSIE') == -1) {
@@ -403,7 +403,7 @@
             }
 
             var xmlHTTP = createXMLHttpRequest();
-            xmlHTTP.open("GET", "/myoffice/common/organtree_config2.xml", false);
+            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
             xmlHTTP.send();
 
             var treeconfig;
