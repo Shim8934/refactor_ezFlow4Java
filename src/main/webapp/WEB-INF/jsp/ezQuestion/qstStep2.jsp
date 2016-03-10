@@ -43,7 +43,7 @@
 	    		if (!confirm("<spring:message code='ezQuestion.t453' />")) return;
 	    		history.back();
 			}
-    		function AddQuesList_DATA(vdata, vAttachYN, QstXML) {
+    		function AddQuesList_DATA(vdata, vAttachYN, QstXML,answerType,multi,sviewNo,eviewNo) {
         		var selCnt=frmCreate.selQues.length;
         		if (selCnt > 0) {
             		while(1) {
@@ -67,6 +67,7 @@
             		else 
                 		i = frmCreate.selQues.length;
             		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
+alert("TmpOption:"+TmpOption);
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
         		}
@@ -122,17 +123,20 @@
 
         		for (i=0; i < Qlen ; i++) {
             		v_QuesID += frmCreate.selQues[i].value + ";"
+
         		}
-        		/* var xmlHttp = createXMLHttpRequest();
+        		 var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
-        		var QuestionNode = createNode(xmlDoc, "QUESTION"); */
+        		var QuestionNode = createNode(xmlDoc, "QUESTION"); 
+
         		var pQstCnt = document.frmCreate.selQues.length;
 
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
-                		//var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
+                		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
+alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
                 		//var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
                 		//QuestionNode.appendChild(importedNode); 
                 		//var question = {"row" : };
@@ -191,7 +195,7 @@
      				    }
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
-	     				alert('<spring:message code="ezBoard.t0014" />');
+	     				menuQst_List();
      				},
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
@@ -232,7 +236,7 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id='<c:out value='${requestScope.item_id}'/>'" , "addques", 700, 440); 
+            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id='<c:out value='${ezQuestionVO.itemId}'/>'" , "addques", 700, 440); 
 		        }
 		        else {
             		WinRef.focus();
@@ -340,8 +344,8 @@
                     		var xmlDoc = createXmlDom();
                     		var objNode;
                     		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${requestScope.brd_id}'/>');
-                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${requestScope.item_id}'/>'); 
+                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>');
+                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>'); 
                     		xmlHttp.open("POST","Qst_Cancel.aspx",false);
                     		xmlHttp.send(xmlDoc);
                     		var resultXML = xmlHttp.responseXML;
@@ -361,9 +365,9 @@
     		}
     		function menuQst_List() {
         		if(CrossYN())
-            		var szUrl = "/ezQuestion/qstList.do?brd_id=5"
+            		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
         		else
-            		var szUrl = "/ezQuestion/qstList.do?brd_id=5"
+            		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
         		window.location.href = szUrl;	
     		}
     		function menuQst_FileOpen() {
