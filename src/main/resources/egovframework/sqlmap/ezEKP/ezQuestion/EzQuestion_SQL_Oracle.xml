@@ -96,6 +96,19 @@
 		]]>		
 	</select>
 	
+	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				USER_ID 
+			FROM
+				EZQUESTION.TBLBRDMNG 
+			WHERE
+				brd_id = #brdID#
+			AND 
+				admin_fg = N'1'
+		]]>
+	</select>
+	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
