@@ -261,8 +261,11 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResult.do")
-	public String qstResult(HttpServletRequest request, ModelMap model){
-		System.out.println("@@@@@@@@");
+	public String qstResult(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, ModelMap model) throws Exception{
+		LoginVO loginVO = new LoginVO();
+		loginVO = commonUtil.userInfo(loginCookie);
+		System.out.println(loginVO.getId());
+		model.addAttribute("userId", loginVO.getId());
 		return "/ezQuestion/qstResult";
 	}
 
