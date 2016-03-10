@@ -20,15 +20,15 @@ import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
 import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
 
 @Service("EzBoardAdminService")
-public class EzBoardAdminServiceImpl implements EzBoardAdminService {
-	
-	Map<String, Object> map = new HashMap<String, Object>();
+public class EzBoardAdminServiceImpl implements EzBoardAdminService {	
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
 
 	@Override
-	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{		
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", pRootBoardID);
 		map.put("v_pUserID", pUserID);
 		map.put("v_pDeptID", pDeptID);
@@ -44,6 +44,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public String getBoardTree_Get1(String pStrLang, String pQuery) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_STRLANG", pStrLang);
 		map.put("v_PQUERY", pQuery);
 		
@@ -52,6 +54,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PACCESSID", pAccessID);
 		map.put("v_PROOTBOARDID", pRootBoardID);
 		
@@ -60,6 +64,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pRootBoardID", pRootBoardID);
 		map.put("v_pUserID", pAccessID);
 		map.put("v_pDeptID", "");
@@ -73,6 +79,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_STRLANG", pStrLang);
 		map.put("v_PQUERY", string);
 		map.put("v_RESULT", string2);
@@ -82,6 +90,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public int checkIfLeafBoard(String pBoardID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", pBoardID);
 		
 		return ezBoardAdminDAO.checkIfLeafBoard(map);
@@ -89,6 +99,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PTREEUPPER", pRootTreeID);
 		
@@ -111,6 +123,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
 		
@@ -119,6 +133,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_BOARDGROUPNAME", boardPropertyVO.getBoardGroupName());
 		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
@@ -132,6 +148,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDID", boardPropertyVO.getBoardID());
 		map.put("v_BOARDNAME", boardPropertyVO.getBoardName());
 		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
@@ -146,6 +164,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void saveBoardOrder(String pBoardIDList) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		int pBoardListCount = pBoardIDList.split(";").length - 1;
 		
 		map.put("v_pBoardIDList", pBoardIDList);
@@ -156,6 +175,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void deleteBoard(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", boardID);
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.deleteBoard(map);
@@ -202,6 +223,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		// TODO Auto-generated method stub
 		map.put("v_pOrgBoardID", orgBoardID);
         map.put("v_pNewParentBoardID", newParentBoardID);

@@ -58,7 +58,7 @@
 		                    </tr>
 		                </table>
 		            </c:if>
-		            <c:if test="${use_multiData != 'Y'}">${model.boardName}</c:if>                	    
+		            <c:if test="${use_multiData != 'Y'}">${model.boardName}</c:if>
 	            </td>
 	        </tr>
 	    </table>

@@ -450,7 +450,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String adminType = request.getParameter("adminType");
 		String style = "";
-System.out.println(use_multiData);				
+		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
 		
 		if(boardPropertyVO.getBoardName2() == null || boardPropertyVO.getBoardName2().equals("")){
