@@ -5,10 +5,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code='ezQuestion.t270' /></title>
+		<title><spring:message code='ezQuestion.t378' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' /> %>" type="text/css">
+<%-- 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' /> %>" type="text/css"> --%>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
@@ -85,13 +85,13 @@
 		            window.open("/myoffice/common/ShowPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left); */
 		        } 
 
-		    /* function menuQst_List() {
+		    function menuQst_List() {
 		        if (CrossYN())
 		            var szUrl = "/ezQuestion/qstListCross.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;
 		        else
-		            var szUrl = "/ezQuestion/qstList.do?brdId=${vBrdId}";
+		            var szUrl = "/ezQuestion/qstList.do?brdId=${userPermissionVO.brdId}";
 			    window.location.href = szUrl;
-			} */
+			}
 
 			/* function menuQst_ResponseList(pflag) {
 			    var szUrl = "/ezQuestion/qstResponseList.do?" + "${receve}" + "&responseYN=" + pflag;
@@ -109,7 +109,7 @@
 			        openwindow(pUrl, "", "415px", "120px", "0", "0", "500");
 			} */
 
-			/* function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {
+			function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {
 			    try {
 			        var heigth = window.screen.availHeight;
 			        var width = window.screen.availWidth;
@@ -119,11 +119,11 @@
 			        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=" + wScrollbars + ",resizable=" + wResizable + ",height=" + wHeigth + ",width=" + wWeigth + ",top=" + top + ",left = " + left);
 			    }
 			    catch (e) { }
-			} */
+			}
 		</script>
 	</head>
-	<body>
-		<form method="post" runat="server">
+	<body class="mainbody">
+		<form method="post">
 			<h1><spring:message code='ezQuestion.t303' /></h1>
 			<div id="mainmenu">
 				<ul>
@@ -151,14 +151,14 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t216' /></th>
-					<td>${pollStartDate} + " ~ " ${pollEndDate}</td>
+					<td>${pollStartDate} " ~ " ${pollEndDate}</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t231' /></th>
 					
 					<td>
 						<c:choose>
-							<c:when test="${postTerm == '0'">
+							<c:when test="${postTerm == '0'}">
 								<spring:message code='ezQuestion.t322' />
 							</c:when>
 							<c:otherwise>
