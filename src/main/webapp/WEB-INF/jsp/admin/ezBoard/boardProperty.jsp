@@ -17,7 +17,10 @@
 	        var portlet = "${model.portlet}";
 	        var background = "${model.backGround}";
 	        var pAdminType = "${adminType}";
-	        var FormFlag = "${model.formFlag}";	        
+	        var FormFlag = "${model.formFlag}";
+	        var APPRFLAG = "${model.apprFlag}";
+	        var APPRMAILFLAG = "${model.apprMailFlag}";
+	        var orgAPPRFLAG = "${model.apprFlag}";
 	        
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -27,9 +30,196 @@
 	    	};
         
 			$(document).ready(function(){			
-				
+				if ("${use_portal}" != "Y")
+	                trPortlet.style.display = "none";
+
+	            if (portlet == "Y")
+	                $("#chkPortletBoard").prop("checked",true);
+	            if (background == "Y")
+	                $("#chkbackgroundimage")prop("checked",true);
+	            if(FormFlag == "Y")
+	                $("#chkform").prop("checked",true);
+	            if (pAdminType == "y")
+	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
+	            if (APPRFLAG == "Y") {
+	                $("#chkApprBoard").prop("checked",true);
+	                document.getElementById("chkApprList").style.display = "";
+	                document.getElementById("chkApprListMail").style.display = "";
+
+	                getApprUserList();
+	            }
+	            if (APPRMAILFLAG == "Y") {
+	                $("#chkApprBoardMail").prop("checked",true);
+	            }
+	            
+	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
+	                if ($("#chkApprBoard").is(":checked")) {
+	                    chkApprBoard.checked = false;
+	                    checkApprBoard();
+	                    chkApprBoard.disabled = true;
+	                }
+	                else {
+	                    chkApprBoard.disabled = true;
+	                }
+	            }
+
+	            //추가항목
+	            if ("${style}" == "") {
+	                if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
+	                    document.getElementById("trAttribute").style.display = "none";
+	                }
+	                else {
+	                    document.getElementById("trAttribute").style.display = "";
+	                }
+	            }
 			});
 			
+			function Save() {
+	            if ($.trim($("#txtBoardName").val()) == "") {
+	                alert("<spring:message code='ezBoard.t144'/>");
+	                return;
+	            }
+	            //승인게시판
+	            if (APPRFLAG == "Y") {
+	                if (ApprUserList == "") {
+	                    alert("<spring:message code='ezBoard.t999018'/>");
+	                    return;
+	                }
+	            } else {
+	                ApprUserList = "";
+	            }
+
+	            var AttachMax = txtAttachLimit.value;
+	            var Description = txtBoardDescription.value;
+	            var Expires = "";
+	            var gubun = "";
+	            var replynotify = "";
+
+	            if (chkNotify.checked) {
+	                replynotify = "1"
+	            } else {
+	                replynotify = "0";
+	            }
+
+	            if (chkGroupBoard.checked) {
+	                gubun = "1"
+	            } else if (chkAnonyBoard.checked) {
+	                gubun = "2";
+	            } else if (chkPhotoBoard.checked) {
+	                gubun = "3";
+	            } else if (chkThumbBoard.checked) {
+	                gubun = "4";
+	            } else if (chkGeneralBoard.checked) {
+	                gubun = "0";
+	            } else if (chkQnABoard.checked) {
+	                gubun = "5";
+	            }
+
+	            if (chkPortletBoard.checked && txtURL.value == "")
+	                portlet = "Y";
+	            else
+	                portlet = "N";
+
+	            if (chkbackgroundimage.checked)
+	                background = "Y";
+	            else
+	                background = "N";
+
+	            if (chkform.checked)
+	                FormFlag = "Y";
+	            else
+	                FormFlag = "N";
+
+	            if (chkPermanent.checked) {
+	                Expires = "-1"
+	            } else {
+	                Expires = txtExpires.value;
+	            }
+
+	            var iDeleteAfter = "-1";
+
+	            if (usedeleteafter.checked && deleteafter.value == "") {
+	                alert("<spring:message code='ezBoard.t146'/>");
+	                deleteafter.focus();
+	                return;
+	            }
+
+	            if (orgAPPRFLAG != APPRFLAG) {
+	                if (orgAPPRFLAG == "N") {
+	                    if (!confirm("<spring:message code='ezBoard.t999013'/>")) {
+	                        return;
+	                    }
+	                } else {
+	                    if (!confirm("<spring:message code='ezBoard.t999012'/>")) {
+	                        return;
+	                    }
+	                }
+	            }
+
+	            if (usedeleteafter.checked) {
+	                iDeleteAfter = deleteafter.value;
+	            }
+
+	            var url = txtURL.value;
+	            if (url != "" && url.toLowerCase().indexOf("http") == -1) url = "http://" + url;
+
+	            if (AttachMax == "") AttachMax = "5";
+	            if (Expires == "") Expires = "30";
+
+	            var strXML = "";
+	            strXML += "<NODES>";
+	            strXML += "<NODE>";
+	            strXML += "<BOARDNAME>" + MakeXMLString(txtBoardName.value) + "</BOARDNAME>";
+	            strXML += "<BOARDNAME2>" + MakeXMLString(txtBoardName2.value) + "</BOARDNAME2>";
+	            strXML += "<BOARDID>" + BoardID + "</BOARDID>";
+	            strXML += "<ATTACHMAX>" + AttachMax + "</ATTACHMAX>";
+	            strXML += "<DESCRIPTION>" + MakeXMLString(Description) + "</DESCRIPTION>";
+	            strXML += "<EXPIRES>" + Expires + "</EXPIRES>";
+	            strXML += "<URL>" + url + "</URL>";
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
+	            strXML += "<REPLYNOTIFY>" + replynotify + "</REPLYNOTIFY>";
+	            strXML += "<DELETEAFTER>" + iDeleteAfter + "</DELETEAFTER>";
+	            strXML += "<BOARDCOLOR>" + brd_color + "</BOARDCOLOR>";
+	            strXML += "<PORTLET>" + portlet + "</PORTLET>";
+	            strXML += "<BACKGROUND>" + background + "</BACKGROUND>";
+	            strXML += "<FORM>" + FormFlag + "</FORM>";
+
+	            if (chkOneLine.checked == false)
+	                strXML += "<ONELINEREPLY>0</ONELINEREPLY>";
+	            else
+	                strXML += "<ONELINEREPLY>1</ONELINEREPLY>";
+
+	            //승인게시판 추가
+	            strXML += "<APPRFLAG>" + APPRFLAG + "</APPRFLAG>";
+	            strXML += "<ORGAPPRFLAG>" + orgAPPRFLAG + "</ORGAPPRFLAG>";
+	            strXML += "<APPRUSERLIST>" + ApprUserList + "</APPRUSERLIST>";
+	            strXML += "<APPRMAILFLAG>" + APPRMAILFLAG + "</APPRMAILFLAG>";
+	            strXML += "</NODE>";
+	            strXML += "</NODES>";
+
+	            var xmldom = loadXMLString(strXML);
+	            var xmlhttp = createXMLHttpRequest();
+	            xmlhttp.open("POST", "interASP/SaveBoardProperty.aspx", false);
+	            xmlhttp.send(xmldom);
+
+	            if (xmlhttp.status == "200" && xmlhttp.responseText.indexOf("OK") > -1)
+	                alert("<spring:message code='ezBoard.t79'/>");
+	            else
+	                //alert(xmlhttp.responseXML);
+
+	            xmldom = null;
+	            xmlhttp = null;
+
+	            /*if (pAdminType == "y") {
+	                parent.parent.location.href = "/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID;
+	                //window.open("/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID, "main", "");
+	                return;
+	                //parent.parent.frames.location = parent.parent.frames.location;
+	            }
+	            else
+	                parent.frames.location = parent.frames.location;
+	            location.href = location.href;*/
+	        }		
 			
 	    </script>
 	</head>	
