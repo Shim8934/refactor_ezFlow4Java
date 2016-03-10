@@ -264,7 +264,7 @@ public class EzQuestionController {
 	public String qstResult(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, ModelMap model) throws Exception{
 		LoginVO loginVO = new LoginVO();
 		loginVO = commonUtil.userInfo(loginCookie);
-		System.out.println(loginVO.getId());
+
 		model.addAttribute("userId", loginVO.getId());
 		return "/ezQuestion/qstResult";
 	}
@@ -274,7 +274,7 @@ public class EzQuestionController {
 		String brdId = req.getParameter("brd_ID");
 		String brdNm = req.getParameter("brd_nm");
 		String brdPostterm = req.getParameter("brd_postterm");
-				
+
 		model.addAttribute("brdId", brdId);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
@@ -284,7 +284,7 @@ public class EzQuestionController {
 
 	@RequestMapping(value="/ezQuestion/qstStep2.do")
 	public String qstStep2(HttpServletRequest req, EzQuestionVO ezQuestionVO, Model model) {
-		
+
 		StringBuilder pStep1DataXML = new StringBuilder();
 		pStep1DataXML.append("<PARAMETER>");
 		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
