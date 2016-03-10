@@ -21,6 +21,7 @@
 	        var APPRFLAG = "${model.apprFlag}";
 	        var APPRMAILFLAG = "${model.apprMailFlag}";
 	        var orgAPPRFLAG = "${model.apprFlag}";
+	        var ApprUserList = "";
 	        
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -29,15 +30,14 @@
 	                return true;
 	    	};
         
-			$(document).ready(function(){			
+			$(document).ready(function(){				
 				if ("${use_portal}" != "Y")
-	                trPortlet.style.display = "none";
-
+	                $("#trPortlet").css("display","none");
 	            if (portlet == "Y")
 	                $("#chkPortletBoard").prop("checked",true);
 	            if (background == "Y")
-	                $("#chkbackgroundimage")prop("checked",true);
-	            if(FormFlag == "Y")
+	                $("#chkbackgroundimage").prop("checked",true);
+	            if(FormFlag.trim() == "Y")
 	                $("#chkform").prop("checked",true);
 	            if (pAdminType == "y")
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
@@ -54,21 +54,19 @@
 	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
 	                if ($("#chkApprBoard").is(":checked")) {
-	                    chkApprBoard.checked = false;
+	                	$("#chkApprBoard").prop("checked",false);	                    
 	                    checkApprBoard();
-	                    chkApprBoard.disabled = true;
-	                }
-	                else {
-	                    chkApprBoard.disabled = true;
+	                    $("#chkApprBoard").prop("disabled",true);
+	                } else {
+	                	$("#chkApprBoard").prop("disabled",true);	                    
 	                }
 	            }
 
 	            //추가항목
 	            if ("${style}" == "") {
-	                if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
+	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                }
-	                else {
+	                } else {
 	                    document.getElementById("trAttribute").style.display = "";
 	                }
 	            }
@@ -89,58 +87,58 @@
 	                ApprUserList = "";
 	            }
 
-	            var AttachMax = txtAttachLimit.value;
-	            var Description = txtBoardDescription.value;
+	            var AttachMax = $("#txtAttachLimit").val();
+	            var Description = $("#txtBoardDescription").val();
 	            var Expires = "";
 	            var gubun = "";
 	            var replynotify = "";
 
-	            if (chkNotify.checked) {
+	            if ($("#chkNotify").is(":checked")) {
 	                replynotify = "1"
 	            } else {
 	                replynotify = "0";
 	            }
 
-	            if (chkGroupBoard.checked) {
+	            if ($("#chkGroupBoard").is(":checked")) {
 	                gubun = "1"
-	            } else if (chkAnonyBoard.checked) {
+	            } else if ($("#chkAnonyBoard").is(":checked")) {
 	                gubun = "2";
-	            } else if (chkPhotoBoard.checked) {
+	            } else if ($("#chkPhotoBoard").is(":checked")) {
 	                gubun = "3";
-	            } else if (chkThumbBoard.checked) {
+	            } else if ($("#chkThumbBoard").is(":checked")) {
 	                gubun = "4";
-	            } else if (chkGeneralBoard.checked) {
+	            } else if ($("#chkGeneralBoard").is(":checked")) {
 	                gubun = "0";
-	            } else if (chkQnABoard.checked) {
+	            } else if ($("#chkQnABoard").is(":checked")) {
 	                gubun = "5";
 	            }
 
-	            if (chkPortletBoard.checked && txtURL.value == "")
+	            if ($("#chkPortletBoard").is(":checked") && $("#txtURL").val() == "")
 	                portlet = "Y";
 	            else
 	                portlet = "N";
 
-	            if (chkbackgroundimage.checked)
+	            if ($("#chkbackgroundimage").is(":checked"))
 	                background = "Y";
 	            else
 	                background = "N";
 
-	            if (chkform.checked)
+	            if ($("#chkform").is(":checked"))
 	                FormFlag = "Y";
 	            else
 	                FormFlag = "N";
 
-	            if (chkPermanent.checked) {
+	            if ($("#chkPermanent").is(":checked")) {
 	                Expires = "-1"
 	            } else {
-	                Expires = txtExpires.value;
+	                Expires = $("#txtExpires").val();
 	            }
 
 	            var iDeleteAfter = "-1";
 
-	            if (usedeleteafter.checked && deleteafter.value == "") {
+	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
 	                alert("<spring:message code='ezBoard.t146'/>");
-	                deleteafter.focus();
+	                $("#deleteafter").focus();
 	                return;
 	            }
 
@@ -156,11 +154,11 @@
 	                }
 	            }
 
-	            if (usedeleteafter.checked) {
-	                iDeleteAfter = deleteafter.value;
+	            if ($("#usedeleteafter").is(":checked")) {
+	                iDeleteAfter = $("#deleteafter").val();
 	            }
 
-	            var url = txtURL.value;
+	            var url = $("#txtURL").val();
 	            if (url != "" && url.toLowerCase().indexOf("http") == -1) url = "http://" + url;
 
 	            if (AttachMax == "") AttachMax = "5";
@@ -169,8 +167,8 @@
 	            var strXML = "";
 	            strXML += "<NODES>";
 	            strXML += "<NODE>";
-	            strXML += "<BOARDNAME>" + MakeXMLString(txtBoardName.value) + "</BOARDNAME>";
-	            strXML += "<BOARDNAME2>" + MakeXMLString(txtBoardName2.value) + "</BOARDNAME2>";
+	            strXML += "<BOARDNAME>" + MakeXMLString($("#txtBoardName").val()) + "</BOARDNAME>";
+	            strXML += "<BOARDNAME2>" + MakeXMLString($("#txtBoardName2").val()) + "</BOARDNAME2>";
 	            strXML += "<BOARDID>" + BoardID + "</BOARDID>";
 	            strXML += "<ATTACHMAX>" + AttachMax + "</ATTACHMAX>";
 	            strXML += "<DESCRIPTION>" + MakeXMLString(Description) + "</DESCRIPTION>";
@@ -184,7 +182,7 @@
 	            strXML += "<BACKGROUND>" + background + "</BACKGROUND>";
 	            strXML += "<FORM>" + FormFlag + "</FORM>";
 
-	            if (chkOneLine.checked == false)
+	            if ($("#chkOneLine").is(":checked") == false)
 	                strXML += "<ONELINEREPLY>0</ONELINEREPLY>";
 	            else
 	                strXML += "<ONELINEREPLY>1</ONELINEREPLY>";
