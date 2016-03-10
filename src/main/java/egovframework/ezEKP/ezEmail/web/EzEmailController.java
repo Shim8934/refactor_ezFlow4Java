@@ -53,9 +53,9 @@ public class EzEmailController {
         loginVO = commonUtil.userInfo(userID);
         
         String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
-        String serverName = config.getProperty("config.serverName");
+        String mailServerAddress = config.getProperty("config.MailServerAddress");
         model.addAttribute("use_ArchiveMailBox", use_ArchiveMailBox);
-        model.addAttribute("serverName", serverName);
+        model.addAttribute("mailServerAddress", mailServerAddress);
 		return "ezEmail/mailLeft";
 	}
 	

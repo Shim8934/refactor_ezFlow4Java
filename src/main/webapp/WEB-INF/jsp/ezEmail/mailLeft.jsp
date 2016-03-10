@@ -21,7 +21,7 @@
         var pUse_Editor = "${useEditor}";
         var subCode = "${subCode}";
         var funcCode = "${funCode}";
-        var g_szMailFolderURL = "http://${serverName}/exchange/${userinfo.EmailID}"; //scheme(http,https) 설정
+        var g_szMailFolderURL = "http://${mailServerAddress}/exchange/${userinfo.EmailID}"; //scheme(http,https) 설정
         var g_firstOpen = true;
         var lang = "${userinfo.lang}";
         var p_Use_IE11Browser = "${useIE11Browser}";
