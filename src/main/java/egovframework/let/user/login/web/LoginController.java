@@ -17,6 +17,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -59,6 +61,9 @@ public class LoginController {
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
     
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    
 	/**
 	 * 로그인 화면으로 들어간다
 	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
@@ -67,7 +72,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do")
-	public String loginView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {    	    	
+	public String loginView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
     	String pbm = egovFileScrty.getPbm();
  	
 		model.addAttribute("publicModulus", pbm);
@@ -85,6 +90,9 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogin.do")
     public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    	
+    	logger.debug("=========================================== 로그인 ============================================");
+    	
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	

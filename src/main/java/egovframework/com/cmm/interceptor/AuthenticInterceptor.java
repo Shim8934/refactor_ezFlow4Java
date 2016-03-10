@@ -6,6 +6,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
@@ -36,6 +38,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	/** CRYPTO */
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+    
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticInterceptor.class);
 
 	/**
 	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
@@ -45,7 +50,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
 		String isCookie = null;		
 		Cookie[] cookies = request.getCookies();
-System.out.println("================================================ cookie ====================================================");		
+		
+		logger.debug("=========================================== Interface Check ============================================");
+
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
     			if("loginCookie".equals(cookie.getName())){
