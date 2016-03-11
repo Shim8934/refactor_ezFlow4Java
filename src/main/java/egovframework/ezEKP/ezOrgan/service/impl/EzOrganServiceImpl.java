@@ -14,7 +14,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Resource(name = "EzOrganDAO")
-	EzOrganDAO ezOrganDAO;
+	private EzOrganDAO ezOrganDAO;
 	
 	@Override
 	public String getPropertyValue(String userid, String propName) throws Exception{
@@ -34,7 +34,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getDeptFullPath(String deptID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
 		return ezOrganDAO.getDeptFullPath(deptID);
 	}
 
