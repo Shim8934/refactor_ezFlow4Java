@@ -14,6 +14,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
+@RequestMapping("/ezEmail/mailList.do")
 public class EzMailMailListControllder {
 	
 	@Autowired
@@ -22,7 +23,6 @@ public class EzMailMailListControllder {
 	@Autowired
 	private Properties config;
 
-	@RequestMapping(value="/ezEmail/mailList.do")
 	public String showMailList(HttpServletRequest request, Model model, LoginVO loginVO, HttpServletResponse response) throws Exception{
 		return "ezEmail/mailList";
 	}
