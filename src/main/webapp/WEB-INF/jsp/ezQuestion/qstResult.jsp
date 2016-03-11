@@ -42,6 +42,7 @@
 			MM_reloadPage(true);
 		</script>
 		<script type="text/javascript">
+			var brdId="${userPermissionVO.userId}";
 			/* function Setting_Change(vdata) {
 		        var feature = GetOpenPosition(380, 340);
 		        window.open("change_setting.do?brdId=" + "${v_brdId}" + "&itemNo=" + "${v_itemNo}", "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
@@ -50,11 +51,11 @@
 			    var szUrl = "/ezQuestion/qstResultSubjective.do?brdId=" + "${v_brdId}" + "&itemNo=" + "${v_itemNo}" + "&questionNo=" + questionNo;
 			    window.location.href = szUrl;
 			} */
-			/* function UserInfo(questionNo, answerNo, type) {
-			} */
-			/* function printOnClick() {
+			function UserInfo(questionNo, answerNo, type) {
+			}
+			function printOnClick() {
 			    window.print();
-			} */
+			}
 			/* function funDelete() {
 	
 			    var result;
@@ -85,7 +86,7 @@
 		            window.open("/myoffice/common/ShowPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left); */
 		        } 
 
-		    function menuQst_List() {
+		    function menuQstList() {
 		        if (CrossYN())
 		            var szUrl = "/ezQuestion/qstListCross.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;
 		        else
@@ -143,41 +144,41 @@
 			<table class="content">
 				<tr>
 					<th><spring:message code='ezQuestion.t255' /></th>
-					<td>${Title}</td>
+					<td>${userPollItemVO.title}</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t265' /></th>
-					<td><a style="cursor:pointer" onclick='openUserInfo("${userEmail}")' >${userNm} (${userEmail}) </a> </td>
+					<td><a style="cursor:pointer" onclick='openUserInfo("${userEmail}")' >${userPollItemVO.userNm} (${userPollItemVO.userEmail}) </a> </td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t216' /></th>
-					<td>${pollStartDate} " ~ " ${pollEndDate}</td>
+					<td>${userPollItemVO.pollStartDate}  ~  ${userPollItemVO.pollEndDate}</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t231' /></th>
 					
 					<td>
 						<c:choose>
-							<c:when test="${postTerm == '0'}">
+							<c:when test="${userPollItemVO.postTerm == '0'}">
 								<spring:message code='ezQuestion.t322' />
 							</c:when>
 							<c:otherwise>
-								${pollEndDate} <spring:message code='ezQuestion.t323' /> ${postTerm} <spring:message code='ezQuestion.t233' />
+								${userPollItemVO.pollEndDate} <spring:message code='ezQuestion.t323' /> ${userPollItemVO.postTerm} <spring:message code='ezQuestion.t233' />
 							</c:otherwise>
 						</c:choose>
 					</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t325' /></th>
-					<td>${resCnt} <spring:message code='ezQuestion.t391' />${readCnt} ] </td>
+					<td>${userPollItemVO.resCnt} <spring:message code='ezQuestion.t391' />${userPollItemVO.readCnt} ] </td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t327' /></th>
-					<td>${content}</td>
+					<td>${userPollItemVO.content}</td>
 				</tr>
 			</table>
 			<br>
-			<div>${strData}</div>
+<%-- 			<div>${userPollItemVO.title}</div> --%>
 		</form>
 	</body>
 </html>
