@@ -23,6 +23,7 @@ public class EzEMailMailListController {
 	@Autowired
 	private Properties config;
 
+	@RequestMapping()
 	public String showMailList(HttpServletRequest request, Model model, LoginVO loginVO, HttpServletResponse response) throws Exception{
 		return "ezEmail/mailList";
 	}
