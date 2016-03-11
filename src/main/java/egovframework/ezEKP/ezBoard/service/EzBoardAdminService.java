@@ -47,5 +47,7 @@ public interface EzBoardAdminService {
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 	
 	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+	
+	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception;
 
 }

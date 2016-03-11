@@ -14,13 +14,13 @@
 		<script type="text/javascript" language="javascript">
 			var BoardID = "${model.boardID}";
 	        var brd_color = "${model.boardColor}";
-	        var portlet = "${model.portlet}";
-	        var background = "${model.backGround}";
-	        var pAdminType = "${adminType}";
-	        var FormFlag = "${model.formFlag}";
-	        var APPRFLAG = "${model.apprFlag}";
-	        var APPRMAILFLAG = "${model.apprMailFlag}";
-	        var orgAPPRFLAG = "${model.apprFlag}";
+	        var portlet =  $.trim("${model.portlet}");
+	        var background = $.trim("${model.backGround}");
+	        var pAdminType = $.trim("${adminType}");
+	        var FormFlag =  $.trim("${model.formFlag}");
+	        var APPRFLAG = $.trim("${model.apprFlag}");
+	        var APPRMAILFLAG = $.trim("${model.apprMailFlag}");
+	        var orgAPPRFLAG = $.trim("${model.apprFlag}");
 	        var ApprUserList = "";
 	        
 	        document.onselectstart = function (){
@@ -37,7 +37,7 @@
 	                $("#chkPortletBoard").prop("checked",true);
 	            if (background == "Y")
 	                $("#chkbackgroundimage").prop("checked",true);
-	            if(FormFlag.trim() == "Y")
+	            if(FormFlag == "Y")
 	                $("#chkform").prop("checked",true);
 	            if (pAdminType == "y")
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
@@ -163,8 +163,26 @@
 
 	            if (AttachMax == "") AttachMax = "5";
 	            if (Expires == "") Expires = "30";
+	            
+	            var oneLineReply = "";
+	            
+	            if ($("#chkOneLine").is(":checked") == false)
+	            	oneLineReply = 0;
+	            else
+	            	oneLineReply = 1;
 
-	            var strXML = "";
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezBoard/saveBoardProperty.do",
+	            	data : { boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(), boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
+	            		     itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter, boardColor:brd_color, portlet:portlet, backGround:background,
+	            		     formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG, apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG},
+	            	success : function(){
+	            		alert("<spring:message code='ezBoard.t79'/>");
+	            	}	            		
+	            });
+	            /* var strXML = "";
 	            strXML += "<NODES>";
 	            strXML += "<NODE>";
 	            strXML += "<BOARDNAME>" + MakeXMLString($("#txtBoardName").val()) + "</BOARDNAME>";
@@ -207,7 +225,7 @@
 
 	            xmldom = null;
 	            xmlhttp = null;
-
+ */
 	            /*if (pAdminType == "y") {
 	                parent.parent.location.href = "/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID;
 	                //window.open("/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID, "main", "");
@@ -427,7 +445,7 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 25px" value="${model.attachLimit}" />&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: 25px" value="${model.attachSizeLimit}" />&nbsp;MB
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -490,7 +508,7 @@
 		</table>
     	<br/>
 	    <div class="btnposition">
-	        <a class="imgbtn"><span onclick="return Save()"><spring:message code="ezBoard.t98" /></span></a>
+	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
 	    </div>
 	</body>
 </html>

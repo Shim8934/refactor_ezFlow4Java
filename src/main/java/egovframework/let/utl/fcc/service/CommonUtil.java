@@ -75,6 +75,13 @@ public class CommonUtil {
 		return user;
 	}
 	
+	public String getPassword(String loginCookie) throws Exception {	
+		String decData = egovFileScrty.decryptAES(loginCookie);
+		String pass = decData.split("///")[4];
+
+		return pass;
+	}
+	
 	public String getMultiData(String lang) throws Exception{
 		if(!lang.equals(config.getProperty("config.primary"))){
 			return "2";

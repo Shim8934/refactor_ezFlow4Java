@@ -62,6 +62,10 @@ public class BoardPropertyVO {
 	private String apprFlag;
 	/** ?	*/
 	private String apprMailFlag;
+	/** ?   */
+	private String apprUserList;
+	/** ?   */
+	private String orgApprFlag;	
 	/** ?	*/
 	private String attributeYN;
 	/** 게시글 갯수	*/
@@ -470,6 +474,18 @@ public class BoardPropertyVO {
 	}
 	public void setBoardGroupName2(String boardGroupName2) {
 		this.boardGroupName2 = boardGroupName2;
+	}
+	public String getApprUserList() {
+		return apprUserList;
+	}
+	public void setApprUserList(String apprUserList) {
+		this.apprUserList = apprUserList;
+	}
+	public String getOrgApprFlag() {
+		return orgApprFlag;
+	}
+	public void setOrgApprFlag(String orgApprFlag) {
+		this.orgApprFlag = orgApprFlag;
 	}
 	
 }

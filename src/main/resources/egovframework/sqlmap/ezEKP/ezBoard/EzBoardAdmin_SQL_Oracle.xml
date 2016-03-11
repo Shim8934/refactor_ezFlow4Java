@@ -106,6 +106,12 @@
 		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
+		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY(#v_PBOARDID#, #v_PATTACHMAX#, #v_PDESCRIPTION#, #v_PEXPIRES#, #v_PURL#, #v_PREPLYNOTIFY#, #v_PGUBUN#, #v_PBOARDNAME#,
+		                                           #v_PDELETEAFTER#, #v_PBOARDCOLOR#, #v_PBOARDNAME2#, #v_PPORTLET#, #v_PONELINEREPLY#, #v_PBACKGROUND#, #v_PFORM#, 
+		                                           #v_PAPPRFLAG#, #v_PAPPRMAILFLAG#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 

@@ -480,4 +480,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		return "admin/ezBoard/boardProperty";
 	}
 	
+	@RequestMapping(value="/admin/ezBoard/saveBoardProperty.do")
+	public void saveBoardProperty(HttpServletRequest request, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{		
+		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
+	}
+	
 }

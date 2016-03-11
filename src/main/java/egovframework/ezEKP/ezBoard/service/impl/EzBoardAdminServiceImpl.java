@@ -232,6 +232,32 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		ezBoardAdminDAO.moveBoard(map);
 	}
 
+	@Override
+	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// TODO Auto-generated method stub
+		map.put("v_PBOARDID", boardPropertyVO.getBoardID());
+		map.put("v_PATTACHMAX", boardPropertyVO.getAttachSizeLimit());
+		map.put("v_PDESCRIPTION", boardPropertyVO.getBoardDescription());
+		map.put("v_PEXPIRES", boardPropertyVO.getItemExpires());
+		map.put("v_PURL", boardPropertyVO.getUrl());
+		map.put("v_PREPLYNOTIFY", boardPropertyVO.getReplyNotify());
+		map.put("v_PGUBUN", boardPropertyVO.getGuBun());
+		map.put("v_PBOARDNAME", boardPropertyVO.getBoardName());
+		map.put("v_PDELETEAFTER", boardPropertyVO.getDeleteAfter());
+		map.put("v_PBOARDCOLOR", boardPropertyVO.getBoardColor());
+		map.put("v_PBOARDNAME2", boardPropertyVO.getBoardName2());
+		map.put("v_PPORTLET", boardPropertyVO.getPortlet());
+		map.put("v_PONELINEREPLY", boardPropertyVO.getOneLineReply());
+		map.put("v_PBACKGROUND", boardPropertyVO.getBackGround());
+		map.put("v_PFORM", boardPropertyVO.getFormFlag());
+		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
+		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
+		
+		ezBoardAdminDAO.saveBoardProperty(map);
+	}
+	
+	
 		
 	
 }

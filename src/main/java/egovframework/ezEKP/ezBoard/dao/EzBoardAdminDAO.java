@@ -105,4 +105,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		update("EzBoardAdminDAO.moveBoard", map);
 	}
 	
+	public void saveBoardProperty(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBoardProperty", map);
+	}
+	
 }
