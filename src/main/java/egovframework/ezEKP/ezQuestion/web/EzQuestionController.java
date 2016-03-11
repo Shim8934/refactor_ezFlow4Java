@@ -198,8 +198,8 @@ public class EzQuestionController {
 		
 		redirectAttr.addFlashAttribute("userPermissionVO", userPermissionVO);
 		redirectAttr.addFlashAttribute("userPollItemVO", userPollItemVO);
-		redirectAttr.addFlashAttribute("receve", receve);
-		redirectAttr.addFlashAttribute("currPage", request.getAttribute("currPage"));
+		redirectAttr.addAttribute("receve", receve);
+		redirectAttr.addAttribute("currPage", request.getParameter("currPage"));
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -283,10 +283,11 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResponseCross.do")
-	public String qstResponseCross(UserPollItemVO userPollItemVO, UserPermissionVO userPermissionVO, String receve, ModelMap model,HttpServletRequest request) throws Exception{
+	public String qstResponseCross(UserPollItemVO userPollItemVO, UserPermissionVO userPermissionVO, String currPage, ModelMap model,HttpServletRequest request) throws Exception{
 		System.out.println(userPollItemVO.toString());
 		System.out.println(userPermissionVO.toString());
-		System.out.println(request.getParameter("currPage"));
+		System.out.println(request.getParameter("receve"));
+		model.addAttribute("receve",request.getParameter("receve"));
 		
 		return "/ezQuestion/qstResponse";
 	}
