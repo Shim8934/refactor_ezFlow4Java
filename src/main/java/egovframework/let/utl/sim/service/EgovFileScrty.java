@@ -16,6 +16,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
@@ -386,18 +387,19 @@ public class EgovFileScrty {
 		return privateKey;
 	}
     
-    public String encryptAES(String s) throws Exception {
-        String encrypted = null;
+    public String encryptAES(String s) throws Exception {        
+        String iv16 = apb.substring(0,16);
 
         try{        	
             SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes(), "AES");            
 
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec);            
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(iv16.getBytes("UTF-8")));
 
-            encrypted = byteArrayToHex(cipher.doFinal(s.getBytes()));
+            byte[] encrypted = cipher.doFinal(s.getBytes("UTF-8"));
+            String enStr = new String(Base64.encodeBase64(encrypted));
 
-            return encrypted;
+            return enStr;
         }catch (Exception e){          
             throw e;
         }
@@ -405,34 +407,21 @@ public class EgovFileScrty {
 
     // key는 16 바이트로 구성 되어야 한다.
     public String decryptAES(String s) throws Exception {
-        String decrypted = null;
+    	String iv16 = apb.substring(0,16);
 
         try{
             SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes(), "AES");             
 
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(iv16.getBytes("UTF-8")));
 
-            decrypted = new String(cipher.doFinal(hexToByteArray(s)));
-
-            return decrypted;
-
+            byte[] byteStr = Base64.decodeBase64(s.getBytes());
+            
+            return new String(cipher.doFinal(byteStr),"UTF-8");
         }catch(Exception e){
             throw e;
         }
-    }
-    
-    private String byteArrayToHex(byte buf[]) {
-        StringBuffer strbuf = new StringBuffer(buf.length * 2);
-
-        for (int i = 0; i < buf.length; i++) {
-            if (((int) buf[i] & 0xff) < 0x10) {
-                strbuf.append("0");
-            }
-            strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
-        }
-        return strbuf.toString();
-    }    
+    }     
 
 	public String getPrm() {
 		return prm;
