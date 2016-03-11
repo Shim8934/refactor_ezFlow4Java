@@ -196,22 +196,27 @@ public class EzQuestionController {
 		String rsUserId = userPollItemVO.getUserId();
 		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
 		
+		redirectAttr.addFlashAttribute("userPermissionVO", userPermissionVO);
+		redirectAttr.addFlashAttribute("userPollItemVO", userPollItemVO);
+		redirectAttr.addFlashAttribute("receve", receve);
+		redirectAttr.addFlashAttribute("currPage", request.getAttribute("currPage"));
+		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		if(endPoll == false){
 			if(responseCnt <= 0)
-				return "/ezQuestion/qstResponseCross.do?" + receve;
+				return "redirect:/ezQuestion/qstResponseCross.do";
 			else if(userPermissionVO.getPublicResultFlg() == "1"){
 				if(userPermissionVO.getMultiResponseFlg() == "1"){
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("window.open('/ezQuestion/msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 					response.getWriter().write("</script>");
 					if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-						return "/ezQuestion/qstList.do?brd_id=5";
+						return "redirect:/ezQuestion/qstList.do";
 					else
-						return "/ezQuestion/qstListCross.do?brd_id=5";
+						return "redirect:/ezQuestion/qstListCross.do";
 				}else
-					return "/ezQuestion/qstResult.do?" + receve;
+					return "redirect:/ezQuestion/qstResult.do";
 			}else{
 				adminYN = false;
 				if(userIdAdminList != null){
@@ -226,34 +231,34 @@ public class EzQuestionController {
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						response.getWriter().write("</script>");
 						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-							return "/ezQuestion/qstList.do?brd_id=5";
+							return "redirect:/ezQuestion/qstList.do";
 						else
-							return "/ezQuestion/qstListCross.do?brd_id=5";
+							return "redirect:/ezQuestion/qstListCross.do";
 					}else
-						return "/ezQuestion/qstResult.do?" + receve;
+						return "redirect:/ezQuestion/qstResult.do";
 				}else{
 					if(userPermissionVO.getMultiResponseFlg() == "1"){
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						response.getWriter().write("</script>");
 						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-							return "/ezQuestion/qstList.do?brd_id=5";
+							return "redirect:/ezQuestion/qstList.do";
 						else
-							return "/ezQuestion/qstListCross.do?brd_id=5";
+							return "redirect:/ezQuestion/qstListCross.do";
 					}else{
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
 						response.getWriter().write("</script>");
 						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-							return "/ezQuestion/Qst_List.do?brd_id=5";
+							return "redirect:/ezQuestion/Qst_List.do";
 						else
-							return "/ezQuestion/Qst_List_Cross.do?brd_id=5";
+							return "redirect:/ezQuestion/Qst_List_Cross.do";
 					}
 				}
 			}
 		}else{
 			if (userPermissionVO.getPublicFlg() == "1"){
-				return "/ezQuestion/qstResult.do?" + receve;
+				return "redirect:/ezQuestion/qstResult.do";
 			}else{
 				adminYN = false;
 				if(userIdAdminList != null){
@@ -263,24 +268,27 @@ public class EzQuestionController {
 					}
 				}
 				if (rsUserId == userId || adminYN == true)
-					return "/ezQuestion/qstResult.do?" + receve;
+					return "redirect:/ezQuestion/qstResult.do";
 				else{
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
 					response.getWriter().write("</script>");
 					if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-						return "/ezQuestion/qstList.do?brd_id=" + request.getParameter("brdId");
+						return "redirect:/ezQuestion/qstList.do";
 					else
-						return "/ezQuestion/qstListCross.do?brd_id=" + request.getParameter("brdId");
+						return "redirect:/ezQuestion/qstListCross.do";
 				}
 			}
 		}
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResponseCross.do")
-	public String qstResponseCross(ModelMap model){
+	public String qstResponseCross(UserPollItemVO userPollItemVO, UserPermissionVO userPermissionVO, String receve, ModelMap model,HttpServletRequest request) throws Exception{
+		System.out.println(userPollItemVO.toString());
+		System.out.println(userPermissionVO.toString());
+		System.out.println(request.getParameter("currPage"));
 		
-		return "/ezQuestion/qstResponseCross.do";
+		return "/ezQuestion/qstResponse";
 	}
 
 	@RequestMapping(value="/ezQuestion/qstStep1.do")
