@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tree>
+	<config>
+		<size width="16px" height="16px" />
+		<baseimage>
+			<dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
+			<dot_end path="/images/OrganTree_cross/dot_end.gif" />
+			<dot_normal path="/images/OrganTree_cross/dot_normal.gif" />
+			<minus_end path="/images/OrganTree_cross/minus.gif" />
+			<minus_normal path="/images/OrganTree_cross/minus.gif" />
+			<plus_end path="/images/OrganTree_cross/plus.gif" />
+			<plus_normal path="/images/OrganTree_cross/plus.gif" />
+      <node_plus path="/images/OrganTree_cross/plus_normal.gif" />
+      <node_minus path="/images/OrganTree_cross/minus_normal.gif" />
+      <node_end path="/images/OrganTree_cross/dot_end.gif" />
+      <node_space path="/images/OrganTree_cross/space.gif" />
+			<space path="/images/OrganTree_cross/space.gif" />
+			<selected path="/images/OrganTree_cross/fldr.gif" />
+		</baseimage>
+		<baseclass>
+			<normal name="node_normal" />
+			<selected name="node_selected" />
+      <hover name="node_hover" />
+		</baseclass>
+		<images>
+			<image idx="BASE" path="/images/OrganTree_cross/fldr.gif" />
+			<image idx="1" path="/images/OrganTree_cross/fldr.gif" />
+			<image idx="ICONCOMP" path="/images/OrganTree_cross/fldr.gif" />
+			<image idx="SUB_BASE" path="/images/OrganTree_cross/ic-Item.gif" />
+		</images>
+	</config>
+</tree>
