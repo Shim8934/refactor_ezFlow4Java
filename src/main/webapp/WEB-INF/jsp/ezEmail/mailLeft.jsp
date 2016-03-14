@@ -20,7 +20,7 @@
     <script type="text/javascript">
         var pUse_Editor = "${useEditor}";
         var subCode = "${subCode}";
-        var funcCode = "${funCode}";
+        var funcCode = "1"; //${funCode}
         var g_szMailFolderURL = "http://${mailServerAddress}/exchange/${userinfo.EmailID}"; //추후 수정
         var g_firstOpen = true;
         var lang = "${userinfo.lang}";
@@ -624,7 +624,7 @@
         initToggleList(document.getElementById("left"), "h2", "ul", "li");
     </script>
     <xml id="RootFolderXML" style="display: none;">
-    <%--=RootFolderXML --%>
+    ${rootFolderXML}
     </xml>
     <xml id="AddressFolderXML" style="display: none;">
     <%--=RootAddressXML --%>

@@ -17,7 +17,7 @@
         objRoot.appendChild(objNode);
 
         var xmlHTTP = new XMLHttpRequest();
-        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_get_folderlist.aspx", false);
+        xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
 	    xmlHTTP.send(xmlDOM);
     	
     	

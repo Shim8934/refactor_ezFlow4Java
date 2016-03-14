@@ -14,7 +14,7 @@
     objNode.text = bcount;
     objRoot.appendChild(objNode);
 
-    xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_get_folderlist.aspx", false);
+    xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
 	xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	xmlHTTP.send(xmlDOM.xml);
 	
