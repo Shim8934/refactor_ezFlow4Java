@@ -110,8 +110,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		update("EzBoardAdminDAO.saveBoardProperty", map);
 	}
 
-	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception{
-		return (BoardAttributeVO) select("EzBoardAdminDAO.getBoardAttribute", boardID);
+	@SuppressWarnings("unchecked")
+	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception{
+		return (List<BoardAttributeVO>) select("EzBoardAdminDAO.getBoardAttribute", boardID);
 	}
 	
 }

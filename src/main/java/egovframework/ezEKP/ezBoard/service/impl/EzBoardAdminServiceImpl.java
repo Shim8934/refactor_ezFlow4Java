@@ -259,7 +259,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception {
+	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception {
 		return ezBoardAdminDAO.getBoardAttribute(boardID);
 	}
 	

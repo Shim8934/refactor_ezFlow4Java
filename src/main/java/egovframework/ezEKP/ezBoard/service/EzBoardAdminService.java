@@ -51,6 +51,6 @@ public interface EzBoardAdminService {
 	
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception;
 
-	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception;
+	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception;
 
 }
