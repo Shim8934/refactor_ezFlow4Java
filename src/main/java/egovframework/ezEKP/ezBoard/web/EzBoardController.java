@@ -2,11 +2,15 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -567,7 +571,7 @@ public class EzBoardController {
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
 		if(pBoardID == ""){
-			boardInfo.setBoardName(egovMessageSource.getMessage("t229"));		
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
 			return null;
 		}
 
@@ -656,7 +660,7 @@ public class EzBoardController {
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
 		if(pBoardID == ""){
-			boardInfo.setBoardName(egovMessageSource.getMessage("t229"));		
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
 			return null;
 		}
 
@@ -1602,7 +1606,7 @@ public class EzBoardController {
         }
         BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
 
-        String nowTime = EgovDateUtil.convertDate(EgovDateUtil.getToday(), "0000", "yyyy-MM-dd HH:mm:ss");
+        String nowTime = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
         String parentTime = boardItem.getParentWriteDate().toString();
 
         if (EgovDateUtil.getDaysDiff(parentTime.substring(0,10), nowTime.substring(0,10)) < 0){
@@ -1613,7 +1617,7 @@ public class EzBoardController {
         }
 
         if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4) == "9999"){
-        	boardItem.setEndDate(egovMessageSource.getMessage("t287"));
+        	boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287"));
         }
         if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")){
             if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("") ){
@@ -1660,9 +1664,170 @@ public class EzBoardController {
         return "ezBoard/boardItemView";
     }
 	
-	public String FileNameConvert(String name){
-        return name.replace("\\", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "")
-            .replace("\"", "").replace("<", "").replace(">", "").replace("|", "")
-            .replace("#", "").replace("!", "").replace(".", "");
+	@RequestMapping(value="/ezBoard/setRead.do")
+	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pBoardID = "";
+        String pItemIDList = "";
+        if(request.getParameter("boardID") != null){
+        	pBoardID = request.getParameter("boardID");
+        }
+        if(request.getParameter("itemIDList") != null){
+        	pItemIDList = request.getParameter("itemIDList");
+        }
+        ezBoardService.setAsReads(userInfo, pBoardID, pItemIDList);
+	}
+	
+	@RequestMapping(value = "/ezBoard/newBoardItem.do")
+	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+        String extenLang = "1";
+        String editor = config.getProperty("EDITOR");
+        String uploadFilePath = config.getProperty("upload_board.ROOT");
+        String mode = "";
+        String boardID = "";
+        String itemID = "";
+        String url = "";
+        String hasAttach = "";
+        String strWriterFakeName = "";
+        if(request.getParameter("mode") != null){
+        	mode = request.getParameter("mode");
+        }
+        if(boardListVO.getBoardID() != null){
+        	boardID = boardListVO.getBoardID();
+        }
+        if(boardListVO.getItemID() != null){
+        	itemID = boardListVO.getItemID();
+        }
+        if(request.getParameter("url") != null){
+        	url = request.getParameter("url");
+        }
+        String newGuid = UUID.randomUUID().toString();
+        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+        if(boardInfo.getWrite_FG() != null && boardInfo.getWrite_FG().equals("false")){
+        	return "main/warning";
+        }
+        //추가 항목 가져오는 소스 사용안하는듯
+        if(boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")){
+//        	ezBoardAdminService.getBoardAttribute(boardID);
+        	if(userInfo.getLang().equals("1")){
+        		extenLang = "2";
+        	}
+        }
+        String strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+        String startDateTime = "";
+        String endDateTime = "";
+        String expireDays = "";
+        String expireItem = "";
+        String strTitle = "";
+        
+        if(!url.equals("")){
+        	startDateTime = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "").split(" ")[0];
+        	endDateTime = EgovDateUtil.addDay(startDateTime, 30);
+        	expireDays = "-1";
+        }else{
+        	expireDays = boardInfo.getExpireDays();
+        	if(!mode.equals("new")){
+        		if(!mode.equals("temp")){
+        			boardListVO = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        		}else{
+        			//temp는 나중에 개발
+//        			boardListVO = ezBoardService.getBrdGetItemInfoTemp();
+        		}
+        		if(mode.equals("reply")){
+        			boardListVO.setItemLevel(boardListVO.getItemLevel()+1);
+        			boardListVO.setABSTRACT("");
+        		}
+        		strTitle = boardListVO.getTitle();
+        		boardListVO.setTitle(URLEncoder.encode(boardListVO.getTitle(),"UTF-8"));
+        		strTitle = URLEncoder.encode(strTitle, "UTF-8");
+        		boardListVO.setABSTRACT(URLEncoder.encode(boardListVO.getABSTRACT(), "UTF-8"));
+        		
+        		if(Integer.parseInt(boardListVO.getAttachments()) > 0){
+        			hasAttach = "YES";
+        		}
+        	}
+        	startDateTime = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+        	
+        	if(mode.equals("modify") || mode.equals("temp")){
+        		if(boardListVO.getEndDate().substring(0, 4).equals("9999")){
+        			expireItem = "YES";
+        			if(expireDays.equals("-1")){
+        				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), 30);
+        			}else{
+        				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), Integer.parseInt(expireDays));
+        			}
+        		}else{
+        			boardListVO.setEndDate(boardListVO.getEndDate().split(" ")[0]);
+        		}
+        		startDateTime = boardListVO.getStartDate();
+        	}else{
+        		if(expireDays.equals("-1")){
+        			endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), 30);
+    			}else{
+    				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), Integer.parseInt(expireDays));
+    			}
+        	}
+        	if(boardInfo.getGuBun().equals("2")){
+        		if(commonUtil.getMultiData(userInfo.getLang()).equals("")){
+        			strWriterFakeName = boardListVO.getWriterName();
+        			boardListVO.setWriterName("");
+        		}else{
+        			strWriterFakeName = boardListVO.getWriterName2();
+        			boardListVO.setWriterName2("");
+        		}
+        	}
+        }
+        Calendar strDate = Calendar.getInstance();
+        if(strDate.get(Calendar.MINUTE) > 30){
+        	strDate.add(Calendar.HOUR, 1);
+        	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
+        	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
+        }else{
+        	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
+        	strDate.add(Calendar.MINUTE, 30);
+        	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
+        }
+        startDateTime = strDate.get(Calendar.YEAR)+ "-"+ (strDate.get(Calendar.MONTH)+1)+"-"+strDate.get(Calendar.DATE)+" "+strDate.get(Calendar.HOUR)+":"+strDate.get(Calendar.MINUTE)+":"+strDate.get(Calendar.SECOND);
+        
+        endDateTime = EgovDateUtil.convertDate(endDateTime,"0000","yyyy-MM-dd");
+        //여기까지~
+		return "main/warning";
+	}
+	
+	public String isoUTFDate(String dateTimeStr){
+        String timeSetStr = "";
+        String resultStr = "";
+
+        if (dateTimeStr.trim() != ""){
+            if (dateTimeStr.indexOf(" ") != -1){
+                if ((dateTimeStr.split(" ")[1] == "오후" || dateTimeStr.split(" ")[1] == egovMessageSource.getMessage("ezBoard.t213")) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                    timeSetStr = (dateTimeStr.split(" ")[2].split(":")[0]) + 12;
+                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                }
+                else if (dateTimeStr.split(" ")[1] == "오전" || dateTimeStr.split(" ")[1] == egovMessageSource.getMessage("ezBoard.t212")){
+                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
+                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
+                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else{
+                        timeSetStr = dateTimeStr.split(" ")[2];
+                    }
+                }
+                else{
+                    timeSetStr = dateTimeStr.split(" ")[2];
+                }
+                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
+            }
+            else{
+                resultStr = dateTimeStr + "T00:00:00.000Z";
+            }
+        }
+        else{
+            resultStr = "";
+        }
+        return resultStr;
     }
 }

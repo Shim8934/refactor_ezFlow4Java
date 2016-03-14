@@ -259,5 +259,21 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PITEMID", itemID);
 		return ezBoardDAO.getCheckApprUserList(map);
 	}
-	
+
+	@Override
+	public void setAsReads(LoginVO userInfo, String boardID, String pItemIDList) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("iv_pBoardID", boardID);
+		map.put("v_pItemID", pItemIDList);
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_pUserName", userInfo.getDisplayName1());
+		map.put("v_pUserDeptName", userInfo.getDeptName1());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+		map.put("v_pUserTitle", userInfo.getTitle1());
+		map.put("v_pUserName2", userInfo.getDisplayName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		ezBoardDAO.setAsReads(map);
+	}
 }

@@ -64,4 +64,6 @@ public interface EzBoardService {
 
 	public int getCheckApprUserList(String id, String itemID) throws Exception;
 
+	public void setAsReads(LoginVO userInfo, String pBoardID, String pItemIDList) throws Exception;
+
 }

@@ -595,20 +595,20 @@
 		            return;
 		        }
 		        var feature = GetOpenWindowfeature(765, 820);
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
-		        }
-		        else {
-		            if (pUse_IE11Browser == "CK") {
-		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
-		            }
-		            else {
-		                if(pUse_Editor == "")
-		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
-		                else
-		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
-		            }
-		        }
+// 		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+// 		        }
+// 		        else {
+// 		            if (pUse_IE11Browser == "CK") {
+// 		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
+// 		            }
+// 		            else {
+// 		                if(pUse_Editor == "")
+// 		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
+// 		                else
+// 		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=new", "", feature, "");
+// 		            }
+// 		        }
 		    }
 		
 		    function ItemRead_onclick(obj) {
@@ -964,7 +964,7 @@
 		            }
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "interASP/SetRead.aspx?BoardID=" + pBoardID + "&ItemIDList=" + strItemList, false);
+		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            getBoardList();

@@ -132,5 +132,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int getCheckApprUserList(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
+
+	public void setAsReads(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.setAsReads", map);
+	}
 	
 }
