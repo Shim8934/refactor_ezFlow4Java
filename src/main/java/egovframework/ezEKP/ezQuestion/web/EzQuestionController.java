@@ -199,10 +199,12 @@ public class EzQuestionController {
 		redirectAttr.addFlashAttribute("userPermissionVO", userPermissionVO);
 		redirectAttr.addFlashAttribute("userPollItemVO", userPollItemVO);
 		redirectAttr.addAttribute("receve", receve);
+		redirectAttr.addAttribute("brdId", request.getParameter("brdId"));
 		redirectAttr.addAttribute("currPage", request.getParameter("currPage"));
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
+		
 		if(endPoll == false){
 			if(responseCnt <= 0)
 				return "redirect:/ezQuestion/qstResponseCross.do";
@@ -240,19 +242,32 @@ public class EzQuestionController {
 					if(userPermissionVO.getMultiResponseFlg() == "1"){
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+						response.getWriter().write("history.back();");
 						response.getWriter().write("</script>");
-						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
+						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
 							return "redirect:/ezQuestion/qstList.do";
 						else
 							return "redirect:/ezQuestion/qstListCross.do";
 					}else{
-						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
-						response.getWriter().write("</script>");
-						if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
-							return "redirect:/ezQuestion/Qst_List.do";
-						else
-							return "redirect:/ezQuestion/Qst_List_Cross.do";
+						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1){
+							response.getWriter().write("<script language='javascript'>");
+							response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
+							response.getWriter().write(" window.location.href = '/ezQuestion/qstList.do?brdId=5'");
+							response.getWriter().write("</script>");
+							response.flushBuffer();
+							
+							
+							return null;
+						}else{
+							response.getWriter().write("window.location.href = redirect:/ezQuestion/qstListCross.do");
+							response.getWriter().write("<script language='javascript'>");
+							response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
+							response.getWriter().write(" window.location.href = '/ezQuestion/qstListCross.do?brdId=5'");
+							response.getWriter().write("</script>");
+							response.flushBuffer();
+
+							return null;
+						}
 					}
 				}
 			}
@@ -273,7 +288,7 @@ public class EzQuestionController {
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
 					response.getWriter().write("</script>");
-					if (request.getHeader("UserAgent").indexOf("MSIE") > -1 || request.getHeader("UserAgent").indexOf("Trident") > -1)
+					if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
 						return "redirect:/ezQuestion/qstList.do";
 					else
 						return "redirect:/ezQuestion/qstListCross.do";
