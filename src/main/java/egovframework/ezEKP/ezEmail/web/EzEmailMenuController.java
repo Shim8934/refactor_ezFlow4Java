@@ -1,14 +1,18 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,23 +22,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
 public class EzEmailMenuController {
-	
+
 	@Autowired
 	private CommonUtil commonUtil;
 
 	@Autowired
 	private Properties config;
-	
+
 	@RequestMapping(value="/ezEmail/mailLeft.do")
-	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception{
+	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		String funCode = "";
 		String subCode = "";			
-		String rootFolderXML = "";
 		String rootAddressXML = "";
 		String folderID = "";
 		String pOutBoxFolderID = "";
@@ -51,135 +53,247 @@ public class EzEmailMenuController {
 		String use_IE11Browser = "";
 		String pcFolderPath = "";
 		String noneActiveX = "";
-		//유저정보 가져오기 아직 미구현이므로 고정값으로 테스트 @수정요망@
-		loginVO = commonUtil.userInfo(loginCookie);
-
-		getRootMailFolder("jblue0o0@opensol2016.com", "1234");
 		
+		String rootFolderXML = getRootFolderXML();
 		String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		
 		model.addAttribute("use_ArchiveMailBox", use_ArchiveMailBox);
 		model.addAttribute("mailServerAddress", mailServerAddress);
+		model.addAttribute("rootFolderXML", rootFolderXML);
 		return "ezEmail/mailLeft";
 	}
-	
-	public String getRootFolderXML(){
-		/*
-		<node imgidx="1" caption="받은 편지함(15)" foldername="받은 편지함" orgBoxName="0" fullcaption="_INBOX" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAEMAAA=" hassub="1" style='font-weight:bold' ></node>
-		<node imgidx="1" caption="보낸 편지함" foldername="보낸 편지함" orgBoxName="1" fullcaption="_SENT" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAEJAAA="   ></node>
-		<node imgidx="1" caption="임시 보관함" foldername="임시 보관함" orgBoxName="2" fullcaption="_DRAFT" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAEPAAA="   ></node>
-		<node imgidx="1" caption="지운 편지함" foldername="지운 편지함" orgBoxName="3" fullcaption="_DELETE" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAEKAAA="   ></node>
-		<node imgidx="1" caption="PERSONAL" foldername="PERSONAL" orgBoxName="4" fullcaption="_PERSONAL" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAElAAA="   ></node>
-		<node imgidx="1" caption="정크 메일" foldername="정크 메일" orgBoxName="5" fullcaption="_JUNK" href="AAMkADUzMzFiN2ZmLTcxMjQtNGQyYy04NWFhLWIwZGE4MjgwOGFiNgAuAAAAAACTVwAhk/rNSrXnUO5agdjtAQB7mQ9h8kXlSbYb4JX5rK8UAAAAAAEeAAA="   ></node>
-		 */
-		String rootFolderXML = "";
 
-
-
-		return rootFolderXML;
-	}
-
-	public void getRootMailFolder(String userName, String password) throws Exception{
-		Store store = getIMAPStore(config.getProperty("config.MailServerAddress"));
-		store.connect(userName, password);
-		
-		//기존 편지함 존재하지 않을 시 생성
-		Folder f = store.getDefaultFolder();
-		if(!f.getFolder("INBOX").exists()){
-			System.out.println("create INBOX");
-			if(f.getFolder("INBOX").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating INBOX success");
-			}
-		}
-		if(!f.getFolder("보낸 편지함").exists()){
-			System.out.println("create 보낸 편지함");
-			if(f.getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating 보낸 편지함 success");
-			}
-		}
-		if(!f.getFolder("임시 보관함").exists()){
-			System.out.println("create 임시 보관함");
-			if(f.getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating 임시 보관함 success");
-			}
-		}
-		if(!f.getFolder("지운 편지함").exists()){
-			System.out.println("create 지운 편지함");
-			if(f.getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating 지운 편지함 success");
-			}
-		}
-		if(!f.getFolder("PERSONAL").exists()){
-			System.out.println("create PERSONAL");
-			if(f.getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating PERSONAL success");
-			}
-		}
-		if(!f.getFolder("정크 메일").exists()){
-			System.out.println("create 정크 메일");
-			if(f.getFolder("정크 메일").create(Folder.HOLDS_FOLDERS)){
-				System.out.println("creating 정크 메일 success");
-			}
-		}
-		
-		Folder[] rootMailFolder = f.list();
-		for(Folder fd : rootMailFolder){
-			
-		}
-		
-		
-		/*for(Folder fd:f){
-			System.out.println(">> "+fd.getName()+","+fd.getFullName());
-			
-			if(fd.getName().equals("INBOX")){
-				System.out.println("0");
-			}
-			else if(fd.getName().equals("Sent")){
-				System.out.println("1");
-			}
-			else if(fd.getName().equals("Drafts")){
-				System.out.println("2");
-			}
-			else if(fd.getName().equals("Trash")){
-				System.out.println("3");
-			}
-			else if(fd.getName().equals("Personal")){
-				System.out.println("4");
-			}
-			else if(fd.getName().equals("Junk")){
-				System.out.println("5");
-			}
-		}
-		
-		Folder[] f2 = store.getFolder("Trash.sub1").list();
-		for(Folder fd:f2){
-			System.out.println(">> "+fd.getName()+","+fd.getFullName());
+	@RequestMapping(value="/ezEmail/getFolderList.do")
+	public void getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response){
+		/*Map<String, String[]> map = request.getParameterMap();
+		Set<String> set = map.keySet();
+		Iterator<String> iter =	 set.iterator();
+		while(iter.hasNext()){
+			String key = iter.next();
+			System.out.println(key+", "+map.get(key));
 		}*/
-		
-		store.close();
+		Enumeration<String> en = request.getParameterNames();
+		while(en.hasMoreElements()){
+			System.out.println(en.nextElement());
+		}
+		//getSubFolderXML(request...);
+		response.setContentType("text/plain; charset=utf-8");
+		response.reset();
 	}
+	
+	public String getRootFolderXML() {
+		StringBuilder rootFolderXML = new StringBuilder();
+		List<Folder> rootMailFolder = getRootMailFolder();
+		try {
+			for(int i=0; i<rootMailFolder.size(); i++){
+				Folder fd = rootMailFolder.get(i);
+				rootFolderXML.append("<node imgidx='1'");
+				if(fd.getUnreadMessageCount()>0){
+					rootFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
+				}else{
+					rootFolderXML.append(" caption='"+fd.getName()+"'");
+				}
+				rootFolderXML.append(" foldername='"+fd.getName()+"'");
+				rootFolderXML.append(" orgBoxName='"+i+"'");
+				rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+				rootFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
+				if(fd.list().length>0){
+					rootFolderXML.append(" hassub='1'");
+				}
+				if(fd.getUnreadMessageCount()>0){
+					rootFolderXML.append(" style='font-weight:bold'");
+				}
+				rootFolderXML.append("></node>");
+			}
+		} catch (MessagingException e) {
+			System.out.println("Error get unread message count: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return rootFolderXML.toString();
+	}
+	
+	public String getSubFolderXML(String parent) {
+		StringBuilder subFolderXML = new StringBuilder();
+		List<Folder> subMailFolder = getSubMailFolderByName(parent);
+		try {
+			for(int i=0; i<subMailFolder.size(); i++){
+				Folder fd = subMailFolder.get(i);
+				subFolderXML.append("<node imgidx='1'");
+				if(fd.getUnreadMessageCount()>0){
+					subFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
+				}else{
+					subFolderXML.append(" caption='"+fd.getName()+"'");
+				}
+				subFolderXML.append(" foldername='"+fd.getName()+"'");
+				subFolderXML.append(" orgBoxName='"+i+"'");
+				subFolderXML.append(" fullcaption='_NONE'"); //수정
+				subFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
+				if(fd.list().length>0){
+					subFolderXML.append(" hassub='1'");
+				}
+				if(fd.getUnreadMessageCount()>0){
+					subFolderXML.append(" style='font-weight:bold'");
+				}
+				subFolderXML.append("></node>");
+			}
+		} catch (MessagingException e) {
+			System.out.println("Error get unread message count: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return subFolderXML.toString();
+	}
+	
+	public List<Folder> getRootMailFolder() {
+		ArrayList<Folder> rootMailFolder = new ArrayList<Folder>();
+		Store store = getStore("10.0.102.8", "jblue0o0@opensol2016.com", "1234"); //수정
+		createDefualtFolders(store); //6개의 기본폴더 생성
+		try{
+			Folder[] f = store.getDefaultFolder().list();
 
-	public Store getIMAPStore(String host) throws Exception{
-		Properties properties = new Properties();
+			for(Folder fd : f){
+				rootMailFolder.add(fd);
+			}
 
-		// server setting
-		properties.put("mail.imap.host", host);
-		properties.put("mail.imap.port", "143");
+			/*//순서 변경 -- 수정
+			int defaultFolderCount = 6;
+			for(Folder fd : f){
+				switch(fd.getName()){
+				case "INBOX":
+					rootMailFolder.add(0, fd);
+					break;
+				case "보낸 편지함":
+					rootMailFolder.add(1, fd);
+					break;
+				case "임시 보관함":
+					rootMailFolder.add(2, fd);
+					break;
+				case "지운 편지함":
+					rootMailFolder.add(3, fd);
+					break;
+				case "PERSONAL":
+					rootMailFolder.add(4, fd);
+					break;
+				case "정크 메일":
+					rootMailFolder.add(5, fd);
+					break;
+				default:
+					rootMailFolder.add(defaultFolderCount++, fd);
+					break;
+				}
+			}*/
+		} catch(MessagingException e){
+			System.out.println("Error get default folder: " + e.getMessage());
+			e.printStackTrace();
+		}
+		closeStore(store);
+		return rootMailFolder;
+	}
+	
+	public List<Folder> getSubMailFolder(Folder parent){
+		ArrayList<Folder> al = new ArrayList<Folder>();
+		try {
+			Folder[] f = parent.list();
+			for(Folder fd : f){
+				al.add(fd);
+			}
+		} catch (MessagingException e) {
+			System.out.println("Error get sub folder: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return al;
+	}
+	
+	public List<Folder> getSubMailFolderByName(String parent){
+		ArrayList<Folder> al = new ArrayList<Folder>();
+		Store store = null;
+		try {
+			store = getStore("10.0.102.8", "jblue0o0@opensol2016.com", "1234"); //수정
+			Folder[] f = store.getFolder(parent).list();
+			for(Folder fd : f){
+				al.add(fd);
+			}
+		} catch (MessagingException e) {
+			System.out.println("Error get sub folder: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			closeStore(store);
+		}
+		return al;
+	}
+	
+	public Store getStore(String host, String userName, String password) {
+		Store store=null;
+		try {
+			Properties properties = new Properties();
+			String port = "143";
+			// server setting
+			properties.put("mail.imap.host", host);
+			properties.put("mail.imap.port", port);
 
-		// SSL setting
-		//properties.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			// SSL setting
+			//properties.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-		//If set to true, failure to create a socket using the specified socket factory class will 
-		//cause the socket to be created using the java.net.Socket class. Defaults to true.
-		properties.setProperty("mail.imap.socketFactory.fallback", "false");
-		properties.setProperty("mail.imap.socketFactory.port", String.valueOf("143"));
+			//If set to true, failure to create a socket using the specified socket factory class will 
+			//cause the socket to be created using the java.net.Socket class. Defaults to true.
+			properties.setProperty("mail.imap.socketFactory.fallback", "false");
+			properties.setProperty("mail.imap.socketFactory.port", String.valueOf(port));
 
-		Session session = Session.getDefaultInstance(properties);
+			Session session = Session.getDefaultInstance(properties);
 
-		// connects to the message store
-		Store store = session.getStore("imap");
-
+			// connects to the message store
+			store = session.getStore("imap");
+			store.connect(userName, password);
+		} catch (NoSuchProviderException e) {
+			System.out.println("Error get store from session: " + e.getMessage());
+			e.printStackTrace();
+		}catch (MessagingException e) {
+			System.out.println("Error connect store: " + e.getMessage());
+			e.printStackTrace();
+		}
 		return store;
 	}
-	
+
+	public void closeStore(Store store) {
+		try {
+			if(store != null){
+				store.close();
+			}
+		} catch(MessagingException e) {
+			System.out.println("Error close store: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	public void createDefualtFolders(Store store){
+		Folder f;
+		try {
+			f = store.getDefaultFolder();
+			createFolder(f, "INBOX", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			createFolder(f, "보낸 편지함", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			createFolder(f, "임시 보관함", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			createFolder(f, "지운 편지함", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			createFolder(f, "PERSONAL", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			createFolder(f, "정크 메일", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			
+		} catch (MessagingException e) {
+			System.out.println("Error get default folder: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public boolean createFolder(Folder parent, String folderName, int folderType){ //create:true, already exist:false
+		boolean isCreate = false;
+		try{
+			Folder newFolder = parent.getFolder(folderName);
+			isCreate = newFolder.create(folderType);
+		}
+		catch(MessagingException e){
+			System.out.println("Error create folder: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return isCreate;
+	}
+
 }
