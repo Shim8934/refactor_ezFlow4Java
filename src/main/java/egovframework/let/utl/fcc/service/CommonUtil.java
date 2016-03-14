@@ -17,6 +17,8 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -75,11 +77,16 @@ public class CommonUtil {
 		return user;
 	}
 	
-	public String getPassword(String loginCookie) throws Exception {	
+	public List<String> getUserIdAndPassword(String loginCookie) throws Exception {	
 		String decData = egovFileScrty.decryptAES(loginCookie);
+		List<String> returnObject = new ArrayList<String>();
+		
+		String userId = decData.split("///")[1];
 		String pass = decData.split("///")[4];
+		returnObject.add(userId);
+		returnObject.add(pass);
 
-		return pass;
+		return returnObject;
 	}
 	
 	public String getMultiData(String lang) throws Exception{
