@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -49,5 +50,7 @@ public interface EzBoardAdminService {
 	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
 	
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception;
+
+	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception;
 
 }

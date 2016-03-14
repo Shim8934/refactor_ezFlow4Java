@@ -13,6 +13,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -256,8 +257,11 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		
 		ezBoardAdminDAO.saveBoardProperty(map);
 	}
+
+	@Override
+	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception {
+		return ezBoardAdminDAO.getBoardAttribute(boardID);
+	}
 	
-	
-		
 	
 }

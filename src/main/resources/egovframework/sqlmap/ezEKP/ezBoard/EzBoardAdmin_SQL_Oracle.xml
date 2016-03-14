@@ -6,6 +6,7 @@
 	<typeAlias  alias="BoardTreeVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
 	<typeAlias  alias="EzBoardVO" 			type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
 	<typeAlias  alias="BoardPropertyVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="BoardAttributeVO" 	 type="egovframework.ezEKP.ezBoard.vo.BoardAttributeVO"/>
 	<typeAlias  alias="MyFavoriteVO" 		type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
 	<typeAlias  alias="BoardBackgroundVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	
@@ -205,5 +206,24 @@
 		WHERE
 			backgroundid = #backgroundID#			
 	</delete>
+	<select id="EzBoardAdminDAO.getBoardAttribute" resultClass="BoardAttributeVO">
+		<![CDATA[	
+			SELECT 
+				boardid ,
+				tablecol ,
+				sn ,
+				colname1 ,
+				colname2 ,
+       			value ,
+       			coltype ,
+       			must  
+	       FROM 
+	       		ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE 
+	       WHERE  
+	       		boardid = #boardID#
+	       ORDER BY 
+	       		sn
+		]]>
+	</select>
 
 </sqlMap>

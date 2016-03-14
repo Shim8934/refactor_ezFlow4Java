@@ -92,6 +92,8 @@ public class LoginVO implements Serializable{
 	private String primary;
 	/** 다국어*/
 	private String lang;
+	/** 핸드폰번호*/
+	private String phone;
 
 	public String getId() {
 		return id;
@@ -296,6 +298,12 @@ public class LoginVO implements Serializable{
 	}
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}	
 	
 }

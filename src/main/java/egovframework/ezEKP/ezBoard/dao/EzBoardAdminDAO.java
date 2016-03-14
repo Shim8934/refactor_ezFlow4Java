@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -107,6 +108,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	
 	public void saveBoardProperty(Map<String, Object> map) throws Exception{		
 		update("EzBoardAdminDAO.saveBoardProperty", map);
+	}
+
+	public BoardAttributeVO getBoardAttribute(String boardID) throws Exception{
+		return (BoardAttributeVO) select("EzBoardAdminDAO.getBoardAttribute", boardID);
 	}
 	
 }

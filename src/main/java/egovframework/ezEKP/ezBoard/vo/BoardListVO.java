@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezBoard.vo;
 
-import java.sql.Date;
-
 public class BoardListVO {
 	
 	/** 유저아이디*/
