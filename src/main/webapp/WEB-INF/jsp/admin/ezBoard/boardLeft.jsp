@@ -8,10 +8,10 @@
 	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">	   	
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 		<title><spring:message code="ezBoard.t52" /></title>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "${user.id}";
 	        var SSUserName = "${user.displayName1}";
@@ -172,23 +172,15 @@
 	                alert(e);
 	            }
 	        }
-
+	        
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
-	        	var ret;
-	        	
-	        	$.ajax({
-					type : "POST",
-					dataType : "xml",
-					async : false,
-					url : "/ezBoard/getSubBoards.do",	        			
-					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
-					success: function(result){
-						ret = result;				        
-					}
-				});
-	        	
-	        	return ret;
-	        }
+		    	var xmlhttp3 = createXMLHttpRequest();
+		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+		        xmlhttp3.send();
+		        var ret = xmlhttp3.responseXML;
+		        xmlhttp3 = null;
+		        return ret;
+		    }        
 
 	        function TreeCtrl_onNodeClick(pNodeID, pTreeID) {	
 	            try {

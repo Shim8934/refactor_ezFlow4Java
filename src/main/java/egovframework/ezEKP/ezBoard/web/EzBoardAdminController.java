@@ -471,6 +471,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
+		model.addAttribute("lang", lang);
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
 		model.addAttribute("use_portal", use_portal);

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * </pre>
  */
 @Controller@SessionAttributes(types = ComDefaultVO.class)
-public class EgovMainController {
+public class EzMainController {
 
 	/**
 	 * 메인 페이지에서 각 업무 화면으로 연계하는 기능을 제공한다.

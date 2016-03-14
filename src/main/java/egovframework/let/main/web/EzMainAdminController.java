@@ -1,4 +1,4 @@
-package egovframework.ezEKP.main.web;
+package egovframework.let.main.web;
 
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class EzMainController {
+public class EzMainAdminController {
 
 	@Autowired
 	private Properties config;

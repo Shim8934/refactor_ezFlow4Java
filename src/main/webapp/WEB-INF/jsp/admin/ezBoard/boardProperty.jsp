@@ -21,8 +21,13 @@
 	        var APPRFLAG = $.trim("${model.apprFlag}");
 	        var APPRMAILFLAG = $.trim("${model.apprMailFlag}");
 	        var orgAPPRFLAG = $.trim("${model.apprFlag}");
+	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
-	        
+	        var selectTargetListXML = "";
+			var selecttarget_cross_dialogArguments = new Array();
+			var manycolor_dialogArguments = new Array();
+			var BoardExtension_dialogArguments = new Array();
+			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -72,7 +77,7 @@
 	            }
 			});
 			
-			function Save() {
+			function Save() {				
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
@@ -181,62 +186,313 @@
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            	}	            		
-	            });
-	            /* var strXML = "";
-	            strXML += "<NODES>";
-	            strXML += "<NODE>";
-	            strXML += "<BOARDNAME>" + MakeXMLString($("#txtBoardName").val()) + "</BOARDNAME>";
-	            strXML += "<BOARDNAME2>" + MakeXMLString($("#txtBoardName2").val()) + "</BOARDNAME2>";
-	            strXML += "<BOARDID>" + BoardID + "</BOARDID>";
-	            strXML += "<ATTACHMAX>" + AttachMax + "</ATTACHMAX>";
-	            strXML += "<DESCRIPTION>" + MakeXMLString(Description) + "</DESCRIPTION>";
-	            strXML += "<EXPIRES>" + Expires + "</EXPIRES>";
-	            strXML += "<URL>" + url + "</URL>";
-	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
-	            strXML += "<REPLYNOTIFY>" + replynotify + "</REPLYNOTIFY>";
-	            strXML += "<DELETEAFTER>" + iDeleteAfter + "</DELETEAFTER>";
-	            strXML += "<BOARDCOLOR>" + brd_color + "</BOARDCOLOR>";
-	            strXML += "<PORTLET>" + portlet + "</PORTLET>";
-	            strXML += "<BACKGROUND>" + background + "</BACKGROUND>";
-	            strXML += "<FORM>" + FormFlag + "</FORM>";
-
-	            if ($("#chkOneLine").is(":checked") == false)
-	                strXML += "<ONELINEREPLY>0</ONELINEREPLY>";
-	            else
-	                strXML += "<ONELINEREPLY>1</ONELINEREPLY>";
-
-	            //승인게시판 추가
-	            strXML += "<APPRFLAG>" + APPRFLAG + "</APPRFLAG>";
-	            strXML += "<ORGAPPRFLAG>" + orgAPPRFLAG + "</ORGAPPRFLAG>";
-	            strXML += "<APPRUSERLIST>" + ApprUserList + "</APPRUSERLIST>";
-	            strXML += "<APPRMAILFLAG>" + APPRMAILFLAG + "</APPRMAILFLAG>";
-	            strXML += "</NODE>";
-	            strXML += "</NODES>";
-
-	            var xmldom = loadXMLString(strXML);
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "interASP/SaveBoardProperty.aspx", false);
-	            xmlhttp.send(xmldom);
-
-	            if (xmlhttp.status == "200" && xmlhttp.responseText.indexOf("OK") > -1)
-	                alert("<spring:message code='ezBoard.t79'/>");
-	            else
-	                //alert(xmlhttp.responseXML);
-
-	            xmldom = null;
-	            xmlhttp = null;
- */
-	            /*if (pAdminType == "y") {
-	                parent.parent.location.href = "/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID;
-	                //window.open("/myoffice/ezBoardSTD/main_Redirect_Admin.aspx?BoardID=" + BoardID, "main", "");
-	                return;
-	                //parent.parent.frames.location = parent.parent.frames.location;
+	            });	            
+	        }			
+			function chkPermanent_onclick() {
+	            if (chkPermanent.checked) {
+	                chkExpires.checked = false;
+	                txtExpires.value = "";
+	            } else {
+	                chkExpires.checked = true;
+	                txtExpires.value = "365";
 	            }
-	            else
-	                parent.frames.location = parent.frames.location;
-	            location.href = location.href;*/
-	        }		
-			
+	        }			
+			function chkExpires_onclick() {
+	            if (chkExpires.checked) {
+	                chkPermanent.checked = false;
+	                txtExpires.value = "365";
+	            } else {
+	                chkPermanent.checked = true;
+	                txtExpires.value = "";
+	            }
+	        }			
+			function checkboardtype() {
+	        	if (event.srcElement.id == "chkGeneralBoard" && event.srcElement.checked) {
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            if (event.srcElement.id == "chkAnonyBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+
+	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
+	                    if (chkApprBoard.checked) {
+	                        chkApprBoard.checked = false;
+	                        checkApprBoard();
+	                        chkApprBoard.disabled = true;
+	                    }
+	                }
+	            } else {
+	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
+	                    chkApprBoard.disabled = true;
+	                } else {
+	                    chkApprBoard.disabled = false;
+	                }
+	            }
+	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+
+	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
+	                    if (chkApprBoard.checked) {
+	                        chkApprBoard.checked = false;
+	                        checkApprBoard();
+	                        chkApprBoard.disabled = true;
+	                    }
+	                }
+	            } else {
+	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
+	                    chkApprBoard.disabled = true;
+	                }
+	                else {
+	                    chkApprBoard.disabled = false;
+	                }
+	            }
+
+	            //추가항목
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
+	                document.getElementById("trAttribute").style.display = "none";
+	            } else {
+	                document.getElementById("trAttribute").style.display = "";
+	            }
+
+	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
+	                alert("<spring:message code='ezBoard.t150'/>");
+	                event.srcElement.checked = false;
+	                return;
+	            }
+
+	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
+	                alert("<spring:message code='ezBoard.t6000'/>");
+	                event.srcElement.checked = false;
+	                return;
+	            }
+
+	            if (chkform.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
+	                alert("<spring:message code='ezBoard.t6001'/>");
+	                event.srcElement.checked = false;
+	                return;
+	            }
+
+	            if (chkNotify.checked && chkAnonyBoard.checked) {
+	                alert("<spring:message code='ezBoard.t151'/>");
+	                event.srcElement.checked = false;
+	                return;
+	            }
+			}			
+			function checkApprBoard() {
+			    if (chkApprBoard.checked == true) {
+			        document.getElementById("chkApprList").style.display = "";
+			        document.getElementById("chkApprListMail").style.display = "";
+			        APPRFLAG = "Y";
+			    } else {
+			        document.getElementById("chkApprList").style.display = "none";
+			        document.getElementById("chkApprListMail").style.display = "none";
+			        APPRFLAG = "N";
+			    }
+			}			
+			function checkApprMail() {
+			    if (chkApprBoardMail.checked == true) {
+			        APPRMAILFLAG = "Y";
+			    } else {
+			        APPRMAILFLAG = "N";
+			    }
+			}			
+			function SelectTarget() {
+			    var receiverData = new Array();
+			    receiverData["window"] = this;
+			    receiverData["selectTargetListXML"] = selectTargetListXML;
+			    
+			    selecttarget_cross_dialogArguments[0] = receiverData;
+			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
+			    var SelectTarget_Cross = window.open("OrganAdmin/SelectTarget_Cross2.aspx", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
+			    try { SelectTarget_Cross.focus(); } catch (e) {}
+			}
+			function SelectTarget_Complete(ret) {
+			    if (typeof (ret) != "undefined") {
+			        selectTargetListXML = ret;
+			        document.getElementById("AccessList").innerHTML = "";
+
+			        var listview = new ListView();
+			        listview.SetID("AccessListView");
+			        listview.SetSelectFlag(false);
+			        listview.SetMulSelectable(true);
+			        listview.DataSource(document.getElementById("listviewheader"));
+			        listview.DataBind("AccessList");
+
+			        var xmldom = loadXMLString(selectTargetListXML);
+			        var xmldomNode = SelectNodes(xmldom, "DATA/NAME");
+			        for (i = 0; i < xmldomNode.length; i++) {
+			            var listTR = listview.AddRow(listview.GetRowCount());
+			            var listTD = document.createElement("TD");
+			            listTD.style.paddingBottom = "0px";
+			            listTD.style.paddingTop = "0px";
+			            var listTDText = document.createTextNode(getNodeText(xmldomNode[i]));
+			            listTD.appendChild(listTDText);
+			            listTR.appendChild(listTD);
+			        }
+
+
+			        var xmldomNode2 = SelectNodes(xmldom, "DATA/CN");
+			        ApprUserList = "";
+			        for (var i = 0; i < xmldomNode2.length; i++) {
+			            ApprUserList += getNodeText(xmldomNode2[i]);
+			            if (i != xmldomNode2.length - 1) {
+			                ApprUserList += ";";
+			            }
+			        }
+			    }
+			}			
+			function getApprUserList() {
+			    var xmlpara = createXmlDom();
+			    var objNode;
+			    createNodeInsert(xmlpara, objNode, "PARAMETER");
+			    createNodeAndInsertText(xmlpara, objNode, "pBoardID", BoardID);
+
+			    xmlhttp = null;
+			    xmlhttp = createXMLHttpRequest();
+			    xmlhttp.open("POST", "/myoffice/ezBoardSTD/aspx/Get_ApprUserList.aspx", true);
+			    xmlhttp.onreadystatechange = getApprUserList_after;
+			    xmlhttp.send(xmlpara);
+			}
+			function getApprUserList_after() {
+			    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+			    if (xmlhttp.statusText == "OK") {
+			        makeApprUserList(xmlhttp.responseXML);
+			    }
+			    
+			}
+			function makeApprUserList(getApprXml){
+			    document.getElementById("AccessList").innerHTML = "";
+
+			    var listview = new ListView();
+			    listview.SetID("AccessListView");
+			    listview.SetSelectFlag(false);
+			    listview.SetMulSelectable(true);
+			    listview.DataSource(document.getElementById("listviewheader"));
+			    listview.DataBind("AccessList");
+
+			    var xmldom = getApprXml;
+			    var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
+			    for (i = 0; i < xmldomNode.length; i++) {
+			        var listTR = listview.AddRow(listview.GetRowCount());
+			        var listTD = document.createElement("TD");
+			        listTD.style.paddingBottom = "0px";
+			        listTD.style.paddingTop = "0px";
+
+			        var UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME");
+			        if ("${lang}" != "1")
+			            UserName = SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME2");
+
+			        var DeptName = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION");
+			        if("${lang}" != "1")
+			            DeptName  = SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION2");
+
+			        var listTDText = document.createTextNode(UserName + "(" + DeptName + ")");
+			        listTD.appendChild(listTDText);
+			        listTR.appendChild(listTD);
+			    }
+			    var xmlpara = createXmlDom();
+			    var objNode;
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    var strxml = "<DATA>";
+			    var xmldomNode2 = SelectNodes(xmldom, "NODES/NODE");
+			    ApprUserList = "";
+			    for (var i = 0; i < xmldomNode2.length; i++) {
+			        ApprUserList += SelectSingleNodeValue(xmldomNode[i], "APPRUSERID");
+			        if (i != xmldomNode2.length - 1) {
+			            ApprUserList += ";";
+			        }
+			        strxml += "<CN><![CDATA[" + SelectSingleNodeValue(xmldomNode[i], "APPRUSERID") + "]]></CN>";
+			        strxml += "<NAME><![CDATA[" + SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME") + "(" + SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION") + ")" + "]]></NAME>";
+			        strxml += "<NAME2><![CDATA[" + SelectSingleNodeValue(xmldomNode[i], "DISPLAYNAME2") + "(" + SelectSingleNodeValue(xmldomNode[i], "DESCRIPTION2") + ")" + "]]></NAME2>";
+			        strxml += "<DEPT><![CDATA[PERSON]]></DEPT>";
+			        strxml += "<GROUP><![CDATA[N]]></GROUP>";
+			    }
+			    strxml += "</DATA>";
+			    selectTargetListXML = strxml;
+			}			
+			function change_brdColor() {
+			    if (CrossYN()) {
+			        manycolor_dialogArguments[1] = change_brdColor_Complete;
+			        var manyColor = window.open("../htm/manyColor.aspx", "manyColor", GetOpenWindowfeature(286, 290));
+			        try { manyColor.focus(); } catch (e) {}
+			    }
+			    else {
+			        var color = showModalDialog("../htm/manyColor.aspx", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
+			        if (typeof (color) != "undefined") {
+			            document.getElementById("selColor").style.backgroundColor = color;
+			            document.getElementById("colorID").innerText = color;
+			            brd_color = color;
+			        }
+			    }
+			}       
+			function change_brdColor_Complete(color) {
+			    if (typeof (color) != "undefined") {
+			        document.getElementById("selColor").style.backgroundColor = color;
+			        document.getElementById("colorID").innerText = color;
+			        brd_color = color;
+			    }
+			}			
+		    function ExtensionAttribute_onClick() {
+		        if (chkGroupBoard.checked) {
+		            gubun = "1"
+		        } else if (chkAnonyBoard.checked) {
+		            gubun = "2";
+		        } else if (chkPhotoBoard.checked) {
+		            gubun = "3";
+		        } else if (chkThumbBoard.checked) {
+		            gubun = "4";
+		        } else if (chkGeneralBoard.checked) {
+		            gubun = "0";
+		        } else if (chkQnABoard.checked) {
+		            gubun = "5";
+		        }
+
+		        var para = new Array();
+		        para[0] = BoardID;
+		        para[1] = gubun;
+		        var url = "BoardExtensionAttribute.aspx"
+
+		        if (CrossYN()) {
+		            BoardExtension_dialogArguments[0] = para;
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(750, 750));
+		            try { ExtensionAttribute.focus(); } catch (e) { }
+		        }
+		        else {
+		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
+		        }
+		    }
 	    </script>
 	</head>	
 	<c:if test="${adminType != 'y'}">
