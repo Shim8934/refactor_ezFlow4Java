@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -35,6 +37,9 @@ public class EzEmailMenuController {
 	@Autowired
 	private Properties config;
 
+	@Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;  
+	
 	@RequestMapping(value="/ezEmail/mailLeft.do")
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		String funCode = "";
@@ -90,7 +95,7 @@ public class EzEmailMenuController {
 		StringBuilder rootFolderXML = new StringBuilder();
 		List<Folder> rootMailFolder = getRootMailFolder();
 		try {
-			for(int i=0; i<rootMailFolder.size(); i++){
+			for(int i=0,j=0; i<rootMailFolder.size(); i++){
 				Folder fd = rootMailFolder.get(i);
 				rootFolderXML.append("<node imgidx='1'");
 				if(fd.getUnreadMessageCount()>0){
@@ -99,8 +104,30 @@ public class EzEmailMenuController {
 					rootFolderXML.append(" caption='"+fd.getName()+"'");
 				}
 				rootFolderXML.append(" foldername='"+fd.getName()+"'");
-				rootFolderXML.append(" orgBoxName='"+i+"'");
-				rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+				
+				if(fd.getName().equalsIgnoreCase("INBOX")) {
+					rootFolderXML.append(" orgBoxName='0'");
+					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
+				} else if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645"))) {
+					rootFolderXML.append(" orgBoxName='1'");
+					rootFolderXML.append(" fullcaption='_SENT'"); //수정
+				} else if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646"))) {
+					rootFolderXML.append(" orgBoxName='2'");
+					rootFolderXML.append(" fullcaption='_DRAFT'"); //수정
+				} else if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647"))) {
+					rootFolderXML.append(" orgBoxName='3'");
+					rootFolderXML.append(" fullcaption='_DELETE'"); //수정
+				} else if(fd.getName().equalsIgnoreCase("PERSONAL")) {
+					rootFolderXML.append(" orgBoxName='4'");
+					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+				} else if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))) {
+					rootFolderXML.append(" orgBoxName='5'");
+					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
+				} else {
+					rootFolderXML.append(" orgBoxName='"+((j++)+6)+"'");
+					rootFolderXML.append(" fullcaption='_NONE'"); //수정
+				}
+				
 				rootFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
 				if(fd.list().length>0){
 					rootFolderXML.append(" hassub='1'");
