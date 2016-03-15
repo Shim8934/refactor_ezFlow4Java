@@ -3,11 +3,11 @@
 
 <sqlMap namespace="ezQuestion">
 
-	<typeAlias  alias="QuestionListVO" type="egovframework.ezEKP.ezQuestion.vo.QuestionListVO"/>
-	<typeAlias  alias="UserPollItemVO" type="egovframework.ezEKP.ezQuestion.vo.UserPollItemVO"/>
-	<typeAlias  alias="UserPermissionVO" type="egovframework.ezEKP.ezQuestion.vo.UserPermissionVO"/>
+	<typeAlias  alias="QstListVO" type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
+	<typeAlias  alias="QstUserPollItemVO" type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
+	<typeAlias  alias="QstUserPermissionVO" type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
 	
-	<resultMap class="QuestionListVO" id="qstList">
+	<resultMap class="QstListVO" id="qstList">
 		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
 		<result property="userId"			column="USER_ID"			columnIndex="3"/>
@@ -24,7 +24,7 @@
 		<result property="responseRange"	column="RESPONSE_RANGE"		columnIndex="14"/>
 	</resultMap>
 	
-	<resultMap class="UserPollItemVO" id="userPollItem">
+	<resultMap class="QstUserPollItemVO" id="userPollItem">
 		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
 		<result property="userId"			column="USER_ID"			columnIndex="3"/>
@@ -55,7 +55,7 @@
 		<result property="completeFlag"		column="COMPLETE_FLAG"		columnIndex="28"/>
 	</resultMap>
 	
-	<resultMap class="UserPermissionVO" id="userPermission">
+	<resultMap class="QstUserPermissionVO" id="userPermission">
 		<result property="brdId"			column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"			column="ITEM_NO"			columnIndex="2"/>
 		<result property="publicFlg"		column="PUBLIC_FLG"			columnIndex="3"/>
