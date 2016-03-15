@@ -8,12 +8,14 @@ import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
+
 	 
 public interface EzQuestionService {
+
 	public int getQstListCnt(QstListVO qstListVO) throws Exception;
-	
+
 	public List<QstListVO> getQstList(QstListVO qstListVO) throws Exception;
-	
+
 	public int getItemNoCnt(int brdId,int itemNo) throws Exception;
 	
 	public String getItemSeq(String brdId) throws Exception;
@@ -40,7 +42,7 @@ public interface EzQuestionService {
 	
 	public void callInsertPollResponseper(QstCompleteVO qstCompleteVO) throws Exception;
 	
-	public int getQuestionNo(QstCompleteVO qstCompleteVO) throws Exception;
+	public int getQuestionNo(int brdId,int itemNo) throws Exception;
 	
 	public void insertQuestion(QstCompleteVO qstCompleteVO) throws Exception;
 	
