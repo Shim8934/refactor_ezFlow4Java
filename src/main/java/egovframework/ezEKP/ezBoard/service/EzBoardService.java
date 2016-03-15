@@ -66,4 +66,8 @@ public interface EzBoardService {
 
 	public void setAsReads(LoginVO userInfo, String pBoardID, String pItemIDList) throws Exception;
 
+	public String checkForm(String boardID, String mode) throws Exception;
+
+	public String checkBackGroundImage(String boardID) throws Exception;
+
 }

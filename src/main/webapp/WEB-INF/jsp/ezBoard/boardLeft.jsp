@@ -23,9 +23,9 @@
 	        var SS_ServerName = "test.yoonz44.com";
 	        var RedirectBoardGroupID = "";
 	        var RedirectBoardID = "";
-	        var Func = "";
-	        var subFunc = "";
-	        var PhotoType = "";
+	        var Func = "${func}";
+	        var subFunc = "${subFunc}";
+	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
 	        var items = "11";
@@ -41,7 +41,7 @@
 		                document.getElementById("TreeCtrl" + i + "obj").style.maxHeight = (height * 0.38) + "px";
 		            }
 		        }
-		    }
+		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -91,7 +91,7 @@
 		                favoriteList();
 		            }
 		        }
-		    }
+		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
 		        for (var i = 0 ; i < spans.length ; i++) {
@@ -110,10 +110,10 @@
 		
 		        var totalboard = "";
 		        if (pObjSpan.parentElement.nextSibling.nodeType == 1) {
-		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling)
+		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling);
 		        }
 		        else {
-		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling)
+		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling);
 		        }
 		
 		        var cnt = totalboard.children[0].getElementsByTagName("div").length;
@@ -132,7 +132,7 @@
 		                }
 		
 		                var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
-		                cnt += rtnval
+		                cnt += rtnval;
 		            }
 		        }
 		        selectItem.getElementsByTagName("span")[0].onclick();
@@ -196,7 +196,7 @@
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
-		        xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
+		        xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1");
 		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
 		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
@@ -261,7 +261,7 @@
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
-		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"))
+		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"));
 		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
 		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
@@ -372,7 +372,7 @@
 		        xmldom = loadXMLString(strXML);
 		        strHTML = "";
 		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
-		        for (i = 0; i < xmldomNodes.length; i++) {
+		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 		            tid = tid.substring(1, 37);
 		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
@@ -534,11 +534,11 @@
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
-<%-- 	    <% if( _ApplyFlag == "OK") { %> --%>
-<!--         <h3> -->
-<%--             <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span> --%>
-<!--         </h3> -->
-<%--     	<%} %> --%>
+	    <c:if test="${applyFlag == 'OK'}">
+	        <h3>
+	            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
+	        </h3>
+	    </c:if>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

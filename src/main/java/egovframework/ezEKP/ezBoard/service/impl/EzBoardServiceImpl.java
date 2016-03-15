@@ -175,9 +175,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getNoticePostItemCount(String boardId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", boardId);
-		return ezBoardDAO.getNoticePostItemCount(map);
+		return ezBoardDAO.getNoticePostItemCount(boardId);
 	}
 
 	@Override
@@ -276,4 +274,34 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_pUserTitle2", userInfo.getTitle2());
 		ezBoardDAO.setAsReads(map);
 	}
+
+	@Override
+	public String checkForm(String boardID, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PMODE", mode);
+		
+		String checkForm = "";
+		int checkCnt = ezBoardDAO.checkForm(map);
+		
+		if(checkCnt > 0){
+			checkForm = "TRUE";
+		}else{
+			checkForm = "FALSE";
+		}
+		return checkForm;
+	}
+
+	@Override
+	public String checkBackGroundImage(String boardID) throws Exception {
+		String check = "";
+		int checkCnt = ezBoardDAO.checkBackGroundImage(boardID);
+		if(checkCnt > 0){
+			check = "TRUE";
+		}else{
+			check = "FALSE";
+		}
+		return check;
+	}
+	
 }

@@ -3,28 +3,14 @@
 
 <sqlMap namespace="ezOrgan">
 
-	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 		 alias="loginVO" 					type="egovframework.let.user.login.vo.LoginVO"/>
 
-	<parameterMap id="getPropertyValueMap" class="java.util.Map">
-		<parameter property="v_CN" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="v_FIELD" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-	<parameterMap id="getSIPUriListMap" class="java.util.Map">
-		<parameter property="iv_CNLIST" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="iv_EMAILLIST" javaType="java.lang.String" jdbcType="VARCHAR2" mode="IN"/>
-		<parameter property="cv_1" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
-	</parameterMap>
-
-	<!--@@@@@@@@@@@@@@@@@@@@@@@@@@@   resultMAP   @@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
-	
-	<procedure id="EzOrganDAO.getPropertyValue" parameterMap="getPropertyValueMap" resultClass="String">
-		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(?,?,?)}
+	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String">
+		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzOrganDAO.getSIPUriList" parameterMap="getSIPUriListMap" resultClass="String">
-		{CALL EZHRMASTER.EZSP_GETSIPURILIST(?,?,?)}
+	<procedure id="EzOrganDAO.getSIPUriList" parameterClass="Map" resultClass="String">
+		{CALL EZHRMASTER.EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzOrganDAO.getDeptFullPath" parameterClass="String" resultClass="String">

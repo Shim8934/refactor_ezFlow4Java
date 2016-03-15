@@ -98,8 +98,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
 	}
 
-	public int getNoticePostItemCount(Map<String, Object> map) throws Exception{
-		return (int)select("EzBoardDAO.getNoticePostItemCount", map);
+	public int getNoticePostItemCount(String boardId) throws Exception{
+		return (int)select("EzBoardDAO.getNoticePostItemCount", boardId);
 	}
 
 	public int getBoardTotalItemCount(Map<String, Object> map) throws Exception{
@@ -135,6 +135,15 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	public void setAsReads(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.setAsReads", map);
+	}
+
+	public int checkForm(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.checkForm", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int checkBackGroundImage(String boardID) throws Exception{
+		return (int) select("EzBoardDAO.checkBackGroundImage", boardID);
 	}
 	
 }

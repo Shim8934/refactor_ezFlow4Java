@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta name="CODE_LANGUAGE" Content="C#">
-		<meta http-equiv="X-UA-Compatible" content="IE=9">
+<!-- 		<meta http-equiv="X-UA-Compatible" content="IE=9"> -->
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<script  type="text/javascript"src="/js/mouseeffect.js"></script>

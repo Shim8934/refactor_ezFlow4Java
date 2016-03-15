@@ -2,23 +2,23 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezBoard">
-	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
-	<typeAlias  alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
-	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
-	<typeAlias  alias="BoardConfigVO" type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
-	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
-	<typeAlias  alias="BoardListHeaderVO" type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
+
+	<typeAlias  alias="EzBoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
+	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
+	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
+	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
+	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
-		<result property="boardGroupId" column="BOARDGROUPID" columnIndex="1"/>
+		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
 	
 	<resultMap id="get_favoriteList" class="MyFavoriteVO">
-		<result property="boardId" column="BOARDID" columnIndex="1"/>
-		<result property="boardName" column="BOARDNAME" columnIndex="2"/>
-		<result property="boardName2" column="BOARDNAME2" columnIndex="3"/>
-		<result property="tabUsed" column="TABUSED" columnIndex="4"/>
-		<!-- <result property="guBun" column="GUBUN" columnIndex="5"/> -->
+		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
+		<result property="boardName" 				column="BOARDNAME" 				columnIndex="2"/>
+		<result property="boardName2" 				column="BOARDNAME2" 			columnIndex="3"/>
+		<result property="tabUsed" 					column="TABUSED" 				columnIndex="4"/>
 	</resultMap>
 	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
@@ -75,6 +75,10 @@
 	
 	<procedure id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_GETQNABRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#, #v_PADMINTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer">
@@ -137,7 +141,7 @@
 	        FROM 
 	        	ezBoardSTD.TBL_BOARD_ITEM 
 	        WHERE  
-	        	boardid = #v_pBoardID#
+	        	boardid = #boardId#
 	        AND 
 	        	startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
 	        AND 
@@ -163,5 +167,17 @@
 	        AND 
 	        	B.appruserid = #v_PUSERID#
         ]]>	
+	</select>
+	<select id="EzBoardDAO.checkBackGroundImage" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(boardid)
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_BOARDINFO 
+	        WHERE  
+	       		boardid = #boardID#
+			AND 
+				background = 'Y'
+		]]>                
 	</select>
 </sqlMap>

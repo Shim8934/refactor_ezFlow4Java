@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,7 @@ import org.xml.sax.InputSource;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -146,6 +146,10 @@ public class EzBoardController {
         
         modelMap.addAttribute("userInfo", loginVO);
         modelMap.addAttribute("resultXML", resultXML);
+        modelMap.addAttribute("func",func);
+        modelMap.addAttribute("subFunc",subFunc);
+        modelMap.addAttribute("photoType",photoType);
+        modelMap.addAttribute("applyFlag",applyFlag);
         
 		return "ezBoard/boardLeft";
 	}
@@ -1679,7 +1683,7 @@ public class EzBoardController {
 	}
 	
 	@RequestMapping(value = "/ezBoard/newBoardItem.do")
-	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO) throws Exception{
+	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
         String extenLang = "1";
         String editor = config.getProperty("EDITOR");
@@ -1690,6 +1694,12 @@ public class EzBoardController {
         String url = "";
         String hasAttach = "";
         String strWriterFakeName = "";
+        String reservedItem = "";
+        String checkForm = "";
+        String useBackGround = "";
+        String docID = "";
+        String boardType = "";
+        
         if(request.getParameter("mode") != null){
         	mode = request.getParameter("mode");
         }
@@ -1702,14 +1712,24 @@ public class EzBoardController {
         if(request.getParameter("url") != null){
         	url = request.getParameter("url");
         }
+        if(request.getParameter("BTYPE") != null){
+        	boardType = request.getParameter("BTYPE");
+        }
+        if(request.getParameter("docid") != null){
+        	docID = request.getParameter("docid");
+        }
+        if(request.getParameter("ReservedItem") != null){
+        	reservedItem = request.getParameter("ReservedItem");
+        }
         String newGuid = UUID.randomUUID().toString();
         BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
         if(boardInfo.getWrite_FG() != null && boardInfo.getWrite_FG().equals("false")){
         	return "main/warning";
         }
         //추가 항목 가져오는 소스 사용안하는듯
+        List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
         if(boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")){
-//        	ezBoardAdminService.getBoardAttribute(boardID);
+        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID);
         	if(userInfo.getLang().equals("1")){
         		extenLang = "2";
         	}
@@ -1789,13 +1809,44 @@ public class EzBoardController {
         	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
         }
         startDateTime = strDate.get(Calendar.YEAR)+ "-"+ (strDate.get(Calendar.MONTH)+1)+"-"+strDate.get(Calendar.DATE)+" "+strDate.get(Calendar.HOUR)+":"+strDate.get(Calendar.MINUTE)+":"+strDate.get(Calendar.SECOND);
-        
         endDateTime = EgovDateUtil.convertDate(endDateTime,"0000","yyyy-MM-dd");
-        //여기까지~
-		return "main/warning";
+        if(reservedItem.equals("true")){
+        	startDateTime = boardListVO.getStartDate();
+        }
+        
+        checkForm = ezBoardService.checkForm(boardID, "Y");
+        useBackGround = ezBoardService.checkBackGroundImage(boardID);
+        
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("boardListVO", boardListVO);
+        model.addAttribute("boardAttributeListVO", boardAttributeListVO);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("extenLang", extenLang);
+        model.addAttribute("editor", editor);
+        model.addAttribute("uploadFilePath", uploadFilePath);
+        model.addAttribute("mode", mode);
+        model.addAttribute("boardID", boardID);
+        model.addAttribute("itemID", itemID);
+        model.addAttribute("url", url);
+        model.addAttribute("hasAttach", hasAttach);
+        model.addAttribute("strWriterFakeName", strWriterFakeName);
+        model.addAttribute("reservedItem", reservedItem);
+        model.addAttribute("checkForm", checkForm);
+        model.addAttribute("useBackGround", useBackGround);
+        model.addAttribute("strNow", strNow);
+        model.addAttribute("startDateTime", startDateTime);
+        model.addAttribute("endDateTime", endDateTime);
+        model.addAttribute("expireDays", expireDays);
+        model.addAttribute("expireItem", expireItem);
+        model.addAttribute("strTitle", strTitle);
+        model.addAttribute("newGuid", newGuid);
+        model.addAttribute("docID", docID);
+        model.addAttribute("boardType", boardType);
+        
+		return "ezBoard/boardNewItem";
 	}
 	
-	public String isoUTFDate(String dateTimeStr){
+	public String isoUTFDate(String dateTimeStr) throws Exception{
         String timeSetStr = "";
         String resultStr = "";
 
@@ -1830,4 +1881,23 @@ public class EzBoardController {
         }
         return resultStr;
     }
+	
+	@RequestMapping(value = "/ezBoard/ckEditor.do")
+	public String ckEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo",userInfo);
+		
+		return "ezBoard/boardCKEditor";
+	}
+	
+	@RequestMapping(value = "/ezBoard/dragAndDrop.do")
+	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo",userInfo);
+		
+		return "ezBoard/boardDragAndDrop";
+	}
+	
 }
