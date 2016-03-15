@@ -370,7 +370,7 @@ public class EzQuestionController {
 			if(readDateCnt > 0){
 //				sysdate, brdId, itemNo, userId
 				/** updateReadDate*/
-//				ezQuestionService.updateReadDate();
+				ezQuestionService.updateReadDate(userPollItemVO);
 			}else{
 //				sysdate, displayName1,2,deptId,deptName1,2,title1,2
 				/** insertItemRead*/
