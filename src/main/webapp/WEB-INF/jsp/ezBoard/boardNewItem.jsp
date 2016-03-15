@@ -16,16 +16,14 @@
 			    <title><spring:message code='ezBoard.t370' /></title>
 			</c:otherwise>
 		</c:choose>
-	    <meta name="CODE_LANGUAGE" content="C#">
-<!-- 	    <meta http-equiv="X-UA-Compatible" content="IE=10"> -->
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <script  type="text/javascript"src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript"src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/datepicker.htc.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
-	    <script  type="text/javascript"src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
@@ -37,14 +35,14 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 	    <!-- data picker-->
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
 		    var pBoardID = "${boardID}";
@@ -160,7 +158,7 @@
 			            //추가항목
 			            try {
 			            	if("${fn:length(boardAttributeListVO)}" > 0){
-			            		$.each("${boardAttributeListVO}",function(VOIndex, VO){
+			            		$.each(["${boardAttributeListVO}"],function(VOIndex, VO){
 			            			if(VO.colType == "radio"){
 			            				SetRadioVal(VO.tableCol, ConvMakeXMLString(VO.tableCol));
 			            			}else if(VO.colType == "text"){
@@ -245,7 +243,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -263,7 +261,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        var NowDate2 = new Date();
@@ -340,7 +338,6 @@
 		        }
 		    }
 		    function MakeAttachList() {
-alert(23232);
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
 		        var str = "";
@@ -419,7 +416,8 @@ alert(23232);
 		        }
 		
 		        //추가항목
-		        $.each("${boardAttributeListVO}",function(VOIndex, VO){
+				var list = "${boardAttributeListVO}";
+		        $.each([list],function(VOIndex, VO){
 		        	if(VO.must == "Y"){
 		        		if(VO.colType == "radio"){
 		        			if(GetRadioVal(VO.tableCol) == ""){
@@ -446,7 +444,6 @@ alert(23232);
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
-		
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
@@ -543,6 +540,7 @@ alert(23232);
 		            importance = "0";
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
+
 		        if (gubun != "2") {
 		            if (SSUserName == "" || SSUserName2 == "" ||
 				        SSDeptName == "" || SSDeptName2 == "" ||
@@ -655,7 +653,6 @@ alert(23232);
 		        else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
 		        }
-		
 		        if (gubun != "2") {
 		
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
@@ -672,7 +669,6 @@ alert(23232);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", "");
 		        }
-		
 		        if (gubun != "3") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", "");
 		        }
@@ -693,7 +689,6 @@ alert(23232);
 		            if (obj[i].className == "FIELD")
 		                obj[i].removeAttribute('className');
 		        }
-		
 		        if (pDocID != "")
 		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 		        
@@ -713,7 +708,7 @@ alert(23232);
 		            }
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
-		
+		        
 		        if (gubun == "2")
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", Crypt_Encrytion(document.getElementById('txtPassWord').value));
 		        else
@@ -728,7 +723,7 @@ alert(23232);
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 				
-		        $.each("${boardAttributeListVO}",function(VOIndex, VO){
+		        $.each(["${boardAttributeListVO}"],function(VOIndex, VO){
 		        	if(VO.colType == "radio"){
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, VO.tableCol, GetRadioVal(VO.tableCol));
 		        	}else if(VO.colType == "text"){
@@ -737,9 +732,9 @@ alert(23232);
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, VO.tableCol, GetCheckVal(VO.tableCol));
 		        	}
 		        });
-		
 		        xmlhttp.open("POST", "interASP/SaveItem.aspx?Mode=" + pMode + "&gubun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
+//@@@@@@@@@@@@@@@ 여기까지
 		        if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;
 		            xmlDom = null;
@@ -876,7 +871,7 @@ alert(23232);
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";

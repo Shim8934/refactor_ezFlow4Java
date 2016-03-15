@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
+		<link href="/css/default_kr.css"  rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
@@ -16,48 +16,48 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		    <style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	    <style>
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			#layer_Viewpopup .popupwrap1 {
+				border:1px solid #555a64;
+				padding:0px;
+				margin:0px;
+				
+			}
+			#layer_Viewpopup .shadow {
+				height:2px;
+				background:#d7d7d7;
+				
+			}
+			#layer_Viewpopup .popupwrap2 {
+				border:2px solid #e5e5e5;
+				padding:10px;
+				
+			}
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		/* 20130809 추가 */
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
-		    </style>
+			/* 20130809 추가 */
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
+	    </style>
 		<script  type="text/javascript">
 			var pBoardID = "${boardInfo.boardID}";
 	    	var SSUserID = "${userInfo.id}";
@@ -261,20 +261,20 @@
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
-		        	url = "/ezBoard/getBoardList.do"
+		        	url = "/ezBoard/getBoardList.do";
 		        }
 		        $.ajax({
 					type : "POST",
 					dataType : "xml",
 					async : true,
 					url : url,
-					data : { boardType : pBoardType, 
-								  boardId : pBoardID, 
-								  pageNum : CurPage, 
-								  orderCell : OrderCell, 
-								  orderOption : OrderOption,
-								  searchQuery : SQLPARADATA,
-								  type : type
+					data : { boardType   : pBoardType, 
+							 boardId 	 : pBoardID, 
+							 pageNum 	 : CurPage, 
+							 orderCell 	 : OrderCell, 
+							 orderOption : OrderOption,
+							 searchQuery : SQLPARADATA,
+							 type 		 : type
 								  },
 					success: function(xml){
 						getBoardList_after(xml);
@@ -380,47 +380,47 @@
 		        //하위 게시판 검색할 건지에 대한 조건
 		        if (document.getElementById("chkSearchSub").checked)		// SearchSubBoard
 		        {
-		            TYPE += "SEARCHSUBBOARD;"
+		            TYPE += "SEARCHSUBBOARD;";
 		        }
 		        if (document.getElementById("txt_keyword").value != "") {
 		            var radiosearch = document.getElementsByName('searchCheck');
 		            if (radiosearch.item(0).checked) {
-		                TYPE += "TITLE;"
+		                TYPE += "TITLE;";
 		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
 		            }
 		            else if (radiosearch.item(1).checked) {
-		                TYPE += "WRITERNAME;"
+		                TYPE += "WRITERNAME;";
 		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
 		            }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
-		                TYPE += "TITLE;"
+		                TYPE += "TITLE;";
 		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
 		            }
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
-		                TYPE += "WRITERNAME;"
+		                TYPE += "WRITERNAME;";
 		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
-		                TYPE += "ABSTRACT;"
+		                TYPE += "ABSTRACT;";
 		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
 		            }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
-		                TYPE += "STARTDATE;"
+		                TYPE += "STARTDATE;";
 		                DATA += "<STARTDATE>" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</STARTDATE>";
 		            }
 		
 		            if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// EndDate
 		            {
-		                TYPE += "ENDDATE;"
+		                TYPE += "ENDDATE;";
 		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
 		            }
 		        }
@@ -456,11 +456,11 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
@@ -657,7 +657,7 @@
 		            
 		            if (CrossYN()) {
 		                arrList2 = strListInfo.split(";");
-		                for (i = 0; i < arrList2.length - 1; i++) {
+		                for (var i = 0; i < arrList2.length - 1; i++) {
 		                    strItemList += arrList2[i].split(",")[0] + ";";
 		                }
 		                strItemList = strItemList.split(";");
@@ -725,7 +725,7 @@
 		                    if (CurPage == totalPage) {
 		                        var SelList = new ListView();
 		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1
+		                        var DeleteCount = strListInfo.split(';').length - 1;
 		                        if (SelList.GetRowCount() == DeleteCount) {
 		                            CurPage = CurPage - 1;
 		                        }
@@ -762,7 +762,7 @@
 		                    if (CurPage == totalPage) {
 		                        var SelList = new ListView();
 		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1
+		                        var DeleteCount = strListInfo.split(';').length - 1;
 		                        if (SelList.GetRowCount() == DeleteCount) {
 		                            CurPage = CurPage - 1;
 		                        }
@@ -797,7 +797,7 @@
 		        if (CurPage == totalPage) {
 		            var SelList = new ListView();
 		            SelList.LoadFromID("BoardList");
-		            var DeleteCount = strListInfo.split(';').length - 1
+		            var DeleteCount = strListInfo.split(';').length - 1;
 		            if (SelList.GetRowCount() == DeleteCount) {
 		                CurPage = CurPage - 1;
 		            }

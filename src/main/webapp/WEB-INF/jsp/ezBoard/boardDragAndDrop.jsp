@@ -5,8 +5,6 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" /> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<style>
 		#lstAttachLink {
@@ -14,6 +12,8 @@
 		border: 1px solid #3C2F2E;
 		}
 		</style>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;

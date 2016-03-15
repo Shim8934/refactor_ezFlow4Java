@@ -751,150 +751,17 @@ public class EzBoardController {
     protected boolean CheckDBColum(String pProvValue) throws Exception{
         boolean bRet = false;
         // 사용자 속성명
-        switch (pProvValue.toUpperCase()){
-            case "CN":
-                bRet = true;
-                break;
-            case "DISPLAYNAME":
-                bRet = true;
-                break;
-            case "DISPLAYNAME1":
-                bRet = true;
-                break;
-            case "DISPLAYNAME2":
-                bRet = true;
-                break;
-            case "MAIL":
-                bRet = true;
-                break;
-            case "MAILNICKNAME":
-                bRet = true;
-                break;
-            case "UPNNAME":
-                bRet = true;
-                break;
-            case "DEPARTMENT":
-                bRet = true;
-                break;
-            case "DESCRIPTION":
-                bRet = true;
-                break;
-            case "DESCRIPTION1":
-                bRet = true;
-                break;
-            case "DESCRIPTION2":
-                bRet = true;
-                break;
-            case "PHYSICALDELIVERYOFFICENAME":
-                bRet = true;
-                break;
-            case "COMPANY":
-                bRet = true;
-                break;
-            case "COMPANY1":
-                bRet = true;
-                break;
-            case "COMPANY2":
-                bRet = true;
-                break;
-            case "TITLE":
-                bRet = true;
-                break;
-            case "TITLE1":
-                bRet = true;
-                break;
-            case "TITLE2":
-                bRet = true;
-                break;
-            case "TELEPHONENUMBER":
-                bRet = true;
-                break;
-            case "HOMEPHONE":
-                bRet = true;
-                break;
-            case "FACSIMILETELEPHONENUMBER":
-                bRet = true;
-                break;
-            case "MOBILE":
-                bRet = true;
-                break;
-            case "POSTALCODE":
-                bRet = true;
-                break;
-            case "STREETADDRESS":
-                bRet = true;
-                break;
-            case "INFO":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE1":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE2":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE3":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE4":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE5":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE6":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE7":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE8":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE9":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE10":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE101":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE102":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE11":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE12":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE13":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE14":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE15":
-                bRet = true;
-                break;
-            case "ADSPATH":
-                bRet = true;
-                break;
-            case "UPDATEDT":
-                bRet = true;
-                break;
-            case "SIPURI":
-                bRet = true;
-                break;
-            case "BIRTH":
-                bRet = true;
-                break;
-            case "BIRTHTYPE":
-                bRet = true;
-                break;
+        String tmp = pProvValue.toUpperCase();
+        if(tmp.equals("CN") || tmp.equals("DISPLAYNAME") ||tmp.equals("DISPLAYNAME1") ||tmp.equals("DISPLAYNAME2") ||tmp.equals("MAIL") ||tmp.equals("MAILNICKNAME") ||tmp.equals("UPNNAME") ||
+    	   tmp.equals("DEPARTMENT") ||tmp.equals("DESCRIPTION") ||tmp.equals("DESCRIPTION1") ||tmp.equals("DESCRIPTION2") ||tmp.equals("PHYSICALDELIVERYOFFICENAME") ||tmp.equals("COMPANY") ||
+    	   tmp.equals("COMPANY1") ||tmp.equals("COMPANY2") ||tmp.equals("TITLE") ||tmp.equals("TITLE1") ||tmp.equals("TITLE2") ||tmp.equals("TELEPHONENUMBER") ||tmp.equals("HOMEPHONE") ||tmp.equals("FACSIMILETELEPHONENUMBER") ||
+    	   tmp.equals("MOBILE") ||tmp.equals("POSTALCODE") ||tmp.equals("STREETADDRESS") ||tmp.equals("INFO") ||tmp.equals("EXTENSIONATTRIBUTE1") ||tmp.equals("EXTENSIONATTRIBUTE2") ||tmp.equals("EXTENSIONATTRIBUTE3") ||tmp.equals("EXTENSIONATTRIBUTE4") ||
+    	   tmp.equals("EXTENSIONATTRIBUTE5") ||tmp.equals("EXTENSIONATTRIBUTE6") ||tmp.equals("EXTENSIONATTRIBUTE7") ||tmp.equals("EXTENSIONATTRIBUTE8") ||tmp.equals("EXTENSIONATTRIBUTE9") ||tmp.equals("EXTENSIONATTRIBUTE10") ||tmp.equals("EXTENSIONATTRIBUTE101") ||
+    	   tmp.equals("EXTENSIONATTRIBUTE102") ||tmp.equals("EXTENSIONATTRIBUTE11") ||tmp.equals("EXTENSIONATTRIBUTE12") ||tmp.equals("EXTENSIONATTRIBUTE13") ||tmp.equals("EXTENSIONATTRIBUTE14") ||tmp.equals("EXTENSIONATTRIBUTE15") ||
+    	   tmp.equals("ADSPATH") ||tmp.equals("UPDATEDT") ||tmp.equals("SIPURI") ||tmp.equals("BIRTH") ||tmp.equals("BIRTHTYPE")){
+        	
+        	bRet = true;
         }
-
         // 부서명
         switch (pProvValue.toUpperCase()){
             case "CN":
