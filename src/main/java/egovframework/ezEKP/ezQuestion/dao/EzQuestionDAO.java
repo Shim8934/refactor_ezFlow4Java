@@ -77,7 +77,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		insert("EzQuestionDAO.callInsertPollResponseper", map);
 	}
 	
-	public int getQuestionNo(Map<String,Object> map) {
+	public int getQuestionNo(Map<String,Object> map) throws Exception {
 		select("EzQuestionDAO.getQuestionNo", map);
 		return (int)map.get("v_pCount");
 	}
