@@ -3,20 +3,31 @@ package egovframework.ezEKP.ezQuestion.vo;
 import java.util.List;
 
 public class QstAddVO {
-	//private int brdID;
-	//private int itemNo;
+	/** 질문번호*/
 	private int questionNo;
+	/** 질문내용*/
 	private String questionContent;
+	/** 질문유형*/
 	private int answerType;
+	/** 보기유형*/
 	private int answerViewType;
+	/** 다답형*/
 	private String multiSelect;
+	/** */
 	private int quesSN;
+	/** */
 	private int selViewStart;
+	/** */
 	private int selViewEnd;
+	/** 질문제목*/
 	private String txtQuestion;
+	/** */
 	private String title;
+	/** */
 	private List<String> answer;
+	/** */
 	private List<String> attach;
+	/** */
 	private String href;
 	
 	
