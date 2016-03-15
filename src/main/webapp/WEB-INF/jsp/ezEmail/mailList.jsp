@@ -35,7 +35,7 @@
 	    var SearchKeyword = "";
 	    var g_loginID = "${userId}";
 	    var SecurityMailReadUndo = true;
-	    var p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+	    var p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
 	    var p_Listoption = "1";
 	    var p_ListOrderby = "urn:schemas:httpmail:datereceived";
 	    var p_ListOrderOption = "DESC";
@@ -74,7 +74,7 @@
 	            case "sent":
 	                receivecheck.style.display = "";
 	                reply.style.display = 'none';
-	                p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+	                p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
 	                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
 	                p_Listoption = "2";
 	                document.getElementById("select").selectedIndex = 3;
@@ -155,7 +155,7 @@
 	                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 	                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
 	                    if (g_foldertype != "sent") {
-	                        p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+	                        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
 	                        SmallSizeList = true;
 	                        OldSmallSizeList = true;
 	                    }
@@ -170,9 +170,9 @@
 	        }
 	
 	        var HeaderObject = document.getElementById("MailHeader");
-	        var ContentObject = document.getElementById("MailList");
-	        HeaderIni(HeaderObject);
-	        GetListInfo(HeaderObject, ContentObject);
+	        var ContentObject = document.getElementById("MailList");	        
+	        HeaderIni(HeaderObject);       
+	        GetListInfo(HeaderObject, ContentObject);	        
 	        PreviewMode_ChangeBtn();
 	        window_onunload_Event = true;
 	        if (pRefreshinterval != "") {

@@ -657,7 +657,7 @@ function on_changeView(listtypeValue) {
             p_ListorderValue = "SENT";
             p_ListOrderby = "http://schemas.microsoft.com/mapi/sent_representing_name";
             p_ListOrderOption = "ASC";
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile3.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile3.xml";
             break;
         case "SUBJECT":
             p_ListorderType = " WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false " +
@@ -665,20 +665,20 @@ function on_changeView(listtypeValue) {
             p_ListorderValue = "SUBJECT";
             p_ListOrderby = "http://schemas.microsoft.com/mapi/proptag/x0e1d001f";
             p_ListOrderOption = "ASC";
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile4.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile4.xml";
             break;
         case "RECEIV":
             p_ListorderType = "WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false ";
             p_ListorderValue = "RECEIV";
             p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
             break;
     }
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
         if (pPreviewShow_HOW == "H") {
             if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                 if (g_foldertype != "sent") {
-                    p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                     SmallSizeList = true;
                     OldSmallSizeList = true;
                 }
@@ -770,15 +770,15 @@ function MailListRefresh() {
 }
 function BasicViewHeaderChange(pGubun) {
     if (pGubun) {
-        if (p_HeaderViewXML == "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml")
+        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml")
             return;
 
-        p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
     } else {
-        if (p_HeaderViewXML == "Controls_cross/" + g_userLang + "/viewXMLFile1.xml")
+        if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml")
             return;
 
-        p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+        p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
     }
     listContentArry = new Array();
     listSubContentArry = new Array();
@@ -1375,7 +1375,7 @@ function event_GrouplistDBClick(obj) {
     }
     var pGroupProp = obj.getAttribute("prop");
     var pGroupMode = obj.getAttribute("mode");
-    p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
     if (pGroupMode == "SENT") {
         p_ListorderType_SUB = " WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false " +
                           " AND \"http://schemas.microsoft.com/mapi/sent_representing_name\" = '" + pGroupProp + "' ";

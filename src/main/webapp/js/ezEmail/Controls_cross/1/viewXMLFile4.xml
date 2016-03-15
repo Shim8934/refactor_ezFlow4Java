@@ -1,0 +1,29 @@
+﻿<view>
+  <byteabbreviation>B</byteabbreviation>
+  <kilobyteabbreviation>KB</kilobyteabbreviation>
+  <megabyteabbreviation>MB</megabyteabbreviation>
+  <column>
+    <heading>제목별로</heading>
+    <type>string</type>
+    <propname>subject</propname>
+    <prop>subject</prop>
+    <sortable>1</sortable>
+    <bitmap>0</bitmap>
+    <multivalued>0</multivalued>
+    <visible>1</visible>
+    <width>100%</width>
+    <align>left</align>
+  </column>
+  <column>
+    <heading>메일정보</heading>
+    <type>date</type>
+    <propname>info</propname>
+    <prop>sentdt</prop>
+    <sortable>1</sortable>
+    <bitmap>0</bitmap>
+    <multivalued>0</multivalued>
+    <visible>1</visible>
+    <width>200px</width>
+    <align>center</align>
+  </column>
+</view>
