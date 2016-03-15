@@ -61,6 +61,10 @@ public interface EzQuestionService {
 	public void updateReadCnt(QstUserPollItemVO userPollItemVO);
 
 	public int getReadDateItem();
+	
+	public void updateReadDate(QstUserPollItemVO userPollItemVO);
 
 	public List<QstVO> getQuestionForResponse(QstVO questionVO);
+
+
 }
