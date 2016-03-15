@@ -284,6 +284,12 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	public void updateReadDate(QstUserPollItemVO userPollItemVO) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public List<QstVO> getQuestionForResponse(QstVO questionVO) {
@@ -291,4 +297,5 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		// TODO Auto-generated method stub
 		
 	}
+
 }
