@@ -173,27 +173,7 @@
 	       AND 
 	       		rownum <= 1 
 		]]>
-	</select>
-	
-	<!-- 	권한가져오기 -->
-	<select id="EzBoardAdminDAO.getAttribute"  resultMap="backGroundImage">
-		<![CDATA[
-			SELECT 
-				boardid as BACKGROUNDID,
-	            tablecol as ORGFILENAME,
-	            sn as SN,
-	            colname1 as WIDTH,
-	            colname2 as HEIGHT,
-	            value as REGUSERID,
-	            coltype as REGDATE,
-	            must as ISUSE,
-	            '' as SAVEFILENAME	            
-	       FROM 
-	        	ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE 
-	       WHERE  
-	       		BOARDID = #backgroundID#
-		]]>
-	</select>
+	</select>	
 	
 	<select id="EzBoardAdminDAO.getBackGroundImage"  resultMap="backGroundImage">
 		<![CDATA[
@@ -216,21 +196,6 @@
 		ORDER BY sn
 	</select>
 	
-	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">		
-		UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
-		SET
-			<isEqual property="type" compareValue="U"> isuse = #isUse#</isEqual>
-			<isNotEqual property="type" compareValue="U"> sn = #isUse#</isNotEqual>
-		WHERE
-			backgroundid = #backgroundID#			
-	</update>
-	
-	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">		
-		DELETE FROM 
-			ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
-		WHERE
-			backgroundid = #backgroundID#			
-	</delete>
 	<select id="EzBoardAdminDAO.getBoardAttribute" resultClass="BoardAttributeVO">
 		<![CDATA[	
 			SELECT 
@@ -250,5 +215,21 @@
 	       		sn
 		]]>
 	</select>
+	
+	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">		
+		UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
+		SET
+			<isEqual property="type" compareValue="U"> isuse = #isUse#</isEqual>
+			<isNotEqual property="type" compareValue="U"> sn = #isUse#</isNotEqual>
+		WHERE
+			backgroundid = #backgroundID#			
+	</update>
+	
+	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">		
+		DELETE FROM 
+			ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
+		WHERE
+			backgroundid = #backgroundID#			
+	</delete>
 
 </sqlMap>

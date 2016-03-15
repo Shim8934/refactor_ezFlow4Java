@@ -29,9 +29,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
 	
-	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
-	
-	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) throws Exception;
+	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
 	public List<BoardBackgroundVO> getBoardHeader(String boardID, String gubun) throws Exception;
 

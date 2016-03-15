@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -492,21 +493,20 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getAttribute.do")
-	public void getAttribute(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
-		boardBackgroundVO.setBackgroundID(request.getParameter("boardID"));
-		List<BoardBackgroundVO> list = ezBoardAdminService.getAttribute(boardBackgroundVO);
+	public void getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{	
+		List<BoardAttributeVO> list = ezBoardAdminService.getBoardAttribute(boardAttributeVO.getBoardID());
 		
 		StringBuilder sb = new StringBuilder();		
 	
 		sb.append("<ROWS>");
 		for(int i=0; i< list.size(); i++){
-			BoardBackgroundVO obj = list.get(i);
+			BoardAttributeVO obj = list.get(i);
 			sb.append("<ROW>");
-			sb.append("<CELL><VALUE>" + obj.getWidth() + "</VALUE><DATA1>" + obj.getOrgFileName() + "</DATA1></CELL>");
+			/*sb.append("<CELL><VALUE>" + obj.getWidth() + "</VALUE><DATA1>" + obj.getOrgFileName() + "</DATA1></CELL>");
 			sb.append("<CELL><VALUE>" + obj.getHeight() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + obj.getIsUse() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + obj.getRegDate() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + obj.getRegUserID() + "</VALUE></CELL>");			
+			sb.append("<CELL><VALUE>" + obj.getRegUserID() + "</VALUE></CELL>");	*/		
 			sb.append("</ROW>");				
 		}
 		sb.append("</ROWS>");

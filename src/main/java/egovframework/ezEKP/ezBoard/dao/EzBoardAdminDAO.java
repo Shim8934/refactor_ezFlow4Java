@@ -68,12 +68,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) {		
 		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBackGroundImage", boardBackgroundVO);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) {		
-		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getAttribute", boardBackgroundVO);
-	}
+	}	
+
 	@SuppressWarnings("unchecked")
 	public List<BoardBackgroundVO> getBoardHeader(Map<String, Object> map) throws Exception{		
 		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBoardHeader", map);		

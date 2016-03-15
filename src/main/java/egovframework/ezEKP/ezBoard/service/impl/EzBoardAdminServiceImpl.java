@@ -123,13 +123,6 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 	
 	@Override
-	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) throws Exception {
-		// TODO Auto-generated method stub
-		return ezBoardAdminDAO.getAttribute(boardBackgroundVO);
-		
-	}
-	
-	@Override
 	public List<BoardBackgroundVO> getBoardHeader(String boardID, String gubun) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
