@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
-public class UserPermissionVO {
+public class QstUserPermissionVO {
 	/** 게시판ID*/
 	int brdId;
 	/** 글 번호*/

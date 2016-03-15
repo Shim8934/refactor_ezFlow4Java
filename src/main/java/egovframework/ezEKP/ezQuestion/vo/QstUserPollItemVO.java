@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
-public class UserPollItemVO {
+public class QstUserPollItemVO {
 	/** 게시판ID*/
 	int brdId;
 	/** 글 번호*/

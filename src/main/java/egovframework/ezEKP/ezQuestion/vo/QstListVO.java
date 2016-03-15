@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
 
-public class QuestionListVO {
+public class QstListVO {
 	/** 게시판아이디*/
 	private int brdId;
 	/** 설문번호*/
