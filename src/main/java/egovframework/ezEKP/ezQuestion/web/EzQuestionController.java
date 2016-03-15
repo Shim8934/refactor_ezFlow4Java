@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
-import egovframework.ezEKP.ezQuestion.vo.EzQuestionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
+import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
+import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
@@ -433,9 +435,8 @@ public class EzQuestionController {
 		return "/ezQuestion/qstStep1";
 	}
 
-	@RequestMapping(value="/ezQuestion/qstStep2.do")
-	public String qstStep2(HttpServletRequest req, EzQuestionVO ezQuestionVO, Model model) {
-
+	@RequestMapping(value="/ezQuestion/qstStep2.do", method = RequestMethod.POST)
+	public String qstStep2(HttpServletRequest req, QstStep1VO ezQuestionVO, QstAddVO questionAddVO, ModelMap model) {
 		StringBuilder pStep1DataXML = new StringBuilder();
 		pStep1DataXML.append("<PARAMETER>");
 		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
@@ -449,8 +450,17 @@ public class EzQuestionController {
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("setTarget")+"</TARGET>");
 		pStep1DataXML.append("</PARAMETER>");
-
+System.out.println("answerType@@@@@@@:"+req.getParameter("answerType"));
+System.out.println("answerType@@@@@@@:"+req.getParameter("multiSelect"));
+System.out.println("answerType@@@@@@@:"+req.getParameter("selViewStart"));
+System.out.println("answerType@@@@@@@:"+req.getParameter("selViewEnd"));
+System.out.println("answerType@@@@@@@:"+req.getParameter("itemNo"));
+System.out.println("answerType@@@@@@@:"+req.getParameter("txtQuestion"));
+System.out.println("title@@@@@@@:"+questionAddVO.getTitle());
+		
+		model.addAttribute("getTitle", questionAddVO.getTitle());
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
+		model.addAttribute("questionAddVO", questionAddVO);
 		model.addAttribute("pStep1DataXML", pStep1DataXML);
 		return "/ezQuestion/qstStep2";
 	}
@@ -462,29 +472,80 @@ public class EzQuestionController {
 	}
 
 	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
-	public String qstStep2QuestionAdd(HttpServletRequest req,Model model)  {
+	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO)  {
 		String brdId = "";
 		String itemId = "";
 		String pMode = "";
 		String pQstTitle, pAnswerType, pMultiSel;
-		String pSelectOption;
+		String pSelectOption = "";
 		String pEditIndex;
-		String pQstAnsInfo;
+		List<String> pQstAnsInfo;
 		String pQstAttach = "";
 		String pDataXML = "";
 		String pNoneActiveX = "";
 
 		pMode = "NEW";
 		pAnswerType = "1";
-		brdId = req.getParameter("brd_id"); 
+		if(req.getParameter("brd_id") != null) {
+			brdId = req.getParameter("brd_id").trim(); 
+		}
+		
+		if(req.getParameter("item_id") != null) {
+			itemId = req.getParameter("item_id").trim(); 
+		}
+		if (questionAddVO != null) {
+			pMode = "EDIT";
+			pQstTitle = questionAddVO.getQuestionContent();
+System.out.println("pQstTitle:"+pQstTitle);
+			/*if(questionAddVO.getAttach().size() > 0) {
+				if(questionAddVO.getAttach().toString() != "") {
+					pQstAnsInfo = questionAddVO.getAttach();
+					
+					int pAttachCnt = questionAddVO.getAttach().size();
+					for (int i=0; i< pAttachCnt; i++) {
+						if(pQstAnsInfo.equals("")) {
+							pQstAttach += ";";
+						}
+						pQstAttach += questionAddVO.getTitle();
+					}
+				}
+			}*/
+			pAnswerType = String.valueOf(questionAddVO.getAnswerType());
+			questionAddVO.setMultiSelect("1");
+			if(questionAddVO.getMultiSelect().equals("1")) {
+				pMultiSel = "true";
+			} else {
+				pMultiSel = "false";
+			}
+			if(!pAnswerType.equals("2")) {
+				/*if(questionAddVO.getAnswer().size() != 0) {
+					int pCnt = questionAddVO.getAnswer().size();
+					
+					for (int i=0; i<pCnt; i++) {
+						pSelectOption += "<option value=\"" + questionAddVO.getTitle() + "\" ";
+						if(questionAddVO.getAttach().size() > 0) {
+							pSelectOption += "AnsInfo=\"" + questionAddVO.getAttach().get(0).toString() + "\">";
+						} else {
+							pSelectOption += ">";
+						}
+						pSelectOption += String.valueOf(i+1) + "." + questionAddVO.getTitle() + "</option>";
+					}
+				}*/
+			}
+			if(req.getParameter("dataIndex") != null) {
+				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
+			}
+		}
+		
 		itemId = req.getParameter("item_id");
 		model.addAttribute("item_id",itemId);
+		model.addAttribute("questionAddVO",questionAddVO);
 		model.addAttribute("pEditIndex",req.getParameter("pEditIndex"));
 		model.addAttribute("pMode",req.getParameter("pMode"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
 		model.addAttribute("pDataXml",req.getParameter("pDataXml"));
 		model.addAttribute("pNoneActiveX",req.getParameter("pNoneActiveX"));
-		model.addAttribute("pQstTitle",req.getParameter("pQstTitle"));
+		model.addAttribute("pQstTitle",req.getParameter("txtContent"));
 		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
 		model.addAttribute("pSelectOption",req.getParameter("pSelectOption"));
@@ -511,9 +572,8 @@ public class EzQuestionController {
 	}
 
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("loginCookie") String userID, LoginVO loginVO,ModelMap model) throws Exception  {
-		loginVO.setId(userID);
-		loginVO = commonUtil.userInfo(userID);
+	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
+		loginVO = commonUtil.userInfo(loginCookie);
 		String pUserID = loginVO.getId();
 		
 		String pBrdID = "";
@@ -540,7 +600,6 @@ public class EzQuestionController {
 		String multiresponse = req.getParameter("parameter[multiresponse]");
 		String importance = req.getParameter("parameter[importance]");
 		String target = req.getParameter("parameter[target]");
-		String questionContent = req.getParameter("parameter[question][row][content]");
 		
 		map.put("subject", subject);
 		map.put("content", content);
@@ -560,6 +619,29 @@ public class EzQuestionController {
 		ezQuestionService.stepSave(pUserID, map); 
 		
 		ezQuestionService.stepSave2(map);
+		
+		
+		//대상범위
+		if (target.equals("1")) {
+			
+		}
+		
+		//int qstCnt =  
+		
+		int v_quesNo = 1;
+
+		v_quesNo = ezQuestionService.getQuestionNo(brdId, itemNo);
+		
+		if(v_quesNo == 0) {
+			v_quesNo = 1;
+		} else {
+			v_quesNo = v_quesNo + 1;
+		}
+		
+		//ezQuestionService.insertQuestion(qstCompleteVO); 
+		
+		
+	
 		
 		return map;
 		
