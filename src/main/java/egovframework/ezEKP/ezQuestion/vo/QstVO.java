@@ -11,11 +11,11 @@ public class QstVO {
 	String quesContent;
 	/** 답변타입*/
 	int answerType;
-	/** 답변보기타입?*/
+	/** 답변보기타입*/
 	int answerViewType;
 	/** 다중선택가능*/
 	String multiSelect;
-	/** ??*/
+	/** */
 	int quesSn;
 	public int getBrdId() {
 		return brdId;
