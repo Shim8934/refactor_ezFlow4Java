@@ -123,7 +123,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 	
 	@Override
-	public List<BoardBackgroundVO> getBoardHeader(String boardID, String gubun) throws Exception {
+	public List<BoardAttributeVO> getBoardHeader(String boardID, String gubun) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", boardID);

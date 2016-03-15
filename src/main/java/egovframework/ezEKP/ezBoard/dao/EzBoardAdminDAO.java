@@ -71,8 +71,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}	
 
 	@SuppressWarnings("unchecked")
-	public List<BoardBackgroundVO> getBoardHeader(Map<String, Object> map) throws Exception{		
-		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBoardHeader", map);		
+	public List<BoardAttributeVO> getBoardHeader(Map<String, Object> map) throws Exception{		
+		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardHeader", map);		
 	}
 
 	public BoardPropertyVO getACL(Map<String, Object> map) throws Exception{		

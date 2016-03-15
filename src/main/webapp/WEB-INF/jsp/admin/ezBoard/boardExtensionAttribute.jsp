@@ -89,7 +89,7 @@
 		        	type : "POST",
 		        	dataType : "xml",
 		        	url : "/admin/ezBoard/getBoardHeader.do",
-		        	data : {gubun : pGubun, boardID : boardid},
+		        	data : {colType : pGubun, boardID : boardid},
 		        	success : function(result){
 						if (document.getElementById("HeaderList").innerHTML != "")
 						    document.getElementById("HeaderList").innerHTML = "";

@@ -7,11 +7,11 @@ public class BoardAttributeVO {
 	/** 추가컬럼*/
 	private String tableCol;
 	/** */
-	private String sn;
+	private String sn;	
 	/** */
 	private String colName1;
 	/** */
-	private String colName2;
+	private String colName2;	
 	/** */
 	private String value;
 	/** */

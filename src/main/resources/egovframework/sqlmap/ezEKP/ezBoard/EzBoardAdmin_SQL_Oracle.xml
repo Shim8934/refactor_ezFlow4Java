@@ -3,53 +3,60 @@
 
 <sqlMap namespace="ezBoardAdmin">
 	
-	<typeAlias  alias="BoardTreeVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
-	<typeAlias  alias="EzBoardVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
-	<typeAlias  alias="BoardPropertyVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
-	<typeAlias  alias="BoardAttributeVO" 	 type="egovframework.ezEKP.ezBoard.vo.BoardAttributeVO"/>
-	<typeAlias  alias="MyFavoriteVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
-	<typeAlias  alias="BoardBackgroundVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
+	<typeAlias  alias="BoardTreeVO"					type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
+	<typeAlias  alias="EzBoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
+	<typeAlias  alias="BoardPropertyVO"				type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="BoardAttributeVO"			type="egovframework.ezEKP.ezBoard.vo.BoardAttributeVO"/>
+	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
+	<typeAlias  alias="BoardBackgroundVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	
 	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
-		<result property="boardId" column="BOARDID" columnIndex="1"/>
+		<result property="boardId" 					column="BOARDID" 					columnIndex="1"/>
 	</resultMap>
 	
 	<resultMap id="checkApplyUser" class="EzBoardVO">
-		<result property="apprUserId" column="APPRUSERID" columnIndex="1"/>
+		<result property="apprUserId" 				column="APPRUSERID" 				columnIndex="1"/>
 	</resultMap>
 	
 	<resultMap id="brdBoardTree" class="BoardTreeVO">
-		<result property="boardId" 			column="BOARDID" 		columnIndex="1"/>
-		<result property="boardName" 		column="BOARDNAME" 		columnIndex="2"/>
-		<result property="boardName2" 		column="BOARDNAME2"		columnIndex="3"/>
-		<result property="treeViewOrder" 	column="TREEVIEWORDER" 	columnIndex="4"/>
-		<result property="boardColor" 		column="BOARDCOLOR" 	columnIndex="5"/>
-		<result property="guBun" 			column="GUBUN" 			columnIndex="6"/>
-		<result property="boardGroupAcl" 	column="BOARDGROUPACL" 	columnIndex="7"/>
+		<result property="boardId" 					column="BOARDID" 					columnIndex="1"/>
+		<result property="boardName" 				column="BOARDNAME" 					columnIndex="2"/>
+		<result property="boardName2" 				column="BOARDNAME2"					columnIndex="3"/>
+		<result property="treeViewOrder" 			column="TREEVIEWORDER" 				columnIndex="4"/>
+		<result property="boardColor" 				column="BOARDCOLOR" 				columnIndex="5"/>
+		<result property="guBun" 					column="GUBUN" 						columnIndex="6"/>
+		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="7"/>
 	</resultMap>
 	
 	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
-		<result property="treeId" 			column="TREEID" 		columnIndex="1"/>
-		<result property="userId" 			column="USERID" 		columnIndex="2"/>
-		<result property="treeName" 		column="TREENAME" 		columnIndex="3"/>
-		<result property="treeName2" 		column="TREENAME2" 		columnIndex="4"/>
-		<result property="treeLevel" 		column="TREELEVEL" 		columnIndex="5"/>
-		<result property="treeStep" 		column="TREESTEP" 		columnIndex="6"/>
-		<result property="treeUpper" 		column="TREEUPPER" 		columnIndex="7"/>
-		<result property="childCnt" 		column="CHILDCNT" 		columnIndex="8"/>
-		<result property="treeBoardId" 		column="TREEBOARDID" 	columnIndex="9"/>
+		<result property="treeId" 					column="TREEID" 					columnIndex="1"/>
+		<result property="userId" 					column="USERID" 					columnIndex="2"/>
+		<result property="treeName" 				column="TREENAME" 					columnIndex="3"/>
+		<result property="treeName2" 				column="TREENAME2" 					columnIndex="4"/>
+		<result property="treeLevel" 				column="TREELEVEL" 					columnIndex="5"/>
+		<result property="treeStep" 				column="TREESTEP" 					columnIndex="6"/>
+		<result property="treeUpper" 				column="TREEUPPER" 					columnIndex="7"/>
+		<result property="childCnt" 				column="CHILDCNT" 					columnIndex="8"/>
+		<result property="treeBoardId" 				column="TREEBOARDID" 				columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap id="backGroundImage" class="BoardBackgroundVO">
-		<result property="backgroundID" 	column="BACKGROUNDID" 	columnIndex="1"/>
-		<result property="orgFileName" 		column="ORGFILENAME" 	columnIndex="2"/>
-		<result property="saveFileName" 	column="SAVEFILENAME" 	columnIndex="3"/>
-		<result property="regUserID" 		column="REGUSERID" 		columnIndex="4"/>
-		<result property="regDate" 			column="REGDATE" 		columnIndex="5"/>
-		<result property="isUse" 			column="ISUSE" 			columnIndex="6"/>
-		<result property="sn" 				column="SN" 			columnIndex="7"/>
-		<result property="width" 			column="WIDTH" 			columnIndex="8"/>
-		<result property="height" 			column="HEIGHT" 		columnIndex="9"/>
+		<result property="backgroundID" 			column="BACKGROUNDID" 				columnIndex="1"/>
+		<result property="orgFileName" 				column="ORGFILENAME" 				columnIndex="2"/>
+		<result property="saveFileName" 			column="SAVEFILENAME" 				columnIndex="3"/>
+		<result property="regUserID" 				column="REGUSERID" 					columnIndex="4"/>
+		<result property="regDate" 					column="REGDATE" 					columnIndex="5"/>
+		<result property="isUse" 					column="ISUSE" 						columnIndex="6"/>
+		<result property="sn" 						column="SN" 						columnIndex="7"/>
+		<result property="width" 					column="WIDTH" 						columnIndex="8"/>
+		<result property="height" 					column="HEIGHT" 					columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="boardAttribute" class="BoardAttributeVO">
+		<result property="colName1" 				column="NAME1" 						columnIndex="1"/>
+		<result property="colName2" 				column="NAME2" 						columnIndex="2"/>
+		<result property="sn" 						column="VIEW_FG" 					columnIndex="3"/>
+		<result property="value" 					column="WIDTH" 						columnIndex="4"/>		
 	</resultMap>
 	
 	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String">
@@ -69,9 +76,8 @@
 										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultClass="HashMap">
-		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, 
-										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute">
+		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDID#, #v_PBOARDTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer">

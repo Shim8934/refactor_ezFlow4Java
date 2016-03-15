@@ -496,18 +496,20 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	public void getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{	
 		List<BoardAttributeVO> list = ezBoardAdminService.getBoardAttribute(boardAttributeVO.getBoardID());
 		
-		StringBuilder sb = new StringBuilder();		
-	
+		StringBuilder sb = new StringBuilder();	
 		sb.append("<ROWS>");
-		for(int i=0; i< list.size(); i++){
-			BoardAttributeVO obj = list.get(i);
-			sb.append("<ROW>");
-			/*sb.append("<CELL><VALUE>" + obj.getWidth() + "</VALUE><DATA1>" + obj.getOrgFileName() + "</DATA1></CELL>");
-			sb.append("<CELL><VALUE>" + obj.getHeight() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + obj.getIsUse() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + obj.getRegDate() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + obj.getRegUserID() + "</VALUE></CELL>");	*/		
-			sb.append("</ROW>");				
+		
+		if(list != null){
+			for(int i=0; i< list.size(); i++){
+				BoardAttributeVO obj = list.get(i);
+				sb.append("<ROW>");
+				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getMust() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColType() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");		
+				sb.append("</ROW>");				
+			}
 		}
 		sb.append("</ROWS>");
 		
@@ -518,19 +520,19 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do")
-	public void getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
-		String boardID = request.getParameter("boardID");
-		String gubun = request.getParameter("gubun");
-		List<BoardBackgroundVO> list = ezBoardAdminService.getBoardHeader(boardID, gubun);
+	public void getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{		
+		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getBoardID(), boardAttributeVO.getColType());
 		
 		StringBuilder sb = new StringBuilder();		
-		
 		sb.append("<ROWS>");
-		for(int i=0; i< list.size(); i++){
-			BoardBackgroundVO obj = list.get(i);
 		
-			sb.append("</ROW>");				
-		}
+		if(list != null){
+			for(int i=0; i< list.size(); i++){
+				BoardAttributeVO obj = list.get(i);
+			
+				sb.append("</ROW>");				
+			}
+		}	
 		sb.append("</ROWS>");
 		
 		response.setCharacterEncoding("UTF-8");
