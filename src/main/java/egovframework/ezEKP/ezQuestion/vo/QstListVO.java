@@ -26,7 +26,7 @@ public class QstListVO {
 	private String publicResultFlg;
 	/** 기명여부*/
 	private String publicFlg;
-	/** */
+	/** 다중답변가능여부*/
 	private String multiResponseFlg;
 	/** */
 	private String endFlg;
