@@ -1,12 +1,10 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;
@@ -15,12 +13,16 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -55,6 +57,7 @@ public class EzEmailMenuController {
 		String noneActiveX = "";
 		
 		String rootFolderXML = getRootFolderXML();
+		System.out.println(rootFolderXML);
 		String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		
@@ -66,20 +69,21 @@ public class EzEmailMenuController {
 
 	@RequestMapping(value="/ezEmail/getFolderList.do")
 	public void getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response){
-		/*Map<String, String[]> map = request.getParameterMap();
-		Set<String> set = map.keySet();
-		Iterator<String> iter =	 set.iterator();
-		while(iter.hasNext()){
-			String key = iter.next();
-			System.out.println(key+", "+map.get(key));
-		}*/
-		Enumeration<String> en = request.getParameterNames();
-		while(en.hasMoreElements()){
-			System.out.println(en.nextElement());
+		try {
+			StringBuilder sb = new StringBuilder();
+			char[] charBuffer = new char[128];
+	        int bytesRead=0;
+	        while ( (bytesRead = request.getReader().read(charBuffer)) != -1 ) {
+	            sb.append(charBuffer, 0, bytesRead);
+	        }
+	        Document doc = commonUtil.convertStringToDocument(sb.toString());
+	        String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
+			response.setContentType("text/plain; charset=utf-8");
+			response.getWriter().print(getSubFolderXML(folderName));
+		} catch (IOException e) {
+			System.out.println("Error IO: " + e.getMessage());
+			e.printStackTrace();
 		}
-		//getSubFolderXML(request...);
-		response.setContentType("text/plain; charset=utf-8");
-		response.reset();
 	}
 	
 	public String getRootFolderXML() {
@@ -146,7 +150,7 @@ public class EzEmailMenuController {
 	
 	public List<Folder> getRootMailFolder() {
 		ArrayList<Folder> rootMailFolder = new ArrayList<Folder>();
-		Store store = getStore("10.0.102.8", "jblue0o0@opensol2016.com", "1234"); //수정
+		Store store = getStore(config.getProperty("config.MailServerAddress"), "jblue0o0@opensol2016.com", "1234"); //수정
 		createDefualtFolders(store); //6개의 기본폴더 생성
 		try{
 			Folder[] f = store.getDefaultFolder().list();
@@ -208,7 +212,7 @@ public class EzEmailMenuController {
 		ArrayList<Folder> al = new ArrayList<Folder>();
 		Store store = null;
 		try {
-			store = getStore("10.0.102.8", "jblue0o0@opensol2016.com", "1234"); //수정
+			store = getStore(config.getProperty("config.MailServerAddress"), "jblue0o0@opensol2016.com", "1234"); //수정
 			Folder[] f = store.getFolder(parent).list();
 			for(Folder fd : f){
 				al.add(fd);
@@ -238,7 +242,6 @@ public class EzEmailMenuController {
 			//cause the socket to be created using the java.net.Socket class. Defaults to true.
 			properties.setProperty("mail.imap.socketFactory.fallback", "false");
 			properties.setProperty("mail.imap.socketFactory.port", String.valueOf(port));
-
 			Session session = Session.getDefaultInstance(properties);
 
 			// connects to the message store
@@ -276,7 +279,6 @@ public class EzEmailMenuController {
 			createFolder(f, "지운 편지함", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 			createFolder(f, "PERSONAL", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 			createFolder(f, "정크 메일", Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			
 		} catch (MessagingException e) {
 			System.out.println("Error get default folder: " + e.getMessage());
 			e.printStackTrace();
