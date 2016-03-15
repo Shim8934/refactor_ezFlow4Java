@@ -190,10 +190,10 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getQuestionNo(QstCompleteVO qstCompleteVO) throws Exception {
+	public int getQuestionNo(int brdId, int itemNo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
-		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("v_pstrBrdID",brdId);
+		map.put("v_pItemNo", itemNo);
 		return ezQuestionDAO.getQuestionNo(map);
 	}
 
