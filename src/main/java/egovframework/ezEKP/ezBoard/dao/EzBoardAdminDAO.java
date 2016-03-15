@@ -9,8 +9,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardAdminDAO")
@@ -29,8 +29,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<EzBoardVO> checkApplyUser() throws Exception{
-		return (List<EzBoardVO>) list("EzBoardAdminDAO.checkApplyUser");
+	public List<BoardVO> checkApplyUser() throws Exception{
+		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser");
 	}
 	
 	public String getBoardTree_Get1(Map<String, Object> map) throws Exception{		
@@ -38,8 +38,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<EzBoardVO> getBoardTree_Get2(Map<String, Object> map) throws Exception{		
-		return (List<EzBoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2",	map);
+	public List<BoardVO> getBoardTree_Get2(Map<String, Object> map) throws Exception{		
+		return (List<BoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2",	map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,8 +56,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MyFavoriteVO> getMyBoardTree_get3(Map<String, Object> map) throws Exception{		
-		return (List<MyFavoriteVO>) list("EzBoardAdminDAO.getMyBoardTree_get3", map);
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(Map<String, Object> map) throws Exception{		
+		return (List<BoardMyFavoriteVO>) list("EzBoardAdminDAO.getMyBoardTree_get3", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -68,6 +68,15 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) {		
 		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBackGroundImage", boardBackgroundVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) {		
+		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getAttribute", boardBackgroundVO);
+	}
+	@SuppressWarnings("unchecked")
+	public List<BoardBackgroundVO> getBoardHeader(Map<String, Object> map) throws Exception{		
+		return (List<BoardBackgroundVO>) list("EzBoardAdminDAO.getBoardHeader", map);		
 	}
 
 	public BoardPropertyVO getACL(Map<String, Object> map) throws Exception{		

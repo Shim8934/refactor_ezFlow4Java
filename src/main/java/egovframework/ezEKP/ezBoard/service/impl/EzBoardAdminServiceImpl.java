@@ -17,8 +17,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl implements EzBoardAdminService {	
@@ -39,7 +39,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public List<EzBoardVO> checkApplyUser() throws Exception{
+	public List<BoardVO> checkApplyUser() throws Exception{
 		return ezBoardAdminDAO.checkApplyUser();
 	}
 
@@ -54,7 +54,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
+	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PACCESSID", pAccessID);
@@ -99,7 +99,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
-	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userID);
@@ -120,6 +120,23 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		// TODO Auto-generated method stub
 		return ezBoardAdminDAO.getBackGroundImage(boardBackgroundVO);
 		
+	}
+	
+	@Override
+	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) throws Exception {
+		// TODO Auto-generated method stub
+		return ezBoardAdminDAO.getAttribute(boardBackgroundVO);
+		
+	}
+	
+	@Override
+	public List<BoardBackgroundVO> getBoardHeader(String boardID, String gubun) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PBOARDTYPE", gubun);
+		
+		return ezBoardAdminDAO.getBoardHeader(map);		
 	}
 
 	@Override

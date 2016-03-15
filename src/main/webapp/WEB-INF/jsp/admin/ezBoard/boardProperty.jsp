@@ -445,11 +445,11 @@
 			function change_brdColor() {
 			    if (CrossYN()) {
 			        manycolor_dialogArguments[1] = change_brdColor_Complete;
-			        var manyColor = window.open("../htm/manyColor.aspx", "manyColor", GetOpenWindowfeature(286, 290));
+			        var manyColor = window.open("/ezCommon/manyColor.do", "manyColor", GetOpenWindowfeature(286, 290));
 			        try { manyColor.focus(); } catch (e) {}
 			    }
 			    else {
-			        var color = showModalDialog("../htm/manyColor.aspx", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
+			        var color = showModalDialog("/ezCommon/manyColor.do", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
 			        if (typeof (color) != "undefined") {
 			            document.getElementById("selColor").style.backgroundColor = color;
 			            document.getElementById("colorID").innerText = color;
@@ -464,7 +464,7 @@
 			        brd_color = color;
 			    }
 			}			
-		    function ExtensionAttribute_onClick() {
+		    function ExtensionAttribute_onClick() {    	
 		        if (chkGroupBoard.checked) {
 		            gubun = "1"
 		        } else if (chkAnonyBoard.checked) {
@@ -482,14 +482,13 @@
 		        var para = new Array();
 		        para[0] = BoardID;
 		        para[1] = gubun;
-		        var url = "BoardExtensionAttribute.aspx"
+		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
 
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
 		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(750, 750));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
-		        }
-		        else {
+		        } else {
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
 		        }
 		    }

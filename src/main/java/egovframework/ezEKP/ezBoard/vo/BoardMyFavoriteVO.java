@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezBoard.vo;
 
-public class MyFavoriteVO {
+public class BoardMyFavoriteVO {
 	
 	/**게시판아이디	 */
 	private String boardId;

@@ -46,8 +46,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -106,8 +106,8 @@ public class EzBoardController {
 		if(request.getParameter("BoardID") != null){
 			redirectBoardID  = request.getParameter("BoardID");
 			
-			List<EzBoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
-			for(EzBoardVO i :  leftBoardList){
+			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
+			for(BoardVO i :  leftBoardList){
 				redirectBoardGroupID += i.getBoardGroupId()+",";
 			}
 			if(redirectBoardGroupID.length() != 0)
@@ -128,9 +128,9 @@ public class EzBoardController {
         String pExcludeBoardID = " ";
         String BoardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID,pUserID,pDeptID,pCompanyID);
         
-        List<EzBoardVO> ApplyUserList = ezBoardAdminService.checkApplyUser();
+        List<BoardVO> ApplyUserList = ezBoardAdminService.checkApplyUser();
         
-        for(EzBoardVO vo: ApplyUserList){
+        for(BoardVO vo: ApplyUserList){
         	if(vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1){
         		applyFlag = "OK";
         	}
@@ -169,7 +169,7 @@ public class EzBoardController {
             String boardID = "";
             
             brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID,pAccessID.split(",")[i].trim(),pMode,pSelectBy,pExcludeBoardID);            
-            List<EzBoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(),pRootBoardID);
+            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(),pRootBoardID);
             
             if(boardTreeList.size() > 0){
                 for(int r = 0; r < boardTreeList.size() - 1; r++){
@@ -265,7 +265,7 @@ public class EzBoardController {
 	public void get_favoriteList(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
 	
 		loginVO = commonUtil.userInfo(loginCookie);
-		List<MyFavoriteVO> resultList = new ArrayList<MyFavoriteVO>();
+		List<BoardMyFavoriteVO> resultList = new ArrayList<BoardMyFavoriteVO>();
         String pMode = request.getParameter("MODE");
         String pUserID = loginVO.getId();
         //즐겨찾기 리스트
@@ -356,7 +356,7 @@ public class EzBoardController {
 		return "ezBoard/boardFavorite";
 	}
 	
-	public String parentBoardName(List<MyFavoriteVO> resultList) throws Exception{
+	public String parentBoardName(List<BoardMyFavoriteVO> resultList) throws Exception{
         String rtv = "";
         String BoardIdList = "";
         int BoardIdListCount = 0;
@@ -384,13 +384,13 @@ public class EzBoardController {
            if(req.getParameter("COUNTFLAG") != null)
                pCountFlag = req.getParameter("COUNTFLAG");
 
-           List<MyFavoriteVO> resultList = getMyBoardTreeConfig(loginVO.getId(), pRootTreeID, commonUtil.getMultiData(lang));
+           List<BoardMyFavoriteVO> resultList = getMyBoardTreeConfig(loginVO.getId(), pRootTreeID, commonUtil.getMultiData(lang));
            
            if(config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString() == "YES" && pCountFlag == "YES"){
                String strName = "";
                int intCount;
                
-               MyFavoriteVO myFavoriteVO = new MyFavoriteVO();
+               BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
                myFavoriteVO.setUserId(loginVO.getId());
                myFavoriteVO.setNowDate(EgovDateUtil.getToday());
                myFavoriteVO.setFromNow(EgovDateUtil.addDay(EgovDateUtil.getToday(), -5));
@@ -480,8 +480,8 @@ public class EzBoardController {
        }
    }
 	
-	public List<MyFavoriteVO> getMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
-        List<MyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID,pRootTreeID.trim());
+	public List<BoardMyFavoriteVO> getMyBoardTreeConfig(String userID,String pRootTreeID,String lang) throws Exception{
+        List<BoardMyFavoriteVO> resultList  = ezBoardAdminService.getMyBoardTree_get3(userID,pRootTreeID.trim());
 
         for(int i = 0; i < resultList.size(); i++){
         	if(resultList.get(i).getTreeBoardId() == "")
@@ -985,7 +985,7 @@ public class EzBoardController {
     }
     
     @RequestMapping(value = "/ezBoard/getBoardList.do")
-    public void getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, EzBoardVO ezBoardVO, HttpServletResponse res) throws Exception{
+    public void getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO ezBoardVO, HttpServletResponse res) throws Exception{
         String boardID = ezBoardVO.getBoardId();
         String boardType = ezBoardVO.getBoardType();
         String type = "1";
@@ -1046,7 +1046,7 @@ public class EzBoardController {
         
     }
 
-	public String getNewItemList(EzBoardVO ezBoardVO, LoginVO userInfo) throws Exception{
+	public String getNewItemList(BoardVO ezBoardVO, LoginVO userInfo) throws Exception{
         String orderOption1 = "";
         String orderOption2 = "";
         // 수정(2007.06.18) : multidata 기능추가 
@@ -1167,7 +1167,7 @@ public class EzBoardController {
         
 		return resultXML.toString();
 	}
-	public String getBoardListItem(EzBoardVO ezBoardVO, LoginVO userInfo, String type) throws Exception{
+	public String getBoardListItem(BoardVO ezBoardVO, LoginVO userInfo, String type) throws Exception{
         String orderOption1 = "";
         String orderOption2 = "";
         // 수정(2007.06.18) : multidata 기능추가 
@@ -1429,7 +1429,7 @@ public class EzBoardController {
 	    if (strXML.substring(0, 5).toUpperCase() != "ERROR"){
 	        if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString().equals("YES")){
             	
-            	MyFavoriteVO myFavoriteVO = new MyFavoriteVO();
+            	BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
             	int intCount = 0;
 	            if(nList != null){
 	            	for (int i = 0; i < nList.getLength(); i++){

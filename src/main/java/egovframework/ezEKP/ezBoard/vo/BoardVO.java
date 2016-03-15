@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezBoard.vo;
 
-public class EzBoardVO {
+public class BoardVO {
 	
 	/**게시판 그룹아이디	 */
 	private String boardGroupId;	

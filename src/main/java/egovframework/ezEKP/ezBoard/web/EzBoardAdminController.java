@@ -25,7 +25,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -62,7 +62,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	
 		if(request.getParameter("BoardID") != null){			
 			redirectBoardID  = request.getParameter("BoardID");			
-			List<EzBoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
+			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
 			
 			sb.append("<DATA>");
 			for(int i=0; i< leftBoardList.size(); i++){
@@ -482,8 +482,61 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/saveBoardProperty.do")
-	public void saveBoardProperty(HttpServletRequest request, HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{		
+	public void saveBoardProperty(HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{		
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/boardExtensionAttribute.do")
+	public String boardExtensionAttribute() throws Exception{		
+		return "admin/ezBoard/boardExtensionAttribute";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/getAttribute.do")
+	public void getAttribute(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		boardBackgroundVO.setBackgroundID(request.getParameter("boardID"));
+		List<BoardBackgroundVO> list = ezBoardAdminService.getAttribute(boardBackgroundVO);
+		
+		StringBuilder sb = new StringBuilder();		
+	
+		sb.append("<ROWS>");
+		for(int i=0; i< list.size(); i++){
+			BoardBackgroundVO obj = list.get(i);
+			sb.append("<ROW>");
+			sb.append("<CELL><VALUE>" + obj.getWidth() + "</VALUE><DATA1>" + obj.getOrgFileName() + "</DATA1></CELL>");
+			sb.append("<CELL><VALUE>" + obj.getHeight() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + obj.getIsUse() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + obj.getRegDate() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + obj.getRegUserID() + "</VALUE></CELL>");			
+			sb.append("</ROW>");				
+		}
+		sb.append("</ROWS>");
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/xml");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(sb.toString());
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do")
+	public void getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+		String boardID = request.getParameter("boardID");
+		String gubun = request.getParameter("gubun");
+		List<BoardBackgroundVO> list = ezBoardAdminService.getBoardHeader(boardID, gubun);
+		
+		StringBuilder sb = new StringBuilder();		
+		
+		sb.append("<ROWS>");
+		for(int i=0; i< list.size(); i++){
+			BoardBackgroundVO obj = list.get(i);
+		
+			sb.append("</ROW>");				
+		}
+		sb.append("</ROWS>");
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/xml");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(sb.toString());
 	}
 	
 }

@@ -4,10 +4,10 @@
 <sqlMap namespace="ezBoardAdmin">
 	
 	<typeAlias  alias="BoardTreeVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardTreeVO"/>
-	<typeAlias  alias="EzBoardVO" 			type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+	<typeAlias  alias="EzBoardVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardPropertyVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	<typeAlias  alias="BoardAttributeVO" 	 type="egovframework.ezEKP.ezBoard.vo.BoardAttributeVO"/>
-	<typeAlias  alias="MyFavoriteVO" 		type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
+	<typeAlias  alias="MyFavoriteVO" 		type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardBackgroundVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	
 	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
@@ -65,6 +65,11 @@
 	</procedure>
 		
 	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree">
+		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, 
+										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, 
 										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -167,6 +172,26 @@
 	       		accessid = #userDeptPath# 
 	       AND 
 	       		rownum <= 1 
+		]]>
+	</select>
+	
+	<!-- 	권한가져오기 -->
+	<select id="EzBoardAdminDAO.getAttribute"  resultMap="backGroundImage">
+		<![CDATA[
+			SELECT 
+				boardid as BACKGROUNDID,
+	            tablecol as ORGFILENAME,
+	            sn as SN,
+	            colname1 as WIDTH,
+	            colname2 as HEIGHT,
+	            value as REGUSERID,
+	            coltype as REGDATE,
+	            must as ISUSE,
+	            '' as SAVEFILENAME	            
+	       FROM 
+	        	ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE 
+	       WHERE  
+	       		BOARDID = #backgroundID#
 		]]>
 	</select>
 	

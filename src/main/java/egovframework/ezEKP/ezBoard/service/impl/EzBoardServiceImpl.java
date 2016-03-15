@@ -14,8 +14,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -26,14 +26,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 	private EzBoardDAO ezBoardDAO;
 
 	@Override
-	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
+	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("redirectBoardID", redirectBoardID);
 		return ezBoardDAO.getLeft_BoardSTD(map);
 	}
 
 	@Override
-	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
@@ -59,7 +59,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception {
+	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
@@ -116,7 +116,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", myFavoriteVO.getUserId());
 		map.put("v_pNow", myFavoriteVO.getNowDate());
@@ -125,7 +125,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception {
+	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
@@ -135,7 +135,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+	public int getBrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
@@ -145,7 +145,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception {
+	public int getQNABrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PNOW", myFavoriteVO.getNowDate());
@@ -165,7 +165,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public List<BoardListHeaderVO> getListHeaderBoardID(EzBoardVO ezBoardVO) throws Exception {
+	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
@@ -191,7 +191,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getNoticePostItem(EzBoardVO ezBoardVO, int personalCount) throws Exception {
+	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		int start = 0;
         int end = 0;

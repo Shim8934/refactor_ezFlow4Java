@@ -8,15 +8,15 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardService {
 
-	public List<EzBoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception;
+	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception;
 
-	public List<MyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception;
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception;
 
 	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
 
@@ -26,7 +26,7 @@ public interface EzBoardService {
 	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
 
-	public List<BoardListHeaderVO> getListHeader(EzBoardVO ezBoardVO) throws Exception;
+	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
 
 	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
 
@@ -34,25 +34,25 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
-	public int getBrdNewItemCount(MyFavoriteVO myFavoriteVO) throws Exception;
+	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 
-	public int getThumbNailCount(MyFavoriteVO myFavoriteVO) throws Exception;
+	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 
-	public int getBrdTotalItemCount(MyFavoriteVO myFavoriteVO)  throws Exception;
+	public int getBrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO)  throws Exception;
 
-	public int getQNABrdTotalItemCount(MyFavoriteVO myFavoriteVO) throws Exception;
+	public int getQNABrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 	
 	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 	
-	public List<BoardListHeaderVO> getListHeaderBoardID(EzBoardVO ezBoardVO) throws Exception;
+	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
 
 	public int getNoticePostItemCount(String boardId) throws Exception;
 
 	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception;
 
-	public List<HashMap<String, Object>> getNoticePostItem(EzBoardVO ezBoardVO, int personalCount) throws Exception;
+	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 

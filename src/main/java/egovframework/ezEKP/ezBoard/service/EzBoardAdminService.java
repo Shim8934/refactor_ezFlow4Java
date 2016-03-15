@@ -6,18 +6,18 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 
 public interface EzBoardAdminService {
 
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception;
 
-	public List<EzBoardVO> checkApplyUser() throws Exception;
+	public List<BoardVO> checkApplyUser() throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
 
-	public List<EzBoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
+	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
 
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception;
 
@@ -25,11 +25,15 @@ public interface EzBoardAdminService {
 
 	public int checkIfLeafBoard(String pBoardID) throws Exception;
 
-	public List<MyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception;
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception;
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
+	
+	public List<BoardBackgroundVO> getAttribute(BoardBackgroundVO boardBackgroundVO) throws Exception;
+	
+	public List<BoardBackgroundVO> getBoardHeader(String boardID, String gubun) throws Exception;
 
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 	

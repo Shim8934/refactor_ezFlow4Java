@@ -10,21 +10,21 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
-import egovframework.ezEKP.ezBoard.vo.EzBoardVO;
-import egovframework.ezEKP.ezBoard.vo.MyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardDAO")
 public class EzBoardDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
-	public List<EzBoardVO> getLeft_BoardSTD(Map<String, Object> map) throws Exception{
-		return (List<EzBoardVO>) list("EzBoardDAO.getLeft_BoardSTD", map);
+	public List<BoardVO> getLeft_BoardSTD(Map<String, Object> map) throws Exception{
+		return (List<BoardVO>) list("EzBoardDAO.getLeft_BoardSTD", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MyFavoriteVO> get_favoriteList(Map<String, Object> map) throws Exception{
-		return (List<MyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
+	public List<BoardMyFavoriteVO> get_favoriteList(Map<String, Object> map) throws Exception{
+		return (List<BoardMyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}
 	
 	public BoardConfigVO getBoardList_Config(String userID) throws Exception{

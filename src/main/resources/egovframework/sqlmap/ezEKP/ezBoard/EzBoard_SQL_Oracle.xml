@@ -2,14 +2,14 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezBoard">
-	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.EzBoardVO"/>
+	<typeAlias  alias="EzBoardVO" type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
-	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.MyFavoriteVO"/>
+	<typeAlias  alias="MyFavoriteVO" type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardConfigVO" type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
 	<typeAlias  alias="BoardPropertyVO" type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	<typeAlias  alias="BoardListHeaderVO" type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
 
-	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.EzBoardVO">
+	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" column="BOARDGROUPID" columnIndex="1"/>
 	</resultMap>
 	

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class EzCommonController {
 	
-	@RequestMapping(value = "/ezCommon/.do")
-	public String getMgtMainPage(HttpServletRequest request, ModelMap model) throws Exception{		
-		return "main/main";
+	@RequestMapping(value = "/ezCommon/manyColor.do")
+	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
+		return "ezCommon/manyColor";
 	}
 
 }
