@@ -193,100 +193,50 @@
 		    }
 		
 		    function menu_Checking(){
-	        	if(CrossYN()){
-					var szCheckCnt = 0;
-		            var table = document.getElementById("QstList");
-		            var szLen = table.rows.length;
-		            szPubFlag = "";
-		            for(var i = TR_Contents_Start; i < szLen; i++){
-						var row = table.rows[i];
-		                var chkboxCell = row.cells[0];
-		                var InputTags = chkboxCell.getElementsByTagName("INPUT");
-		                if(InputTags.length > 0){
-		                    if(InputTags[0].type == "checkbox"){
-		                        var chkbox = InputTags[0];
-		                        if(chkbox.checked){
-		                            szSelectedItemNo = chkbox.value;
-		                            if(navigator.userAgent.indexOf("Firefox") > -1){
-		                                var ret = row.cells[2].innerHTML;
-		                                ret = ret.replace(/&nbsp;/ig, " ");
-		                                ret = ret.replace(/<br>/ig, "\n");
-		                                ret = ret.replace(/<br[^>]+>/ig, "\n");
-		                                ret = ret.replace(/<[^>]+>/g, "");
-		                                szPubFlag = ret;
-		                            }else{
-		                                szPubFlag = row.cells[2].innerText;
-		                            }
-		                            szCheckCnt = szCheckCnt + 1;
-		                        }
-		                    }
-		                }
-		            }
-		            if(szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1){
-		                szPubFlag = "1";
-		            }else{
-		                szPubFlag = "0";
-		            }
-		            if (szCheckCnt == 1)
-		            	return true;
-		            else if(szCheckCnt == 0){
-		                szSelectedItemNo = "";
-		                alert('<spring:message code="ezQuestion.t289" />');
-		                return false;
-		            }else{
-		                szSelectedItemNo = "";
-		                alert('<spring:message code="ezQuestion.t290" />');
-		                return false;
-		            }
-		        }else{
-		            var szCheckCnt = 0;
-		            var table = document.getElementById("QstList");
-		            var szLen = table.children[0].children[1].children.length;
-
-		            for(var i = TR_Contents_Start; i < szLen; i++){
-		                var row = table.children[0].children[1].children[i];
-		                var chkboxCell = row.cells[0];
-		                var InputTags = chkboxCell.getElementsByTagName("INPUT");
-
-		                if(InputTags.length > 0){
-		                    if(InputTags[0].type == "checkbox"){
-		                        var chkbox = InputTags[0];
-		                        if(chkbox.checked){
-		                            szSelectedItemNo = chkbox.value;
-		                            if(navigator.userAgent.indexOf("Firefox") > -1){
-		                                var ret = row.cells[2].innerHTML;
-		                                ret = ret.replace(/&nbsp;/ig, " ");
-		                                ret = ret.replace(/<br>/ig, "\n");
-		                                ret = ret.replace(/<br[^>]+>/ig, "\n");
-		                                ret = ret.replace(/<[^>]+>/g, "");
-
-		                                szPubFlag = ret;
-		                            }else{
-		                                szPubFlag = row.cells[2].innerText;
-		                            }
-		                            szCheckCnt = szCheckCnt + 1;
-		                        }
-		                    }
-		                }
-		            }
-		            if(szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1){
-		            szPubFlag = "1";
-		        	}else{
-		            	szPubFlag = "0";
-		        	}
-	
-			        if(szCheckCnt == 1) 
-			        	return true;
-			        else if(szCheckCnt == 0){
-			            szSelectedItemNo = "";
-			            alert('<spring:message code="ezQuestion.t289" />');
-			            return false;
-			        }else{
-			            szSelectedItemNo = "";
-			            alert('<spring:message code="ezQuestion.t290" />');
-			            return false;
-			        }
-		        }
+				var szCheckCnt = 0;
+	            var table = document.getElementById("QstList");
+	            var szLen = table.rows.length;
+	            szPubFlag = "";
+	            for(var i = TR_Contents_Start; i < szLen; i++){
+					var row = table.rows[i];
+	                var chkboxCell = row.cells[0];
+	                var InputTags = chkboxCell.getElementsByTagName("INPUT");
+	                if(InputTags.length > 0){
+	                    if(InputTags[0].type == "checkbox"){
+	                        var chkbox = InputTags[0];
+	                        if(chkbox.checked){
+	                            szSelectedItemNo = chkbox.value;
+	                            if(navigator.userAgent.indexOf("Firefox") > -1){
+	                                var ret = row.cells[2].innerHTML;
+	                                ret = ret.replace(/&nbsp;/ig, " ");
+	                                ret = ret.replace(/<br>/ig, "\n");
+	                                ret = ret.replace(/<br[^>]+>/ig, "\n");
+	                                ret = ret.replace(/<[^>]+>/g, "");
+	                                szPubFlag = ret;
+	                            }else{
+	                                szPubFlag = row.cells[2].innerText;
+	                            }
+	                            szCheckCnt = szCheckCnt + 1;
+	                        }
+	                    }
+	                }
+	            }
+	            if(szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1){
+	                szPubFlag = "1";
+	            }else{
+	                szPubFlag = "0";
+	            }
+	            if (szCheckCnt == 1)
+	            	return true;
+	            else if(szCheckCnt == 0){
+	                szSelectedItemNo = "";
+	                alert('<spring:message code="ezQuestion.t289" />');
+	                return false;
+	            }else{
+	                szSelectedItemNo = "";
+	                alert('<spring:message code="ezQuestion.t290" />');
+	                return false;
+	            }
 		    }
 		    
 		    function menu_Response(){
