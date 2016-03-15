@@ -3,85 +3,85 @@
 
 <sqlMap namespace="ezQuestion">
 
-	<typeAlias  alias="QstListVO" type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
-	<typeAlias  alias="QstUserPollItemVO" type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
-	<typeAlias  alias="QstUserPermissionVO" type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
+	<typeAlias  alias="QstListVO" 					type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
+	<typeAlias  alias="QstUserPollItemVO" 			type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
+	<typeAlias  alias="QstUserPermissionVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
 	
 	<resultMap class="QstListVO" id="qstList">
-		<result property="brdId"								column="BRD_ID"							columnIndex="1"/>
-		<result property="itemNo"								column="ITEM_NO"						columnIndex="2"/>
-		<result property="userId"								column="USER_ID"						columnIndex="3"/>
-		<result property="userNm"								column="USER_NM"						columnIndex="4"/>
-		<result property="userEmail"							column="USER_EMAIL"						columnIndex="5"/>
-		<result property="title"								column="TITLE"							columnIndex="6"/>
-		<result property="content"								column="CONTENT"						columnIndex="7"/>
-		<result property="pollEndDate"							column="POLL_ENDDATE"					columnIndex="8"/>
-		<result property="postDate"								column="POST_DATE"						columnIndex="9"/>
-		<result property="publicResultFlg"						column="PUBLIC_RESULT_FLG"				columnIndex="10"/>
-		<result property="publicFlg"							column="PUBLIC_FLG"						columnIndex="11"/>
-		<result property="multiResponseFlg"						column="MULTI_RESPONSE_FLG"				columnIndex="12"/>
-		<result property="endFlg"								column="END_FLG"						columnIndex="13"/>
-		<result property="responseRange"						column="RESPONSE_RANGE"					columnIndex="14"/>
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="userId"					column="USER_ID"					columnIndex="3"/>
+		<result property="userNm"					column="USER_NM"					columnIndex="4"/>
+		<result property="userEmail"				column="USER_EMAIL"					columnIndex="5"/>
+		<result property="title"					column="TITLE"						columnIndex="6"/>
+		<result property="content"					column="CONTENT"					columnIndex="7"/>
+		<result property="pollEndDate"				column="POLL_ENDDATE"				columnIndex="8"/>
+		<result property="postDate"					column="POST_DATE"					columnIndex="9"/>
+		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="10"/>
+		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="11"/>
+		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="12"/>
+		<result property="endFlg"					column="END_FLG"					columnIndex="13"/>
+		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="14"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPollItemVO" id="userPollItem">
-		<result property="brdId"								column="BRD_ID"							columnIndex="1"/>
-		<result property="itemNo"								column="ITEM_NO"						columnIndex="2"/>
-		<result property="userId"								column="USER_ID"						columnIndex="3"/>
-		<result property="userNm"								column="USER_NM"						columnIndex="4"/>
-		<result property="userNm2"								column="USER_NM2"						columnIndex="5"/>
-		<result property="userEmail"							column="USER_EMAIL"						columnIndex="6"/>
-		<result property="userDeptId"							column="USER_DEPTID"					columnIndex="7"/>
-		<result property="userDeptNm"							column="USER_DEPTNM"					columnIndex="8"/>
-		<result property="title"								column="TITLE"							columnIndex="9"/>
-		<result property="content"								column="CONTENT"						columnIndex="10"/>
-		<result property="postDate"								column="POST_DATE"						columnIndex="11"/>
-		<result property="updateDate"							column="UPDATE_DATE"					columnIndex="12"/>
-		<result property="endDate"								column="END_DATE"						columnIndex="13"/>
-		<result property="postTerm"								column="POST_TERM"						columnIndex="14"/>
-		<result property="itemRef"								column="ITEM_REF"						columnIndex="15"/>
-		<result property="itemLevel"							column="ITEM_LEVEL"						columnIndex="16"/>
-		<result property="itemStep"								column="ITEM_STEP"						columnIndex="17"/>
-		<result property="itemImp"								column="ITEM_IMP"						columnIndex="18"/>
-		<result property="HasAttach"							column="HASATTACH"						columnIndex="19"/>
-		<result property="SrCuserId"							column="SRCUSER_ID"						columnIndex="20"/>
-		<result property="SrCuserNm"							column="SRCUSER_NM"						columnIndex="21"/>
-		<result property="SrCuserEmail"							column="SRCUSER_EMAIL"					columnIndex="22"/>
-		<result property="itemGb"								column="ITEM_GB"						columnIndex="23"/>
-		<result property="readCnt"								column="READ_CNT"						columnIndex="24"/>
-		<result property="pollStartDate"						column="POLL_STARTDATE"					columnIndex="25"/>
-		<result property="pollEndDate"							column="POLL_ENDDATE"					columnIndex="26"/>
-		<result property="resCnt"								column="RES_CNT"						columnIndex="27"/>
-		<result property="completeFlag"							column="COMPLETE_FLAG"					columnIndex="28"/>
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="userId"					column="USER_ID"					columnIndex="3"/>
+		<result property="userNm"					column="USER_NM"					columnIndex="4"/>
+		<result property="userNm2"					column="USER_NM2"					columnIndex="5"/>
+		<result property="userEmail"				column="USER_EMAIL"					columnIndex="6"/>
+		<result property="userDeptId"				column="USER_DEPTID"				columnIndex="7"/>
+		<result property="userDeptNm"				column="USER_DEPTNM"				columnIndex="8"/>
+		<result property="title"					column="TITLE"						columnIndex="9"/>
+		<result property="content"					column="CONTENT"					columnIndex="10"/>
+		<result property="postDate"					column="POST_DATE"					columnIndex="11"/>
+		<result property="updateDate"				column="UPDATE_DATE"				columnIndex="12"/>
+		<result property="endDate"					column="END_DATE"					columnIndex="13"/>
+		<result property="postTerm"					column="POST_TERM"					columnIndex="14"/>
+		<result property="itemRef"					column="ITEM_REF"					columnIndex="15"/>
+		<result property="itemLevel"				column="ITEM_LEVEL"					columnIndex="16"/>
+		<result property="itemStep"					column="ITEM_STEP"					columnIndex="17"/>
+		<result property="itemImp"					column="ITEM_IMP"					columnIndex="18"/>
+		<result property="HasAttach"				column="HASATTACH"					columnIndex="19"/>
+		<result property="SrCuserId"				column="SRCUSER_ID"					columnIndex="20"/>
+		<result property="SrCuserNm"				column="SRCUSER_NM"					columnIndex="21"/>
+		<result property="SrCuserEmail"				column="SRCUSER_EMAIL"				columnIndex="22"/>
+		<result property="itemGb"					column="ITEM_GB"					columnIndex="23"/>
+		<result property="readCnt"					column="READ_CNT"					columnIndex="24"/>
+		<result property="pollStartDate"			column="POLL_STARTDATE"				columnIndex="25"/>
+		<result property="pollEndDate"				column="POLL_ENDDATE"				columnIndex="26"/>
+		<result property="resCnt"					column="RES_CNT"					columnIndex="27"/>
+		<result property="completeFlag"				column="COMPLETE_FLAG"				columnIndex="28"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPermissionVO" id="userPermission">
-		<result property="brdId"								column="BRD_ID"							columnIndex="1"/>
-		<result property="itemNo"								column="ITEM_NO"						columnIndex="2"/>
-		<result property="publicFlg"							column="PUBLIC_FLG"						columnIndex="3"/>
-		<result property="publicResultFlg"						column="PUBLIC_RESULT_FLG"				columnIndex="4"/>
-		<result property="multiResponseFlg"						column="MULTI_RESPONSE_FLG"				columnIndex="5"/>
-		<result property="endFlg"								column="END_FLG"						columnIndex="6"/>
-		<result property="responseRange"						column="RESPONSE_RANGE"					columnIndex="7"/>
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="3"/>
+		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="4"/>
+		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="5"/>
+		<result property="endFlg"					column="END_FLG"					columnIndex="6"/>
+		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="7"/>
 	</resultMap>
 	
-	<procedure id="EzQuestionDAO.getQstListCnt"					parameterClass="Map"					resultClass="Integer">
+	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getQstList"					parameterClass="Map"					resultMap="qstList">
+	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzQuestionDAO.getUserPollItem"				parameterClass="Map"					resultMap="userPollItem">
+	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="userPollItem">
 		{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getUserPermission"				parameterClass="Map"					resultMap="userPermission">
+	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="userPermission">
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	<!-- 수정필요 -->
-	<select id="EzQuestionDAO.getUserResponseCnt"				parameterClass="Map"					resultClass="Integer">
+	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
 				COUNT(*) as CNT
@@ -96,7 +96,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzQuestionDAO.getUserIdAdmin"					parameterClass="String"					resultClass="String">
+	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="String" resultClass="String">
 		<![CDATA[
 			SELECT
 				USER_ID 
@@ -109,51 +109,51 @@
 		]]>
 	</select>
 	
-	<procedure id="EzQuestionDAO.getItemNoCnt"					parameterClass="Map"					resultClass="Integer">
+	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.stepSave"						parameterClass="Map" >
+	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.stepSave2"						parameterClass="Map" >
+	<procedure id="EzQuestionDAO.stepSave2" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.callCreateMother"				parameterClass="Map" >
+	<procedure id="EzQuestionDAO.callCreateMother" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.callInsertPollResponsep1"		parameterClass="Map" >
+	<procedure id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.callInsertPollResponseper"		parameterClass="Map" >
+	<procedure id="EzQuestionDAO.callInsertPollResponseper" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getQuestionNo"					parameterClass="Map"					resultClass="Integer">
+	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.insertQuestion"				parameterClass="Map">
+	<procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.pollSaveAttach"				parameterClass="Map">
+	<procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.insertAnswerAnswerContent"		parameterClass="Map">
+	<procedure id="EzQuestionDAO.insertAnswerAnswerContent"	parameterClass="Map">
 		{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.insertAnswerContent"			parameterClass="Map">
+	<procedure id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.updatePollItem"				parameterClass="Map">
+	<procedure id="EzQuestionDAO.updatePollItem" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
