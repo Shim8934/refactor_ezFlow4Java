@@ -21,7 +21,6 @@
 			}
 		</style>
 		<script language="JavaScript" type="text/javascript">
-		/* c:out value */
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "${qstListVO.brdId}";
 		    var g_BrdNM = "${pBrdNM}";
@@ -34,8 +33,8 @@
 			var MultiResYN, WriteYN, AdminYN;
 			var TR_Contents_Start = 1;
 			var pNoneActiveX = "${pNoneActiveX}";
-			document.onselectstart = function () { return false; };
-			window.onload = function () {
+			document.onselectstart = function(){ return false; };
+			window.onload = function(){
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
 			        document.body.style.WebkitUserSelect = 'none';
@@ -46,7 +45,7 @@
 				makePageSelPage();
 			}
 		
-			/* function Check_UserPollStatus(pItemNo, pflag) {
+			/* function Check_UserPollStatus(pItemNo, pflag){
 			    try {
 			        var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 			        var szUrl = "Call_UsersPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
@@ -89,95 +88,89 @@
 			                    break;
 			            }
 			            return rv;
-			        }
-			        else {
-			            EndPollYN = "";
-			            ResponseYN = "";
-			            ResultOpenYN = "";
-			            MultiResYN = "";
-			            WriteYN = "N";
-			            AdminYN = "N";
+			        }else{
+			        	EndPollYN = "";
+				        ResponseYN = "";
+				        ResultOpenYN = "";
+				        MultiResYN = "";
+				        WriteYN = "N";
+				        AdminYN = "N";
 			            return false;
 			        }
 			    } catch (e) {
+			    	alert(e.message);
 			        return false;
 			    }
 			} */
-			function Chk_Reuse() {
-			    if (WriteYN == "Y")
-			    	return true;
-			    else {
-			        alert(strLang44);
-			        return false;
-			    }
+			function Chk_Reuse(){
+				if (WriteYN == "Y")
+					return true;
+				else{
+					alert(strLang44);
+				return false;
+				}
 			}
-			function Chk_Save() {
-			    if (WriteYN == "Y" || AdminYN == "Y")
+			function Chk_Save(){
+			    if(WriteYN == "Y" || AdminYN == "Y")
 			        return true;
-			    else {
+			    else{
 			        alert('<spring:message code="ezQuestion.t275" />');
 			        return false;
 			    }
 			}
-		    function Chk_Analysis() {
-		        if (WriteYN == "Y" || AdminYN == "Y")
+		    function Chk_Analysis(){
+		        if(WriteYN == "Y" || AdminYN == "Y")
 		            return true;
-		        else {
+		        else{
 		            alert('<spring:message code="ezQuestion.t276" />');
 		            return false;
 		        }
 		    }
-		    function Chk_Delete() {
-		        if (WriteYN == "Y" || AdminYN == "Y")
+		    function Chk_Delete(){
+		        if(WriteYN == "Y" || AdminYN == "Y")
 		            return true;
-		        else {
+		        else{
 		            alert('<spring:message code="ezQuestion.t278" />');
 		            return false;
 		        }
 		    }
-		    function Chk_Response() {
-		        if (EndPollYN == "N") {
-		            if (ResponseYN == "Y") {
-		                if (MultiResYN == "Y") {
-		                    return true;
-		                }
-		                else {
-		                    alert('<spring:message code="ezQuestion.t280" />');
-		                    return false;
-		                }
-		            }
-		            else {
-		                return true;
-		            }
-		        }
-		        else {
-		            alert('<spring:message code="ezQuestion.t281" />');
-		            return false;
-		        }
-		    }
+		    function Chk_Response(){
+		        if(EndPollYN == "N"){
+	            	if(ResponseYN == "Y"){
+	                	if(MultiResYN == "Y"){
+	                	    return true;
+	                	}else{
+	                	    alert('<spring:message code="ezQuestion.t280" />');
+	                	    return false;
+	                	}
+	            	}else{
+	            	    return true;
+	            	}
+	        	}else{
+	        	    alert('<spring:message code="ezQuestion.t281" />');
+	        	    return false;
+	        	}
+    		}
 		
-		    function Chk_Result() {
-		        if (EndPollYN == "Y") {
-		            if (ResultOpenYN == "Y") {
+	    	function Chk_Result(){
+	    	    if(EndPollYN == "Y"){
+	    	        if(ResultOpenYN == "Y"){
 		                return true;
-		            }
-		            else {
-		                if (WriteYN == "Y" || AdminYN == "Y")
+		            }else{
+		                if(WriteYN == "Y" || AdminYN == "Y")
 		                    return true;
-		                else {
-		                    alert('<spring:message code="ezQuestion.t284" />');
-		                    return false;
-		                }
-		            }
-		        }
-		        else {
-		            if (ResultOpenYN == "Y") {
+	            	    else{
+	            	        alert('<spring:message code="ezQuestion.t284" />');
+	            	        return false;
+	            	    }
+	            	}
+	        	}else{
+	        	    if(ResultOpenYN == "Y"){
 		                return true;
-		            }
-		            else {
-		                if (WriteYN == "Y" || AdminYN == "Y")
+		            }else{
+		                if(WriteYN == "Y" || AdminYN == "Y")
 		                    return true;
-		                else {
+		                else{
 		                    alert('<spring:message code="ezQuestion.t284" />');
 		                    return false;
 		                }
@@ -186,175 +179,255 @@
 		        }
 		    }
 		
-		    function Chk_InfoModify() {
+		    function Chk_InfoModify(){
 		        if (WriteYN == "Y" || AdminYN == "Y") {
 		            return true;
-		        }
-		        else {
+		        }else{
 		            alert('<spring:message code="ezQuestion.t285" />');
 		            return false;
 		        }
 		    }
-		    function menu_NewQuestion() {
-		        var szUrl = g_ezBoard + "/Poll/Qst_Step1.do?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
+		    function menu_NewQuestion(){
+		        var szUrl = g_ezBoard + "/ezQuestion/qstStep1.do?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
 		        window.location.href = szUrl;
 		    }
 		
-		    function menu_Checking() {
+		    function menu_Checking(){
+	        	if(CrossYN()){
+					var szCheckCnt = 0;
+		            var table = document.getElementById("QstList");
+		            var szLen = table.rows.length;
+		            szPubFlag = "";
+		            for(var i = TR_Contents_Start; i < szLen; i++){
+						var row = table.rows[i];
+		                var chkboxCell = row.cells[0];
+		                var InputTags = chkboxCell.getElementsByTagName("INPUT");
+		                if(InputTags.length > 0){
+		                    if(InputTags[0].type == "checkbox"){
+		                        var chkbox = InputTags[0];
+		                        if(chkbox.checked){
+		                            szSelectedItemNo = chkbox.value;
+		                            if(navigator.userAgent.indexOf("Firefox") > -1){
+		                                var ret = row.cells[2].innerHTML;
+		                                ret = ret.replace(/&nbsp;/ig, " ");
+		                                ret = ret.replace(/<br>/ig, "\n");
+		                                ret = ret.replace(/<br[^>]+>/ig, "\n");
+		                                ret = ret.replace(/<[^>]+>/g, "");
+		                                szPubFlag = ret;
+		                            }else{
+		                                szPubFlag = row.cells[2].innerText;
+		                            }
+		                            szCheckCnt = szCheckCnt + 1;
+		                        }
+		                    }
+		                }
+		            }
+		            if(szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1){
+		                szPubFlag = "1";
+		            }else{
+		                szPubFlag = "0";
+		            }
+		            if (szCheckCnt == 1)
+		            	return true;
+		            else if(szCheckCnt == 0){
+		                szSelectedItemNo = "";
+		                alert('<spring:message code="ezQuestion.t289" />');
+		                return false;
+		            }else{
+		                szSelectedItemNo = "";
+		                alert('<spring:message code="ezQuestion.t290" />');
+		                return false;
+		            }
+		        }else{
+		            var szCheckCnt = 0;
+		            var table = document.getElementById("QstList");
+		            var szLen = table.children[0].children[1].children.length;
+
+		            for(var i = TR_Contents_Start; i < szLen; i++){
+		                var row = table.children[0].children[1].children[i];
+		                var chkboxCell = row.cells[0];
+		                var InputTags = chkboxCell.getElementsByTagName("INPUT");
+
+		                if(InputTags.length > 0){
+		                    if(InputTags[0].type == "checkbox"){
+		                        var chkbox = InputTags[0];
+		                        if(chkbox.checked){
+		                            szSelectedItemNo = chkbox.value;
+		                            if(navigator.userAgent.indexOf("Firefox") > -1){
+		                                var ret = row.cells[2].innerHTML;
+		                                ret = ret.replace(/&nbsp;/ig, " ");
+		                                ret = ret.replace(/<br>/ig, "\n");
+		                                ret = ret.replace(/<br[^>]+>/ig, "\n");
+		                                ret = ret.replace(/<[^>]+>/g, "");
+
+		                                szPubFlag = ret;
+		                            }else{
+		                                szPubFlag = row.cells[2].innerText;
+		                            }
+		                            szCheckCnt = szCheckCnt + 1;
+		                        }
+		                    }
+		                }
+		            }
+		            if(szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1){
+		            szPubFlag = "1";
+		        	}else{
+		            	szPubFlag = "0";
+		        	}
+	
+			        if(szCheckCnt == 1) 
+			        	return true;
+			        else if(szCheckCnt == 0){
+			            szSelectedItemNo = "";
+			            alert('<spring:message code="ezQuestion.t289" />');
+			            return false;
+			        }else{
+			            szSelectedItemNo = "";
+			            alert('<spring:message code="ezQuestion.t290" />');
+			            return false;
+			        }
+		        }
+		    }
+		    
+		    function menu_Response(){
+		        <%-- if(menu_Checking()){
+		            if(Check_UserPollStatus(szSelectedItemNo, "Response") == false)
+		            	return;
+		            var szUrl = "Qst_Response.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            window.location.href = szUrl;
+		        } --%>
+		    }
+		    function menu_Result(){
+		        <%-- if(menu_Checking()){
+		            if(Check_UserPollStatus(szSelectedItemNo, "Result") == false)
+		            	return;
+		            var szUrl = "Qst_Result.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            szUrl += "&brd_nm=" + g_BrdNM;
+		            window.location.href = szUrl;
+		        } --%>
+		    }
+		    function menu_InfoModify(){
+		        <%-- if(menu_Checking()){
+		            if(Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false)
+		            	return;
+		            var szUrl = "Qst_Change_Permission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            szUrl += "&brd_nm=" + g_BrdNM;
+		            window.location.href = szUrl;
+		        } --%>
+		    }
+// 		    var qst_delete_itemmsg_dialogArguments = new Array();
+		    function menu_Delete(){
 		        var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
-		        var szLen = table.children[0].children[1].children.length;
-		
-		        for (var i = TR_Contents_Start; i <= szLen-1; i++) {
-		
-		            var row = table.children[0].children[1].children[i];
+		        var szLen = table.rows.length;
+		        for(var i = TR_Contents_Start; i < szLen; i++){
+		            var row = table.rows[i];
 		            var chkboxCell = row.cells[0];
 		            var InputTags = chkboxCell.getElementsByTagName("INPUT");
-		
-		            if (InputTags.length > 0) {
-		                if (InputTags[0].type == "checkbox") {
+		            if(InputTags.length > 0){
+		                if(InputTags[0].type == "checkbox"){
 		                    var chkbox = InputTags[0];
-		                    if (chkbox.checked) {
-		                        szSelectedItemNo = chkbox.value;
-		                        if (navigator.userAgent.indexOf("Firefox") > -1) {
-		                            var ret = row.cells[2].innerHTML;
+		                    if(chkbox.checked){
+		                        p_SelectedItemNo = chkbox.value;
+		                        if(navigator.userAgent.indexOf("Firefox") > -1){
+		                            var ret = row.cells[1].innerHTML;
 		                            ret = ret.replace(/&nbsp;/ig, " ");
 		                            ret = ret.replace(/<br>/ig, "\n");
 		                            ret = ret.replace(/<br[^>]+>/ig, "\n");
 		                            ret = ret.replace(/<[^>]+>/g, "");
-		
-		                            szPubFlag = ret;
-		                        } else {
-		                            szPubFlag = row.cells[2].innerText;
+		                            p_SelectedTitle = ret;
+		                        }else{
+		                            p_SelectedTitle = row.cells[1].innerText;
+		                        }
+		                        if(navigator.userAgent.indexOf("Firefox") > -1){
+		                            var ret = row.cells[5].innerHTML;
+		                            ret = ret.replace(/&nbsp;/ig, " ");
+		                            ret = ret.replace(/<br>/ig, "\n");
+		                            ret = ret.replace(/<br[^>]+>/ig, "\n");
+		                            ret = ret.replace(/<[^>]+>/g, "");
+		                            p_SelectedWriter = ret;
+		                        }else{
+		                            p_SelectedWriter = row.cells[5].innerText;
 		                        }
 		                        szCheckCnt = szCheckCnt + 1;
 		                    }
 		                }
 		            }
 		        }
-		
-		        if (szPubFlag.indexOf('<spring:message code="ezQuestion.t239" />') > -1) {
-		            szPubFlag = "1";
-		        }
-		        else {
-		            szPubFlag = "0";
-		        }
-		
-		        if (szCheckCnt == 1) return true;
-		        else if (szCheckCnt == 0) {
-		            szSelectedItemNo = "";
-		            alert('<spring:message code="ezQuestion.t289" />');
-		            return false;
-		        }
-		        else {
-		            szSelectedItemNo = "";
-		            alert('<spring:message code="ezQuestion.t290" />');
-		            return false;
-		        }
-		    }
-		    function menu_Response() {
-		        <%-- if (menu_Checking()) {
-		            if (Check_UserPollStatus(szSelectedItemNo, "Response") == false) return;
-		
-		            var szUrl = "Qst_Response.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            window.location.href = szUrl;
-		        } --%>
-		    }
-		    function menu_Result() {
-		        <%-- if (menu_Checking()) {
-		            if (Check_UserPollStatus(szSelectedItemNo, "Result") == false) return;
-		            var szUrl = "Qst_Result.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            szUrl += "&brd_nm=" + g_BrdNM;
-		            window.location.href = szUrl;
-		        } --%>
-		    }
-		    function menu_InfoModify() {
-		        <%-- if (menu_Checking()) {
-		            if (Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false) return;
-		
-		            var szUrl = "Qst_Change_Permission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            szUrl += "&brd_nm=" + g_BrdNM;
-		            window.location.href = szUrl;
-		        } --%>
-		    }
-		    function menu_Delete() {
-		        var szCheckCnt = 0;
-		        var table = document.getElementById("QstList");
-		        var szLen = table.children[0].children[1].children.length;
-		        var p_SelectedItemNo, p_SelectedTitle, p_SelectedWriter;
-		
-		
-		        for (var i = TR_Contents_Start; i <= szLen-1; i++) {
-		            if (szCheckCnt > 1) break;
-		
-		            var row = table.children[0].children[1].children[i];
-		            var chkboxCell = row.cells[0];
-		            var InputTags = chkboxCell.getElementsByTagName("INPUT");
-		
-		            if (InputTags.length > 0) {
-		                if (InputTags[0].type == "checkbox") {
-		                    var chkbox = InputTags[0];
-		                    if (chkbox.checked) {
-		                        p_SelectedItemNo = chkbox.value;
-		                        p_SelectedTitle = row.cells[1].innerText;
-		                        p_SelectedWriter = row.cells[5].innerText;
-		                        szCheckCnt = szCheckCnt + 1;
-		                    }
-		                }
-		            }
-		        }
-		        if (szCheckCnt == 0) {
+		        if(szCheckCnt == 0){
 		            alert('<spring:message code="ezQuestion.t294" />');
 		            return;
 		        }
-		        if (szCheckCnt == 1) {
-		           /*  if (Check_UserPollStatus(p_SelectedItemNo, "Delete") == false) return; */
-		
-		
-		            var szUrl = "Qst_Delete_ItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo;
-		            var szParam = "dialogHeight:260px;dialogWidth:400px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no;";
-		
+		        if(szCheckCnt == 1){
+		            if(Check_UserPollStatus(p_SelectedItemNo, "Delete") == false)
+		            	return;
 		            var rgParams = new Array();
-		
 		            rgParams["TITLE"] = p_SelectedTitle;
 		            rgParams["WRITER"] = p_SelectedWriter;
-		
-		            window.showModalDialog(szUrl, rgParams, szParam);
-		            location.href = location.href;
-		        }
-		        else {
+
+		            qst_delete_itemmsg_dialogArguments[0] = rgParams;
+		            qst_delete_itemmsg_dialogArguments[1] = menu_Delete_Complete;
+
+		            var Qst_Delete_ItemMsg = GetOpenWindow("Qst_Delete_ItemMsg.aspx?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "Qst_Delete_ItemMsg", 400, 230);
+		            try{
+		            	Qst_Delete_ItemMsg.focus(); 
+		            }catch (e){
+		            }
+		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
 		        }
 		    }
-		    function menu_Analysis() {
-		       <%-- if (menu_checking()) {
-		            if (check_userpollstatus(szselecteditemno, "analysis") == false) return;
-		            if(pnoneactivex == "yes")
-		                var szurl = "qst_analysis_cross.do?<%=receve_str2%>&item_no=" + szselecteditemno + "&pubflag=" + szpubflag;
-		            else
-		                var szurl = "qst_analysis_cross.do?<%=receve_str2%>&item_no=" + szselecteditemno + "&pubflag=" + szpubflag;
-		            window.location.href = szurl;
-		        } --%>
+		    
+		    function menu_Delete_Complete(){
+		        window.location.reload(true);
 		    }
-		    function menu_Search() {
+		    
+		    function menu_Analysis(){
+// 		       if (menu_Checking()) {
+// 		            if (Check_UserPollStatus(szSelectedItemNo, "Analysis") == false) return;
+<%-- 		            var szUrl = "Qst_Analysis_Cross.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag; --%>
+// 		            window.location.href = szUrl;
+// 		        }
+		    }
+		    
+		    function menu_Search(){
 		        var szUrl = "/myOffice/ezQuestion/poll/Qst_Search_Cross.do?brd_id=" + g_BrdID;
 		        window.location.href = szUrl;
 		    }
 		
-		    function menuQst_DetailUserInfo(pUserID) {
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
-		        window.open("/myoffice/common/ShowPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		    function menuQst_DetailUserInfo(pUserID){
+		    	 var feature = GetOpenPosition(420, 438);
+		         window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
+		    
+		    function search_Set(pPage){
+				if(pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${qstListVO.totalPage}')){
+					var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
+					window.location.href = szUrl;
+				}
+			}
+		    
+		    function changePage(){
+		        if(event.keyCode == 13){
+		            var inputNum = txt_PageInputNum.value;
+		            search_Set(inputNum);
+		            return false;
+		        }
+		        return true;
+		    }
+		    
+		    function title_OnClick(pReceve){
+		        document.location.href = "/ezQuestion/pollOpen.do?" + pReceve;
+		    }
+		    
 		    var BlockSize = 10;
-		    function td_Create1(strtext) {
+		    
+		    function td_Create1(strtext){
 		        document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
 		    }
 		
-		    function makePageSelPage() {
+		    function makePageSelPage(){
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
@@ -362,167 +435,154 @@
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
-		        if (totalPage > 1 && pageNum != 1) {
+		        if(totalPage > 1 && pageNum != 1){
 		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
-		        }
-		        else {
+		        }else{
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 		        }
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
+		        if(totalPage > BlockSize){
+		            if(pageNum > BlockSize){
 		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
-		            }
-		            else {
+		            }else{
 		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
-		        }
-		        else {
+		        }else{
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
 		        var i;
 		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
+		        if(totalPage >= (startNum + parseInt(BlockSize))){
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        }
-		        else {
+		        }else{
 		            MaxNum = totalPage;
 		        }
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
+		        for(i = startNum; i <= MaxNum; i++){
+		            if(i == pageNum){
 		                strtext = "<span class='on'>" + i + "</span>";
 		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		            }else{
+						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		        if(totalPage > BlockSize){
+	            	if(totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)){
+	            	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	            	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
-		            }
-		            else {
+	            	}else{
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
-		            }
-		        }
-		        else {
+	            	}
+		        }else{
 		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		        if(totalPage > 1 && totalPage != 1 && (totalPage != pageNum)){
 		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
-		        }
-		        else {
+		        }else{
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
 		        td_Create1(PagingHTML);
 		    }
-		    function goToPageByNum(Value) {
+		    
+		    function goToPageByNum(Value){
 		        CurPage = Value;
 		        makePageSelPage();
 		        search_Set(CurPage);
 		    }
-		    function selbeforeBlock() {
+		    
+		    function selbeforeBlock(){
 		        var pageNum = parseInt(CurPage);
 		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
 		        goToPageByNum(pageNum);
 		    }
-		    function selbeforeBlock_one() {
+		    
+		    function selbeforeBlock_one(){
 		        var pageNum = parseInt(CurPage);
-		        if (parseInt(pageNum - 1) > 0)
+		        if(parseInt(pageNum - 1) > 0)
 		            goToPageByNum(parseInt(pageNum - 1));
 		        else
 		            return;
 		    }
-		    function selafterBlock() {
+		    
+		    function selafterBlock(){
 		        var pageNum = parseInt(CurPage);
 		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
 		        goToPageByNum(pageNum);
 		    }
-		    function selafterBlock_one() {
+		    
+		    function selafterBlock_one(){
 		        var pageNum = parseInt(CurPage);
-		        if (parseInt(pageNum + 1) <= totalPage)
+		        if(parseInt(pageNum + 1) <= totalPage)
 		            goToPageByNum(parseInt(pageNum + 1));
 		        else
 		            return;
 		    }
-		    function search_Set(pPage) {
-		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${qstListVO.totalPage}')) {
-		            var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
-		            window.location.href = szUrl;
-		        }
-		    }
-		    function changePage() {
-		        if (event.keyCode == 13) {
-		            var inputNum = txt_PageInputNum.value;
-		
-		            search_Set(inputNum);
-		
-		            return false;
-		        }
-		
-		        return true;
-		    }
-		
-		    function title_OnClick(pReceve) {
-		        document.location.href = "/ezQuestion/pollOpen.do?" + pReceve;
-		    }
-		    function menu_reuse() {
+		     
+		    function menu_reuse(){
 		        var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
-		        var szLen = table.children[0].children[1].children.length;
-		        var p_SelectedItemNo, p_SelectedTitle, p_SelectedWriter;
-		
-		
-		        for (var i = TR_Contents_Start; i <= szLen-1; i++) {
-		            if (szCheckCnt > 1) break;
-		
-		            var row = table.children[0].children[1].children[i];
+		        var szLen = table.rows.length;
+		        for(var i = TR_Contents_Start; i < szLen; i++){
+		            var row = table.rows[i];
 		            var chkboxCell = row.cells[0];
 		            var InputTags = chkboxCell.getElementsByTagName("INPUT");
-		
-		            if (InputTags.length > 0) {
-		                if (InputTags[0].type == "checkbox") {
+		            if(InputTags.length > 0){
+		                if(InputTags[0].type == "checkbox"){
 		                    var chkbox = InputTags[0];
-		                    if (chkbox.checked) {
+		                    if(chkbox.checked){
 		                        p_SelectedItemNo = chkbox.value;
-		                        p_SelectedTitle = row.cells[1].innerText;
-		                        p_SelectedWriter = row.cells[5].innerText;
+		                        if(navigator.userAgent.indexOf("Firefox") > -1){
+		                            var ret = row.cells[1].innerHTML;
+		                            ret = ret.replace(/&nbsp;/ig, " ");
+		                            ret = ret.replace(/<br>/ig, "\n");
+		                            ret = ret.replace(/<br[^>]+>/ig, "\n");
+		                            ret = ret.replace(/<[^>]+>/g, "");
+		                            p_SelectedTitle = ret;
+		                        }else{
+		                            p_SelectedTitle = row.cells[1].innerText;
+		                        }
+		                        if(navigator.userAgent.indexOf("Firefox") > -1){
+		                            var ret = row.cells[5].innerHTML;
+		                            ret = ret.replace(/&nbsp;/ig, " ");
+		                            ret = ret.replace(/<br>/ig, "\n");
+		                            ret = ret.replace(/<br[^>]+>/ig, "\n");
+		                            ret = ret.replace(/<[^>]+>/g, "");
+		                            p_SelectedWriter = ret;
+		                        }else{
+		                            p_SelectedWriter = row.cells[5].innerText;
+		                        }
 		                        szCheckCnt = szCheckCnt + 1;
 		                    }
 		                }
 		            }
 		        }
-		        if (szCheckCnt == 0) {
+		        if(szCheckCnt == 0){
 		            alert('<spring:message code="ezQuestion.t294" />');
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
-		           /*  if (Check_UserPollStatus(p_SelectedItemNo, "Reuse") == false) return; */
-		
-		            var szUrl = "Qst_Step1_reuse_cross.do?brdId=" + g_BrdID + "&itemId=" + p_SelectedItemNo;
+		            if (Check_UserPollStatus(p_SelectedItemNo, "Reuse") == false)
+		            	return;
+		            var szUrl = "/ezQuestion/qstStep1Reuse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
 		            window.location.href = szUrl;
-		        }
-		        else {
+		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
 		        }
 		    }
-		
 		</script>
 	</head>
 	<body class="mainbody">
