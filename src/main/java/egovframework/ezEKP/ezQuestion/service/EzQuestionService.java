@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
-import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 	 
 public interface EzQuestionService {
-	public int getQstListCnt(QuestionListVO questionListVO) throws Exception;
+	public int getQstListCnt(QstListVO qstListVO) throws Exception;
 	
-	public List<QuestionListVO> getQstList(QuestionListVO questionListVO) throws Exception;
+	public List<QstListVO> getQstList(QstListVO qstListVO) throws Exception;
 	
 	public int getItemNoCnt(int brdId,int itemNo) throws Exception;
 	
@@ -25,11 +26,11 @@ public interface EzQuestionService {
 	
 	public void updateItemSeq(int brdId,int itemNo) throws Exception;
 	
-	public UserPollItemVO getUserPollItem(UserPollItemVO userPollItemVO) throws Exception;
+	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO userPollItemVO) throws Exception;
 	
-	public UserPermissionVO getUserPermission(UserPermissionVO userPermissionVO) throws Exception;
+	public QstUserPermissionVO getUserPermission(QstUserPermissionVO userPermissionVO) throws Exception;
 	
-	public int getUserResponseCnt(UserPermissionVO userPermissionVO) throws Exception;
+	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO) throws Exception;
 	
 	public List<String> getUserIdAdmin(String brd) throws Exception;
 	
@@ -52,6 +53,14 @@ public interface EzQuestionService {
 	public void updatePollItem(QstCompleteVO qstCompleteVO) throws Exception;
 	
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
-	
-	
+
+	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO);
+
+	public int resCount(String brdId);
+
+	public void updateReadCnt(QstUserPollItemVO userPollItemVO);
+
+	public int getReadDateItem();
+
+	public List<QstVO> getQuestionForResponse(QstVO questionVO);
 }

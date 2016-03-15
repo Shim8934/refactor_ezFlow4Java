@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzQuestionDAO")
@@ -19,8 +19,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<QuestionListVO> getQstList(Map<String, Object> map){
-		return (List<QuestionListVO>) list("EzQuestionDAO.getQstList", map);
+	public List<QstListVO> getQstList(Map<String, Object> map){
+		return (List<QstListVO>) list("EzQuestionDAO.getQstList", map);
 	}
 	
 	public int getItemNoCnt(Map<String, Object> map) throws Exception {
@@ -48,12 +48,12 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		update("EzQuestionDAO.stepSave2", map);
 	}
 	
-	public UserPollItemVO getUserPollItem(Map<String, Object> map){
-		return  (UserPollItemVO) select("EzQuestionDAO.getUserPollItem", map);
+	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
+		return  (QstUserPollItemVO) select("EzQuestionDAO.getUserPollItem", map);
 	}
 	
-	public UserPermissionVO getUserPermission(Map<String, Object> map){
-		return (UserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
+	public QstUserPermissionVO getUserPermission(Map<String, Object> map){
+		return (QstUserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
 	}
 	
 	public int getUserResponseCnt(Map<String, Object> map){

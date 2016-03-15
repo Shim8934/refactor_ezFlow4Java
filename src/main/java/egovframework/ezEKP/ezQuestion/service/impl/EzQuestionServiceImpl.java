@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
-import egovframework.ezEKP.ezQuestion.vo.QuestionListVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPermissionVO;
-import egovframework.ezEKP.ezQuestion.vo.UserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
@@ -23,7 +24,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	private EzQuestionDAO ezQuestionDAO;
 	
 	@Override
-	public int getQstListCnt(QuestionListVO questionListVO) throws Exception {
+	public int getQstListCnt(QstListVO questionListVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdId());
 		map.put("v_PUSERID", questionListVO.getUserId());
@@ -36,7 +37,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public List<QuestionListVO> getQstList(QuestionListVO questionListVO) throws Exception {
+	public List<QstListVO> getQstList(QstListVO questionListVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdId());
 		map.put("v_PUSERID", questionListVO.getUserId());
@@ -111,7 +112,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 	
 	@Override
-	public UserPollItemVO getUserPollItem(UserPollItemVO userPollItemVO) throws Exception {
+	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO userPollItemVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPollItemVO.getBrdId());
 		map.put("v_pItemNo", userPollItemVO.getItemNo());
@@ -119,7 +120,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public UserPermissionVO getUserPermission(UserPermissionVO userPermissionVO) throws Exception {
+	public QstUserPermissionVO getUserPermission(QstUserPermissionVO userPermissionVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
@@ -127,7 +128,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getUserResponseCnt(UserPermissionVO userPermissionVO) throws Exception {
+	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
@@ -258,5 +259,36 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
 		ezQuestionDAO.deleteItem(map);
+	}
+
+	@Override
+	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int resCount(String brdId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void updateReadCnt(QstUserPollItemVO userPollItemVO) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getReadDateItem() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<QstVO> getQuestionForResponse(QstVO questionVO) {
+		return null;
+		// TODO Auto-generated method stub
+		
 	}
 }
