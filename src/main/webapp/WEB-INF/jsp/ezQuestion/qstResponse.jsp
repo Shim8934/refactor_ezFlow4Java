@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezQuestion.t315" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
 		    document.onselectstart = function (){ return false; };
