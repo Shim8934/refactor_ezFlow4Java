@@ -1,24 +1,43 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstStepSaveVO {
+	/** 게시판아이디*/
 	private int brdId;
+	/** 아이템번호*/
 	private int itemNo;
+	/** 유저아이디*/
 	private String userId;
+	/** 유저이름*/
 	private String userNm;
+	/** 유저이름2*/
 	private String userNm2;
+	/** 유저이메일*/
 	private String userEmail;
+	/** 제목*/
 	private String title;
+	/** 내용*/
 	private String content;
+	/** 현재시간*/
 	private String postDate;
+	/** 기간*/
 	private int postTerm;
+	/** */
 	private int itemRef;
+	/** */
 	private String itemImp;
+	/** 시작일*/
 	private String sDate;
+	/** 종료일*/
 	private String eDate;
+	/** 데이터갯수*/
 	private int dataCount;
+	/** */
 	private String resultFlg;
+	/** */
 	private String publicFlg;
+	/** */
 	private String multiFlg;
+	/** */
 	private String resRange;
 	
 	public int getBrdId() {
