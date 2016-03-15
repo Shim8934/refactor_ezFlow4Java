@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -28,7 +30,10 @@ public class EzEmailMailListController {
 
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
-	
+
+    @Resource(name="EzEmailService")
+    private EzEmailService ezEmailService;    
+    
     private static final Logger logger = LoggerFactory.getLogger(EzEmailMailListController.class);
 	
 	@RequestMapping()
@@ -38,10 +43,34 @@ public class EzEmailMailListController {
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
+		String folderName = egovMessageSource.getMessage("ezEmail.t644");
+		String folderType = "";
+		String userLang ="1";
 		
-		model.addAttribute("folderName", egovMessageSource.getMessage("ezEmail.t644"));
+		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645"))) {
+			folderType = "sent";
+		}
+		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t646"))) {
+			folderType = "draft";
+		}
+		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t647"))) {
+			folderType = "delete";
+		}
+		
+		MailGeneralVO mailGeneral = null;
+		List<MailGeneralVO> mailGeneralList = ezEmailService.getMailGeneral(userId);
+		if (mailGeneralList.size() > 0) {
+			mailGeneral = mailGeneralList.get(0);
+			logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral);
+		}
+		
+		model.addAttribute("folderName", folderName);
+		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", true);
 		model.addAttribute("listCount", "30");
+		model.addAttribute("userLang", userLang);
+		model.addAttribute("userId", userId);
+		model.addAttribute("mailGeneral", mailGeneral);
 		
 		logger.debug("showMailList ended");
 		

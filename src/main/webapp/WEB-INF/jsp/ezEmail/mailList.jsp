@@ -17,6 +17,233 @@
 	<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
 	<script type="text/javascript" src="/js/Common.js"></script>
 	<script type="text/javascript" src="/js/NameControl.js"></script>		
+	<script type="text/javascript">
+	    var g_bdraft = false;
+	    var g_expath = "exchange";
+	    var g_bPrevShow = false;
+	    var g_ViewID = null;
+	    var g_PreViewID = null;
+	    var g_PageInput = null;
+	    var g_PageCount = 0;
+	    var g_PreView = null;
+	    var g_PreviewTitle = null;
+	    var g_moveStart = false;
+	    var g_startPosition = 0;
+	    var g_foldertype = "${folderType}";
+	    var g_userLang = "${userLang}";
+	    var searchMode = false;
+	    var SearchKeyword = "";
+	    var g_loginID = "${userId}";
+	    var SecurityMailReadUndo = true;
+	    var p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+	    var p_Listoption = "1";
+	    var p_ListOrderby = "urn:schemas:httpmail:datereceived";
+	    var p_ListOrderOption = "DESC";
+	    var p_ListorderType = "";
+	    var p_ListorderValue = "";
+	    var pListCount = "${listCount}";
+	    var pFolderTotalCount;
+	    var pFolderUnReadCount;
+	    var CopyMsg = "<spring:message code="ezEmail.t635" />";
+	    var MoveMsg = "<spring:message code="ezEmail.t636" />";
+	    var pPreviewMode = "${mailGeneral.previewMode}";
+	    var pPreviewWList = "${mailGeneral.previewWList}";
+	    var pPreviewWContent = "${mailGeneral.previewWContent}";
+	    var pPreviewHList = "${mailGeneral.previewHList}";
+	    var pPreviewHContent = "${mailGeneral.previewHContent}";
+	    var pRefreshinterval = "${mailGeneral.refreshInterval}";
+	    var CurrentHeight = 0;
+	    var CurrenWidth = 0;
+	    var pMailListHeightW = 0;
+	    var pMailPreHeightW = 0;
+	    var pMailListDiv = 0;
+	    var pMailPreVDiv = 0;
+	    var pMailListWidthH = 0;
+	    var pMailPreWidthH = 0;
+	    var pMailListDiv_H = 0;
+	    var pMailPreVDiv_H = 0;
+	    var tmp_href;
+	    document.onselectstart = function () { return false; };
+	    window.onresize = Window_resize;
+	    window.onunload = Window_onunload;
+	    var window_onunload_Event = false;
+	    window.onload = function () {
+	        CurrentHeight = document.body.clientHeight;
+	        CurrenWidth = document.body.clientWidth;
+	        switch (g_foldertype) {
+	            case "sent":
+	                receivecheck.style.display = "";
+	                reply.style.display = 'none';
+	                p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile2.xml";
+	                p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+	                p_Listoption = "2";
+	                document.getElementById("select").selectedIndex = 3;
+	                document.getElementById("select").item(3).selected = true;
+	                break;
+	            case "draft":
+	                g_bdraft = true;
+	                break;
+	            case "delete":
+	                deleteone.style.display = 'none';
+	                deleteall.style.display = '';
+	                break;
+	        }
+	        if (g_foldertype != "sent" && g_foldertype != "draft")
+	            btnReject.style.display = "";
+	
+	        pMailListDiv = pPreviewWList;
+	        pMailPreVDiv = pPreviewWContent;
+	        pMailListDiv_H = pPreviewHList;
+	        pMailPreVDiv_H = pPreviewHContent;
+	        g_bPrevShow = false;
+	        pPreviewShow_HOW = pPreviewMode;
+	        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
+	        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code="ezEmail.t99000002" />";
+	        if (pPreviewMode != "OFF") {
+	            g_bPrevShow = true;
+	            if (parseInt(document.documentElement.clientWidth) < 1000) {
+	                document.getElementById("PreViewleft").style.display = "none";
+	                pPreviewShow_HOW = "W";
+	            }
+	            else {
+	                document.getElementById("PreViewleft").style.display = "";
+	            }
+	            if (pPreviewShow_HOW == "W") {
+	
+	                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
+	                    pMailListDiv = 50; pMailPreVDiv = 50;
+	                }
+	                document.getElementById("MailListRayer").style.display = "inline-block";
+	                document.getElementById("PreviewRayerW").style.display = "block";
+	
+	                CurrenWidth = document.documentElement.clientWidth - 10;
+	                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+	                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+	                document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
+	                pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
+	                pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
+	                document.getElementById("MailListRayer").style.width = "100%";
+	                document.getElementById("PreviewRayerW").style.width = "100%";
+	                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
+	                document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+	                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+	                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+	                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
+	                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
+	            }
+	            else {
+	                if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
+	                    pMailListDiv_H = 50; pMailPreVDiv_H = 50;
+	                }
+	                document.getElementById("MailListRayer").style.display = "inline-block";
+	                document.getElementById("PreviewRayerH").style.display = "inline-block";
+	
+	                CurrenWidth = document.documentElement.clientWidth - 20;
+	                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+	                pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
+	                pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
+	                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+	                document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
+	                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+	                document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
+	                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+	                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+	                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+	                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
+	                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+	                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
+	                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+	                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+	                    if (g_foldertype != "sent") {
+	                        p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+	                        SmallSizeList = true;
+	                        OldSmallSizeList = true;
+	                    }
+	                }
+	            }
+	        }
+	        else {
+	            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+	            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+	            document.getElementById("MailListRayer").style.width = "100%";
+	            document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+	        }
+	
+	        var HeaderObject = document.getElementById("MailHeader");
+	        var ContentObject = document.getElementById("MailList");
+	        HeaderIni(HeaderObject);
+	        GetListInfo(HeaderObject, ContentObject);
+	        PreviewMode_ChangeBtn();
+	        window_onunload_Event = true;
+	        if (pRefreshinterval != "") {
+	            var pSaveInterval = parseInt(pRefreshinterval) * 1000;
+	            window.setInterval("MailListRefresh()", pSaveInterval);
+	        }
+	    }
+	    var Save_unloadSave = false;
+	    function Window_onunload() {
+	        if (window_onunload_Event && !Save_unloadSave) {
+	            var _pPreview;
+	            if (g_bPrevShow)
+	                _pPreview = pPreviewShow_HOW;
+	            else
+	                _pPreview = "OFF";
+	
+	            if (parseInt(pMailListDiv) + parseInt(pMailPreVDiv) != 100)
+	                pMailPreVDiv = 100 - parseInt(pMailListDiv);
+	            if (parseInt(pMailListDiv_H) + parseInt(pMailPreVDiv_H) != 100)
+	                pMailPreVDiv_H = 100 - parseInt(pMailListDiv_H);
+	
+	            var xmlpara = createXmlDom();
+	            var objNode;
+	            objNode = createNodeInsert(xmlpara, objNode, "DATA");
+	            var xmlhttp = createXMLHttpRequest();
+	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
+	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
+	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", " ${mailGeneral.refreshInterval}");
+	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", " ${mailGeneral.keepDeleteLength} ");
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", _pPreview);
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWLIST", parseInt(pMailListDiv));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
+	            xmlhttp.open("POST", "/myoffice/Common/mail_general_save.aspx", false);
+	            xmlhttp.send(xmlpara);
+	            Save_unloadSave = true;
+	        }
+	    }
+	    function keyword_Clear() {
+	        document.getElementsByName('keyword').item(0).value = "";
+	    }
+	    function onkeydown_start_search(evt) {
+	        var curevent = (typeof event == 'undefined' ? evt : event)
+	        if (curevent.keyCode == "13") {
+	            start_search();
+	        }
+	    }
+	    function start_search() {
+	        searchMode = true;
+	        var inputkeyword = document.getElementsByName('keyword').item(0);
+	        if (inputkeyword.value.indexOf("%") != -1) {
+	            alert("'%'" + strLang148);
+	            return;
+	        }
+	        if (inputkeyword.value == "") {
+	            alert(strLang254);
+	            return;
+	        }
+	        SearchKeyword = MakeSQL(inputkeyword.value);
+	        goToPageByNum("1");
+	
+	    }
+	    function MakeSQL(key) {
+	        var radiosearch = document.getElementsByName('searchCheck');
+	        if (radiosearch.item(0).checked)
+	            return radiosearch.item(0).value + "=" + key;
+	        else if (radiosearch.item(1).checked)
+	            return radiosearch.item(1).value + "=" + key;
+	    }
+	</script>	
 </head>
 <body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	<h1>${folderName}<span id="mailBoxInfo"></span>

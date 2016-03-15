@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezEmail">
+	<typeAlias  alias="MailGeneralVO" type="egovframework.ezEKP.ezEmail.vo.MailGeneralVO"/>
+	
+	<resultMap id="mailGeneral" class="MailGeneralVO">
+		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
+		<result property="refreshInterval" column="REFRESHINTERVAL" columnIndex="2"/>
+		<result property="keepDeleteLength" column="KEEPDELETELENGTH" columnIndex="3"/>
+		<result property="previewMode" column="PREVIEWMODE" columnIndex="4"/>
+		<result property="previewWList" column="PREVIEWWLIST" columnIndex="5"/>
+		<result property="previewWContent" column="PREVIEWWCONTENT" columnIndex="6"/>
+		<result property="previewHList" column="PREVIEWHLIST" columnIndex="7"/>
+		<result property="previewHContent" column="PREVIEWHCONTENT" columnIndex="8"/>
+ 		<result property="mailSenderNm" column="MAILSENDERNM" columnIndex="9" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
+		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+</sqlMap>
