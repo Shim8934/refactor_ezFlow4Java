@@ -1,26 +1,47 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstStep1VO {
-	private String txtExpiredate; 
+	/** 완료기한*/
+	private String txtExpiredate;
+	/** 기명여부*/
 	private String setAnonymity;
-	private String hidAnonymity; 
-	private String hidOpenResult; 
+	/** 기명여부*/
+	private String hidAnonymity;
+	/** 조사결과*/
+	private String hidOpenResult;
+	/** 중복응답*/
 	private String hidMultiResponse;
-	private String hidTarget; 
-	private String brdId; 
-	private String brdNm; 
-	private String brdPostterm; 
-	private String itemNo; 
-	private String hidStartDate; 
-	private String hidEndDate; 
+	/** 대상자설정*/
+	private String hidTarget;
+	/** 게시판아이디*/
+	private String brdId;
+	/** 게시판번호*/
+	private String brdNm;
+	/** */
+	private String brdPostterm;
+	/** 아이템번호*/
+	private String itemNo;
+	/** 시작일*/
+	private String hidStartDate;
+	/** 종료일*/
+	private String hidEndDate;
+	/** 대상자 Y/N*/
 	private String selectYN; 
-	private String RangeXMLStr; 
-	private String setMultiResponse; 
-	private String setOpenResult; 
-	private String importance; 
-	private String setTarget; 
-	private String txtSubject; 
+	/** 대상자범위*/
+	private String RangeXMLStr;
+	/** 중복응답*/
+	private String setMultiResponse;
+	/** 조사결과*/
+	private String setOpenResult;
+	/** */
+	private String importance;
+	/** 대상자설정*/
+	private String setTarget;
+	/** 설문제목*/
+	private String txtSubject;
+	/** 설문목적*/
 	private String txtContent;
+	/** */
 	private String itemId;
 	
 	public String getItemId() {
