@@ -1,34 +1,63 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstCompleteVO {
+	/** 게시판아이디*/
 	private int strBrdID;
+	/** 아이템번호*/
 	private int itemNo;
+	/** 구분flag*/
 	private String gubunFg;
+	/** 구분아이디*/
 	private String gubunID;
+	/** 구분번호*/
 	private String gubunNm;
+	/** 구분번호2*/
 	private String gubunNm2;
+	/** 유저아이디*/
 	private String userID;
+	/** 유저이름*/
 	private String userNm;
+	/** 유저이름2*/
 	private String userNm2;
+	/** 유저이메일*/
 	private String userEmail;
+	/** 유저부서아이디*/
 	private String userDeptID;
+	/** 유저부서이름*/
 	private String userDeptNm;
+	/** 유저부서이름2*/
 	private String userDeptNm2;
+	/** */
 	private String userPOS;
+	/** */
 	private String userPOS2;
+	/** 유저성별*/
 	private String userGender;
+	/** 유저나이*/
 	private int userAge;
+	/** */
 	private int count;
+	/** 질문번호*/
 	private int quesNo;
+	/** 질문내용*/
 	private String quesContent;
+	/** 보기유형*/
 	private int answerType;
+	/** 다답형*/
 	private String multiSelect;
+	/** 보기번호*/
 	private int answerNo;
+	/** 첨부번호*/
 	private int attachNo;
+	/** 첨부이름*/
 	private String attachName;
+	/** 첨부URL*/
 	private String attachURL;
+	/** 첨부유형*/
 	private String attachType;
+	/** 보기내용*/
 	private String answerAnswerContent;
+	/** */
 	private String answerContent;
 	
 	public int getStrBrdID() {
