@@ -23,11 +23,11 @@
 		<script language="JavaScript" type="text/javascript">
 		/* c:out value */
 			var g_ezBoard = "/gwQuestion";
-		    var g_BrdID = "${questionListVO.brdId}";
+		    var g_BrdID = "${qstListVO.brdId}";
 		    var g_BrdNM = "${pBrdNM}";
-		    var CurPage = "${questionListVO.currPage}";
-		    var totalPage = "${questionListVO.totalPage}";
-		    var totalCount = "${questionListVO.totalCnt}";
+		    var CurPage = "${qstListVO.currPage}";
+		    var totalPage = "${qstListVO.totalPage}";
+		    var totalCount = "${qstListVO.totalCnt}";
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
 			var EndPollYN, ResponseYN, ResultOpenYN;
@@ -461,8 +461,8 @@
 		            return;
 		    }
 		    function search_Set(pPage) {
-		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${questionListVO.totalPage}')) {
-		            var szUrl = "/ezQuestion/qstList.do?brd_ID=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${questionListVO.title}" + "&responseRange=" + "${questionListVO.responseRange}" + "&postDate=" + "${questionListVO.postDate}" + "&pollEndDate=" + "${questionListVO.pollEndDate}";
+		       if (pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${qstListVO.totalPage}')) {
+		            var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
 		            window.location.href = szUrl;
 		        }
 		    }
@@ -580,7 +580,7 @@
 
 			        </tr>
 		        </c:forEach>
-			    <c:if test="${QuestionListVO.TotalCnt == 0}"> 
+			    <c:if test="${qstListVO.totalCnt == 0}"> 
 			        <tr> 
 						<td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
 		       		</tr> 
