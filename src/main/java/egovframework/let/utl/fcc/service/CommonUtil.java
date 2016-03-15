@@ -17,14 +17,19 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -97,6 +102,18 @@ public class CommonUtil {
 		}
 	}
 	
+	public Document convertStringToDocument(String xmlStr) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+        DocumentBuilder builder;  
+        try {  
+            builder = factory.newDocumentBuilder();  
+            Document doc = builder.parse(new InputSource(new StringReader(xmlStr))); 
+            return doc;
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }
+        return null;
+	}
 }
 
 
