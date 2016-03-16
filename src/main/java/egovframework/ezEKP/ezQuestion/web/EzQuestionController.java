@@ -146,12 +146,12 @@ public class EzQuestionController {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		/**UserPollItem*/
-		QstUserPollItemVO userPollItemVO = new QstUserPollItemVO();
-		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		userPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		userPollItemVO=ezQuestionService.getUserPollItem(userPollItemVO);
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO);
 		/** 결과값없으면 Error처리*/
-		if(userPollItemVO.getTitle().equals(null))
+		if(qstUserPollItemVO.getTitle().equals(null))
 			response.sendRedirect("/error.do"); //나중에 에러처리찾아서 주소만바꾸면됨
 		/** 설문기간에 따른 Title처리*/
 		java.text.DateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -162,43 +162,43 @@ public class EzQuestionController {
 		int compareStart, compareEnd;
 		String strData;
 		
-		startDate1=formatter1.parse(userPollItemVO.getPostDate());
-		endDate1=formatter1.parse(userPollItemVO.getPollEndDate());
+		startDate1=formatter1.parse(qstUserPollItemVO.getPostDate());
+		endDate1=formatter1.parse(qstUserPollItemVO.getPollEndDate());
 		compareStart = startDate1.compareTo(sysDate1);
 		compareEnd = endDate1.compareTo(sysDate1);
 		StringBuffer strbuffer = new StringBuffer();
 		if(compareStart <= 0 && compareEnd >= 0){
 			strbuffer.append("[진행중] ");
-			strbuffer.append(userPollItemVO.getTitle()); 
+			strbuffer.append(qstUserPollItemVO.getTitle()); 
 			strData = strbuffer.toString();
 		}else{
 			strbuffer.append("[완료] ");
-			strbuffer.append(userPollItemVO.getTitle());
+			strbuffer.append(qstUserPollItemVO.getTitle());
 			strData = strbuffer.toString();
 		}
 		
 		/**UserPermission*/
-		QstUserPermissionVO userPermissionVO = new QstUserPermissionVO();
-		userPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		userPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
-		userPermissionVO = ezQuestionService.getUserPermission(userPermissionVO);
+		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
 		
 		/**ResponseCnt*/
-		userPermissionVO.setUserId(userId);
-		int responseCnt = ezQuestionService.getUserResponseCnt(userPermissionVO);
+		qstUserPermissionVO.setUserId(userId);
+		int responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO);
 		/** 날짜계산*/
 		boolean endPoll = false;
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		if(formatter.parse(userPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
+		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
 			endPoll = true;
-		if(userPermissionVO.getEndFlg().equals('1'))
+		if(qstUserPermissionVO.getEndFlg().equals('1'))
 			endPoll = true;
 		
 		/**UserIdAdmin*/
 		boolean adminYN = false;
-		String rsUserId = userPollItemVO.getUserId();
+		String rsUserId = qstUserPollItemVO.getUserId();
 		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
 		
 		response.setCharacterEncoding("UTF-8");
@@ -206,18 +206,15 @@ public class EzQuestionController {
 		if(endPoll == false){
 			if(responseCnt <= 0){
 				response.getWriter().write("<script language='javascript'>");
-				response.getWriter().write("window.location.href='/ezQuestion/qstResponseCross.do?" + receve + "'");
+				response.getWriter().write("window.location.href='/ezQuestion/qstResponse.do?" + receve + "'");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
-			else if(userPermissionVO.getPublicResultFlg().equals("1")){
-				if(userPermissionVO.getMultiResponseFlg().equals("1")){
+			else if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
+				if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("window.open('/ezQuestion/msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
-					if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-						response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
-					else
-						response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brdId=5';");
+					response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
 				}else{
@@ -235,14 +232,11 @@ public class EzQuestionController {
 					}
 				}
 				if(userId == rsUserId || adminYN == true){
-					if(userPermissionVO.getMultiResponseFlg().equals("1")){
+					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						response.getWriter().write("</script>");
-						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1){
-							response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
-						}else
-							response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brdId=5';");
+						response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
 					}else{
@@ -252,29 +246,23 @@ public class EzQuestionController {
 						response.getWriter().flush();
 					}
 				}else{
-					if(userPermissionVO.getMultiResponseFlg().equals("1")){
+					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
-						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-							response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
-						else
-							response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brdId=5';");
+						response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
 					}else{
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
-						if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)						
-							response.getWriter().write(" window.location.href = '/ezQuestion/qstList.do?brdId=5'");
-						else
-							response.getWriter().write(" window.location.href = '/ezQuestion/qstListCross.do?brdId=5'");						
+						response.getWriter().write(" window.location.href = '/ezQuestion/qstList.do?brdId=5'");						
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
 					}
 				}
 			}
 		}else{
-			if (userPermissionVO.getPublicResultFlg().equals("1")){
+			if (qstUserPermissionVO.getPublicResultFlg().equals("1")){
 				response.getWriter().write("<script language='javascript'>");
 				response.getWriter().write("	window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 				response.getWriter().write("</script>");
@@ -295,10 +283,7 @@ public class EzQuestionController {
 				}else{
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
-					if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-						response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
-					else
-						response.getWriter().write("	window.location.href='/ezQuestion/qstListCross.do?brdId=5';");
+					response.getWriter().write("	window.location.href='/ezQuestion/qstList.do?brdId=5';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
 				}
@@ -309,9 +294,9 @@ public class EzQuestionController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseCross.do")
 	public String qstResponseCross(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
-		QstVO questionVO = new QstVO();
-		questionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		questionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		QstVO qstVO = new QstVO();
+		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
 		
 /*		model.addAttribute("brdId",request.getParameter("brdId"));
@@ -329,16 +314,16 @@ public class EzQuestionController {
 		int readCnt = 0;
 		
 		/**UserPermission*/
-		QstUserPermissionVO userPermissionVO = new QstUserPermissionVO();
-		userPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		userPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		userPermissionVO=ezQuestionService.getUserPermission(userPermissionVO);
-		if(userPermissionVO.getMultiResponseFlg().equals(1)){
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO);
+		if(qstUserPermissionVO.getMultiResponseFlg().equals(1)){
 			multiResponseOK = true;
 		}else{
 		/** ResponseDateCnt*/
-//			userPermissionVO 대신 나중에 view 로 던질 VO 삽입
-			if(ezQuestionService.getResponseDateCnt(userPermissionVO)!=0){
+//			qstUserPermissionVO 대신 나중에 view 로 던질 VO 삽입
+			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO)!=0){
 				multiResponseOK = false;
 			}else{
 				multiResponseOK = true;
@@ -356,15 +341,15 @@ public class EzQuestionController {
 		/** ResCount*/
 		responseCnt = ezQuestionService.resCount(request.getParameter("brdId"));
 		/** UserPollItem*/
-		QstUserPollItemVO userPollItemVO = new QstUserPollItemVO();
-		userPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		userPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		userPollItemVO=ezQuestionService.getUserPollItem(userPollItemVO);
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO);
 		
-		if(userPollItemVO.getUserId() != userId){
-			userPollItemVO.setReadCnt(userPollItemVO.getReadCnt() + 1);
+		if(qstUserPollItemVO.getUserId() != userId){
+			qstUserPollItemVO.setReadCnt(qstUserPollItemVO.getReadCnt() + 1);
 			/** updateReadCnt*/
-			ezQuestionService.updateReadCnt(userPollItemVO);
+			ezQuestionService.updateReadCnt(qstUserPollItemVO);
 		}
 		/** ReadDateItem*/
 		int readDateCnt = ezQuestionService.getReadDateItem();
@@ -372,7 +357,7 @@ public class EzQuestionController {
 			if(readDateCnt > 0){
 //				sysdate, brdId, itemNo, userId
 				/** updateReadDate*/
-				ezQuestionService.updateReadDate(userPollItemVO);
+				ezQuestionService.updateReadDate(qstUserPollItemVO);
 			}else{
 //				sysdate, displayName1,2,deptId,deptName1,2,title1,2
 				/** insertItemRead*/
@@ -381,13 +366,13 @@ public class EzQuestionController {
 		}
 //		xml
 		/** QuestionForResponse*/
-		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(questionVO);
+		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO);
 		
 		if(questionList != null){
 			int iQueCount = 0;
-			for(QstVO qstVO : questionList){
+			for(QstVO question : questionList){
 				iQueCount++;
-				arrAnswer.add(qstVO.getAnswerType());
+				arrAnswer.add(question.getAnswerType());
 				/** xml에 질문하나씩 넣는건데  */
 			}
 		}
@@ -399,12 +384,10 @@ public class EzQuestionController {
 		boolean endPoll = false;
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		if(formatter.parse(userPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
+		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
 			endPoll = true;
-		if(userPermissionVO.getEndFlg().equals('1'))
+		if(qstUserPermissionVO.getEndFlg().equals('1'))
 			endPoll = true;
-		
-		
 		
 		return "/ezQuestion/qstResponse";
 	}
