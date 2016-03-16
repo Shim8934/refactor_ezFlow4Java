@@ -540,7 +540,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
 
     GetList_HTTP = createXMLHttpRequest();
-    GetList_HTTP.open("POST", "/myoffice/ezEmail/remote/mail_get_list_cross.aspx", true);
+    GetList_HTTP.open("POST", "/ezEmail/mailGetList.do", true);
     GetList_HTTP.onreadystatechange = GetListIevent_ongetxmlcomplete;
     GetList_HTTP.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
