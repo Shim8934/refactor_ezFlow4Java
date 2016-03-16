@@ -535,20 +535,33 @@
         }
 
         createNodeAndInsertText(xmlDoc, objNode, "ANSWERTYPE", v_viewtype);
+        
         if (document.Ques_Answer.MultiResponse.checked)
             multi=1;
         createNodeAndInsertText(xmlDoc, objNode, "MULTISELECT", multi);
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWSTART", sviewno);
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWEND", eviewno);
+
+alert("v_viewType:"+v_viewtype);
+/* alert(document.Ques_Answer.answerType.value);
+document.Ques_Answer.submit(); */
+		
+
         if(Ques_Answer.selType[0].checked){
+var inputAns = "";
             if (viewcnt > 0)
             {
                 var DeptNode = null;
+                
                 for(var ii=0 ; ii < viewcnt ; ii++)
                 {
                     DeptNode = null;
                     DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
                     createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "TITLE", Ques_Answer.input_Ans[ii].value);
+alert(ii+"번째"+Ques_Answer.input_Ans[ii].value);
+inputAns += Ques_Answer.input_Ans[ii].value+";";
+
+
                     if (Ques_Answer.input_Ans[ii].AnsInfo != null)
                     //if(Ques_Answer.input_Ans[ii].AnsInfo != null && Ques_Answer.input_Ans[ii].AnsInfo != "" && typeof(Ques_Answer.input_Ans[ii].AnsInfo) != "undefined")
                     {
@@ -569,6 +582,7 @@
                             }
                         }
                         else {
+
                             xmlDom_AnswerAttach = GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo);
                             DeptNode.appendChild(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"));
                         }
@@ -586,6 +600,7 @@
                         //}
                     }
                 }
+alert("inputAns:"+inputAns);
             }
             else if (v_viewtype == 2) {
                 var DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
@@ -617,38 +632,53 @@
                 attachQ = GetAttachList_ie(Ques_Answer.txtQuestion.AnsInfo).xml;
         }
         if(Ques_Answer.selType[0].checked){
-            if (viewcnt > 0)
-            {
-                for(var ii=0 ; ii < viewcnt ; ii++)
-                {
+
+            if (viewcnt > 0) {
+                for(var ii=0 ; ii < viewcnt ; ii++) {
                     view += Ques_Answer.input_Ans[ii].text +  ";";
-                    if( Ques_Answer.input_Ans[ii].AnsInfo != null )
-                    {
+alert("view:"+view);
+                    if( Ques_Answer.input_Ans[ii].AnsInfo != null ) {
                         if(CrossYN())
                             attach += GetAttachList(Ques_Answer.input_Ans[ii].AnsInfo);
                         else
                             attach += GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo).xml;
                     }
                     attach += "^";
+alert("attach:"+attach);
                 }
             }
         }
 
         var pAttachYN = "";
         attach = attach.replace(/\^/g, "");
-        if ( trim(attach) != "" &&  trim(attachQ) != "" )
-        {
+        if ( trim(attach) != "" &&  trim(attachQ) != "" ) {
             pAttachYN =  "Y";
         }
-        else{
+        else {
             pAttachYN = "";
         }
-        if(pEditIndex != "")
-        {
-            window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc));
+alert(pEditIndex);
+        if(pEditIndex != "") {
+             window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
         }
-        else{
+        else {
+alert("value:"+Ques_Answer.txtQuestion.value);
+alert("pAttachYN:"+pAttachYN);
+alert("xmlDoc:"+xmlDoc);
+		var answerType = v_viewtype;
+		var multi = multi;
+		var sviewNo = sviewno;
+		var eviewNo = eviewno;
+
+document.Ques_Answer.answerType.value = v_viewtype;
+document.Ques_Answer.multiSelect.value = multi;
+document.Ques_Answer.selViewStart.value = sviewNo;
+document.Ques_Answer.selViewEnd.value = eviewNo;
+document.Ques_Answer.txtQuestion.value;
+document.Ques_Answer.title.value = inputAns;
+document.Ques_Answer.submit();
             window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));
+            window.opener.fun_OK(Ques_Answer.txtQuestion.value, multi,v_viewtype, sviewNo, eviewNo, inputAns);
         }
         window.close();
     }
@@ -1028,7 +1058,12 @@
 </script>
 </head>
 <body class="popup" style="overflow:auto">
-    <form name="Ques_Answer" method="post" action="">
+    <form name="Ques_Answer" method="post" action="/ezQuestion/qstStep2.do">
+    	<input type="hidden" id="answerType" name="answerType" value="!!" />
+    	<input type="hidden" id="multiSelect" name="multiSelect" value="" />
+    	<input type="hidden" id="selViewStart" name="selViewStart" value="" />
+    	<input type="hidden" id="selViewEnd" name="selViewEnd" value="" />
+    	<input type="hidden" id="title" name="title" value="" />
         <div id="menu">
             <ul><li><span onclick="javascript:fun_QuesSave();"><spring:message code='ezQuestion.t516' /></span></li></ul>
         </div>
@@ -1042,7 +1077,7 @@
         <table class="content"> <!------------------ 질문 ------------------------->
             <tr>
                 <th rowspan="2"><spring:message code='ezQuestion.t333' /></th>
-                <td class="pos1"><input type="text" size="9" maxlength="500" style="WIDTH:100%" name="txtQuestion" value="<c:out value='${requestScope.pQstTitle}'/>" AnsInfo="<c:out value='${requestScope.pQstAnsInfo}'/>" /></td>
+                <td class="pos1"><input type="text" size="9" maxlength="500" style="WIDTH:100%" name="txtQuestion" value="" AnsInfo="<c:out value='${requestScope.pQstAnsInfo}'/>" /></td>
                 <td class="pos2"><a class="imgbtn"><span onclick="javascript:fun_SetAns('Q', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a></td>
             </tr>
             <tr>
@@ -1129,7 +1164,7 @@
                     <select id="vertical">
                     </select>
                     &nbsp;&nbsp;
-                     <a class="imgbtn"><span onclick="createTable()"><spring:message code='ezQuestion.t910023' /></span></a>
+                    <a class="imgbtn"><span onclick="createTable()"><spring:message code='ezQuestion.t910023' /></span></a>
                     <a class="imgbtn"><span onclick="createVetical()"><spring:message code='ezQuestion.t910024' /></span></a>
                     <a class="imgbtn"><span onclick="createHorizon()"><spring:message code='ezQuestion.t910025' /></span></a>
                 </td>
