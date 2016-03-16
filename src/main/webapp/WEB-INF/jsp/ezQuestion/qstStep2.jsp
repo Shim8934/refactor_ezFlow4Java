@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-
 			var pBrdID = "<c:out value='${ezQuestionVO.brdId}'/>";
 			var pBrdSubject = "<c:out value='${ezQuestionVO.txtSubject}'/>";
 			var pBrdContent = "<c:out value='${ezQuestionVO.txtContent}'/>";
@@ -26,11 +25,13 @@
 			var multiResponse = "<c:out value='${ezQuestionVO.setMultiResponse}'/>";
 			var importance = "<c:out value='${ezQuestionVO.importance}'/>";
 			var target = "<c:out value='${ezQuestionVO.setTarget}'/>";
+			
 			var index = -1;
 			var flgClose= true;
 			var surveyState = "";
 			var WinRef;
 			var pNoneActiveX = "";
+
 			function Init_QuesAdd(vdata,vquesno) {
 				if(frmCreate.selQues[0].text=="")
 		    		i=0;
@@ -43,7 +44,7 @@
 	    		if (!confirm("<spring:message code='ezQuestion.t453' />")) return;
 	    		history.back();
 			}
-    		function AddQuesList_DATA(vdata, vAttachYN, QstXML,answerType,multi,sviewNo,eviewNo) {
+    		function AddQuesList_DATA(vdata, vAttachYN, QstXML) {
         		var selCnt=frmCreate.selQues.length;
         		if (selCnt > 0) {
             		while(1) {
@@ -67,7 +68,7 @@
             		else 
                 		i = frmCreate.selQues.length;
             		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
-alert("TmpOption:"+TmpOption);
+
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
         		}
@@ -108,7 +109,8 @@ alert("TmpOption:"+TmpOption);
             		frmCreate.selQues.options[0] = TmpOption;
         		}
     		}
-    		function fun_OK() {
+    		function fun_OK(txtQuestion, multi, v_viewtype, sviewNo, eviewNo) {
+
         		var Qlen = frmCreate.selQues.length;
         		if( Qlen == 0 ) {
             		alert("<spring:message code='ezQuestion.t456' />");
@@ -125,7 +127,8 @@ alert("TmpOption:"+TmpOption);
             		v_QuesID += frmCreate.selQues[i].value + ";"
 
         		}
-        		 var xmlHttp = createXMLHttpRequest();
+
+        		var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
@@ -136,10 +139,30 @@ alert("TmpOption:"+TmpOption);
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
-alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
+
+//alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
                 		//var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		//QuestionNode.appendChild(importedNode); 
-                		//var question = {"row" : };
+                		//QuestionNode.appendChild(importedNode);
+                /* 		var row = {
+                				"content" : <c:out value='${questionAddVO.txtQuestion}'/>,
+                				"answerType" : <c:out value='${questionAddVO.answerType}'/>,
+                				"multiselect" : 0,
+                				"selviewstart" : <c:out value='${questionAddVO.selViewStart}'/>,
+                				"selviewend" : <c:out value='${questionAddVO.selViewEnd}'/>,
+                				"answer": [
+        				                    {
+        				                        "title": "보기1"
+        				                    },
+        				                    {
+        				                        "title": "보기2"
+        				                    }
+        				                ] 
+                		}
+                		var question = {
+                				"row" : row
+                		} */
+                 		   
+                 		   
             		}
         		}
         		/* xmlDoc.documentElement.appendChild(QuestionNode);
@@ -157,8 +180,21 @@ alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
             		}		
         		}	
         		surveyState = "OK"; */
-	       		
-
+        			
+	       				var row =   {  "content": txtQuestion,
+			                "answertype": v_viewtype,
+				                "multiselect": multi,
+				                "selviewstart": sviewNo,
+				                "selviewend": eviewNo,
+				                "answer": [
+				                    {
+				                        "title": "보기1"
+				                    },
+				                    {
+				                        "title": "보기2"
+				                    }
+				                ] }
+  
         		 $.ajax({
      				url : '/ezQuestion/qstComplete.do',
      				method : 'POST',
@@ -175,22 +211,9 @@ alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
      				        "multiresponse": multiResponse,
      				        "importance": importance,
      				        "target": target,
-     				        "question": {
-     				            "row": {
-     				                "content": pBrdContent,
-     				                "answertype": 1,
-     				                "multiselect": 0,
-     				                "selviewstart": 0,
-     				                "selviewend": 0,
-     				                "answer": [
-     				                    {
-     				                        "title": "보기1"
-     				                    },
-     				                    {
-     				                        "title": "보기2"
-     				                    }
-     				                ]
-     				            }
+     				        "question": { 
+     				             "row": 
+     				            	row
      				        }
      				    }
      				} ,
@@ -258,7 +281,7 @@ alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=" + '<c:out value='${requestScope.brd_id}'/>' + "&item_id=" + '<c:out value='${requestScope.item_id}'/>';
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=" + '<c:out value='${ezQuestionVO.brdId}'/>' + "&item_id=" + '<c:out value='${ezQuestionVO.itemId}'/>';
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		}
@@ -677,7 +700,7 @@ alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
 		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" name="frmCreate" id="frmCreate" action="Qst_List.aspx?brd_id=5">
+		<form method="post" name="frmCreate" id="frmCreate" action="qstList.do?brd_id=5">
 			<h1><spring:message code="ezQuestion.t436" /></h1>
 			<div id="Main_List">
         		<div id="mainmenu">
