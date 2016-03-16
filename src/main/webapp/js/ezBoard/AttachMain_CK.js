@@ -201,7 +201,8 @@ function btn_AttachSaveSure_onclick()
 //	}catch(errmsg){alert(errmsg.description);}
 //}btn_PhotoAlbumAttachAdd_onclick
 
-function AttachFileInfo(resultXML) {
+/* 2016-03-16 NODEJS 관련 스크립트 주석/ 장진혁
+ * function AttachFileInfo(resultXML) {
 
     var xml = loadXMLString(resultXML);
     var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -229,7 +230,7 @@ function AttachFileInfo(resultXML) {
     {
         alert(ErrMsg.description); 
     }
-}
+}*/
 // ==============================================
 // ListView에서 첨부파일 선택시 호출  Function
 // ==============================================
