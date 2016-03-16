@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzOrganDAO")
@@ -21,7 +22,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getDeptFullPath", deptID);
 	}
 
-	public String getPropertyList(Map<String, Object> map) {
-		return (String) select("EzOrganDAO.getDeptInfo", map);
+	public LoginVO getPropertyList(Map<String, Object> map) {
+		return (LoginVO) select("EzOrganDAO.getDeptInfo", map);
 	}
 }
