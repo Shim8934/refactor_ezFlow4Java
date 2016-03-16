@@ -79,34 +79,6 @@
 	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="userPermission">
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-	<!-- 수정필요 -->
-	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				COUNT(*) as CNT
-			FROM
-				EZQUESTION.TBLPOLL_RESPONSE
-			WHERE
-				brd_id = #v_pstrBrdID#
-			AND 
-				item_no = #v_pItemNo#
-			AND 
-				responseuser_id = #v_puserID#
-		]]>		
-	</select>
-	
-	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="String" resultClass="String">
-		<![CDATA[
-			SELECT
-				USER_ID 
-			FROM
-				EZQUESTION.TBLBRDMNG 
-			WHERE
-				brd_id = #brdID#
-			AND 
-				admin_fg = N'1'
-		]]>
-	</select>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -169,6 +141,34 @@
 			WHERE  
 				brd_id = #brdId#
 		]]>		
+	</select>
+	
+	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) as CNT
+			FROM
+				EZQUESTION.TBLPOLL_RESPONSE
+			WHERE
+				brd_id = #v_pstrBrdID#
+			AND 
+				item_no = #v_pItemNo#
+			AND 
+				responseuser_id = #v_puserID#
+		]]>		
+	</select>
+	
+	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				USER_ID 
+			FROM
+				EZQUESTION.TBLBRDMNG 
+			WHERE
+				brd_id = #brdID#
+			AND 
+				admin_fg = N'1'
+		]]>
 	</select>
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="String">
