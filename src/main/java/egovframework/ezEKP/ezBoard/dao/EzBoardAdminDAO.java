@@ -117,7 +117,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception{
-		return (List<BoardAttributeVO>) select("EzBoardAdminDAO.getBoardAttribute", boardID);
+		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardAttribute", boardID);
 	}
 	
 }

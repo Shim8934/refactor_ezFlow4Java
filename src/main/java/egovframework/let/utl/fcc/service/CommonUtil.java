@@ -17,12 +17,15 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -101,18 +104,39 @@ public class CommonUtil {
 			return "";
 		}
 	}
-	
-	public Document convertStringToDocument(String xmlStr) {
+		
+	public Document convertStringToDocument(String xmlStr) {		
+		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-        DocumentBuilder builder;  
+        DocumentBuilder builder;
+        Document doc = null;
+        
         try {  
             builder = factory.newDocumentBuilder();  
-            Document doc = builder.parse(new InputSource(new StringReader(xmlStr))); 
-            return doc;
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }
-        return null;
+            doc = builder.parse(new InputSource(new StringReader(replaceData)));            
+        } catch (Exception e) {}
+        
+        return doc;        
+	}
+	
+	public Document convertRequestToDocument(HttpServletRequest request) {
+		StringBuilder sb = new StringBuilder();		
+        String readData = "";
+        BufferedReader br;
+        Document doc = null;
+        
+		try {
+			br = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+			
+			while ((readData = br.readLine()) != null ) {
+	            sb.append(readData);
+	        }
+			doc = convertStringToDocument(sb.toString());
+			
+		} catch(Exception e){}
+		
+		return doc;		
 	}
 }
 

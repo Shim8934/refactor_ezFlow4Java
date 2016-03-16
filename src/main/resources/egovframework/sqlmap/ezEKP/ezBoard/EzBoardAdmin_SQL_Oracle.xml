@@ -55,7 +55,7 @@
 	<resultMap id="boardAttribute" class="BoardAttributeVO">
 		<result property="colName1" 				column="NAME1" 						columnIndex="1"/>
 		<result property="colName2" 				column="NAME2" 						columnIndex="2"/>
-		<result property="sn" 						column="VIEW_FG" 					columnIndex="3"/>
+		<result property="sn" 						column="COLNAME" 					columnIndex="3"/>
 		<result property="value" 					column="WIDTH" 						columnIndex="4"/>		
 	</resultMap>
 	
@@ -77,7 +77,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute">
-		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDID#, #v_PBOARDTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDTYPE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer">

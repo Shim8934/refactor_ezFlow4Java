@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Properties;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import org.w3c.dom.Document;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -512,7 +514,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 			}
 		}
 		sb.append("</ROWS>");
-		
+
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
 		response.setHeader("Cache-Control", "no-cache");
@@ -521,7 +523,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	
 	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do")
 	public void getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{		
-		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getBoardID(), boardAttributeVO.getColType());
+		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getColType(), boardAttributeVO.getBoardID());
 		
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<ROWS>");
@@ -529,16 +531,26 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		if(list != null){
 			for(int i=0; i< list.size(); i++){
 				BoardAttributeVO obj = list.get(i);
-			
+				sb.append("<ROW>");
+				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");				
 			}
 		}	
 		sb.append("</ROWS>");
-		
+
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(sb.toString());
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/saveAttribute.do")
+	public void saveAttribute(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertRequestToDocument(request); 		
+		String folderName = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+System.out.println(folderName);		
 	}
 	
 }

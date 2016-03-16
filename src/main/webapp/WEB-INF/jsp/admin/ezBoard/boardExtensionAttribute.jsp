@@ -519,7 +519,7 @@
 
 		    function btn_InitHeader() {
 		        ChangedHeader = true;
-		        GetBoardHeader("");
+		        GetBoardHeader("reset");
 		    }
 
 		    function btn_EditWidth() {
@@ -641,7 +641,6 @@
 		    }
 
 		    function btnOK_onclick() {
-
 		        if (ChangedAdd) {
 		            if (!CheckExtensionList()) {
 		                alert("<spring:message code='ezBoard.t999062'/>");
@@ -666,8 +665,7 @@
 		                    createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(tr[i].cells[4].textContent));
 		                    createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", tr[i].cells[3].textContent);
 		                    createNodeAndInsertText(xmlpara, objRoot, "MUST", tr[i].cells[2].textContent);
-		                }
-		                else {
+		                } else {
 		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(tr[i].cells[0].innerText));
 		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(tr[i].cells[1].innerText));
 		                    createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(tr[i].cells[4].innerText));
@@ -677,7 +675,7 @@
 		                createNodeAndInsertText(xmlpara, objRoot, "TABLECOL", tr[i].getAttribute("DATA1"));
 		            }
 
-		            xmlhttp.open("Post", "interAsp/SaveAttribute.aspx", false);
+		            xmlhttp.open("POST", "/admin/ezBoard/saveAttribute.do", false);
 		            xmlhttp.send(xmlpara);
 
 		            if (xmlhttp.responseText == "OK") {
