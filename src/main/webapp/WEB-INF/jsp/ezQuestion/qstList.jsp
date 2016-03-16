@@ -23,7 +23,6 @@
 		<script language="JavaScript" type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "${qstListVO.brdId}";
-		    var g_BrdNM = "${pBrdNM}";
 		    var CurPage = "${qstListVO.currPage}";
 		    var totalPage = "${qstListVO.totalPage}";
 		    var totalCount = "${qstListVO.totalCnt}";
@@ -251,7 +250,6 @@
 		            if(Check_UserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qResult.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
@@ -260,7 +258,6 @@
 		            if(Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qstChangePermission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
@@ -335,15 +332,15 @@
 		    }
 		    
 		    function menu_Analysis(){
-// 		       if (menu_Checking()) {
-// 		            if (Check_UserPollStatus(szSelectedItemNo, "Analysis") == false) return;
-<%-- 		            var szUrl = "Qst_Analysis_Cross.aspx?<%=Receve_str2%>&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag; --%>
-// 		            window.location.href = szUrl;
-// 		        }
+		       if (menu_Checking()) {
+		            if (Check_UserPollStatus(szSelectedItemNo, "Analysis") == false) return;
+		            var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
+		            window.location.href = szUrl;
+		        }
 		    }
 		    
 		    function menu_Search(){
-		        var szUrl = "/myOffice/ezQuestion/poll/Qst_Search_Cross.do?brd_id=" + g_BrdID;
+		        var szUrl = "/ezQuestion/qstSearch.do?brd_id=" + g_BrdID;
 		        window.location.href = szUrl;
 		    }
 		
@@ -573,21 +570,21 @@
 			          	<c:if test="${list.publicFlg == 1}">
 			          		<td> 무기명 </td>	
 			          	</c:if>
-			          	<c:set var="pollEndDate1" value="${list.pollEndDate}" />
-			          	<td> ${fn:substring(pollEndDate1,0,10) } </td>
+			          	<c:set var="pollEndDate" value="${list.pollEndDate}" />
+			          	<td> ${fn:substring(pollEndDate,0,10) } </td>
 			          	<c:if test="${list.responseRange == 0}">
 			          		<td> 전체 </td>	
 			          	</c:if>
 			          	<c:if test="${list.responseRange == 1}">
 			          		<td> 선정 </td>	
-			          	</c:if> 
+			          	</c:if>
 			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userId}')"> ${list.userNm} </a> </td> 
 			          	<c:if test="${list.publicResultFlg == 0}">
 			          		<td> 비공개 </td>	
-			          	</c:if> 
+			          	</c:if>
 			          	<c:if test="${list.publicResultFlg == 1}">
 			          		<td> 공개 </td>	
-			          	</c:if> 
+			          	</c:if>
 
 			        </tr>
 		        </c:forEach>

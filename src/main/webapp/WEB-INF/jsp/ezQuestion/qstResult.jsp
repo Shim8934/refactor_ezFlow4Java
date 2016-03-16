@@ -35,6 +35,9 @@
 		</script>
 		<script type="text/javascript">
 			var brdId="${qstUserPermissionVO.userId}";
+			var tempReceve= "${receve}";
+			var receve = tempReceve.replace(/amp;/g,'');
+			
 			<%-- function Setting_Change(vdata){
 		        var feature = GetOpenPosition(380, 340);
 		        window.open("change_setting.aspx?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>', "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);

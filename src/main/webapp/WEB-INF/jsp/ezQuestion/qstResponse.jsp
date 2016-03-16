@@ -31,8 +31,8 @@
 			MM_reloadPage(true);
 		</script>
 		<script type="text/javascript">
-			var tempReceve="${receve}";
-			var receve =tempReceve.replace(/amp;/g,'');
+			var tempReceve= "${receve}";
+			var receve = tempReceve.replace(/amp;/g,'');
 		
 			var btnSaveChk = false;
 		    function fun_Save(){
@@ -181,7 +181,7 @@
 				result = confirm("<spring:message code='ezQuestion.t321' />");
 	
 				if(result){
-				    document.location.href = "Qst_Delete_Item.asp?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>';
+				    document.location.href = "/ezQuestion/qstDeleteItem.do?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>';
 				}
 		    } --%>
 			
@@ -191,7 +191,7 @@
 			} --%>
 			
 			function menuQst_List(){
-			    <%-- var szUrl = "/ezQuestion/qstList.do?"+receve+"&brd_nm=<%=v_brd_nm%>&brd_postterm=<%=v_brddefaultpostterm%>"; --%>
+			    var szUrl = "/ezQuestion/qstList.do?"+receve+"&brd_postterm='' ";
 			    window.location.href = szUrl;
 			}
 	
