@@ -3,7 +3,7 @@
 
 <sqlMap namespace="ezOrgan">
 
-	<typeAlias 	 alias="loginVO" 					 type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	 alias="OrganDeptVO" 					 type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 
 	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String">
 		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -24,7 +24,7 @@
 	     ]]> 
 	</select>
 
-	<select id="EzOrganDAO.getDeptInfo" parameterClass="Map" resultClass="loginVO">
+	<select id="EzOrganDAO.getDeptInfo" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT 
 				cn ,

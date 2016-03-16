@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
@@ -39,7 +39,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public LoginVO getPropertyList(String userID,  String primary) throws Exception {
+	public OrganDeptVO getPropertyList(String userID,  String primary) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("primary", primary);

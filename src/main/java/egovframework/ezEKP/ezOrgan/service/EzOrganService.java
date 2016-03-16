@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service;
 
-import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 
 public interface EzOrganService {
 
@@ -10,5 +10,5 @@ public interface EzOrganService {
 	
 	public String getDeptFullPath(String deptID) throws Exception;
 
-	public LoginVO getPropertyList(String userID,String primary) throws Exception; 
+	public OrganDeptVO getPropertyList(String userID,String primary) throws Exception; 
 }
