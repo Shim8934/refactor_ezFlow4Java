@@ -14,14 +14,13 @@
 		<result property="userNm"					column="USER_NM"					columnIndex="4"/>
 		<result property="userEmail"				column="USER_EMAIL"					columnIndex="5"/>
 		<result property="title"					column="TITLE"						columnIndex="6"/>
-		<result property="content"					column="CONTENT"					columnIndex="7"/>
-		<result property="pollEndDate"				column="POLL_ENDDATE"				columnIndex="8"/>
-		<result property="postDate"					column="POST_DATE"					columnIndex="9"/>
-		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="10"/>
-		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="11"/>
-		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="12"/>
-		<result property="endFlg"					column="END_FLG"					columnIndex="13"/>
-		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="14"/>
+		<result property="pollEndDate"				column="POLL_ENDDATE"				columnIndex="7"/>
+		<result property="postDate"					column="POST_DATE"					columnIndex="8"/>
+		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="9"/>
+		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="10"/>
+		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="11"/>
+		<result property="endFlg"					column="END_FLG"					columnIndex="12"/>
+		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="13"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPollItemVO" id="userPollItem">
