@@ -26,7 +26,7 @@ public class EzMainAdminController {
 		String use_ezKMS = config.getProperty("config.Use_ezKMS");
 		String use_ezDMS = config.getProperty("config.Use_ezDMS");
 		String use_portal = config.getProperty("config.Use_Portal");
-		String use_mobileMgmt = config.getProperty("config.Use_MobileMgmt1");
+		String use_mobileMgmt = config.getProperty("config.Use_MobileMgmt");
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezKMS", use_ezKMS);
