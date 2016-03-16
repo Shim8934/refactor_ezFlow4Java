@@ -62,7 +62,7 @@
 		    	<th><spring:message code="ezBoard.t123" /></th>
 		    	<td style="padding:0">		    		
 		        	<table style="width:100%">
-		        		<c:if test="${use_multiData == 'Y'}">
+		        		<c:if test="${use_multiData == 'YES'}">
 			          		<tr class="primary">
 			            		<th>${lang_primary}</th>
 			            		<td><input name="text" type="text" id="txtNewGroupName" style="width:200px" maxlength=11></td>
@@ -72,7 +72,7 @@
 			            		<td><input type="text" name="textfield" id="txtNewGroupName2" style="width:200px" maxlength=11></td>
 			          		</tr>
 		          		</c:if>
-		          		<c:if test="${use_multiData != 'Y'}">
+		          		<c:if test="${use_multiData != 'YES'}">
 		          			<tr>
 			        			<td><input name="text" type="text" id="txtNewGroupName" style="width:200px" maxlength=12></td>
 			        		</tr>	

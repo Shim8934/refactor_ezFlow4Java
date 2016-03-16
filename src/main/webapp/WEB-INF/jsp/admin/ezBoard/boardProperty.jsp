@@ -36,7 +36,7 @@
 	    	};
         
 			$(document).ready(function(){				
-				if ("${use_portal}" != "Y")
+				if ("${use_portal}" != "YES")
 	                $("#trPortlet").css("display","none");
 	            if (portlet == "Y")
 	                $("#chkPortletBoard").prop("checked",true);
@@ -507,7 +507,7 @@
 	        <tr>
 	            <th><spring:message code="ezBoard.t114"/></th>
 	            <td style="padding: 0;">
-	            	<c:if test="${use_multiData == 'Y'}">
+	            	<c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
 		                    <tr class="primary">
 		                        <th>${lang_primary}</th>
@@ -519,7 +519,7 @@
 		                    </tr>
 		                </table>
 		            </c:if>
-		            <c:if test="${use_multiData != 'Y'}">${model.boardName}</c:if>
+		            <c:if test="${use_multiData != 'YES'}">${model.boardName}</c:if>
 	            </td>
 	        </tr>
 	    </table>
@@ -530,7 +530,7 @@
 	            <!-- 20060613 준호 수정 -->
 	            <!-- 게시판명 특수문자 있을때 깨지는 현상 수정 -->
 	            <td style="padding: 0;">
-	                <c:if test="${use_multiData == 'Y'}">
+	                <c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
 		                    <tr class="primary">
 		                        <th>${lang_primary}</th>
@@ -546,7 +546,7 @@
 		                    </tr>
 		                </table>
 		            </c:if>    
-	          		<c:if test="${use_multiData != 'Y'}">
+	          		<c:if test="${use_multiData != 'YES'}">
 	                	<input type="text" id="txtBoardName" style="width: 100%" value="${model.boardName}" maxlength="25" />
 	                </c:if>
 	            </td>
