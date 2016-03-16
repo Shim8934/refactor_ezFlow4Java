@@ -3,26 +3,26 @@
 
 <sqlMap namespace="Login">
 
-	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
-	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="egovMap" 				type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="loginVO" 				type="egovframework.let.user.login.vo.LoginVO"/>
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id"			column="cn"   			columnIndex="1"/>
-		<result property="password" 	column="password" 		columnIndex="2"/>
-		<result property="displayName1" column="displayname"	columnIndex="3"/>
-		<result property="displayName2" column="displayname2" 	columnIndex="4"/>
-		<result property="deptID" 		column="department" 	columnIndex="5"/>
-		<result property="deptName1" 	column="description" 	columnIndex="6"/>
-		<result property="deptName2" 	column="description2" 	columnIndex="7"/>
-		<result property="title1" 		column="title" 			columnIndex="8"/>
-		<result property="title2" 		column="title2" 		columnIndex="9"/>
-		<result property="companyID" 	column="companyid" 		columnIndex="10"/>
-		<result property="companyName1" column="company" 		columnIndex="11"/>
-		<result property="companyName2" column="company2" 		columnIndex="12"/>		
-		<result property="updateDT" 	column="updatedt"		columnIndex="13"/>
-		<result property="rollInfo" 	column="rollinfo"		columnIndex="14"/>
-		<result property="phone" 	column="telephonenumber"		columnIndex="15"/>
+		<result property="id"					column="cn"   						columnIndex="1"/>
+		<result property="password" 			column="password" 					columnIndex="2"/>
+		<result property="displayName1" 		column="displayname"				columnIndex="3"/>
+		<result property="displayName2" 		column="displayname2" 				columnIndex="4"/>
+		<result property="deptID" 				column="department" 				columnIndex="5"/>
+		<result property="deptName1" 			column="description" 				columnIndex="6"/>
+		<result property="deptName2" 			column="description2" 				columnIndex="7"/>
+		<result property="title1" 				column="title" 						columnIndex="8"/>
+		<result property="title2" 				column="title2" 					columnIndex="9"/>
+		<result property="companyID" 			column="companyid" 					columnIndex="10"/>
+		<result property="companyName1" 		column="company" 					columnIndex="11"/>
+		<result property="companyName2" 		column="company2" 					columnIndex="12"/>		
+		<result property="updateDT" 			column="updatedt"					columnIndex="13"/>
+		<result property="rollInfo" 			column="rollinfo"					columnIndex="14"/>
+		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
