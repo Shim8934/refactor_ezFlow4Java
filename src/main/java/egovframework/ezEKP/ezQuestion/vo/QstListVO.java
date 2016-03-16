@@ -16,8 +16,6 @@ public class QstListVO {
 	private String userEmail;
 	/** 제목*/
 	private String title;
-	/** 제목*/
-	private String content;
 	/** 유효한 마지막 날*/
 	private String pollEndDate;
 	/** 유효한 첫 날*/
@@ -92,12 +90,6 @@ public class QstListVO {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
 	}
 	public String getPollEndDate() {
 		return pollEndDate;
@@ -194,20 +186,5 @@ public class QstListVO {
 	}
 	public void setReceve(String receve) {
 		this.receve = receve;
-	}
-	@Override
-	public String toString() {
-		return "QuestionListVO [brdId=" + brdId + ", itemNo=" + itemNo
-				+ ", userId=" + userId + ", userNm=" + userNm + ", userNm2="
-				+ userNm2 + ", userEmail=" + userEmail + ", title=" + title
-				+ ", content=" + content + ", pollEndDate=" + pollEndDate
-				+ ", postDate=" + postDate + ", publicResultFlg="
-				+ publicResultFlg + ", publicFlg=" + publicFlg
-				+ ", multiResponseFlg=" + multiResponseFlg + ", endFlg="
-				+ endFlg + ", responseRange=" + responseRange + ", totalCnt="
-				+ totalCnt + ", totalPage=" + totalPage + ", currPage="
-				+ currPage + ", pageSize=" + pageSize + ", blockSize="
-				+ blockSize + ", currBlock=" + currBlock + ", totalBlock="
-				+ totalBlock + ", lang=" + lang + ", receve=" + receve + "]";
 	}
 }
