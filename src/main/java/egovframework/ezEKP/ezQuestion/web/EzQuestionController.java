@@ -292,8 +292,8 @@ public class EzQuestionController {
 	}
 	
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResponseCross.do")
-	public String qstResponseCross(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
+	@RequestMapping(value="/ezQuestion/qstResponse.do")
+	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
 		QstVO qstVO = new QstVO();
 		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));

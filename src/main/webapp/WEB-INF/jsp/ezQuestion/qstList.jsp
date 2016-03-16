@@ -45,63 +45,62 @@
 				makePageSelPage();
 			}
 		
-			/* function Check_UserPollStatus(pItemNo, pflag){
-			    try {
-			        var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-			        var szUrl = "Call_UsersPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
-			        xmlHttp.Open("POST", szUrl, false);
-			        xmlHttp.Send();
-			        var strXML = xmlHttp.responseXML.xml;
-			        if (strXML != "") {
-			            var resultXML = new ActiveXObject("Microsoft.XMLDOM");
-			            resultXML.loadXML(strXML);
-		
-			            EndPollYN = resultXML.selectSingleNode("RESULT/EndPollYN").text;
-			            ResponseYN = resultXML.selectSingleNode("RESULT/ResponseYN").text;
-			            ResultOpenYN = resultXML.selectSingleNode("RESULT/ResultOpenYN").text;
-			            MultiResYN = resultXML.selectSingleNode("RESULT/MultiResYN").text;
-			            WriteYN = resultXML.selectSingleNode("RESULT/WriteYN").text;
-			            AdminYN = resultXML.selectSingleNode("RESULT/AdminYN").text;
-		
-			            var rv;
-			            switch (pflag) {
-			                case "Response":
-			                    rv = Chk_Response();
-			                    break;
-			                case "Result":
-			                    rv = Chk_Result();
-			                    break;
-			                case "InfoModify":
-			                    rv = Chk_InfoModify();
-			                    break;
-			                case "Delete":
-			                    rv = Chk_Delete();
-			                    break;
-			                case "Analysis":
-			                    rv = Chk_Analysis();
-			                    break;
-			                case "Save":
-			                    rv = Chk_Save();
-			                    break;
-			                case "Reuse":
-			                    rv = Chk_Reuse();
-			                    break;
-			            }
-			            return rv;
-			        }else{
-			        	EndPollYN = "";
+			function Check_UserPollStatus(pItemNo, pflag){
+				try{
+			    	var xmlHttp = createXMLHttpRequest();
+				    var szUrl = "Call_UsersPollStatus.aspx?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
+				    xmlHttp.open("POST", szUrl, false);
+				    xmlHttp.send();
+				    if(getXmlString(xmlHttp.responseXML) != ""){
+				        var resultXML = createXmlDom();
+				        resultXML = xmlHttp.responseXML;
+				        var xmldomNode = SelectNodes(resultXML, "RESULT");
+				        EndPollYN = SelectSingleNodeValue(xmldomNode[0], "EndPollYN");
+				        ResponseYN = SelectSingleNodeValue(xmldomNode[0], "ResponseYN");
+				        ResultOpenYN = SelectSingleNodeValue(xmldomNode[0], "ResultOpenYN");
+				        MultiResYN = SelectSingleNodeValue(xmldomNode[0], "MultiResYN");
+				        WriteYN = SelectSingleNodeValue(xmldomNode[0], "WriteYN");
+				        AdminYN = SelectSingleNodeValue(xmldomNode[0], "AdminYN");
+				        var rv;
+				        switch(pflag){
+				            case "Response":
+				                rv = Chk_Response();
+				                break;
+				            case "Result":
+				                rv = Chk_Result();
+				                break;
+				            case "InfoModify":
+				                rv = Chk_InfoModify();
+				                break;
+				            case "Delete":
+				                rv = Chk_Delete();
+				                break;
+				            case "Analysis":
+				                rv = Chk_Analysis();
+				                break;
+				            case "Save":
+				                rv = Chk_Save();
+				                break;
+				            case "Reuse":
+				                rv = Chk_Reuse();
+				                break;
+				        }
+				        return rv;
+				    }else{
+				        EndPollYN = "";
 				        ResponseYN = "";
 				        ResultOpenYN = "";
 				        MultiResYN = "";
 				        WriteYN = "N";
 				        AdminYN = "N";
-			            return false;
-			        }
-			    } catch (e) {
-			    	alert(e.message);
-			        return false;
-			    }
-			} */
+				        return false;
+				    }
+				}catch (e){
+				    alert(e.message);
+				    return false;
+				}
+			}
+			
 			function Chk_Reuse(){
 				if (WriteYN == "Y")
 					return true;
@@ -243,7 +242,7 @@
 		        <%-- if(menu_Checking()){
 		            if(Check_UserPollStatus(szSelectedItemNo, "Response") == false)
 		            	return;
-		            var szUrl = "Qst_Response.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstResponse.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
@@ -251,7 +250,7 @@
 		        <%-- if(menu_Checking()){
 		            if(Check_UserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
-		            var szUrl = "Qst_Result.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qResult.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
@@ -260,13 +259,15 @@
 		        <%-- if(menu_Checking()){
 		            if(Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
-		            var szUrl = "Qst_Change_Permission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstChangePermission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
 		            szUrl += "&brd_nm=" + g_BrdNM;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
-// 		    var qst_delete_itemmsg_dialogArguments = new Array();
+		    
+		    
 		    function menu_Delete(){
+		    	var qst_delete_itemmsg_dialogArguments = new Array();
 		        var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
 		        var szLen = table.rows.length;
