@@ -433,15 +433,7 @@ public class EzQuestionController {
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("setTarget")+"</TARGET>");
 		pStep1DataXML.append("</PARAMETER>");
-System.out.println("answerType@@@@@@@:"+req.getParameter("answerType"));
-System.out.println("answerType@@@@@@@:"+req.getParameter("multiSelect"));
-System.out.println("answerType@@@@@@@:"+req.getParameter("selViewStart"));
-System.out.println("answerType@@@@@@@:"+req.getParameter("selViewEnd"));
-System.out.println("answerType@@@@@@@:"+req.getParameter("itemNo"));
-System.out.println("answerType@@@@@@@:"+req.getParameter("txtQuestion"));
-System.out.println("title@@@@@@@:"+questionAddVO.getTitle());
-		
-		model.addAttribute("getTitle", questionAddVO.getTitle());
+
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
 		model.addAttribute("questionAddVO", questionAddVO);
 		model.addAttribute("pStep1DataXML", pStep1DataXML);
@@ -613,7 +605,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 		
 		int v_quesNo = 1;
 
-		v_quesNo = ezQuestionService.getQuestionNo(brdId, itemNo);
+			v_quesNo = ezQuestionService.getQuestionNo(brdId, itemNo);
 		
 		if(v_quesNo == 0) {
 			v_quesNo = 1;
@@ -621,10 +613,13 @@ System.out.println("pQstTitle:"+pQstTitle);
 			v_quesNo = v_quesNo + 1;
 		}
 		
-		//ezQuestionService.insertQuestion(qstCompleteVO); 
-		
-		
-	
+		qstCompleteVO.setStrBrdID(brdId);
+		qstCompleteVO.setItemNo(itemNo);
+		qstCompleteVO.setQuesNo(v_quesNo);
+		qstCompleteVO.setAnswerType(Integer.parseInt(req.getParameter("parameter[question][row][answertype]")));
+		qstCompleteVO.setQuesContent(req.getParameter("parameter[question][row][content]"));
+		qstCompleteVO.setMultiSelect(req.getParameter("parameter[question][row][multiselect]"));
+		ezQuestionService.insertQuestion(qstCompleteVO); 
 		
 		return map;
 		
