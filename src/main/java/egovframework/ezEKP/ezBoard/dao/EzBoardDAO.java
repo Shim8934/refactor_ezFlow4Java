@@ -27,42 +27,51 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<BoardMyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}
 	
-	public BoardConfigVO getBoardList_Config(String userID) throws Exception{
-		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", userID);
-	}
-
-	public String get_parentBoardName(Map<String, Object> map) throws Exception{
-		return (String) select("EzBoardDAO.get_parentBoardName", map);
-	}
-
-	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
-		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<BoardListHeaderVO> getListHeader(Map<String, Object> map) throws Exception{
 		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeader", map);
 	}
-
-	public int getNewItemListCount(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getNewItemListCount", map);
-		return (int)map.get("v_pCount");
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListHeaderVO> getListHeaderBoardID(Map<String, Object> map) throws Exception {
+		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
 
-	public BoardConfigVO getPersonalCount(String userID) throws Exception{
-		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);
-	}
-
-	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
-		
-		update("EzBoardDAO.setBoardList_Config", map);
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getBoardListItem", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getNewItemList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNewItemList", map);
 	}
+	
+	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
+		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
+	}
 
+	public BoardConfigVO getPersonalCount(String userID) throws Exception{
+		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);
+	}
+	
+	public BoardConfigVO getBoardList_Config(String userID) throws Exception{
+		return (BoardConfigVO) select("EzBoardDAO.getBoardList_Config", userID);
+	}
+
+	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
+		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
+	}
+
+	public String get_parentBoardName(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.get_parentBoardName", map);
+	}
+	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
 		select("EzBoardDAO.getBrdNewItemCount",map);
 		return (int)map.get("v_pCount");
@@ -83,6 +92,45 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int getNewItemListCount(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getNewItemListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getNoticePostItemCount(String boardId) throws Exception{
+		return (int)select("EzBoardDAO.getNoticePostItemCount", boardId);
+	}
+
+	public int getBoardTotalItemCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getBoardTotalItemCount", map);
+	}
+
+	public int getCheckItemID(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getCheckItemID", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int checkForm(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.checkForm", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int checkBackGroundImage(String boardID) throws Exception{
+		return (int) select("EzBoardDAO.checkBackGroundImage", boardID);
+	}
+
+	public int getCheckApprUserList(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getCheckApprUserList", map);
+	}
+
+	public void setAsRead(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.setAsRead", map);
+	}
+	
+	public void setAsReads(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.setAsReads", map);
+	}
+	
 	public void setListOrder(Map<String, Object> map) throws Exception {
 		
 		update("EzBoardDAO.set_ListOrder",map);
@@ -92,58 +140,12 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		
 		update("EzBoardDAO.set_TabUsed",map);
 	}
-
-	@SuppressWarnings("unchecked")
-	public List<BoardListHeaderVO> getListHeaderBoardID(Map<String, Object> map) throws Exception {
-		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
+	
+	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
+		
+		update("EzBoardDAO.setBoardList_Config", map);
 	}
 
-	public int getNoticePostItemCount(String boardId) throws Exception{
-		return (int)select("EzBoardDAO.getNoticePostItemCount", boardId);
-	}
 
-	public int getBoardTotalItemCount(Map<String, Object> map) throws Exception{
-		return (int) select("EzBoardDAO.getBoardTotalItemCount", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
-		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) throws Exception{
-		return (List<HashMap<String, Object>>) list("EzBoardDAO.getBoardListItem", map);
-	}
-
-	public int getCheckItemID(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getCheckItemID", map);
-		return (int)map.get("v_pCount");
-	}
-
-	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
-		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
-	}
-
-	public void setAsRead(Map<String, Object> map) throws Exception{
-		insert("EzBoardDAO.setAsRead", map);
-	}
-
-	public int getCheckApprUserList(Map<String, Object> map) throws Exception{
-		return (int) select("EzBoardDAO.getCheckApprUserList", map);
-	}
-
-	public void setAsReads(Map<String, Object> map) throws Exception{
-		insert("EzBoardDAO.setAsReads", map);
-	}
-
-	public int checkForm(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.checkForm", map);
-		return (int)map.get("v_pCount");
-	}
-
-	public int checkBackGroundImage(String boardID) throws Exception{
-		return (int) select("EzBoardDAO.checkBackGroundImage", boardID);
-	}
 	
 }

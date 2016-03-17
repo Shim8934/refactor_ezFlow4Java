@@ -18,21 +18,31 @@ public interface EzBoardService {
 
 	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception;
 
-	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
+	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
+	
+	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
+	
+	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
+
+	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
+
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
-	public BoardConfigVO getBoardList_Config(String userId) throws Exception;
-	
-	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
-
-	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
-
-	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
-
 	public BoardConfigVO getPersonalCount(String userID) throws Exception;
 
-	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
+	public BoardConfigVO getBoardList_Config(String userId) throws Exception;
+	
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+	
+	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
+	
+	public String checkForm(String boardID, String mode) throws Exception;
+
+	public String checkBackGroundImage(String boardID) throws Exception;
+
+	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
 
 	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 
@@ -42,32 +52,23 @@ public interface EzBoardService {
 
 	public int getQNABrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 	
-	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
-
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
-	
-	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
-
 	public int getNoticePostItemCount(String boardId) throws Exception;
 
 	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception;
 
-	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
-
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
-
 	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception;
-
-	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+	
+	public int getCheckApprUserList(String id, String itemID) throws Exception;
+	
+	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
 
-	public int getCheckApprUserList(String id, String itemID) throws Exception;
-
 	public void setAsReads(LoginVO userInfo, String pBoardID, String pItemIDList) throws Exception;
+	
+	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
 
-	public String checkForm(String boardID, String mode) throws Exception;
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 
-	public String checkBackGroundImage(String boardID) throws Exception;
 
 }
