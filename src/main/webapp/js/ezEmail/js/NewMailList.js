@@ -593,7 +593,7 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     // 2013.08.01 보낸 편지함 Sorting 처리 
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     GetList_HTTP_SUB = createXMLHttpRequest();
-    GetList_HTTP_SUB.open("POST", "/myoffice/ezEmail/remote/mail_get_list_cross.aspx", true);
+    GetList_HTTP_SUB.open("POST", "/ezEmail/mailGetList.do", true);
     GetList_HTTP_SUB.onreadystatechange = GetListIevent_ongetxmlcomplete_SUB;
     GetList_HTTP_SUB.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;

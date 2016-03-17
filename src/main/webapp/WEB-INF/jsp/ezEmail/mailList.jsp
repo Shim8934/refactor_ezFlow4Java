@@ -31,6 +31,7 @@
 	    var g_moveStart = false;
 	    var g_startPosition = 0;
 	    var g_foldertype = "${folderType}";
+	    var importanceColor = "#ff0000";
 	    var g_userLang = "${userLang}";
 	    var searchMode = false;
 	    var SearchKeyword = "";
