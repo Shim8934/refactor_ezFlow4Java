@@ -132,6 +132,18 @@
 		{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.updateReadDate" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.insertItemRead" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
+	</procedure>
+	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -150,11 +162,11 @@
 			FROM
 				EZQUESTION.TBLPOLL_RESPONSE
 			WHERE
-				brd_id = #v_pstrBrdID#
+				brd_id	=	#v_pstrBrdID#
 			AND 
-				item_no = #v_pItemNo#
+				item_no	=	#v_pItemNo#
 			AND 
-				responseuser_id = #v_puserID#
+				responseuser_id	=	#v_puserID#
 		]]>		
 	</select>
 	
@@ -165,9 +177,53 @@
 			FROM
 				EZQUESTION.TBLBRDMNG 
 			WHERE
-				brd_id = #brdID#
+				brd_id	=	#brdID#
 			AND 
 				admin_fg = N'1'
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getResponseDateCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(response_date)  
+        	FROM
+        		EZQUESTION.TBLPOLL_RESPONSE 
+       		WHERE
+       			brd_id	=	#v_pstrBrdID#
+            AND 
+            	item_no	=	#v_pItemNo#
+       	   	AND 
+       	   		responseuser_id	=	#v_pUserID#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.resCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				res_cnt 
+      		FROM
+      			EZQUESTION.TBLPOLL_ITEM 
+      		WHERE
+      			brd_id	=	#v_pstrBrdID#
+      		AND
+      			item_no	=	#v_pItemNo#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getReadDateItem" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(Read_Date)  
+        	FROM
+        		EZQUESTION.TBLPOLL_ITEMREAD 
+       		WHERE
+       			brd_id	=	#v_pstrBrdID#
+            AND
+            	item_no	=	#v_pItemNo#
+            AND
+            	user_id	=	#v_pUserID#
+		
 		]]>
 	</select>
 	
@@ -185,4 +241,5 @@
 			WHERE brd_id = #v_pstrBrdID#  
 		]]>
 	</update>
+	
 </sqlMap>
