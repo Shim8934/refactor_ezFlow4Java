@@ -30,13 +30,13 @@ public interface EzQuestionService {
 	
 	public void updateItemSeq(int brdId,int itemNo) throws Exception;
 	
-	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO userPollItemVO) throws Exception;
+	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
 	
-	public QstUserPermissionVO getUserPermission(QstUserPermissionVO userPermissionVO) throws Exception;
+	public QstUserPermissionVO getUserPermission(QstUserPermissionVO qstUserPermissionVO) throws Exception;
 	
-	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO) throws Exception;
+	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userId) throws Exception;
 	
-	public List<String> getUserIdAdmin(String brd) throws Exception;
+	public List<String> getUserIdAdmin(int brd) throws Exception;
 	
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception;
 	
@@ -62,7 +62,7 @@ public interface EzQuestionService {
 
 	public int resCount(String brdId,String itemNo);
 
-	public void updateReadCnt(QstUserPollItemVO userPollItemVO);
+	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO);
 
 	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId);
 	

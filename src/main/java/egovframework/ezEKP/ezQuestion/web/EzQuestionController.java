@@ -186,8 +186,7 @@ public class EzQuestionController {
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
 		
 		/**ResponseCnt*/
-		qstUserPermissionVO.setUserId(userId);
-		int responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO);
+		int responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO,userId);
 		/** 날짜계산*/
 		boolean endPoll = false;
 		Date sysDate=new Date();
@@ -200,7 +199,7 @@ public class EzQuestionController {
 		/**UserIdAdmin*/
 		boolean adminYN = false;
 		String rsUserId = qstUserPollItemVO.getUserId();
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
+		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -292,26 +291,75 @@ public class EzQuestionController {
 		}
 	}
 	
-	@RequestMapping(value="/ezQuestion/qstUserPollStatus.do")
-	public @ResponseBody Map<String, Object> qstUserPollStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/ezQuestion/qstCallUsersPollStatus.do")
+	public @ResponseBody Map<String, Object> qstCallUsersPollStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		boolean endPoll = false;
 		String endPollYN="";
 		String responseYN="";
 		String resultOpenYN="";
 		String multiResYN="";
 		String writeYN="";
 		String adminYN="";
-		
-		ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
+		int responseCnt=0;
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		
 		adminYN = "N";
-		if(loginVO.getId().equals(ezQuestionService.getUserIdAdmin(request.getParameter("brdId")))){
+		if(loginVO.getId().equals(ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId"))))){
 			adminYN = "Y";
 		}
+		
 		if(loginVO.getRollInfo().toUpperCase().indexOf("C=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("K=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("I=1") > -1){ 
 			adminYN = "Y";
 		}
+		
+		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
+		
+		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
+		
+		responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO,loginVO.getId());
+		
+		endPoll = false;
+		Date sysDate=new Date();
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
+		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate) < 0)
+			endPoll = true;
+		if(qstUserPermissionVO.getEndFlg().equals("1"))
+			endPoll = true;
+		if(loginVO.getId().equals(qstUserPollItemVO.getUserId()))
+			writeYN = "Y";
+		else
+			writeYN = "N";
+		if(endPoll == false)
+			endPollYN ="N";
+		else
+			endPollYN = "Y";
+		if(responseCnt <=0)
+			responseYN = "N";
+		else
+			responseYN ="Y";
+		if(qstUserPermissionVO.getPublicResultFlg().equals("1"))
+			resultOpenYN = "Y";
+		else
+			resultOpenYN = "N";
+		if(qstUserPermissionVO.getMultiResponseFlg().equals("1"))
+			multiResYN = "Y";
+		else
+			multiResYN = "N";
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("endPollYN", endPollYN);
+		map.put("writeYN", writeYN);
+		map.put("responseYN", responseYN);
+		map.put("resultOpenYN", resultOpenYN);
+		map.put("multiResYN", multiResYN);
+		map.put("adminYN", adminYN);
 		
 		return map;
 	}
@@ -354,7 +402,7 @@ public class EzQuestionController {
 			}
 		}
 		/** UserIdAdmin*/
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(request.getParameter("brdId"));
+		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 		boolean adminYN = false;
 		if(userIdAdminList != null){
 			for(String userIdAdmin : userIdAdminList){
@@ -411,6 +459,7 @@ public class EzQuestionController {
 			endPoll = true;
 		
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
+		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		
 		return "/ezQuestion/qstResponse";
 	}

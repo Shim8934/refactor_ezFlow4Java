@@ -130,16 +130,16 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO) throws Exception {
+	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
-		map.put("v_puserID", userPermissionVO.getUserId());
+		map.put("v_puserID", userId);
 		return ezQuestionDAO.getUserResponseCnt(map);
 	}
 	
 	@Override
-	public List<String> getUserIdAdmin(String brdId) throws Exception {
+	public List<String> getUserIdAdmin(int brdId) throws Exception {
 		return ezQuestionDAO.getUserIdAdmin(brdId);
 	}
 	
