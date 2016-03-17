@@ -170,7 +170,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="String" resultClass="String">
+	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="Integer" resultClass="String">
 		<![CDATA[
 			SELECT
 				USER_ID 
