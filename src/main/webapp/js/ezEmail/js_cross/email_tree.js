@@ -1,5 +1,5 @@
 ﻿function get_childXML_2010(url, broot, bcount) {
-    if (navigator.userAgent.indexOf('MSIE') == -1) {
+    if (navigator.userAgent.indexOf('Trident') == -1) {
         var xmlDOM = createXmlDom();
 
         var objRoot = xmlDOM.createElement("DATA");
@@ -44,7 +44,7 @@
         objNode.text = bcount;
         objRoot.appendChild(objNode);
 
-        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_get_folderlist.aspx", false);
+        xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
 	    xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	    xmlHTTP.send(xmlDOM.xml);
     	

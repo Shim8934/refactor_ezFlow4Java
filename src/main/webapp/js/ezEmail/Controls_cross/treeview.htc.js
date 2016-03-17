@@ -184,30 +184,40 @@
 
     this.getvalue = ex_getvalue;
     function ex_getvalue(nodeIdx, valueName) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (navigator.userAgent.indexOf('Trident') == -1) ?
         (function(nodeIdx, valueName) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
-
             if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
                 return "";
 
             return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).nodeValue;
         }).call(this,nodeIdx, valueName) :
         (function(nodeIdx, valueName) {
-            if (nodeIdx > g_nodeCount || nodeIdx < 1)
-                return "";
-
-            if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
-                return "";
-
-            return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
+        	if(navigator.userAgent.indexOf('MSIE') == -1){ //IE11
+	            if (nodeIdx > g_nodeCount || nodeIdx < 1)
+	                return "";
+	
+	            if (g_nodeArray["nodeXML"][nodeIdx].getAttribute(valueName) == null)
+	                return "";
+	
+	            return g_nodeArray["nodeXML"][nodeIdx].getAttribute(valueName);
+        	}
+        	else{
+        		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+	                return "";
+	
+	            if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
+	                return "";
+	
+	            return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
+        	}
         }).call(this,nodeIdx, valueName);
     }
 
     this.putvalue = ex_putvalue;
     function ex_putvalue(nodeIdx, valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (navigator.userAgent.indexOf('Trident') == -1) ?
         (function(nodeIdx, valueName, value) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
@@ -215,10 +225,18 @@
             g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).textContent = value;
         }).call(this,nodeIdx, valueName, value) :
         (function(nodeIdx, valueName, value) {
-            if (nodeIdx > g_nodeCount || nodeIdx < 1)
-                return "";
-
-            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
+        	if(navigator.userAgent.indexOf('MSIE') == -1){ //IE11
+	            if (nodeIdx > g_nodeCount || nodeIdx < 1)
+	                return "";
+	
+	            g_nodeArray["nodeXML"][nodeIdx].setAttribute(value);
+        	}
+        	else{
+        		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+	                return "";
+	
+	            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
+        	}
         }).call(this,nodeIdx, valueName, value);
     }
 
@@ -636,7 +654,7 @@
 
     this.findindex = ex_findindex;
     function ex_findindex(valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (navigator.userAgent.indexOf('Trident') == -1) ?
         (function(valueName, value) {
             for (var i = 1; i <= g_nodeCount; i++) {
                 if (g_nodeArray["nodeXML"][i] != null)
@@ -647,13 +665,24 @@
             return -1;
         }).call(this,valueName, value) :
         (function(valueName, value) {
-            for (var i = 1; i <= g_nodeCount; i++) {
-                if (g_nodeArray["nodeXML"][i] != null)
-                    if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
-                    return i;
-            }
-
-            return -1;
+        	if(navigator.userAgent.indexOf('MSIE') == -1){
+	            for (var i = 1; i <= g_nodeCount; i++) {
+	                if (g_nodeArray["nodeXML"][i] != null)
+	                    if (g_nodeArray["nodeXML"][i].getAttribute(valueName) == value)
+	                    return i;
+	            }
+            
+	            return -1;
+        	}
+        	else{
+        		for (var i = 1; i <= g_nodeCount; i++) {
+                    if (g_nodeArray["nodeXML"][i] != null)
+                        if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
+                        return i;
+                }
+                
+                return -1;
+        	}
         }).call(this,valueName, value);
     }
 
@@ -1237,7 +1266,7 @@
     }
 
     function set_initvalue() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (navigator.userAgent.indexOf('Trident') == -1) ?
         (function() {
 
             iterator(
@@ -1275,28 +1304,59 @@
 
         }).call(this) :
         (function() {
+        	if(navigator.userAgent.indexOf('MSIE') == -1){  //IE11
+        		var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
+          	  
+            	for (var i = 0; i < bimageNodes.length; i++){
+            		if(bimageNodes.item(i).nodeType == 1){
+            			g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes[i].getAttribute("path");
+            		}
+            	}
+                bimageNodes = null;
 
-            var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
-            for (var i = 0; i < bimageNodes.length; i++)
-                g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text;
+                var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
+                for (var i = 0; i < classNodes.length; i++){
+                	if(classNodes.item(i).nodeType == 1){
+                		g_baseClass[classNodes.item(i).nodeName] = classNodes[i].getAttribute("name");
+                	}
+                }
+                classNodes = null;
 
-            bimageNodes = null;
+                var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
+                for (var i = 0; i < imageNodes.length; i++){
+                	if(imageNodes.item(i).nodeType == 1){
+                		g_images[imageNodes[i].getAttribute("idx")] = imageNodes[i].getAttribute("path");
+                	}
+                }
 
-            var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
-            for (var i = 0; i < classNodes.length; i++)
-                g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+                imageNodes = null;
 
-            classNodes = null;
+                g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
+                g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+        	}
+        	else{
+        		var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+                for (var i = 0; i < bimageNodes.length; i++)
+                    g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text;
 
-            var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
-            for (var i = 0; i < imageNodes.length; i++)
-                g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = imageNodes.item(i).attributes.getNamedItem("path").text;
+                bimageNodes = null;
 
-            imageNodes = null;
+                var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+                for (var i = 0; i < classNodes.length; i++)
+                    g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
 
-            g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
-            g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+                classNodes = null;
 
+                var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+                for (var i = 0; i < imageNodes.length; i++)
+                    g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = imageNodes.item(i).attributes.getNamedItem("path").text;
+
+                imageNodes = null;
+
+                g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
+                g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+        	}
+            
         }).call(this);
     }
 
