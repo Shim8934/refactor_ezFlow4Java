@@ -6,6 +6,7 @@
 	<typeAlias  alias="QstListVO" 					type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
 	<typeAlias  alias="QstUserPollItemVO" 			type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
 	<typeAlias  alias="QstUserPermissionVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
+	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
 	
 	<resultMap class="QstListVO" id="qstList">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -23,7 +24,7 @@
 		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="13"/>
 	</resultMap>
 	
-	<resultMap class="QstUserPollItemVO" id="userPollItem">
+	<resultMap class="QstUserPollItemVO" id="qstUserPollItem">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="userId"					column="USER_ID"					columnIndex="3"/>
@@ -54,7 +55,7 @@
 		<result property="completeFlag"				column="COMPLETE_FLAG"				columnIndex="28"/>
 	</resultMap>
 	
-	<resultMap class="QstUserPermissionVO" id="userPermission">
+	<resultMap class="QstUserPermissionVO" id="qstUserPermission">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="3"/>
@@ -64,26 +65,41 @@
 		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="7"/>
 	</resultMap>
 	
-	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
+	<resultMap class="QstAttachVO" id="qstAttachVO">
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
+		<result property="attachNo"					column="ATTACHNO"					columnIndex="5"/>
+		<result property="attachName"				column="ATTACHNAME"					columnIndex="6"/>
+		<result property="attachUrl"				column="ATTACHURL"					columnIndex="7"/>
+		<result property="attachType"				column="ATTACHTYPE"					columnIndex="8"/>
+	</resultMap>
+		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="userPollItem">
+	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItem">
 		{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="userPermission">
+	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="qstUserPermission">
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getAttachInfo" parameterClass="Map" resultMap="qstAttachVO">
+		{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+		
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>

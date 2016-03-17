@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
@@ -326,9 +327,17 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public List<QstVO> getQuestionForResponse(QstVO questionVO) {
+	public List<QstVO> getQuestionForResponse(QstVO questionVO) throws Exception {
 		return null;
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO)	throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstAttachVO.getBrdId());
+		map.put("v_pItemNo", qstAttachVO.getItemNo());
+		map.put("v_pQuesNo", qstAttachVO.getQuestionNo());
+		map.put("v_pAnswerNo", qstAttachVO.getAnswerNo());
+		return ezQuestionDAO.getAttachInfo(map);
 	}
 }

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezQuestion.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
@@ -14,7 +15,9 @@ public interface EzQuestionService {
 
 	public List<QstListVO> getQstList(QstListVO qstListVO) throws Exception;
 
-	public List<QstVO> getQuestionForResponse(QstVO questionVO);
+	public List<QstVO> getQuestionForResponse(QstVO questionVO) throws Exception;
+	
+	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO) throws Exception;
 
 	public List<String> getUserIdAdmin(int brd) throws Exception;
 
@@ -32,11 +35,11 @@ public interface EzQuestionService {
 
 	public int getQuestionNo(int brdId,int itemNo) throws Exception;
 
-	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO, String userId);
+	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO, String userId) throws Exception;
 	
-	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId);
+	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
 
-	public int resCount(String brdId,String itemNo);
+	public int resCount(String brdId,String itemNo) throws Exception;
 
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 
@@ -50,7 +53,7 @@ public interface EzQuestionService {
 
 	public void insertAnswerContent(QstCompleteVO qstCompleteVO) throws Exception;
 	
-	public void insertItemRead(LoginVO loginVO, QstUserPollItemVO qstUserPollItemVO, String readDate);
+	public void insertItemRead(LoginVO loginVO, QstUserPollItemVO qstUserPollItemVO, String readDate) throws Exception;
 	
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception;
 
@@ -64,9 +67,9 @@ public interface EzQuestionService {
 	
 	public void updatePollItem(QstCompleteVO qstCompleteVO) throws Exception;
 	
-	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO);
+	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO) throws Exception;
 
-	public void updateReadDate(QstUserPollItemVO userPollItemVO, String readDate, String userId);
+	public void updateReadDate(QstUserPollItemVO userPollItemVO, String readDate, String userId) throws Exception;
 
-	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;	
+	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;		
 }

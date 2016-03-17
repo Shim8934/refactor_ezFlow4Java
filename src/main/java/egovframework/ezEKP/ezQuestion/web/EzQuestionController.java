@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +23,20 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
-import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
+import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
-import egovframework.ezEKP.ezQuestion.vo.QstVO;
+import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -292,7 +299,8 @@ public class EzQuestionController {
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstCallUsersPollStatus.do")
-	public @ResponseBody Map<String, Object> qstCallUsersPollStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+	@ResponseBody
+	public Map<String, Object> qstCallUsersPollStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		boolean endPoll = false;
 		String endPollYN="";
@@ -440,11 +448,54 @@ public class EzQuestionController {
 		
 		if(questionList != null){
 			int iQueCount = 0;
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
 			for(QstVO question : questionList){
 				iQueCount++;
 				arrAnswer.add(question.getAnswerType());
-				/** xml에 질문하나씩 넣는건데  */
+				sb.append("<ROW>");
+				sb.append("<QST>");
+				sb.append(egovMessageSource.getMessage("ezQuestion.t333"));
+				sb.append(iQueCount + ":");
+				sb.append(modifyData(question.getQuesContent()));
+				sb.append(getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
+				sb.append("</QST>");
+				sb.append("<BRD_ID>");
+				sb.append(question.getBrdId());
+				sb.append("</BRD_ID>");
+				sb.append("<ITEM_NO>");
+				sb.append(question.getItemNo());
+				sb.append("</ITEM_NO>");
+				sb.append("<QUESTION_NO>");
+				sb.append(question.getQuestionNo());
+				sb.append("</QUESTION_NO>");
+				sb.append("<ANSWERTYPE>");
+				sb.append(question.getAnswerType());
+				sb.append("</ANSWERTYPE>");
+				sb.append("<ANSWERVIEWTYPE>");
+				sb.append(question.getAnswerViewType());
+				sb.append("</ANSWERVIEWTYPE>");
+				sb.append("<MULTISELECT>");
+				sb.append(question.getMultiSelect());
+				sb.append("</MULTISELECT>");
+				sb.append("<QUES_SN>");
+				sb.append(question.getQuesSn());
+				sb.append("</QUES_SN>");
+				sb.append("</ROW>");
+				
+				
+				
+				
 			}
+			sb.append("</DATA>");
+			String strXML = sb.toString();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    Document doc = builder.parse(new InputSource(new StringReader(strXML)));
+		    
+		    NodeList nList = doc.getElementsByTagName("NODE");
+			
+			
 		}
 		
 		/** AnswerCnt*/
@@ -457,11 +508,75 @@ public class EzQuestionController {
 			endPoll = true;
 		if(qstUserPermissionVO.getEndFlg().equals('1'))
 			endPoll = true;
-		
+	 
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		
 		return "/ezQuestion/qstResponse";
+	}
+	
+	public String modifyData(String strData) throws Exception{
+		String strResult = "";
+		strResult = strData.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		       
+		return strResult;
+	}
+	
+	@SuppressWarnings("unused")
+	public String getAttachList(String strQuestionNo, String strAnswer,int brdId, int itemNo) throws Exception{
+		StringBuilder strResult = new StringBuilder();
+        String strAttachName = "";
+        String strAttachUrl = "";
+        /** 쓰는곳이 업는 거 같음*/
+        String strSAttachUrl = "";
+        String strAttachNo = "";
+        boolean bFirst = true;
+        
+        QstAttachVO qstAttachVO = new QstAttachVO();
+        qstAttachVO.setBrdId(brdId);
+        qstAttachVO.setItemNo(itemNo);
+        qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
+        qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
+        List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO);
+        
+        for(QstAttachVO attachVO : qstAttachVOList){
+        	if (bFirst){
+        		if (strAnswer == "0"){
+        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
+        			strResult.append("<table><tr>");
+        		}else{
+        			strResult.append("<br><table><tr>");
+        		}
+        		bFirst = false;
+        	}
+        	strAttachName = attachVO.getAttachName();
+        	strAttachUrl = attachVO.getAttachUrl();
+            strAttachNo = Integer.toString(attachVO.getAttachNo());
+
+            switch (attachVO.getAttachType()){
+            	case "1":
+            		strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
+            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
+                    break;
+            	case "2":
+            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+                    break;
+                case "3":
+                	break;
+                case "4":
+                	break;
+                case "5":
+                	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+                	break;
+                default:
+                	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
+                    break;
+            }
+        }
+        if(!bFirst){
+        	strResult.append("<td style=\"padding:5px\">&nbsp;</td></tr></table>");
+        }
+        return strResult.toString();
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResult.do")

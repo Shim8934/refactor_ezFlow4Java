@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
@@ -21,6 +22,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getUserIdAdmin(int brdId) {
 		return (List<String>) select("EzQuestionDAO.getUserIdAdmin", brdId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstAttachVO> getAttachInfo(Map<String, Object> map) {
+		return (List<QstAttachVO>) select("EzQuestionDAO.getAttachInfo", map);
 	}
 	
 	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
