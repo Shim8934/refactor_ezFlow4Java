@@ -20,10 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -658,7 +661,7 @@ public class EzQuestionController {
 		if (questionAddVO != null) {
 			pMode = "EDIT";
 			pQstTitle = questionAddVO.getQuestionContent();
-System.out.println("pQstTitle:"+pQstTitle);
+
 			/*if(questionAddVO.getAttach().size() > 0) {
 				if(questionAddVO.getAttach().toString() != "") {
 					pQstAnsInfo = questionAddVO.getAttach();
@@ -732,83 +735,122 @@ System.out.println("pQstTitle:"+pQstTitle);
 		
 		return String.valueOf(get_itemNo);
 	}
-
-	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> qstCompleteCross(HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
+	
+	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String qstCompleteCross(@RequestBody String xmlDoc ,HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
+		Document doc = commonUtil.convertStringToDocument(xmlDoc);
 		loginVO = commonUtil.userInfo(loginCookie);
+
 		String pUserID = loginVO.getId();
-		
 		String pBrdID = "";
 		String vItemID = "";
+		
 		if(req.getParameter("pBrdID") == null) {
 			pBrdID = "5";
 			vItemID = callGetItemSeq(pBrdID);
 		}
 		
-		int dataCount = 0;
+		String pRtn = SaveQuestion(pBrdID, vItemID, doc, pUserID);
+		
+		/*if(!pRtn.equals("OK")) {
+			DeleteQuestion(pBrdID, vItemID);
+			pRtn = "ERROR";
+		}*/
+
+		String strXML = "<DATA>" + pRtn + "</DATA>";
+		
 		int brdId = Integer.parseInt(pBrdID);
 		int itemNo = Integer.parseInt(vItemID);
-
-		dataCount = ezQuestionService.getItemNoCnt(brdId, itemNo);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		String subject = req.getParameter("parameter[subject]");
-		String content = req.getParameter("parameter[content]");
-		String startdate = req.getParameter("parameter[startdate]");
-		String enddate = req.getParameter("parameter[enddate]");
-		String expiredate = req.getParameter("parameter[expiredate]");
-		String anonymity = req.getParameter("parameter[anonymity]");
-		String openresult = req.getParameter("parameter[openresult]");
-		String multiresponse = req.getParameter("parameter[multiresponse]");
-		String importance = req.getParameter("parameter[importance]");
-		String target = req.getParameter("parameter[target]");
 		
-		map.put("subject", subject);
-		map.put("content", content);
-		map.put("startdate", startdate);
-		map.put("enddate", enddate);
-		map.put("expiredate", expiredate);
-		map.put("anonymity", anonymity);
-		map.put("openresult", openresult);
-		map.put("multiresponse", multiresponse);
-		map.put("importance", importance);
-		map.put("target", target);
-		map.put("brdId", brdId);
-		map.put("itemNo", itemNo);
-		map.put("itemId", vItemID);
+		return strXML;
+	}
+
+
+	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID) throws Exception {
+		String pResult = "";
+		
+		int dataCount = 0;
+		dataCount = ezQuestionService.getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID));
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("subject", doc.getElementsByTagName("SUBJECT").item(0).getTextContent());
+		map.put("content", doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+		map.put("startdate", doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
+		map.put("enddate", doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		map.put("expiredate", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
+		map.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
+		map.put("openresult", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
+		map.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
+		map.put("importance", doc.getElementsByTagName("IMPORTANT").item(0).getTextContent());
+		map.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
+		map.put("brdId", pBrdID);
+		map.put("itemNo", Integer.parseInt(vItemID));
 		map.put("dataCount", dataCount);
 		
-		ezQuestionService.stepSave(pUserID, map); 
+		ezQuestionService.stepSave(pUserID, map);
 		
 		ezQuestionService.stepSave2(map);
-		
-		
 		//대상범위
-		if (target.equals("1")) {
+		if(doc.getElementsByTagName("TARGET").item(0).getTextContent().equals("1")) {
 			
 		}
 		
-		//int qstCnt =  
+		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
 		
-		int v_quesNo = 1;
+		for(int i=0; i<qstCnt; i++) {
+			
+			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
+			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
+			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
+			String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
+			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();
+			
+			int v_quesNo = 1;
 
-			v_quesNo = ezQuestionService.getQuestionNo(brdId, itemNo);
+			v_quesNo = ezQuestionService.getQuestionNo(Integer.parseInt(pBrdID), Integer.parseInt(vItemID));
 		
-		if(v_quesNo == 0) {
-			v_quesNo = 1;
-		} else {
-			v_quesNo = v_quesNo + 1;
+			if(v_quesNo == 0) {
+				v_quesNo = 1;
+			} else {
+				v_quesNo = v_quesNo + 1;
+			}
+			
+			QstCompleteVO qstCompleteVO = new QstCompleteVO();
+			qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+			qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+			qstCompleteVO.setQuesNo(v_quesNo);
+			qstCompleteVO.setQuesContent(qstSubject);
+			qstCompleteVO.setAnswerType(Integer.parseInt(answerType));
+			qstCompleteVO.setMultiSelect(multiSelect);
+			ezQuestionService.insertQuestion(qstCompleteVO);
+			
+			if(doc.getElementsByTagName("ANSWER").item(0).getChildNodes().getLength() > 0) {
+				int ansCnt = doc.getElementsByTagName("ANSWER").getLength();
+				for(int iAns=0; iAns < ansCnt; iAns++ ) {
+					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO.setQuesNo(v_quesNo);
+					qstCompleteVO.setAnswerNo(iAns+1);
+					qstCompleteVO.setAnswerContent(doc.getElementsByTagName("TITLE").item(iAns).getTextContent().replace("'", "''"));
+					ezQuestionService.insertAnswerContent(qstCompleteVO);
+				}
+			}
 		}
 		
-		qstCompleteVO.setStrBrdID(brdId);
-		qstCompleteVO.setItemNo(itemNo);
-		qstCompleteVO.setQuesNo(v_quesNo);
-		qstCompleteVO.setAnswerType(Integer.parseInt(req.getParameter("parameter[question][row][answertype]")));
-		qstCompleteVO.setQuesContent(req.getParameter("parameter[question][row][content]"));
-		qstCompleteVO.setMultiSelect(req.getParameter("parameter[question][row][multiselect]"));
-		ezQuestionService.insertQuestion(qstCompleteVO); 
+		QstCompleteVO qstCompleteVO = new QstCompleteVO();
+		qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+		ezQuestionService.updatePollItem(qstCompleteVO);
 		
-		return map;
-		
+		return pResult;
+	}
+	
+
+	public void DeleteQuestion(String pBrdID, String vItemID) throws Exception {
+		QstCompleteVO qstCompleteVO = new QstCompleteVO();
+		qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+		ezQuestionService.deleteItem(qstCompleteVO);
 	}
 }
