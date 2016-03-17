@@ -485,7 +485,7 @@
         var xmlDoc = createXmlDom();
         var objNode;
         var RootNode = createNodeInsert(xmlDoc, objNode, "ROW");
-        createNodeAndInsertCDataText(xmlDoc, objNode, "CONTENT", document.Ques_Answer.txtQuestion.value);
+        createNodeAndInsertCDataText(xmlDoc, objNode, "QUESTIONCONTENT", document.Ques_Answer.txtQuestion.value);
         if (Ques_Answer.txtQuestion.AnsInfo != null && Ques_Answer.txtQuestion.AnsInfo != null && typeof (Ques_Answer.txtQuestion.AnsInfo) != "undefined") {
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
@@ -542,7 +542,7 @@
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWSTART", sviewno);
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWEND", eviewno);
 
-alert("v_viewType:"+v_viewtype);
+
 /* alert(document.Ques_Answer.answerType.value);
 document.Ques_Answer.submit(); */
 		
@@ -600,7 +600,7 @@ inputAns += Ques_Answer.input_Ans[ii].value+";";
                         //}
                     }
                 }
-alert("inputAns:"+inputAns);
+
             }
             else if (v_viewtype == 2) {
                 var DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
@@ -636,7 +636,7 @@ alert("inputAns:"+inputAns);
             if (viewcnt > 0) {
                 for(var ii=0 ; ii < viewcnt ; ii++) {
                     view += Ques_Answer.input_Ans[ii].text +  ";";
-alert("view:"+view);
+
                     if( Ques_Answer.input_Ans[ii].AnsInfo != null ) {
                         if(CrossYN())
                             attach += GetAttachList(Ques_Answer.input_Ans[ii].AnsInfo);
@@ -644,7 +644,7 @@ alert("view:"+view);
                             attach += GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo).xml;
                     }
                     attach += "^";
-alert("attach:"+attach);
+
                 }
             }
         }
@@ -662,23 +662,7 @@ alert(pEditIndex);
              window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
         }
         else {
-alert("value:"+Ques_Answer.txtQuestion.value);
-alert("pAttachYN:"+pAttachYN);
-alert("xmlDoc:"+xmlDoc);
-		var answerType = v_viewtype;
-		var multi = multi;
-		var sviewNo = sviewno;
-		var eviewNo = eviewno;
-
-document.Ques_Answer.answerType.value = v_viewtype;
-document.Ques_Answer.multiSelect.value = multi;
-document.Ques_Answer.selViewStart.value = sviewNo;
-document.Ques_Answer.selViewEnd.value = eviewNo;
-document.Ques_Answer.txtQuestion.value;
-document.Ques_Answer.title.value = inputAns;
-document.Ques_Answer.submit();
             window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));
-            window.opener.fun_OK(Ques_Answer.txtQuestion.value, multi,v_viewtype, sviewNo, eviewNo, inputAns);
         }
         window.close();
     }
@@ -1058,12 +1042,7 @@ document.Ques_Answer.submit();
 </script>
 </head>
 <body class="popup" style="overflow:auto">
-    <form name="Ques_Answer" method="post" action="/ezQuestion/qstStep2.do">
-    	<input type="hidden" id="answerType" name="answerType" value="!!" />
-    	<input type="hidden" id="multiSelect" name="multiSelect" value="" />
-    	<input type="hidden" id="selViewStart" name="selViewStart" value="" />
-    	<input type="hidden" id="selViewEnd" name="selViewEnd" value="" />
-    	<input type="hidden" id="title" name="title" value="" />
+    <form name="Ques_Answer" method="post" action="">
         <div id="menu">
             <ul><li><span onclick="javascript:fun_QuesSave();"><spring:message code='ezQuestion.t516' /></span></li></ul>
         </div>
