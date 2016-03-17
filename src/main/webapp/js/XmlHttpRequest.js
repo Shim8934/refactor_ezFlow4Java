@@ -684,21 +684,21 @@ function ConvertMHTtoHTML(pURL) {
 }
 
 function ConvertHTMLtoMHT(pContent) {
-    var rtnVal = '';
-    try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "strHTML", pContent);
-
-        xmlhttp.open("POST", "/myoffice/CKEditor/HTMLtoMHT.aspx", false);
-        xmlhttp.send(xmlpara);
-        if (xmlhttp.status == "200") rtnVal = xmlhttp.responseText;
-    }
-    catch (e) { }
-    finally { return rtnVal }
+	var rtnVal = '';
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezCommon/htmlToMHT.do",
+		data : { strHTML   : pContent 
+  			   },
+		success: function(result){
+			rtnVal = result;
+		}        			
+	});
+    return rtnVal;
 }
+
 
 //에디터 Read 프레임 관련 사용함수
 function CKediter_Trim(value) {
@@ -724,8 +724,8 @@ function GetFieldsList(iframePage) {
 }
 
 function GetBODY(iframePage) {
-    var BODYTag;
     var count = 0;
+    var BODYTag;
     var i = 0;
     count = iframePage.contentWindow.document.getElementsByTagName("*").length;
     for (i = 0; i < count; i++) {

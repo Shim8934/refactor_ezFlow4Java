@@ -19,7 +19,8 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <script type="text/javascript"src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/datepicker.htc.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
@@ -440,7 +441,6 @@
 		        		}
 		        	}
 		        });
-		        var strXML = "";
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
@@ -499,14 +499,11 @@
 		        newID = NewGuid;
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
-		
-		
-		
+
 		        var objNode, objSubNode, objDataNode;
 		        objNode = createNodeInsert(xmlDom, objNode, "NODES");
 		        objSubNode = createNodeAndAppandNode(xmlDom, objNode, objSubNode, "NODE");
-		
-		
+
 		        if (gubun != "3") {
 		            if (pMode != "modify") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", newID);
@@ -540,14 +537,13 @@
 		            importance = "0";
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
-
 		        if (gubun != "2") {
 		            if (SSUserName == "" || SSUserName2 == "" ||
 				        SSDeptName == "" || SSDeptName2 == "" ||
 				        SSCompanyName == "" || SSCompanyName2 == "") {
 		                var tmpXmlDom = createXmlDom();
 		                var tmpXmlHttp = createXMLHttpRequest();
-		
+
 		                var objNode;
 		                createNodeInsert(tmpXmlDom, objNode, "DATA");
 		                createNodeAndInsertText(tmpXmlDom, objNode, "CN", SSUserID);
@@ -590,7 +586,7 @@
 		        else {
 		            var nickname = document.getElementById("txtNickName").value;
 		            if (nickname == "") nickname = "<spring:message code='ezBoard.t286' />";
-		
+
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
@@ -601,7 +597,7 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
 		        }
-		
+
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
@@ -619,7 +615,7 @@
 		            else
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
 		        }
-		
+
 		        if (pMode == "new" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
@@ -641,20 +637,18 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        }
-		
+
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "FILEPATH", pUploadFilePath);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE1", "");
-		
-		        strXML += "<FILEPATH>" + pUploadFilePath + "</FILEPATH>";
-		        strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
+
 		        if (gubun != "3" && document.getElementById('noticePost').checked) {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "1");
 		        }
 		        else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
 		        }
+
 		        if (gubun != "2") {
-		
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
 		            if (gubun != "3") {
@@ -669,6 +663,7 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", "");
 		        }
+
 		        if (gubun != "3") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", "");
 		        }
@@ -676,14 +671,7 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", MakeXMLString(GetSmallUrl()));
 		        }
 		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD")
-		        for (i = 0; i < obj.length; i++) {
-		            if (obj[i].free == "")
-		                obj[i].removeAttribute('free');
-		            if (obj[i].className == "FIELD")
-		                obj[i].removeAttribute('className');
-		        }
-		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD")
-		        for (i = 0; i < obj.length; i++) {
+		        for (var i = 0; i < obj.length; i++) {
 		            if (obj[i].free == "")
 		                obj[i].removeAttribute('free');
 		            if (obj[i].className == "FIELD")
@@ -692,12 +680,11 @@
 		        if (pDocID != "")
 		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 		        
-		        JSleep(1000);
-		
+		        setTimeout(JSleep, 1000);
+
 		        var strBody = message.GetEditorContent();
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
 		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody).replace("&amp;", "&") + "</BODY>" + "</HTML>");
-		
 		        }
 		        else {
 		            if (pDocID == "")
@@ -708,12 +695,12 @@
 		            }
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
-		        
+
 		        if (gubun == "2")
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", Crypt_Encrytion(document.getElementById('txtPassWord').value));
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
-		
+
 		        if (pMode != "new" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
 		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
@@ -722,20 +709,21 @@
 		        }
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-				
+
 		        $.each(["${boardAttributeListVO}"],function(VOIndex, VO){
 		        	if(VO.colType == "radio"){
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, VO.tableCol, GetRadioVal(VO.tableCol));
+		        		saveData.VO.tableCol = GetRadioVal(VO.tableCol);
 		        	}else if(VO.colType == "text"){
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, VO.tableCol, document.getElementById(VO.tableCol).value);
+		        		saveData.VO.tableCol = document.getElementById(VO.tableCol).value;
 		        	}else if(VO.colType == "check"){
-		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, VO.tableCol, GetCheckVal(VO.tableCol));
+		        		saveData.VO.tableCol = GetCheckVal(VO.tableCol);
 		        	}
 		        });
-		        xmlhttp.open("POST", "interASP/SaveItem.aspx?Mode=" + pMode + "&gubun=" + gubun, false);
+		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 //@@@@@@@@@@@@@@@ 여기까지
-		        if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
+alert(123456);
+				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;
 		            xmlDom = null;
 		            if (orgMode == "temp") {
@@ -778,8 +766,6 @@
 		                        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + strItemID, false);
 		                    }
 		                        
-		
-		                    
 		                    xmlhttp.send();
 		                    var ResponseXML = xmlhttp.responseXML;
 		                    xmlhttp = createXMLHttpRequest();
@@ -815,8 +801,6 @@
 		                        } catch (e) {
 		
 		                        }
-		
-		
 		                    }
 		                }
 		                catch (e) { }
@@ -849,11 +833,8 @@
 		        xmlhttp = null;
 		        xmlDom = null;
 		    }
-		    function JSleep(sTime) {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/userSleep.aspx?time=" + sTime, false);
-		        xmlhttp.send();
-		        xmlhttp = null;
+		    function JSleep() {
+		    	return;
 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
@@ -1241,7 +1222,7 @@
 		            return "";
 		        }
 		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA2");
-		        for (i = 0; i < xmldomNodes.length; i++) {
+		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(xmldomNodes[i]);
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                var idx = filepath.lastIndexOf("/");

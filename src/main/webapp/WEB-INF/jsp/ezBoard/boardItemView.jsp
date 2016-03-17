@@ -126,7 +126,7 @@
 		        catch (e) {
 		            alert(e.description);
 		        }
-		    }
+		    };
 		
 		    window.onresize = function ()
 		    {        
@@ -150,7 +150,7 @@
 			            }
 		         	}
 	        	}
-		    }
+		    };
 		
 		    function AddLinkTarget() {
 		        try {
@@ -1080,7 +1080,7 @@
 	        		</c:otherwise>
 	        	</c:choose>
 	        	<c:choose>
-		        	<c:when test="${useEzKMS =='YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+		        	<c:when test="${useEzKMS == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 		        		<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
 		        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t321' /></span></li>
 		        		</c:when>

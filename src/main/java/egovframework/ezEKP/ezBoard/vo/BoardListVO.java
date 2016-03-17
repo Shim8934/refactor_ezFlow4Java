@@ -102,6 +102,8 @@ public class BoardListVO {
 	private String copiedItem;
 	/** */
 	private String apprFlag;
+	/** 파일경로*/
+	private String filePath;
 	
 	public int getrNum() {
 		return rNum;
@@ -403,4 +405,11 @@ public class BoardListVO {
 	public void setABSTRACT(String aBSTRACT) {
 		ABSTRACT = aBSTRACT;
 	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	
 }

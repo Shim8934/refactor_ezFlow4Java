@@ -13,9 +13,9 @@
             if (result.toString().indexOf("px") > -1) result = result.replace("px", "");
             if (result != null) ImgWidth = result;
 
-            var result = imgColl.item(i).style.width != "" ? imgColl.item(i).style.height : imgColl.item(i).height;
-            if (result.toString().indexOf("px") > -1) result = result.replace("px", "");
-            if (result != null) ImgHeight = result;
+            var result2 = imgColl.item(i).style.height != "" ? imgColl.item(i).style.height : imgColl.item(i).height;
+            if (result2.toString().indexOf("px") > -1) result2 = result2.replace("px", "");
+            if (result2 != null) ImgHeight = result2;
 
             ConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
         }

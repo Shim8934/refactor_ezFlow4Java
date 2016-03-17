@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -748,112 +749,6 @@ public class EzBoardController {
         return boardInfo;
 	}
 	
-    protected boolean CheckDBColum(String pProvValue) throws Exception{
-        boolean bRet = false;
-        // 사용자 속성명
-        String tmp = pProvValue.toUpperCase();
-        if(tmp.equals("CN") || tmp.equals("DISPLAYNAME") ||tmp.equals("DISPLAYNAME1") ||tmp.equals("DISPLAYNAME2") ||tmp.equals("MAIL") ||tmp.equals("MAILNICKNAME") ||tmp.equals("UPNNAME") ||
-    	   tmp.equals("DEPARTMENT") ||tmp.equals("DESCRIPTION") ||tmp.equals("DESCRIPTION1") ||tmp.equals("DESCRIPTION2") ||tmp.equals("PHYSICALDELIVERYOFFICENAME") ||tmp.equals("COMPANY") ||
-    	   tmp.equals("COMPANY1") ||tmp.equals("COMPANY2") ||tmp.equals("TITLE") ||tmp.equals("TITLE1") ||tmp.equals("TITLE2") ||tmp.equals("TELEPHONENUMBER") ||tmp.equals("HOMEPHONE") ||tmp.equals("FACSIMILETELEPHONENUMBER") ||
-    	   tmp.equals("MOBILE") ||tmp.equals("POSTALCODE") ||tmp.equals("STREETADDRESS") ||tmp.equals("INFO") ||tmp.equals("EXTENSIONATTRIBUTE1") ||tmp.equals("EXTENSIONATTRIBUTE2") ||tmp.equals("EXTENSIONATTRIBUTE3") ||tmp.equals("EXTENSIONATTRIBUTE4") ||
-    	   tmp.equals("EXTENSIONATTRIBUTE5") ||tmp.equals("EXTENSIONATTRIBUTE6") ||tmp.equals("EXTENSIONATTRIBUTE7") ||tmp.equals("EXTENSIONATTRIBUTE8") ||tmp.equals("EXTENSIONATTRIBUTE9") ||tmp.equals("EXTENSIONATTRIBUTE10") ||tmp.equals("EXTENSIONATTRIBUTE101") ||
-    	   tmp.equals("EXTENSIONATTRIBUTE102") ||tmp.equals("EXTENSIONATTRIBUTE11") ||tmp.equals("EXTENSIONATTRIBUTE12") ||tmp.equals("EXTENSIONATTRIBUTE13") ||tmp.equals("EXTENSIONATTRIBUTE14") ||tmp.equals("EXTENSIONATTRIBUTE15") ||
-    	   tmp.equals("ADSPATH") ||tmp.equals("UPDATEDT") ||tmp.equals("SIPURI") ||tmp.equals("BIRTH") ||tmp.equals("BIRTHTYPE")){
-        	
-        	bRet = true;
-        }
-        // 부서명
-        switch (pProvValue.toUpperCase()){
-            case "CN":
-                bRet = true;
-                break;
-            case "DISPLAYNAME":
-                bRet = true;
-                break;
-            case "DISPLAYNAME1":
-                bRet = true;
-                break;
-            case "DISPLAYNAME2":
-                bRet = true;
-                break;
-            case "USEFLAG":
-                bRet = true;
-                break;
-            case "COMPANY":
-                bRet = true;
-                break;
-            case "COMPANY1":
-                bRet = true;
-                break;
-            case "COMPANY2":
-                bRet = true;
-                break;
-            case "DEPTLEVEL":
-                bRet = true;
-                break;
-            case "DEPT_CD_PATH":
-                bRet = true;
-                break;
-            case "DEPT_NM_PATH":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE1":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE2":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE3":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE4":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE5":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE6":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE7":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE8":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE9":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE10":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE11":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE12":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE13":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE14":
-                bRet = true;
-                break;
-            case "EXTENSIONATTRIBUTE15":
-                bRet = true;
-                break;
-            case "ADFLAG":
-                bRet = true;
-                break;
-            case "ADSPATH":
-                bRet = true;
-                break;
-            case "UPDATEDT":
-                bRet = true;
-                break;
-        }
-        return bRet;
-    }
     
     @RequestMapping(value = "/ezBoard/getBoardList.do")
     public void getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO ezBoardVO, HttpServletResponse res) throws Exception{
@@ -1765,6 +1660,257 @@ public class EzBoardController {
 		model.addAttribute("userInfo",userInfo);
 		
 		return "ezBoard/boardDragAndDrop";
+	}
+	
+	@RequestMapping(value = "/ezBoard/saveItem.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveItem(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlData, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pMode = "";
+        String gubun = "";
+        if (request.getParameter("mode") != null){
+        	pMode = request.getParameter("mode");
+        }
+        if (request.getParameter("guBun") != null){
+        	gubun = request.getParameter("guBun");
+        }
+        Document doc = commonUtil.convertStringToDocument(xmlData.toString());
+        String attachList = "";
+        String smallName = "";
+        String title = "";
+        String itemID = "";
+        String[] attchArray = null;
+        String[] smallArray = null;
+        String[] itemid = null;
+
+        BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+
+        doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("\n", "\r\n"));;
+
+        if (boardInfo.getWrite_FG().equals("false")){
+            return "<RESULT>INACCESSIBLE</RESULT>";
+        }
+        if (gubun == "3"){
+            attachList = doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
+            smallName = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+            title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+            itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
+            attchArray = attachList.split(";");
+            smallArray = smallName.split(";");
+            itemid = itemID.split(";");
+        }                
+
+        String ret = "";
+
+        if (gubun == "3"){
+            if (attchArray.length == smallArray.length){
+                for (int i = 0; i < attchArray.length - 1; i++){
+                    doc.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attchArray[i] + ";");
+                    doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
+                    doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemid[i]);
+                    doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemid[i]);
+                    if (attchArray.length > 2){
+                    	doc.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + (i + 1));
+                    }
+                    if (i > 0){
+                        pMode = "New";
+                        doc.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
+                    }
+                    ret = insertNewItem(doc, pMode);
+                }
+            }
+        }else{
+            ret = insertNewItem(doc, pMode);
+        }
+
+        return "<RESULT>" + ret + "</RESULT>";
+	}
+
+	private String insertNewItem(Document doc, String pMode) throws Exception{
+		BoardListVO boardListVO = new BoardListVO();
+
+		boolean saveMHTResult = false;
+		
+		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+//		pUploadFilePath = xmldom.SelectSingleNode("NODES/NODE/FILEPATH").InnerText;
+//		pItemID = xmldom.SelectSingleNode("NODES/NODE/ITEMID").InnerText;
+//		pBoardID = xmldom.SelectSingleNode("NODES/NODE/BOARDID").InnerText;
+//		pWriterID = xmldom.SelectSingleNode("NODES/NODE/WRITERID").InnerText;
+//        pTopWriteID = xmldom.SelectSingleNode("NODES/NODE/TOPWRITERID").InnerText;
+//		pWriterName = xmldom.SelectSingleNode("NODES/NODE/WRITERNAME").InnerText;
+//        pWriterName2 = xmldom.SelectSingleNode("NODES/NODE/WRITERNAME2").InnerText;
+//		pWriterDeptID = xmldom.SelectSingleNode("NODES/NODE/DEPTID").InnerText;
+//		pWriterDeptName = xmldom.SelectSingleNode("NODES/NODE/DEPTNAME").InnerText;
+//        pWriterDeptName2 = xmldom.SelectSingleNode("NODES/NODE/DEPTNAME2").InnerText;
+//		pWriterCompanyID = xmldom.SelectSingleNode("NODES/NODE/COMPANYID").InnerText;
+//		pWriterCompanyName = xmldom.SelectSingleNode("NODES/NODE/COMPANYNAME").InnerText;
+//        pWriterCompanyName2 = xmldom.SelectSingleNode("NODES/NODE/COMPANYNAME2").InnerText;
+//		pWriteDate = MakeDateFormatNow();
+//		pImportance = xmldom.SelectSingleNode("NODES/NODE/IMPORTANCE").InnerText;
+//		pTitle = xmldom.SelectSingleNode("NODES/NODE/TITLE").InnerText;
+//		if (pMode == "copy")
+//			pContentLocation = xmldom.SelectSingleNode("NODES/NODE/CONTENTLOCATION").InnerText;
+//		else
+//			pContentLocation = "/Upload_BoardSTD/" + pBoardID + "/doc/" + pItemID + ".mht";
+//	
+//		pStartDate = xmldom.SelectSingleNode("NODES/NODE/STARTDATE").InnerText;
+//
+//		if (pStartDate == "")
+//			pStartDate = pWriteDate;
+//	
+//		pEndDate = xmldom.SelectSingleNode("NODES/NODE/ENDDATE").InnerText;
+//		pAbstract = xmldom.SelectSingleNode("NODES/NODE/ABSTRACT").InnerText;
+//		pAttachments = xmldom.SelectSingleNode("NODES/NODE/ATTACHMENTS").InnerText;
+//		pUpperItemIDTree = xmldom.SelectSingleNode("NODES/NODE/UPPERITEMIDTREE").InnerText;
+//	
+//		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
+//		if (pMode == "reply")
+//			pUpperItemIDTree = pUpperItemIDTree + GetReverseDateNow() + pItemID;
+//    
+//		pItemLevel = xmldom.SelectSingleNode("NODES/NODE/ITEMLEVEL").InnerText;
+//		if (pMode != "copy")
+//		{
+//			pContent = xmldom.SelectSingleNode("NODES/NODE/CONTENT").InnerText;
+//			pParentWriteDate = xmldom.SelectSingleNode("NODES/NODE/PARENTWRITEDATE").InnerText;
+//		}
+//		else
+//		{
+//			pParentWriteDate = pWriteDate;
+//		}
+//
+//		if (pParentWriteDate == "")
+//			pParentWriteDate = pStartDate;
+//	
+//		//확장 필드, Ext1, Ext2는 integer 값을 가짐
+//		if (xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE1").InnerText.Trim() == "")
+//			pExtensionAttribute1 = 0;
+//		else
+//			pExtensionAttribute1 = Convert.ToInt32(xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE1").InnerText);
+//
+//		if (xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE2").InnerText.Trim() == "")
+//			pExtensionAttribute2 = 0;
+//		else
+//			pExtensionAttribute2 = Convert.ToInt32(xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE2").InnerText.Trim());
+//
+//		pExtensionAttribute3 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE3").InnerText;
+//        pExtensionAttribute32 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE32").InnerText;
+//		pExtensionAttribute4 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE4").InnerText;
+//		pExtensionAttribute5 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE5").InnerText;
+//    
+//		pDocPassWord = xmldom.SelectSingleNode("NODES/NODE/DOCPASSWORD").InnerText;
+//        pReadCountFlag = xmldom.SelectSingleNode("NODES/NODE/READCOUNTFLAG").InnerText;
+//
+//        //추가항목
+//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE6").Count > 0)
+//            pExtensionAttribute6 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE6").InnerText;
+//
+//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE7").Count > 0)
+//            pExtensionAttribute7 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE7").InnerText;
+//
+//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE8").Count > 0)
+//            pExtensionAttribute8 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE8").InnerText;
+//
+//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE9").Count > 0)
+//            pExtensionAttribute9 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE9").InnerText;
+//
+//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE10").Count > 0)
+//            pExtensionAttribute10 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE10").InnerText;
+//
+//		if (pMode != "copy")
+//		{
+//			SaveMHTResult = SaveMHT(pContent, pItemID, pBoardID, pUploadFilePath, "BOARD");
+//			if (SaveMHTResult == false)
+//			{
+//				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+//			}
+//		}
+//    
+//		if (pAttachments.Length > 0)
+//			pHasAttach = "1";
+//		else
+//			pHasAttach = "0";
+//
+//        if (pMode == "modify")
+//            cmd = new OracleCommand("ezSp_BrdUpdateItem", conn);
+//        else if (pMode == "temp")
+//            cmd = new OracleCommand("ezSp_BrdNewItem_temp", conn);
+//        else
+//            cmd = new OracleCommand("ezSp_BrdNewItem", conn);
+//
+//        cmd.CommandType = CommandType.StoredProcedure;
+//
+//        OracleParameter param1 = cmd.Parameters.Add("v_pItemID", OracleType.NChar, 38); param1.Value = pItemID;
+//        OracleParameter param2 = cmd.Parameters.Add("v_pBoardID", OracleType.NChar, 38); param2.Value = pBoardID;
+//        OracleParameter param3 = cmd.Parameters.Add("v_pWriterID", OracleType.NVarChar, 20); param3.Value = pWriterID;
+//        OracleParameter param4 = cmd.Parameters.Add("v_pWriterName", OracleType.NVarChar, 20); param4.Value = pWriterName;
+//        OracleParameter param5 = cmd.Parameters.Add("v_pWriterDeptID", OracleType.NVarChar, 20); param5.Value = pWriterDeptID;
+//        OracleParameter param6 = cmd.Parameters.Add("v_pWriterDeptName", OracleType.NVarChar, 50); param6.Value = pWriterDeptName;
+//        OracleParameter param7 = cmd.Parameters.Add("v_pWriterCompanyID", OracleType.NVarChar, 20); param7.Value = pWriterCompanyID;
+//        OracleParameter param8 = cmd.Parameters.Add("v_pWriterCompanyName", OracleType.NVarChar, 50); param8.Value = pWriterCompanyName;
+//        OracleParameter param9 = cmd.Parameters.Add("v_pWriteDate", OracleType.NVarChar, 20); param9.Value = pWriteDate;
+//        OracleParameter param10 = cmd.Parameters.Add("v_pParentWriteDate", OracleType.NVarChar, 20); param10.Value = pParentWriteDate;
+//        OracleParameter param11 = cmd.Parameters.Add("v_pImportance", OracleType.Number, 4); param11.Value = Convert.ToInt32(pImportance);
+//        OracleParameter param12 = cmd.Parameters.Add("v_pTitle", OracleType.NVarChar, 200); param12.Value = pTitle;
+//        OracleParameter param13 = cmd.Parameters.Add("v_pContentLocation", OracleType.NVarChar, 200); param13.Value = pContentLocation;
+//        OracleParameter param14 = cmd.Parameters.Add("v_pStartDate", OracleType.NVarChar, 20); param14.Value = pStartDate;
+//        OracleParameter param15 = cmd.Parameters.Add("v_pEndDate", OracleType.NVarChar, 20); param15.Value = pEndDate;
+//        OracleParameter param16 = cmd.Parameters.Add("v_pAbstract", OracleType.NVarChar, 400); param16.Value = pAbstract;
+//        OracleParameter param17 = cmd.Parameters.Add("v_pAttachments", OracleType.NChar, 1); param17.Value = pHasAttach;
+//        OracleParameter param18 = cmd.Parameters.Add("v_pUpperItemIDTree", OracleType.NVarChar, 3800); param18.Value = pUpperItemIDTree;
+//        if (pItemLevel == "" || pItemLevel == null)
+//            pItemLevel = "0";
+//
+//        OracleParameter param19 = cmd.Parameters.Add("v_pItemLevel", OracleType.Number, 4); param19.Value = Int32.Parse(pItemLevel);
+//        OracleParameter param20 = cmd.Parameters.Add("v_pExtensionAttribute1", OracleType.Number, 4); param20.Value = Convert.ToInt32(pExtensionAttribute1);
+//        OracleParameter param21 = cmd.Parameters.Add("v_pExtensionAttribute2", OracleType.Number, 4); param21.Value = Convert.ToInt32(pExtensionAttribute2);
+//        OracleParameter param22 = cmd.Parameters.Add("v_pExtensionAttribute3", OracleType.NVarChar, 50); param22.Value = pExtensionAttribute3;
+//        OracleParameter param23 = cmd.Parameters.Add("v_pExtensionAttribute4", OracleType.NVarChar, 50); param23.Value = pExtensionAttribute4;
+//        OracleParameter param24 = cmd.Parameters.Add("v_pExtensionAttribute5", OracleType.NVarChar, 200); param24.Value = pExtensionAttribute5;
+//        OracleParameter param25 = cmd.Parameters.Add("v_pDocPassWord", OracleType.Char, 684); param25.Value = pDocPassWord;
+//        OracleParameter param26 = cmd.Parameters.Add("v_pWriterName2", OracleType.NVarChar, 20); param26.Value = pWriterName2;
+//        OracleParameter param27 = cmd.Parameters.Add("v_pWriterDeptName2", OracleType.NVarChar, 50); param27.Value = pWriterDeptName2;
+//        OracleParameter param28 = cmd.Parameters.Add("v_pWriterCompanyName2", OracleType.NVarChar, 50); param28.Value = pWriterCompanyName2;
+//        OracleParameter param29 = cmd.Parameters.Add("v_pExtensionAttribute32", OracleType.NVarChar, 50); param29.Value = pExtensionAttribute32;
+//        if (pTopWriteID != "" || pTopWriteID != null)
+//        {
+//            OracleParameter param31 = cmd.Parameters.Add("v_pTopWriteID", OracleType.NVarChar, 20); param31.Value = pTopWriteID;
+//        }
+//
+//        if (pMode == "modify")
+//        {
+//            OracleParameter param30 = cmd.Parameters.Add("v_pReadCountFlag", OracleType.NChar, 1); param30.Value = pReadCountFlag;
+//        }
+//
+//        OracleParameter param32 = cmd.Parameters.Add("v_pExtensionAttribute6", OracleType.NVarChar, 100); param32.Value = pExtensionAttribute6;
+//        OracleParameter param33 = cmd.Parameters.Add("v_pExtensionAttribute7", OracleType.NVarChar, 100); param33.Value = pExtensionAttribute7;
+//        OracleParameter param34 = cmd.Parameters.Add("v_pExtensionAttribute8", OracleType.NVarChar, 100); param34.Value = pExtensionAttribute8;
+//        OracleParameter param35 = cmd.Parameters.Add("v_pExtensionAttribute9", OracleType.NVarChar, 100); param35.Value = pExtensionAttribute9;
+//        OracleParameter param36 = cmd.Parameters.Add("v_pExtensionAttribute10", OracleType.NVarChar, 100); param36.Value = pExtensionAttribute10;
+//
+//        cmd.ExecuteNonQuery();
+//        cmd.Dispose();
+//
+//        cmd1 = new OracleCommand("EZSP_NEWITEM",conn);
+//        cmd1.CommandType = CommandType.StoredProcedure;
+//        cmd1.Parameters.Add("v_PITEMID", OracleType.NChar, 38).Value = pItemID;
+//
+//        cmd1.ExecuteNonQuery();
+//
+//		if (pAttachments.Length > 0)
+//		{
+//			if (SaveAttachmentsInfo(pAttachments, pItemID, pBoardID, pUploadFilePath, "BOARD") == false)
+//			{
+//				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
+//			}
+//			pHasAttach = "1";
+//		}
+//		else
+//		{
+//			pHasAttach = "0";
+//		}
+
+		//통계 남기는 부분
+		return "OK";
 	}
 	
 }
