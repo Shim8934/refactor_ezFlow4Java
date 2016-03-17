@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -272,6 +273,34 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception {
 		return ezBoardAdminDAO.getBoardAttribute(boardID);
 	}
+	
+	@Override
+	public void deleteAttribute(String boardID) throws Exception {
+		ezBoardAdminDAO.deleteAttribute(boardID);
+	}
+	
+	@Override
+	public void saveAttribute(BoardAttributeVO boardAttributeVO) throws Exception {		
+		ezBoardAdminDAO.saveAttribute(boardAttributeVO);
+	}
+	
+	@Override
+	public void updateAttribute(BoardAttributeVO boardAttributeVO) throws Exception {		
+		ezBoardAdminDAO.updateAttribute(boardAttributeVO);
+	}
+
+	@Override
+	public void deleteHeader(String boardID) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.deleteHeader(boardID);
+	}
+
+	@Override
+	public void saveHeader(BoardListHeaderVO boardListHeaderVO)	throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.saveHeader(boardListHeaderVO);
+	}
+	
 	
 	
 }

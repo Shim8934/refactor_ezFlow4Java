@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezBoard.vo;
 
 public class BoardListHeaderVO {
+	/** 게시판 ID */
+	private String boardID;
 	/** header 이름*/
 	private String name;
 	/** header 이름(다국어)*/
@@ -15,6 +17,8 @@ public class BoardListHeaderVO {
 	private String width;
 	/** Header Soring Column 명*/
 	private String colName;
+	/** SN */
+	private String sn;
 
 	public String getName() {
 		return name;
@@ -57,6 +61,18 @@ public class BoardListHeaderVO {
 	}
 	public void setColName(String colName) {
 		this.colName = colName;
+	}
+	public String getBoardID() {
+		return boardID;
+	}
+	public void setBoardID(String boardID) {
+		this.boardID = boardID;
+	}
+	public String getSn() {
+		return sn;
+	}
+	public void setSn(String sn) {
+		this.sn = sn;
 	}
 
 	

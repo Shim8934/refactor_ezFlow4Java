@@ -679,8 +679,8 @@
 		            xmlhttp.send(xmlpara);
 
 		            if (xmlhttp.responseText == "OK") {
-		            }
-		            else {
+		            	
+		            } else {
 		                alert("Error : " + xmlhttp.responseText);
 		                return;
 		            }
@@ -689,8 +689,8 @@
 		        if (pGubun == "0" || pGubun == "1" || pGubun == "2" || pGubun == "5") {
 		            if (ChangedHeader) {
 		                if (SaveHeader() == "OK") {
-		                }
-		                else {
+alert("good");		                	
+		                } else {
 		                    alert("Error : " + xmlhttp.responseText);
 		                    return;
 		                }
@@ -733,7 +733,7 @@
 		            createNodeAndInsertText(xmlpara, objRoot, "COLNAME", tr[i].getAttribute("DATA1"));
 		        }
 
-		        xmlhttp.open("Post", "interAsp/SaveHeader.aspx", false);
+		        xmlhttp.open("POST", "/admin/ezBoard/saveHeader.do", false);
 		        xmlhttp.send(xmlpara);
 
 		        return xmlhttp.responseText;

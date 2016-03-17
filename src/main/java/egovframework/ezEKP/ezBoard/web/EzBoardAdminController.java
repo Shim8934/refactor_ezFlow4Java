@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Properties;
@@ -16,16 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import org.w3c.dom.Document;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -494,8 +496,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		return "admin/ezBoard/boardExtensionAttribute";
 	}
 	
-	@RequestMapping(value="/admin/ezBoard/getAttribute.do")
-	public void getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{	
+	@RequestMapping(value="/admin/ezBoard/getAttribute.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{	
 		List<BoardAttributeVO> list = ezBoardAdminService.getBoardAttribute(boardAttributeVO.getBoardID());
 		
 		StringBuilder sb = new StringBuilder();	
@@ -515,10 +518,11 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		}
 		sb.append("</ROWS>");
 
-		response.setCharacterEncoding("UTF-8");
+		return sb.toString();
+		/*response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
 		response.setHeader("Cache-Control", "no-cache");
-		response.getWriter().write(sb.toString());
+		response.getWriter().write(sb.toString());*/
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do")
@@ -546,11 +550,66 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		response.getWriter().write(sb.toString());
 	}
 	
-	@RequestMapping(value="/admin/ezBoard/saveAttribute.do")
-	public void saveAttribute(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		Document doc = commonUtil.convertRequestToDocument(request); 		
-		String folderName = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-System.out.println(folderName);		
+	@RequestMapping(value="/admin/ezBoard/saveAttribute.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveAttribute(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{		
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+		ezBoardAdminService.deleteAttribute(boardID);
+		
+		int colSize = doc.getElementsByTagName("COLNAME1").getLength();
+		String attributeYN = "N";
+		boardAttributeVO.setBoardID(boardID);
+		
+		for (int i = 0; i < colSize; i++){			
+			boardAttributeVO.setTableCol(doc.getElementsByTagName("TABLECOL").item(i).getTextContent());
+			boardAttributeVO.setSn(i+"");
+			boardAttributeVO.setColName1(doc.getElementsByTagName("COLNAME1").item(i).getTextContent());
+			boardAttributeVO.setColName2(doc.getElementsByTagName("COLNAME2").item(i).getTextContent());
+			boardAttributeVO.setValue(doc.getElementsByTagName("VALUE").item(i).getTextContent());
+			boardAttributeVO.setColType(doc.getElementsByTagName("COLTYPE").item(i).getTextContent());
+			boardAttributeVO.setMust(doc.getElementsByTagName("MUST").item(i).getTextContent());
+			
+			ezBoardAdminService.saveAttribute(boardAttributeVO);
+		}		
+		
+        if (colSize > 0){
+        	attributeYN = "Y";
+        }
+        
+        boardAttributeVO.setValue(attributeYN);
+        
+        ezBoardAdminService.updateAttribute(boardAttributeVO);
+        
+        return "OK";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/saveHeader.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveHeader(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, BoardListHeaderVO boardListHeaderVO) throws Exception{		
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+		ezBoardAdminService.deleteHeader(boardID);
+		
+		int colSize = doc.getElementsByTagName("NAME1").getLength();		
+		boardListHeaderVO.setBoardID(boardID);
+		
+		for (int i = 0; i < colSize; i++){			
+			boardListHeaderVO.setSn(i+"");
+			boardListHeaderVO.setName1(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+			boardListHeaderVO.setName2(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+			boardListHeaderVO.setName3(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+			boardListHeaderVO.setName4(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+			boardListHeaderVO.setColName(doc.getElementsByTagName("COLNAME").item(i).getTextContent());
+			boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
+			boardListHeaderVO.setName("Y");
+			
+			ezBoardAdminService.saveHeader(boardListHeaderVO);
+		}	
+		
+		return "OK";
 	}
 	
 }
