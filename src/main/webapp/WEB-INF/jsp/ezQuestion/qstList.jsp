@@ -47,7 +47,7 @@
 			function Check_UserPollStatus(pItemNo, pflag){
 				try{
 			    	var xmlHttp = createXMLHttpRequest();
-				    var szUrl = "Call_UsersPollStatus.aspx?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
+				    var szUrl = "/ezQuestion/qstCallUsersPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
 				    xmlHttp.open("POST", szUrl, false);
 				    xmlHttp.send();
 				    if(getXmlString(xmlHttp.responseXML) != ""){
@@ -237,19 +237,11 @@
 	            }
 		    }
 		    
-		    function menu_Response(){
-		        <%-- if(menu_Checking()){
-		            if(Check_UserPollStatus(szSelectedItemNo, "Response") == false)
-		            	return;
-		            var szUrl = "/ezQuestion/qstResponse.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
-		            window.location.href = szUrl;
-		        } --%>
-		    }
 		    function menu_Result(){
 		        <%-- if(menu_Checking()){
 		            if(Check_UserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qResult.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstResult.do?" + receve + "&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
@@ -257,7 +249,7 @@
 		        <%-- if(menu_Checking()){
 		            if(Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstChangePermission.do?<%=Receve_str2%>&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
