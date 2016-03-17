@@ -109,4 +109,28 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+	
+	public int getResponseDateCnt(Map<String,Object> map){
+		return (int) select("EzQuestionDAO.getResponseDateCnt", map);
+	}
+	
+	public int resCount(Map<String, Object> map) {
+		return (int) select("EzQuestionDAO.resCount", map);
+	}
+
+	public void updateReadCnt(Map<String, Object> map) {
+		update("EzQuestionDAO.updateReadCnt", map);
+	}
+
+	public int getReadDateItem(Map<String, Object> map) {
+		return (int) select("EzQuestionDAO.getReadDateItem", map);
+	}
+
+	public void updateReadDate(Map<String, Object> map) {
+		update("EzQuestionDAO.updateReadDate", map);
+	}
+
+	public void insertItemRead(Map<String, Object> map) {
+		insert("EzQuestionDAO.insertItemRead", map);
+	}
 }

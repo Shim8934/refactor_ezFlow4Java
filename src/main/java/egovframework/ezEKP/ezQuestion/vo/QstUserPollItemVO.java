@@ -19,7 +19,7 @@ public class QstUserPollItemVO {
 	String userDeptNm;
 	/** 제목*/
 	String title;
-	/** 내용*/
+	/** 목적*/
 	String content;
 	/** 작성일*/
 	String postDate;

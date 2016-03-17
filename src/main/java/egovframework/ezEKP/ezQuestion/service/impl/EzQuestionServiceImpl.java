@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezQuestion.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,10 @@ import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
-import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
@@ -262,33 +264,65 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO,String userId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", userPermissionVO.getBrdId());
+		map.put("v_pItemNo", userPermissionVO.getItemNo());
+		map.put("v_pUserID", userId);
+		return ezQuestionDAO.getResponseDateCnt(map);
 	}
 
 	@Override
-	public int resCount(String brdId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int resCount(String brdId, String itemNo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		return ezQuestionDAO.resCount(map);
 	}
 
 	@Override
-	public void updateReadCnt(QstUserPollItemVO userPollItemVO) {
-		// TODO Auto-generated method stub
-		
+	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pReadCnt", qstUserPollItemVO.getReadCnt());
+		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdId());
+		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		ezQuestionDAO.updateReadCnt(map);
 	}
 
 	@Override
-	public int getReadDateItem() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdId());
+		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		map.put("v_pUserID", userId);
+		return ezQuestionDAO.getReadDateItem(map);
 	}
 	
 	@Override
-	public void updateReadDate(QstUserPollItemVO userPollItemVO) {
-		// TODO Auto-generated method stub
-		
+	public void updateReadDate(QstUserPollItemVO qstUserPollItemVO, String readDate,String userId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdId());
+		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		map.put("v_pUserID", userId);
+		map.put("v_pReadDate", readDate);
+		ezQuestionDAO.updateReadDate(map);
+	}
+
+	@Override
+	public void insertItemRead(LoginVO loginVO, QstUserPollItemVO qstUserPollItemVO, String readDate) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdId());
+		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		map.put("v_pUserID", loginVO.getId());
+		map.put("v_pReadDate", readDate);
+		map.put("v_pUserNM", loginVO.getDisplayName1());
+		map.put("v_pUserNM2", loginVO.getDisplayName2());
+		map.put("v_pUserDeptID", loginVO.getDeptID());
+		map.put("v_pUserDeptNM", loginVO.getDeptName1());
+		map.put("v_pUserDeptNM2", loginVO.getDeptName2());
+		map.put("v_pUserPosNM", loginVO.getTitle1());
+		map.put("v_pUserPosNM2", loginVO.getTitle2());
+		ezQuestionDAO.insertItemRead(map);
 	}
 
 	@Override
@@ -297,5 +331,4 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

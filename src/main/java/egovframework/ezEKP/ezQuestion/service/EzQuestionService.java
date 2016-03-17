@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezQuestion.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 	 
 public interface EzQuestionService {
@@ -56,17 +58,17 @@ public interface EzQuestionService {
 	
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
-	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO);
+	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO, String userId);
 
-	public int resCount(String brdId);
+	public int resCount(String brdId,String itemNo);
 
 	public void updateReadCnt(QstUserPollItemVO userPollItemVO);
 
-	public int getReadDateItem();
+	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId);
 	
-	public void updateReadDate(QstUserPollItemVO userPollItemVO);
+	public void updateReadDate(QstUserPollItemVO userPollItemVO, String readDate, String userId);
 
 	public List<QstVO> getQuestionForResponse(QstVO questionVO);
 
-
+	public void insertItemRead(LoginVO loginVO, QstUserPollItemVO qstUserPollItemVO, String readDate);
 }
