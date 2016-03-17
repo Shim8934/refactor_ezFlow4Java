@@ -14,18 +14,6 @@
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-			var pBrdID = "<c:out value='${ezQuestionVO.brdId}'/>";
-			var pBrdSubject = "<c:out value='${ezQuestionVO.txtSubject}'/>";
-			var pBrdContent = "<c:out value='${ezQuestionVO.txtContent}'/>";
-			var pHideStartDate = "<c:out value='${ezQuestionVO.hidStartDate}'/>";
-			var pHideEndDate = "<c:out value='${ezQuestionVO.hidEndDate}'/>";
-			var pExpireDate = "<c:out value='${ezQuestionVO.txtExpiredate}'/>";
-			var anonymity = "<c:out value='${ezQuestionVO.setAnonymity}'/>";
-			var openResult = "<c:out value='${ezQuestionVO.setOpenResult}'/>";
-			var multiResponse = "<c:out value='${ezQuestionVO.setMultiResponse}'/>";
-			var importance = "<c:out value='${ezQuestionVO.importance}'/>";
-			var target = "<c:out value='${ezQuestionVO.setTarget}'/>";
-			
 			var index = -1;
 			var flgClose= true;
 			var surveyState = "";
@@ -109,7 +97,7 @@
             		frmCreate.selQues.options[0] = TmpOption;
         		}
     		}
-    		function fun_OK(txtQuestion, multi, v_viewtype, sviewNo, eviewNo) {
+    		function fun_OK() {
 
         		var Qlen = frmCreate.selQues.length;
         		if( Qlen == 0 ) {
@@ -139,91 +127,26 @@
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
-
-//alert("selQuesvalue"+i+":"+document.frmCreate.selQues[i].value);
-                		//var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		//QuestionNode.appendChild(importedNode);
-                /* 		var row = {
-                				"content" : <c:out value='${questionAddVO.txtQuestion}'/>,
-                				"answerType" : <c:out value='${questionAddVO.answerType}'/>,
-                				"multiselect" : 0,
-                				"selviewstart" : <c:out value='${questionAddVO.selViewStart}'/>,
-                				"selviewend" : <c:out value='${questionAddVO.selViewEnd}'/>,
-                				"answer": [
-        				                    {
-        				                        "title": "보기1"
-        				                    },
-        				                    {
-        				                        "title": "보기2"
-        				                    }
-        				                ] 
-                		}
-                		var question = {
-                				"row" : row
-                		} */
-                 		   
-                 		   
+                		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
+                		QuestionNode.appendChild(importedNode);
             		}
         		}
-        		/* xmlDoc.documentElement.appendChild(QuestionNode);
+        		xmlDoc.documentElement.appendChild(QuestionNode);
         		xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
-        		xmlHttp.send(xmlDoc); */
-        	/* 	if(getXmlString(xmlHttp.responseXML) == "")
+        		xmlHttp.send(xmlDoc); 
+        	 	if(getXmlString(xmlHttp.responseXML) == "")
             		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
         		else {
             		var resultXML = xmlHttp.responseXML;
             		State = SelectSingleNodeValue(resultXML, "DATA");
-            		if (State !="OK")
+            		/* if (State !="OK")
                 		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
-            		else {
+            		else { */
                 		menuQst_List();
-            		}		
+            		//}		
         		}	
-        		surveyState = "OK"; */
+        		surveyState = "OK"; 
         			
-	       				var row =   {  "content": txtQuestion,
-			                "answertype": v_viewtype,
-				                "multiselect": multi,
-				                "selviewstart": sviewNo,
-				                "selviewend": eviewNo,
-				                "answer": [
-				                    {
-				                        "title": "보기1"
-				                    },
-				                    {
-				                        "title": "보기2"
-				                    }
-				                ] }
-  
-        		 $.ajax({
-     				url : '/ezQuestion/qstComplete.do',
-     				method : 'POST',
-     				dataType : 'json',
-     				data : {
-     					"parameter": {
-     				        "subject" : pBrdSubject,
-     				        "content": pBrdContent,
-     				        "startdate": pHideStartDate,
-     				        "enddate": pHideEndDate,
-     				        "expiredate": pExpireDate,
-     				        "anonymity": anonymity,
-     				        "openresult": openResult,
-     				        "multiresponse": multiResponse,
-     				        "importance": importance,
-     				        "target": target,
-     				        "question": { 
-     				             "row": 
-     				            	row
-     				        }
-     				    }
-     				} ,
-	     			success : function(data, textStatus, jqXHR) {
-	     				menuQst_List();
-     				},
-     				error : function(jqXHR, textStatus, errorThrown) {
-                	    alert('Error : ' + jqXHR.status + ", " + textStatus);
-     				}
-     			});         
     		}
     		function fun_Ques_UP() {
         		if (index > 0) {
