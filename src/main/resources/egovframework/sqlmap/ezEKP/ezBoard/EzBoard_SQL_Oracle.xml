@@ -119,6 +119,7 @@
 				boardid = #pBoardID#
 		]]>		
 	</select>
+	
 	<select id="EzBoardDAO.getBoardList_Config"  resultClass="BoardConfigVO">
 		<![CDATA[
 			SELECT 
@@ -134,6 +135,7 @@
        		    userid = #userID#
 		]]>		
 	</select>
+	
 	<select id="EzBoardDAO.getNoticePostItemCount" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -152,6 +154,7 @@
 	        	extensionattribute2 = '1'
         ]]>
 	</select>
+	
 	<select id="EzBoardDAO.getCheckApprUserList" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -168,6 +171,7 @@
 	        	B.appruserid = #v_PUSERID#
         ]]>	
 	</select>
+	
 	<select id="EzBoardDAO.checkBackGroundImage" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -180,4 +184,5 @@
 				background = 'Y'
 		]]>                
 	</select>
+	
 </sqlMap>
