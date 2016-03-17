@@ -33,7 +33,9 @@
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
-		
+			var brdId = "${qstUserPermissionVO.brdId}";
+			var itemNo = "${qstUserPermissionVO.itemNo}";
+			
 			var btnSaveChk = false;
 		    function fun_Save(){
 		        if(form_check() == false)
@@ -75,13 +77,14 @@
 		        }
 		        return str_temp;
 		    }
-		    <%-- function view_Result(){
-		        window.location.href = "/ezQuestion/result.do?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>';
-			} --%>
+		    /* 안쓰는거 같음 나중에 지워야함
+		    function view_Result(){
+		        window.location.href = "/ezQuestion/result.do?brdId=" + brdId + "&itemNo=" + itemNo;
+			} */
 	
 			function form_check(){
-<%-- 		        var cur_date = '<%=cur_date%>' --%>
-<%-- 	            var start_date = '<%=poll_startdate%>' --%>
+		        var cur_date = new Date();
+	            var start_date = '${qstUserPollItemVO.pollStartDate}';
 
 	            if(start_date > cur_date){
 	                alert("<spring:message code='ezQuestion.t316' />" + start_date + "<spring:message code='ezQuestion.t317' />");
@@ -176,19 +179,19 @@
                 document.frmResponse.tableAnswer.value = result;
             }
 		
-			<%-- function fun_Delete(){
+			function fun_Delete(){
 		    	var result;
 				result = confirm("<spring:message code='ezQuestion.t321' />");
 	
 				if(result){
-				    document.location.href = "/ezQuestion/qstDeleteItem.do?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>';
+				    document.location.href = "/ezQuestion/qstDeleteItem.do?brdId=" + brdId + "&itemNo=" + itemNo;
 				}
-		    } --%>
+		    }
 			
-		    <%-- function Setting_Change(vdata){
+		    function Setting_Change(vdata){
 		        var feature = GetOpenPosition(380, 340);
-		        window.open("change_setting.aspx?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>', "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
-			} --%>
+		        window.open("changeSetting.do?brdId=" + brdId + "&itemNo=" + itemNo, "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
+			}
 			
 			function menuQst_List(){
 			    var szUrl = "/ezQuestion/qstList.do?"+receve+"&brd_postterm='' ";
@@ -216,7 +219,7 @@
 			}
 			
 			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
-			    var pUrl = "Qst_Attach_View.aspx?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
+			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
 	
 			    if(pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
@@ -300,7 +303,7 @@
 		  </tr>
 		</table>
 		<%-- <form name="frmResponse" method="post" onSubmit="fun_Save()">
-		  <input type=hidden value="${receve}" name="Receve_str">
+		  <input type=hidden value="${receve}" name="receve">
 		  <table class="poll" style="margin-top:10px" >
 		    <% 
 			XmlNodeList nodeList = xmlMainDom.DocumentElement.SelectNodes("//ROW");

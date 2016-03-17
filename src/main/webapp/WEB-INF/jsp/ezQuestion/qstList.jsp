@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
+		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<style>
 			.pagetd{padding-top:6px; }
 			.pcol{padding-top:6px; }
@@ -23,15 +24,15 @@
 		<script language="JavaScript" type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "${qstListVO.brdId}";
-		    var CurPage = "${qstListVO.currPage}";
-		    var totalPage = "${qstListVO.totalPage}";
-		    var totalCount = "${qstListVO.totalCnt}";
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
-			var EndPollYN, ResponseYN, ResultOpenYN;
-			var MultiResYN, WriteYN, AdminYN;
+		    var endPollYN, responseYN, resultOpenYN;
+			var multiResYN, writeYN, adminYN;
 			var TR_Contents_Start = 1;
-			var pNoneActiveX = "${pNoneActiveX}";
+			var CurPage = "${qstListVO.currPage}";
+			var totalPage = "${qstListVO.totalPage}";
+		    var totalCount = "${qstListVO.totalCnt}";
+		    
 			document.onselectstart = function(){ return false; };
 			window.onload = function(){
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -43,61 +44,59 @@
 			    }
 				makePageSelPage();
 			}
-		
-			function Check_UserPollStatus(pItemNo, pflag){
-				try{
-			    	var xmlHttp = createXMLHttpRequest();
-				    var szUrl = "/ezQuestion/qstCallUsersPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
-				    xmlHttp.open("POST", szUrl, false);
-				    xmlHttp.send();
-				    if(getXmlString(xmlHttp.responseXML) != ""){
-				        var resultXML = createXmlDom();
-				        resultXML = xmlHttp.responseXML;
-				        var xmldomNode = SelectNodes(resultXML, "RESULT");
-				        EndPollYN = SelectSingleNodeValue(xmldomNode[0], "EndPollYN");
-				        ResponseYN = SelectSingleNodeValue(xmldomNode[0], "ResponseYN");
-				        ResultOpenYN = SelectSingleNodeValue(xmldomNode[0], "ResultOpenYN");
-				        MultiResYN = SelectSingleNodeValue(xmldomNode[0], "MultiResYN");
-				        WriteYN = SelectSingleNodeValue(xmldomNode[0], "WriteYN");
-				        AdminYN = SelectSingleNodeValue(xmldomNode[0], "AdminYN");
-				        var rv;
-				        switch(pflag){
-				            case "Response":
-				                rv = Chk_Response();
-				                break;
-				            case "Result":
-				                rv = Chk_Result();
-				                break;
-				            case "InfoModify":
-				                rv = Chk_InfoModify();
-				                break;
-				            case "Delete":
-				                rv = Chk_Delete();
-				                break;
-				            case "Analysis":
-				                rv = Chk_Analysis();
-				                break;
-				            case "Save":
-				                rv = Chk_Save();
-				                break;
-				            case "Reuse":
-				                rv = Chk_Reuse();
-				                break;
-				        }
-				        return rv;
-				    }else{
-				        EndPollYN = "";
-				        ResponseYN = "";
-				        ResultOpenYN = "";
-				        MultiResYN = "";
-				        WriteYN = "N";
-				        AdminYN = "N";
-				        return false;
-				    }
-				}catch (e){
-				    alert(e.message);
-				    return false;
-				}
+			
+			function checkUserPollStatus(pItemNo, pflag){
+				$.ajax({
+					  type: "POST",
+					  url: "/ezQuestion/qstCallUsersPollStatus.do",
+					  data: "brd_id=" + g_BrdID + "&item_no=" + pItemNo,
+					  dataType: "JSON",
+					  success: function(map){
+						  endPollYN = map.endPollYN;
+						  responseYN = map.responseYN;
+						  resultOpenYN = map.resultOpenYN;
+						  multiResYN = map.multiResYN;
+						  writeYN = map.writeYN;
+						  adminYN = map.adminYN;
+						  var rv;
+					        switch (pflag) {
+					            case "Response":
+					                rv = Chk_Response();
+					                break;
+					            case "Result":
+					                rv = Chk_Result();
+					                break;
+					            case "InfoModify":
+					                rv = Chk_InfoModify();
+					                break;
+					            case "Delete":
+					                rv = Chk_Delete();
+					                break;
+					            case "Analysis":
+					                rv = Chk_Analysis();
+					                break;
+					            case "Save":
+					                rv = Chk_Save();
+					                break;
+					            case "Reuse":
+					                rv = Chk_Reuse();
+					                break;
+					        }
+					        return rv;
+					  },
+					  error: function(xhr, status, e){
+						 	alert(e.message);
+						 	
+						 	EndPollYN = "";
+					        ResponseYN = "";
+					        ResultOpenYN = "";
+					        MultiResYN = "";
+					        WriteYN = "N";
+					        AdminYN = "N";
+					        
+						    return false;
+					  }
+				});
 			}
 			
 			function Chk_Reuse(){
@@ -108,6 +107,7 @@
 				return false;
 				}
 			}
+			
 			function Chk_Save(){
 			    if(WriteYN == "Y" || AdminYN == "Y")
 			        return true;
@@ -116,6 +116,7 @@
 			        return false;
 			    }
 			}
+			
 		    function Chk_Analysis(){
 		        if(WriteYN == "Y" || AdminYN == "Y")
 		            return true;
@@ -124,6 +125,7 @@
 		            return false;
 		        }
 		    }
+		    
 		    function Chk_Delete(){
 		        if(WriteYN == "Y" || AdminYN == "Y")
 		            return true;
@@ -132,6 +134,7 @@
 		            return false;
 		        }
 		    }
+		    
 		    function Chk_Response(){
 		        if(EndPollYN == "N"){
 	            	if(ResponseYN == "Y"){
@@ -185,6 +188,7 @@
 		            return false;
 		        }
 		    }
+		    
 		    function menu_NewQuestion(){
 		        var szUrl = g_ezBoard + "/ezQuestion/qstStep1.do?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
 		        window.location.href = szUrl;
@@ -238,22 +242,22 @@
 		    }
 		    
 		    function menu_Result(){
-		        <%-- if(menu_Checking()){
-		            if(Check_UserPollStatus(szSelectedItemNo, "Result") == false)
+		        if(menu_Checking()){
+		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qstResult.do?" + receve + "&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
-		        } --%>
+		        }
 		    }
+		    
 		    function menu_InfoModify(){
 		        <%-- if(menu_Checking()){
-		            if(Check_UserPollStatus(szSelectedItemNo, "InfoModify") == false)
+		            if(checkUserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }
-		    
 		    
 		    function menu_Delete(){
 		    	var qst_delete_itemmsg_dialogArguments = new Array();
@@ -299,7 +303,7 @@
 		            return;
 		        }
 		        if(szCheckCnt == 1){
-		            if(Check_UserPollStatus(p_SelectedItemNo, "Delete") == false)
+		            if(checkUserPollStatus(p_SelectedItemNo, "Delete") == false)
 		            	return;
 		            var rgParams = new Array();
 		            rgParams["TITLE"] = p_SelectedTitle;
@@ -325,7 +329,7 @@
 		    
 		    function menu_Analysis(){
 		       if (menu_Checking()) {
-		            if (Check_UserPollStatus(szSelectedItemNo, "Analysis") == false) return;
+		            if (checkUserPollStatus(szSelectedItemNo, "Analysis") == false) return;
 		            var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
 		            window.location.href = szUrl;
 		        }
@@ -514,7 +518,7 @@
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
-		            if (Check_UserPollStatus(p_SelectedItemNo, "Reuse") == false)
+		            if (checkUserPollStatus(p_SelectedItemNo, "Reuse") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qstStep1Reuse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
 		            window.location.href = szUrl;
