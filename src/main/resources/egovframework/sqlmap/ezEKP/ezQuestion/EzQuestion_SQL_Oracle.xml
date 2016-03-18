@@ -7,6 +7,7 @@
 	<typeAlias  alias="QstUserPollItemVO" 			type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
 	<typeAlias  alias="QstUserPermissionVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
 	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
+	<typeAlias	alias="QstVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
 	
 	<resultMap class="QstListVO" id="qstList">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -51,7 +52,7 @@
 		<result property="readCnt"					column="READ_CNT"					columnIndex="24"/>
 		<result property="pollStartDate"			column="POLL_STARTDATE"				columnIndex="25"/>
 		<result property="pollEndDate"				column="POLL_ENDDATE"				columnIndex="26"/>
-		<result property="resCnt"					column="RES_CNT"					columnIndex="27"/>
+		<result property="responseCnt"				column="RES_CNT"					columnIndex="27"/>
 		<result property="completeFlag"				column="COMPLETE_FLAG"				columnIndex="28"/>
 	</resultMap>
 	
@@ -75,6 +76,20 @@
 		<result property="attachUrl"				column="ATTACHURL"					columnIndex="7"/>
 		<result property="attachType"				column="ATTACHTYPE"					columnIndex="8"/>
 	</resultMap>
+	
+	<resultMap class="QstVO" id="qstVO">
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answerType"				column="ANSWERTYPE"					columnIndex="5"/>
+		<result property="answerViewType"			column="ANSWERVIEWTYPE"				columnIndex="6" 	nullValue="0"/>
+		<result property="multiSelect"				column="MULTISELECT"				columnIndex="7"/>
+		<result property="quesSn"					column="QUES_SN"					columnIndex="8"/>
+		
+		
+	
+	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -92,6 +107,10 @@
 		{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.getQuestionForResponse" parameterClass="Map" resultMap="qstVO">
+		{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
