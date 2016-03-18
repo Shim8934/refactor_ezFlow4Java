@@ -428,6 +428,7 @@ public class EzQuestionController {
 		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO);
 
 		Document doc = null;
+		String strXML ="";
 		if(questionList != null){
 			int iQueCount = 0;
 			StringBuilder sb = new StringBuilder();
@@ -466,12 +467,10 @@ public class EzQuestionController {
 				sb.append("</ROW>");
 			}
 			sb.append("</DATA>");
-			String strXML = sb.toString();
-		    doc = commonUtil.convertStringToDocument(strXML);
+			strXML = sb.toString();
+System.out.println(strXML);
 		}
-System.out.println(qstVO.getItemNo());
-System.out.println(questionList.get(0));
-System.out.println(doc.getElementsByTagName("ROW").item(0));		
+		
 		/** AnswerCnt*/
 		
 		/** AttachInfo*/
@@ -485,6 +484,7 @@ System.out.println(doc.getElementsByTagName("ROW").item(0));
 	 
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
+		model.addAttribute("strXML",strXML);
 		
 		return "/ezQuestion/qstResponse";
 	}
@@ -513,39 +513,41 @@ System.out.println(doc.getElementsByTagName("ROW").item(0));
         qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
         List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO);
         
-        for(QstAttachVO attachVO : qstAttachVOList){
-        	if (bFirst){
-        		if (strAnswer == "0"){
-        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
-        			strResult.append("<table><tr>");
-        		}else{
-        			strResult.append("<br><table><tr>");
-        		}
-        		bFirst = false;
-        	}
-        	strAttachName = attachVO.getAttachName();
-        	strAttachUrl = attachVO.getAttachUrl();
-            strAttachNo = Integer.toString(attachVO.getAttachNo());
-
-            switch (attachVO.getAttachType()){
-            	case "1":
-            		strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
-            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
-                    break;
-            	case "2":
-            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
-                    break;
-                case "3":
-                	break;
-                case "4":
-                	break;
-                case "5":
-                	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
-                	break;
-                default:
-                	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
-                    break;
-            }
+        if(qstAttachVOList!=null){
+	        for(QstAttachVO attachVO : qstAttachVOList){
+	        	if (bFirst){
+	        		if (strAnswer == "0"){
+	        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
+	        			strResult.append("<table><tr>");
+	        		}else{
+	        			strResult.append("<br><table><tr>");
+	        		}
+	        		bFirst = false;
+	        	}
+	        	strAttachName = attachVO.getAttachName();
+	        	strAttachUrl = attachVO.getAttachUrl();
+	            strAttachNo = Integer.toString(attachVO.getAttachNo());
+	
+	            switch (attachVO.getAttachType()){
+	            	case "1":
+	            		strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
+	            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
+	                    break;
+	            	case "2":
+	            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	                    break;
+	                case "3":
+	                	break;
+	                case "4":
+	                	break;
+	                case "5":
+	                	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	                	break;
+	                default:
+	                	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
+	                    break;
+	            }
+	        }
         }
         if(!bFirst){
         	strResult.append("<td style=\"padding:5px\">&nbsp;</td></tr></table>");

@@ -30,8 +30,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<QstAttachVO>) select("EzQuestionDAO.getAttachInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<QstVO> getQuestionForResponse(Map<String, Object> map) {
-		return (List<QstVO>) select("EzQuestionDAO.getQuestionForResponse", map);
+		System.out.println(select("EzQuestionDAO.getQuestionForResponse", map).toString());
+		return (List<QstVO>) list("EzQuestionDAO.getQuestionForResponse", map);
 	}
 	
 	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
