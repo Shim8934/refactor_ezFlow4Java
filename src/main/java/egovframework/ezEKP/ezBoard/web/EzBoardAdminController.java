@@ -612,4 +612,31 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		return "OK";
 	}
 	
+	@RequestMapping(value="/admin/ezBoard/boardACL.do")	
+	public String boardACL(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String adminType = request.getParameter("adminType");
+		String pBoardName = request.getParameter("boardName");
+		String pType = request.getParameter("boardType");
+		String pParentNeed = request.getParameter("parentNeed");		
+		String pAccessLevel = request.getParameter("accessLevel");
+		String strUserLang = "";
+		
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		String boardName = boardPropertyVO.getBoardName();
+        
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("strUserLang", strUserLang);
+		model.addAttribute("pBoardName", pBoardName);
+		model.addAttribute("pType", pType);
+		model.addAttribute("pParentNeed", pParentNeed);
+		model.addAttribute("adminType", adminType);
+		model.addAttribute("pAccessLevel", pAccessLevel);
+		model.addAttribute("boardName", boardName);
+		
+		return "admin/ezBoard/boardACL";
+	}
+	
 }
