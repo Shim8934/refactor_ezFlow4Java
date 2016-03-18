@@ -631,15 +631,25 @@ function createXMLDomFromXmlString(pXML) {
 ////////////////////////////////////////////////////////////////////////
 // CrossBrowser적용
 function CrossYN()
-{
-    // 크로스 브라우저 IE:false IE외: true
-    var result = true;
-    if (navigator.appName.indexOf("Microsoft") > -1) {
-        result = false;
-    } else {
-        result = true;
-    }
+{	
+	var ua = navigator.userAgent;
+	var result = true;
 
+    // 크로스 브라우저 IE:false IE외: true    
+	if (/msie/i.test(ua)){
+		result = false;
+	}else if (/firefox/i.test(ua)){
+		result = true;
+	}else if (/chrome/i.test(ua)){
+		result = true;
+	}else if (/safari/i.test(ua)){
+		result = true;
+	}else if (/opera/i.test(ua)){
+		result = true;
+	}else if (/trident/i.test(ua)){
+		result = true;
+	}
+	
     return result;
 }
 

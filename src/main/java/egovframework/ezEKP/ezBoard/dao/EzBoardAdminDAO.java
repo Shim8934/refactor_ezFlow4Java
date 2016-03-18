@@ -57,6 +57,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardAttribute", boardID);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getBoardAccessList(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getBoardAccessList", map);
+	}
+	
 	public BoardPropertyVO getACL(Map<String, Object> map) throws Exception{		
 		return (BoardPropertyVO) select("EzBoardAdminDAO.getACL", map);
 	}
@@ -142,6 +148,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		delete("EzBoardAdminDAO.deleteHeader", boardID);
 	}
+
+	
 
 
 

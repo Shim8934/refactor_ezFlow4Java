@@ -60,6 +60,29 @@
 		<result property="value" 					column="WIDTH" 						columnIndex="4"/>		
 	</resultMap>
 	
+	<resultMap id="boardAccessList" class="BoardPropertyVO">
+		<result property="loginVO.companyName1" 	column="COMPANY" 					columnIndex="1"/>
+		<result property="loginVO.deptName1" 		column="DESCRIPTION" 				columnIndex="2"/>
+		<result property="loginVO.displayName1" 	column="DISPLAYNAME" 				columnIndex="3"/>
+		<result property="loginVO.title1" 			column="TITLE" 						columnIndex="4"/>		
+		<result property="loginVO.companyName2" 	column="COMPANY2" 					columnIndex="5"/>		
+		<result property="loginVO.deptName2" 		column="DESCRIPTION2" 				columnIndex="6"/>		
+		<result property="loginVO.displayName2" 	column="DISPLAYNAME2" 				columnIndex="7"/>		
+		<result property="loginVO.title2" 			column="TITLE2" 					columnIndex="8"/>		
+		<result property="accessID" 				column="ACCESSID" 					columnIndex="9"/>		
+		<result property="accessName" 				column="ACCESSNAME" 				columnIndex="10"/>		
+		<result property="accessName2" 				column="ACCESSNAME2" 				columnIndex="11"/>		
+		<result property="boardGroupACL" 			column="BOARDGROUPACL" 				columnIndex="12"/>				
+		<result property="boardAdmin_FG" 			column="BOARDADMIN_FG" 				columnIndex="13"/>		
+		<result property="access_" 					column="ACCESS_" 					columnIndex="14"/>		
+		<result property="listView_FG" 				column="LISTVIEW_FG" 				columnIndex="15"/>		
+		<result property="read_FG" 					column="READ_FG" 					columnIndex="16"/>		
+		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="17"/>		
+		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="18"/>		
+		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="19"/>		
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="20"/>			
+	</resultMap>
+	
 	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String">
 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET1(#v_STRLANG#,#v_PQUERY#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -123,6 +146,10 @@
 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY(#v_PBOARDID#, #v_PATTACHMAX#, #v_PDESCRIPTION#, #v_PEXPIRES#, #v_PURL#, #v_PREPLYNOTIFY#, #v_PGUBUN#, #v_PBOARDNAME#,
 		                                           #v_PDELETEAFTER#, #v_PBOARDCOLOR#, #v_PBOARDNAME2#, #v_PPORTLET#, #v_PONELINEREPLY#, #v_PBACKGROUND#, #v_PFORM#, 
 		                                           #v_PAPPRFLAG#, #v_PAPPRMAILFLAG#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
+		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">

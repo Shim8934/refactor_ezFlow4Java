@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezBoard.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -623,9 +625,45 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		String pAccessLevel = request.getParameter("accessLevel");
 		String strUserLang = "";
 		
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
-		String boardName = boardPropertyVO.getBoardName();
-        
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID);
+		String boardName = boardProperty.getBoardName();
+		
+		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID);
+				
+		StringBuilder sb = new StringBuilder();		
+		sb.append("<DATA>");
+		
+		if(list != null){
+			for(int i=0; i< list.size(); i++){
+				BoardPropertyVO obj = list.get(i);
+				sb.append("<ROW>");
+				sb.append("<COMPANY>" + obj.getLoginVO().getCompanyName1() + "</COMPANY>");
+				sb.append("<DESCRIPTION>" + obj.getLoginVO().getDeptName1() + "</DESCRIPTION>");
+				sb.append("<DISPLAYNAME>" + obj.getLoginVO().getDisplayName1() + "</DISPLAYNAME>");
+				sb.append("<TITLE>" + obj.getLoginVO().getTitle1() + "</TITLE>");
+				sb.append("<COMPANY2>" + obj.getLoginVO().getCompanyName2() + "</COMPANY2>");
+				sb.append("<DESCRIPTION2>" + obj.getLoginVO().getDeptName2() + "</DESCRIPTION2>");
+				sb.append("<DISPLAYNAME2>" + obj.getLoginVO().getDisplayName2() + "</DISPLAYNAME2>");
+				sb.append("<TITLE2>" + obj.getLoginVO().getTitle2() + "</TITLE2>");
+				sb.append("<ACCESSID>" + obj.getAccessID() + "</ACCESSID>");
+				sb.append("<ACCESSNAME>" + obj.getAccessName() + "</ACCESSNAME>");
+				sb.append("<ACCESSNAME2>" + obj.getAccessName2() + "</ACCESSNAME2>");
+				sb.append("<BOARDGROUPACL>" + obj.getBoardGroupACL() + "</BOARDGROUPACL>");
+				sb.append("<BOARDADMIN_FG>" + obj.getBoardAdmin_FG() + "</BOARDADMIN_FG>");
+				sb.append("<ACCESS_>" + obj.getAccess_() + "</ACCESS_>");
+				sb.append("<LISTVIEW_FG>" + obj.getListView_FG() + "</LISTVIEW_FG>");
+				sb.append("<READ_FG>" + obj.getRead_FG() + "</READ_FG>");
+				sb.append("<WRITE_FG>" + obj.getWrite_FG() + "</WRITE_FG>");
+				sb.append("<REPLY_FG>" + obj.getReply_FG() + "</REPLY_FG>");
+				sb.append("<DELETE_FG>" + obj.getDelete_FG() + "</DELETE_FG>");
+				sb.append("<POSTNOTICE>" + obj.getPostNotice() + "</POSTNOTICE>");				
+				sb.append("</ROW>");				
+			}
+		}	
+		sb.append("</DATA>");
+		
+		String result = sb.toString().replace("null", "");
+    
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("strUserLang", strUserLang);
@@ -635,8 +673,81 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("pAccessLevel", pAccessLevel);
 		model.addAttribute("boardName", boardName);
+		model.addAttribute("strList", result);
 		
 		return "admin/ezBoard/boardACL";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/getACL.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getACL(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String boardID = request.getParameter("boardID");
+		String accessID = request.getParameter("accessID");
+		
+		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<NODES>");
+		
+		if(boardProperty != null){
+			sb.append("<NODE>");
+			sb.append("<ACCESS>" + boardProperty.getAccess_() + "</ACCESS>");
+			sb.append("<BOARDADMIN>" + boardProperty.getBoardAdmin_FG() + "</BOARDADMIN>");
+			sb.append("<LIST>" + boardProperty.getListView_FG() + "</LIST>");
+			sb.append("<READ>" + boardProperty.getRead_FG() + "</READ>");
+			sb.append("<WRITE>" + boardProperty.getWrite_FG() + "</WRITE>");
+			sb.append("<REPLY>" + boardProperty.getReply_FG() + "</REPLY>");
+			sb.append("<DELETE>" + boardProperty.getDelete_FG() + "</DELETE>");
+			sb.append("<INHERIT>" + boardProperty.getInherit_FG() + "</INHERIT>");
+			sb.append("<POSTNOTICE>" + boardProperty.getPostNotice() + "</POSTNOTICE>");
+			sb.append("</NODE>");			
+		}	
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/saveACL.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveACL(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{	
+		Document doc = commonUtil.convertStringToDocument(data);
+		Map<String, Object> map = new HashMap<String, Object>(); 
+		
+		int size = doc.getElementsByTagName("BOARDID").getLength();
+		
+		for(int i=0; i < size; i++){
+			String pAccessName2 = doc.getElementsByTagName("TARGETNAME2").item(i).getTextContent();
+			String pAccess_FG = "";
+			
+			if (pAccessName2.equals("") || pAccessName2 == null){
+                pAccessName2 = doc.getElementsByTagName("TARGETNAME").item(i).getTextContent();			
+			}
+			if (doc.getElementsByTagName("ACCESS").item(i).getTextContent().toUpperCase().equals("TRUE")){
+				pAccess_FG = "1";
+			}else{ 
+				pAccess_FG = "0";
+			}
+			map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());
+			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());
+			map.put("v_pAccessName", doc.getElementsByTagName("TARGETNAME").item(i).getTextContent());			
+			map.put("v_pParentBoardID", doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent());
+			map.put("v_pInherit", doc.getElementsByTagName("INHERIT").item(i).getTextContent());
+			map.put("v_pAdmin", doc.getElementsByTagName("ADMIN").item(i).getTextContent());
+			map.put("v_pAccess", pAccess_FG);
+			map.put("v_pListView", doc.getElementsByTagName("LIST").item(i).getTextContent());
+			map.put("v_pRead", doc.getElementsByTagName("READ").item(i).getTextContent());
+			map.put("v_pWrite", doc.getElementsByTagName("WRITE").item(i).getTextContent());
+			map.put("v_pReply", doc.getElementsByTagName("REPLY").item(i).getTextContent());
+			map.put("v_pDelete", doc.getElementsByTagName("DELETE").item(i).getTextContent());
+			map.put("v_pPostNotice", doc.getElementsByTagName("POSTNOTICE").item(i).getTextContent());		
+			map.put("v_pAccessName2", pAccessName2);			
+			map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());		
+		}
+		
+		//save 서비스 구현
+		StringBuilder sb = new StringBuilder();
+		
+		return sb.toString();
 	}
 	
 }

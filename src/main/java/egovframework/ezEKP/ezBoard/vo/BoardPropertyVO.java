@@ -1,11 +1,14 @@
 package egovframework.ezEKP.ezBoard.vo;
 
+import egovframework.let.user.login.vo.LoginVO;
+
 /**
  * @author YOON
  *	보드 게시판 정보,보드게시판 어드민 정보,권한정보 등등
  */
 public class BoardPropertyVO {
-	
+	/** join을 위한 loginVO	*/
+	private LoginVO loginVO;
 	/** 게시판 아이디	*/
 	private String boardID;
 	/** 게시판 이름	*/
@@ -486,6 +489,12 @@ public class BoardPropertyVO {
 	}
 	public void setOrgApprFlag(String orgApprFlag) {
 		this.orgApprFlag = orgApprFlag;
+	}
+	public LoginVO getLoginVO() {
+		return loginVO;
+	}
+	public void setLoginVO(LoginVO loginVO) {
+		this.loginVO = loginVO;
 	}
 	
 }

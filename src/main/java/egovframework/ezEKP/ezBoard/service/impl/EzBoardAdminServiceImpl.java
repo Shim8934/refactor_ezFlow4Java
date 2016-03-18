@@ -130,7 +130,16 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		map.put("v_PBOARDTYPE", gubun);
 		map.put("v_PBOARDID", boardID);		
 
-		return ezBoardAdminDAO.getBoardHeader(map);		
+		return ezBoardAdminDAO.getBoardHeader(map);
+	}	
+
+	@Override
+	public List<BoardPropertyVO> getBoardAccessList(String boardID)	throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		// TODO Auto-generated method stub
+		return ezBoardAdminDAO.getBoardAccessList(map);
 	}
 
 	@Override

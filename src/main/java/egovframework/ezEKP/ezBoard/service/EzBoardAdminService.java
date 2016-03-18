@@ -28,6 +28,8 @@ public interface EzBoardAdminService {
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
+	public List<BoardPropertyVO> getBoardAccessList(String boardID) throws Exception;
+	
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
@@ -65,5 +67,6 @@ public interface EzBoardAdminService {
 	public void deleteHeader(String boardID) throws Exception;
 
 	public void saveHeader(BoardListHeaderVO boardListHeaderVO) throws Exception;
+	
 
 }
