@@ -10,8 +10,6 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class IMAPAccess {
 
 	private String host;
@@ -170,6 +168,18 @@ public class IMAPAccess {
 			e.printStackTrace();
 		}
 		return unreadCount;
+	}
+	
+	public Folder getFolder(String folderName) {
+		Folder folder = null;
+		
+		try {
+			folder = getStore().getFolder(folderName);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		return folder;
 	}
 	
 	public static IMAPAccess getInstance(String host, String port, String username, String password){
