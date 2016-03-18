@@ -5,58 +5,59 @@ public class QstUserPollItemVO {
 	int brdId;
 	/** 글 번호*/
 	int itemNo;
-	/** 유저ID*/
+	/** 작성자아이디*/
 	String userId;
-	/** 유저이름*/
+	/** 작성자이름*/
 	String userNm;
 	/** 다국어*/
 	String userNm2;
-	/** 유저EMAIL*/
+	/** 작성자이메일*/
 	String userEmail;
-	/** 유저부서ID*/
+	/** 작성자부서ID*/
 	String userDeptId;
-	/** 유저부서이름*/
+	/** 작성자부서이름*/
 	String userDeptNm;
-	/** 제목*/
+	/** 설문제목*/
 	String title;
-	/** 목적*/
+	/** 설문목적*/
 	String content;
-	/** 작성일*/
+	/** 설문등록일시*/
 	String postDate;
-	/** 수정일*/
+	/** 설문수정일시*/
 	String updateDate;
-	/** */
+	/** 종료일시*/
 	String endDate;
-	/** 기간*/
+	/** 설문종료후공개기간*/
 	int postTerm;
-	/** */
+	/** 관련게시물아이디(사용안함)*/
 	int itemRef;
-	/** */
+	/** 관련게시물계층레벨(사용안함)*/
 	int itemLevel;
-	/** */
+	/** 관련게시물내순서(사용안함)*/
 	int itemStep;
 	/** */
 	String itemImp;
-	/** */
+	/** 첨부파일여부(사용안함)*/
 	int HasAttach;
-	/** */
+	/** 원본게시자아이디(사용안함)*/
 	String SrCuserId;
-	/** */
+	/** 원본게시자이름(사용안함)*/
 	String SrCuserNm;
-	/** */
+	/** 원본게시자이메일(사용안함)*/
 	String SrCuserEmail;
-	/** */
+	/** 게시물구분(사용안함)*/
 	String itemGb;
 	/** 조회수*/
 	int readCnt;
-	/** 설문시작일*/
+	/** 설문접수시작일*/
 	String pollStartDate;
-	/** 설문종료일*/
+	/** 설문접수종료일*/
 	String pollEndDate;
-	/** 응답수*/
-	int resCnt;
-	/** 완료or진행중 구분*/
+	/** 참여자수*/
+	int responseCnt;
+	/** 종려여부*/
 	String completeFlag;
+	
 	public int getBrdId() {
 		return brdId;
 	}
@@ -213,33 +214,16 @@ public class QstUserPollItemVO {
 	public void setPollEndDate(String pollEndDate) {
 		this.pollEndDate = pollEndDate;
 	}
-	public int getResCnt() {
-		return resCnt;
+	public int getResponseCnt() {
+		return responseCnt;
 	}
-	public void setResCnt(int resCnt) {
-		this.resCnt = resCnt;
+	public void setResponseCnt(int responseCnt) {
+		this.responseCnt = responseCnt;
 	}
 	public String getCompleteFlag() {
 		return completeFlag;
 	}
 	public void setCompleteFlag(String completeFlag) {
 		this.completeFlag = completeFlag;
-	}
-	@Override
-	public String toString() {
-		return "UserPollItemVO [brdId=" + brdId + ", itemNo=" + itemNo
-				+ ", userId=" + userId + ", userNm=" + userNm + ", userNm2="
-				+ userNm2 + ", userEmail=" + userEmail + ", userDeptId="
-				+ userDeptId + ", userDeptNm=" + userDeptNm + ", title="
-				+ title + ", content=" + content + ", postDate=" + postDate
-				+ ", updateDate=" + updateDate + ", endDate=" + endDate
-				+ ", postTerm=" + postTerm + ", itemRef=" + itemRef
-				+ ", itemLevel=" + itemLevel + ", itemStep=" + itemStep
-				+ ", itemImp=" + itemImp + ", HasAttach=" + HasAttach
-				+ ", SrCuserId=" + SrCuserId + ", SrCuserNm=" + SrCuserNm
-				+ ", SrCuserEmail=" + SrCuserEmail + ", itemGb=" + itemGb
-				+ ", readCnt=" + readCnt + ", pollStartDate=" + pollStartDate
-				+ ", pollEndDate=" + pollEndDate + ", resCnt=" + resCnt
-				+ ", completeFlag=" + completeFlag + "]";
 	}
 }

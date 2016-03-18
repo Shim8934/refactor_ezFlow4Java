@@ -7,15 +7,15 @@ public class QstAttachVO {
 	public int itemNo;
 	/** 질문번호*/
 	public int questionNo;
-	/** 보기번호*/
+	/** 응답번호*/
 	public int answerNo;
-	/** 첨부번호*/
+	/** 첨부파일번호*/
 	public int attachNo;
-	/** 첨부이름*/
+	/** 첨부파일이름*/
 	public String attachName;
-	/** 첨부URL*/
+	/** 첨부파일경로*/
 	public String attachUrl;
-	/** 첨부유형*/
+	/** 첨부파일구분*/
 	public String attachType;
 	
 	public int getBrdId() {

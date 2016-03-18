@@ -3,20 +3,21 @@ package egovframework.ezEKP.ezQuestion.vo;
 public class QstVO {
 	/** 게시판ID*/
 	int brdId;
-	/** 글 번호*/
+	/** 설문번호*/
 	int itemNo;
-	/** 질문 번호*/
+	/** 질문번호*/
 	int questionNo;
-	/** 질문 내용*/
+	/** 질문내용*/
 	String quesContent;
-	/** 답변타입*/
+	/** 응답형태(객관식:1, 주관식:2, 우선순위:4)*/
 	int answerType;
-	/** 답변보기타입*/
+	/** (사용안함)*/
 	int answerViewType;
-	/** 다중선택가능*/
+	/** 다중선택여부(다답형:1)*/
 	String multiSelect;
-	/** */
+	/** 질문표시순서(순번변경가능)*/
 	int quesSn;
+	
 	public int getBrdId() {
 		return brdId;
 	}

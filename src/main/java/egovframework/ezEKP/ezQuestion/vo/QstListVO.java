@@ -6,7 +6,7 @@ public class QstListVO {
 	private int brdId;
 	/** 설문번호*/
 	private int itemNo;
-	/** 유저아이디*/
+	/** 사용자아이디*/
 	private String userId;
 	/** 유저이름*/
 	private String userNm;
@@ -14,21 +14,23 @@ public class QstListVO {
 	private String userNm2;
 	/** 유저이메일*/
 	private String userEmail;
-	/** 제목*/
+	/** 설문제목*/
 	private String title;
-	/** 유효한 마지막 날*/
+	/** 설문접수시작일*/
+	private String pollStartDate;
+	/** 설문접수종료일*/
 	private String pollEndDate;
-	/** 유효한 첫 날*/
+	/** 설문등록일시*/
 	private String postDate;
-	/** 결과공개*/
+	/** 조사결과공개여부(공개:1, 비공개:0)*/
 	private String publicResultFlg;
-	/** 기명여부*/
+	/** 기명여부(무기명:0, 기명:1)*/
 	private String publicFlg;
-	/** 다중답변가능여부*/
+	/** 중복응답여부(비허용:0, 허용:1)*/
 	private String multiResponseFlg;
-	/** */
+	/** 마감여부(즉시마감:1)*/
 	private String endFlg;
-	/** 대상자*/
+	/** 대상자설정여부(선정:1, 전체:0)*/
 	private String responseRange;
 	/** 게시글 총갯수*/
 	private int totalCnt;
@@ -48,7 +50,6 @@ public class QstListVO {
 	private String lang;
 	/** jsp Onclick 시 주소*/
 	private String receve;
-	
 	public int getBrdId() {
 		return brdId;
 	}
@@ -90,6 +91,12 @@ public class QstListVO {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getPollStartDate() {
+		return pollStartDate;
+	}
+	public void setPollStartDate(String pollStartDate) {
+		this.pollStartDate = pollStartDate;
 	}
 	public String getPollEndDate() {
 		return pollEndDate;

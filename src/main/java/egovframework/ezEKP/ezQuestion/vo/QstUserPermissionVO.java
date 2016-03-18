@@ -7,18 +7,17 @@ public class QstUserPermissionVO {
 	int itemNo;
 	/** 유저ID*/
 	String userId;
-	/** 기명여부*/
+	/** 기명여부(무기명:0, 기명:1)*/
 	String publicFlg;
-	/** 결과공개*/
+	/** 조사결과공개여부(공걔:1, 비공개:0)*/
 	String publicResultFlg;
-	/** */
+	/** 중복응답허용여부(비허용:0, 허용:1)*/
 	String multiResponseFlg;
-	/** */
+	/** 마감여부(즉시마감:1)*/
 	String endFlg;
-	/** */
+	/** 대상자설정여부(선정:1, 전체:0)*/
 	String responseRange;
-	/** */
-	int responseCnt;
+	
 	public int getBrdId() {
 		return brdId;
 	}
@@ -67,20 +66,4 @@ public class QstUserPermissionVO {
 	public void setResponseRange(String responseRange) {
 		this.responseRange = responseRange;
 	}
-	public int getResponseCnt() {
-		return responseCnt;
-	}
-	public void setResponseCnt(int responseCnt) {
-		this.responseCnt = responseCnt;
-	}
-	@Override
-	public String toString() {
-		return "UserPermissionVO [brdId=" + brdId + ", itemNo=" + itemNo
-				+ ", userId=" + userId + ", publicFlg=" + publicFlg
-				+ ", publicResultFlg=" + publicResultFlg
-				+ ", multiResponseFlg=" + multiResponseFlg + ", endFlg="
-				+ endFlg + ", responseRange=" + responseRange
-				+ ", responseCnt=" + responseCnt + "]";
-	}
-	
 }
