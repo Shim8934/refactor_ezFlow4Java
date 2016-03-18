@@ -47,55 +47,56 @@
 			
 			function checkUserPollStatus(pItemNo, pflag){
 				$.ajax({
-					  type: "POST",
-					  url: "/ezQuestion/qstCallUsersPollStatus.do",
-					  data: "brd_id=" + g_BrdID + "&item_no=" + pItemNo,
-					  dataType: "JSON",
-					  success: function(map){
-						  endPollYN = map.endPollYN;
-						  responseYN = map.responseYN;
-						  resultOpenYN = map.resultOpenYN;
-						  multiResYN = map.multiResYN;
-						  writeYN = map.writeYN;
-						  adminYN = map.adminYN;
-						  var rv;
-					        switch (pflag) {
-					            case "Response":
-					                rv = Chk_Response();
-					                break;
-					            case "Result":
-					                rv = Chk_Result();
-					                break;
-					            case "InfoModify":
-					                rv = Chk_InfoModify();
-					                break;
-					            case "Delete":
-					                rv = Chk_Delete();
-					                break;
-					            case "Analysis":
-					                rv = Chk_Analysis();
-					                break;
-					            case "Save":
-					                rv = Chk_Save();
-					                break;
-					            case "Reuse":
-					                rv = Chk_Reuse();
-					                break;
-					        }
-					        return rv;
-					  },
-					  error: function(xhr, status, e){
-						 	alert(e.message);
-						 	
-						 	EndPollYN = "";
-					        ResponseYN = "";
-					        ResultOpenYN = "";
-					        MultiResYN = "";
-					        WriteYN = "N";
-					        AdminYN = "N";
-					        
-						    return false;
-					  }
+					type: "POST",
+					url: "/ezQuestion/qstCallUsersPollStatus.do",
+					data: {"brdId":g_BrdID ,"itemNo":pItemNo},
+					dataType: "JSON",
+					success: function(map){
+						EndPollYN = map.endPollYN;
+						ResponseYN = map.responseYN;
+						ResultOpenYN = map.resultOpenYN;
+						MultiResYN = map.multiResYN;
+						WriteYN = map.writeYN;
+						AdminYN = map.adminYN;
+						var rv;
+					  
+						switch (pflag) {
+							case "Response":
+								rv = Chk_Response();
+								break;
+							case "Result":
+								rv = Chk_Result();
+								break;
+							case "InfoModify":
+								rv = Chk_InfoModify();
+								break;
+							case "Delete":
+								rv = Chk_Delete();
+								break;
+							case "Analysis":
+								rv = Chk_Analysis();
+								break;
+							case "Save":
+								rv = Chk_Save();
+								break;
+							case "Reuse":
+								rv = Chk_Reuse();
+								break;
+						}
+						return rv;
+					},
+					error: function(xhr, status, e){
+						alert(e.message);
+					 	
+						EndPollYN = "";
+						ResponseYN = "";
+						ResultOpenYN = "";
+						MultiResYN = "";
+						WriteYN = "N";
+						AdminYN = "N";
+						       
+						return false;
+					}
 				});
 			}
 			
@@ -245,7 +246,7 @@
 		        if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstResult.do?" + receve + "&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstResult.do?brdId="+"${qstListVO.brdId}"+"&title="+"${qstListVO.title}"+"&responseRange="+"${qstListVO.responseRange}"+"&sdate="+"${qstListVO.postDate}"+"&edate="+"${qstListVO.pollEndDate}" + "&currPage="+pPage+ "&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        }
 		    }

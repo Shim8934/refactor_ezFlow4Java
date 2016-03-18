@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<script type="text/javascript">
 		    document.onselectstart = function (){ return false; };
 		    window.onload = function (){
@@ -29,6 +30,11 @@
 					location.reload();
 			}
 			MM_reloadPage(true);
+			
+alert("${strXML}")
+var xml = $.parseXML('${strXML}');
+var a = xml.documentElement.childNodes;
+
 		</script>
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
@@ -295,13 +301,15 @@
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t325" /></th>
-		    <td>${qstUserPermissionVO.responseCnt} <spring:message code="ezQuestion.t326" />${qstUserPollItemVO.readCnt} ] </td>
+		    <td>${qstUserPollItemVO.responseCnt} <spring:message code="ezQuestion.t326" />${qstUserPollItemVO.readCnt} ] </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t327" /></th>
 		    <td>${qstUserPollItemVO.content} </td>
 		  </tr>
 		</table>
+		
+		
 		<%-- <form name="frmResponse" method="post" onSubmit="fun_Save()">
 		  <input type=hidden value="${receve}" name="receve">
 		  <table class="poll" style="margin-top:10px" >
@@ -335,24 +343,22 @@
 				
 			}
 			xmlMainDom = null;
-		%>
-		    <asp:repeater id="reList" runat="server">
-		      <ItemTemplate>
+		%>  --%>
+		<!-- <table>
 		        <tr>
-		          <td style="padding:3px 10px"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("QST").InnerText %></td>
+		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("QST").InnerText</td>
 		        </tr>
-		        <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SUBROW").InnerText %>
+		        	((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SUBROW").InnerText
 		        <tr>
-		          <td style="padding:3px 10px"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TAG").InnerText %></td>
+		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TAG").InnerText</td>
 		        </tr>
-		      </ItemTemplate>
-		    </asp:repeater>
-		  </table>
+		</table> -->
+		  
 		  <input type="hidden" name="hidEleCnt">
-		  <input type=hidden value="<%=v_brd_id%>" name=brd_id >
-		  <input type=hidden value="<%=v_item_no%>" name=item_no>
+		  <input type=hidden value="brdId%>" name=brdId >
+		  <input type=hidden value="itemNo" name=itemNo>
 		  <input type="hidden" name="tableAnswer" />
-		</form> --%>
+		</form>
 		<div class="btnposition">
 			<a class="imgbtn"> <span onClick="javascript:fun_Save();return false;"> <spring:message code="ezQuestion.t37" /> </span> </a>
 			<a class="imgbtn"> <span onClick="javascript:menuQst_List();return false;"> <spring:message code="ezQuestion.t38" /> </span> </a>
