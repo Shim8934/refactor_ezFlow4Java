@@ -71,12 +71,30 @@ public class IMAPAccess {
 		
 		try{
 			Store store = getStore();
-			store.getDefaultFolder().getFolder("INBOX").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			store.getDefaultFolder().getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			store.getDefaultFolder().getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			store.getDefaultFolder().getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			store.getDefaultFolder().getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			store.getDefaultFolder().getFolder("정크 메일").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			if(!store.getDefaultFolder().getFolder("INBOX").exists()){
+				store.getDefaultFolder().getFolder("INBOX").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("INBOX created");
+			}
+			if(!store.getDefaultFolder().getFolder("보낸 편지함").exists()){
+				store.getDefaultFolder().getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("보낸 편지함 created");
+			}
+			if(!store.getDefaultFolder().getFolder("임시 보관함").exists()){
+				store.getDefaultFolder().getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("임시 보관함 created");
+			}
+			if(!store.getDefaultFolder().getFolder("지운 편지함").exists()){
+				store.getDefaultFolder().getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("지운 편지함 created");
+			}
+			if(!store.getDefaultFolder().getFolder("PERSONAL").exists()){
+				store.getDefaultFolder().getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("PERSONAL created");
+			}
+			if(!store.getDefaultFolder().getFolder("정크 메일").exists()){
+				store.getDefaultFolder().getFolder("정크 메일").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				System.out.println("정크 메일 created");
+			}
 			
 			Folder[] f = getStore().getDefaultFolder().list();
 			
