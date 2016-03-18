@@ -20,6 +20,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        tableXML();
 		    }
 		    
 		    function MM_reloadPage(init){
@@ -47,15 +48,24 @@
 // alert(SelectSingleNodeValue(nodes[i], "ANSWERVIEWTYPE"));
 // alert(SelectSingleNodeValue(nodes[i], "MULTISELECT"));
 // alert(SelectSingleNodeValue(nodes[i], "QUES_SN"));
-					
-					
 					tableXml += "<tr>";
-					tableXml += "<td style='padding:3px 10px'>SelectSingleNodeValue(nodes[i], 'QST')</td>";
+					tableXml += "<td style='padding:3px 10px'>";
+					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
+					tableXml += "</td>";
 					tableXml += "</tr>";
+					/* tableXml += "<tr>";
+					tableXml += "<td style='padding:3px 10px'>";
+					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
+					tableXml += "</td>";
+					tableXml += "</tr>"; */
+/* 					tableXml += "<tr>";
+					tableXml += "<td style='padding:3px 10px'>";
+					tableXml += SelectSingleNodeValue(nodes[i], 'TAG');
+					tableXml += "</td>";
+					tableXml += "</tr>"; */
 				}
 				$("#tableXml").html(tableXml);
 			}
-			tableXML();
 		</script>
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
@@ -364,7 +374,7 @@
 			}
 			xmlMainDom = null;
 		%>  --%>
-		<table id = "tableXml">
+		<table id="tableXml">
 		</table>
 
 <!-- 		<table> -->

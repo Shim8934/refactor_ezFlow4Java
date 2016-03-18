@@ -468,6 +468,8 @@ public class EzQuestionController {
 			}
 			sb.append("</DATA>");
 			strXML = sb.toString();
+			doc = commonUtil.convertStringToDocument(strXML);
+			
 System.out.println(strXML);
 		}
 		
@@ -487,6 +489,10 @@ System.out.println(strXML);
 		model.addAttribute("strXML",strXML);
 		
 		return "/ezQuestion/qstResponse";
+	}
+	
+	public void dataSubProcess(int brdId, int itemNo, int qstNo){
+		
 	}
 	
 	public String modifyData(String strData) throws Exception{
