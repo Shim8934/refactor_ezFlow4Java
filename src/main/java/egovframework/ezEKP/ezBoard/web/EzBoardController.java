@@ -1,5 +1,12 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URLEncoder;
@@ -23,6 +30,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +48,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
@@ -57,7 +67,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzBoardController {
+public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -82,6 +92,8 @@ public class EzBoardController {
 	
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
 	
 	@RequestMapping(value="/ezBoard/boardLeft.do")
 	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO loginVO, HttpServletResponse response) throws Exception{
@@ -1448,7 +1460,7 @@ public class EzBoardController {
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
         String extenLang = "1";
-        String editor = config.getProperty("EDITOR");
+        String editor = config.getProperty("config.EDITOR");
         String uploadFilePath = config.getProperty("upload_board.ROOT");
         String mode = "";
         String boardID = "";
@@ -1668,6 +1680,8 @@ public class EzBoardController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pMode = "";
         String gubun = "";
+        String realPath = request.getServletContext().getRealPath("");
+        
         if (request.getParameter("mode") != null){
         	pMode = request.getParameter("mode");
         }
@@ -1684,7 +1698,7 @@ public class EzBoardController {
         String[] itemid = null;
 
         BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
-
+System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(0).getTextContent());
         doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("\n", "\r\n"));;
 
         if (boardInfo.getWrite_FG().equals("false")){
@@ -1716,115 +1730,112 @@ public class EzBoardController {
                         pMode = "New";
                         doc.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
                     }
-                    ret = insertNewItem(doc, pMode);
+                    ret = insertNewItem(doc, pMode, realPath);
                 }
             }
         }else{
-            ret = insertNewItem(doc, pMode);
+            ret = insertNewItem(doc, pMode, realPath);
         }
 
         return "<RESULT>" + ret + "</RESULT>";
 	}
 
-	private String insertNewItem(Document doc, String pMode) throws Exception{
+	private String insertNewItem(Document doc, String pMode, String realPath) throws Exception{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
 		
+		
 		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
-//		pUploadFilePath = xmldom.SelectSingleNode("NODES/NODE/FILEPATH").InnerText;
-//		pItemID = xmldom.SelectSingleNode("NODES/NODE/ITEMID").InnerText;
-//		pBoardID = xmldom.SelectSingleNode("NODES/NODE/BOARDID").InnerText;
-//		pWriterID = xmldom.SelectSingleNode("NODES/NODE/WRITERID").InnerText;
-//        pTopWriteID = xmldom.SelectSingleNode("NODES/NODE/TOPWRITERID").InnerText;
-//		pWriterName = xmldom.SelectSingleNode("NODES/NODE/WRITERNAME").InnerText;
-//        pWriterName2 = xmldom.SelectSingleNode("NODES/NODE/WRITERNAME2").InnerText;
-//		pWriterDeptID = xmldom.SelectSingleNode("NODES/NODE/DEPTID").InnerText;
-//		pWriterDeptName = xmldom.SelectSingleNode("NODES/NODE/DEPTNAME").InnerText;
-//        pWriterDeptName2 = xmldom.SelectSingleNode("NODES/NODE/DEPTNAME2").InnerText;
-//		pWriterCompanyID = xmldom.SelectSingleNode("NODES/NODE/COMPANYID").InnerText;
-//		pWriterCompanyName = xmldom.SelectSingleNode("NODES/NODE/COMPANYNAME").InnerText;
-//        pWriterCompanyName2 = xmldom.SelectSingleNode("NODES/NODE/COMPANYNAME2").InnerText;
-//		pWriteDate = MakeDateFormatNow();
-//		pImportance = xmldom.SelectSingleNode("NODES/NODE/IMPORTANCE").InnerText;
-//		pTitle = xmldom.SelectSingleNode("NODES/NODE/TITLE").InnerText;
-//		if (pMode == "copy")
-//			pContentLocation = xmldom.SelectSingleNode("NODES/NODE/CONTENTLOCATION").InnerText;
-//		else
-//			pContentLocation = "/Upload_BoardSTD/" + pBoardID + "/doc/" + pItemID + ".mht";
-//	
-//		pStartDate = xmldom.SelectSingleNode("NODES/NODE/STARTDATE").InnerText;
-//
-//		if (pStartDate == "")
-//			pStartDate = pWriteDate;
-//	
-//		pEndDate = xmldom.SelectSingleNode("NODES/NODE/ENDDATE").InnerText;
-//		pAbstract = xmldom.SelectSingleNode("NODES/NODE/ABSTRACT").InnerText;
-//		pAttachments = xmldom.SelectSingleNode("NODES/NODE/ATTACHMENTS").InnerText;
-//		pUpperItemIDTree = xmldom.SelectSingleNode("NODES/NODE/UPPERITEMIDTREE").InnerText;
-//	
-//		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
-//		if (pMode == "reply")
-//			pUpperItemIDTree = pUpperItemIDTree + GetReverseDateNow() + pItemID;
-//    
-//		pItemLevel = xmldom.SelectSingleNode("NODES/NODE/ITEMLEVEL").InnerText;
-//		if (pMode != "copy")
-//		{
-//			pContent = xmldom.SelectSingleNode("NODES/NODE/CONTENT").InnerText;
-//			pParentWriteDate = xmldom.SelectSingleNode("NODES/NODE/PARENTWRITEDATE").InnerText;
-//		}
-//		else
-//		{
-//			pParentWriteDate = pWriteDate;
-//		}
-//
-//		if (pParentWriteDate == "")
-//			pParentWriteDate = pStartDate;
-//	
-//		//확장 필드, Ext1, Ext2는 integer 값을 가짐
-//		if (xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE1").InnerText.Trim() == "")
-//			pExtensionAttribute1 = 0;
-//		else
-//			pExtensionAttribute1 = Convert.ToInt32(xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE1").InnerText);
-//
-//		if (xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE2").InnerText.Trim() == "")
-//			pExtensionAttribute2 = 0;
-//		else
-//			pExtensionAttribute2 = Convert.ToInt32(xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE2").InnerText.Trim());
-//
-//		pExtensionAttribute3 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE3").InnerText;
-//        pExtensionAttribute32 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE32").InnerText;
-//		pExtensionAttribute4 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE4").InnerText;
-//		pExtensionAttribute5 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE5").InnerText;
-//    
-//		pDocPassWord = xmldom.SelectSingleNode("NODES/NODE/DOCPASSWORD").InnerText;
-//        pReadCountFlag = xmldom.SelectSingleNode("NODES/NODE/READCOUNTFLAG").InnerText;
-//
-//        //추가항목
-//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE6").Count > 0)
-//            pExtensionAttribute6 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE6").InnerText;
-//
-//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE7").Count > 0)
-//            pExtensionAttribute7 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE7").InnerText;
-//
-//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE8").Count > 0)
-//            pExtensionAttribute8 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE8").InnerText;
-//
-//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE9").Count > 0)
-//            pExtensionAttribute9 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE9").InnerText;
-//
-//        if (xmldom.GetElementsByTagName("EXTENSIONATTRIBUTE10").Count > 0)
-//            pExtensionAttribute10 = xmldom.SelectSingleNode("NODES/NODE/EXTENSIONATTRIBUTE10").InnerText;
-//
-//		if (pMode != "copy")
-//		{
-//			SaveMHTResult = SaveMHT(pContent, pItemID, pBoardID, pUploadFilePath, "BOARD");
-//			if (SaveMHTResult == false)
-//			{
-//				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
-//			}
-//		}
-//    
+		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+		boardListVO.setTopWriterID(doc.getElementsByTagName("TOPWRITERID").item(0).getTextContent());
+		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+		boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
+		boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
+		boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
+		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
+		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
+		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		if(pMode.equals("copy")){
+			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+		}else{
+			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+"/" + boardListVO.getBoardID() + "/doc/" + boardListVO.getItemID() + ".mht");
+		}
+		if(doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null || !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")){
+			boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
+		}else{
+			boardListVO.setStartDate(boardListVO.getWriteDate());
+		}
+		boardListVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
+		
+		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
+		if(pMode.equals("reply")){
+			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
+		}
+		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
+		if(!pMode.equals("copy")){
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+		}else{
+			boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+		}
+		
+		if(boardListVO.getParentWriteDate().equals("")){
+			boardListVO.setParentWriteDate(boardListVO.getStartDate());
+		}
+
+		//확장 필드, Ext1, Ext2는 integer 값을 가짐
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")){
+			boardListVO.setExtensionAttribute1("0");
+		}else{
+			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
+		}
+		
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")){
+			boardListVO.setExtensionAttribute1("0");
+		}else{
+			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+		}
+		
+		boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
+		boardListVO.setExtensionAttribute32(doc.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
+		boardListVO.setExtensionAttribute4(doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
+		boardListVO.setExtensionAttribute5(doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
+		boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		boardListVO.setReadFlag(doc.getElementsByTagName("READCOUNTFLAG").item(0).getTextContent());
+		
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0) != null){
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent());
+		}
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null){
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+		}
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null){
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+		}
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null){
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+		}
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null){
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+		}
+		
+		if(!pMode.equals("copy")){
+			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), realPath + boardListVO.getFilePath(), "BOARD");
+			if(saveMHTResult == false){
+				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+			}
+		}
+	
 //		if (pAttachments.Length > 0)
 //			pHasAttach = "1";
 //		else
@@ -1911,6 +1922,82 @@ public class EzBoardController {
 
 		//통계 남기는 부분
 		return "OK";
+	}
+
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType) {
+		String docPath = "";
+		String mhtFilePath = "";
+		
+        if (strType == "BOARD"){
+            strHTML = strHTML.replace("'", "''");
+        }
+		docPath = strFilePath +"/"+ strBoardID;
+		docPath = docPath.replace('\\','/');
+		mhtFilePath = strMHTFilename + ".mht";
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = docPath + "/doc";
+		try {
+		    stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+		    File cFile = new File(docPath);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdir();
+				cFile = new File(stordFilePathReal);
+				cFile.mkdir();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + mhtFilePath);
+	
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+			return false;
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+			return false;
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+			return false;
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+		return true;
+	}
+
+	public String getReverseDateNow() {
+		StringBuilder reverseDate = new StringBuilder();
+		Calendar cal = Calendar.getInstance();
+		
+		reverseDate.append(9999 - cal.get(Calendar.YEAR));
+		reverseDate.append(21 - cal.get(Calendar.MONTH));
+		reverseDate.append(41 - cal.get(Calendar.DATE));
+		reverseDate.append(33 - cal.get(Calendar.HOUR));
+		reverseDate.append(69 - cal.get(Calendar.MINUTE));
+		reverseDate.append(69 - cal.get(Calendar.SECOND));
+		
+		return reverseDate.toString();
 	}
 	
 }

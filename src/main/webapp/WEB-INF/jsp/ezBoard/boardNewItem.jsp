@@ -496,7 +496,7 @@
 		        if (pStartDate == "" && pReservedItem == "TRUE") {
 		            strParentWriteDate = "";
 		        }
-		        newID = NewGuid;
+		        newID = "{" +NewGuid+ "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
 

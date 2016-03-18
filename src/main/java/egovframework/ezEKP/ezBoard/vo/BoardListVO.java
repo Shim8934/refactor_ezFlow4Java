@@ -26,8 +26,12 @@ public class BoardListVO {
 	private String writerID;
 	/** 작성자이름*/
 	private String writerName;
+	/** 작성자부서아이디*/
+	private String writerDeptID;
 	/** 작성자부서명*/
 	private String writerDeptName;
+	/** 작성자회사아이디*/
+	private String writerCompanyID;
 	/** 작성자회사명*/
 	private String writerCompanyName;
 	/** 작성일*/
@@ -104,6 +108,10 @@ public class BoardListVO {
 	private String apprFlag;
 	/** 파일경로*/
 	private String filePath;
+	/** top작성자ID*/
+	private String topWriterID;
+	/** 게시물 비밀번호*/
+	private String docPassword;
 	
 	public int getrNum() {
 		return rNum;
@@ -411,5 +419,28 @@ public class BoardListVO {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
+	public String getTopWriterID() {
+		return topWriterID;
+	}
+	public void setTopWriterID(String topWriterID) {
+		this.topWriterID = topWriterID;
+	}
+	public String getWriterDeptID() {
+		return writerDeptID;
+	}
+	public void setWriterDeptID(String writerDeptID) {
+		this.writerDeptID = writerDeptID;
+	}
+	public String getWriterCompanyID() {
+		return writerCompanyID;
+	}
+	public void setWriterCompanyID(String writerCompanyID) {
+		this.writerCompanyID = writerCompanyID;
+	}
+	public String getDocPassword() {
+		return docPassword;
+	}
+	public void setDocPassword(String docPassword) {
+		this.docPassword = docPassword;
+	}
 }

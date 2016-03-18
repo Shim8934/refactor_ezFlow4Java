@@ -39,7 +39,7 @@ public class EzCommonController {
 		return "ezCommon/manyColor";
 	}
 	
-	@RequestMapping(value = "/ezCommon/htmlToMHT.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommon/htmlToMHT.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -47,6 +47,8 @@ public class EzCommonController {
         if(request.getParameter("strHTML") != null){
         	strHTML = request.getParameter("strHTML");
         }
+        strHTML = strHTML.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+        
         String scheme = "http://";
     	if(request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")){
     		scheme = "https://";
@@ -105,6 +107,7 @@ public class EzCommonController {
         // reform - end
 
         String mhtData = startHtml2Mht(strHTML);
+        
         return mhtData;
 	}
 	
@@ -115,26 +118,19 @@ public class EzCommonController {
 		String[] m_BackImageList = null;
         if (m_strHTML != ""){
             //MHT 헤더 생성.
-        	String tmp[] = makeHeader(m_strHTML);
-        	m_strMHT.append(tmp[0]);
-        	m_strBoundary = tmp[1];
-            //이미지 경로 추출 및 가상경로 매칭.
-        	Object tmp1[] = extractImageSource(m_strHTML);
-        	m_strHTML = (String)tmp1[0];
-        	m_ImageList = (String[])tmp1[1];
+        	m_strBoundary = makeHeader(m_strMHT);
+        	//이미지 경로 추출 및 가상경로 매칭.
+        	m_ImageList = extractImageSource(m_strHTML);
             //백그라운드 경로 추출 및 가상경로 매칭
-        	tmp1 = extractBackgroundSource(m_strHTML, m_ImageList);
-        	m_strHTML = (String)tmp1[0];
-        	m_ImageList = (String[])tmp1[1];
-        	m_BackImageList = (String[])tmp1[2];
+        	m_BackImageList = extractBackgroundSource(m_strHTML, m_ImageList);
             //본문 인코딩
-        	m_strMHT = doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
+        	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
             //이미지 인코딩
             if (m_ImageList != null)
-                m_strMHT = doImageEncoding(m_ImageList, m_strMHT, m_strBoundary);
+                doImageEncoding(m_ImageList, m_strMHT, m_strBoundary);
             //백그라운드 인코딩
             if (m_BackImageList != null)
-            	m_strMHT = doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
+            	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
             //스크립트 인코딩 - 생략 ex) <script src="http://....test.aspx">
             //CSS 인코딩 - 생략 ex) <link href="http://....test.css">
 
@@ -148,18 +144,17 @@ public class EzCommonController {
 
     }
 
-	private String[] makeHeader(String m_strMHT) throws Exception{
+	private String makeHeader(StringBuilder m_strMHT) throws Exception{
 		String m_strBoundary = createBoundary();
-        m_strMHT += "MIME-Version: 1.0\n";
-        m_strMHT += "Content-Type: Multipart/related;\n";
-        m_strMHT += "  boundary=\"" + m_strBoundary + "\"\n";
-        m_strMHT += "From: Kaoni MHT Component(UTF-8)\n";
-        m_strMHT += "Subject:  HTML to Mime-HTML\n";
-        m_strMHT += "Date: " + getDate() + "\n";
-        m_strMHT += "\n\n";
-        String tmpAry[] = {m_strMHT,m_strBoundary};
+        m_strMHT.append("MIME-Version: 1.0\n");
+        m_strMHT.append("Content-Type: Multipart/related;\n");
+        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"\n");
+        m_strMHT.append("From: Kaoni MHT Component(UTF-8)\n");
+        m_strMHT.append("Subject:  HTML to Mime-HTML\n");
+        m_strMHT.append("Date: " + getDate() + "\n");
+        m_strMHT.append("\n\n");
         
-        return tmpAry;
+        return m_strBoundary;
     }
 	
 	private String createBoundary() throws Exception{
@@ -170,10 +165,10 @@ public class EzCommonController {
             int nch = Rnd.nextInt(9)+1; 
 
             if (nch < 26){
-                strBoundary += (65 + nch);
+                strBoundary += (char)(65 + nch);
             }
             else{
-                strBoundary += (97 + nch - 26);
+                strBoundary += (char)(97 + nch - 26);
             }
         }
         return strBoundary;
@@ -265,7 +260,7 @@ public class EzCommonController {
         return strDate;
     }
 	
-	private Object[] extractImageSource(String strHtml) throws Exception{
+	private String[] extractImageSource(String strHtml) throws Exception{
 		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
         String strTempHtml = strHtml.toLowerCase();
         String strImgsrc = "";
@@ -374,11 +369,10 @@ public class EzCommonController {
                 }
             }
         }
-        Object tmpAry[] = {strHtml,m_ImageList};
-        return tmpAry;
+        return m_ImageList;
     }
 	
-	private Object[] extractBackgroundSource(String strHtml, String[] m_ImageList) throws Exception{
+	private String[] extractBackgroundSource(String strHtml, String[] m_ImageList) throws Exception{
         String strTempHtml = strHtml.toLowerCase();
         int npos = 0, nposStart = 0, nposEnd = 0;
         int nImgCount = 0;
@@ -503,12 +497,11 @@ public class EzCommonController {
                 index++;
             }
         }
-        Object tmpAry[] = {strHtml, m_ImageList, m_BackImageList};
         
-        return tmpAry;
+        return m_BackImageList;
     }
 	
-	private StringBuilder doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
+	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         m_strMHT.append("--" + m_strBoundary + "\n");
         m_strMHT.append("Content-Type: Text/HTML\n");
         m_strMHT.append("Content-Transfer-Encoding: base64\n");
@@ -519,10 +512,9 @@ public class EzCommonController {
         m_strMHT.append(strMhtBase64 + "\n");
         m_strMHT.append("--" + m_strBoundary);
         
-        return m_strMHT;
     }
 	
-	private StringBuilder doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
+	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_ImageList.length; i++){
             m_strMHT.append("\nContent-Type: Image/gif\n");
             m_strMHT.append("Content-Transfer-Encoding: base64\n");
@@ -555,10 +547,9 @@ public class EzCommonController {
             m_strMHT.append(strImageData + "\n");
             m_strMHT.append("--" + m_strBoundary);
         }
-        return m_strMHT;
     }
 	
-	private StringBuilder doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
+	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++){
             m_strMHT.append("\nContent-Type: Image/gif\n");
             m_strMHT.append("Content-Transfer-Encoding: base64\n");
@@ -590,6 +581,5 @@ public class EzCommonController {
             m_strMHT.append(strImageData + "\n");
             m_strMHT.append("--" + m_strBoundary);
         }
-        return m_strMHT;
     }
 }
