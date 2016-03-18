@@ -328,7 +328,10 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 
 	@Override
 	public List<QstVO> getQuestionForResponse(QstVO questionVO) throws Exception {
-		return null;
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", questionVO.getBrdId());
+		map.put("v_pItemNo", questionVO.getItemNo());
+		return ezQuestionDAO.getQuestionForResponse(map);
 	}
 
 	@Override

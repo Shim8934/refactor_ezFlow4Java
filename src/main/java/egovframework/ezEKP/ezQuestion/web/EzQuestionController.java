@@ -164,29 +164,6 @@ public class EzQuestionController {
 		/** 결과값없으면 Error처리*/
 		if(qstUserPollItemVO.getTitle().equals(null))
 			response.sendRedirect("/error.do"); //나중에 에러처리찾아서 주소만바꾸면됨
-		/** 설문기간에 따른 Title처리*/
-		java.text.DateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date startDate1;
-		Date endDate1;
-		Date sysDate1;
-		sysDate1 = new Date();
-		int compareStart, compareEnd;
-		String strData;
-		
-		startDate1=formatter1.parse(qstUserPollItemVO.getPostDate());
-		endDate1=formatter1.parse(qstUserPollItemVO.getPollEndDate());
-		compareStart = startDate1.compareTo(sysDate1);
-		compareEnd = endDate1.compareTo(sysDate1);
-		StringBuilder strbuilder = new StringBuilder();
-		if(compareStart <= 0 && compareEnd >= 0){
-			strbuilder.append("[진행중] ");
-			strbuilder.append(qstUserPollItemVO.getTitle()); 
-			strData = strbuilder.toString();
-		}else{
-			strbuilder.append("[완료] ");
-			strbuilder.append(qstUserPollItemVO.getTitle());
-			strData = strbuilder.toString();
-		}
 		
 		/**UserPermission*/
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
@@ -241,7 +218,7 @@ public class EzQuestionController {
 							adminYN = true;
 					}
 				}
-				if(userId == rsUserId || adminYN == true){
+				if(userId.equals(rsUserId) || adminYN == true){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
@@ -285,7 +262,7 @@ public class EzQuestionController {
 							adminYN = true;
 					}
 				}
-				if (rsUserId == userId || adminYN == true){
+				if (rsUserId.equals(userId) || adminYN == true){
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 					response.getWriter().write("</script>");
@@ -317,6 +294,7 @@ public class EzQuestionController {
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		
 		adminYN = "N";
+
 		if(loginVO.getId().equals(ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId"))))){
 			adminYN = "Y";
 		}
@@ -448,7 +426,8 @@ public class EzQuestionController {
 		
 		/** QuestionForResponse*/
 		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO);
-		
+
+		Document doc = null;
 		if(questionList != null){
 			int iQueCount = 0;
 			StringBuilder sb = new StringBuilder();
@@ -485,22 +464,14 @@ public class EzQuestionController {
 				sb.append(question.getQuesSn());
 				sb.append("</QUES_SN>");
 				sb.append("</ROW>");
-				
-				
-				
-				
 			}
 			sb.append("</DATA>");
 			String strXML = sb.toString();
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder builder = factory.newDocumentBuilder();
-		    Document doc = builder.parse(new InputSource(new StringReader(strXML)));
-		    
-		    NodeList nList = doc.getElementsByTagName("NODE");
-			
-			
+		    doc = commonUtil.convertStringToDocument(strXML);
 		}
-		
+System.out.println(qstVO.getItemNo());
+System.out.println(questionList.get(0));
+System.out.println(doc.getElementsByTagName("ROW").item(0));		
 		/** AnswerCnt*/
 		
 		/** AttachInfo*/

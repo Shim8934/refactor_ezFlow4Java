@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
+import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzQuestionDAO")
@@ -27,6 +28,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<QstAttachVO> getAttachInfo(Map<String, Object> map) {
 		return (List<QstAttachVO>) select("EzQuestionDAO.getAttachInfo", map);
+	}
+	
+	public List<QstVO> getQuestionForResponse(Map<String, Object> map) {
+		return (List<QstVO>) select("EzQuestionDAO.getQuestionForResponse", map);
 	}
 	
 	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
@@ -138,4 +143,5 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+
 }
