@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<script type="text/javascript">
 		    document.onselectstart = function (){ return false; };
@@ -31,17 +32,36 @@
 			}
 			MM_reloadPage(true);
 			
-alert("${strXML}")
-var xml = $.parseXML('${strXML}');
-var a = xml.documentElement.childNodes;
-
+			function tableXML(){				
+				var xmlDoc =$.parseXML('${strXML}');
+				var DataNode = SelectSingleNode(xmlDoc, "DATA");
+				var RowNode = SelectSingleNode(DataNode,"ROW");
+				var nodes = GetChildNodes(DataNode);
+				var tableXml="";
+				for(i=0;nodes.length>i; i++){
+// alert(SelectSingleNodeValue(nodes[i], "QST"));
+// alert(SelectSingleNodeValue(nodes[i], "BRD_ID"));
+// alert(SelectSingleNodeValue(nodes[i], "ITEM_NO"));
+// alert(SelectSingleNodeValue(nodes[i], "QUESTION_NO"));
+// alert(SelectSingleNodeValue(nodes[i], "ANSWERTYPE"));
+// alert(SelectSingleNodeValue(nodes[i], "ANSWERVIEWTYPE"));
+// alert(SelectSingleNodeValue(nodes[i], "MULTISELECT"));
+// alert(SelectSingleNodeValue(nodes[i], "QUES_SN"));
+					
+					
+					tableXml += "<tr>";
+					tableXml += "<td style='padding:3px 10px'>SelectSingleNodeValue(nodes[i], 'QST')</td>";
+					tableXml += "</tr>";
+				}
+				$("#tableXml").html(tableXml);
+			}
+			tableXML();
 		</script>
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
-			
 			var btnSaveChk = false;
 		    function fun_Save(){
 		        if(form_check() == false)
@@ -309,7 +329,7 @@ var a = xml.documentElement.childNodes;
 		  </tr>
 		</table>
 		
-		
+		<form>
 		<%-- <form name="frmResponse" method="post" onSubmit="fun_Save()">
 		  <input type=hidden value="${receve}" name="receve">
 		  <table class="poll" style="margin-top:10px" >
@@ -344,21 +364,24 @@ var a = xml.documentElement.childNodes;
 			}
 			xmlMainDom = null;
 		%>  --%>
-		<!-- <table>
-		        <tr>
-		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("QST").InnerText</td>
-		        </tr>
-		        	((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SUBROW").InnerText
-		        <tr>
-		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TAG").InnerText</td>
-		        </tr>
-		</table> -->
-		  
+		<table id = "tableXml">
+		</table>
+
+<!-- 		<table> -->
+<!-- 		        <tr> -->
+<!-- 		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("QST").InnerText</td> -->
+<!-- 		        </tr> -->
+<!-- 		        	((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SUBROW").InnerText -->
+<!-- 		        <tr> -->
+<!-- 		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TAG").InnerText</td> -->
+<!-- 		        </tr> -->
+<!-- 		</table> -->
+		</form>
 		  <input type="hidden" name="hidEleCnt">
 		  <input type=hidden value="brdId%>" name=brdId >
 		  <input type=hidden value="itemNo" name=itemNo>
 		  <input type="hidden" name="tableAnswer" />
-		</form>
+		
 		<div class="btnposition">
 			<a class="imgbtn"> <span onClick="javascript:fun_Save();return false;"> <spring:message code="ezQuestion.t37" /> </span> </a>
 			<a class="imgbtn"> <span onClick="javascript:menuQst_List();return false;"> <spring:message code="ezQuestion.t38" /> </span> </a>
