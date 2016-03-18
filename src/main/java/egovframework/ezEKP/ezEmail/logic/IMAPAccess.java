@@ -66,73 +66,81 @@ public class IMAPAccess {
 		}
 	}
 	
-	public List<Folder> getRootMailFolder() {
-		ArrayList<Folder> rootMailFolder = new ArrayList<Folder>();
+	public List<Folder> getTopLevelFolders() {
+		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		
 		try{
-			getStore().getDefaultFolder().getFolder("INBOX").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			getStore().getDefaultFolder().getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			getStore().getDefaultFolder().getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			getStore().getDefaultFolder().getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			getStore().getDefaultFolder().getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			getStore().getDefaultFolder().getFolder("정크 메일").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-			
-			
+			Store store = getStore();
+			store.getDefaultFolder().getFolder("INBOX").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			store.getDefaultFolder().getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			store.getDefaultFolder().getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			store.getDefaultFolder().getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			store.getDefaultFolder().getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			store.getDefaultFolder().getFolder("정크 메일").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 			
 			Folder[] f = getStore().getDefaultFolder().list();
 			
-			
-			
 			for(Folder fd : f){
-				rootMailFolder.add(fd);
-			}
-
-			/*//순서 변경 -- 수정
-			int defaultFolderCount = 6;
-			for(Folder fd : f){
-				switch(fd.getName()){
-				case "INBOX":
-					rootMailFolder.add(0, fd);
-					break;
-				case "보낸 편지함":
-					rootMailFolder.add(1, fd);
-					break;
-				case "임시 보관함":
-					rootMailFolder.add(2, fd);
-					break;
-				case "지운 편지함":
-					rootMailFolder.add(3, fd);
-					break;
-				case "PERSONAL":
-					rootMailFolder.add(4, fd);
-					break;
-				case "정크 메일":
-					rootMailFolder.add(5, fd);
-					break;
-				default:
-					rootMailFolder.add(defaultFolderCount++, fd);
+				if(fd.getName().equalsIgnoreCase("INBOX")){
+					topLevelFolders.add(fd);
 					break;
 				}
-			}*/
+			}
+			for(Folder fd : f){
+				if(fd.getName().equalsIgnoreCase("보낸 편지함")){
+					topLevelFolders.add(fd);
+					break;
+				}
+			}
+			for(Folder fd : f){
+				if(fd.getName().equalsIgnoreCase("임시 보관함")){
+					topLevelFolders.add(fd);
+					break;
+				}
+			}
+			for(Folder fd : f){
+				if(fd.getName().equalsIgnoreCase("지운 편지함")){
+					topLevelFolders.add(fd);
+					break;
+				}
+			}
+			for(Folder fd : f){
+				if(fd.getName().equalsIgnoreCase("PERSONAL")){
+					topLevelFolders.add(fd);
+					break;
+				}
+			}
+			for(Folder fd : f){
+				if(fd.getName().equalsIgnoreCase("정크 메일")){
+					topLevelFolders.add(fd);
+					break;
+				}
+			}
+			for(Folder fd : f){
+				if(!fd.getName().equalsIgnoreCase("INBOX")&&!fd.getName().equalsIgnoreCase("보낸 편지함")&&!fd.getName().equalsIgnoreCase("임시 보관함")&&
+						!fd.getName().equalsIgnoreCase("지운 편지함")&&!fd.getName().equalsIgnoreCase("PERSONAL")&&!fd.getName().equalsIgnoreCase("정크 메일")){
+					topLevelFolders.add(fd);
+				}
+			}
 		} catch(MessagingException e){
 			System.out.println("Error get default folder: " + e.getMessage());
 			e.printStackTrace();
 		}
-		return rootMailFolder;
+		return topLevelFolders;
 	}
 	
-	public List<Folder> getSubMailFolder(String parent){
-		ArrayList<Folder> al = new ArrayList<Folder>();
+	public List<Folder> getSubFolders(String parent){
+		ArrayList<Folder> subFolders = new ArrayList<Folder>();
 		try {
 			Folder[] f = getStore().getFolder(parent).list();
 			for(Folder fd : f){
-				al.add(fd);
+				subFolders.add(fd);
 			}
 		} catch (MessagingException e) {
 			System.out.println("Error get sub folder: " + e.getMessage());
 			e.printStackTrace();
 		}
-		return al;
+		return subFolders;
 	}
 
 	public int getUnreadCount(String folderName){

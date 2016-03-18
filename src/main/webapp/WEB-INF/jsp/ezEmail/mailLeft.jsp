@@ -363,7 +363,7 @@
         }
         var AddressTreeView = null;
         function LoadAddressTree() {
-            /* if (AddressTreeView == null) {
+            /* if (AddressTreeView == null) { //주소록할때 주석풀기
                 AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
 
                 AddressTreeView.attachEvent('requestdata', requestdata_address);

@@ -1,21 +1,14 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -43,12 +35,14 @@ public class EzEmailMenuController {
 
 	@RequestMapping(value="/ezEmail/mailLeft.do")
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
 		StringBuilder rootFolderXML = new StringBuilder();
 		System.out.println(commonUtil.getUserIdAndPassword(loginCookie).get(0) +","+ commonUtil.getUserIdAndPassword(loginCookie).get(1));
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				commonUtil.getUserIdAndPassword(loginCookie).get(0)+"@"+config.getProperty("config.DomainName"), commonUtil.getUserIdAndPassword(loginCookie).get(1));
-		List<Folder> rootMailFolder = ia.getRootMailFolder();
+				id+"@"+config.getProperty("config.DomainName"), password);
+		List<Folder> rootMailFolder = ia.getTopLevelFolders();
 		
 		try {
 			for(int i=0,j=0; i<rootMailFolder.size(); i++){
@@ -126,6 +120,9 @@ public class EzEmailMenuController {
 	@RequestMapping(value="/ezEmail/getFolderList.do")
 	public void getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
+			List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+			String id = userInfo.get(0);
+			String password  = userInfo.get(1);
 			StringBuilder sb = new StringBuilder();
 			char[] charBuffer = new char[128];
 			int bytesRead=0;
@@ -138,8 +135,8 @@ public class EzEmailMenuController {
 			
 			StringBuilder subFolderXML = new StringBuilder();
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					commonUtil.getUserIdAndPassword(loginCookie).get(0)+"@"+config.getProperty("config.DomainName"), commonUtil.getUserIdAndPassword(loginCookie).get(1));
-			List<Folder> subMailFolder = ia.getSubMailFolder(folderName);
+					id+"@"+config.getProperty("config.DomainName"), password);
+			List<Folder> subMailFolder = ia.getSubFolders(folderName);
 			try {
 				for(int i=0; i<subMailFolder.size(); i++){
 					Folder fd = subMailFolder.get(i);
@@ -176,6 +173,9 @@ public class EzEmailMenuController {
 	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do")
 	public void getFolderUnreadCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
+			List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+			String id = userInfo.get(0);
+			String password  = userInfo.get(1);
 			StringBuilder sb = new StringBuilder();
 			char[] charBuffer = new char[128];
 			int bytesRead=0;
@@ -187,7 +187,7 @@ public class EzEmailMenuController {
 			response.setContentType("text/plain; charset=utf-8");
 			
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					commonUtil.getUserIdAndPassword(loginCookie).get(0)+"@"+config.getProperty("config.DomainName"), commonUtil.getUserIdAndPassword(loginCookie).get(1));
+					id+"@"+config.getProperty("config.DomainName"), password);
 			String unreadCountXML = "<DATA>"+ia.getUnreadCount(folderName)+"</DATA>";
 			ia.close();
 			
