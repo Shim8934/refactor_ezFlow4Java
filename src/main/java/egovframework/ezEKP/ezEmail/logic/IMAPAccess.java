@@ -6,12 +6,20 @@ import java.util.Properties;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.MimeBodyPart;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IMAPAccess {
 
+    private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
+    
 	private String host;
 	private String port;
 	private Store store;
@@ -22,7 +30,7 @@ public class IMAPAccess {
 		this.host = host;
 		this.port = port;
 		this.userName = username;
-		this.password = password;
+		this.password = password;		
 	}
 
 	private Store getStore(){
@@ -180,6 +188,44 @@ public class IMAPAccess {
 		}
 		
 		return folder;
+	}
+	
+	public boolean hasAttachment(Part part) {
+		boolean isAttached = false;
+		
+		try {
+//			logger.debug("Content-Type=" + part.getContentType());
+			
+			// this is a multipart			
+			if (part.isMimeType("multipart/*")) {				
+		         Multipart mp = (Multipart)part.getContent();
+		         int count = mp.getCount();
+		         for (int i = 0; i < count; i++) {
+		        	 isAttached = hasAttachment(mp.getBodyPart(i));
+		        	 if (isAttached) {
+		        		 break;
+		        	 }
+		         }
+			}
+			// this is a nested message			
+			else if (part.isMimeType("message/rfc822")) {
+				hasAttachment((Part)part.getContent());
+			}
+			else if (part instanceof MimeBodyPart) {
+				String disp = part.getDisposition();
+				String filename = part.getFileName();
+//				logger.debug("disp=" + disp + ",filename=" + filename);
+				// many mailers don't include a Content-Disposition
+				if ((disp != null && disp.equalsIgnoreCase(Part.ATTACHMENT))
+						|| (filename != null)) {
+					isAttached = true;
+				}
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 		
+		
+		return isAttached;
 	}
 	
 	public static IMAPAccess getInstance(String host, String port, String username, String password){

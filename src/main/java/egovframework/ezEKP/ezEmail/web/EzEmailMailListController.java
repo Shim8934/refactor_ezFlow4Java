@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.UIDFolder;
+import javax.mail.internet.MimeUtility;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzEmailMailListController {
 	
+    private static final Logger logger = LoggerFactory.getLogger(EzEmailMailListController.class);
+    
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -42,19 +47,28 @@ public class EzEmailMailListController {
     private EgovMessageSource egovMessageSource;    
 
     @Resource(name="EzEmailService")
-    private EzEmailService ezEmailService;    
-    
-    private static final Logger logger = LoggerFactory.getLogger(EzEmailMailListController.class);
+    private EzEmailService ezEmailService;        
 	
 	@RequestMapping("/ezEmail/mailList.do")
-	public String showMailList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String showMailList(@CookieValue("loginCookie") String loginCookie, 
+			HttpServletRequest request,
+			Model model) throws Exception {
 		logger.debug("showMailList started");
+		String dispname = request.getParameter("dispname");
+		if (dispname != null) {
+			dispname = new String(dispname.getBytes("ISO-8859-1"),"UTF-8");
+		}
+		logger.debug("dispname=" + dispname);
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String folderName = egovMessageSource.getMessage("ezEmail.t644");
 		String folderType = "";
 		String userLang ="1";
+		
+		if (dispname != null) {
+			folderName = dispname;
+		}
 		
 		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645"))) {
 			folderType = "sent";
@@ -119,20 +133,48 @@ public class EzEmailMailListController {
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		Message[] messages = folder.getMessages();
 		
-		for (int i = 0; i < messages.length; i++) {
+		int startNo = messages.length - 1 - Integer.parseInt(start);
+		int endNo = Math.max(messages.length - 1 - Integer.parseInt(end), 0);
+		logger.debug("startNo=" + startNo + ",endNo=" + endNo);
+		for (int i = startNo; i >= endNo; i--) {
 			Message message = messages[i];
 			
 			sb.append("<response>");
 			sb.append(String.format("<href><![CDATA[%s]]></href>", uidFolder.getUID(message)));
 			sb.append("<fromemail><![CDATA[]]></fromemail>");
-			sb.append(String.format("<importance><![CDATA[%d]]></importance>", 1));
+			String[] headers = message.getHeader("importance");
+			String header = headers != null ? headers[0] : "normal";
+			int importance = 1;
+			if (header.equalsIgnoreCase("high")) {
+				importance = 2;
+			}
+			else if (header.equalsIgnoreCase("low")) {
+				importance = 0;
+			}
+			sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));			
 			sb.append("<flag><![CDATA[0]]></flag>");
-			sb.append("<attach><![CDATA[0]]></attach>");
-			sb.append(String.format("<sender><![CDATA[%s]]></sender>", message.getFrom()[0]));
+			boolean isAttached = imapAccess.hasAttachment(message);
+//			logger.debug("msgno=" + i + ",isAttached=" + isAttached);
+			int attached = isAttached ? 1 : 0;
+			sb.append(String.format("<attach><![CDATA[%d]]></attach>", attached));
+			
+			String addressStr = "";
+			Address[] address = null;
+			if (!viewSelectIndex.equals("3")) {
+				address = message.getFrom();
+			}
+			else {
+				address = message.getRecipients(Message.RecipientType.TO);
+			}			
+			if (address != null) {
+				addressStr = address[0].toString();
+				addressStr = MimeUtility.decodeText(addressStr);
+			}
+			sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
 			sb.append(String.format("<subject><![CDATA[%s]]></subject>", message.getSubject()));
 			Date receivedDate = message.getReceivedDate();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
-			sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", format.format(receivedDate)));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
+			sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", sdf.format(receivedDate)));
 			sb.append(String.format("<size><![CDATA[%d]]></size>", message.getSize()));
 			int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 			sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
