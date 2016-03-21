@@ -32,7 +32,6 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public List<QstVO> getQuestionForResponse(Map<String, Object> map) {
-		System.out.println(select("EzQuestionDAO.getQuestionForResponse", map).toString());
 		return (List<QstVO>) list("EzQuestionDAO.getQuestionForResponse", map);
 	}
 	

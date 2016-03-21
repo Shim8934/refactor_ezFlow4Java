@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -427,52 +427,72 @@ public class EzQuestionController {
 		/** QuestionForResponse*/
 		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO);
 
-		Document doc = null;
-		String strXML ="";
+		String strResult = "<SUBDATA>";
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Node data = doc.createElement("DATA");
+		doc.appendChild(data);
+
 		if(questionList != null){
 			int iQueCount = 0;
-			StringBuilder sb = new StringBuilder();
-			sb.append("<DATA>");
+			String strTagData = "";
 			for(QstVO question : questionList){
-				iQueCount++;
-				arrAnswer.add(question.getAnswerType());
-				sb.append("<ROW>");
-				sb.append("<QST>");
-				sb.append(egovMessageSource.getMessage("ezQuestion.t333"));
-				sb.append(iQueCount + ":");
-				sb.append(modifyData(question.getQuesContent()));
-				sb.append(getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
-				sb.append("</QST>");
-				sb.append("<BRD_ID>");
-				sb.append(question.getBrdId());
-				sb.append("</BRD_ID>");
-				sb.append("<ITEM_NO>");
-				sb.append(question.getItemNo());
-				sb.append("</ITEM_NO>");
-				sb.append("<QUESTION_NO>");
-				sb.append(question.getQuestionNo());
-				sb.append("</QUESTION_NO>");
-				sb.append("<ANSWERTYPE>");
-				sb.append(question.getAnswerType());
-				sb.append("</ANSWERTYPE>");
-				sb.append("<ANSWERVIEWTYPE>");
-				sb.append(question.getAnswerViewType());
-				sb.append("</ANSWERVIEWTYPE>");
-				sb.append("<MULTISELECT>");
-				sb.append(question.getMultiSelect());
-				sb.append("</MULTISELECT>");
-				sb.append("<QUES_SN>");
-				sb.append(question.getQuesSn());
-				sb.append("</QUES_SN>");
-				sb.append("</ROW>");
+				Element row = doc.createElement("ROW");
+				Element qst = doc.createElement("QST");
+				Node brdId = doc.createElement("BRD_ID");
+				Node itemNo = doc.createElement("ITEM_NO");
+				Node questionNo = doc.createElement("QUESTION_NO");
+				Node answerType = doc.createElement("ANSWERTYPE");
+				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
+				Node multiSelect = doc.createElement("MULTISELECT");
+				Node quesSn = doc.createElement("QUES_SN");
+				
+				row.setAttribute("QST", egovMessageSource.getMessage("ezQuestion.t333") + iQueCount + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
+				row.setAttribute("BRD_ID", Integer.toString(question.getBrdId()));
+				row.setAttribute("ITEM_NO", Integer.toString(question.getItemNo()));
+				row.setAttribute("QUESTION_NO", Integer.toString(question.getQuestionNo()));
+				row.setAttribute("ANSWERTYPE", Integer.toString(question.getAnswerType()));
+				row.setAttribute("ANSWERVIEWTYPE", Integer.toString(question.getAnswerViewType()));
+				row.setAttribute("MULTISELECT", question.getMultiSelect());
+				row.setAttribute("QUES_SN", Integer.toString(question.getQuesSn()));
+				
+				row.appendChild(qst);
+				row.appendChild(brdId);
+				row.appendChild(itemNo);
+				row.appendChild(questionNo);
+				row.appendChild(answerType);
+				row.appendChild(answerViewType);
+				row.appendChild(multiSelect);
+				row.appendChild(quesSn);
+				data.appendChild(row);
+				
+				if(question.getAnswerType() == 2){
+					strTagData = "<tr>\n";
+					strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
+                    strTagData += "<textarea style='Width:100%;height:85;' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></textarea></td>\n";
+                    strTagData += "</tr>\n";
+                    row.setAttribute("SUBROW", strTagData);
+				}else if(question.getAnswerType() == 5){
+                    strTagData = "<tr>\n";
+                    strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
+                    strTagData += "";
+                    strTagData += "</tr>\n";
+				}else{
+					if(question.getAnswerType() == 4){
+						 strTagData = "<tr>\n";
+                         strTagData += "	<td style='word-break:break-all;padding:10px'>\n";
+                         strTagData += "		<input type='text' maxlength='500' READONLY style='Width:760' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></td>\n";
+                         strTagData += "</tr>\n";
+                         row.setAttribute("SUBROW", strTagData);
+					}else{
+						row.setAttribute("SUBROW", "");
+					}
+					dataSubProcess(qstVO.getBrdId(), qstVO.getItemNo(), qstVO.getItemNo(), row);
+				}
+				strResult += "</SUBDATA>";
+				
 			}
-			sb.append("</DATA>");
-			strXML = sb.toString();
-			doc = commonUtil.convertStringToDocument(strXML);
 			
-System.out.println(strXML);
 		}
-		
 		/** AnswerCnt*/
 		
 		/** AttachInfo*/
@@ -486,12 +506,12 @@ System.out.println(strXML);
 	 
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
-		model.addAttribute("strXML",strXML);
+		model.addAttribute("doc", doc);
 		
 		return "/ezQuestion/qstResponse";
 	}
 	
-	public void dataSubProcess(int brdId, int itemNo, int qstNo){
+	public void dataSubProcess(int brdId, int itemNo, int qstNo, Node row){
 		
 	}
 	
