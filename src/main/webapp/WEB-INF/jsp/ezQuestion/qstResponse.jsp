@@ -34,11 +34,12 @@
 			MM_reloadPage(true);
 			
 			function tableXML(){				
-				var xmlDoc =$.parseXML('${strXML}');
+				var xmlDoc =$.parseXML('${doc}');
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
+				alert("${doc}");
 				for(i=0;nodes.length>i; i++){
 // alert(SelectSingleNodeValue(nodes[i], "QST"));
 // alert(SelectSingleNodeValue(nodes[i], "BRD_ID"));
