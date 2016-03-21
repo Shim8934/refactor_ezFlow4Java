@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezQuestion.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
@@ -24,6 +25,8 @@ public interface EzQuestionService {
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
 
 	public QstUserPermissionVO getUserPermission(QstUserPermissionVO qstUserPermissionVO) throws Exception;
+	
+	public QstAnswerVO getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception;
 
 	public String getItemSeq(String brdId) throws Exception;
 
@@ -71,5 +74,7 @@ public interface EzQuestionService {
 
 	public void updateReadDate(QstUserPollItemVO userPollItemVO, String readDate, String userId) throws Exception;
 
-	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;		
+	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
+
+			
 }
