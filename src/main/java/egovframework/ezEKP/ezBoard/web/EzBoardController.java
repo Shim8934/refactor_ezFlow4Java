@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URLEncoder;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1698,7 +1700,6 @@ public class EzBoardController extends EgovFileMngUtil{
         String[] itemid = null;
 
         BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
-System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(0).getTextContent());
         doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("\n", "\r\n"));;
 
         if (boardInfo.getWrite_FG().equals("false")){
@@ -1767,7 +1768,7 @@ System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(
 		}else{
 			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+"/" + boardListVO.getBoardID() + "/doc/" + boardListVO.getItemID() + ".mht");
 		}
-		if(doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null || !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")){
+		if(doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")){
 			boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
 		}else{
 			boardListVO.setStartDate(boardListVO.getWriteDate());
@@ -1794,16 +1795,16 @@ System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(
 		}
 
 		//확장 필드, Ext1, Ext2는 integer 값을 가짐
-		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")){
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")){
 			boardListVO.setExtensionAttribute1("0");
 		}else{
 			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
 		}
 		
-		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")){
-			boardListVO.setExtensionAttribute1("0");
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")){
+			boardListVO.setExtensionAttribute2("0");
 		}else{
-			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+			boardListVO.setExtensionAttribute2(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
 		}
 		
 		boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
@@ -1815,18 +1816,28 @@ System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(
 		
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0) != null){
 			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent());
+		}else{
+			boardListVO.setExtensionAttribute6("");
 		}
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null){
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+			boardListVO.setExtensionAttribute7(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+		}else{
+			boardListVO.setExtensionAttribute7("");
 		}
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null){
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+			boardListVO.setExtensionAttribute8(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+		}else{
+			boardListVO.setExtensionAttribute8("");
 		}
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null){
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+			boardListVO.setExtensionAttribute9(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+		}else{
+			boardListVO.setExtensionAttribute9("");
 		}
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null){
-			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+			boardListVO.setExtensionAttribute10(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+		}else{
+			boardListVO.setExtensionAttribute10("");
 		}
 		
 		if(!pMode.equals("copy")){
@@ -1836,89 +1847,31 @@ System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(
 			}
 		}
 	
-//		if (pAttachments.Length > 0)
-//			pHasAttach = "1";
-//		else
-//			pHasAttach = "0";
-//
-//        if (pMode == "modify")
-//            cmd = new OracleCommand("ezSp_BrdUpdateItem", conn);
-//        else if (pMode == "temp")
-//            cmd = new OracleCommand("ezSp_BrdNewItem_temp", conn);
-//        else
-//            cmd = new OracleCommand("ezSp_BrdNewItem", conn);
-//
-//        cmd.CommandType = CommandType.StoredProcedure;
-//
-//        OracleParameter param1 = cmd.Parameters.Add("v_pItemID", OracleType.NChar, 38); param1.Value = pItemID;
-//        OracleParameter param2 = cmd.Parameters.Add("v_pBoardID", OracleType.NChar, 38); param2.Value = pBoardID;
-//        OracleParameter param3 = cmd.Parameters.Add("v_pWriterID", OracleType.NVarChar, 20); param3.Value = pWriterID;
-//        OracleParameter param4 = cmd.Parameters.Add("v_pWriterName", OracleType.NVarChar, 20); param4.Value = pWriterName;
-//        OracleParameter param5 = cmd.Parameters.Add("v_pWriterDeptID", OracleType.NVarChar, 20); param5.Value = pWriterDeptID;
-//        OracleParameter param6 = cmd.Parameters.Add("v_pWriterDeptName", OracleType.NVarChar, 50); param6.Value = pWriterDeptName;
-//        OracleParameter param7 = cmd.Parameters.Add("v_pWriterCompanyID", OracleType.NVarChar, 20); param7.Value = pWriterCompanyID;
-//        OracleParameter param8 = cmd.Parameters.Add("v_pWriterCompanyName", OracleType.NVarChar, 50); param8.Value = pWriterCompanyName;
-//        OracleParameter param9 = cmd.Parameters.Add("v_pWriteDate", OracleType.NVarChar, 20); param9.Value = pWriteDate;
-//        OracleParameter param10 = cmd.Parameters.Add("v_pParentWriteDate", OracleType.NVarChar, 20); param10.Value = pParentWriteDate;
-//        OracleParameter param11 = cmd.Parameters.Add("v_pImportance", OracleType.Number, 4); param11.Value = Convert.ToInt32(pImportance);
-//        OracleParameter param12 = cmd.Parameters.Add("v_pTitle", OracleType.NVarChar, 200); param12.Value = pTitle;
-//        OracleParameter param13 = cmd.Parameters.Add("v_pContentLocation", OracleType.NVarChar, 200); param13.Value = pContentLocation;
-//        OracleParameter param14 = cmd.Parameters.Add("v_pStartDate", OracleType.NVarChar, 20); param14.Value = pStartDate;
-//        OracleParameter param15 = cmd.Parameters.Add("v_pEndDate", OracleType.NVarChar, 20); param15.Value = pEndDate;
-//        OracleParameter param16 = cmd.Parameters.Add("v_pAbstract", OracleType.NVarChar, 400); param16.Value = pAbstract;
-//        OracleParameter param17 = cmd.Parameters.Add("v_pAttachments", OracleType.NChar, 1); param17.Value = pHasAttach;
-//        OracleParameter param18 = cmd.Parameters.Add("v_pUpperItemIDTree", OracleType.NVarChar, 3800); param18.Value = pUpperItemIDTree;
-//        if (pItemLevel == "" || pItemLevel == null)
-//            pItemLevel = "0";
-//
-//        OracleParameter param19 = cmd.Parameters.Add("v_pItemLevel", OracleType.Number, 4); param19.Value = Int32.Parse(pItemLevel);
-//        OracleParameter param20 = cmd.Parameters.Add("v_pExtensionAttribute1", OracleType.Number, 4); param20.Value = Convert.ToInt32(pExtensionAttribute1);
-//        OracleParameter param21 = cmd.Parameters.Add("v_pExtensionAttribute2", OracleType.Number, 4); param21.Value = Convert.ToInt32(pExtensionAttribute2);
-//        OracleParameter param22 = cmd.Parameters.Add("v_pExtensionAttribute3", OracleType.NVarChar, 50); param22.Value = pExtensionAttribute3;
-//        OracleParameter param23 = cmd.Parameters.Add("v_pExtensionAttribute4", OracleType.NVarChar, 50); param23.Value = pExtensionAttribute4;
-//        OracleParameter param24 = cmd.Parameters.Add("v_pExtensionAttribute5", OracleType.NVarChar, 200); param24.Value = pExtensionAttribute5;
-//        OracleParameter param25 = cmd.Parameters.Add("v_pDocPassWord", OracleType.Char, 684); param25.Value = pDocPassWord;
-//        OracleParameter param26 = cmd.Parameters.Add("v_pWriterName2", OracleType.NVarChar, 20); param26.Value = pWriterName2;
-//        OracleParameter param27 = cmd.Parameters.Add("v_pWriterDeptName2", OracleType.NVarChar, 50); param27.Value = pWriterDeptName2;
-//        OracleParameter param28 = cmd.Parameters.Add("v_pWriterCompanyName2", OracleType.NVarChar, 50); param28.Value = pWriterCompanyName2;
-//        OracleParameter param29 = cmd.Parameters.Add("v_pExtensionAttribute32", OracleType.NVarChar, 50); param29.Value = pExtensionAttribute32;
-//        if (pTopWriteID != "" || pTopWriteID != null)
-//        {
-//            OracleParameter param31 = cmd.Parameters.Add("v_pTopWriteID", OracleType.NVarChar, 20); param31.Value = pTopWriteID;
-//        }
-//
-//        if (pMode == "modify")
-//        {
-//            OracleParameter param30 = cmd.Parameters.Add("v_pReadCountFlag", OracleType.NChar, 1); param30.Value = pReadCountFlag;
-//        }
-//
-//        OracleParameter param32 = cmd.Parameters.Add("v_pExtensionAttribute6", OracleType.NVarChar, 100); param32.Value = pExtensionAttribute6;
-//        OracleParameter param33 = cmd.Parameters.Add("v_pExtensionAttribute7", OracleType.NVarChar, 100); param33.Value = pExtensionAttribute7;
-//        OracleParameter param34 = cmd.Parameters.Add("v_pExtensionAttribute8", OracleType.NVarChar, 100); param34.Value = pExtensionAttribute8;
-//        OracleParameter param35 = cmd.Parameters.Add("v_pExtensionAttribute9", OracleType.NVarChar, 100); param35.Value = pExtensionAttribute9;
-//        OracleParameter param36 = cmd.Parameters.Add("v_pExtensionAttribute10", OracleType.NVarChar, 100); param36.Value = pExtensionAttribute10;
-//
-//        cmd.ExecuteNonQuery();
-//        cmd.Dispose();
-//
-//        cmd1 = new OracleCommand("EZSP_NEWITEM",conn);
-//        cmd1.CommandType = CommandType.StoredProcedure;
-//        cmd1.Parameters.Add("v_PITEMID", OracleType.NChar, 38).Value = pItemID;
-//
-//        cmd1.ExecuteNonQuery();
-//
-//		if (pAttachments.Length > 0)
-//		{
-//			if (SaveAttachmentsInfo(pAttachments, pItemID, pBoardID, pUploadFilePath, "BOARD") == false)
-//			{
-//				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
-//			}
-//			pHasAttach = "1";
-//		}
-//		else
-//		{
-//			pHasAttach = "0";
-//		}
+		if(boardListVO.getAttachments() != null || boardListVO.getAttachments().equals("")){
+			boardListVO.setHasAttach("1");
+		}else{
+			boardListVO.setHasAttach("0");
+		}
+		
+		if(boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")){
+			boardListVO.setItemLevel("0");
+		}
+
+		if(pMode.equals("modify")){
+//			ezBoardService.brdUpdateItem(boardListVO);
+		}else if(pMode.equals("temp")){
+//			ezBoardService.brdNewItemTemp(boardListVO);
+		}else{
+			ezBoardService.brdNewItem(boardListVO);
+		}
+		if(boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")){
+			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), realPath + boardListVO.getFilePath(), "BOARD")){
+				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
+			}
+			boardListVO.setHasAttach("1");
+		}else{
+			boardListVO.setHasAttach("0");
+		}
 
 		//통계 남기는 부분
 		return "OK";
@@ -1998,6 +1951,65 @@ System.out.println("@@@@@@@@@@@@@ || "+doc.getElementsByTagName("CONTENT").item(
 		reverseDate.append(69 - cal.get(Calendar.SECOND));
 		
 		return reverseDate.toString();
+	}
+	
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType){
+        long fileSize = 0;
+        String filepath = "";
+        String filename = "";
+        String[] temp = null;
+        if (strAttachments.substring(strAttachments.length() - 1) != ";"){
+        	strAttachments += ";";
+        }
+        
+//        for (int i = 0; i < strAttachments.split(";").length - 1; i++){
+//            if (strType.equals("BOARD")){
+//                File file = new File(strFilePath + "\\" + strAttachments.split(";")[i].replace("/", "\\"));
+//                fileSize = file.length();
+//                if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1){
+//                    filepath = strFilePath + "\\" + strBoardID + "\\uploadFile" + strAttachments.split(";")[i].replace("/", "\\").replace("tempUploadFile", "");
+//                    File fileinfo = new File(filepath);
+//                    if (!fileinfo.exists()){
+//                    	FileUtils.moveDirectoryToDirectory(src, destDir, createDestDir);
+//                    }
+//                }
+//                else
+//                {
+//                    filepath = strFilePath + "\\" + strAttachments.Split(';')[i].Replace("/", "\\");
+//                }
+//                file = null;
+//            }
+//            else
+//            {
+//                FileInfo file = new FileInfo(strFilePath + "\\" + "tempUploadFile\\" + strAttachments.Split(';')[i].Split('/')[2]);
+//                fileSize = file.Length.ToString();
+//                filepath = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.Split(';')[i].Split('/')[2];
+//
+//                FileInfo fileinfo = new FileInfo(filepath);
+//                if (!fileinfo.Exists)
+//                    file.MoveTo(filepath);
+//                file = null;
+//            }
+//            temp = strAttachments.Split(';')[i].Split('_');
+//            for (int j = 1; j < temp.Length; j++)
+//            {
+//                if (j == 1)
+//                    filename += temp[j];
+//                else
+//                    filename += "_" + temp[j];
+//            }
+//            cmd = new OracleCommand("EZSP_SAVEATTACHMENTSINFO");
+//            cmd.CommandType = CommandType.StoredProcedure;
+//            cmd.Parameters.Add("v_STRITEMID", OracleType.NChar, 38).Value = strItemID;
+//            cmd.Parameters.Add("v_STRATTACHMENTS", OracleType.NVarChar, 200).Value = filepath.Replace(strFilePath + "\\", "").Replace("\\", "/");
+//            cmd.Parameters.Add("v_FILESIZE", OracleType.NVarChar, 50).Value = fileSize;
+//            cmd.Parameters.Add("v_FILENAME", OracleType.NVarChar, 50).Value = filename;
+//
+//            ExecuteSP(ref cmd);
+//            filename = null;
+//            temp = null;
+//        }
+        return true;
 	}
 	
 }

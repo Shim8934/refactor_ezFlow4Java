@@ -112,6 +112,8 @@ public class BoardListVO {
 	private String topWriterID;
 	/** 게시물 비밀번호*/
 	private String docPassword;
+	/** 첨부여부*/
+	private String hasAttach;
 	
 	public int getrNum() {
 		return rNum;
@@ -443,4 +445,11 @@ public class BoardListVO {
 	public void setDocPassword(String docPassword) {
 		this.docPassword = docPassword;
 	}
+	public String getHasAttach() {
+		return hasAttach;
+	}
+	public void setHasAttach(String hasAttach) {
+		this.hasAttach = hasAttach;
+	}
+	
 }

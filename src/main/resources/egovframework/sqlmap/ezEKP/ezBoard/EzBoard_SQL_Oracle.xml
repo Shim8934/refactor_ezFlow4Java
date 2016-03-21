@@ -109,6 +109,13 @@
 		{CALL EZBOARDSTD.EZSP_BRDSETASREADS(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#attachments#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 
@@ -184,5 +191,14 @@
 				background = 'Y'
 		]]>                
 	</select>
+	
+	<delete id="EzBoardDAO.newItem" parameterClass="String">
+		<![CDATA[
+			DELETE FROM
+				ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS
+	   		WHERE  
+	   			itemid = #itemID#
+   		]]>
+	</delete>
 	
 </sqlMap>

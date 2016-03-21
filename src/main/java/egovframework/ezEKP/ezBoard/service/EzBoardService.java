@@ -70,5 +70,7 @@ public interface EzBoardService {
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 
+	public void brdNewItem(BoardListVO boardListVO) throws Exception;
+
 
 }

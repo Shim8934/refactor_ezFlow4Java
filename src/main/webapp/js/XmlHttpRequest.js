@@ -695,7 +695,7 @@ function ConvertHTMLtoMHT(pContent) {
 	var rtnVal = '';
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezCommon/htmlToMHT.do",
 		data : { strHTML   : pContent 

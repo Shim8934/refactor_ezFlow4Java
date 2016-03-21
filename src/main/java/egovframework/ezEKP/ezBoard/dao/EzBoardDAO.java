@@ -123,6 +123,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
 
+	public void brdNewItem(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.brdNewItem", boardListVO);
+	}
+	
+	public void newItem(String itemID) throws Exception{
+		insert("EzBoardDAO.newItem", itemID);
+	}
+	
 	public void setAsRead(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.setAsRead", map);
 	}
@@ -145,6 +153,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
+
 
 
 	

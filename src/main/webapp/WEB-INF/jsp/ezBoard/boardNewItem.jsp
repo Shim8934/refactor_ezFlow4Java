@@ -603,18 +603,10 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", MakeXMLString(document.getElementById("txtAbstract").value));
-		        if (gubun != "3") {
-		            if (attachxml != "")
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
-		            else
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
-		        }
-		        else {
-		            if (attachxml != "")
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
-		            else
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
-		        }
+	            if (attachxml != "")
+	                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
+	            else
+	                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
 
 		        if (pMode == "new" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
@@ -722,7 +714,6 @@
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 //@@@@@@@@@@@@@@@ 여기까지
-alert(123456);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;
 		            xmlDom = null;

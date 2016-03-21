@@ -303,5 +303,10 @@ public class EzBoardServiceImpl implements EzBoardService {
 		}
 		return check;
 	}
-	
+
+	@Override
+	public void brdNewItem(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.brdNewItem(boardListVO);
+		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
 }
