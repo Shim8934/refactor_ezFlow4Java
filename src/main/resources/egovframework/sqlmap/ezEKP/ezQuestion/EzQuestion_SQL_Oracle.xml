@@ -7,7 +7,7 @@
 	<typeAlias  alias="QstUserPollItemVO" 			type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
 	<typeAlias  alias="QstUserPermissionVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
 	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
-	<typeAlias	alias="QstVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
+	<typeAlias	alias="QstVO" 						type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
 	
 	<resultMap class="QstListVO" id="qstList">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -86,9 +86,6 @@
 		<result property="answerViewType"			column="ANSWERVIEWTYPE"				columnIndex="6" 	nullValue="0"/>
 		<result property="multiSelect"				column="MULTISELECT"				columnIndex="7"/>
 		<result property="quesSn"					column="QUES_SN"					columnIndex="8"/>
-		
-		
-	
 	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
@@ -109,6 +106,10 @@
 	
 	<procedure id="EzQuestionDAO.getQuestionForResponse" parameterClass="Map" resultMap="qstVO">
 		{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstVO">
+		{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">

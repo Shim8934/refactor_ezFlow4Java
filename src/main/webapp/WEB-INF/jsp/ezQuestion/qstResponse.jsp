@@ -33,22 +33,23 @@
 			}
 			MM_reloadPage(true);
 			
-			function tableXML(){				
-				var xmlDoc =$.parseXML('${doc}');
+			function tableXML(){
+				var xmlDoc ='${xmlResult}';
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
-				alert("${doc}");
+				alert(SelectSingleNodeValue(nodes[0], "QST"));
+				
 				for(i=0;nodes.length>i; i++){
-// alert(SelectSingleNodeValue(nodes[i], "QST"));
-// alert(SelectSingleNodeValue(nodes[i], "BRD_ID"));
-// alert(SelectSingleNodeValue(nodes[i], "ITEM_NO"));
-// alert(SelectSingleNodeValue(nodes[i], "QUESTION_NO"));
-// alert(SelectSingleNodeValue(nodes[i], "ANSWERTYPE"));
-// alert(SelectSingleNodeValue(nodes[i], "ANSWERVIEWTYPE"));
-// alert(SelectSingleNodeValue(nodes[i], "MULTISELECT"));
-// alert(SelectSingleNodeValue(nodes[i], "QUES_SN"));
+alert(SelectSingleNode(nodes[i], "QST"));
+alert(SelectSingleNodeValue(nodes[i], "BRD_ID"));
+alert(SelectSingleNodeValue(nodes[i], "ITEM_NO"));
+alert(SelectSingleNodeValue(nodes[i], "QUESTION_NO"));
+alert(SelectSingleNodeValue(nodes[i], "ANSWERTYPE"));
+alert(SelectSingleNodeValue(nodes[i], "ANSWERVIEWTYPE"));
+alert(SelectSingleNodeValue(nodes[i], "MULTISELECT"));
+alert('${xmlResult}');
 					tableXml += "<tr>";
 					tableXml += "<td style='padding:3px 10px'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'QST');

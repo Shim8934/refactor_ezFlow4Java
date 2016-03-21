@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezQuestion.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -343,4 +342,15 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pAnswerNo", qstAttachVO.getAnswerNo());
 		return ezQuestionDAO.getAttachInfo(map);
 	}
+
+	@Override
+	public List<QstVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", qstNo);
+		return ezQuestionDAO.getAnswerAnswerCnt(map);
+	}
+	
+	
 }

@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezQuestion.web;
 
-import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +12,11 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,8 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -436,8 +437,8 @@ public class EzQuestionController {
 			int iQueCount = 0;
 			String strTagData = "";
 			for(QstVO question : questionList){
-				Element row = doc.createElement("ROW");
-				Element qst = doc.createElement("QST");
+				Node row = doc.createElement("ROW");
+				Node qst = doc.createElement("QST");
 				Node brdId = doc.createElement("BRD_ID");
 				Node itemNo = doc.createElement("ITEM_NO");
 				Node questionNo = doc.createElement("QUESTION_NO");
@@ -446,15 +447,16 @@ public class EzQuestionController {
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
 				
-				row.setAttribute("QST", egovMessageSource.getMessage("ezQuestion.t333") + iQueCount + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
-				row.setAttribute("BRD_ID", Integer.toString(question.getBrdId()));
-				row.setAttribute("ITEM_NO", Integer.toString(question.getItemNo()));
-				row.setAttribute("QUESTION_NO", Integer.toString(question.getQuestionNo()));
-				row.setAttribute("ANSWERTYPE", Integer.toString(question.getAnswerType()));
-				row.setAttribute("ANSWERVIEWTYPE", Integer.toString(question.getAnswerViewType()));
-				row.setAttribute("MULTISELECT", question.getMultiSelect());
-				row.setAttribute("QUES_SN", Integer.toString(question.getQuesSn()));
 				
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + iQueCount + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
+				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
+				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
+				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
+				answerType.appendChild(doc.createTextNode(Integer.toString(question.getAnswerType())));
+				answerViewType.appendChild(doc.createTextNode(Integer.toString(question.getAnswerViewType())));
+				multiSelect.appendChild(doc.createTextNode(question.getMultiSelect()));
+				quesSn.appendChild(doc.createTextNode(Integer.toString(question.getQuesSn())));
+
 				row.appendChild(qst);
 				row.appendChild(brdId);
 				row.appendChild(itemNo);
@@ -470,7 +472,9 @@ public class EzQuestionController {
 					strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
                     strTagData += "<textarea style='Width:100%;height:85;' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></textarea></td>\n";
                     strTagData += "</tr>\n";
-                    row.setAttribute("SUBROW", strTagData);
+                    Element subRow = doc.createElement("SUBROW");
+                    subRow.appendChild(doc.createTextNode(strTagData));
+                    row.appendChild(subRow);
 				}else if(question.getAnswerType() == 5){
                     strTagData = "<tr>\n";
                     strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
@@ -482,19 +486,20 @@ public class EzQuestionController {
                          strTagData += "	<td style='word-break:break-all;padding:10px'>\n";
                          strTagData += "		<input type='text' maxlength='500' READONLY style='Width:760' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></td>\n";
                          strTagData += "</tr>\n";
-                         row.setAttribute("SUBROW", strTagData);
+                         Element subRow = doc.createElement("SUBROW");
+                         subRow.appendChild(doc.createTextNode(strTagData));
+                         row.appendChild(subRow);
 					}else{
-						row.setAttribute("SUBROW", "");
+						Element subRow = doc.createElement("SUBROW");
+	                    subRow.appendChild(doc.createTextNode(""));
+	                    row.appendChild(subRow);
 					}
-					dataSubProcess(qstVO.getBrdId(), qstVO.getItemNo(), qstVO.getItemNo(), row);
+					dataSubProcess(question.getBrdId(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), row, doc);
 				}
 				strResult += "</SUBDATA>";
 				
 			}
-			
 		}
-		/** AnswerCnt*/
-		
 		/** AttachInfo*/
 		
 		/** 날짜계산*/
@@ -503,16 +508,33 @@ public class EzQuestionController {
 			endPoll = true;
 		if(qstUserPermissionVO.getEndFlg().equals('1'))
 			endPoll = true;
+		
+		/** XML to String */
+		DOMSource domSource = new DOMSource(doc);
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.transform(domSource, result);
+System.out.println(writer.toString());
 	 
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
-		model.addAttribute("doc", doc);
+		model.addAttribute("xmlResult", writer.toString());
 		
 		return "/ezQuestion/qstResponse";
 	}
 	
-	public void dataSubProcess(int brdId, int itemNo, int qstNo, Node row){
-		
+	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, Node row, Document doc) throws Exception{
+		Node snewRow = doc.createElement("ITEM");
+        int iCount = 0, iAddCount = 0;
+//여기부터 하면됨 근데 이 테이블이 비어잇다.
+        List<QstVO> qstAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
+        if(qstAnswerList != null){
+	        if (answerType == 5){
+	        	System.out.println(qstAnswerList.get(0).getQuestionNo());
+	        }
+        }
 	}
 	
 	public String modifyData(String strData) throws Exception{

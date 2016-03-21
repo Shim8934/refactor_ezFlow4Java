@@ -43,6 +43,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (QstUserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<QstVO> getAnswerAnswerCnt(Map<String, Object> map) {
+		return (List<QstVO>) list("EzQuestionDAO.getAnswerAnswerCnt", map);
+	}
+	
 	public String getItemSeq(String brdId) {
 		return (String)select("EzQuestionDAO.getItemSeq", brdId);
 	}
