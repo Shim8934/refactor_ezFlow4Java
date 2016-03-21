@@ -1,12 +1,14 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -132,10 +136,23 @@ public class EzEmailMailListController {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		Message[] messages = folder.getMessages();
-		
+				
 		int startNo = messages.length - 1 - Integer.parseInt(start);
 		int endNo = Math.max(messages.length - 1 - Integer.parseInt(end), 0);
 		logger.debug("startNo=" + startNo + ",endNo=" + endNo);
+		if (startNo >= endNo) {
+			Message[] fetchMessages = Arrays.copyOfRange(messages, endNo, startNo + 1);
+			FetchProfile fp = new FetchProfile();
+			fp.add(UIDFolder.FetchProfileItem.UID);
+			fp.add("importance");
+			fp.add(FetchProfile.Item.CONTENT_INFO);
+			fp.add(FetchProfile.Item.ENVELOPE);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			fp.add(FetchProfile.Item.SIZE);
+			fp.add(FetchProfile.Item.FLAGS);
+			folder.fetch(fetchMessages, fp);					
+		}
+		
 		for (int i = startNo; i >= endNo; i--) {
 			Message message = messages[i];
 			
