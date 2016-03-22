@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,8 +34,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
@@ -739,63 +740,6 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 		questionAddVO.setpQstAttach(pQstAttach);
 		model.addAttribute("questionAddVO",questionAddVO);
 		
-/*		if (questionAddVO != null) {
-			pMode = "EDIT";
-			pQstTitle = questionAddVO.getQuestionContent();
-
-			if(questionAddVO.getAttach().size() > 0) {
-				if(questionAddVO.getAttach().toString() != "") {
-					pQstAnsInfo = questionAddVO.getAttach();
-					
-					int pAttachCnt = questionAddVO.getAttach().size();
-					for (int i=0; i< pAttachCnt; i++) {
-						if(pQstAnsInfo.equals("")) {
-							pQstAttach += ";";
-						}
-						pQstAttach += questionAddVO.getTitle();
-					}
-				}
-			}
-			pAnswerType = String.valueOf(questionAddVO.getAnswerType());
-			questionAddVO.setMultiSelect("1");
-			if(questionAddVO.getMultiSelect().equals("1")) {
-				pMultiSel = "true";
-			} else {
-				pMultiSel = "false";
-			}
-			if(!pAnswerType.equals("2")) {
-				if(questionAddVO.getAnswer().size() != 0) {
-					int pCnt = questionAddVO.getAnswer().size();
-					
-					for (int i=0; i<pCnt; i++) {
-						pSelectOption += "<option value=\"" + questionAddVO.getTitle() + "\" ";
-						if(questionAddVO.getAttach().size() > 0) {
-							pSelectOption += "AnsInfo=\"" + questionAddVO.getAttach().get(0).toString() + "\">";
-						} else {
-							pSelectOption += ">";
-						}
-						pSelectOption += String.valueOf(i+1) + "." + questionAddVO.getTitle() + "</option>";
-					}
-				}
-			}
-			if(req.getParameter("dataIndex") != null) {
-				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
-			}
-		}
-		
-		itemId = req.getParameter("item_id");
-		model.addAttribute("item_id",itemId);
-		model.addAttribute("questionAddVO",questionAddVO);
-		model.addAttribute("pEditIndex",req.getParameter("pEditIndex"));
-		model.addAttribute("pMode",req.getParameter("pMode"));
-		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
-		model.addAttribute("pDataXml",req.getParameter("pDataXml"));
-		model.addAttribute("pNoneActiveX",req.getParameter("pNoneActiveX"));
-		model.addAttribute("pQstTitle",req.getParameter("txtContent"));
-		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
-		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
-		model.addAttribute("pSelectOption",req.getParameter("pSelectOption"));*/
-
 		return "/ezQuestion/qstStep2QuestionAdd";
 	}
 	
