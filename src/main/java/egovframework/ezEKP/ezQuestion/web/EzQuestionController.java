@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezQuestion.web;
 
+import java.io.File;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,10 +29,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
@@ -47,7 +51,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzQuestionController {
+public class EzQuestionController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -638,11 +642,11 @@ System.out.println(writer.toString());
 		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
 		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
 		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
-		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("setAnonymity")+"</ANONYMITY>");
-		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("setOpenResult")+"</OPENRESULT>");
-		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("setMultiResponse")+"</MULTIRESPONSE>");
+		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("hidAnonymity")+"</ANONYMITY>");
+		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("hidOpenResult")+"</OPENRESULT>");
+		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
-		pStep1DataXML.append("<TARGET>" + req.getParameter("setTarget")+"</TARGET>");
+		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
 		pStep1DataXML.append("</PARAMETER>");
 
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
@@ -658,18 +662,18 @@ System.out.println(writer.toString());
 	}
 
 	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
-	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO)  {
+	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
 		String brdId = "";
 		String itemId = "";
 		String pMode = "";
-		String pQstTitle, pAnswerType, pMultiSel;
+		String pQstTitle = "", pAnswerType, pMultiSel = "";
 		String pSelectOption = "";
 		String pEditIndex;
-		List<String> pQstAnsInfo;
+		String pQstAnsInfo = "";
 		String pQstAttach = "";
 		String pDataXML = "";
 		String pNoneActiveX = "";
-
+		
 		pMode = "NEW";
 		pAnswerType = "1";
 		if(req.getParameter("brd_id") != null) {
@@ -679,11 +683,67 @@ System.out.println(writer.toString());
 		if(req.getParameter("item_id") != null) {
 			itemId = req.getParameter("item_id").trim(); 
 		}
-		if (questionAddVO != null) {
+		
+		if(req.getParameter("DataXML") != null) {
+			pMode = "EDIT";
+			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
+			Document doc = commonUtil.convertStringToDocument(pDataXML);
+System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent());
+			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
+			
+			//첨부
+			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
+					pQstAnsInfo = doc.getElementsByTagName("ATTACH").item(0).getTextContent();
+					
+					int pAttachCnt = doc.getElementsByTagName("ROW").getLength();
+					for(int i=0; i<pAttachCnt; i++) {
+						if(pQstAttach != "") {
+							pQstAttach += ";";
+						}
+						pQstAttach += doc.getElementsByTagName("TITLE").item(i).getTextContent();
+					}
+				}
+			}
+			pAnswerType = doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent();
+			
+			if(doc.getElementsByTagName("MULTISELECT").item(0).getTextContent().equals("1")) {
+				pMultiSel = "true";
+			} else {
+				pMultiSel = "false";
+			}
+			if(!pAnswerType.equals("2")) {
+				if(doc.getElementsByTagName("ANSWER") != null) {
+					int pCnt = doc.getElementsByTagName("ANSWER").getLength();
+					
+					for(int i=0; i<pCnt; i++) {
+						pSelectOption += "<option value=\"" +doc.getElementsByTagName("TITLE").item(0).getTextContent() + "\" ";
+						if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+							pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(0).getTextContent() + "\">";
+						} else {
+							pSelectOption += ">";
+						}
+						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("TITLE").item(0).getTextContent() + "</option>";
+					}
+				}
+			}
+			if(req.getParameter("DataIndex") != null) {
+				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
+			}
+		}
+		
+		questionAddVO.setpMultiSel(pMultiSel);
+		questionAddVO.setpSelectOption(pSelectOption);
+		questionAddVO.setQuestionContent(pQstTitle);
+		questionAddVO.setpQstAnsInfo(pQstAnsInfo);
+		questionAddVO.setpQstAttach(pQstAttach);
+		model.addAttribute("questionAddVO",questionAddVO);
+		
+/*		if (questionAddVO != null) {
 			pMode = "EDIT";
 			pQstTitle = questionAddVO.getQuestionContent();
 
-			/*if(questionAddVO.getAttach().size() > 0) {
+			if(questionAddVO.getAttach().size() > 0) {
 				if(questionAddVO.getAttach().toString() != "") {
 					pQstAnsInfo = questionAddVO.getAttach();
 					
@@ -695,7 +755,7 @@ System.out.println(writer.toString());
 						pQstAttach += questionAddVO.getTitle();
 					}
 				}
-			}*/
+			}
 			pAnswerType = String.valueOf(questionAddVO.getAnswerType());
 			questionAddVO.setMultiSelect("1");
 			if(questionAddVO.getMultiSelect().equals("1")) {
@@ -704,7 +764,7 @@ System.out.println(writer.toString());
 				pMultiSel = "false";
 			}
 			if(!pAnswerType.equals("2")) {
-				/*if(questionAddVO.getAnswer().size() != 0) {
+				if(questionAddVO.getAnswer().size() != 0) {
 					int pCnt = questionAddVO.getAnswer().size();
 					
 					for (int i=0; i<pCnt; i++) {
@@ -716,7 +776,7 @@ System.out.println(writer.toString());
 						}
 						pSelectOption += String.valueOf(i+1) + "." + questionAddVO.getTitle() + "</option>";
 					}
-				}*/
+				}
 			}
 			if(req.getParameter("dataIndex") != null) {
 				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
@@ -734,7 +794,7 @@ System.out.println(writer.toString());
 		model.addAttribute("pQstTitle",req.getParameter("txtContent"));
 		model.addAttribute("pAnswerType",req.getParameter("pAnswerType"));
 		model.addAttribute("pMultiSel",req.getParameter("pMultiSel"));
-		model.addAttribute("pSelectOption",req.getParameter("pSelectOption"));
+		model.addAttribute("pSelectOption",req.getParameter("pSelectOption"));*/
 
 		return "/ezQuestion/qstStep2QuestionAdd";
 	}
@@ -846,6 +906,24 @@ System.out.println(writer.toString());
 			qstCompleteVO.setMultiSelect(multiSelect);
 			ezQuestionService.insertQuestion(qstCompleteVO);
 			
+			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+				int qstAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
+				for(int qa=0; qa < qstAttachCnt; qa++) {
+					String attachType = doc.getElementsByTagName("TYPE").item(qa).getTextContent();
+					String tmpAttachUrl = doc.getElementsByTagName("HREF").item(qa).getTextContent();
+					
+					if(attachType == "3" || attachType == "4" || attachType == "6" || attachType == "7") {
+						
+					}
+					qstCompleteVO.setAnswerNo(0);
+					qstCompleteVO.setAttachNo(qa);
+					qstCompleteVO.setAttachName(doc.getElementsByTagName("TITLE").item(qa).getTextContent());
+					qstCompleteVO.setAttachURL(tmpAttachUrl);
+					qstCompleteVO.setAttachType(attachType);
+					ezQuestionService.pollSaveAttach(qstCompleteVO);
+				}
+			}
+			
 			if(doc.getElementsByTagName("ANSWER").item(0).getChildNodes().getLength() > 0) {
 				int ansCnt = doc.getElementsByTagName("ANSWER").getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
@@ -874,4 +952,90 @@ System.out.println(writer.toString());
 		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 		ezQuestionService.deleteItem(qstCompleteVO);
 	}
+	
+	@RequestMapping(value="/ezQuestion/qstAttachNonActX.do")
+	public String qstAttachNonActX(HttpServletRequest req, Model model) {
+		String idName = "";
+		String attachInfo = "";
+		String attachType = "";
+		String attachMode = "";
+		String attachModeIndex = "";
+		
+		if(req.getParameter("id_name") != null) {
+			idName = String.valueOf(req.getParameter("id_name"));
+		}
+		
+		if(req.getParameter("m_AttachInfo") != null) {
+			attachInfo = String.valueOf(req.getParameter("m_AttachInfo"));
+		}
+		
+		if(req.getParameter("m_AttachType") != null) {
+			attachType = String.valueOf(req.getParameter("m_AttachType"));
+		}
+		
+		if(req.getParameter("m_AttachMode") != null) {
+			attachMode = String.valueOf(req.getParameter("m_AttachMode"));
+		}
+		
+		if(req.getParameter("m_AttachModIndex") != null) {
+			attachModeIndex = String.valueOf(req.getParameter("m_AttachModIndex"));
+		}
+System.out.println("idName:"+idName);		
+		model.addAttribute("idName", idName);
+		model.addAttribute("attachInfo", attachInfo);
+		model.addAttribute("attachType", attachType);
+		model.addAttribute("attachMode", attachMode);
+		model.addAttribute("attachModeIndex", attachModeIndex);
+		
+		return "/ezQuestion/qstAttachNonActX";
+	}
+	
+	@RequestMapping(value="/ezQuestion/attachFileNonActX.do")
+	public String attachFileNonActXDad(MultipartHttpServletRequest req,Model model) throws Exception {
+		String pFilePath = "";
+		String type = "";
+		String mode = "";
+		if(req.getParameter("QstType") != null) {
+			type = String.valueOf(req.getParameter("QstType"));
+		} 
+		if(req.getParameter("mode") != null) {
+			type = String.valueOf(req.getParameter("mode"));
+		}
+		String pFileName = "";
+		MultipartFile file = req.getFile("cmuds");
+		if(file != null) {
+			pFileName = req.getFile("cmuds").getOriginalFilename();
+			pFileName = pFileName.replace("+", "%2b");
+			pFileName = pFileName.replace(";", "%3b");
+			
+			String pDirPath = config.getProperty("upload_board.UPLOADQUESTION");
+			String qDirPath = req.getServletContext().getRealPath("");
+
+			File temp = new File(qDirPath);
+			if(!temp.exists()) {
+				temp.mkdirs();
+			}
+			
+			String fileSize = String.valueOf(req.getFile("cmuds").getSize());
+			String newFileName = pFileName;
+			
+			if(type == "1") {
+				
+			}
+			pFilePath = "/Upload_BoardSTD/Upload_Question/"+newFileName;
+			
+			writeUploadedFile(file, pFileName, qDirPath+pDirPath);
+			
+			model.addAttribute("pFilePath", pFilePath);
+			model.addAttribute("type", type);
+			model.addAttribute("mode", mode);
+			model.addAttribute("pFileName", pFileName);
+			model.addAttribute("pDirPath", pDirPath);
+			model.addAttribute("qDirPath", qDirPath);
+			model.addAttribute("fileSize", fileSize);
+			
+		}
+		return "/ezQuestion/qstAttachFile";
+	}
+	
 }
