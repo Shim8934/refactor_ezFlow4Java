@@ -111,8 +111,6 @@ public class BoardPropertyVO {
 	private String boardAdmin_FG;
 	/** 만료날짜*/
 	private String expireDays;
-	/** 첨부제한*/
-	private String attachLimit;
 	/** 메일 여부*/
 	private String apprMail_FG;
 	/** 게시판유형 Y or N*/
@@ -405,12 +403,6 @@ public class BoardPropertyVO {
 	}
 	public void setExpireDays(String expireDays) {
 		this.expireDays = expireDays;
-	}
-	public String getAttachLimit() {
-		return attachLimit;
-	}
-	public void setAttachLimit(String attachLimit) {
-		this.attachLimit = attachLimit;
 	}
 	public String getBoardName1() {
 		return boardName1;

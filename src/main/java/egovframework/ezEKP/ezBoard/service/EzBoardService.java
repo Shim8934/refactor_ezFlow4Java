@@ -72,5 +72,7 @@ public interface EzBoardService {
 
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 
+	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
+
 
 }

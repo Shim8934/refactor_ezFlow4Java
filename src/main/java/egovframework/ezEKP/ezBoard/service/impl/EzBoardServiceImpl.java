@@ -309,4 +309,15 @@ public class EzBoardServiceImpl implements EzBoardService {
 		ezBoardDAO.brdNewItem(boardListVO);
 		ezBoardDAO.newItem(boardListVO.getItemID());
 	}
+
+	@Override
+	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_STRITEMID", strItemID);
+		map.put("v_STRATTACHMENTS", filePath);
+		map.put("v_FILESIZE", fileSize);
+		map.put("v_FILENAME", fileName);
+		ezBoardDAO.saveAttachInfo(map);
+	}
+	
 }

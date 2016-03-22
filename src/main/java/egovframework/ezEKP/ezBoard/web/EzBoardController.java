@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,7 +11,6 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URLEncoder;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -20,6 +20,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,6 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -57,10 +61,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -656,7 +660,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	    if(strProp != null){
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
-	    	boardInfo.setAttachLimit(strProp.getAttachLimit());
+	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
 	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
@@ -745,7 +749,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	    if(strProp != null){
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
-	    	boardInfo.setAttachLimit(strProp.getAttachLimit());
+	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
 	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
@@ -1705,7 +1709,7 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getWrite_FG().equals("false")){
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
-        if (gubun == "3"){
+        if (gubun.equals("3")){
             attachList = doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
             smallName = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
             title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
@@ -1717,7 +1721,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         String ret = "";
 
-        if (gubun == "3"){
+        if (gubun.equals("3")){
             if (attchArray.length == smallArray.length){
                 for (int i = 0; i < attchArray.length - 1; i++){
                     doc.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attchArray[i] + ";");
@@ -1741,11 +1745,10 @@ public class EzBoardController extends EgovFileMngUtil{
         return "<RESULT>" + ret + "</RESULT>";
 	}
 
-	private String insertNewItem(Document doc, String pMode, String realPath) throws Exception{
+	public String insertNewItem(Document doc, String pMode, String realPath) throws Exception{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
-		
 		
 		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
 		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
@@ -1763,16 +1766,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		
 		if(pMode.equals("copy")){
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		}else{
 			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+"/" + boardListVO.getBoardID() + "/doc/" + boardListVO.getItemID() + ".mht");
 		}
+		
 		if(doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")){
 			boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
 		}else{
 			boardListVO.setStartDate(boardListVO.getWriteDate());
 		}
+System.out.println("||||||||||||||||||||||||||");
+System.out.println(boardListVO.getStartDate());
 		boardListVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
 		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
 		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
@@ -1819,21 +1826,25 @@ public class EzBoardController extends EgovFileMngUtil{
 		}else{
 			boardListVO.setExtensionAttribute6("");
 		}
+		
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null){
 			boardListVO.setExtensionAttribute7(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
 		}else{
 			boardListVO.setExtensionAttribute7("");
 		}
+		
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null){
 			boardListVO.setExtensionAttribute8(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
 		}else{
 			boardListVO.setExtensionAttribute8("");
 		}
+		
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null){
 			boardListVO.setExtensionAttribute9(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
 		}else{
 			boardListVO.setExtensionAttribute9("");
 		}
+		
 		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null){
 			boardListVO.setExtensionAttribute10(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
 		}else{
@@ -1872,7 +1883,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}else{
 			boardListVO.setHasAttach("0");
 		}
-
 		//통계 남기는 부분
 		return "OK";
 	}
@@ -1897,6 +1907,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdir();
 				cFile = new File(stordFilePathReal);
+				cFile.mkdir();
+				cFile = new File(docPath + "/upoadFile");
 				cFile.mkdir();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
@@ -1953,63 +1965,174 @@ public class EzBoardController extends EgovFileMngUtil{
 		return reverseDate.toString();
 	}
 	
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType){
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType) throws Exception{
         long fileSize = 0;
-        String filepath = "";
-        String filename = "";
+        String filePath = "";
+        String filePath2 = "";
+        String fileName = "";
         String[] temp = null;
         if (strAttachments.substring(strAttachments.length() - 1) != ";"){
         	strAttachments += ";";
         }
         
-//        for (int i = 0; i < strAttachments.split(";").length - 1; i++){
-//            if (strType.equals("BOARD")){
-//                File file = new File(strFilePath + "\\" + strAttachments.split(";")[i].replace("/", "\\"));
-//                fileSize = file.length();
-//                if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1){
-//                    filepath = strFilePath + "\\" + strBoardID + "\\uploadFile" + strAttachments.split(";")[i].replace("/", "\\").replace("tempUploadFile", "");
-//                    File fileinfo = new File(filepath);
-//                    if (!fileinfo.exists()){
-//                    	FileUtils.moveDirectoryToDirectory(src, destDir, createDestDir);
-//                    }
-//                }
-//                else
-//                {
-//                    filepath = strFilePath + "\\" + strAttachments.Split(';')[i].Replace("/", "\\");
-//                }
-//                file = null;
-//            }
-//            else
-//            {
-//                FileInfo file = new FileInfo(strFilePath + "\\" + "tempUploadFile\\" + strAttachments.Split(';')[i].Split('/')[2]);
-//                fileSize = file.Length.ToString();
-//                filepath = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.Split(';')[i].Split('/')[2];
-//
-//                FileInfo fileinfo = new FileInfo(filepath);
-//                if (!fileinfo.Exists)
-//                    file.MoveTo(filepath);
-//                file = null;
-//            }
-//            temp = strAttachments.Split(';')[i].Split('_');
-//            for (int j = 1; j < temp.Length; j++)
-//            {
-//                if (j == 1)
-//                    filename += temp[j];
-//                else
-//                    filename += "_" + temp[j];
-//            }
-//            cmd = new OracleCommand("EZSP_SAVEATTACHMENTSINFO");
-//            cmd.CommandType = CommandType.StoredProcedure;
-//            cmd.Parameters.Add("v_STRITEMID", OracleType.NChar, 38).Value = strItemID;
-//            cmd.Parameters.Add("v_STRATTACHMENTS", OracleType.NVarChar, 200).Value = filepath.Replace(strFilePath + "\\", "").Replace("\\", "/");
-//            cmd.Parameters.Add("v_FILESIZE", OracleType.NVarChar, 50).Value = fileSize;
-//            cmd.Parameters.Add("v_FILENAME", OracleType.NVarChar, 50).Value = filename;
-//
-//            ExecuteSP(ref cmd);
-//            filename = null;
-//            temp = null;
-//        }
+        for (int i = 0; i < strAttachments.split(";").length; i++){
+            if (strType.equals("BOARD")){
+            	filePath = strFilePath + "\\" + strAttachments.split(";")[i];
+                File file = new File(filePath);
+                fileSize = file.length();
+                if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1){
+                    filePath2 = strFilePath + "\\" + strBoardID + "\\uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
+                    File fileinfo = new File(filePath2);
+                    if (!fileinfo.exists()){
+                    	FileUtils.moveFile(file, fileinfo);
+                    }
+                }else{
+                    filePath = strFilePath + "\\" + strAttachments.split(";")[i];
+                }
+                file = null;
+            }
+            else{
+                File file = new File(strFilePath + "\\" + "tempUploadFile\\" + strAttachments.split(";")[i].split("/")[2]);
+                fileSize = file.length();
+                filePath = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.split(";")[i].split("/")[2];
+
+                File fileinfo = new File(filePath);
+                if (!fileinfo.exists())
+                	FileUtils.moveFile(file, fileinfo);
+                file = null;
+            }
+            temp = strAttachments.split(";")[i].split("_");
+            for (int j = 1; j < temp.length; j++){
+                if (j == 1)
+                    fileName += temp[j];
+                else
+                    fileName += "_" + temp[j];
+            }
+            
+            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName);
+            temp = null;
+        }
         return true;
 	}
 	
+	@RequestMapping(value = "/ezBoard/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadItemAttach(MultipartHttpServletRequest request) throws Exception{
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		int cnt = multiFile.size();
+		String realPath = request.getServletContext().getRealPath("");
+		String[] pFileName = new String[cnt];
+        Long[] fileSize = new Long[cnt];
+        String[] fileLocation = new String[cnt];
+        String[] resultUpload = new String[cnt];
+        String[] sGUID = new String[cnt];
+        String[] pUploadSN = new String[cnt];
+        String strXML;
+
+        String useExtension = config.getProperty("config.USE_FileExtension");
+        for (int i = 0; i < cnt; i++){
+            resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+        }
+
+        int maxSize = 0;
+        String pBoardID = "";
+        String pMode = "";
+        maxSize = Integer.parseInt(request.getParameter("maxSize"));
+        pBoardID = request.getParameter("boardID");
+        pMode = request.getParameter("mode");
+
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) || StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
+            for (int i = 0; i < cnt; i++){
+                String _pFileName = multiFile.get(i).getOriginalFilename();
+                if (_pFileName.indexOf(File.separator) > 0){
+                    _pFileName = _pFileName.split(File.separator)[_pFileName.split(File.separator).length - 1];
+                }
+                pFileName[i] = _pFileName;
+            }
+        }
+
+        for (int i = 0; i < cnt; i++){
+            pFileName[i] = pFileName[i].replace("+", "%2b");
+            pFileName[i] = pFileName[i].replace(";", "%3b");
+        }
+
+        String pDirPath = config.getProperty("upload_board.ROOT");
+        pDirPath = realPath + pDirPath;
+        if(pDirPath.substring(pDirPath.length() - 1) != "\\")
+            pDirPath = pDirPath + "\\";
+        File file = new File(pDirPath);
+        File file2 = new File(pDirPath + pBoardID + "\\uploadFile");
+        if(!file.exists()){
+        	file.mkdir();
+        	file = new File(pDirPath + pBoardID + "\\uploadFile");
+        	file.mkdir();
+        }
+        else if(!file2.exists()){
+            file2.mkdir();
+        }
+
+        for (int i = 0; i < cnt; i++){
+        	fileSize[i] = multiFile.get(i).getSize();
+
+            if (fileSize[i] > maxSize){
+                resultUpload[i] = "overflow";
+            }else{
+                if (pMode.equals("ATT")){
+                    if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")){
+                        resultUpload[i] = "denied";
+                    }else{
+                        String pAttachPath = pDirPath + "\\tempUploadFile\\";
+                        File fTemp = new File(pAttachPath);
+                        if (!file.exists()){
+                        	fTemp.mkdir();
+                        }
+                        writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        fileLocation[i] = pAttachPath + pUploadSN[i] + "_" + pFileName[i];
+                        resultUpload[i] = "true";
+                    }
+                }
+                else if (pMode.equals("PHOTO")){
+                    String pAttachPath = pDirPath + pBoardID + "\\uploadFile\\";
+                    writeUploadedFile(multiFile.get(i), pUploadSN[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.')), pAttachPath);
+                    fileLocation[i] = pBoardID + "/uploadFile" + "/" + pUploadSN[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.'));
+
+                    BufferedImage bufferedImg = ImageIO.read(new File(pAttachPath));			    
+    				
+//                    int nImgWidth = bufferedImg.getWidth();
+//                    int nImgHeight = bufferedImg.getHeight();
+//                    int nWidth = 0, nHeight = 0;
+//                    if (nImgWidth > nImgHeight){
+//                        nWidth = 200;
+//                        nHeight = (bufferedImg.getHeight() * nWidth) / bufferedImg.getWidth();
+//                    }else{
+//                        nHeight = 200;
+//                        nWidth = (bufferedImg.getWidth() * nHeight) / bufferedImg.getHeight();
+//                    }
+                    bufferedImg = Scalr.resize(bufferedImg, 100, 100, Scalr.OP_ANTIALIAS);
+                    //포토 게시판 구현할때 다시봐야함
+                    //imageThumbnail.Save(pDirPath + pBoardID + "\\UploadFile\\s_" + pUploadSN[i] + pFileName[i].Substring(pFileName[i].LastIndexOf('.')));
+                    resultUpload[i] = "true";
+                }
+            }
+        }
+
+        strXML = "<ROOT><NODES>";
+        for (int i = 0; i < cnt; i++){
+            if (pMode.equals("PHOTO")){
+                strXML += "<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.')) + "]]></PUPLOADSN>";
+            }else{
+                strXML += "<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>";
+            }
+            strXML += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+            strXML += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+            strXML += "<FILESIZE>" + fileSize[i] + "</FILESIZE>";
+            strXML += "<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>";
+            strXML += "</NODE>";
+        }
+        strXML += "</NODES></ROOT>";
+        
+        return strXML;
+    }
 }

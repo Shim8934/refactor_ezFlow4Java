@@ -111,7 +111,7 @@
 	
 	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#attachments#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
 										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
 										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
@@ -191,6 +191,16 @@
 				background = 'Y'
 		]]>                
 	</select>
+	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS(
+	        	itemid, 	    guid, 	     filepath, 		      filesize, 	 filename 
+	        )
+       		VALUES( 
+       			#v_STRITEMID#,  SYS_GUID(),  #v_STRATTACHMENTS#,  #v_FILESIZE#,  #v_FILENAME# 
+       		)
+		]]>
+	</insert>
 	
 	<delete id="EzBoardDAO.newItem" parameterClass="String">
 		<![CDATA[

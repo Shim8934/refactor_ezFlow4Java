@@ -139,20 +139,22 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.setAsReads", map);
 	}
 	
+	public void saveAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.saveAttachInfo", map);
+	}
+	
 	public void setListOrder(Map<String, Object> map) throws Exception {
-		
 		update("EzBoardDAO.set_ListOrder",map);
 	}
 	
 	public void setTabUsed(Map<String, Object> map) throws Exception{
-		
 		update("EzBoardDAO.set_TabUsed",map);
 	}
 	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
-		
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
+
 
 
 

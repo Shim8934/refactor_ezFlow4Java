@@ -201,8 +201,7 @@ function btn_AttachSaveSure_onclick()
 //	}catch(errmsg){alert(errmsg.description);}
 //}btn_PhotoAlbumAttachAdd_onclick
 
-/* 2016-03-16 NODEJS 관련 스크립트 주석/ 장진혁
- * function AttachFileInfo(resultXML) {
+function AttachFileInfo(resultXML) {
 
     var xml = loadXMLString(resultXML);
     var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -217,8 +216,7 @@ function btn_AttachSaveSure_onclick()
                 return;
             }
             else if (getNodeText(GetChildNodes(nodes[i])[1]) == "FileOverFlowMsg") {
-
-                getNodeText(GetChildNodes(nodes[i])[2]) = ""; //filename
+                setNodeText(GetChildNodes(nodes[i])[2],"");//filename
             }
             
         }
@@ -230,7 +228,7 @@ function btn_AttachSaveSure_onclick()
     {
         alert(ErrMsg.description); 
     }
-}*/
+}
 // ==============================================
 // ListView에서 첨부파일 선택시 호출  Function
 // ==============================================
@@ -258,9 +256,9 @@ function chkFileNMFilter(cur_ExtName){
     var e = cur_ExtName.lastIndexOf(".");
 
     if(s == -1)
-        cur_ExtName = ""
+        cur_ExtName = "";
     else
-        cur_ExtName = cur_ExtName.substring(s+1,e)
+        cur_ExtName = cur_ExtName.substring(s+1,e);
  
 	for(i=0;i<plength;i++){
 		alert(cur_ExtName.indexOf(SpeCha[i]));
@@ -334,7 +332,7 @@ function AppendFileAttachInfo(ret) {
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
             var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
-            realFileNM = ReplaceText(realFileNM, "'", "&apos;")
+            realFileNM = ReplaceText(realFileNM, "'", "&apos;");
 
             if (is_newfile != "DEL") {
                 objTr = document.createElement("TR");
@@ -393,7 +391,7 @@ function AttachFileList() {
             if (filepath.indexOf(pBoardID) != -1) {
                 strRet += filepath + ";";
             } else {
-            strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+            strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";";
             }
         }
     }
@@ -480,10 +478,10 @@ function beginAttachAdd_Photo()
 		    txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);	//2006.10.20 " + strLang25 + "
 		    ezUtil = null;
 
-		    var Result = attachFilename.substr(3, attachFilename.length-3)
+		    var Result = attachFilename.substr(3, attachFilename.length-3);
 
 		    // 2010.07.06 : Drag&Drop 실행, attachFilePath 추가
-		    AttachFileInfo(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1), Result.substr(Result.lastIndexOf("/")+1), fileSize + "Bytes", Result, fileSize, attachFilePath)		    
+		    AttachFileInfo(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1), Result.substr(Result.lastIndexOf("/")+1), fileSize + "Bytes", Result, fileSize, attachFilePath);	    
 	    }
 	}
 

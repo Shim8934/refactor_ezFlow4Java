@@ -78,7 +78,7 @@
 		    var strWriterTitle = "${boardListVO.title}";
 		    var strWriterFakeName = "${strWriterFakeName}";
 		    var pAttachListXml = "";
-		    var AttachLimit = "${boardInfo.attachLimit}";
+		    var AttachLimit = "${boardInfo.attachSizeLimit}";
 			var pReservedItem = "${reservedItem}";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
@@ -140,7 +140,7 @@
 			
 			            for (var i = 0; i < objAttachNodes.length; i++) {
 			                if (pMode == "boardContent" || pMode == "boardAttach")
-			                    attachxml += "TempUploadFile/" + getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+			                    attachxml += "tempUploadFile/" + getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
 			                else
 			                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
 			            }
@@ -208,7 +208,7 @@
 			                document.getElementById("txtTitle").focus();
 			    }
 			    catch (e) { }
-		    }
+		    };
 		    window.onresize = function () {
 		        switch (pSelectTab) {
 		            case "MailEnv_div1":
@@ -236,7 +236,7 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
-		    }
+		    };
 		
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -364,7 +364,7 @@
 		            str += "<ROW><CELL>";
 		            str += "<VALUE>" + filename + "</VALUE>";
 		            str += "<DATA1>" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "</DATA1>";
-		            str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath").replace("TempUploadFile/", "")) + "</DATA2>";
+		            str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath").replace("tempUploadFile/", "")) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";
 		            str += "<DATA5>Y</DATA5>";
@@ -391,7 +391,7 @@
 		    function GetEndDate() {
 		        var pEndDateTime;
 		        if (document.getElementById("ChkPermanence").checked) {
-		            pEndDateTime = "9999-12-30 23:59:59"
+		            pEndDateTime = "9999-12-30 23:59:59";
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Sdatepicker2').val().substring(0, 4) != "9999") {
 		                pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
@@ -500,7 +500,7 @@
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
 
-		        var objNode, objSubNode, objDataNode;
+		        var objNode = null, objSubNode = null, objDataNode = null;
 		        objNode = createNodeInsert(xmlDom, objNode, "NODES");
 		        objSubNode = createNodeAndAppandNode(xmlDom, objNode, objSubNode, "NODE");
 
@@ -526,7 +526,7 @@
 		            if (pMode != "modify") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
 		            } else {
-		                itemid = strItemID + ";"
+		                itemid = strItemID + ";";
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
 		            }
 		        }
@@ -662,7 +662,7 @@
 		        else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", MakeXMLString(GetSmallUrl()));
 		        }
-		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD")
+		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD");
 		        for (var i = 0; i < obj.length; i++) {
 		            if (obj[i].free == "")
 		                obj[i].removeAttribute('free');
@@ -713,7 +713,6 @@
 		        });
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
-//@@@@@@@@@@@@@@@ 여기까지
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;
 		            xmlDom = null;
@@ -995,9 +994,9 @@
 		                FileName = getNodeText(mailXml.getElementsByTagName("ATTACHMENT").item(i));
 		                FileURL = getNodeText(mailXml.getElementsByTagName("ATTACHMENTURL").item(i));
 		                ItemID = getNodeText(mailXml.getElementsByTagName("ITEMID").item(0));
-		                attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\UploadFile" + "&NewGuid=" + NewGuid, false);
+		                attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\uploadFile" + "&newGuid=" + NewGuid, false);
 		                attachHTTP.send();
-		                filefullpath = pUploadFilePath + "\\" + pBoardID + "\\UploadFile\\" + NewGuid + "_" + FileName;
+		                filefullpath = pUploadFilePath + "\\" + pBoardID + "\\uploadFile\\" + NewGuid + "_" + FileName;
 		                var fileHTTP = createXMLHttpRequest();
 		                fileHTTP.open("POST", "interASP/getFileSize.aspx?filepath=" + encodeURIComponent(filefullpath), false);
 		                fileHTTP.send();
@@ -1065,7 +1064,7 @@
 		            var XmlBodyDATA = createXmlDom();
 		            var tempStr = "";
 		            tempStr = ConvertMHTtoHTML(fullPath);
-		            tempXML = loadXMLString(tempStr)
+		            tempXML = loadXMLString(tempStr);
 		            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 		            var htmlData = getNodeText(XmlBodyDATA);
@@ -1150,8 +1149,8 @@
 		                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
-		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0])
-		                    strRet += "TempUploadFile/" + filepath + ";";
+		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+		                    strRet += "tempUploadFile/" + filepath + ";";
 		                }
 		                attachxml = strRet;
 		            }
@@ -1221,7 +1220,7 @@
 		                    strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + ";";
 		                }
 		            } else {
-		                strRet += pBoardID + "/UploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
+		                strRet += pBoardID + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
 		            }
 		        }
 		        xmldom_attachlist = null;
@@ -1237,7 +1236,7 @@
 		            return "";
 		        }
 		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
-		        for (i = 0; i < xmldomNodes.length; i++) {
+		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            strRet += getNodeText(xmldomNodes.item(i)) + ";";
 		        }
 		        return strRet;
@@ -1318,7 +1317,7 @@
 		        var xml = loadXMLString(strXML);
 		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		        var extFlag = false;        
-		        for (i = 0; i < nodes.length; i++) {
+		        for (var i = 0; i < nodes.length; i++) {
 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
 		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
 		                    alert(strLang6);
