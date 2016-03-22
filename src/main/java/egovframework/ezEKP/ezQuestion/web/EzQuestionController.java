@@ -150,12 +150,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstList";
 	}
 	
-	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
                 "&itemNo=" + request.getParameter("itemNo") +
-                "&title=" + request.getParameter("title") +
+                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
                 "&responseRange=" + request.getParameter("responseRange") +
                 "&postDate=" + request.getParameter("postDate") +
                 "&pollEndDate=" + request.getParameter("pollEndDate") +
@@ -362,24 +361,24 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
+		String receve = "brdId=" + request.getParameter("brdId") +
+                "&itemNo=" + request.getParameter("itemNo") +
+                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+                "&responseRange=" + request.getParameter("responseRange") +
+                "&postDate=" + request.getParameter("postDate") +
+                "&pollEndDate=" + request.getParameter("pollEndDate") +
+                "&currPage=" + request.getParameter("currPage");
+		
 		QstVO qstVO = new QstVO();
 		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
-/*		model.addAttribute("brdId",request.getParameter("brdId"));
-		model.addAttribute("itemNo",request.getParameter("itemNo"));
-		model.addAttribute("title",request.getParameter("title"));
-		model.addAttribute("responseRange",request.getParameter("responseRange"));
-		model.addAttribute("postDate",request.getParameter("postDate"));
-		model.addAttribute("pollEndDate",request.getParameter("pollEndDate"));
-		model.addAttribute("currPage",request.getParameter("currPage")); */
 		List<Integer> arrAnswer = new ArrayList<Integer>();
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		boolean multiResponseOK = false;
 		int responseCnt = 0;
 		int readCnt = 0;
-		
 		/**UserPermission*/
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -526,6 +525,7 @@ System.out.println(writer.toString());
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", writer.toString());
+		model.addAttribute("receve", receve);
 		
 		return "/ezQuestion/qstResponse";
 	}
@@ -685,6 +685,19 @@ System.out.println(writer.toString());
         	strResult.append("<td style=\"padding:5px\">&nbsp;</td></tr></table>");
         }
         return strResult.toString();
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
+	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String receve = "brdId=" + request.getParameter("brdId") +
+                "&itemNo=" + request.getParameter("itemNo") +
+                "&title=" + request.getParameter("title") +
+                "&responseRange=" + request.getParameter("responseRange") +
+                "&postDate=" + request.getParameter("postDate") +
+                "&pollEndDate=" + request.getParameter("pollEndDate") +
+                "&currPage=" + request.getParameter("currPage");
+		System.out.println(request.getParameter("receve"));
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResult.do")
