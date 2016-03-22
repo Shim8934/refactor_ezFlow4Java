@@ -8,6 +8,7 @@
 	<typeAlias  alias="QstUserPermissionVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
 	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
 	<typeAlias	alias="QstVO" 						type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
+	<typeAlias	alias="QstAnswerVO"					type="egovframework.ezEKP.ezQuestion.vo.QstAnswerVO"/>
 	
 	<resultMap class="QstListVO" id="qstList">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -87,6 +88,22 @@
 		<result property="multiSelect"				column="MULTISELECT"				columnIndex="7"/>
 		<result property="quesSn"					column="QUES_SN"					columnIndex="8"/>
 	</resultMap>
+	
+	<resultMap class="QstAnswerVO" id="qstAnswerVO">
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
+		<result property="answerContent"			column="ANSWERCONTENT"				columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="QstAnswerVO" id="qstAnswerAnswerVO">
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
+		<result property="answerContent"			column="ANSWER_ANSWERCONTENT"		columnIndex="5"/>
+	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -108,8 +125,12 @@
 		{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstVO">
+	<procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstAnswerAnswerVO">
 		{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getAnswerCnt" parameterClass="Map" resultMap="qstAnswerVO">
+		{CALL EZQUESTION.EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
