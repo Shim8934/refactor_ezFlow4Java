@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="/js/NameControl.js"></script>		
 	<script type="text/javascript">
 	    var g_bdraft = false;
-	    var g_moveUrl = "${folderName}";
+	    var g_moveUrl = "${url}";
 	    var g_expath = "exchange";
 	    var g_bPrevShow = false;
 	    var g_ViewID = null;
