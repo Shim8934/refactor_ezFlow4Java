@@ -12,7 +12,7 @@ public class QstAddVO {
 	/** 보기유형*/
 	private int answerViewType;
 	/** 다답형*/
-	private String multiSelect;
+	private String pMultiSel;
 	/** */
 	private int quesSN;
 	/** */
@@ -30,7 +30,31 @@ public class QstAddVO {
 	/** */
 	private String href;
 	
+	private String pSelectOption;
 	
+	private String pQstAnsInfo;
+	
+	private String pQstAttach;
+	
+	
+	public String getpQstAttach() {
+		return pQstAttach;
+	}
+	public void setpQstAttach(String pQstAttach) {
+		this.pQstAttach = pQstAttach;
+	}
+	public String getpQstAnsInfo() {
+		return pQstAnsInfo;
+	}
+	public void setpQstAnsInfo(String pQstAnsInfo) {
+		this.pQstAnsInfo = pQstAnsInfo;
+	}
+	public String getpSelectOption() {
+		return pSelectOption;
+	}
+	public void setpSelectOption(String pSelectOption) {
+		this.pSelectOption = pSelectOption;
+	}
 	public List<String> getAttach() {
 		return attach;
 	}
@@ -109,11 +133,11 @@ public class QstAddVO {
 	public void setAnswerViewType(int answerViewType) {
 		this.answerViewType = answerViewType;
 	}
-	public String getMultiSelect() {
-		return multiSelect;
+	public String getpMultiSel() {
+		return getpMultiSel();
 	}
-	public void setMultiSelect(String multiSelect) {
-		this.multiSelect = multiSelect;
+	public void setpMultiSel(String pMultiSel) {
+		this.pMultiSel = pMultiSel;
 	}
 	public int getQuesSN() {
 		return quesSN;
