@@ -13,6 +13,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.UIDFolder;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,7 +63,11 @@ public class EzEmailMailListController {
 		if (dispname != null) {
 			dispname = new String(dispname.getBytes("ISO-8859-1"),"UTF-8");
 		}
-		logger.debug("dispname=" + dispname);
+		String url = request.getParameter("url");
+		if (url != null) {
+			url = new String(url.getBytes("ISO-8859-1"),"UTF-8");
+		}		
+		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
@@ -92,6 +97,7 @@ public class EzEmailMailListController {
 		}
 		
 		model.addAttribute("folderName", folderName);
+		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", true);
 		model.addAttribute("listCount", "30");
@@ -184,8 +190,13 @@ public class EzEmailMailListController {
 				address = message.getRecipients(Message.RecipientType.TO);
 			}			
 			if (address != null) {
-				addressStr = address[0].toString();
-				addressStr = MimeUtility.decodeText(addressStr);
+				addressStr = ((InternetAddress)address[0]).getPersonal();
+				if (addressStr == null) {
+					addressStr = ((InternetAddress)address[0]).getAddress();
+				}
+				else {
+					addressStr = MimeUtility.decodeText(addressStr);
+				}
 			}
 			sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
 			sb.append(String.format("<subject><![CDATA[%s]]></subject>", message.getSubject()));
