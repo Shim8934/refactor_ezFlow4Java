@@ -67,11 +67,12 @@
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;
+			
 		    function fun_Save(){
 		        if(form_check() == false)
 		            return;
 		        if(btnSaveChk == false){
-		            document.frmResponse.action = "/ezQuestion/qstResponseOK.do";
+		            document.frmResponse.action = "/ezQuestion/qstResponseOk.do";
 		            document.frmResponse.submit();
 		            btnSaveChk = true;
 		        }else{
@@ -333,58 +334,18 @@
 		  </tr>
 		</table>
 		
-		<form>
-		<%-- <form name="frmResponse" method="post" onSubmit="fun_Save()">
-		  <input type=hidden value="${receve}" name="receve">
-		  <table class="poll" style="margin-top:10px" >
-		    <% 
-			XmlNodeList nodeList = xmlMainDom.DocumentElement.SelectNodes("//ROW");
-		
-			foreach(XmlNode myNode in nodeList)
-			{
-				Response.Write("<tr>\n");
-				Response.Write("<th>");
-				Response.Write(myNode.SelectSingleNode("QST").InnerText);
-				Response.Write("</td>\n");
-				Response.Write("</tr>\n");
-				Response.Write(myNode.SelectSingleNode("SUBROW").InnerText);
-				
-				XmlNodeList subNodeList = myNode.SelectNodes("ITEM");
-		
-				foreach(XmlNode mySubNode in subNodeList)
-				{
-					int j = 0;
-					for(int i=0; i<	int.Parse(mySubNode.Attributes["count"].Value); i++)
-					{
-						j++;
-						Response.Write("<tr>\n");									
-						Response.Write("<td style='padding:3px 10px'>");
-						Response.Write(mySubNode.SelectSingleNode("TAG" + j.ToString()).InnerText);
-						Response.Write("</td>\n");
-						Response.Write("</tr>\n");
-					}
-				}
-				
-			}
-			xmlMainDom = null;
-		%>  --%>
-		<table id="xmlTable" class="poll" style="margin-top:10px">
-		</table>
-
-<!-- 		<table> -->
-<!-- 		        <tr> -->
-<!-- 		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("QST").InnerText</td> -->
-<!-- 		        </tr> -->
-<!-- 		        	((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SUBROW").InnerText -->
-<!-- 		        <tr> -->
-<!-- 		          <td style="padding:3px 10px">((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TAG").InnerText</td> -->
-<!-- 		        </tr> -->
-<!-- 		</table> -->
+		<form name="frmResponse" method="post" onSubmit="fun_Save()">
+			<input type=hidden value="${receve}" name="receve">
+			<table id="xmlTable" class="poll" style="margin-top:10px">
+			</table>
+			<input type="hidden" name="hidEleCnt">
+		  	<input type=hidden value="brdId" name=brdId >
+			<input type=hidden value="itemNo" name=itemNo>
+			<input type="hidden" name="tableAnswer" />
 		</form>
-		  <input type="hidden" name="hidEleCnt">
-		  <input type=hidden value="brdId%>" name=brdId >
-		  <input type=hidden value="itemNo" name=itemNo>
-		  <input type="hidden" name="tableAnswer" />
+		<script>
+		alert("${receve}");
+		</script>
 		
 		<div class="btnposition">
 			<a class="imgbtn"> <span onClick="javascript:fun_Save();return false;"> <spring:message code="ezQuestion.t37" /> </span> </a>
