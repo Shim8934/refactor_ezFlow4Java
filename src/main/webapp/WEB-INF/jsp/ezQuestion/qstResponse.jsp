@@ -33,40 +33,32 @@
 			}
 			MM_reloadPage(true);
 			
+			
 			function tableXML(){
-				var xmlDoc ='${xmlResult}';
+				var xmlDoc = loadXMLString('${xmlResult}');
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
-				alert(SelectSingleNodeValue(nodes[0], "QST"));
 				
 				for(i=0;nodes.length>i; i++){
-alert(SelectSingleNode(nodes[i], "QST"));
-alert(SelectSingleNodeValue(nodes[i], "BRD_ID"));
-alert(SelectSingleNodeValue(nodes[i], "ITEM_NO"));
-alert(SelectSingleNodeValue(nodes[i], "QUESTION_NO"));
-alert(SelectSingleNodeValue(nodes[i], "ANSWERTYPE"));
-alert(SelectSingleNodeValue(nodes[i], "ANSWERVIEWTYPE"));
-alert(SelectSingleNodeValue(nodes[i], "MULTISELECT"));
-alert('${xmlResult}');
 					tableXml += "<tr>";
-					tableXml += "<td style='padding:3px 10px'>";
+					tableXml += "<th style='padding:3px 10px'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
-					tableXml += "</td>";
+					tableXml += "</th>";
 					tableXml += "</tr>";
-					/* tableXml += "<tr>";
-					tableXml += "<td style='padding:3px 10px'>";
-					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
-					tableXml += "</td>";
-					tableXml += "</tr>"; */
-/* 					tableXml += "<tr>";
-					tableXml += "<td style='padding:3px 10px'>";
-					tableXml += SelectSingleNodeValue(nodes[i], 'TAG');
-					tableXml += "</td>";
-					tableXml += "</tr>"; */
+					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
+					var itemNodes = GetChildNodes(itemNode);
+					
+					for(j=0; itemNodes.length>j; j++){
+						tableXml += "<tr>";
+						tableXml += "<td style='padding:3px 10px'>";
+						tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
+						tableXml += "</td>";
+						tableXml += "</tr>";
+					}
 				}
-				$("#tableXml").html(tableXml);
+				document.getElementById("xmlTable").innerHTML = tableXml;
 			}
 		</script>
 		<script type="text/javascript">
@@ -376,7 +368,7 @@ alert('${xmlResult}');
 			}
 			xmlMainDom = null;
 		%>  --%>
-		<table id="tableXml">
+		<table id="xmlTable" class="poll" style="margin-top:10px">
 		</table>
 
 <!-- 		<table> -->

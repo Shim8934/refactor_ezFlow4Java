@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
@@ -344,13 +345,24 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public List<QstVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception {
+	public List<QstAnswerVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdId);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", qstNo);
 		return ezQuestionDAO.getAnswerAnswerCnt(map);
 	}
+
+	@Override
+	public List<QstAnswerVO> getAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", qstNo);
+		return ezQuestionDAO.getAnswerCnt(map);
+	}
+	
+	
 	
 	
 }

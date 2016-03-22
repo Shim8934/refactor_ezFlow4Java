@@ -18,7 +18,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +38,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
+import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
@@ -453,7 +453,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node quesSn = doc.createElement("QUES_SN");
 				
 				
-				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + iQueCount + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount+1) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
 				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
@@ -499,7 +499,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	                    subRow.appendChild(doc.createTextNode(""));
 	                    row.appendChild(subRow);
 					}
-					dataSubProcess(question.getBrdId(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), row, doc);
+					dataSubProcess(question.getBrdId(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);
 				}
 				strResult += "</SUBDATA>";
 				
@@ -530,17 +530,96 @@ System.out.println(writer.toString());
 		return "/ezQuestion/qstResponse";
 	}
 	
-	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, Node row, Document doc) throws Exception{
+	@SuppressWarnings("unused")
+	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
 		Node snewRow = doc.createElement("ITEM");
         int iCount = 0, iAddCount = 0;
-//여기부터 하면됨 근데 이 테이블이 비어잇다.
-        List<QstVO> qstAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
-        if(qstAnswerList != null){
-	        if (answerType == 5){
-	        	System.out.println(qstAnswerList.get(0).getQuestionNo());
-	        }
+        if (answerType == 5){
+        	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
+        	if(qstAnswerAnswerList != null){
+        		//결과 받아서 XMl로 변환 -> 표형식 생성안되서 나중에 
+        	}
         }
-	}
+        
+        List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdId, itemNo, qstNo);
+        if(qstAnswerList != null){
+        	for(QstAnswerVO qstAnswer : qstAnswerList){
+        		Node itemNode = null;
+        		Node iValueNode = null;
+        		String strTagData = "";
+        		iCount++;
+        		
+        		if(answerType !=  5){
+        			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
+        		}else{
+        			itemNode = doc.createElement("TAG");
+        		}
+        		switch(answerType){
+        		case 1:
+        			if (multiSelect.equals("1")){
+                        strTagData = "<input type='checkbox' name='chk" + qstNo + "_" + Integer.toString(iCount) + "' value='0'>" + modifyData(qstAnswer.getAnswerContent());
+                        strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
+                        iValueNode = doc.createTextNode(strTagData);
+                    }else{
+                    	 strTagData = "<input type=\"Radio\" name=\"rdo" + qstNo + "\" value=\"" + Integer.toString(iCount) + "\">" + modifyData(qstAnswer.getAnswerContent());
+                    	 strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
+                         iValueNode = doc.createTextNode(strTagData);
+                    }
+        			itemNode.appendChild(iValueNode);
+        			snewRow.appendChild(itemNode);
+        			iValueNode = null;
+        			itemNode = null;
+        			break;
+        		case 3:
+        			int rCount = 0;
+        			
+					String ansContent = modifyData(qstAnswer.getAnswerContent());
+					
+					String[] ArryContent = ansContent.split("-");
+					rCount = Integer.parseInt(ArryContent[1]) - Integer.parseInt(ArryContent[0]);
+					strTagData = "<select name='sel " + qstNo + "'>";
+					for (int j = 0; j < rCount; j++)
+					{
+					    strTagData += "<option>" + Integer.toString(j) + "</option>";
+					}
+					strTagData += "</select>";
+					iValueNode = doc.createTextNode(strTagData);
+					itemNode.appendChild(iValueNode);
+					snewRow.appendChild(itemNode);
+					iValueNode = null;
+					itemNode = null;
+					break;
+        		case 4:
+        			strTagData = "<input type='checkbox' onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",'frmResponse.chk" + qstNo + "', 'frmResponse.txt" + qstNo + "')\" name='chk" + qstNo + "' value='" + qstAnswer.getQuestionNo() + "'>" + modifyData(qstAnswer.getAnswerContent());
+
+                    strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
+
+                    String strEtcTag = "";
+                    iValueNode = doc.createTextNode(strTagData);
+                    strTagData = "";
+                    itemNode.appendChild(iValueNode);
+                    snewRow.appendChild(itemNode);
+                    iValueNode = null;
+                    itemNode = null;
+                    break;
+        		case 5:
+        			strTagData =  modifyData(qstAnswer.getAnswerContent());
+                    iValueNode = doc.createTextNode(strTagData);
+                    itemNode.appendChild(iValueNode);
+                    snewRow.appendChild(itemNode);
+                    iValueNode = null;
+                    itemNode = null;
+                    break;
+        		}
+        	}
+        	Node attr = doc.createAttribute("count");
+        	attr.setNodeValue(Integer.toString(iCount));
+        	
+        	row.appendChild(snewRow);
+        	snewRow = null;
+        }
+    }
+	
 	
 	public String modifyData(String strData) throws Exception{
 		String strResult = "";
@@ -582,23 +661,23 @@ System.out.println(writer.toString());
 	            strAttachNo = Integer.toString(attachVO.getAttachNo());
 	
 	            switch (attachVO.getAttachType()){
-	            	case "1":
-	            		strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
-	            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
-	                    break;
-	            	case "2":
-	            		strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
-	                    break;
-	                case "3":
-	                	break;
-	                case "4":
-	                	break;
-	                case "5":
-	                	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
-	                	break;
-	                default:
-	                	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
-	                    break;
+	            case "1":
+	            	strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
+	            	break;
+	            case "2":
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	break;
+	            case "3":
+	            	break;
+	            case "4":
+	            	break;
+	            case "5":
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	break;
+	            default:
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
+	            	break;
 	            }
 	        }
         }
@@ -684,7 +763,7 @@ System.out.println(writer.toString());
 		if(req.getParameter("item_id") != null) {
 			itemId = req.getParameter("item_id").trim(); 
 		}
-		
+
 		if(req.getParameter("DataXML") != null) {
 			pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");

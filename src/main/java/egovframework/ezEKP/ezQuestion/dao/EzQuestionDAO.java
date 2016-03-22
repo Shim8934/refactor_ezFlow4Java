@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
@@ -44,8 +45,13 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<QstVO> getAnswerAnswerCnt(Map<String, Object> map) {
-		return (List<QstVO>) list("EzQuestionDAO.getAnswerAnswerCnt", map);
+	public List<QstAnswerVO> getAnswerAnswerCnt(Map<String, Object> map) {
+		return (List<QstAnswerVO>) list("EzQuestionDAO.getAnswerAnswerCnt", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstAnswerVO> getAnswerCnt(Map<String, Object> map) {
+		return (List<QstAnswerVO>) list("EzQuestionDAO.getAnswerCnt", map);
 	}
 	
 	public String getItemSeq(String brdId) {
