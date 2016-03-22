@@ -41,7 +41,7 @@ public class EzEmailMenuController {
 		StringBuilder rootFolderXML = new StringBuilder();
 		System.out.println(commonUtil.getUserIdAndPassword(loginCookie).get(0) +","+ commonUtil.getUserIdAndPassword(loginCookie).get(1));
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
 		List<Folder> rootMailFolder = ia.getTopLevelFolders();
 		
 		try {
@@ -50,21 +50,21 @@ public class EzEmailMenuController {
 				rootFolderXML.append("<node imgidx='1'");
 				if(fd.getUnreadMessageCount()>0){
 					if(fd.getName().equalsIgnoreCase("INBOX")){
-						rootFolderXML.append(" caption='받은 편지함("+fd.getUnreadMessageCount()+")'");
+						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025")+"("+fd.getUnreadMessageCount()+")'");
 					}
 					else{
 						rootFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
 					}
 				}else{
 					if(fd.getName().equalsIgnoreCase("INBOX")){
-						rootFolderXML.append(" caption='받은 편지함'");
+						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025")+"'");
 					}
 					else{
 						rootFolderXML.append(" caption='"+fd.getName()+"'");
 					}
 				}
 				if(fd.getName().equalsIgnoreCase("INBOX")) {
-					rootFolderXML.append(" foldername='받은 편지함'");
+					rootFolderXML.append(" foldername='"+egovMessageSource.getMessage("ezEmail.t99000025")+"'");
 				}
 				else{
 					rootFolderXML.append(" foldername='"+fd.getName()+"'");
@@ -106,7 +106,6 @@ public class EzEmailMenuController {
 			System.out.println("Error get unread message count: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
 		ia.close();
 		
 		String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
@@ -135,7 +134,7 @@ public class EzEmailMenuController {
 			
 			StringBuilder subFolderXML = new StringBuilder();
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password);
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
 			List<Folder> subMailFolder = ia.getSubFolders(folderName);
 			try {
 				for(int i=0; i<subMailFolder.size(); i++){
@@ -187,7 +186,7 @@ public class EzEmailMenuController {
 			response.setContentType("text/plain; charset=utf-8");
 			
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password);
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
 			String unreadCountXML = "<DATA>"+ia.getUnreadCount(folderName)+"</DATA>";
 			ia.close();
 			

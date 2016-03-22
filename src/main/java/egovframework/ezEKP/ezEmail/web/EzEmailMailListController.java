@@ -127,7 +127,7 @@ public class EzEmailMailListController {
 						+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		
 		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password);
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource);
 				
 		Folder folder = imapAccess.getFolder(folderId);		
 		folder.open(Folder.READ_ONLY);

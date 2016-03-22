@@ -16,6 +16,8 @@ import javax.mail.internet.MimeBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import egovframework.com.cmm.EgovMessageSource;
+
 public class IMAPAccess {
 
     private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
@@ -25,12 +27,14 @@ public class IMAPAccess {
 	private Store store;
 	private String userName;
 	private String password;
-
-	private IMAPAccess(String host, String port, String username, String password){
+	private EgovMessageSource egovMessageSource;
+	
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource){
 		this.host = host;
 		this.port = port;
-		this.userName = username;
-		this.password = password;		
+		this.userName = userName;
+		this.password = password;
+		this.egovMessageSource = egovMessageSource;
 	}
 
 	private Store getStore(){
@@ -51,11 +55,10 @@ public class IMAPAccess {
 			store = session.getStore("imap");
 			store.connect(userName, password);
 		} catch (NoSuchProviderException e) {
-			System.out.println("Error get store from session: " + e.getMessage());
+			logger.error("Error get store from session: " + e.getMessage());
 			e.printStackTrace();
 		}catch (MessagingException e) {
-			System.out.println("Error connect store: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error connect store: " + e.getMessage());
 		}
 		return store;
 	}
@@ -67,8 +70,7 @@ public class IMAPAccess {
 				store = null;
 			}
 		} catch (MessagingException e) {
-			System.out.println("Error close store: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error close store: " + e.getMessage());
 		}
 	}
 	
@@ -77,78 +79,77 @@ public class IMAPAccess {
 		
 		try{
 			Store store = getStore();
-			if(!store.getDefaultFolder().getFolder("INBOX").exists()){
-				store.getDefaultFolder().getFolder("INBOX").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("INBOX created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084") + " created");
 			}
-			if(!store.getDefaultFolder().getFolder("보낸 편지함").exists()){
-				store.getDefaultFolder().getFolder("보낸 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("보낸 편지함 created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000026") + " created");
 			}
-			if(!store.getDefaultFolder().getFolder("임시 보관함").exists()){
-				store.getDefaultFolder().getFolder("임시 보관함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("임시 보관함 created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000027") + " created");
 			}
-			if(!store.getDefaultFolder().getFolder("지운 편지함").exists()){
-				store.getDefaultFolder().getFolder("지운 편지함").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("지운 편지함 created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000028") + " created");
 			}
-			if(!store.getDefaultFolder().getFolder("PERSONAL").exists()){
-				store.getDefaultFolder().getFolder("PERSONAL").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("PERSONAL created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug("PERSONAL created");
 			}
-			if(!store.getDefaultFolder().getFolder("정크 메일").exists()){
-				store.getDefaultFolder().getFolder("정크 메일").create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				System.out.println("정크 메일 created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029") + " created");
 			}
 			
 			Folder[] f = getStore().getDefaultFolder().list();
 			
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("INBOX")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("보낸 편지함")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("임시 보관함")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("지운 편지함")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("PERSONAL")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase("정크 메일")){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(!fd.getName().equalsIgnoreCase("INBOX")&&!fd.getName().equalsIgnoreCase("보낸 편지함")&&!fd.getName().equalsIgnoreCase("임시 보관함")&&
-						!fd.getName().equalsIgnoreCase("지운 편지함")&&!fd.getName().equalsIgnoreCase("PERSONAL")&&!fd.getName().equalsIgnoreCase("정크 메일")){
+				if(!fd.getName().equalsIgnoreCase("INBOX")&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))&&
+						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))&&!fd.getName().equalsIgnoreCase("PERSONAL")&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
 					topLevelFolders.add(fd);
 				}
 			}
 		} catch(MessagingException e){
-			System.out.println("Error get default folder: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error get default folder: " + e.getMessage());
 		}
 		return topLevelFolders;
 	}
@@ -161,8 +162,7 @@ public class IMAPAccess {
 				subFolders.add(fd);
 			}
 		} catch (MessagingException e) {
-			System.out.println("Error get sub folder: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error get sub folder: " + e.getMessage());
 		}
 		return subFolders;
 	}
@@ -172,8 +172,7 @@ public class IMAPAccess {
 		try {
 			unreadCount = getStore().getFolder(folderName).getUnreadMessageCount();
 		} catch (MessagingException e) {
-			System.out.println("Error get unread message count: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error get unread message count: " + e.getMessage());
 		}
 		return unreadCount;
 	}
@@ -184,7 +183,7 @@ public class IMAPAccess {
 		try {
 			folder = getStore().getFolder(folderName);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error("Error get folder: " + e.getMessage());
 		}
 		
 		return folder;
@@ -228,7 +227,7 @@ public class IMAPAccess {
 		return isAttached;
 	}
 	
-	public static IMAPAccess getInstance(String host, String port, String username, String password){
-		return new IMAPAccess(host, port, username, password);
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource){
+		return new IMAPAccess(host, port, username, password, egovMessageSource);
 	}
 }
