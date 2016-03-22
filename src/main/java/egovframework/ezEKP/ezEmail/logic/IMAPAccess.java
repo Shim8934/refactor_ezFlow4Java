@@ -97,7 +97,7 @@ public class IMAPAccess {
 			}
 			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).exists()){
 				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug("PERSONAL created");
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000085") + " created");
 			}
 			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).exists()){
 				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
@@ -143,8 +143,8 @@ public class IMAPAccess {
 				}
 			}
 			for(Folder fd : f){
-				if(!fd.getName().equalsIgnoreCase("INBOX")&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))&&
-						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))&&!fd.getName().equalsIgnoreCase("PERSONAL")&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
+				if(!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))&&
+						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
 					topLevelFolders.add(fd);
 				}
 			}

@@ -49,28 +49,28 @@ public class EzEmailMenuController {
 				Folder fd = rootMailFolder.get(i);
 				rootFolderXML.append("<node imgidx='1'");
 				if(fd.getUnreadMessageCount()>0){
-					if(fd.getName().equalsIgnoreCase("INBOX")){
+					if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))){
 						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025")+"("+fd.getUnreadMessageCount()+")'");
 					}
 					else{
 						rootFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
 					}
 				}else{
-					if(fd.getName().equalsIgnoreCase("INBOX")){
+					if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))){
 						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025")+"'");
 					}
 					else{
 						rootFolderXML.append(" caption='"+fd.getName()+"'");
 					}
 				}
-				if(fd.getName().equalsIgnoreCase("INBOX")) {
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))) {
 					rootFolderXML.append(" foldername='"+egovMessageSource.getMessage("ezEmail.t99000025")+"'");
 				}
 				else{
 					rootFolderXML.append(" foldername='"+fd.getName()+"'");
 				}
 
-				if(fd.getName().equalsIgnoreCase("INBOX")) {
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))) {
 					rootFolderXML.append(" orgBoxName='0'");
 					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
 				} else if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645"))) {
