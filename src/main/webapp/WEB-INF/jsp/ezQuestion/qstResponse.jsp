@@ -225,7 +225,7 @@
 			}
 			
 			function menuQst_List(){
-			    var szUrl = "/ezQuestion/qstList.do?"+receve+"&brd_postterm='' ";
+			    var szUrl = "/ezQuestion/qstList.do?"+"${receve}"+"&brd_postterm='' ";
 			    window.location.href = szUrl;
 			}
 	
@@ -339,13 +339,11 @@
 			<table id="xmlTable" class="poll" style="margin-top:10px">
 			</table>
 			<input type="hidden" name="hidEleCnt">
-		  	<input type=hidden value="brdId" name=brdId >
-			<input type=hidden value="itemNo" name=itemNo>
+		  	<input type=hidden value="${qstUserPermissionVO.brdId}" name=brdId >
+			<input type=hidden value="${qstUserPermissionVO.itemNo}" name=itemNo>
+			<input type=hidden value="${currPage}" name=currPage>
 			<input type="hidden" name="tableAnswer" />
 		</form>
-		<script>
-		alert("${receve}");
-		</script>
 		
 		<div class="btnposition">
 			<a class="imgbtn"> <span onClick="javascript:fun_Save();return false;"> <spring:message code="ezQuestion.t37" /> </span> </a>

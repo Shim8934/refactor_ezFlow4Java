@@ -29,9 +29,12 @@
 		    var endPollYN, responseYN, resultOpenYN;
 			var multiResYN, writeYN, adminYN;
 			var TR_Contents_Start = 1;
+			var szSearchParam ="&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
 			var CurPage = "${qstListVO.currPage}";
 			var totalPage = "${qstListVO.totalPage}";
 		    var totalCount = "${qstListVO.totalCnt}";
+		    var receve = "${receve}";
+		    alert(szSearchParam);
 		    
 			document.onselectstart = function(){ return false; };
 			window.onload = function(){
@@ -246,7 +249,7 @@
 		        if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstResult.do?brdId="+"${qstListVO.brdId}"+"&title="+"${qstListVO.title}"+"&responseRange="+"${qstListVO.responseRange}"+"&sdate="+"${qstListVO.postDate}"+"&edate="+"${qstListVO.pollEndDate}" + "&currPage="+pPage+ "&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstResult.do?brdId="+receve+"&item_no=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        }
 		    }
@@ -348,7 +351,7 @@
 		    
 		    function search_Set(pPage){
 				if(pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${qstListVO.totalPage}')){
-					var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + "&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
+					var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + szSearchParam;
 					window.location.href = szUrl;
 				}
 			}

@@ -72,30 +72,47 @@ public class EzQuestionController extends EgovFileMngUtil {
 	private EgovMessageSource egovMessageSource;
 
 	@RequestMapping(value="/ezQuestion/qstList.do")
-	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, QstListVO qstListVO, HttpServletRequest request) throws Exception{
+	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		QstListVO qstListVO = new QstListVO();
+		String brdId="5",title="",responseRange="",postDate="",pollEndDate="",lang="";
+		String currPage="1";
+		int pageSize=15;
 		/** 전달받지 않은 인자 초기화 */
 		qstListVO.setUserId(loginVO.getId());
 		
-		if(qstListVO.getBrdId()==0)
-			qstListVO.setBrdId(5);
-		else
-			qstListVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
-		if(qstListVO.getTitle()==null)
-			qstListVO.setTitle("");
-		if(qstListVO.getResponseRange()==null)
-			qstListVO.setResponseRange("");
-		if(qstListVO.getPostDate()==null)
-			qstListVO.setPostDate("");
-		if(qstListVO.getPollEndDate()==null)
-			qstListVO.setPollEndDate("");
-		if(qstListVO.getLang()==null)
-			qstListVO.setLang("");
-		if(qstListVO.getPageSize()==0)
-			qstListVO.setPageSize(15);
-		if(qstListVO.getCurrPage()==0)
-			qstListVO.setCurrPage(1);
+		if(request.getParameter("brdId")!=null)
+			brdId = request.getParameter("brdId");
+		if(request.getParameter("title")!=null)
+			title = new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8");
+		if(request.getParameter("responseRange")!=null)
+			responseRange = request.getParameter("responseRange");
+		if(request.getParameter("postDate")!=null)
+			postDate = request.getParameter("postDate");
+		if(request.getParameter("pollEndDate")!=null)
+			pollEndDate = request.getParameter("pollEndDate");
+		if(request.getParameter("lang")!=null)
+			lang = request.getParameter("lang");
+		if(request.getParameter("currPage")!=null)
+			currPage = request.getParameter("currPage");
+
+		qstListVO.setBrdId(Integer.parseInt(brdId));
+		qstListVO.setTitle(title);
+		qstListVO.setResponseRange(responseRange);
+		qstListVO.setPostDate(postDate);
+		qstListVO.setPollEndDate(pollEndDate);
+		qstListVO.setLang(lang);
+		qstListVO.setCurrPage(Integer.parseInt(currPage));
+		qstListVO.setPageSize(pageSize);
+
 		
+		String receve = "brdId=" + qstListVO.getBrdId() +
+                "&title=" + new String(qstListVO.getTitle()) +
+                "&responseRange=" + qstListVO.getResponseRange() +
+                "&postDate=" + qstListVO.getPostDate() +
+                "&pollEndDate=" + qstListVO.getPollEndDate() +
+                "&currPage=" + qstListVO.getCurrPage();
+
 		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO));
 		
 		if(qstListVO.getTotalPage()==0)
@@ -108,13 +125,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		for(QstListVO qst : list){
 			if(qst.getReceve()==null){
 				strbuilder = new StringBuilder();
-				strbuilder.append("brdId="+qst.getBrdId());
-				strbuilder.append("&title="+qst.getTitle());
-				strbuilder.append("&responseRange="+qst.getResponseRange());
-				strbuilder.append("&postDate="+qst.getPostDate());
-				strbuilder.append("&pollEndDate="+qst.getPollEndDate());
-				strbuilder.append("&currPage="+qstListVO.getCurrPage());
-				
+				strbuilder.append(receve);
+				strbuilder.append("&itemNo="+qst.getItemNo());
 				qst.setReceve(strbuilder.toString());
 			}
 		}
@@ -146,6 +158,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("list", list);
+		model.addAttribute("receve", receve);
 		
 		return "/ezQuestion/qstList";
 	}
@@ -161,6 +174,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&currPage=" + request.getParameter("currPage");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
+			
 		/**UserPollItem*/
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -192,7 +206,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean adminYN = false;
 		String rsUserId = qstUserPollItemVO.getUserId();
 		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
-		
+
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		if(endPoll == false){
@@ -362,13 +376,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
-                "&itemNo=" + request.getParameter("itemNo") +
                 "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
                 "&responseRange=" + request.getParameter("responseRange") +
                 "&postDate=" + request.getParameter("postDate") +
                 "&pollEndDate=" + request.getParameter("pollEndDate") +
                 "&currPage=" + request.getParameter("currPage");
-		
+
+
 		QstVO qstVO = new QstVO();
 		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
@@ -504,15 +518,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 			}
 		}
-		/** AttachInfo*/
-		
-		/** 날짜계산*/
-		boolean endPoll = false;
-		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
-			endPoll = true;
-		if(qstUserPermissionVO.getEndFlg().equals('1'))
-			endPoll = true;
-		
+
 		/** XML to String */
 		DOMSource domSource = new DOMSource(doc);
 		StringWriter writer = new StringWriter();
@@ -690,14 +696,32 @@ System.out.println(writer.toString());
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String receve = "brdId=" + request.getParameter("brdId") +
-                "&itemNo=" + request.getParameter("itemNo") +
-                "&title=" + request.getParameter("title") +
-                "&responseRange=" + request.getParameter("responseRange") +
-                "&postDate=" + request.getParameter("postDate") +
-                "&pollEndDate=" + request.getParameter("pollEndDate") +
-                "&currPage=" + request.getParameter("currPage");
-		System.out.println(request.getParameter("receve"));
+		String brdId="5",title="",responseRange="",postDate="",pollEndDate="",lang="", receve="";
+		String currPage="1";
+		
+		if(request.getParameter("brdId")!=null)
+			brdId = request.getParameter("brdId");
+		if(request.getParameter("title")!=null)
+			title = new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8");
+		if(request.getParameter("responseRange")!=null)
+			responseRange = request.getParameter("responseRange");
+		if(request.getParameter("postDate")!=null)
+			postDate = request.getParameter("postDate");
+		if(request.getParameter("pollEndDate")!=null)
+			pollEndDate = request.getParameter("pollEndDate");
+		if(request.getParameter("lang")!=null)
+			lang = request.getParameter("lang");
+		if(request.getParameter("currPage")!=null)
+			currPage = request.getParameter("currPage");
+		if(request.getParameter("receve")!=null)
+			receve = request.getParameter("receve").replace("&amp;", "&");
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().write("<script language='javascript'>");
+		response.getWriter().write("window.location.href='/ezQuestion/qstList.do?" + receve + "';");
+		response.getWriter().write("</script>");
+		response.getWriter().flush();
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstResult.do")
