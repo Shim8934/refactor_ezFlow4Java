@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
-public class QstResponsePerson {
+public class QstResponsePersonVO {
 	/** 게시판아이디(설문:5)*/
 	int brdId;
 	/** 설문아이디*/

@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 import oracle.sql.CLOB;
 
-public class QstResponse {
+public class QstResponseVO {
 	/** 게시판아이디*/
 	int brdId;
 	/** 설문아이디*/
