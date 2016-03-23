@@ -1091,12 +1091,7 @@ function callMsgDlg(szContentClass, Href) {
     if (!g_bdraft) {
         var newwin;
         var pURI;
-        if (CrossYN() || pNoneActiveX == "YES") {
-            pURI = "mail_read_Cross.aspx?URL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
-        }
-        else {
-            pURI = "mail_read.aspx?URL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);
-        }
+        pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
         newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
