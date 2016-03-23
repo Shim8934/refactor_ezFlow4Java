@@ -18,15 +18,15 @@
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script  type="text/javascript">
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.document.Script.refresh_onclick2();
 		        } catch (e) { }
-		    }
+		    };
 		    window.offscreenBuffering = true;
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		    var curFontSize = 1;
@@ -64,11 +64,11 @@
 		    var AtttributeCount = 0; 
 		    window.onload = function () {
 		        try {
-		            initKey();
+// 		            initKey();
 		
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=BOARDCONTENT&DOCID=" + escape(pItemID);
-		            document.getElementById('message').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
-		
+// 		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/ezCommonInterFace.do&type=BOARDCONTENT&docID=" + escape(pItemID);
+		            document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?type=BOARDCONTENT&itemID=" + escape(pItemID);
+																
 		            AddLinkTarget();
 		            SetAttachmentInfo();
 		            
@@ -287,17 +287,17 @@
 		            return;
 		        }
 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply"
+		            window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
 		        }
 		        else {
 		            if (pUse_IE11Browser == "CK") {
-		                window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply"
+		                window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
 		            }
 		            else {
 		                if(pUse_Editor == "")
-		                    window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply"
+		                    window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
 		                else
-		                    window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply"
+		                    window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
 		            }
 		        }
 		        window.resizeTo(785, 780);
@@ -528,7 +528,7 @@
 		    }
 		    function attach_Download() {
 		        checks = lstAttachLink.getElementsByTagName("input");
-		        downloadAll(checks)
+		        downloadAll(checks);
 		    }
 		
 		    var suffix = 0;
@@ -622,7 +622,7 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var parameter = ""
+		            var parameter = "";
 		            url = window.location.href;
 		            url = url.replace(".aspx", "_Print_Option.aspx");
 		            var feature = "status:no;dialogWidth:380px;dialogHeight:200px;help:no;";
@@ -643,7 +643,7 @@
 		        }
 		    }
 		    function OpenUserInfo(pUserID) {
-		        var result = GetOpenWindow("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "UserInfo", 420, 450, "NO")
+		        var result = GetOpenWindow("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
 		    function OneLineReply_onkeydown() {
 		        if (event.keyCode == 13) Save_OneLineReply();
@@ -824,7 +824,7 @@
 		    }
 		    function trim(parm_str) {
 		        if (parm_str == "")
-		            return ""
+		            return "";
 		        else
 		            return rtrim(ltrim(parm_str));
 		    }
@@ -863,7 +863,7 @@
 		
 		        }
 		        else {
-		            var parameter = ""
+		            var parameter = "";
 		            var url = "Board_RetransOption.aspx";
 		            var feature = "status:no;dialogWidth:300px;dialogHeight:200px;help:no;";
 		            feature = feature + GetShowModalPosition(300, 200);
@@ -1197,16 +1197,16 @@
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:460px; overflow:auto;"></iframe>
 		    </td>
 		  </c:when>
+		  <c:otherwise>
+		    <td class="pad1" style="vertical-align: top;">
+<%-- 		      <div class="viewbox"><img src='<%=g_ImageUrl%>' border=0 width='<%=g_Width%>' height ='<%=g_Height%>' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src,"_blank","","false") > --%>
+		        <div id="ItemOverflow">
+		           <iframe id="message" name="message"  style="padding: 0;width:100%; overflow:auto;"></iframe>
+		        </div>
+<!-- 		      </div> -->
+		    </td>
+		  </c:otherwise>
 	  </c:choose>
-<%-- 	  <c:otherwise> --%>
-<!-- 	    <td class="pad1" style="vertical-align: top;"> -->
-<%-- 	      <div class="viewbox"><img src='<%=g_ImageUrl%>' border=0 width='<%=g_Width%>' height ='<%=g_Height%>' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src,"_blank","","false") > --%>
-<!-- 	        <div id="ItemOverflow"> -->
-<!-- 	           <iframe id="message" name="message"  style="padding: 0;width:100%; overflow:auto;"></iframe> -->
-<!-- 	        </div> -->
-<!-- 	      </div> -->
-<!-- 	    </td> -->
-<%-- 	  </c:otherwise> --%>
 	  </tr>
 	  <c:choose>
 		  <c:when test="${boardPropertyVO.oneLineReply == '1'}">

@@ -1,14 +1,18 @@
 package egovframework.ezEKP.ezCommon.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -33,6 +38,12 @@ public class EzCommonController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value = "/ezCommon/manyColor.do")
 	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
@@ -582,4 +593,145 @@ public class EzCommonController {
             m_strMHT.append("--" + m_strBoundary);
         }
     }
+	
+	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do")
+	public void mhtToHTML(HttpServletRequest request) throws Exception{
+		String itemID = "";
+		String type = "";
+		String realPath = request.getServletContext().getRealPath("");
+		String strResult = "";
+		
+		itemID = request.getParameter("itemID");
+		type = request.getParameter("type");
+		
+		strResult = getMHTtoHTML(type, itemID, realPath);
+	}
+
+	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
+        String filePath = "";
+        String uploadModule = config.getProperty("LocalPath");
+
+        filePath = realPath + uploadModule;
+        File file = new File(filePath);
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        
+        String url = ezCommonService.getContentInfo(type, itemID);
+        
+        loadMHTFile(realPath + url);
+//        String strHTML = startMHT2HTML(filePath, url + "?TYPE=MHTIMAGE&ATTID=");
+
+//        if (strHTML.Trim().Length > 0)
+//        {
+//            HTMLDocument iDoc = new HTMLDocument();
+//            iDoc.designMode = "on";
+//            object[] oPageText = { strHTML };
+//            IHTMLDocument2 doc = (IHTMLDocument2)iDoc;
+//            doc.write(oPageText);
+//            
+//            XmlDocument XmlDoc;
+//            XmlNode XmlNode;
+//            XmlElement XmlElem1;
+//            XmlElement XmlElem2;
+//            XmlElement XmlElem3;
+//            XmlText XmlText;
+//
+//            XmlDoc = new XmlDocument();
+//            XmlNode = XmlDoc.CreateNode(XmlNodeType.XmlDeclaration, "", "");
+//            XmlDoc.AppendChild(XmlNode);
+//
+//            XmlElem1 = XmlDoc.CreateElement("", "ROOT", "");
+//            XmlDoc.AppendChild(XmlElem1);
+//
+//            XmlElem2 = XmlDoc.CreateElement("", "BODYATTS", "");
+//            XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
+//
+//
+//            string strBODYatt = "";
+//            string DocumentStyleSheets = "";
+//            if (doc.styleSheets != null)
+//            {
+//                HTMLStyleSheetsCollection STyleColl = doc.styleSheets;
+//                for (int i = 0; i < STyleColl.length; i++)
+//                {
+//                    IHTMLStyleSheet styleSheet = STyleColl.item(i) as IHTMLStyleSheet;
+//                    DocumentStyleSheets += styleSheet.cssText;
+//                }
+//            }
+//            else
+//                DocumentStyleSheets = "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; }";
+//
+//            if (doc.body != null)
+//            {
+//                HTMLBody body = doc.body as HTMLBody;
+//                IHTMLAttributeCollection atts = (IHTMLAttributeCollection)body.attributes;
+//                foreach (IHTMLDOMAttribute2 att in atts)
+//                {
+//                    if (((IHTMLDOMAttribute)att).specified)
+//                    {
+//                        if (att.value.ToUpper() != "NULL" && att.value.Trim().Length > 0 && att.expando == true && att.name.ToUpper() != "XMLNS")
+//                        {
+//                            XmlElem3 = XmlDoc.CreateElement("", "NODE", "");
+//                            XmlDoc.SelectSingleNode("ROOT/BODYATTS").AppendChild(XmlElem3);
+//
+//                            XmlElem3 = XmlDoc.CreateElement("", "NODENAME", "");
+//                            XmlText = XmlDoc.CreateTextNode(att.name);
+//                            XmlElem3.AppendChild(XmlText);
+//                            XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Item(XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Count - 1).AppendChild(XmlElem3);
+//
+//                            XmlElem3 = XmlDoc.CreateElement("", "NODEVALUE", "");
+//                            XmlText = XmlDoc.CreateTextNode(att.value);
+//                            XmlElem3.AppendChild(XmlText);
+//                            XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Item(XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Count - 1).AppendChild(XmlElem3);
+//                        }
+//                    }
+//                }
+//
+//                XmlElem2 = XmlDoc.CreateElement("", "BODYDATA", "");
+//                XmlText = XmlDoc.CreateTextNode(doc.body.innerHTML);
+//                XmlElem2.AppendChild(XmlText);
+//                XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
+//
+//            }
+//            else
+//            {
+//                XmlElem2 = XmlDoc.CreateElement("", "BODYDATA", "");
+//                XmlText = XmlDoc.CreateTextNode(strHTML);
+//                XmlElem2.AppendChild(XmlText);
+//                XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
+//            }
+//
+//            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
+//            Response.ContentType = "text/xml; charset=utf-8";
+//            Response.Write("<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>" + DocumentStyleSheets + "</STYLE>" + XmlDoc.SelectSingleNode("ROOT/BODYDATA").InnerText + "</HTML>");
+//        }
+//        else
+//        {
+//            Response.ContentType = "text/xml; charset=utf-8";
+//            Response.Write("<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>");
+//        }
+		return "";
+	}
+	
+	public String loadMHTFile(String strMHTpath) throws Exception{
+		String strMhtData = "";
+		BufferedReader br = new BufferedReader(new FileReader(strMHTpath));
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append("\n");
+	            line = br.readLine();
+	        }
+	        strMhtData = sb.toString();
+	    } finally {
+	        br.close();
+	    }
+System.out.println(strMhtData);		
+        return strMhtData;
+    }
+
 }

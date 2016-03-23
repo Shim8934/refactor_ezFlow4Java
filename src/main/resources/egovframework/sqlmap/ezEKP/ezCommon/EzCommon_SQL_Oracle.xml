@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezCommon">
+	<procedure id="EzCommonDAO.getContentInfo" parameterClass="Map" resultClass="String">
+		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+</sqlMap>
