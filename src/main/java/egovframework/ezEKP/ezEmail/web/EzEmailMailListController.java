@@ -67,6 +67,9 @@ public class EzEmailMailListController {
 		if (url != null) {
 			url = new String(url.getBytes("ISO-8859-1"),"UTF-8");
 		}		
+		else {
+			url = "INBOX";
+		}
 		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
