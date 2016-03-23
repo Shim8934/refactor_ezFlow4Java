@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -36,14 +37,6 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<QstVO>) list("EzQuestionDAO.getQuestionForResponse", map);
 	}
 	
-	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
-		return  (QstUserPollItemVO) select("EzQuestionDAO.getUserPollItem", map);
-	}
-	
-	public QstUserPermissionVO getUserPermission(Map<String, Object> map){
-		return (QstUserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<QstAnswerVO> getAnswerAnswerCnt(Map<String, Object> map) {
 		return (List<QstAnswerVO>) list("EzQuestionDAO.getAnswerAnswerCnt", map);
@@ -52,6 +45,22 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<QstAnswerVO> getAnswerCnt(Map<String, Object> map) {
 		return (List<QstAnswerVO>) list("EzQuestionDAO.getAnswerCnt", map);
+	}
+	
+	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
+		return (QstResponsePersonVO) select("EzQuestionDAO.getResponsePerson", map);
+	}
+	
+	public QstUserPollItemVO getUserPollItem(Map<String, Object> map){
+		return  (QstUserPollItemVO) select("EzQuestionDAO.getUserPollItem", map);
+	}
+	
+	public QstUserPermissionVO getUserPermission(Map<String, Object> map){
+		return (QstUserPermissionVO) select("EzQuestionDAO.getUserPermission", map);
+	}
+	
+	public QstUserPermissionVO getResponseRange(Map<String, Object> map) {
+		return (QstUserPermissionVO) select("EzQuestionDAO.getResponseRange", map);
 	}
 	
 	public String getItemSeq(String brdId) {
@@ -91,6 +100,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public int getReadDateItem(Map<String, Object> map) {
 		return (int) select("EzQuestionDAO.getReadDateItem", map);
+	}
+	
+	public Integer getResponseMaxNo(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.getResponseMaxNo", map);
 	}
 	
 	public void callCreateMother(Map<String,Object> map) {
@@ -151,6 +164,14 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 
 	public void updateReadDate(Map<String, Object> map) {
 		update("EzQuestionDAO.updateReadDate", map);
+	}
+	
+	public void updateResponsePerson(Map<String, Object> map) {
+		update("EzQuestionDAO.updateResponsePerson", map);
+	}
+
+	public void updateResCnt(Map<String, Object> map) {
+		update("EzQuestionDAO.updateResCnt", map);
 	}
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);

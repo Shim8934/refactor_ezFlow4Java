@@ -341,7 +341,6 @@
 			<input type="hidden" name="hidEleCnt">
 		  	<input type=hidden value="${qstUserPermissionVO.brdId}" name=brdId >
 			<input type=hidden value="${qstUserPermissionVO.itemNo}" name=itemNo>
-			<input type=hidden value="${currPage}" name=currPage>
 			<input type="hidden" name="tableAnswer" />
 		</form>
 		

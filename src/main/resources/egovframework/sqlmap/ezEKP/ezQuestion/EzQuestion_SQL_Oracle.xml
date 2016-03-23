@@ -216,6 +216,14 @@
 		{CALL EZQUESTION.EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.updateResponsePerson" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.updateResCnt" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_UPDATERESCNT(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.insertItemRead" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
 	</procedure>
@@ -300,6 +308,19 @@
             AND
             	user_id	=	#v_pUserID#
 		
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getResponseMaxNo" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				MAX(responseno) Resno  
+			FROM
+				EZQUESTION.TBLPOLL_RESPONSE 
+			WHERE
+				brd_id = #v_pstrBrdID#
+			AND item_no = #v_pItemNo#
+			AND question_no = #v_pQuesNo#
 		]]>
 	</select>
 	

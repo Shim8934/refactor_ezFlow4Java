@@ -42,6 +42,8 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
@@ -696,34 +698,124 @@ System.out.println(writer.toString());
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brdId="5",title="",responseRange="",postDate="",pollEndDate="",lang="", receve="";
-		String currPage="1";
-		
+		String brdId = "5", itemNo = "", responseUserIp = "", vPermission = "", vResponseRange = "", receve = "", currPage = "1";
+		String userId = "", userName = "", email = "", deptId = "", depart = "", position = "", jikGub = "", gender = "1", age = "29";
+		String userName2 = "", depart2 = "", position2 = "", jikGub2 = "";
+		String tableAnswer = "";
+        int eleCnt = 0;
+        int tempTableAnswerCnt = 0;
+        
+        if(request.getParameter("hidEleCnt")!=null);
+        	eleCnt = Integer.parseInt(request.getParameter("hidEleCnt"));
 		if(request.getParameter("brdId")!=null)
 			brdId = request.getParameter("brdId");
-		if(request.getParameter("title")!=null)
-			title = new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8");
-		if(request.getParameter("responseRange")!=null)
-			responseRange = request.getParameter("responseRange");
-		if(request.getParameter("postDate")!=null)
-			postDate = request.getParameter("postDate");
-		if(request.getParameter("pollEndDate")!=null)
-			pollEndDate = request.getParameter("pollEndDate");
-		if(request.getParameter("lang")!=null)
-			lang = request.getParameter("lang");
-		if(request.getParameter("currPage")!=null)
-			currPage = request.getParameter("currPage");
+		if(request.getParameter("itemNo")!=null)
+			itemNo = request.getParameter("itemNo");
+		if(request.getParameter("tableAnswer")!=null)
+			tableAnswer = request.getParameter("tableAnswer");
+		responseUserIp = request.getRemoteAddr();
 		if(request.getParameter("receve")!=null)
 			receve = request.getParameter("receve").replace("&amp;", "&");
+		
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
+		
+		/** EZSP_GETRESPONSERANGE*/
+		qstUserPermissionVO = ezQuestionService.getResponseRange(qstUserPermissionVO);
+		vPermission = qstUserPermissionVO.getPublicFlg();
+		vResponseRange = qstUserPermissionVO.getResponseRange();
+		
+		if (vPermission != "1"){
+			userId = loginVO.getId();
+			userName = loginVO.getName();
+			email = loginVO.getEmail();
+			deptId = loginVO.getDeptID();
+			depart = loginVO.getDeptName1();
+			position = loginVO.getTitle1();
+			jikGub = "";
+			gender = "1";
+			age = "29";
+			userName2 = loginVO.getDisplayName2();
+			depart2 = loginVO.getDeptName2();
+			position2 = loginVO.getTitle2();
+			jikGub2 = "";
+		}else{
+			userId = loginVO.getId();
+			userName = "";
+			email = "";
+			deptId = "";
+			depart = "";
+			position = "";
+			jikGub = "";
+			gender = "";
+			age = "";
+			userName2 = "";
+			depart2 = "";
+			position2 = "";
+			jikGub2 = "";
+		}
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
+		
+		if (userId == ""){
+			response.getWriter().write("<script language='javascript'>\n");
+			response.getWriter().write("	alert('" + egovMessageSource.getMessage("t360") + "');\n");
+			response.getWriter().write("	history.back();\n");
+			response.getWriter().write("</script>\n");
+			response.getWriter().flush();
+        }
+		
+		/** EZSP_GETQUESTIONFORRESPONSE*/
+		String question_no = "", quescontent = "", multiselect = "", answertype = "";
+		QstVO questionVO = new QstVO();
+		questionVO.setBrdId(Integer.parseInt(brdId));
+		questionVO.setItemNo(Integer.parseInt(itemNo));
+		
+		List<QstVO> qstVOList = ezQuestionService.getQuestionForResponse(questionVO);
+		for(QstVO qstVO : qstVOList){
+			subDataProcess(qstVO.getQuestionNo(), qstVO.getQuesContent(), qstVO.getMultiSelect(), qstVO.getAnswerType(), Integer.parseInt(brdId), Integer.parseInt(itemNo));
+		}
+		
+		/** EZSP_GETRESPONSEPERSON*/
+		QstResponsePersonVO qstResponsePersonVO = new QstResponsePersonVO();
+		qstResponsePersonVO.setBrdId(Integer.parseInt(brdId));
+		qstResponsePersonVO.setItemNo(Integer.parseInt(itemNo));
+		qstResponsePersonVO.setUserId(userId);
+
+		String selUserId="", selResponseDate="";
+		if(ezQuestionService.getResponsePerson(qstResponsePersonVO)!=null){
+			selUserId = qstResponsePersonVO.getUserId();
+			selResponseDate = qstResponsePersonVO.getResponseDate();
+			
+			if(vResponseRange == "1"){
+				if(selResponseDate==""){
+					ezQuestionService.updateResponsePerson(qstResponsePersonVO);
+				}
+			}
+		}
+		ezQuestionService.updateResCnt(Integer.parseInt(brdId), Integer.parseInt(itemNo));
+
 		response.getWriter().write("<script language='javascript'>");
 		response.getWriter().write("window.location.href='/ezQuestion/qstList.do?" + receve + "';");
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
 	
+	public void subDataProcess(int questionNo, String quesContent, String multiSelect, int answerType, int brdId, int itemNo) throws Exception {
+		String tmp = "";
+        int ansRCnt = 0;
+        String responseNo = "1", strResponseInsert = "", answerSubjectivity = "";
+        
+        Integer responseMaxNo = ezQuestionService.getResponseMaxNo(brdId, itemNo, questionNo);
+System.out.println("@@@@@@@@@");
+        if(responseMaxNo!=null){
+        	responseNo = responseMaxNo.toString();
+        }else
+System.out.println("nullllllllllllll");
+	}
+
 	@RequestMapping(value="/ezQuestion/qstResult.do")
 	public String qstResult(ModelMap model, HttpServletRequest request) throws Exception{
 		/*model.addAttribute("brdId",request.getParameter("brdId"));

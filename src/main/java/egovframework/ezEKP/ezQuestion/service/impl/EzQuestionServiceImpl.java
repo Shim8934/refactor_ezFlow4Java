@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -361,8 +362,47 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pQuesNo", qstNo);
 		return ezQuestionDAO.getAnswerCnt(map);
 	}
-	
-	
-	
-	
+
+	@Override
+	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstUserPermissionVO.getBrdId());
+		map.put("v_pItemNo", qstUserPermissionVO.getItemNo());
+		return ezQuestionDAO.getResponseRange(map);
+	}
+
+	@Override
+	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", qstResponsePersonVO.getBrdId());
+		map.put("v_pItemNo", qstResponsePersonVO.getItemNo());
+		map.put("v_pUserID", qstResponsePersonVO.getUserId());
+		return ezQuestionDAO.getResponsePerson(map);
+	}
+
+	@Override
+	public void updateResponsePerson(QstResponsePersonVO qstResponsePersonVO)throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", qstResponsePersonVO.getBrdId());
+		map.put("v_pItemNo", qstResponsePersonVO.getItemNo());
+		map.put("v_pUserID", qstResponsePersonVO.getUserId());
+		ezQuestionDAO.updateResponsePerson(map);
+	}
+
+	@Override
+	public void updateResCnt(int brdId,int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.updateResCnt(map);	
+	}
+
+	@Override
+	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		return ezQuestionDAO.getResponseMaxNo(map);
+	}
 }
