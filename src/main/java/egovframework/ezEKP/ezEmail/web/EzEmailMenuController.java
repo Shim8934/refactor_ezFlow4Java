@@ -39,7 +39,6 @@ public class EzEmailMenuController {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		StringBuilder rootFolderXML = new StringBuilder();
-		System.out.println(commonUtil.getUserIdAndPassword(loginCookie).get(0) +","+ commonUtil.getUserIdAndPassword(loginCookie).get(1));
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
 		List<Folder> rootMailFolder = ia.getTopLevelFolders();

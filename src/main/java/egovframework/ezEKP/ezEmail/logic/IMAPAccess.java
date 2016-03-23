@@ -30,10 +30,10 @@ public class IMAPAccess {
 	private EgovMessageSource egovMessageSource;
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource){
-		this.host = host;
+		this.host = "10.0.140.179";
 		this.port = port;
-		this.userName = userName;
-		this.password = password;
+		this.userName = "gisa1";
+		this.password = "1234!";
 		this.egovMessageSource = egovMessageSource;
 	}
 
