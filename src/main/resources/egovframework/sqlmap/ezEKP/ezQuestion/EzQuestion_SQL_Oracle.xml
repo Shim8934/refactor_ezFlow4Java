@@ -9,8 +9,9 @@
 	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
 	<typeAlias	alias="QstVO" 						type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
 	<typeAlias	alias="QstAnswerVO"					type="egovframework.ezEKP.ezQuestion.vo.QstAnswerVO"/>
+	<typeAlias	alias="QstResponsePersonVO"			type="egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO"/>
 	
-	<resultMap class="QstListVO" id="qstList">
+	<resultMap class="QstListVO" id="qstListVO">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="userId"					column="USER_ID"					columnIndex="3"/>
@@ -26,7 +27,7 @@
 		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="13"/>
 	</resultMap>
 	
-	<resultMap class="QstUserPollItemVO" id="qstUserPollItem">
+	<resultMap class="QstUserPollItemVO" id="qstUserPollItemVO">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="userId"					column="USER_ID"					columnIndex="3"/>
@@ -57,7 +58,7 @@
 		<result property="completeFlag"				column="COMPLETE_FLAG"				columnIndex="28"/>
 	</resultMap>
 	
-	<resultMap class="QstUserPermissionVO" id="qstUserPermission">
+	<resultMap class="QstUserPermissionVO" id="qstUserPermissionVO">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="3"/>
@@ -65,6 +66,11 @@
 		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="5"/>
 		<result property="endFlg"					column="END_FLG"					columnIndex="6"/>
 		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="7"/>
+	</resultMap>
+	
+	<resultMap class="QstUserPermissionVO" id="qstResponsePermissionVO">
+		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="1"/>
+		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="QstAttachVO" id="qstAttachVO">
@@ -104,16 +110,21 @@
 		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
 		<result property="answerContent"			column="ANSWER_ANSWERCONTENT"		columnIndex="5"/>
 	</resultMap>
+	
+	<resultMap class="QstResponsePersonVO" id="qstResponsePersonVO">
+		<result property="userId"					column="USER_ID"					columnIndex="1"/>
+		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="2"/>
+	</resultMap>
 		
-	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstList">
+	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItem">
+	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItemVO">
 		{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="qstUserPermission">
+	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="qstUserPermissionVO">
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -131,6 +142,14 @@
 	
 	<procedure id="EzQuestionDAO.getAnswerCnt" parameterClass="Map" resultMap="qstAnswerVO">
 		{CALL EZQUESTION.EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getResponseRange" parameterClass="Map" resultMap="qstResponsePermissionVO">
+		{CALL EZQUESTION.EZSP_GETRESPONSERANGE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getResponsePerson" parameterClass="Map" resultMap="qstResponsePersonVO">
+		{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
