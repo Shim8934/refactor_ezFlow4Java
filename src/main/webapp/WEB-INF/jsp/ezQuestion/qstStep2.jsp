@@ -207,6 +207,7 @@
                 		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=" + '<c:out value='${ezQuestionVO.brdId}'/>' + "&item_id=" + '<c:out value='${ezQuestionVO.itemId}'/>';
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
+
             		}
             		else {
                 		WinRef.focus();
