@@ -14,8 +14,8 @@
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
-			<%-- var L_BRDID = "<%=pBrdID%>"; --%>
-			<%-- var L_ITEMNO = "<%=pItemNo%>"; --%>
+			var L_BRDID = "${pBrdId}"; 
+			var L_ITEMNO = "${pItemNo}"; 
 			var g_aChanged = false;
 			var g_bChanged = false;
 			var g_bTreeLoad = false;
@@ -231,10 +231,10 @@
         	}
     	}
     	function on_view() {
-	        <%-- var strQuery = "<DATA><DEPTID><%= UserInfo_DeptCode %></DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>"; --%>
+	        var strQuery = "<DATA><DEPTID>${userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>"; 
     	    xmlHttp_Depttree = null;
 	        xmlHttp_Depttree = createXMLHttpRequest();
-    	    xmlHttp_Depttree.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+    	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	        xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
         	xmlHttp_Depttree.send(strQuery);
     	}
@@ -253,7 +253,7 @@
         	createNodeInsert(xmlpara, objNode, "DATA");
         	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
         	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;DisplayName");
-        	xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+        	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
         	xmlHTTP.send(xmlpara);
         	xmlRtn = loadXMLString(xmlHTTP.responseText);
         	if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
@@ -284,7 +284,7 @@
         	createNodeAndInsertText(xmlDoc, objNode, "TYPE", "user");
         	xmlHttp_UserList = null;
         	xmlHttp_UserList = createXMLHttpRequest();
-        	xmlHttp_UserList.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", true);
+        	xmlHttp_UserList.open("POST", "/ezOrgan/getDeptMemberList.do", true);
         	xmlHttp_UserList.onreadystatechange = event_displayUserList;
         	xmlHttp_UserList.send(xmlDoc);
     	}
@@ -332,7 +332,7 @@
         	try {
             	xmlHttp_UserList = null;
             	xmlHttp_UserList = createXMLHttpRequest();
-            	xmlHttp_UserList.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
+            	xmlHttp_UserList.open("POST", "/ezOrgan/getSearchList.do", false);
             	xmlHttp_UserList.send(xmlDOM);
             	if (xmlHttp_UserList.statusText != "OK") {
                 	alert("<spring:message code='ezQuestion.t23' />" + xmlHttp_UserList.statusText);
@@ -364,7 +364,7 @@
             	var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
             	xmlHttp_Depttree = null;
             	xmlHttp_Depttree = createXMLHttpRequest();
-            	xmlHttp_Depttree.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+            	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
             	xmlHttp_Depttree.send(strQuery);
         	}
@@ -374,13 +374,13 @@
         	        rgParams["addrBook"] = xmlDOM;
             	    rgParams["deptid"] = "";
                 	var feature = GetShowModalPosition(609, 352);
-                	window.showModalDialog("/myoffice/ezEmail/htm/checkName2_Cross.aspx", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
+                	window.showModalDialog("/ezEmail/htm/checkName2.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
                 	if (rgParams["deptid"] != "") {
 	                    bSearch = true;
     	                xmlHttp_Depttree = null;
         	            xmlHttp_Depttree = createXMLHttpRequest();
             	        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
-                	    xmlHttp_Depttree.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+                	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                     	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
                     	xmlHttp_Depttree.send(strQuery);
                 	}
@@ -391,7 +391,7 @@
         	        rgParams["deptid"] = "";
             	    checkname2_cross_dialogArguments[0] = rgParams;
                 	checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-                	var checkName2_Cross = window.open("/myoffice/ezEmail/htm/checkName2_Cross.aspx", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+                	var checkName2_Cross = window.open("/ezEmail/htm/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
                 	try { checkName2_Cross.focus(); } catch (e) {
                 	}
             	}
@@ -403,7 +403,7 @@
             	xmlHttp_Depttree = null;
             	xmlHttp_Depttree = createXMLHttpRequest();
             	var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
-            	xmlHttp_Depttree.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+            	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
             	xmlHttp_Depttree.send(strQuery);
         	}
@@ -416,7 +416,7 @@
                     	    window.dialogArguments["window"].opener.top.organview = getXmlString(xmlHttp_Depttree.responseXML);
                     	} catch (e) { }
                 	}
-                	var treeXML = loadXMLFile("/myoffice/ezQuestion/controls/organtree_config.xml");
+                	var treeXML = loadXMLFile("/xml/organtree_config.xml");
                 	document.getElementById('TreeView').innerHTML = "";
                 	var treeView = new TreeView();
                 	treeView.SetConfig(treeXML);
@@ -461,7 +461,7 @@
     	function GetItemNo() {
 	        var xmldom = createXmlDom();
     	    var xmlHttp = createXMLHttpRequest();
-        	var szUrl = "../Call_GetItemSeqXML.aspx?brd_id=" + L_BRDID;
+        	var szUrl = "../callGetItemSeqXML.do?brd_id=" + L_BRDID;
         	xmlHttp.open("POST", szUrl, false);
         	xmlHttp.send(xmldom)
         	if (getXmlString(xmlHttp.responseXML) != "") {
@@ -517,7 +517,7 @@
         	createNodeAndInsertText(xmlDoc, objNode, "BRDID", L_BRDID);
         	createNodeAndInsertText(xmlDoc, objNode, "ITEMNO", L_ITEMNO);
         	<%-- createNodeAndInsertText(xmlDoc, objNode, "PcompanyID", "<%=pCompanyID%>"); --%>
-        	var szUrl = "Call_SaveRangeACL.aspx";
+        	var szUrl = "callSaveRangeACL.do";
         	xmlHttp = null;
         	xmlHttp = createXMLHttpRequest();
         	xmlHttp.open("POST", szUrl, false);
