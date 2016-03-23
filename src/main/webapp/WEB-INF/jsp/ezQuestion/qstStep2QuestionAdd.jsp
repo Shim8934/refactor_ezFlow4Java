@@ -542,11 +542,6 @@
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWSTART", sviewno);
         createNodeAndInsertText(xmlDoc, objNode, "SELVIEWEND", eviewno);
 
-
-/* alert(document.Ques_Answer.answerType.value);
-document.Ques_Answer.submit(); */
-		
-
         if(Ques_Answer.selType[0].checked){
 var inputAns = "";
             if (viewcnt > 0)
@@ -558,9 +553,6 @@ var inputAns = "";
                     DeptNode = null;
                     DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
                     createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "TITLE", Ques_Answer.input_Ans[ii].value);
-alert(ii+"번째"+Ques_Answer.input_Ans[ii].value);
-inputAns += Ques_Answer.input_Ans[ii].value+";";
-
 
                     if (Ques_Answer.input_Ans[ii].AnsInfo != null)
                     //if(Ques_Answer.input_Ans[ii].AnsInfo != null && Ques_Answer.input_Ans[ii].AnsInfo != "" && typeof(Ques_Answer.input_Ans[ii].AnsInfo) != "undefined")
@@ -769,10 +761,10 @@ alert(pEditIndex);
         if (useragentstr.indexOf(_MSIE) != -1) {
             var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
             var szUrl;
-            if (pNoneActiveX == "YES")
-                szUrl = "Qst_Attach_NonActX.aspx?id_name=" + pID;
-            else
-                szUrl = "Qst_Attach.aspx?id_name=" + pID;
+            //if (pNoneActiveX == "YES")
+                szUrl = "qstAttachNonActX.do?id_name=" + pID;
+            //else
+                //szUrl = "Qst_Attach.aspx?id_name=" + pID;
             var rv = window.showModalDialog(szUrl, rgParams, szParam);
             if (rgParams["m_Return"] == "OK") {
                 if (pID == "A") {
@@ -810,7 +802,7 @@ alert(pEditIndex);
         else{
             if ((g_windowReference == null) || (g_windowReference.closed == true))
             {
-                var szUrl = "Qst_Attach_NonActX.aspx?id_name=" + pID;
+                var szUrl = "qstAttachNonActX.do?id_name=" + pID;
                 g_windowReference = window.open("","AttachAdd","height=370px,width=500px,resizable=no,center=yes" + GetOpenPosition(500, 370));                
                 document.AttachAdd.m_AttachInfo.value = rgParams["m_AttachInfo"];
                 document.AttachAdd.m_AttachType.value = pID;
@@ -874,7 +866,6 @@ alert(pEditIndex);
 		
         return false;
     }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var vertical_no, horizon_no;
     function createTable(pXmlString) {
@@ -1056,11 +1047,11 @@ alert(pEditIndex);
         <table class="content"> <!------------------ 질문 ------------------------->
             <tr>
                 <th rowspan="2"><spring:message code='ezQuestion.t333' /></th>
-                <td class="pos1"><input type="text" size="9" maxlength="500" style="WIDTH:100%" name="txtQuestion" value="" AnsInfo="<c:out value='${requestScope.pQstAnsInfo}'/>" /></td>
+                <td class="pos1"><input type="text" size="9" maxlength="500" style="WIDTH:100%" name="txtQuestion" value="${questionAddVO.questionContent}" AnsInfo="${questionAddVO.pQstAnsInfo}" /></td>
                 <td class="pos2"><a class="imgbtn"><span onclick="javascript:fun_SetAns('Q', 'MOD');"><spring:message code='ezQuestion.t154' /></span></a></td>
             </tr>
             <tr>
-                <td colspan="2"><div name="td_Question" id="td_Question" style="overflow-y:auto;HEIGHT:17px" class="viewtxt"><c:out value='${requestScope.pQstAttach}'/></div></td>
+                <td colspan="2"><div name="td_Question" id="td_Question" style="overflow-y:auto;HEIGHT:17px" class="viewtxt">${questionAddVO.pQstAttach}</div></td>
             </tr>
 
 
@@ -1129,7 +1120,7 @@ alert(pEditIndex);
             <tr id="Objectivity_step3" style="DISPLAY:none">
                 <th></th>
                 <td>
-                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px"><c:out value='${requestScope.pSelectOption}'/></select>
+                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px">${questionAddVO.pSelectOption}</select>
                 </td>
             </tr>
         </table>
