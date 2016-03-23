@@ -15,7 +15,7 @@ public class QstResponse {
 	int answerObjectivity;
 	/** 주관식응답내용,우선순위선택순서*/
 	CLOB answerSubjectivity;
-	/** */
+	/** (사용안함)*/
 	int answerViewSelect;
 	/** 응답자아이디(무기명,기명)*/
 	String responseUserId;
