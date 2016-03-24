@@ -467,26 +467,25 @@ public class EzQuestionController extends EgovFileMngUtil {
 				row.appendChild(multiSelect);
 				row.appendChild(quesSn);
 				data.appendChild(row);
-				
 				if(question.getAnswerType() == 2){
-					strTagData = "<tr>\n";
-					strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
-                    strTagData += "<textarea style='Width:100%;height:85;' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></textarea></td>\n";
-                    strTagData += "</tr>\n";
+					strTagData = "<tr>";
+					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\">";
+                    strTagData +=		"<textarea style=\"Width:100%;height:85;\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
+                    strTagData += "</tr>";
                     Element subRow = doc.createElement("SUBROW");
                     subRow.appendChild(doc.createTextNode(strTagData));
                     row.appendChild(subRow);
 				}else if(question.getAnswerType() == 5){
-                    strTagData = "<tr>\n";
-                    strTagData += "	<td style='word-break:break-all;padding:10px;'>\n";
+                    strTagData = "<tr>";
+                    strTagData += "	<td style=\"word-break:break-all;padding:10px;\">";
                     strTagData += "";
-                    strTagData += "</tr>\n";
+                    strTagData += "</tr>";
 				}else{
 					if(question.getAnswerType() == 4){
-						 strTagData = "<tr>\n";
-                         strTagData += "	<td style='word-break:break-all;padding:10px'>\n";
-                         strTagData += "		<input type='text' maxlength='500' READONLY style='Width:760' id='txt" + question.getQuestionNo() + "' name='txt" + question.getQuestionNo() + "'></td>\n";
-                         strTagData += "</tr>\n";
+						 strTagData = "<tr>";
+                         strTagData += "	<td style='word-break:break-all;padding:10px'>";
+                         strTagData += "		<input type=\"text\" maxlength=\"500\" READONLY style=\"Width:760\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></td>";
+                         strTagData += "</tr>";
                          Element subRow = doc.createElement("SUBROW");
                          subRow.appendChild(doc.createTextNode(strTagData));
                          row.appendChild(subRow);
@@ -507,7 +506,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();
 		transformer.transform(domSource, result);
-	 
+System.out.println(writer.toString());
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", writer.toString());
@@ -539,6 +538,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         		}else{
         			itemNode = doc.createElement("TAG");
         		}
+System.out.println(answerType);
         		switch(answerType){
         		case 1:
         			if (multiSelect.equals("1")){

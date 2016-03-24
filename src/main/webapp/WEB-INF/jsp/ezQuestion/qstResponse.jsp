@@ -33,29 +33,35 @@
 			}
 			MM_reloadPage(true);
 			
-			
 			function tableXML(){
 				var xmlDoc = loadXMLString('${xmlResult}');
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
-				
+
 				for(i=0;nodes.length>i; i++){
 					tableXml += "<tr>";
 					tableXml += "<th style='padding:3px 10px'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 					tableXml += "</th>";
 					tableXml += "</tr>";
-					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
-					var itemNodes = GetChildNodes(itemNode);
+					tableXml += "<tr>";
+					tableXml += "<th style='padding:3px 10px'>";
+					tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
+					tableXml += "</th>";
+					tableXml += "</tr>";
 					
-					for(j=0; itemNodes.length>j; j++){
-						tableXml += "<tr>";
-						tableXml += "<td style='padding:3px 10px'>";
-						tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
-						tableXml += "</td>";
-						tableXml += "</tr>";
+					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
+					if(itemNode != null){
+						var itemNodes = GetChildNodes(itemNode);
+						for(j=0; itemNodes.length>j; j++){
+							tableXml += "<tr>";
+							tableXml += "<td style='padding:3px 10px'>";
+							tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
+							tableXml += "</td>";
+							tableXml += "</tr>";
+						}
 					}
 				}
 				document.getElementById("xmlTable").innerHTML = tableXml;
@@ -67,7 +73,7 @@
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;
-			
+
 		    function fun_Save(){
 		        if(form_check() == false)
 		            return;
@@ -108,10 +114,6 @@
 		        }
 		        return str_temp;
 		    }
-		    /* 안쓰는거 같음 나중에 지워야함
-		    function view_Result(){
-		        window.location.href = "/ezQuestion/result.do?brdId=" + brdId + "&itemNo=" + itemNo;
-			} */
 	
 			function form_check(){
 		        var cur_date = new Date();
@@ -219,10 +221,10 @@
 				}
 		    }
 			
-		    function Setting_Change(vdata){
+		    /* function Setting_Change(vdata){
 		        var feature = GetOpenPosition(380, 340);
 		        window.open("changeSetting.do?brdId=" + brdId + "&itemNo=" + itemNo, "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
-			}
+			} */
 			
 			function menuQst_List(){
 			    var szUrl = "/ezQuestion/qstList.do?"+"${receve}"+"&brd_postterm='' ";
