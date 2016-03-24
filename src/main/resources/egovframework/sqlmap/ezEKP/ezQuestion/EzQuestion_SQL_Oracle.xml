@@ -326,16 +326,22 @@
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="String">
 		<![CDATA[
-			INSERT INTO ezQuestion.TBLITEMSEQ 
-			VALUES (#v_pstrBrdID#, N'1') 
+			INSERT INTO ezQuestion.TBLITEMSEQ (
+			) 
+			VALUES(
+				#v_pstrBrdID#, N'1'
+			) 
 		]]>
 	</insert>
 	
 	 <update id="EzQuestionDAO.updateItemSeq" parameterClass="Map">
 		<![CDATA[
-			UPDATE ezQuestion.TBLITEMSEQ
-			SET item_no = #v_pItemNo#
-			WHERE brd_id = #v_pstrBrdID#  
+			UPDATE 
+				ezQuestion.TBLITEMSEQ
+			SET 
+				item_no = #v_pItemNo#
+			WHERE
+				 brd_id = #v_pstrBrdID#  
 		]]>
 	</update>
 	
