@@ -1,9 +1,16 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.UnsupportedEncodingException;
+import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -12,6 +19,7 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
@@ -145,6 +153,8 @@ public class EzEmailMailListController {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		Message[] messages = folder.getMessages();
+		
+		sortMessages(folder, messages, sortType);
 				
 		int startNo = messages.length - 1 - Integer.parseInt(start);
 		int endNo = Math.max(messages.length - 1 - Integer.parseInt(end), 0);
@@ -225,5 +235,151 @@ public class EzEmailMailListController {
 		
 		return returnData;		
 	}
+	
+	private void sortMessages(Folder folder, Message[] messages, String sortType) throws Exception {
+		// subject
+		if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")) {
+			Comparator<Message> comparator = new MessageSubjectComparator();
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+			}
+			
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);
+			
+			Locale locale = Locale.getDefault();
+			logger.debug("locale=" + locale);
+			
+			Arrays.sort(messages, comparator);
+		}
+		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
+			Comparator<Message> comparator = new MessageSenderComparator();
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+			}
+			
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);
+			
+			Locale locale = Locale.getDefault();
+			logger.debug("locale=" + locale);
+			
+			Arrays.sort(messages, comparator);
+		}		
+	}
+	
+	private class MessageSubjectComparator implements Comparator<Message>{
+		
+		Collator collator = Collator.getInstance();
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			String first = null;
+			String second = null;
+			try {
+				first = m1.getSubject();
+				second = m2.getSubject();
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			
+			first = first != null ? first.trim() : "";
+			second = second != null ? second.trim() : "";
+			
+			int rc = collator.compare(first, second);
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	private class MessageSenderComparator implements Comparator<Message>{
+		
+		Collator collator = Collator.getInstance();
+		Map<Address, String> senders = new HashMap<Address, String>();
+		
+		private String getAddress(Message msg) {
+			String addressStr = null;
+			Address[] address = null;
+			try {
+				address = msg.getFrom();
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			if (address != null) {
+				addressStr = senders.get(address[0]);			
+				if (addressStr == null) {					
+					addressStr = ((InternetAddress)address[0]).getPersonal();
+					if (addressStr == null) {
+						addressStr = ((InternetAddress)address[0]).getAddress();
+					}
+					else {
+						try {
+							addressStr = MimeUtility.decodeText(addressStr);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}					
+					
+					senders.put(address[0], addressStr);
+				}		
+			}
+			else {
+				addressStr = "";
+			}
+			
+			return addressStr;
+		}
+		
+		@Override
+		public int compare(Message m1, Message m2) {			
+			String first = getAddress(m1);
+			String second = getAddress(m2);
+			
+			first = first != null ? first.trim() : "";
+			second = second != null ? second.trim() : "";
+			
+			int rc = collator.compare(first, second);
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
 	
 }
