@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
-import oracle.sql.CLOB;
 
 public class QstResponseVO {
 	/** 게시판아이디*/
@@ -14,7 +13,7 @@ public class QstResponseVO {
 	/** 객관식보기선택번호(다답형은복수ROW생성)*/
 	int answerObjectivity;
 	/** 주관식응답내용,우선순위선택순서*/
-	CLOB answerSubjectivity;
+	String answerSubjectivity;
 	/** (사용안함)*/
 	int answerViewSelect;
 	/** 응답자아이디(무기명,기명)*/
@@ -78,10 +77,10 @@ public class QstResponseVO {
 	public void setAnswerObjectivity(int answerObjectivity) {
 		this.answerObjectivity = answerObjectivity;
 	}
-	public CLOB getAnswerSubjectivity() {
+	public String getAnswerSubjectivity() {
 		return answerSubjectivity;
 	}
-	public void setAnswerSubjectivity(CLOB answerSubjectivity) {
+	public void setAnswerSubjectivity(String answerSubjectivity) {
 		this.answerSubjectivity = answerSubjectivity;
 	}
 	public int getAnswerViewSelect() {

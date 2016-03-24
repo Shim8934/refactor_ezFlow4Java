@@ -42,8 +42,8 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
-import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -728,7 +729,7 @@ System.out.println(writer.toString());
 		
 		if (vPermission != "1"){
 			userId = loginVO.getId();
-			userName = loginVO.getName();
+			userName = loginVO.getDisplayName1();
 			email = loginVO.getEmail();
 			deptId = loginVO.getDeptID();
 			depart = loginVO.getDeptName1();
@@ -755,10 +756,10 @@ System.out.println(writer.toString());
 			position2 = "";
 			jikGub2 = "";
 		}
+		
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
-		
 		if (userId == ""){
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("	alert('" + egovMessageSource.getMessage("t360") + "');\n");
@@ -766,6 +767,28 @@ System.out.println(writer.toString());
 			response.getWriter().write("</script>\n");
 			response.getWriter().flush();
         }
+		
+		QstResponseVO qstResponseVO = new QstResponseVO();
+		qstResponseVO.setBrdId(Integer.parseInt(brdId));
+		qstResponseVO.setItemNo(Integer.parseInt(itemNo));
+		qstResponseVO.setResponseUserId(userId);
+		qstResponseVO.setResponseUserName(userName);
+		qstResponseVO.setResponseUserName2(userName2);
+		qstResponseVO.setResponseUserEmail(email);
+		qstResponseVO.setResponseUserDeptId(deptId);
+		qstResponseVO.setResponseUserDeptName(depart);
+		qstResponseVO.setResponseUserDeptName2(depart2);
+		qstResponseVO.setResponseUserPosition(position);
+		qstResponseVO.setResponseUserPosition2(position2);
+		qstResponseVO.setResponseUserJikgub(jikGub);
+		qstResponseVO.setResponseUserJikgub2(jikGub2);
+		qstResponseVO.setResponseUserGender(gender);
+		qstResponseVO.setResponseUserAge(Integer.parseInt(age));
+		qstResponseVO.setResponseDate(EgovDateUtil.getToday());
+		qstResponseVO.setResponseUserIp(responseUserIp);
+System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@"+loginVO.getDeptID());
+	
+
 		
 		/** EZSP_GETQUESTIONFORRESPONSE*/
 		String question_no = "", quescontent = "", multiselect = "", answertype = "";
@@ -775,7 +798,7 @@ System.out.println(writer.toString());
 		
 		List<QstVO> qstVOList = ezQuestionService.getQuestionForResponse(questionVO);
 		for(QstVO qstVO : qstVOList){
-			subDataProcess(qstVO.getQuestionNo(), qstVO.getQuesContent(), qstVO.getMultiSelect(), qstVO.getAnswerType(), Integer.parseInt(brdId), Integer.parseInt(itemNo));
+			subDataProcess(qstVO.getQuestionNo(), qstVO.getQuesContent(), qstVO.getMultiSelect(), qstVO.getAnswerType(), Integer.parseInt(brdId), Integer.parseInt(itemNo), request, qstResponseVO, response);
 		}
 		
 		/** EZSP_GETRESPONSEPERSON*/
@@ -803,17 +826,104 @@ System.out.println(writer.toString());
 		response.getWriter().flush();
 	}
 	
-	public void subDataProcess(int questionNo, String quesContent, String multiSelect, int answerType, int brdId, int itemNo) throws Exception {
-		String tmp = "";
-        int ansRCnt = 0;
+	public void subDataProcess(int questionNo, String quesContent, String multiSelect, int answerType, int brdId, int itemNo,HttpServletRequest request, QstResponseVO qstResponseVO, HttpServletResponse response) throws Exception {
+		String tmp = "", receve ="";
+        int ansRCnt = 0, tempTableAnswerCnt = 0;
         String responseNo = "1", strResponseInsert = "", answerSubjectivity = "";
+		if(request.getParameter("receve")!=null)
+			receve  = request.getParameter("receve").replace("&amp;", "&");
         
         Integer responseMaxNo = ezQuestionService.getResponseMaxNo(brdId, itemNo, questionNo);
-System.out.println("@@@@@@@@@");
         if(responseMaxNo!=null){
         	responseNo = responseMaxNo.toString();
-        }else
-System.out.println("nullllllllllllll");
+        }else{
+        	responseNo = "1";
+        }
+        
+        qstResponseVO.setQuestionNo(questionNo);
+		qstResponseVO.setResponseNo(Integer.parseInt(responseNo));
+        if(answerType == 1){
+        	/** EZSP_GETANSCNT*/
+	        QstAnswerVO answerVO = new QstAnswerVO();
+	        answerVO.setBrdId(brdId);
+	        answerVO.setItemNo(itemNo);
+	        answerVO.setQuestionNo(questionNo);
+	        Integer ansCnt = ezQuestionService.getAnsCnt(answerVO);
+	        if(ansCnt != null){
+	        	ansRCnt = ansCnt;
+	        }else{
+	        	ansRCnt = 0;
+	        }
+			/** EZSP_INSERTRESPONSE*/
+			List<String> multiQ = null;
+			
+			if(multiSelect == "1"){
+				int iDataCount = 0;
+				String strData = "";
+				for(int j=0; j<ansRCnt; j++){
+					iDataCount ++;
+					tmp = "chk" + questionNo + "_" + Integer.toString(iDataCount);
+					
+					multiQ = new ArrayList<String>();
+					multiQ.add(request.getParameter(tmp.trim()));
+					
+					if(multiQ.get(j) == "1"){
+						qstResponseVO.setAnswerObjectivity(iDataCount);
+						ezQuestionService.insertResponse(qstResponseVO);
+						responseNo = Integer.toString(Integer.parseInt(responseNo)+1); 
+					}
+				}
+				multiQ.clear();
+				multiQ = null;
+			}else{
+				tmp = "rdo" + questionNo;
+				String SingleQ = request.getParameter(tmp);
+				qstResponseVO.setAnswerObjectivity(Integer.parseInt(SingleQ));
+				ezQuestionService.insertResponse(qstResponseVO);
+			}
+        }else if(answerType == 2){
+        	/** EZSP_INSERTRESPONSE2*/
+        	tmp = "txt" + questionNo;
+        	answerSubjectivity = request.getParameter(tmp).trim();
+        	qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
+        	ezQuestionService.insertResponse2(qstResponseVO);
+
+    	
+        }else if(answerType == 4){
+        	/** EZSP_INSERTRESPONSE2*/
+        	tmp = "txt" + questionNo;
+        	answerSubjectivity = request.getParameter(tmp);
+        	qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
+        	ezQuestionService.insertResponse2(qstResponseVO);
+        }else if(answerType == 5){
+        	 /** EZSP_GETANSCNT*/
+	        QstAnswerVO answerVO = new QstAnswerVO();
+	        answerVO.setBrdId(brdId);
+	        answerVO.setItemNo(itemNo);
+	        answerVO.setQuestionNo(questionNo);
+	        Integer ansCnt = ezQuestionService.getAnsCnt(answerVO);
+	        if(ansCnt != null){
+	        	ansRCnt = ansCnt;
+	        }else{
+	        	ansRCnt = 0;
+	        }
+	        String tempTableAnswer = "";
+	        for(; tempTableAnswerCnt < ansRCnt; tempTableAnswerCnt++){
+	        	tempTableAnswer += tempTableAnswer.split(";");
+	        }
+	        qstResponseVO.setAnswerSubjectivity(tempTableAnswer);
+	        ezQuestionService.insertResponse2(qstResponseVO);
+        }else{
+        	tmp = "sel" + questionNo;
+        	String answerViewSelect = request.getParameter(tmp);
+        	qstResponseVO.setAnswerObjectivity(Integer.parseInt(answerViewSelect));
+        	ezQuestionService.insertResponse(qstResponseVO);
+        }
+        
+        response.getWriter().write("<script language='javascript'>\n");
+        response.getWriter().write("window.location.href = '/ezQuestion/qstList.do?" + receve + "'\n");
+        response.getWriter().write("</script>\n");
+        response.getWriter().flush();
 	}
 
 	@RequestMapping(value="/ezQuestion/qstResult.do")

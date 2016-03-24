@@ -106,6 +106,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (Integer) select("EzQuestionDAO.getResponseMaxNo", map);
 	}
 	
+	public int getAnsCnt(Map<String, Object> map) {
+		return (int) select("EzQuestionDAO.getAnsCnt", map);
+	}
+	
 	public void callCreateMother(Map<String,Object> map) {
 		insert("EzQuestionDAO.callCreateMother", map);
 	}
@@ -142,6 +146,14 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		select("EzQuestionDAO.insertItemSeq", brdId);
 	}
 	
+	public void insertResponse(Map<String,Object> map) {
+		insert("EzQuestionDAO.insertResponse", map);
+	}
+	
+	public void insertResponse2(Map<String,Object> map) {
+		insert("EzQuestionDAO.insertResponse2", map);
+	}
+	
 	public void stepSave(Map<String,Object> map) {
 		update("EzQuestionDAO.stepSave", map);
 	}
@@ -176,5 +188,4 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
-
 }

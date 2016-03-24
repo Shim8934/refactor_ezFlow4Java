@@ -319,8 +319,25 @@
 				EZQUESTION.TBLPOLL_RESPONSE 
 			WHERE
 				brd_id = #v_pstrBrdID#
-			AND item_no = #v_pItemNo#
-			AND question_no = #v_pQuesNo#
+			AND 
+				item_no = #v_pItemNo#
+			AND 
+				question_no = #v_pQuesNo#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getAnsCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) ansCnt  
+			FROM
+				EZQUESTION.TBLPOLL_ANSWER 
+			WHERE
+				brd_id = #v_pstrBrdID#
+			AND 
+				item_no = #v_pItemNo#
+			AND 
+				question_no = #v_pQuesNo#
 		]]>
 	</select>
 	
@@ -331,6 +348,28 @@
 			VALUES(
 				#v_pstrBrdID#, N'1'
 			) 
+		]]>
+	</insert>
+			
+	<insert id="EzQuestionDAO.insertResponse" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZQUESTION.TBLPOLL_RESPONSE(
+				brd_id,			item_no,		question_no,	responseno,	answer_objectivity, responseUser_id,	responseUser_name,	responseUser_name2,	responseUser_email,	ResponseUser_dept_id,	responseuser_dept_name,	responseuser_dept_name2,	responseUser_Position,	responseUser_Position2,	responseuser_jikgub,	responseuser_jikgub2,	responseuser_gender,	responseuser_age,	Response_date,	responseuser_ip 
+			)
+			VALUES (
+				#v_pstrBrdID#,	#v_pItemNo#,	#v_pQuesNo#,	#v_pResNo#,	#v_pAobj#,			#v_pUserID#,		#v_pUserNM#,		#v_pUserNM2#,		#v_pEmail#,			#v_pDeptID#,			#v_pDeptNM#,			#v_pDeptNM2#,				#v_pPos#,				#v_pPos2#,				#v_pJikGub#,			#v_pJikGub2#,			#v_pGender#,			#v_pAge#,			#v_pResDate#,	#v_pResUserIP#
+			)
+		]]>
+	</insert>
+	
+	<insert id="EzQuestionDAO.insertResponse2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZQUESTION.TBLPOLL_RESPONSE(
+				brd_id,			item_no,		question_no,	responseno,	answer_subjectivity,	responseUser_id,	responseUser_name,	responseUser_name2,	responseUser_email,	ResponseUser_dept_id,	responseuser_dept_name,	responseuser_dept_name2,	responseUser_Position,	responseUser_Position2,	responseuser_jikgub,	responseuser_jikgub2,	responseuser_gender,	responseuser_age,	Response_date,	responseuser_ip
+			)
+			VALUES (
+				#v_pstrBrdID#,	#v_pItemNo#,	#v_pQuesNo#,	#v_pResNo#,	#v_pAsub#,				#v_pUserID#, 		#v_pUserNM#,		 #v_pUserNM2#, 		#v_pEmail#, 		#v_pDeptID#,			#v_pDeptNM#,			#v_pDeptNM2#,				#v_pPos#,				#v_pPos2#,				#v_pJikGub#,			#v_pJikGub2#,			#v_pGender#,			#v_pAge#,			#v_pResDate#,	#v_pResUserIP#
+			)
 		]]>
 	</insert>
 	

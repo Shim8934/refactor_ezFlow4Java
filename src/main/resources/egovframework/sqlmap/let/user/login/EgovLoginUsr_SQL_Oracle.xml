@@ -23,6 +23,7 @@
 		<result property="updateDT" 			column="updatedt"					columnIndex="13"/>
 		<result property="rollInfo" 			column="rollinfo"					columnIndex="14"/>
 		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
+		<result property="email"				column="mail"						columnIndex="16"/>
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
@@ -44,7 +45,8 @@
 		     	company2,
 		     	updatedt,
 		     	extensionattribute1 as rollinfo,
-		     	telephonenumber
+		     	telephonenumber,
+		     	mail
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 

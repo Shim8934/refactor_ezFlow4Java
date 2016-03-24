@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -404,5 +405,67 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
 		return ezQuestionDAO.getResponseMaxNo(map);
+	}
+
+	@Override
+	public int getAnsCnt(QstAnswerVO answerVO) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", answerVO.getBrdId());
+		map.put("v_pItemNo", answerVO.getItemNo());
+		map.put("v_pQuesNo", answerVO.getQuestionNo());
+		return ezQuestionDAO.getAnsCnt(map);
+	}
+
+	@Override
+	public void insertResponse(QstResponseVO qstResponseVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", qstResponseVO.getBrdId());
+		map.put("v_pItemNo", qstResponseVO.getItemNo());
+		map.put("v_pQuesNo", qstResponseVO.getQuestionNo());
+		map.put("v_pResNo", qstResponseVO.getResponseNo());
+		map.put("v_pAobj", qstResponseVO.getAnswerObjectivity());
+		map.put("v_pUserID", qstResponseVO.getResponseUserId());
+		map.put("v_pUserNM", qstResponseVO.getResponseUserName());
+		map.put("v_pUserNM2", qstResponseVO.getResponseUserName2());
+		map.put("v_pEmail", qstResponseVO.getResponseUserEmail());
+		map.put("v_pDeptID", qstResponseVO.getResponseUserDeptId());
+		map.put("v_pDeptNM", qstResponseVO.getResponseUserDeptName());
+		map.put("v_pDeptNM2", qstResponseVO.getResponseUserDeptName2());
+		map.put("v_pPos", qstResponseVO.getResponseUserPosition());
+		map.put("v_pPos2", qstResponseVO.getResponseUserPosition2());
+		map.put("v_pJikGub", qstResponseVO.getResponseUserJikgub());
+		map.put("v_pJikGub2", qstResponseVO.getResponseUserJikgub2());
+		map.put("v_pGender", qstResponseVO.getResponseUserGender());
+		map.put("v_pAge", qstResponseVO.getResponseUserAge());
+		map.put("v_pResDate", qstResponseVO.getResponseDate());
+		map.put("v_pResUserIP", qstResponseVO.getResponseUserIp());
+		ezQuestionDAO.insertResponse(map);
+	}
+
+	@Override
+	public void insertResponse2(QstResponseVO qstResponseVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", qstResponseVO.getBrdId());
+		map.put("v_pItemNo", qstResponseVO.getItemNo());
+		map.put("v_pQuesNo", qstResponseVO.getQuestionNo());
+		map.put("v_pResNo", qstResponseVO.getResponseNo());
+		map.put("v_pAsub", qstResponseVO.getAnswerSubjectivity());
+		map.put("v_pUserID", qstResponseVO.getResponseUserId());
+		map.put("v_pUserNM", qstResponseVO.getResponseUserName());
+		map.put("v_pUserNM2", qstResponseVO.getResponseUserName2());
+		map.put("v_pEmail", qstResponseVO.getResponseUserEmail());
+		map.put("v_pDeptID", qstResponseVO.getResponseUserDeptId());
+		map.put("v_pDeptNM", qstResponseVO.getResponseUserDeptName());
+		map.put("v_pDeptNM2", qstResponseVO.getResponseUserDeptName2());
+		map.put("v_pPos", qstResponseVO.getResponseUserPosition());
+		map.put("v_pPos2", qstResponseVO.getResponseUserPosition2());
+		map.put("v_pJikGub", qstResponseVO.getResponseUserJikgub());
+		map.put("v_pJikGub2", qstResponseVO.getResponseUserJikgub2());
+		map.put("v_pGender", qstResponseVO.getResponseUserGender());
+		map.put("v_pAge", qstResponseVO.getResponseUserAge());
+		map.put("v_pResDate", qstResponseVO.getResponseDate());
+		map.put("v_pResUserIP", qstResponseVO.getResponseUserIp());
+		ezQuestionDAO.insertResponse2(map);
 	}
 }

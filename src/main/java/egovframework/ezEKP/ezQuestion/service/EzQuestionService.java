@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
+import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -51,6 +52,8 @@ public interface EzQuestionService {
 
 	public int resCount(String brdId,String itemNo) throws Exception;
 	
+	public int getAnsCnt(QstAnswerVO answerVO) throws Exception;
+	
 	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception;
 
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
@@ -66,6 +69,10 @@ public interface EzQuestionService {
 	public void insertAnswerContent(QstCompleteVO qstCompleteVO) throws Exception;
 	
 	public void insertItemRead(LoginVO loginVO, QstUserPollItemVO qstUserPollItemVO, String readDate) throws Exception;
+	
+	public void insertResponse(QstResponseVO qstResponseVO) throws Exception;
+
+	public void insertResponse2(QstResponseVO qstResponseVO) throws Exception;
 	
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception;
 
@@ -87,7 +94,5 @@ public interface EzQuestionService {
 	
 	public void updateResCnt(int brdId, int itemNo) throws Exception;
 
-	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
-
-	
+	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;	
 }
