@@ -400,7 +400,7 @@
 		    		xmlDom = loadXMLString(DataXML);
 		    		removeQue();
 		    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
-		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "CONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
 		        		frmCreate.selQues.options[i] = TmpOption;
 		    		}
 		    		AttachFile.innerHTML = AttachFile.innerHTML;
@@ -686,14 +686,14 @@
         		<div id="Preview_Content">
         		</div>
     		</div>
-			<form method="post" id="form_TempSave" name="form_TempSave" enctype="multipart/form-data" action="Qst_tempSave.aspx" target="_self">
+			<form method="post" id="form_TempSave" name="form_TempSave" enctype="multipart/form-data" action="qstTempSave.do" target="_self">
 		    	<input type="hidden" name="TempSaveData" id="TempSaveData" />
 			</form>
 			<form method="post" action="" name="QstEdit" id="QstEdit">
     			<input type="hidden" name="DataXML" id="DataXML" />
     			<input type="hidden" name="DataIndex" id="DataIndex" />
 			</form>
-			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="Form_TempLoad_Safari.aspx" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
+			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
     			<div id="AttachFile" style="width:1px; height:1px;">
         			<input type="file" name="cmuds" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
     			</div>
