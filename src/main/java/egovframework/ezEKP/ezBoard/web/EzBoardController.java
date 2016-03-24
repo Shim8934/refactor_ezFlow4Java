@@ -57,6 +57,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
@@ -2135,4 +2136,118 @@ System.out.println(boardListVO.getStartDate());
         
         return strXML;
     }
+	
+	@RequestMapping(value = "/ezBoard/getItemAttachments.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String getItemAttachments(HttpServletRequest request) throws Exception{
+		String pItemID = "";
+        String pTitle = "";
+        String pConLocation = "";
+        String pMode = "";
+        String realPath = request.getServletContext().getRealPath("");
+        
+        pItemID = request.getParameter("itemID");
+        pTitle = request.getParameter("title");
+        pConLocation = request.getParameter("conLocation");
+        pMode = request.getParameter("mode");
+        
+        String strXML = "";
+
+        if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))){
+        	strXML = getItemAttachmentXML_Retrans(pItemID, realPath + config.getProperty("upload_board.ROOT"), pMode, pConLocation, pTitle);
+        }else{
+        	strXML = getItemAttachmentXML(pItemID);
+        }
+        
+        return strXML;
+	}
+
+	public String getItemAttachmentXML_Retrans(String pItemID, String filePath, String pMode, String pConLocation, String pTitle) throws Exception{
+		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID);
+		
+		StringBuilder resultXML = new StringBuilder();
+		resultXML.append("<NODES>");
+		
+		if(pMode.equals("boardAttach")){
+            pConLocation = pConLocation.replace("/", "\\");
+            File file = new File(filePath + "\\" + pConLocation);
+            String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
+            String newFilePath = "tempUploadFile\\" + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
+            File fileMove = new File(filePath + "\\" + newFilePath);
+            long mhtSize = file.length();
+            FileUtils.moveFile(file, fileMove);
+
+
+            resultXML.append("<NODE>");
+            resultXML.append("<ItemID>" + pItemID + "</ItemID>");
+            resultXML.append("<FilePath>" + newFilePath.replace("\\", "/") + "</FilePath>");
+            resultXML.append("<FileSize>" + getProperSizeDisplay(String.valueOf(mhtSize)) + "</FileSize>");
+            resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
+            resultXML.append("</NODE>");
+        }
+
+        for (int i = 0; i < boardAttachVOList.size(); i++){
+            String pFilePath = boardAttachVOList.get(i).getFilePath();
+            String newFilePath = pFilePath.split("/")[pFilePath.split("/").length - 1];
+
+            newFilePath = "TempUploadFile\\" + "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length() - newFilePath.indexOf("_"));
+
+            File file = new File(filePath + "\\" + pFilePath);
+            File fileMove = new File(filePath + "\\" + newFilePath);
+            FileUtils.moveFile(file, fileMove);
+            
+            resultXML.append("<NODE>");
+            resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
+            resultXML.append("<FilePath>" + newFilePath.replace("\\", "/") + "</FilePath>");
+            resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
+            resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
+            resultXML.append("</NODE>");
+        }
+        
+        resultXML.append("</NODES>");
+        
+        return resultXML.toString();
+	}
+
+	public String getItemAttachmentXML(String pItemID) throws Exception{
+		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID);
+		
+		StringBuilder resultXML = new StringBuilder();
+		resultXML.append("<NODES>");
+		
+		for (int i = 0; i < boardAttachVOList.size(); i++){
+			resultXML.append("<NODE>");
+			resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
+			resultXML.append("<GUID>" + boardAttachVOList.get(i).getGuid().trim() + "</GUID>");
+			resultXML.append("<FilePath>" + boardAttachVOList.get(i).getFilePath() + "</FilePath>");
+			resultXML.append("<FileName>" + boardAttachVOList.get(i).getFileName() + "</FileName>");
+			resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
+			resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
+			resultXML.append("</NODE>");
+		}
+		resultXML.append("</NODES>");
+		
+		return resultXML.toString();
+	}
+	
+	// 사용자가 보기에 편리한 형태로 파일 사이즈를 변환해 주는 함수
+	public String getProperSizeDisplay(String pSize) throws Exception{
+	    if(Integer.parseInt(pSize) > 1048576){
+	    	return Math.round((Integer.parseInt(pSize) / 1024 / 102.4) / 10) + " MB";
+	    }else if (Integer.parseInt(pSize) > 1024){
+	    	return Math.round((Integer.parseInt(pSize) / 102.4) / 10) + " KB";
+	    }
+	    else{
+	    	return pSize + " Byte";
+	    }
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardAttachDown.do")
+	public void boardAttachDown(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+System.out.println(filePath);
+System.out.println(fileName);
+		downFile(response, filePath, fileName);
+	}
 }

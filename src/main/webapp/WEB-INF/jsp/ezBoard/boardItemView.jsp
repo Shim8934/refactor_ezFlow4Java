@@ -8,6 +8,7 @@
 		<meta name="CODE_LANGUAGE" Content="C#">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
@@ -67,8 +68,25 @@
 // 		            initKey();
 		
 // 		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/ezCommonInterFace.do&type=BOARDCONTENT&docID=" + escape(pItemID);
-		            document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?type=BOARDCONTENT&itemID=" + escape(pItemID);
-																
+					var html = "";
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type   : "BOARDCONTENT", 
+								 itemID 	 : escape(pItemID)
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});	
+		            //document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?type=BOARDCONTENT&itemID=" + escape(pItemID);
+					var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					
 		            AddLinkTarget();
 		            SetAttachmentInfo();
 		            
@@ -465,7 +483,7 @@
 		    function SetAttachmentInfo() {
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
-		        xmlhttp.open("POST", "interASP/GetItemAttachments.aspx?ItemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID, false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
 		        var i = 0;
@@ -476,12 +494,9 @@
 		        var fileImage = "";
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        var regData = GetbrowserLanguage();
-		        for (i = 0; i < xmldomNodes.length; i++) {
+		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = filepath.substr(89, filepath.length - 88);
-		            filename = ReplaceText(filename, "%2b", "+");
-		            filename = ReplaceText(filename, "%3b", ";");
-		            filepath = "/Upload_BoardSTD/" + filepath;
+		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            var strTarget = "target=''";
 		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -514,9 +529,9 @@
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		
-		            strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARD&ATTID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "\">";
+		            strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
 		            
-		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='" + protocol + "//" + serverName + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARD&ATTID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'\">";
+		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ filepath +"&fileName="+ filename +"'\">";
 		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;

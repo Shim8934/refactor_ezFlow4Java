@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -35,6 +36,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<BoardListHeaderVO> getListHeaderBoardID(Map<String, Object> map) throws Exception {
 		return (List<BoardListHeaderVO>) list("EzBoardDAO.getListHeaderBoardID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetItemAttachmentInfo", pItemID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -154,9 +160,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
-
-
-
 
 	
 }

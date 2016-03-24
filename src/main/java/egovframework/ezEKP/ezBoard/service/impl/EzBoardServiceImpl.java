@@ -6,10 +6,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import oracle.net.aso.p;
+
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -171,6 +174,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_PBOARDTYPE", ezBoardVO.getBoardType());
 		return ezBoardDAO.getListHeaderBoardID(map);
+	}
+
+	@Override
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception {
+		return ezBoardDAO.brdGetItemAttachmentInfo(pItemID);
 	}
 
 	@Override

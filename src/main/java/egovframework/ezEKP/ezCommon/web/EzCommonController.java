@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezCommon.web;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -34,7 +37,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  * 공통적으로 사용되는 메소드 집합 Controller
  */
 @Controller
-public class EzCommonController {
+public class EzCommonController{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -594,8 +597,9 @@ public class EzCommonController {
         }
     }
 	
-	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do")
-	public void mhtToHTML(HttpServletRequest request) throws Exception{
+	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mhtToHTML(HttpServletRequest request) throws Exception{
 		String itemID = "";
 		String type = "";
 		String realPath = request.getServletContext().getRealPath("");
@@ -603,8 +607,9 @@ public class EzCommonController {
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		
-		strResult = getMHTtoHTML(type, itemID, realPath);
+		strResult = getMHTtoHTML(type, itemID.replace("%7B", "{").replace("%7D", "}"), realPath);
+
+		return strResult;
 	}
 
 	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
@@ -616,104 +621,106 @@ public class EzCommonController {
         if (!file.exists()){
         	file.mkdir();
         }
-        
         String url = ezCommonService.getContentInfo(type, itemID);
+        String m_strMHT = "";
+        try {
+        	m_strMHT = loadMHTFile(realPath + url);
+		} catch (Exception e) {
+			m_strMHT= "";
+		}
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
-        loadMHTFile(realPath + url);
-//        String strHTML = startMHT2HTML(filePath, url + "?TYPE=MHTIMAGE&ATTID=");
+        if(strHTML.trim().length() > 0){
+        	return strHTML;
+        }else{
+        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
+        }
 
-//        if (strHTML.Trim().Length > 0)
-//        {
-//            HTMLDocument iDoc = new HTMLDocument();
-//            iDoc.designMode = "on";
-//            object[] oPageText = { strHTML };
-//            IHTMLDocument2 doc = (IHTMLDocument2)iDoc;
-//            doc.write(oPageText);
-//            
-//            XmlDocument XmlDoc;
-//            XmlNode XmlNode;
-//            XmlElement XmlElem1;
-//            XmlElement XmlElem2;
-//            XmlElement XmlElem3;
-//            XmlText XmlText;
-//
-//            XmlDoc = new XmlDocument();
-//            XmlNode = XmlDoc.CreateNode(XmlNodeType.XmlDeclaration, "", "");
-//            XmlDoc.AppendChild(XmlNode);
-//
-//            XmlElem1 = XmlDoc.CreateElement("", "ROOT", "");
-//            XmlDoc.AppendChild(XmlElem1);
-//
-//            XmlElem2 = XmlDoc.CreateElement("", "BODYATTS", "");
-//            XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
-//
-//
-//            string strBODYatt = "";
-//            string DocumentStyleSheets = "";
-//            if (doc.styleSheets != null)
-//            {
-//                HTMLStyleSheetsCollection STyleColl = doc.styleSheets;
-//                for (int i = 0; i < STyleColl.length; i++)
-//                {
-//                    IHTMLStyleSheet styleSheet = STyleColl.item(i) as IHTMLStyleSheet;
-//                    DocumentStyleSheets += styleSheet.cssText;
-//                }
-//            }
-//            else
-//                DocumentStyleSheets = "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; }";
-//
-//            if (doc.body != null)
-//            {
-//                HTMLBody body = doc.body as HTMLBody;
-//                IHTMLAttributeCollection atts = (IHTMLAttributeCollection)body.attributes;
-//                foreach (IHTMLDOMAttribute2 att in atts)
-//                {
-//                    if (((IHTMLDOMAttribute)att).specified)
-//                    {
-//                        if (att.value.ToUpper() != "NULL" && att.value.Trim().Length > 0 && att.expando == true && att.name.ToUpper() != "XMLNS")
-//                        {
-//                            XmlElem3 = XmlDoc.CreateElement("", "NODE", "");
-//                            XmlDoc.SelectSingleNode("ROOT/BODYATTS").AppendChild(XmlElem3);
-//
-//                            XmlElem3 = XmlDoc.CreateElement("", "NODENAME", "");
-//                            XmlText = XmlDoc.CreateTextNode(att.name);
-//                            XmlElem3.AppendChild(XmlText);
-//                            XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Item(XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Count - 1).AppendChild(XmlElem3);
-//
-//                            XmlElem3 = XmlDoc.CreateElement("", "NODEVALUE", "");
-//                            XmlText = XmlDoc.CreateTextNode(att.value);
-//                            XmlElem3.AppendChild(XmlText);
-//                            XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Item(XmlDoc.SelectNodes("ROOT/BODYATTS").Item(0).ChildNodes.Count - 1).AppendChild(XmlElem3);
-//                        }
-//                    }
-//                }
-//
-//                XmlElem2 = XmlDoc.CreateElement("", "BODYDATA", "");
-//                XmlText = XmlDoc.CreateTextNode(doc.body.innerHTML);
-//                XmlElem2.AppendChild(XmlText);
-//                XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
-//
-//            }
-//            else
-//            {
-//                XmlElem2 = XmlDoc.CreateElement("", "BODYDATA", "");
-//                XmlText = XmlDoc.CreateTextNode(strHTML);
-//                XmlElem2.AppendChild(XmlText);
-//                XmlDoc.SelectSingleNode("ROOT").AppendChild(XmlElem2);
-//            }
-//
-//            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
-//            Response.ContentType = "text/xml; charset=utf-8";
-//            Response.Write("<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>" + DocumentStyleSheets + "</STYLE>" + XmlDoc.SelectSingleNode("ROOT/BODYDATA").InnerText + "</HTML>");
-//        }
-//        else
-//        {
-//            Response.ContentType = "text/xml; charset=utf-8";
-//            Response.Write("<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>");
-//        }
-		return "";
 	}
 	
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath) throws Exception{
+		String m_strHTML = "";
+		String strBoundary = "";
+		String[] m_Mimechunk = null;
+		List<String> m_ListImageLocation = new ArrayList<String>();
+		List<String> m_ListImageLocalLocation = new ArrayList<String>();
+		
+		strBoundary = getBoundaryText(m_strMHT);
+		if(m_strMHT != null && !m_strMHT.equals("")){
+			if(strBoundary.equals("error")){
+				return "error : boundary 를 찾을 수 없습니다.";
+			}else{
+				m_Mimechunk = m_strMHT.split(strBoundary);
+				
+				for(int i = 1; i < m_Mimechunk.length; i++){
+					String[] strMimeChunk = m_Mimechunk[i].split("\n\n");
+					String[] strMime_info_p = strMimeChunk[0].trim().split("\n");
+					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
+					
+					if(strMime_info_tupe[0].equals("Content-Type")){
+						if(strMime_info_tupe[1].equals("Text/HTML")){
+							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
+						}else if(strMime_info_tupe[0].equals("Image/gif")){
+							String[] strMime_info_location = strMime_info_p[2].split(": ");
+							if(strMime_info_location[0].equals("Content-Location")){
+								m_ListImageLocation.add(strMime_info_location[1]);
+							}
+							m_ListImageLocalLocation.add(doImageDecoding(strMimeChunk[1].trim(), m_strSPath, m_strLPath));
+						}
+					}
+				}
+				if(m_ListImageLocation.size() == m_ListImageLocalLocation.size()){
+					for(int i = 0; i < m_ListImageLocation.size(); i++){
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i)); 
+					}
+				}else{
+					return "error : 파싱오류.";
+				}
+				return m_strHTML;
+			}
+		}else{
+			return "error : MHT 데이터가 존재하지 않습니다.";
+		}
+	}
+
+	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
+		byte[] imageBytes = Base64.decodeBase64(strImageMht);
+		
+		String strImageName = UUID.randomUUID() + ".tmp";
+        String SfilePath = m_strSPath + "\\" + strImageName;
+        String LfilePath = m_strLPath + "\\" + strImageName;
+        
+        File file = new File(m_strLPath);
+        if(!file.exists()){
+        	file.mkdir();
+        }
+        BufferedWriter fw = new BufferedWriter(new FileWriter(LfilePath, true));
+
+        fw.write(imageBytes.toString());
+    	fw.flush();
+    	fw.close();
+        
+		return SfilePath;
+	}
+
+	private String doMHTDecoding(String strMht, String m_strHTML) {
+		byte[] arr = Base64.decodeBase64(strMht);
+		m_strHTML = new String(arr);
+		
+		return m_strHTML;
+	}
+
+	private String getBoundaryText(String m_strMHT) {
+		String strTemp = m_strMHT;
+        int nPos = strTemp.indexOf("boundary=");
+        if (nPos > 0){
+            int nEndPos = strTemp.indexOf("\"", nPos + 10);
+            return "--" + strTemp.substring(nPos + 10, nEndPos);
+        }else{
+            return "error";
+        }
+	}
+
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
 		BufferedReader br = new BufferedReader(new FileReader(strMHTpath));
@@ -730,7 +737,6 @@ public class EzCommonController {
 	    } finally {
 	        br.close();
 	    }
-System.out.println(strMhtData);		
         return strMhtData;
     }
 

@@ -9,16 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import egovframework.let.utl.fcc.service.EgovStringUtil;
-
-import egovframework.rte.fdl.idgnr.EgovIdGnrService;
-import egovframework.rte.fdl.property.EgovPropertyService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +26,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+
+import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.rte.fdl.idgnr.EgovIdGnrService;
+import egovframework.rte.fdl.property.EgovPropertyService;
 
 /**
  * @Class Name  : EgovFileMngUtil.java
@@ -364,9 +364,9 @@ public class EgovFileMngUtil {
     public void downFile(HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
 	    //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
 	    //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
-	    String downFileName = EgovStringUtil.isNullToString(streFileNm).replaceAll("..","");
-		String orgFileName = EgovStringUtil.isNullToString(orignFileNm).replaceAll("..","");
-	
+	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
+		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
+    	
 		File file = new File(downFileName);
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
@@ -389,9 +389,9 @@ public class EgovFileMngUtil {
 	    	    String mimetype = "text/html"; //"application/x-msdownload"	
 	    	    response.setBufferSize(fSize);
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition:", "attachment; filename=" + orgFileName);
+				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
-				//response.setHeader("Content-Transfer-Encoding","binary");
+//				response.setHeader("Content-Transfer-Encoding","binary");
 				//response.setHeader("Pragma","no-cache");
 				//response.setHeader("Expires","0");
 				FileCopyUtils.copy(in, response.getOutputStream());

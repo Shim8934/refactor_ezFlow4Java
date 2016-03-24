@@ -6,6 +6,7 @@
 	<typeAlias  alias="EzBoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
+	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
 	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
@@ -141,6 +142,17 @@
        		WHERE  
        		    userid = #userID#
 		]]>		
+	</select>
+	
+	<select id="EzBoardDAO.brdGetItemAttachmentInfo" parameterClass="String" resultClass="BoardAttachVO">
+		<![CDATA[
+			SELECT 
+				* 
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS 
+	       	WHERE  
+	       		itemid = #pItemID#
+       	]]>
 	</select>
 	
 	<select id="EzBoardDAO.getNoticePostItemCount" resultClass="Integer">

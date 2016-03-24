@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -21,6 +22,8 @@ public interface EzBoardService {
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
 	
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
+	
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception;
 	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
@@ -73,6 +76,5 @@ public interface EzBoardService {
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
-
 
 }
