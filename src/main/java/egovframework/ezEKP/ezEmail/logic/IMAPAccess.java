@@ -1,17 +1,28 @@
 package egovframework.ezEKP.ezEmail.logic;
 
+import java.io.UnsupportedEncodingException;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,4 +241,250 @@ public class IMAPAccess {
 	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource){
 		return new IMAPAccess(host, port, username, password, egovMessageSource);
 	}
+	
+	public static class MessageSubjectComparator implements Comparator<Message> {
+		
+		Collator collator = Collator.getInstance();
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			String first = null;
+			String second = null;
+			try {
+				first = m1.getSubject();
+				second = m2.getSubject();
+			} catch (MessagingException e) {
+			}
+			
+			first = first != null ? first.trim() : "";
+			second = second != null ? second.trim() : "";
+			
+			int rc = collator.compare(first, second);
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessageSenderComparator implements Comparator<Message> {
+		
+		Collator collator = Collator.getInstance();
+		Map<Address, String> senders = new HashMap<Address, String>();
+		
+		private String getAddress(Message msg) {
+			String addressStr = null;
+			Address[] address = null;
+			try {
+				address = msg.getFrom();
+			} catch (MessagingException e) {
+			}
+			if (address != null) {
+				addressStr = senders.get(address[0]);			
+				if (addressStr == null) {					
+					addressStr = ((InternetAddress)address[0]).getPersonal();
+					if (addressStr == null) {
+						addressStr = ((InternetAddress)address[0]).getAddress();
+					}
+					else {
+						try {
+							addressStr = MimeUtility.decodeText(addressStr);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}					
+					
+					senders.put(address[0], addressStr);
+				}		
+			}
+			else {
+				addressStr = "";
+			}
+			
+			return addressStr;
+		}
+		
+		@Override
+		public int compare(Message m1, Message m2) {			
+			String first = getAddress(m1);
+			String second = getAddress(m2);
+			
+			first = first != null ? first.trim() : "";
+			second = second != null ? second.trim() : "";
+			
+			int rc = collator.compare(first, second);
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessageAttachmentComparator implements Comparator<Message> {
+		
+		IMAPAccess imapAccess;
+		
+		public MessageAttachmentComparator(IMAPAccess imapAccess) {
+			this.imapAccess = imapAccess;
+		}
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int attached1 = imapAccess.hasAttachment(m1) ? 1 : 0;
+			int attached2 = imapAccess.hasAttachment(m2) ? 1 : 0;
+						
+			int rc = attached1 - attached2;
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessageUnreadComparator implements Comparator<Message> {
+				
+		@Override
+		public int compare(Message m1, Message m2) {
+			int unread1 = 0;
+			int unread2 = 0;
+			try {
+				unread1 = !m1.isSet(Flags.Flag.SEEN) ? 1 : 0;
+				unread2 = !m2.isSet(Flags.Flag.SEEN) ? 1 : 0;
+			} catch (MessagingException e1) {
+			}
+						
+			int rc = unread1 - unread2;
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessagePriorityComparator implements Comparator<Message> {
+		
+		private int getPriority(Message msg) {
+			String[] headers = null;
+			try {
+				headers = msg.getHeader("importance");
+			} catch (MessagingException e) {
+			}
+			String header = headers != null ? headers[0] : "normal";
+			int importance = 1;
+			if (header.equalsIgnoreCase("high")) {
+				importance = 2;
+			}
+			else if (header.equalsIgnoreCase("low")) {
+				importance = 0;
+			}			
+			
+			return importance;
+		}
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int priority1 = getPriority(m1);	
+			int priority2 = getPriority(m2);
+			
+			int rc = priority1 - priority2;
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessageSizeComparator implements Comparator<Message> {
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int size1 = 0;
+			int size2 = 0;
+			try {
+				size1 = m1.getSize();
+				size2 = m2.getSize();
+			} catch (MessagingException e1) {
+			}
+						
+			int rc = size1 - size2;
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	public static class MessageReceivedDateComparator implements Comparator<Message> {
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int rc = 0;
+			try {
+				Date d1 = m1.getReceivedDate();
+				Date d2 = m2.getReceivedDate();
+				if (d1 != null && d2 != null) {
+					rc = d1.compareTo(d2);
+				}
+			} catch (MessagingException e) {
+			}
+			
+			return rc;
+		}
+		
+	}		
+	
 }

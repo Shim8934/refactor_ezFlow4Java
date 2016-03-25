@@ -1,16 +1,12 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.io.UnsupportedEncodingException;
-import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -19,7 +15,6 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
@@ -162,13 +157,61 @@ public class EzEmailMailListController {
 		if (startNo >= endNo) {
 			Message[] fetchMessages = Arrays.copyOfRange(messages, endNo, startNo + 1);
 			FetchProfile fp = new FetchProfile();
-			fp.add(UIDFolder.FetchProfileItem.UID);
-			fp.add("importance");
-			fp.add(FetchProfile.Item.CONTENT_INFO);
-			fp.add(FetchProfile.Item.ENVELOPE);
-			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-			fp.add(FetchProfile.Item.SIZE);
-			fp.add(FetchProfile.Item.FLAGS);
+			
+			if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")
+					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.FLAGS);				
+			}
+			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);				
+			}
+			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(FetchProfile.Item.SIZE);				
+			}
+			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);				
+			}
+			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(FetchProfile.Item.FLAGS);				
+			}
+			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")) {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);				
+			}
+			else {
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("importance");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);
+			}
+			
 			folder.fetch(fetchMessages, fp);					
 		}
 		
@@ -240,7 +283,7 @@ public class EzEmailMailListController {
 			String sortType) throws Exception {
 		// subject
 		if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")) {
-			Comparator<Message> comparator = new MessageSubjectComparator();
+			Comparator<Message> comparator = new IMAPAccess.MessageSubjectComparator();
 			
 			if (sortType.endsWith("ASC")) {
 				logger.debug("ASC");
@@ -261,7 +304,7 @@ public class EzEmailMailListController {
 			Arrays.sort(messages, comparator);
 		}
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
-			Comparator<Message> comparator = new MessageSenderComparator();
+			Comparator<Message> comparator = new IMAPAccess.MessageSenderComparator();
 			
 			if (sortType.endsWith("ASC")) {
 				logger.debug("ASC");
@@ -282,7 +325,7 @@ public class EzEmailMailListController {
 			Arrays.sort(messages, comparator);
 		}		
 		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
-			Comparator<Message> comparator = new MessageAttachmentComparator(imapAccess);
+			Comparator<Message> comparator = new IMAPAccess.MessageAttachmentComparator(imapAccess);
 			
 			if (sortType.endsWith("ASC")) {
 				logger.debug("ASC");
@@ -295,141 +338,88 @@ public class EzEmailMailListController {
 			
 			FetchProfile fp = new FetchProfile();
 			fp.add(FetchProfile.Item.CONTENT_INFO);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
 			folder.fetch(messages, fp);
 						
 			Arrays.sort(messages, comparator);
 		}				
-	}
-	
-	private class MessageSubjectComparator implements Comparator<Message>{
-		
-		Collator collator = Collator.getInstance();
-		
-		@Override
-		public int compare(Message m1, Message m2) {
-			String first = null;
-			String second = null;
-			try {
-				first = m1.getSubject();
-				second = m2.getSubject();
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
+		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
+			Comparator<Message> comparator = new IMAPAccess.MessageUnreadComparator();
 			
-			first = first != null ? first.trim() : "";
-			second = second != null ? second.trim() : "";
-			
-			int rc = collator.compare(first, second);
-			if (rc == 0) {
-				try {
-					Date d1 = m1.getReceivedDate();
-					Date d2 = m2.getReceivedDate();
-					if (d1 != null && d2 != null) {
-						rc = d1.compareTo(d2);
-					}
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			return rc;
-		}
-		
-	}	
-	
-	private class MessageSenderComparator implements Comparator<Message>{
-		
-		Collator collator = Collator.getInstance();
-		Map<Address, String> senders = new HashMap<Address, String>();
-		
-		private String getAddress(Message msg) {
-			String addressStr = null;
-			Address[] address = null;
-			try {
-				address = msg.getFrom();
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-			if (address != null) {
-				addressStr = senders.get(address[0]);			
-				if (addressStr == null) {					
-					addressStr = ((InternetAddress)address[0]).getPersonal();
-					if (addressStr == null) {
-						addressStr = ((InternetAddress)address[0]).getAddress();
-					}
-					else {
-						try {
-							addressStr = MimeUtility.decodeText(addressStr);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-						}
-					}					
-					
-					senders.put(address[0], addressStr);
-				}		
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
 			}
 			else {
-				addressStr = "";
+				logger.debug("DESC");
 			}
 			
-			return addressStr;
-		}
-		
-		@Override
-		public int compare(Message m1, Message m2) {			
-			String first = getAddress(m1);
-			String second = getAddress(m2);
-			
-			first = first != null ? first.trim() : "";
-			second = second != null ? second.trim() : "";
-			
-			int rc = collator.compare(first, second);
-			if (rc == 0) {
-				try {
-					Date d1 = m1.getReceivedDate();
-					Date d2 = m2.getReceivedDate();
-					if (d1 != null && d2 != null) {
-						rc = d1.compareTo(d2);
-					}
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			return rc;
-		}
-		
-	}	
-	
-	private class MessageAttachmentComparator implements Comparator<Message>{
-		
-		IMAPAccess imapAccess;
-		
-		public MessageAttachmentComparator(IMAPAccess imapAccess) {
-			this.imapAccess = imapAccess;
-		}
-		
-		@Override
-		public int compare(Message m1, Message m2) {
-			int attached1 = imapAccess.hasAttachment(m1) ? 1 : 0;
-			int attached2 = imapAccess.hasAttachment(m2) ? 1 : 0;
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.FLAGS);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
 						
-			int rc = attached1 - attached2;
-			if (rc == 0) {
-				try {
-					Date d1 = m1.getReceivedDate();
-					Date d2 = m2.getReceivedDate();
-					if (d1 != null && d2 != null) {
-						rc = d1.compareTo(d2);
-					}
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
+			Arrays.sort(messages, comparator);
+		}						
+		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
+			Comparator<Message> comparator = new IMAPAccess.MessagePriorityComparator();
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+			}
+									
+			FetchProfile fp = new FetchProfile();
+			fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+			
+			Arrays.sort(messages, comparator);
+		}								
+		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
+			Comparator<Message> comparator = new IMAPAccess.MessageSizeComparator();
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
 			}
 			
-			return rc;
-		}
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.SIZE);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+						
+			Arrays.sort(messages, comparator);
+		}			
+		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")) {
+			Comparator<Message> comparator = new IMAPAccess.MessageReceivedDateComparator();
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+				 // the natural order is used in this case, that is, no sorting is needed.
+				return;
+			}
+			
+			FetchProfile fp = new FetchProfile();
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+						
+			Arrays.sort(messages, comparator);
+		}										
+	}
 		
-	}	
-	
 }
