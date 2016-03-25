@@ -27,7 +27,7 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	var g_author = ""; 
 	var g_exchNBName = "${ userinfo.ExchNBName }";
 	var g_userName = "${ userinfo.DisplayName }";
-	var g_fromEmail = "${ _fromemail }";
+	var g_fromEmail = "${fromEmail}";
     var g_userLang = "${ userinfo.lang }";
 	var g_rejectWord = "";
 	var g_date = "${_date}";
@@ -73,7 +73,8 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	        document.getElementById("PcSave").style.display = "none";
 	    }
 	    
-        form1.iptURL.value = "${_url}";
+	    form1.iptFolderPath.value = "${folderPath}";
+        form1.iptURL.value = "${uid}";
         form1.submit();
         
         if(_ITSMAdmin == "Y")
@@ -415,14 +416,11 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
                 <tr>
                     <th><spring:message code="ezEmail.t161" /></th>
                     <td class="pos1" style="vertical-align:middle;">
-                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="<spring:message code='ezEmail.t553' />${ _fromemail }" style="width:100px; CURSOR: pointer;" onMouseOut="this.style.color='#393939'">	
-                        <%-- if(pUse_Ocs.Equals("YES")){ --%>				
-                        <img src='/images/Presence/unknown.gif' id='${ Guid.NewGuid().ToString() }' onload='PresenceControl("${ _fromemail }",this)' style="vertical-align:middle;"/>
-                        <%--} --%>
-                        <a onClick="show_senderprofile()">					
-                            <span id="LabelFromName">${fromStr}</span>
-                            <span id="LabelSenderInfo"></span>	
-                        </a>					
+                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="<spring:message code='ezEmail.t553' />${fromEmail}" style="width:100px; CURSOR: pointer;" onMouseOut="this.style.color='#393939'">	
+	                        <a onClick="show_senderprofile()">					
+	                            <span id="LabelFromName">${fromStr}</span>
+	                            <span id="LabelSenderInfo"></span>	
+	                        </a>					
                         </DIV>
                     </td>
                     <th><spring:message code="ezEmail.t657" /></th>
@@ -495,9 +493,10 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 </script>
 </form>
 <form name="form1" action="mailReadContent.do" method="post" target="message" >
-      <input  type="hidden" id="iptURL"  name="iptURL" value="">
+	<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
+    <input  type="hidden" id="iptURL"  name="iptURL" value="">
     <input  type="hidden" id="iSecurity"  name="iSecurity" value="">
-    </form>
+</form>
 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>

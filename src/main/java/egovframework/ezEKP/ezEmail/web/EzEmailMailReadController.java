@@ -10,6 +10,9 @@ import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +34,9 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 @Controller
 public class EzEmailMailReadController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailReadController.class);
-    
+
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -42,27 +45,38 @@ public class EzEmailMailReadController {
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
-	
+
 	@RequestMapping(value="/ezEmail/mailRead.do")
 	public String readMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		long uid = Long.parseLong(request.getParameter("URL"));
+		String url = request.getParameter("URL");
+		url = new String(url.getBytes("ISO-8859-1"),"UTF-8");
+		long uid = 0;
+		String folderPath = null;
+		if(url != null){
+			int index = url.lastIndexOf("/");
+			if(index != -1){
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index+1));
+			}
+		}
+		logger.debug(folderPath);
 		String pnFlag = request.getParameter("PNFlag");
 		String contentClass = request.getParameter("CONTENTCLASS");
-		String folderName = "INBOX";
 		
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
-		Folder f = ia.getFolder(folderName);
+		Folder f = ia.getFolder(folderPath);
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
 		Address[] arrRecipientsBCC = null;
 		Date date = null;
 		String fromStr = null;
+		String fromEmail = null;
 		String toStr = null;
 		String toHiddenStr = null;
 		String ccStr = null;
@@ -78,7 +92,6 @@ public class EzEmailMailReadController {
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
 			if(message != null){
-
 				arrFroms = message.getFrom();
 				if(arrFroms != null){
 					fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
@@ -89,6 +102,7 @@ public class EzEmailMailReadController {
 						fromStr = MimeUtility.decodeText(fromStr);
 					}
 				}
+				fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
 				arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 				if(arrRecipientsTo != null){
 					boolean toListme = false;
@@ -101,7 +115,10 @@ public class EzEmailMailReadController {
 					String name = null;
 					for(int i=0; i<arrRecipientsTo.length; i++){
 						name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-						if(name != null){
+						if(name == null){
+							name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+						}
+						else{
 							name = MimeUtility.decodeText(name);
 						}
 						if(toListme){
@@ -138,7 +155,7 @@ public class EzEmailMailReadController {
 						}
 					}
 				}
-				
+
 				arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
 				if(arrRecipientsCC != null){
 					boolean ccListme = false;
@@ -188,7 +205,7 @@ public class EzEmailMailReadController {
 						}
 					}
 				}
-				
+
 				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
 				if(arrRecipientsBCC != null){
 					String name = null;
@@ -204,22 +221,23 @@ public class EzEmailMailReadController {
 								((InternetAddress)arrRecipientsBCC[i]).getAddress() + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 					}
 				}
-				
+
 				date = message.getReceivedDate();
 				if(date != null){
 					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
 				}
-				
+
 				subject = message.getSubject();
 				if(subject != null){
 					title = egovMessageSource.getMessage("ezEmail.t565") + subject;
 				}
-				
+
 			}
 			f.close(true);
 		}
 		ia.close();
 		model.addAttribute("fromStr", fromStr);
+		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("toStr", toStr);
 		model.addAttribute("toHiddenStr", toHiddenStr);
 		model.addAttribute("ccStr", ccStr);
@@ -228,18 +246,91 @@ public class EzEmailMailReadController {
 		model.addAttribute("dateStr", dateStr);
 		model.addAttribute("subject", subject);
 		model.addAttribute("title", title);
+		model.addAttribute("folderPath", folderPath);
+		model.addAttribute("uid", uid);
 		return "ezEmail/mailRead";
 	}
-	
+
 	@RequestMapping(value="/ezEmail/mailReadContent.do")
 	public String readMailContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+
+		long uid = Long.parseLong(request.getParameter("iptURL"));
+		String folderPath = request.getParameter("iptFolderPath");
 		
+		String htmlBody = null;
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+		Folder f = ia.getFolder(folderPath);
+
+		if(f != null){
+			f.open(Folder.READ_ONLY);
+			Message message = null;
+			if(f.isOpen() && f instanceof IMAPFolder){
+				message = ((IMAPFolder)f).getMessageByUID(uid);
+			}
+			if(message != null){
+				htmlBody = test(message);
+			}
+		}
+		
+		model.addAttribute("htmlBody", htmlBody);
 		return "ezEmail/mailReadContent";
 	}
-	
-	private String getReceiverHTML(String name, String address)
-    {
-        return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
-    }
-	
+
+	public String test(Part part){
+		String result = "";
+		try {
+			System.out.println(part.getContentType());
+			if(part.isMimeType("text/html")){
+				result += part.getContent().toString();
+			}
+			else if(part.isMimeType("text/plain")){
+				result += part.getContent().toString();
+			}
+			else if(part.isMimeType("multipart/alternative")){
+				Multipart mp = (Multipart)part.getContent();
+				int count = mp.getCount();
+				Part p = null;
+				for (int i = 0; i < count; i++) {
+					p = mp.getBodyPart(i);
+					if(mp.getBodyPart(i).isMimeType("text/html")){
+						result += p.getContent().toString();
+					}
+				}
+				if(result.equals("")){
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						if(mp.getBodyPart(i).isMimeType("text/plain")){
+							result += p.getContent().toString();
+						}
+					}
+				}
+			}
+			else if (part.isMimeType("multipart/mixed")) {
+				Multipart mp = (Multipart)part.getContent();
+		         int count = mp.getCount();
+		         for (int i = 0; i < count; i++) {
+		        	 result += test(mp.getBodyPart(i));
+		         }
+			}
+			else if(part.isMimeType("multipart/related")){
+				result += part.getContent().toString();
+			}
+			else if(part.isMimeType("image/*")){
+				 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private String getReceiverHTML(String name, String address){
+		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+	}
+
 }

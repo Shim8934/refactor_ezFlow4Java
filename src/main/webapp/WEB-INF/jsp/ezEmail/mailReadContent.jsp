@@ -8,7 +8,7 @@
     <title></title>
         <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
         <script language="JScript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
-        <script language="JavaScript" src="/js/ezEmailjs_cross/reademail.js"></script>
+        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
         <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
     <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script language="javascript" type="text/javascript">
@@ -242,14 +242,12 @@
 <div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;">
 <p class="title"><spring:message code='ezEmail.t99000003' /><span>${ pAttachListHtml_sub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
 <span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
-	<ul class="list" id="PreviewAttachList">
-        ${pAttachListHtml}
-	</ul>
+	<ul class="list" id="PreviewAttachList">${pAttachListHtml}</ul>
 </div>
 <div id="MailBigAttachRayer" class="previewmail_addfile">
 </div>
 <div class='margin' id="normalScreen" style="margin-top:5px;"> 
-${_htmlbody}
+${htmlBody}
 </div>
 <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 </body>
