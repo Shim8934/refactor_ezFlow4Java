@@ -195,7 +195,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		/**UserIdAdmin*/
 		boolean adminYN = false;
 		String rsUserId = qstUserPollItemVO.getUserId();
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -221,11 +221,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}else{
 				adminYN = false;
-				if(userIdAdminList != null){
-					for(String userIdAdmin : userIdAdminList){
-						if(userId == userIdAdmin)
-							adminYN = true;
-					}
+				if(userIdAdmin != null){
+					if(userId == userIdAdmin)
+						adminYN = true;
 				}
 				if(userId.equals(rsUserId) || adminYN == true){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
@@ -265,11 +263,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				response.getWriter().flush();
 			}else{
 				adminYN = false;
-				if(userIdAdminList != null){
-					for(String userIdAdmin : userIdAdminList){
-						if(userId == userIdAdmin)
-							adminYN = true;
-					}
+				if(userIdAdmin != null){
+					if(userId == userIdAdmin)
+						adminYN = true;
 				}
 				if (rsUserId.equals(userId) || adminYN == true){
 					response.getWriter().write("<script language='javascript'>");
@@ -303,12 +299,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		
 		adminYN = "N";
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
-		if(userIdAdminList != null){
-			for(String userIdAdmin : userIdAdminList){
-				if(loginVO.getId().equals(userIdAdmin)){
-					adminYN = "Y";
-				}
+		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		if(userIdAdmin != null){
+			if(loginVO.getId().equals(userIdAdmin)){
+				adminYN = "Y";
 			}
 		}
 		if(loginVO.getRollInfo().toUpperCase().indexOf("C=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("K=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("I=1") > -1){ 
@@ -402,13 +396,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		/** UserIdAdmin*/
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 		boolean adminYN = false;
-		if(userIdAdminList != null){
-			for(String userIdAdmin : userIdAdminList){
-				if(userId == userIdAdmin)
-					adminYN = true;
-			}
+		if(userIdAdmin != null){
+			if(userId == userIdAdmin)
+				adminYN = true;
 		}
 		/** ResCount*/
 		responseCnt = ezQuestionService.resCount(request.getParameter("brdId"),request.getParameter("itemNo"));
@@ -928,12 +920,10 @@ System.out.println(writer.toString());
 		
 		/** EZSP_GETUSERIDADMIN*/
 		boolean adminYN = false;
-		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
-		if(userIdAdminList != null){
-			for(String userIdAdmin : userIdAdminList){
-				if(userId.equals(userIdAdmin)){
-					adminYN = true;
-				}
+		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		if(userIdAdmin != null){
+			if(userId.equals(userIdAdmin)){
+				adminYN = true;
 			}
 		}
 		/** EZSP_RESCOUNT*/
@@ -979,67 +969,136 @@ System.out.println(writer.toString());
              bPublic = false;
          }
          
-//         dataProcessMainData(brdId, itemNo);
-//         dataProcess(bPublic);
+         /** ans*/
+         List<QstVO> qstVOList = dataProcessMainData(brdId, itemNo);
+         dataProcess(Integer.parseInt(brdId), Integer.parseInt(itemNo), bPublic, qstVOList, percent);
          
          
          
 		model.addAttribute("receve", receve);
 		return "/ezQuestion/qstResult";
 	}
-	public void dataprocessMainData(String brdId, String itemNo){
+	public List<QstVO> dataProcessMainData(String brdId, String itemNo) throws Exception{
 		/** EZSP_GETQUESTIONFORRESPONSE*/
 		QstVO qstVO = new QstVO();
 		qstVO.setBrdId(Integer.parseInt(brdId));
 		qstVO.setItemNo(Integer.parseInt(itemNo));
-		/** db.Fill(ds, "QST");*/
-//		List<QstVO> qstVOList = ezQuestionService.getQuestionForResponse(qstVO);
-		
-		
+
+		List<QstVO> qstVOList = ezQuestionService.getQuestionForResponse(qstVO);
+		return qstVOList;
 	}
 	
-	public void DataProcess(boolean bPublic){
+	public List<QstVO> dataProcess(int brdId, int itemNo, boolean bPublic,List<QstVO> qstVOList, int percent) throws Exception{
+		int rCnt = 0;
+		int iCount=0;
 		
+		for(QstVO qstVO : qstVOList){
+			iCount++;
+			int questionNo = qstVO.getQuestionNo();
+			String quesContent = qstVO.getQuesContent().replace("<","&lt;").replace(">", "&gt;");
+			String multiSelect = qstVO.getMultiSelect();
+			int answerType = qstVO.getAnswerType();
+			String strData;
+			rCnt = defaultResponseCount(questionNo, quesContent, multiSelect, answerType);
+			if(answerType == 2){
+				strData = dataProcessType2(brdId, itemNo, quesContent, quesContent, multiSelect, answerType, iCount, percent);
+			}else{
+				dataProcessAns(brdId, itemNo, questionNo);
+				if(answerType == 1){
+					strData = dataProcessType1(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstVO);
+				}else if(answerType == 3){
+					strData = dataProcessType3(questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstVO);
+				}else if(answerType == 4){
+					strData = dataProcessType4(questionNo, quesContent, multiSelect, answerType, iCount, percent, qstVO);
+				}else if(answerType == 5){
+					strData = dataProcessType5(questionNo, quesContent, multiSelect, answerType, iCount, percent, qstVO);
+				}
+			}
+		}
+		return qstVOList;
 	}
 	
-	public void dataProcessAns(String strNo){
-		
+	public List<QstAnswerVO> dataProcessAns(int brdId, int itemNo, int questionNo) throws Exception{
+		/** EZSP_GETANSWERCNT*/
+		List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(brdId, itemNo, questionNo);
+		return qstAnswerVOList;
 	}
 	
-	public int getAnswerPerson(Document xmlDoc, int iAnsCount, int TrOrder){
+	public int getAnswerPerson(Document xmlDoc, int iAnsCount, int TrOrder) throws Exception{
 		return 0;
 	}
 	
-	public int defaultResponseCount(String strNo, String strContent, String strSel, String strType){
+	public int defaultResponseCount(int questionNo, String strContent, String strSel, int answerType) throws Exception{
 		return 0;
 	}
 	
-	public int responseCount(String strNo, String strContent, String strSel, String strType, int iAnsCnt){
+	public int responseCount(String strNo, String strContent, String strSel, String strType, int iAnsCnt) throws Exception{
 		return 0;	
 	}
 	
-	public String strAnsSQL(){
+	public String strAnsSQL() throws Exception{
 		return "";
 	}
 	
-	public void dataProcessType1(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
-		
+	public String dataProcessType1(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int ipercent, String multiSelect, QstVO qstVO) throws Exception{
+		int iAnsCount = 0, responseCnt = 0;
+        int rCnt = 0;
+        float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
+        String strData = "";
+        responseCnt = defaultResponseCount(questionNo, strContent, strSel, answerType);
+        dataProcessAns(brdId, itemNo, questionNo);
+
+        strData += "<table class=\"question\">";
+        strData += "<tr>";
+        strData += "<th>" + egovMessageSource.getMessage("t333") + iDataCount + " : " + strContent + "";
+        if (multiSelect == "1")
+        {
+            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("t55") + "</span>";
+        }
+        strData += getAttachList(strContent, "0", brdId, itemNo);
+        strData += "</th>";
+        strData += "</tr>";
+        strData += "</table>";
+        strData += "<table class=\"ex\">";
+        
+        
+        
+        
+System.out.println("Type1 : " + strData);
+		return strData;
 	}
 
-	public void dataProcessType2(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
-		
+	public String dataProcessType2(int brdId, int itemNo, String strNo, String strContent, String strSel, int answerType, int iDataCount, int ipercent) throws Exception{
+		String strData = "";
+		strData += "<table class=\"question\"><tr>";
+		strData += "<th>" + egovMessageSource.getMessage("t333") + iDataCount + " : " + strContent + "</th>";
+		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
+		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(\"" + strNo + "\");\">" + egovMessageSource.getMessage("t396") + "</span></A>";
+		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
+		strData += getAttachList(strContent, "0", brdId, itemNo) + "</td>";
+		strData += "</tr>";
+		strData += "</table>";
+		strData += "<br>";
+System.out.println("Type2 : " + strData);
+		return strData;
 	}
 	
-	public void dataProcessType3(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent, boolean bPublic){
-	
+	public String dataProcessType3(int questionNo, String strContent, String strSel, int answerType, int iDataCount, int ipercent, boolean bPublic, QstVO qstVO) throws Exception{
+		String strData = "";
+System.out.println("Type3 : " + strData);
+		return strData;
 	}
 	
-	public void dataProcessType4(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
-		 
+	public String dataProcessType4(int questionNo, String strContent, String strSel, int answerType, int iDataCount, int ipercent, QstVO qstVO) throws Exception{
+		String strData = "";
+System.out.println("Type4 : " + strData);
+		return strData; 
 	}
 
-	public void dataProcessType5(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
-		
+	public String dataProcessType5(int questionNo, String strContent, String strSel, int answerType, int iDataCount, int ipercent, QstVO qstVO) throws Exception{
+		String strData = "";
+System.out.println("Type5 : " + strData);
+		return strData;
     }
 	
 	@RequestMapping(value="/ezQuestion/qstStep1.do")

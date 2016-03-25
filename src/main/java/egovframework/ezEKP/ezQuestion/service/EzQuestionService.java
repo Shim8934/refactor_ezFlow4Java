@@ -22,7 +22,7 @@ public interface EzQuestionService {
 	
 	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO) throws Exception;
 
-	public List<String> getUserIdAdmin(int brd) throws Exception;
+	public String getUserIdAdmin(int brd) throws Exception;
 	
 	public List<QstAnswerVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception;
 	

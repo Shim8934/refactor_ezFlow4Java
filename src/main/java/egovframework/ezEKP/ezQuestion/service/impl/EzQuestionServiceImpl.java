@@ -142,7 +142,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 	
 	@Override
-	public List<String> getUserIdAdmin(int brdId) throws Exception {
+	public String getUserIdAdmin(int brdId) throws Exception {
 		return ezQuestionDAO.getUserIdAdmin(brdId);
 	}
 	

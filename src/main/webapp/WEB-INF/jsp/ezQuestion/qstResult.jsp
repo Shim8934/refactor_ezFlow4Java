@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -21,7 +20,6 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		    }
-	    	
 		    function MM_reloadPage(init){
 		        if(init == true) with (navigator){
 		            if((appName == "Netscape") && (parseInt(appVersion) == 4)){
@@ -30,23 +28,13 @@
 		        }else if(innerWidth != document.MM_pgW || innerHeight != document.MM_pgH)
 		        	location.reload();
 		    }
-		    
 			MM_reloadPage(true);
 		</script>
 		<script type="text/javascript">
-			var brdId="${qstUserPermissionVO.userId}";
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
-			
-			<%-- function Setting_Change(vdata){
-		        var feature = GetOpenPosition(380, 340);
-		        window.open("change_setting.aspx?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>', "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
-			} --%>
-			
-			/* function funResponseView(questionNo){
-			    var szUrl = "/ezQuestion/qstResultSubjective.do?brdId=" + "${v_brdId}" + "&itemNo=" + "${v_itemNo}" + "&questionNo=" + questionNo;
-			    window.location.href = szUrl;
-			} */
+			var brdId = "${qstUserPermissionVO.brdId}";
+			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
 			function UserInfo(questionNo, answerNo, type){
 			}
@@ -61,36 +49,37 @@
 				if result){
 				    document.location.href = "/ezQuestion/pollDeleteOk.do?brdId=" + "${v_brd_id}" + "&itemNo=" + "${v_item_no}";
 				}
-	
 		    } */
 
 		    var pUserID = "${userId}";
 		    
-		    function openUserInfo(strEmail){
-		        var compemail = strEmail;
-		        compemail = compemail.toUpperCase();
-		        var sDomain =  request.getServerName();
-		        sDomain = sDomain.toUpperCase();
-		        var s_pos = compemail.indexOf("@");
-		        var parameter = compemail.slice(0, s_pos);
-		        var feature = GetOpenPosition(420, 460);
-				
-		        window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-					
-		        } 
+			<%-- function openUserInfo(strEmail) {
+			    var compemail = strEmail
+			    compemail = compemail.toUpperCase();
+			    var sDomain = <%=request.getServerName() %>;
+			    sDomain = sDomain.toUpperCase();
+	
+			    var s_pos = compemail.indexOf("@")
+			    var parameter = compemail.slice(0, s_pos);  //보낸 사람 ID
+			    var heigth = window.screen.availHeight;
+			    var width = window.screen.availWidth;
+			    var left = (width - 500) / 2;
+			    var top = (heigth - 400) / 2;
+			    window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		    } --%>
 
 		    function menuQstList(){
 	            var szUrl = "/ezQuestion/qstList.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;
 			    window.location.href = szUrl;
 			}
 
-			/* function menuQst_ResponseList(pflag){
-			    var szUrl = "/ezQuestion/qstResponseList.do?" + "${receve}" + "&responseYN=" + pflag;
+			/* function menuQstResponseList(pflag){
+			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&responseYN=" + pflag;
 			    window.location.href = szUrl;
 			} */
 
 			/* function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
-				var pUrl = "Qst_Attach_View.aspx?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);	
+				var pUrl = "/ezQuestion/qstAttachView.do?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);	
 			    if(pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
 			    else if(pType == "3")
