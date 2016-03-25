@@ -73,7 +73,7 @@
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;
-
+alert(receve);
 		    function fun_Save(){
 		        if(form_check() == false)
 		            return;
@@ -276,7 +276,7 @@
 			<%-- function openUserInfo(strEmail) {
 			    var compemail = strEmail
 			    compemail = compemail.toUpperCase();
-			    var sDomain = "<%= Request.ServerVariables["Server_Name"].ToString() %>"
+			    var sDomain = ;<%=request.getServerName() %>;
 			    sDomain = sDomain.toUpperCase();
 	
 			    var s_pos = compemail.indexOf("@")
@@ -285,7 +285,7 @@
 			    var width = window.screen.availWidth;
 			    var left = (width - 500) / 2;
 			    var top = (heigth - 400) / 2;
-			    window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+			    window.open("/myoffice/common/ShowPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    } --%>
 		</script>
 	</head>
