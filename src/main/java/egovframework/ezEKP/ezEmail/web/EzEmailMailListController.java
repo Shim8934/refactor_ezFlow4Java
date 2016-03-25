@@ -154,7 +154,7 @@ public class EzEmailMailListController {
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		Message[] messages = folder.getMessages();
 		
-		sortMessages(folder, messages, sortType);
+		sortMessages(imapAccess, folder, messages, sortType);
 				
 		int startNo = messages.length - 1 - Integer.parseInt(start);
 		int endNo = Math.max(messages.length - 1 - Integer.parseInt(end), 0);
@@ -176,7 +176,7 @@ public class EzEmailMailListController {
 			Message message = messages[i];
 			
 			sb.append("<response>");
-			sb.append(String.format("<href><![CDATA[%s]]></href>", uidFolder.getUID(message)));
+			sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
 			sb.append("<fromemail><![CDATA[]]></fromemail>");
 			String[] headers = message.getHeader("importance");
 			String header = headers != null ? headers[0] : "normal";
@@ -236,7 +236,8 @@ public class EzEmailMailListController {
 		return returnData;		
 	}
 	
-	private void sortMessages(Folder folder, Message[] messages, String sortType) throws Exception {
+	private void sortMessages(IMAPAccess imapAccess, Folder folder, Message[] messages, 
+			String sortType) throws Exception {
 		// subject
 		if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")) {
 			Comparator<Message> comparator = new MessageSubjectComparator();
@@ -280,6 +281,24 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}		
+		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
+			Comparator<Message> comparator = new MessageAttachmentComparator(imapAccess);
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+			}
+			
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.CONTENT_INFO);
+			folder.fetch(messages, fp);
+						
+			Arrays.sort(messages, comparator);
+		}				
 	}
 	
 	private class MessageSubjectComparator implements Comparator<Message>{
@@ -365,6 +384,37 @@ public class EzEmailMailListController {
 			second = second != null ? second.trim() : "";
 			
 			int rc = collator.compare(first, second);
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
+	private class MessageAttachmentComparator implements Comparator<Message>{
+		
+		IMAPAccess imapAccess;
+		
+		public MessageAttachmentComparator(IMAPAccess imapAccess) {
+			this.imapAccess = imapAccess;
+		}
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int attached1 = imapAccess.hasAttachment(m1) ? 1 : 0;
+			int attached2 = imapAccess.hasAttachment(m2) ? 1 : 0;
+						
+			int rc = attached1 - attached2;
 			if (rc == 0) {
 				try {
 					Date d1 = m1.getReceivedDate();
