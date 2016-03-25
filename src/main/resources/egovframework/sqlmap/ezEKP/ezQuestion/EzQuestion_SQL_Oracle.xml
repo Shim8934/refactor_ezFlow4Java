@@ -74,14 +74,10 @@
 	</resultMap>
 	
 	<resultMap class="QstAttachVO" id="qstAttachVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
-		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
-		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
-		<result property="attachNo"					column="ATTACHNO"					columnIndex="5"/>
-		<result property="attachName"				column="ATTACHNAME"					columnIndex="6"/>
-		<result property="attachUrl"				column="ATTACHURL"					columnIndex="7"/>
-		<result property="attachType"				column="ATTACHTYPE"					columnIndex="8"/>
+		<result property="attachNo"					column="ATTACHNO"					columnIndex="1"/>
+		<result property="attachName"				column="ATTACHNAME"					columnIndex="2"/>
+		<result property="attachUrl"				column="ATTACHURL"					columnIndex="3"/>
+		<result property="attachType"				column="ATTACHTYPE"					columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="QstVO" id="qstVO">

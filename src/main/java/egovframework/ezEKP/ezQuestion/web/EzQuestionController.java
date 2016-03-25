@@ -303,12 +303,18 @@ public class EzQuestionController extends EgovFileMngUtil {
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		
 		adminYN = "N";
-		if(loginVO.getId().equals(ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId"))))){
-			adminYN = "Y";
+		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		if(userIdAdminList != null){
+			for(String userIdAdmin : userIdAdminList){
+				if(loginVO.getId().equals(userIdAdmin)){
+					adminYN = "Y";
+				}
+			}
 		}
 		if(loginVO.getRollInfo().toUpperCase().indexOf("C=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("K=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("I=1") > -1){ 
 			adminYN = "Y";
 		}
+		
 		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
@@ -448,7 +454,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-				
+
 				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount+1) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
@@ -538,11 +544,10 @@ System.out.println(writer.toString());
         		}else{
         			itemNode = doc.createElement("TAG");
         		}
-System.out.println(answerType);
         		switch(answerType){
         		case 1:
         			if (multiSelect.equals("1")){
-                        strTagData = "<input type='checkbox' name='chk" + qstNo + "_" + Integer.toString(iCount) + "' value='0'>" + modifyData(qstAnswer.getAnswerContent());
+                        strTagData = "<input type=\"checkbox\" name=\"chk" + qstNo + "_" + Integer.toString(iCount) + "\" value=\"0\">" + modifyData(qstAnswer.getAnswerContent());
                         strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
                         iValueNode = doc.createTextNode(strTagData);
                     }else{
@@ -573,7 +578,7 @@ System.out.println(answerType);
 					itemNode = null;
 					break;
         		case 4:
-        			strTagData = "<input type='checkbox' onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",'frmResponse.chk" + qstNo + "', 'frmResponse.txt" + qstNo + "')\" name='chk" + qstNo + "' value='" + qstAnswer.getQuestionNo() + "'>" + modifyData(qstAnswer.getAnswerContent());
+        			strTagData = "<input type=\"checkbox\" onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",\"frmResponse.chk" + qstNo + "\", \"frmResponse.txt" + qstNo + "\")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getQuestionNo() + "\">" + modifyData(qstAnswer.getAnswerContent());
                     strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
                     String strEtcTag = "";
                     iValueNode = doc.createTextNode(strTagData);
@@ -642,20 +647,20 @@ System.out.println(answerType);
 	            switch (attachVO.getAttachType()){
 	            case "1":
 	            	strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('1','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img style='cursor:pointer' src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width='47' height='31' align='absmiddle'></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"1\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img style=\"cursor:pointer\" src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
 	            	break;
 	            case "2":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('2','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"2\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
 	            case "3":
 	            	break;
 	            case "4":
 	            	break;
 	            case "5":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open('3','" + brdId + "','" + itemNo + "','" + strQuestionNo + "','" + strAnswer + "','" + strAttachNo + "')\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"3\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
 	            default:
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target='_blink'>" + strAttachName + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
 	            	break;
 	            }
 	        }
@@ -887,18 +892,156 @@ System.out.println(answerType);
 	}
 
 	@RequestMapping(value="/ezQuestion/qstResult.do")
-	public String qstResult(ModelMap model, HttpServletRequest request) throws Exception{
-		/*model.addAttribute("brdId",request.getParameter("brdId"));
-		model.addAttribute("itemNo",request.getParameter("itemNo"));
-		model.addAttribute("title",request.getParameter("title"));
-		model.addAttribute("responseRange",request.getParameter("responseRange"));
-		model.addAttribute("postDate",request.getParameter("postDate"));
-		model.addAttribute("pollEndDate",request.getParameter("pollEndDate"));
-		model.addAttribute("currPage",request.getParameter("currPage"));*/
-	
+	public String qstResult(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String userId = loginVO.getId();
+		String brdId="5", brdNm="", itemNo="", title="", responseRange="", postDate="", pollEndDate="", currPage="";
+		String strItemRead = "", StrReadInsert = "", StrPermission = "", publicResultFlg = "", publicFlg = "", multiResponseFlg = "", endFlg = "";
+		int readCnt=0, resCnt=0;
+		int iCount = 0, ResponseCnt = 0, percent = 0;
+		boolean bDisplay=false;
+		
+		if(request.getParameter("brdId")!=null)
+			brdId = request.getParameter("brdId");
+		if(request.getParameter("brdNm")!=null)
+			brdNm = request.getParameter("brdNm");
+		if(request.getParameter("itemNo")!=null)
+			itemNo = request.getParameter("itemNo");
+		if(request.getParameter("title")!=null)
+			title = new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8");
+		if(request.getParameter("responseRange")!=null)
+			responseRange = request.getParameter("responseRange");
+		if(request.getParameter("postDate")!=null)
+			postDate = request.getParameter("postDate");
+		if(request.getParameter("pollEndDate")!=null)
+			pollEndDate = request.getParameter("pollEndDate");
+		if(request.getParameter("currPage")!=null)
+			currPage = request.getParameter("currPage");
+		
+		String receve = "brdId=" + request.getParameter("brdId") +
+				"%itemNo=" + request.getParameter("itemNo") +
+                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+                "&responseRange=" + request.getParameter("responseRange") +
+                "&postDate=" + request.getParameter("postDate") +
+                "&pollEndDate=" + request.getParameter("pollEndDate") +
+                "&currPage=" + request.getParameter("currPage");
+		
+		/** EZSP_GETUSERIDADMIN*/
+		boolean adminYN = false;
+		List<String> userIdAdminList = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
+		if(userIdAdminList != null){
+			for(String userIdAdmin : userIdAdminList){
+				if(userId.equals(userIdAdmin)){
+					adminYN = true;
+				}
+			}
+		}
+		/** EZSP_RESCOUNT*/
+		resCnt = ezQuestionService.resCount(brdId, itemNo);
+		
+		/** EZSP_GETUSERPOLLITEM*/
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		qstUserPollItemVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(itemNo));
+		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
+		
+		/** EZSP_UPDATEREADCNT*/
+		if (qstUserPollItemVO.getUserId() != userId){
+            readCnt = readCnt + 1;
+            ezQuestionService.updateReadCnt(qstUserPollItemVO);
+		}
+		/*
+		*//** EZSP_GETREADDATEITEMFORRESULT*//*
+		String readDate = ezQuestionService.getReadDateItemForResult(qstUserPollItemVO, userId);
+		*//** EZSP_UPDATEREADDATE*//*
+		if(readDate != null){
+			ezQuestionService.updateReadDate(qstUserPollItemVO, readDate, userId);
+		}else{
+			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, readDate);
+		}
+		*/
+		/** EZSP_GETUSERPERMISSION*/
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
+		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
+		
+		publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
+		publicFlg = qstUserPermissionVO.getPublicFlg();
+		multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
+		endFlg = qstUserPermissionVO.getEndFlg();
+		responseRange = qstUserPermissionVO.getResponseRange();
+		
+		 boolean bPublic;
+         if (publicFlg == "1"){
+             bPublic = true;
+         }else{
+             bPublic = false;
+         }
+         
+//         dataProcessMainData(brdId, itemNo);
+//         dataProcess(bPublic);
+         
+         
+         
+		model.addAttribute("receve", receve);
 		return "/ezQuestion/qstResult";
 	}
+	public void dataprocessMainData(String brdId, String itemNo){
+		/** EZSP_GETQUESTIONFORRESPONSE*/
+		QstVO qstVO = new QstVO();
+		qstVO.setBrdId(Integer.parseInt(brdId));
+		qstVO.setItemNo(Integer.parseInt(itemNo));
+		/** db.Fill(ds, "QST");*/
+//		List<QstVO> qstVOList = ezQuestionService.getQuestionForResponse(qstVO);
+		
+		
+	}
+	
+	public void DataProcess(boolean bPublic){
+		
+	}
+	
+	public void dataProcessAns(String strNo){
+		
+	}
+	
+	public int getAnswerPerson(Document xmlDoc, int iAnsCount, int TrOrder){
+		return 0;
+	}
+	
+	public int defaultResponseCount(String strNo, String strContent, String strSel, String strType){
+		return 0;
+	}
+	
+	public int responseCount(String strNo, String strContent, String strSel, String strType, int iAnsCnt){
+		return 0;	
+	}
+	
+	public String strAnsSQL(){
+		return "";
+	}
+	
+	public void dataProcessType1(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
+		
+	}
 
+	public void dataProcessType2(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
+		
+	}
+	
+	public void dataProcessType3(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent, boolean bPublic){
+	
+	}
+	
+	public void dataProcessType4(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
+		 
+	}
+
+	public void dataProcessType5(String strNo, String strContent, String strSel, String strType, int iDataCount, int ipercent){
+		
+    }
+	
 	@RequestMapping(value="/ezQuestion/qstStep1.do")
 	public String qstStep1(HttpServletRequest req,Model model)  {
 		String brdId = req.getParameter("brd_ID");

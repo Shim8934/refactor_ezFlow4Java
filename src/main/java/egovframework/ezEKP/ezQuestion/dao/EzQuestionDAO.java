@@ -29,7 +29,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public List<QstAttachVO> getAttachInfo(Map<String, Object> map) {
-		return (List<QstAttachVO>) select("EzQuestionDAO.getAttachInfo", map);
+		return (List<QstAttachVO>) list("EzQuestionDAO.getAttachInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
