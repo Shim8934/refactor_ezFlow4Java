@@ -50,8 +50,12 @@
 		{CALL EZBOARDSTD.EZSP_GETPERSONALCOUNT(#userID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.setBoardList_Config" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
+	<procedure id="EzBoardDAO.getItemInfo" parameterClass="String" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_GETITEMINFO(#itemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_COPYITEM_GET1(#v_PORGITEMID#, #v_PORGBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
@@ -64,6 +68,10 @@
 
 	<procedure id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getCopyItemAttach" parameterClass="String" resultClass="String">
+		{CALL EZBOARDSTD.EZSP_COPYITEM_GET2(#v_PORGITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultClass="BoardListVO">
@@ -80,6 +88,10 @@
 	
 	<procedure id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer">
@@ -102,12 +114,24 @@
 		{CALL EZBOARDSTD.EZSP_SET_TABUSED(#v_BOARDID#, #v_TABUSED#, #v_USERID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.setBoardList_Config" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.setAsReads" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSETASREADS(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.deleteItem" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_DELETEITEM(#v_STRITEMLIST#, #v_BOARDID#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.deleteTempItem" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_DELETEITEM_TEMP(#v_STRITEMLIST#, #v_BOARDID#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
@@ -213,6 +237,16 @@
        		)
 		]]>
 	</insert>
+	
+	<update id="EzBoardDAO.updateCopyItem" parameterClass="String">
+		<![CDATA[
+			UPDATE ezBoardSTD.TBL_BOARD_ITEM
+           	SET 
+           		copieditem = 1
+           	WHERE  
+           		itemid = #itemID#
+		]]>
+	</update>
 	
 	<delete id="EzBoardDAO.newItem" parameterClass="String">
 		<![CDATA[

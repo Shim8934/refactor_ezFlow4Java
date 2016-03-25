@@ -58,6 +58,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNewItemList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getCopyItemAttach(String orgItemID) throws Exception{
+		return (List<String>) list("EzBoardDAO.getCopyItemAttach", orgItemID);
+	}
+	
 	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
 		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
 	}
@@ -73,7 +78,15 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
 		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", pBoardID);
 	}
-
+	
+	public BoardListVO getItemInfo(String itemID) {
+		return (BoardListVO) select("EzBoardDAO.getItemInfo", itemID);
+	}
+	
+	public BoardListVO getCopyItem(Map<String, Object> map) throws Exception{
+		return (BoardListVO) select("EzBoardDAO.getCopyItem", map);
+	}
+	
 	public String get_parentBoardName(Map<String, Object> map) throws Exception{
 		return (String) select("EzBoardDAO.get_parentBoardName", map);
 	}
@@ -121,6 +134,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 
+	public int brdCheckIfHasReply(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.brdCheckIfHasReply", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public int checkBackGroundImage(String boardID) throws Exception{
 		return (int) select("EzBoardDAO.checkBackGroundImage", boardID);
 	}
@@ -128,7 +146,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int getCheckApprUserList(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
-
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception{
 		insert("EzBoardDAO.brdNewItem", boardListVO);
 	}
@@ -157,9 +175,20 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.set_TabUsed",map);
 	}
 	
+	public void updateCopyItem(String itemID) throws Exception{
+		update("EzBoardDAO.updateCopyItem", itemID);
+	}
+	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
 
-	
+	public void deleteItem(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.deleteItem", map);
+	}
+
+	public void deleteTempItem(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.deleteTempItem", map);
+	}
+
 }

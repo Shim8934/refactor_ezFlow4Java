@@ -679,7 +679,6 @@
 		                return;
 		            }
 		        }
-		
 		        if (Delete_FG != "true") {
 		            alert("<spring:message code='ezBoard.t265' />");
 		            return;
@@ -711,7 +710,7 @@
 		                }
 		                else {
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID="+ pBoardID + "&ItemList=" + arrList[0] + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID="+ pBoardID + "&itemList=" + arrList[0] + ";", false);
 		                    xmlhttp.send();
 		
 		
@@ -750,7 +749,7 @@
 		                }
 		                else {
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + strItemList[0] + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
 		                    xmlhttp.send();
 		                    if (xmlhttp.responseText == "NO") {
 		                        alert("<spring:message code='ezBoard.t265' />");
@@ -773,7 +772,7 @@
 		    }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/CheckIfHasReply.aspx?ItemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -784,7 +783,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -878,7 +877,7 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
-		        window.open("CopyBoardItem_Cross.aspx?ItemIDList=" + strItemList + "&BoardID=" + pBoardID + "&MODE=COPY", "", feature, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();

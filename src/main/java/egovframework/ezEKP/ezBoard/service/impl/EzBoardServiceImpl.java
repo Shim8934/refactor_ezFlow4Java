@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import oracle.net.aso.p;
-
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -166,6 +164,27 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_USERID", pUserID);
 		ezBoardDAO.setTabUsed(map);
 	}
+	
+	@Override
+	public void updateCopyItem(String destItemID) throws Exception {
+		ezBoardDAO.updateCopyItem(destItemID);
+	}
+
+	@Override
+	public void deleteItem(String itemIDs, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_STRITEMLIST", itemIDs);
+		map.put("v_BOARDID", boardID);
+		ezBoardDAO.deleteItem(map);
+	}
+
+	@Override
+	public void deleteTempItem(String itemIDs, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_STRITEMLIST", itemIDs);
+		map.put("v_BOARDID", boardID);
+		ezBoardDAO.deleteTempItem(map);
+	}
 
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
@@ -242,6 +261,24 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public BoardListVO getItemInfo(String itemID) throws Exception {
+		return ezBoardDAO.getItemInfo(itemID);
+	}
+
+	@Override
+	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PORGITEMID", orgItemID);
+		map.put("v_PORGBOARDID", orgBoardID);
+		return ezBoardDAO.getCopyItem(map);
+	}
+
+	@Override
+	public List<String> getCopyItemAttach(String orgItemID) throws Exception {
+		return ezBoardDAO.getCopyItemAttach(orgItemID);
+	}
+
+	@Override
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_pBoardID", boardID);
@@ -304,6 +341,20 @@ public class EzBoardServiceImpl implements EzBoardService {
 	public String checkBackGroundImage(String boardID) throws Exception {
 		String check = "";
 		int checkCnt = ezBoardDAO.checkBackGroundImage(boardID);
+		if(checkCnt > 0){
+			check = "TRUE";
+		}else{
+			check = "FALSE";
+		}
+		return check;
+	}
+
+	@Override
+	public String brdCheckIfHasReply(String itemIDs) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID", itemIDs);
+		String check = "";
+		int checkCnt = ezBoardDAO.brdCheckIfHasReply(map);
 		if(checkCnt > 0){
 			check = "TRUE";
 		}else{

@@ -602,7 +602,7 @@ public class EzBoardController extends EgovFileMngUtil{
         //-- 조직도 Deptpath 역순으로 가져온것을 순방향으로 변환 2008.01.29 이성조
 		String deptPath = userInfo.getDeptPathCode();
 	    String deptPathOrgan="";
-	    for(int ch=0; ch<deptPath.split(",").length; ch++){
+	    for(int ch = 0; ch < deptPath.split(",").length; ch++){
 	        if(ch==0)
 	            deptPathOrgan+=deptPath.split(",")[ch].trim();
 	        else
@@ -1750,7 +1750,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
-		
 		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
 		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
 		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
@@ -1779,8 +1778,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}else{
 			boardListVO.setStartDate(boardListVO.getWriteDate());
 		}
-System.out.println("||||||||||||||||||||||||||");
-System.out.println(boardListVO.getStartDate());
 		boardListVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
 		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
 		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
@@ -1988,29 +1985,28 @@ System.out.println(boardListVO.getStartDate());
                     	FileUtils.moveFile(file, fileinfo);
                     }
                 }else{
-                    filePath = strFilePath + "\\" + strAttachments.split(";")[i];
+                    filePath2 = strFilePath + "\\" + strAttachments.split(";")[i];
                 }
                 file = null;
             }
             else{
                 File file = new File(strFilePath + "\\" + "tempUploadFile\\" + strAttachments.split(";")[i].split("/")[2]);
                 fileSize = file.length();
-                filePath = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.split(";")[i].split("/")[2];
+                filePath2 = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.split(";")[i].split("/")[2];
 
                 File fileinfo = new File(filePath);
                 if (!fileinfo.exists())
-                	FileUtils.moveFile(file, fileinfo);
+                	FileUtils.copyFile(file, fileinfo);
                 file = null;
             }
             temp = strAttachments.split(";")[i].split("_");
             for (int j = 1; j < temp.length; j++){
-                if (j == 1)
-                    fileName += temp[j];
-                else
-                    fileName += "_" + temp[j];
+                if (j == 1){
+                	fileName = temp[j];
+                }
             }
             
-            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName);
+            ezBoardService.saveAttachInfo(strItemID, filePath2.replace("/", "\\"), fileSize, fileName);
             temp = null;
         }
         return true;
@@ -2246,8 +2242,319 @@ System.out.println(boardListVO.getStartDate());
 	public void boardAttachDown(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
-System.out.println(filePath);
-System.out.println(fileName);
+		
 		downFile(response, filePath, fileName);
+	}
+	
+	@RequestMapping(value = "/ezBoard/checkIfHasReply.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String checkIfHasReply(HttpServletRequest request) throws Exception{
+		String itemList = "";
+		String itemIDs = ""; 
+		itemList = request.getParameter("itemList");
+		for(int i = 0; i < itemList.split(";").length; i++){
+			String tempItemID = itemList.split(";")[i].split(",")[0];
+			itemIDs += tempItemID + ";";
+		}
+		String result = ezBoardService.brdCheckIfHasReply(itemIDs);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezBoard/deleteItem.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String deleteItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		String mode = "";
+		String itemList = "";
+		String boardID = "";
+		String itemIDs = "";
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		itemList = request.getParameter("itemList");
+		mode = request.getParameter("mode");
+		boardID = request.getParameter("boardID");
+		
+		if(boardID != null && !boardID.equals("")){
+			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+			
+			if(!boardInfo.getDelete_FG().equals("true")){
+				if(!boardInfo.getBoardAdmin_FG().equals("true")){
+					if(!boardInfo.getBoardGroupAdmin_FG().equals("OK")){
+						return "NO";
+					}
+				}else{
+					if(!boardInfo.getBoardGroupAdmin_FG().equals("OK")){
+						return "NO";
+					}
+				}
+			}
+		}else{
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
+			boardID = boardListVO.getBoardID();
+			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+			
+			if(!boardInfo.getDelete_FG().equals("true")){
+				if(!boardInfo.getBoardAdmin_FG().equals("true")){
+					if(!boardInfo.getBoardGroupAdmin_FG().equals("OK")){
+						return "NO";
+					}
+				}else{
+					if(!boardInfo.getBoardGroupAdmin_FG().equals("OK")){
+						return "NO";
+					}
+				}
+			}
+		}
+		for(int i = 0; i < itemList.split(";").length; i++){
+			String tempItem = itemList.split(";")[i].split(",")[0];
+			itemIDs += tempItem + ";";
+		}
+		if(mode != null && mode.equals("temp")){
+			ezBoardService.deleteTempItem(itemIDs, boardID);
+		}else{
+			ezBoardService.deleteItem(itemIDs, boardID);
+		}
+		
+		return "OK";
+	}
+	
+	@RequestMapping(value = "/ezBoard/copyBoardItem.do")
+	public String copyBoardItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String itemIDList = "";
+		String boardID = "";
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		itemIDList = request.getParameter("itemIDList");
+		boardID = request.getParameter("boardID");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		if(!boardInfo.getRead_FG().equals("true")){
+			return "main/warning";
+		}
+		if(!boardInfo.getBoardAdmin_FG().equals("true")){
+			if(!boardInfo.getBoardGroupAdmin_FG().equals("true")){
+				return "main/warning";
+			}
+		}
+		model.addAttribute("itemIDList", itemIDList);
+		model.addAttribute("boardID", boardID);
+		
+		return "ezBoard/boardCopyItem";
+	}
+	
+	@RequestMapping(value = "/ezBoard/getACL.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getACL(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = "";
+		String strACLXML = "";
+		
+		if(ezBoardAdminService.checkIfBoardGroupAdmin(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID()).equals("OK")){
+			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
+		}else if(userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1){
+			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
+		}else{
+			BoardPropertyVO boardPropertyVO = ezBoardAdminService.getACL(boardID, "everyone");
+			StringBuilder sb = new StringBuilder();
+			sb.append("<NODES>");
+			
+			if(boardPropertyVO != null){
+				sb.append("<NODE>");
+				sb.append("<ACCESS>" + boardPropertyVO.getAccess_() + "</ACCESS>");
+				sb.append("<BOARDADMIN>" + boardPropertyVO.getBoardAdmin_FG() + "</BOARDADMIN>");
+				sb.append("<LIST>" + boardPropertyVO.getListView_FG() + "</LIST>");
+				sb.append("<READ>" + boardPropertyVO.getRead_FG() + "</READ>");
+				sb.append("<WRITE>" + boardPropertyVO.getWrite_FG() + "</WRITE>");
+				sb.append("<REPLY>" + boardPropertyVO.getReply_FG() + "</REPLY>");
+				sb.append("<DELETE>" + boardPropertyVO.getDelete_FG() + "</DELETE>");
+				sb.append("<INHERIT>" + boardPropertyVO.getInherit_FG() + "</INHERIT>");
+				sb.append("<POSTNOTICE>" + boardPropertyVO.getPostNotice() + "</POSTNOTICE>");
+				sb.append("</NODE>");			
+			}	
+			sb.append("</NODES>");
+			
+			strACLXML = sb.toString();
+		}
+		
+		return strACLXML;
+	}
+	
+	@RequestMapping(value = "/ezBoard/checkIfAnonyBoard.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String checkIfAnonyBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		String result = "";
+		String boardID = "";
+		
+		boardID = request.getParameter("boardID");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if(boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4")){
+			result = "<RESULT>anonyboard</RESULT>";
+        }else if (boardInfo.getAttributeYN().equals("Y")){
+        	result = "<RESULT>attributeextension</RESULT>";
+        }else{
+            result = "<RESULT>normalboard</RESULT>";
+        }
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezBoard/copyItem.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String copyItem(HttpServletRequest request) throws Exception{
+		String orgItemIDList = "";
+		String orgBoardID = "";
+		String destBoardID = "";
+		String uploadFilePath = config.getProperty("upload_board.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		String result = "";
+		
+		orgItemIDList = request.getParameter("orgItemIDList");
+		orgBoardID = request.getParameter("orgBoardID");
+		destBoardID = request.getParameter("destBoardID");
+		
+		for(int i = 0; i < orgItemIDList.split(";").length; i++){
+			result = copyItem(orgItemIDList.split(";")[i], orgBoardID, "{"+ UUID.randomUUID() +"}", destBoardID, uploadFilePath, realPath);
+		}
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+
+	public String copyItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath) throws Exception{
+		String result = "";
+		BoardListVO boardLisitVO = ezBoardService.getCopyItem(orgItemID,orgBoardID);
+		//MHT 파일위치 변경
+		boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
+		boardLisitVO.setStartDate("");
+		boardLisitVO.setItemLevel("1");
+		
+		if(boardLisitVO.getExtensionAttribute1() == null){
+			boardLisitVO.setExtensionAttribute1("0");
+		}
+		
+		if(boardLisitVO.getExtensionAttribute2() == null){
+			boardLisitVO.setExtensionAttribute2("0");
+		}
+		
+		if(boardLisitVO.getExtensionAttribute3() == null){
+			boardLisitVO.setExtensionAttribute3("0");
+		}
+		
+		if(boardLisitVO.getExtensionAttribute32() == null){
+			boardLisitVO.setExtensionAttribute32("0");
+		}
+		
+		if(boardLisitVO.getExtensionAttribute4() == null){
+			boardLisitVO.setExtensionAttribute4("0");
+		}
+		
+		if(boardLisitVO.getExtensionAttribute5() == null){
+			boardLisitVO.setExtensionAttribute5("0");
+		}
+		copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath);
+		
+		List<String> attachmentList = ezBoardService.getCopyItemAttach(orgItemID);
+		String attachments = "";
+		if(attachmentList != null){
+			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+
+        sb.append("<NODES>");
+        sb.append("<NODE>");
+        sb.append("<FILEPATH>" + uploadFilePath + "</FILEPATH>");
+        sb.append("<ITEMID>" + destItemID + "</ITEMID>");
+        sb.append("<BOARDID>" + destBoardID + "</BOARDID>");
+        sb.append("<TOPWRITERID>" + boardLisitVO.getTopWriterID() + "</TOPWRITERID>");
+        sb.append("<WRITERID>" + boardLisitVO.getWriterID() + "</WRITERID>");
+        sb.append("<WRITERNAME>" + makeXMLString(boardLisitVO.getWriterName()) + "</WRITERNAME>");
+        sb.append("<WRITERNAME2>" + makeXMLString(boardLisitVO.getWriterName2()) + "</WRITERNAME2>");
+        sb.append("<DEPTID>" + boardLisitVO.getWriterDeptID() + "</DEPTID>");
+        sb.append("<DEPTNAME>" + makeXMLString(boardLisitVO.getWriterDeptName()) + "</DEPTNAME>");	// 20060713 준호수정 특수문자
+        sb.append("<DEPTNAME2>" + makeXMLString(boardLisitVO.getWriterDeptName2()) + "</DEPTNAME2>");	// 20060713 준호수정 특수문자
+        sb.append("<COMPANYID>" + boardLisitVO.getWriterCompanyID() + "</COMPANYID>");
+        sb.append("<COMPANYNAME>" + makeXMLString(boardLisitVO.getWriterCompanyName()) + "</COMPANYNAME>");	// 20060713 준호수정 특수문자
+        sb.append("<COMPANYNAME2>" + makeXMLString(boardLisitVO.getWriterCompanyName2()) + "</COMPANYNAME2>");	// 20060713 준호수정 특수문자
+        sb.append("<IMPORTANCE>" + boardLisitVO.getImportance() + "</IMPORTANCE>");
+        sb.append("<TITLE>" + makeXMLString(boardLisitVO.getTitle()) + "</TITLE>");
+        sb.append("<CONTENTLOCATION>" + boardLisitVO.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
+        sb.append("<STARTDATE>" + boardLisitVO.getStartDate() + "</STARTDATE>");
+        sb.append("<ENDDATE>" + boardLisitVO.getEndDate() + "</ENDDATE>");
+        sb.append("<ABSTRACT>" + makeXMLString(boardLisitVO.getABSTRACT()) + "</ABSTRACT>");
+        sb.append("<ATTACHMENTS>" + makeXMLString(attachments) + "</ATTACHMENTS>");
+        sb.append("<UPPERITEMIDTREE>" + boardLisitVO.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
+        sb.append("<ITEMLEVEL>" + boardLisitVO.getItemLevel() + "</ITEMLEVEL>");
+        sb.append("<EXTENSIONATTRIBUTE1>" + makeXMLString(boardLisitVO.getExtensionAttribute1()) + "</EXTENSIONATTRIBUTE1>");
+        sb.append("<EXTENSIONATTRIBUTE2>" + makeXMLString(boardLisitVO.getExtensionAttribute2()) + "</EXTENSIONATTRIBUTE2>");
+        sb.append("<EXTENSIONATTRIBUTE3>" + makeXMLString(boardLisitVO.getExtensionAttribute3()) + "</EXTENSIONATTRIBUTE3>");
+        sb.append("<EXTENSIONATTRIBUTE32>" + makeXMLString(boardLisitVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
+        sb.append("<EXTENSIONATTRIBUTE4>" + makeXMLString(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
+        sb.append("<EXTENSIONATTRIBUTE5>" + makeXMLString(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
+        sb.append("</NODE>");
+        sb.append("</NODES>");
+
+        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath);
+        
+        if(result.equals("OK")){
+        	ezBoardService.updateCopyItem(destItemID);
+        }
+        
+		return result;
+	}
+
+	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path) throws Exception{
+		String orgFilePath = "";
+		String destFilePath = "";
+		String returnString = "";
+        for (int i = 0; i < attachmentList.size(); i++){
+            orgFilePath = attachmentList.get(i);
+
+            String fileName = "";
+            fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf("\\uploadFile\\") + 12).substring(39);
+            fileName = "{" + UUID.randomUUID() + "}_" + fileName;
+
+            destFilePath = path + "\\" + destBoardID + "\\uploadFile\\" + fileName;
+
+            if(returnString.equals("")){
+            	returnString += destBoardID + "/uploadFile/" + fileName;
+            }else{
+            	returnString = returnString + ";" + destBoardID + "/uploadFile/" + fileName;
+            }
+            
+            FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+        }
+        
+        return returnString;
+	}
+
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path) throws Exception{
+		String orgFilePath = "";
+        String destFilePath = "";
+
+        orgFilePath = path + "\\" + orgBoardID + "\\doc\\" + orgItemID + ".mht";
+        destFilePath = path + "\\" + destBoardID + "\\doc\\" + destItemID + ".mht";
+
+        File file = new File(path + "\\" + destBoardID);
+        if(!file.exists()){
+            file.mkdir();
+            new File(path + "\\" + destBoardID + "\\doc").mkdir();
+            new File(path + "\\" + destBoardID + "\\uploadFile").mkdir();
+        }
+
+        FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+	}
+	
+	public String makeXMLString(String orgString){
+		if(orgString != null){
+			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		}else{
+			return orgString;
+		}
 	}
 }

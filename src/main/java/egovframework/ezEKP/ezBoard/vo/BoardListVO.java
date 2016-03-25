@@ -114,6 +114,10 @@ public class BoardListVO {
 	private String docPassword;
 	/** 첨부여부*/
 	private String hasAttach;
+	/** 작성자 메일*/
+	private String mail;
+	/** 업데이트날짜*/
+	private String updateDate;
 	
 	public int getrNum() {
 		return rNum;
@@ -450,6 +454,18 @@ public class BoardListVO {
 	}
 	public void setHasAttach(String hasAttach) {
 		this.hasAttach = hasAttach;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	public String getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
 	}
 	
 }

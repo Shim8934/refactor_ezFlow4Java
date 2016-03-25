@@ -31,6 +31,8 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 
+	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
+	
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
 	public BoardConfigVO getPersonalCount(String userID) throws Exception;
@@ -39,12 +41,18 @@ public interface EzBoardService {
 	
 	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception;
 	
+	public BoardListVO getItemInfo(String itemID) throws Exception;
+	
+	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception;
+	
 	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
 	
 	public String checkForm(String boardID, String mode) throws Exception;
 
 	public String checkBackGroundImage(String boardID) throws Exception;
 
+	public String brdCheckIfHasReply(String itemIDs) throws Exception;
+	
 	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
 
 	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
@@ -63,6 +71,10 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID) throws Exception;
 	
+	public void brdNewItem(BoardListVO boardListVO) throws Exception;
+
+	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
+	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
@@ -73,8 +85,11 @@ public interface EzBoardService {
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 
-	public void brdNewItem(BoardListVO boardListVO) throws Exception;
+	public void updateCopyItem(String itemID) throws Exception;
+	
+	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
-	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
+	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+
 
 }
