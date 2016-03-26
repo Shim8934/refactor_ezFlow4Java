@@ -159,7 +159,8 @@ public class EzEmailMailListController {
 			FetchProfile fp = new FetchProfile();
 			
 			if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")
-					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
+					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")
+					|| sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("importance");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
@@ -194,7 +195,8 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
-			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")) {
+			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
+					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("importance");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
@@ -238,22 +240,38 @@ public class EzEmailMailListController {
 			sb.append(String.format("<attach><![CDATA[%d]]></attach>", attached));
 			
 			String addressStr = "";
-			Address[] address = null;
+			Address[] addresses = null;
 			if (!viewSelectIndex.equals("3")) {
-				address = message.getFrom();
+				addresses = message.getFrom();
+				if (addresses != null) {
+					addressStr = ((InternetAddress)addresses[0]).getPersonal();
+					if (addressStr == null) {
+						addressStr = ((InternetAddress)addresses[0]).getAddress();
+					}
+					else {
+						addressStr = MimeUtility.decodeText(addressStr);
+					}
+				}				
 			}
 			else {
-				address = message.getRecipients(Message.RecipientType.TO);
+				addresses = message.getRecipients(Message.RecipientType.TO);
+				if (addresses != null) {
+					StringBuilder addressBuilder = new StringBuilder();
+					for (Address address : addresses) {
+						addressStr = ((InternetAddress)address).getPersonal();
+						if (addressStr == null) {
+							addressStr = ((InternetAddress)address).getAddress();
+						}
+						else {
+							addressStr = MimeUtility.decodeText(addressStr);
+						}						
+						addressBuilder.append(addressStr);
+						addressBuilder.append("; ");
+					}
+					addressStr = addressBuilder.toString();
+					addressStr = addressStr.substring(0, addressStr.length() - 2);
+				}								
 			}			
-			if (address != null) {
-				addressStr = ((InternetAddress)address[0]).getPersonal();
-				if (addressStr == null) {
-					addressStr = ((InternetAddress)address[0]).getAddress();
-				}
-				else {
-					addressStr = MimeUtility.decodeText(addressStr);
-				}
-			}
 			sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
 			sb.append(String.format("<subject><![CDATA[%s]]></subject>", message.getSubject()));
 			Date receivedDate = message.getReceivedDate();
@@ -304,7 +322,7 @@ public class EzEmailMailListController {
 			Arrays.sort(messages, comparator);
 		}
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
-			Comparator<Message> comparator = new IMAPAccess.MessageSenderComparator();
+			Comparator<Message> comparator = new IMAPAccess.MessageAddressComparator(true);
 			
 			if (sortType.endsWith("ASC")) {
 				logger.debug("ASC");
@@ -324,6 +342,27 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}		
+		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
+			Comparator<Message> comparator = new IMAPAccess.MessageAddressComparator(false);
+			
+			if (sortType.endsWith("ASC")) {
+				logger.debug("ASC");
+				
+				comparator = Collections.reverseOrder(comparator);
+			}
+			else {
+				logger.debug("DESC");
+			}
+			
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);
+			
+			Locale locale = Locale.getDefault();
+			logger.debug("locale=" + locale);
+			
+			Arrays.sort(messages, comparator);
+		}				
 		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageAttachmentComparator(imapAccess);
 			
@@ -400,7 +439,8 @@ public class EzEmailMailListController {
 						
 			Arrays.sort(messages, comparator);
 		}			
-		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")) {
+		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
+				|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageReceivedDateComparator();
 			
 			if (sortType.endsWith("ASC")) {

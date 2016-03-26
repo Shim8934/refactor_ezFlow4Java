@@ -276,35 +276,73 @@ public class IMAPAccess {
 		
 	}	
 	
-	public static class MessageSenderComparator implements Comparator<Message> {
+	public static class MessageAddressComparator implements Comparator<Message> {
 		
-		Collator collator = Collator.getInstance();
-		Map<Address, String> senders = new HashMap<Address, String>();
+		private Collator collator = Collator.getInstance();
+		private Map<String, String> addressMap = new HashMap<String, String>();
+		private boolean isSender;
+		
+		public MessageAddressComparator(boolean isSender) {
+			this.isSender = isSender;
+		}
 		
 		private String getAddress(Message msg) {
 			String addressStr = null;
-			Address[] address = null;
+			Address[] addresses = null;
 			try {
-				address = msg.getFrom();
+				if (isSender) {
+					addresses = msg.getFrom();
+				}
+				else {
+					addresses = msg.getRecipients(Message.RecipientType.TO);
+				}
 			} catch (MessagingException e) {
 			}
-			if (address != null) {
-				addressStr = senders.get(address[0]);			
-				if (addressStr == null) {					
-					addressStr = ((InternetAddress)address[0]).getPersonal();
-					if (addressStr == null) {
-						addressStr = ((InternetAddress)address[0]).getAddress();
-					}
-					else {
-						try {
-							addressStr = MimeUtility.decodeText(addressStr);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
+			if (addresses != null) {
+				if (isSender) {
+					addressStr = addressMap.get(addresses[0].toString());			
+					if (addressStr == null) {					
+						addressStr = ((InternetAddress)addresses[0]).getPersonal();
+						if (addressStr == null) {
+							addressStr = ((InternetAddress)addresses[0]).getAddress();
 						}
-					}					
-					
-					senders.put(address[0], addressStr);
-				}		
+						else {
+							try {
+								addressStr = MimeUtility.decodeText(addressStr);
+							} catch (UnsupportedEncodingException e) {
+								e.printStackTrace();
+							}
+						}					
+						
+						addressMap.put(addresses[0].toString(), addressStr);
+					}		
+				}
+				else {
+					String keyString = InternetAddress.toString(addresses);
+					addressStr = addressMap.get(keyString);			
+					if (addressStr == null) {		
+						StringBuilder addressBuilder = new StringBuilder();
+						for (Address address : addresses) {
+							addressStr = ((InternetAddress)address).getPersonal();
+							if (addressStr == null) {
+								addressStr = ((InternetAddress)address).getAddress();
+							}
+							else {
+								try {
+									addressStr = MimeUtility.decodeText(addressStr);
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
+							}			
+							addressBuilder.append(addressStr);
+							addressBuilder.append("; ");							
+						}
+						addressStr = addressBuilder.toString();
+						addressStr = addressStr.substring(0, addressStr.length() - 2);						
+						
+						addressMap.put(keyString, addressStr);
+					}		
+				}
 			}
 			else {
 				addressStr = "";
