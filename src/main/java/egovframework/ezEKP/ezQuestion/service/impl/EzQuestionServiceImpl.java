@@ -276,7 +276,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int resCount(String brdId, String itemNo) {
+	public Integer resCount(String brdId, String itemNo) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdId);
 		map.put("v_pItemNo", itemNo);
@@ -468,4 +468,22 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pResUserIP", qstResponseVO.getResponseUserIp());
 		ezQuestionDAO.insertResponse2(map);
 	}
+
+	@Override
+	public int getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		return ezQuestionDAO.getResponsePersonCnt(map);
+	}
+
+	@Override
+	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdId());
+		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		map.put("v_pUserID", userId);
+		return ezQuestionDAO.getReadDateItemForResult(map);
+	}	
 }

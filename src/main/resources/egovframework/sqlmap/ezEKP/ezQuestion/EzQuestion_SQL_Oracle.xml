@@ -155,7 +155,7 @@
 	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
-		
+	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>
@@ -232,6 +232,21 @@
 				ezQuestion.TBLITEMSEQ 
 			WHERE  
 				brd_id = #brdId#
+		]]>		
+	</select>
+	
+	<select id="EzQuestionDAO.getReadDateItemForResult" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				Read_Date 
+			FROM 
+				ezQuestion.TBLPOLL_ITEMREAD 
+			WHERE  
+				brd_id = #v_pstrBrdID#
+			AND 
+				item_no = #v_pItemNo#
+			AND 
+				USER_ID = #v_pUserID#
 		]]>		
 	</select>
 	
@@ -334,6 +349,20 @@
 				item_no = #v_pItemNo#
 			AND 
 				question_no = #v_pQuesNo#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getResponsePersonCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				DISTINCT COUNT(*)  RESPERSON  
+			FROM EZQUESTION.TBLPOLL_RESPONSE 
+			WHERE 
+				BRD_ID = #v_pstrBrdID#
+			AND 
+				ITEM_NO = #v_pItemNo#
+			AND 
+				QUESTION_NO = #v_pQuesNo#
 		]]>
 	</select>
 	

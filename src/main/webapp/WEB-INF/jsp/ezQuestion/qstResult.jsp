@@ -36,6 +36,11 @@
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
+			<%-- function fun_ResponseView(question_no) {
+				var szUrl = "Qst_Result_Subjective_Cross.aspx?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>' + "&question_no=" + question_no;
+			    window.location.href = szUrl;
+			} --%>
+			
 			function UserInfo(questionNo, answerNo, type){
 			}
 			

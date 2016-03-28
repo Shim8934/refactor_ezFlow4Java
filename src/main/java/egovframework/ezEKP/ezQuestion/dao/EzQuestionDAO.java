@@ -66,6 +66,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (String)select("EzQuestionDAO.getItemSeq", brdId);
 	}
 	
+	public String getReadDateItemForResult(Map<String, Object> map) {
+		return (String) select("EzQuestionDAO.getReadDateItemForResult", map);
+	}
+	
 	public int getQstListCnt(Map<String, Object> map){
 		select("EzQuestionDAO.getQstListCnt", map);
 		return (int) map.get("v_pCount");
@@ -93,8 +97,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (int) select("EzQuestionDAO.getResponseDateCnt", map);
 	}
 	
-	public int resCount(Map<String, Object> map) {
-		return (int) select("EzQuestionDAO.resCount", map);
+	public Integer resCount(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.resCount", map);
 	}
 	
 	public int getReadDateItem(Map<String, Object> map) {
@@ -107,6 +111,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public int getAnsCnt(Map<String, Object> map) {
 		return (int) select("EzQuestionDAO.getAnsCnt", map);
+	}
+	
+	public int getResponsePersonCnt(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.getResponsePersonCnt", map);
 	}
 	
 	public void callCreateMother(Map<String,Object> map) {

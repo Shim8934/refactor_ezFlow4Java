@@ -249,7 +249,7 @@
 		        if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstResult.do?brdId="+receve+"&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstResult.do?"+receve+"&itemNo=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        }
 		    }
@@ -258,7 +258,7 @@
 		        <%-- if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&item_no=" + szSelectedItemNo;
+		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&itemNo=" + szSelectedItemNo;
 		            window.location.href = szUrl;
 		        } --%>
 		    }

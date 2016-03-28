@@ -37,6 +37,8 @@ public interface EzQuestionService {
 	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO) throws Exception;
 
 	public String getItemSeq(String brdId) throws Exception;
+	
+	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
 
 	public int getQstListCnt(QstListVO qstListVO) throws Exception;
 
@@ -50,11 +52,13 @@ public interface EzQuestionService {
 	
 	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
 
-	public int resCount(String brdId,String itemNo) throws Exception;
+	public Integer resCount(String brdId,String itemNo) throws Exception;
 	
 	public int getAnsCnt(QstAnswerVO answerVO) throws Exception;
 	
 	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception;
+	
+	public int getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception;
 
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 
@@ -94,5 +98,7 @@ public interface EzQuestionService {
 	
 	public void updateResCnt(int brdId, int itemNo) throws Exception;
 
-	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;	
+	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
+
+		
 }
