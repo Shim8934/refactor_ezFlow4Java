@@ -1232,12 +1232,39 @@ System.out.println("strType 5  = "+strData);
 		return strData; 
 	}
 
+//	지금 안도는거 
 	public String dataProcessType5(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
 		
 		/** EZSP_GETTABLEANSWER*/
-		////////////////////////////////////
+//		GetQueryResultSP ->   DAO 에서 List받아서 ServiceImpl에서 doc생성 값 넣어서 Return
+//		Document xmlDom = ezQuestionService.getTableAnswer(brdId, itemNo, questionNo);
+		
+//		Document xmlDoc = ezQuestionService.getResponseAnswer(brdId, itemNo, questionNo);
 
+		int iAnsCount = 0, responseCnt = 0;
+        int rCnt = 0;
+        percent = 0;
+        
+//        responseCnt = xmlDoc.getElementsByTagName("ANSWER_SUBJECTIVITY").getLength();
+        
+        strData += "<table class=\"question\">";
+        strData += "<tr>";
+        strData += "<th>" + egovMessageSource.getMessage("ezQuestion."
+        		+ "t333") + iDataCount + " : " + strContent + "\n";
+        if (strSel == "1")
+        {
+            strData += "<span class='subtxt'>[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>\n";
+        }
+
+        strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
+
+        strData += "</th>\n";
+        strData += "</tr>\n";
+        strData += "</table>\n";
+        strData += "<table class='ex'>\n";
+        
+		
 		return strData;
     }
 	
