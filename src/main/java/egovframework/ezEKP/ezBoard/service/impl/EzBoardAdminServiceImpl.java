@@ -309,7 +309,28 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveHeader(boardListHeaderVO);
 	}
-	
+
+	@Override
+	public void saveACL(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.saveACL(map);
+	}
+
+	@Override
+	public void deleteACL(String boardID, String targetID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pAccessID", targetID);
+
+		ezBoardAdminDAO.deleteACL(map);
+	}
+
+	@Override
+	public void trunkBoard() throws Exception {
+		// TODO Auto-generated method stub
+		ezBoardAdminDAO.trunkBoard();
+	}	
 	
 	
 }

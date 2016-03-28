@@ -1,20 +1,50 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
-public class OrganDeptVO {
-	/** 회사/부서아이디*/
+public class OrganUserVO {
+	
 	private String cn;
 	/** 회사/부서명*/
-	private String deptID;
+	private String department;
 	/** 부서명*/
 	private String displayName;
 	/** 부서명(다국어)*/
 	private String displayName1;
 	/** 부서명(다국어)*/
-	private String displayName2;
-	/** 부서명(다국어)*/
-	private String deptNM;
+	private String displayName2;	
 	/** 메일주소*/
 	private String mail;
+	/** */
+	private String description;
+	/** */
+	private String description1;
+	/** */
+	private String description2;
+	/** */
+	private String physicalDeliveryOfficeName;
+	/** */
+	private String company;
+	/** */
+	private String company1;
+	/** */
+	private String company2;
+	/** */
+	private String title;
+	/** */
+	private String title1;
+	/** */
+	private String title2;
+	/** */
+	private String telephoneNumber;
+	/** */
+	private String homePhone;
+	/** */
+	private String mobile;
+	/** */
+	private String facsimileTelephoneNumber;
+	/** */
+	private String streetAddress;
+	/** */
+	private String info;
 	/** 상위부서ID*/
 	private String extensionAttribute1;
 	/** 회사ID*/
@@ -49,8 +79,14 @@ public class OrganDeptVO {
 	private String adsPath;
 	/** 최종업데이트일자*/
 	private String updateDT;
-	/** dept*/
+	/** */
 	private String type;
+	/** */
+	private String sipUri;
+	/** */
+	private String positionCD;
+	
+	
 	
 	public String getCn() {
 		return cn;
@@ -58,12 +94,12 @@ public class OrganDeptVO {
 	public void setCn(String cn) {
 		this.cn = cn;
 	}
-	public String getDeptID() {
-		return deptID;
+	public String getDepartment() {
+		return department;
 	}
-	public void setDeptID(String deptID) {
-		this.deptID = deptID;
-	}	
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -82,17 +118,107 @@ public class OrganDeptVO {
 	public void setDisplayName2(String displayName2) {
 		this.displayName2 = displayName2;
 	}
-	public String getDeptNM() {
-		return deptNM;
-	}
-	public void setDeptNM(String deptNM) {
-		this.deptNM = deptNM;
-	}
 	public String getMail() {
 		return mail;
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription1() {
+		return description1;
+	}
+	public void setDescription1(String description1) {
+		this.description1 = description1;
+	}
+	public String getDescription2() {
+		return description2;
+	}
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
+	public String getPhysicalDeliveryOfficeName() {
+		return physicalDeliveryOfficeName;
+	}
+	public void setPhysicalDeliveryOfficeName(String physicalDeliveryOfficeName) {
+		this.physicalDeliveryOfficeName = physicalDeliveryOfficeName;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	public String getCompany1() {
+		return company1;
+	}
+	public void setCompany1(String company1) {
+		this.company1 = company1;
+	}
+	public String getCompany2() {
+		return company2;
+	}
+	public void setCompany2(String company2) {
+		this.company2 = company2;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getTitle1() {
+		return title1;
+	}
+	public void setTitle1(String title1) {
+		this.title1 = title1;
+	}
+	public String getTitle2() {
+		return title2;
+	}
+	public void setTitle2(String title2) {
+		this.title2 = title2;
+	}
+	public String getTelephoneNumber() {
+		return telephoneNumber;
+	}
+	public void setTelephoneNumber(String telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
+	}
+	public String getHomePhone() {
+		return homePhone;
+	}
+	public void setHomePhone(String homePhone) {
+		this.homePhone = homePhone;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getFacsimileTelephoneNumber() {
+		return facsimileTelephoneNumber;
+	}
+	public void setFacsimileTelephoneNumber(String facsimileTelephoneNumber) {
+		this.facsimileTelephoneNumber = facsimileTelephoneNumber;
+	}
+	public String getStreetAddress() {
+		return streetAddress;
+	}
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
 	}
 	public String getExtensionAttribute1() {
 		return extensionAttribute1;
@@ -202,4 +328,18 @@ public class OrganDeptVO {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getSipUri() {
+		return sipUri;
+	}
+	public void setSipUri(String sipUri) {
+		this.sipUri = sipUri;
+	}
+	public String getPositionCD() {
+		return positionCD;
+	}
+	public void setPositionCD(String positionCD) {
+		this.positionCD = positionCD;
+	}	
+	
+	
 }

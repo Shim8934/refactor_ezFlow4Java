@@ -112,6 +112,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.saveHeader", boardListHeaderVO);
 	}
 
+	public void saveACL(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		insert("EzBoardAdminDAO.saveACL", map);
+	}
+
 	public void getBoardTree_Set(Map<String, Object> map) throws Exception{		
 		update("EzBoardAdminDAO.getBoardTree_Set", map);
 	}		
@@ -149,8 +154,15 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.deleteHeader", boardID);
 	}
 
-	
+	public void deleteACL(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		delete("EzBoardAdminDAO.deleteACL", map);		
+	}
 
+	public void trunkBoard() throws Exception{
+		// TODO Auto-generated method stub
+		delete("EzBoardAdminDAO.trunkBoard", "");
+	}
 
 
 }

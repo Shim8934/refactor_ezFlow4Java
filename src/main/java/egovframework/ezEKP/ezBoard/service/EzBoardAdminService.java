@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
@@ -67,6 +68,12 @@ public interface EzBoardAdminService {
 	public void deleteHeader(String boardID) throws Exception;
 
 	public void saveHeader(BoardListHeaderVO boardListHeaderVO) throws Exception;
+
+	public void saveACL(Map<String, Object> map) throws Exception;
+
+	public void deleteACL(String boardID, String targetID) throws Exception;
+
+	public void trunkBoard() throws Exception;
 	
 
 }

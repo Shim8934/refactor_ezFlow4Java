@@ -197,7 +197,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String pBoardIDList = request.getParameter("boardList");
 
-		ezBoardAdminService.saveBoardOrder(pBoardIDList);				
+		ezBoardAdminService.saveBoardOrder(pBoardIDList);
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
@@ -240,6 +242,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		
 		ezBoardAdminService.deleteBoard(boardID);
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardBackGround.do")
@@ -445,6 +449,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		String newBoardGroupID = request.getParameter("newBoardGroupID");
 		
 		ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID);
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardProperty.do")
@@ -491,6 +497,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	@RequestMapping(value="/admin/ezBoard/saveBoardProperty.do")
 	public void saveBoardProperty(HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception{		
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardExtensionAttribute.do")
@@ -711,11 +719,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveACL(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{	
 		Document doc = commonUtil.convertStringToDocument(data);
-		Map<String, Object> map = new HashMap<String, Object>(); 
+		Map<String, Object> map = new HashMap<String, Object>();		
 		
-		int size = doc.getElementsByTagName("BOARDID").getLength();
-		
-		for(int i=0; i < size; i++){
+		for(int i=0; i < doc.getElementsByTagName("BOARDID").getLength(); i++){
 			String pAccessName2 = doc.getElementsByTagName("TARGETNAME2").item(i).getTextContent();
 			String pAccess_FG = "";
 			
@@ -729,7 +735,7 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 			}
 			map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());
 			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());
-			map.put("v_pAccessName", doc.getElementsByTagName("TARGETNAME").item(i).getTextContent());			
+			map.put("v_pAccessName", doc.getElementsByTagName("TARGETNAME").item(i).getTextContent());
 			map.put("v_pParentBoardID", doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent());
 			map.put("v_pInherit", doc.getElementsByTagName("INHERIT").item(i).getTextContent());
 			map.put("v_pAdmin", doc.getElementsByTagName("ADMIN").item(i).getTextContent());
@@ -739,15 +745,52 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 			map.put("v_pWrite", doc.getElementsByTagName("WRITE").item(i).getTextContent());
 			map.put("v_pReply", doc.getElementsByTagName("REPLY").item(i).getTextContent());
 			map.put("v_pDelete", doc.getElementsByTagName("DELETE").item(i).getTextContent());
-			map.put("v_pPostNotice", doc.getElementsByTagName("POSTNOTICE").item(i).getTextContent());		
-			map.put("v_pAccessName2", pAccessName2);			
-			map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());		
+			map.put("v_pPostNotice", doc.getElementsByTagName("POSTNOTICE").item(i).getTextContent());
+			map.put("v_pAccessName2", pAccessName2);
+			map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());
 		}
 		
 		//save 서비스 구현
-		StringBuilder sb = new StringBuilder();
+		ezBoardAdminService.saveACL(map);
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
 		
-		return sb.toString();
+		return "OK";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/deleteACL.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteACL(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{	
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		for(int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++){
+			ezBoardAdminService.deleteACL(doc.getElementsByTagName("BOARDID").item(i).getTextContent(), doc.getElementsByTagName("TARGETID").item(i).getTextContent());
+		}
+		//board_treechache 테이블 trunk
+		ezBoardAdminService.trunkBoard();
+		
+		return "OK";
+	}
+	
+	@RequestMapping(value="/admin/ezBoard/selectTarget.do")	
+	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);		
+        
+        String topid = "";
+        
+        if (user.getRollInfo().indexOf("c=1") == -1){
+        	topid = user.getCompanyID();
+        }else{
+        	topid = "Top";
+        }
+        
+        model.addAttribute("defaultwin", "To");
+        model.addAttribute("strXML", "");
+        model.addAttribute("topid", topid);
+        model.addAttribute("userLang", "");
+        model.addAttribute("deptID", user.getDeptID());       
+        
+		return "admin/ezBoard/selectTarget";
 	}
 	
 }

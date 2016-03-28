@@ -499,12 +499,12 @@
 	            if (CrossYN()) {
 	                selecttarget_cross_dialogArguments[0] = receiverData;
 	                selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-	                var SelectTarget_Cross = window.open("OrganAdmin/SelectTarget_Cross.aspx", "SelectTarget_Cross", GetOpenWindowfeature(800, 520));
+	                var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget.do", "SelectTarget_Cross", GetOpenWindowfeature(800, 520));
 	                try { SelectTarget_Cross.focus(); } catch (e) {}
 	            }else{
 	                var config = "status:false;dialogWidth:800px;dialogHeight:520px;scroll:no;status:no;edge:sunken"
 	                config = config + GetShowModalPosition(800, 520);
-	                var ret = window.showModalDialog("OrganAdmin/SelectTarget_Cross.aspx", receiverData, config);
+	                var ret = window.showModalDialog("/admin/ezBoard/selectTarget.do", receiverData, config);
 	                _type = false;
 	                
 	                if (typeof (ret) != "undefined") {
@@ -606,7 +606,7 @@
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TARGETID", selnode[i].getAttribute("data1"));
 	            }
 
-	            xmlhttp.open("POST", "interASP/DeleteACL.aspx", false);
+	            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
 	            xmlhttp.send(xmlpara);
 
 	            if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {

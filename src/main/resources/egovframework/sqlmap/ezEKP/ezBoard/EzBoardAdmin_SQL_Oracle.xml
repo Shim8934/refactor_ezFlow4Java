@@ -152,6 +152,15 @@
 		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_BRDSAVEACL(#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pParentBoardID#, #v_pInherit#, #v_pAdmin#, #v_pAccess#, 
+		                                 #v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pPostNotice#, #v_pAccessName2#, #v_pBoardGroupACL#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_BRDDELETEACL(#v_pBoardID#, #v_pAccessID#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 
@@ -310,6 +319,11 @@
 			ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		
 		WHERE
 			boardid = #boardID#			
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.trunkBoard">
+		TRUNCATE TABLE 
+			ezBoardSTD.TBL_BOARD_TREECACHE		
 	</delete>
 
 </sqlMap>
