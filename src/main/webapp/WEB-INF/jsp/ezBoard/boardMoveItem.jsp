@@ -1,67 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code='ezBoard.t350'/></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title><spring:message code='ezBoard.t178'/></title>
+		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript">
+		<script language="javascript">
 		    var xmlhttp = createXMLHttpRequest();
 		    var selectedBoard = "";
 		    var ItemIDList = "${itemIDList}";
-		    var BoardID = "${boardID}";
+		    var BoardIDList = "${boardID}";
 		    var xmlDom_treeview = createXmlDom();
+		    var ReturnFunction;
+		
 		    function Select() {
 		        if (selectedBoard == "") {
 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
-		        if (BoardID.indexOf(selectedBoard) != -1) {
-		            alert("<spring:message code='ezBoard.t351'/>");
+		        if (CheckIfAnonyBoard(selectedBoard) == "1") {
+		            alert("<spring:message code='ezBoard.t180'/>");
 		            return;
 		        }
-		        CopyItem(selectedBoard);
+		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
+		            alert("<spring:message code='ezBoard.t999070'/>");
+		            return;
+		        }
+		        if (BoardIDList.indexOf(selectedBoard) != -1) {
+		            alert("<spring:message code='ezBoard.t139'/>");
+		            return;
+		        }
+		        if (CheckIfCanWrite(selectedBoard) == false) {
+		            alert("<spring:message code='ezBoard.t354'/>");
+		            return;
+		        }
+		        MoveItem(selectedBoard);
 		    }
 		    function cancel() {
 		        window.close();
 		    }
-		    function CopyItem(pDestBoardID) {
-		        if (CheckIfAnonyBoard(pDestBoardID) == "1") {
-		            alert("<spring:message code='ezBoard.t353'/>");
-		            return;
-		        }
-		
-		        if (CheckIfAnonyBoard(pDestBoardID) == "2") {
-		            alert("<spring:message code='ezBoard.t999069'/>");
-		            return;
-		        }
-		
-		        if (CheckIfCanWrite(pDestBoardID) == false) {
-		            alert("<spring:message code='ezBoard.t354'/>");
-		            return;
-		        }
-		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardID + "&destBoardID=" + pDestBoardID, false);
-		        xmlhttp.send();
-		        if (xmlhttp.responseText.indexOf("OK") > -1) {
-		            alert("<spring:message code='ezBoard.t355'/>");
-		            window.returnValue = "OK";
-		        } else {
-		            window.returnValue = "ERROR";
-		            window.close();
-		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
-		        }
-		    }
 		    function CheckIfCanWrite(pBoardID) {
-		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID + "&accessID=" + "${userInfo.id}", false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
 		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
 		        return false;
 		    }
+		    var rtnVal = "";
+		    function MoveItem(pDestBoardID) {
+		        var destItemIDList = "";
+		        xmlhttp.open("POST", "/ezBoard/moveItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardIDList + "&destItemIDList=" + destItemIDList + "&destBoardID=" + pDestBoardID, false);
+		        xmlhttp.send();
+		        if (xmlhttp.responseText.indexOf("OK") > -1) {
+		            alert("<spring:message code='ezBoard.t126'/>");
+		            rtnVal = "OK";
+		            window.close();
+		        } else {
+		            rtnVal = "ERROR";
+		            window.close();
+		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
+		        }
+		    }
+		    window.onunload = function () {
+		        if (ReturnFunction != null)
+		            ReturnFunction(rtnVal);
+		        else
+		            window.returnValue = rtnVal;
+		    };
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
 		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
@@ -71,11 +81,17 @@
 		            retval = "1";
 		        else if (xmlhttp2.responseText.indexOf("attributeextension") > -1)
 		            retval = "2";
-		
 		        xmlhttp2 = null;
 		        return retval;
 		    }
 		    window.onload = function () {
+		
+		        try {
+		            ReturnFunction = opener.moveboarditem_cross_dialogArguments[1];
+		        } catch (e) { }
+		
+		
+		
 		        var xmlDom_treeview = createXMLHttpRequest();
 		        xmlDom_treeview.open("GET", "/xml/organtree_config2.xml", false);
 		        xmlDom_treeview.send();
@@ -177,44 +193,13 @@
 		        }
 		    }
 		</script>
-		<style>
-		.node_normal{
-			padding-top: 3px;
-			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
-			font-size: 9pt;
-			background-color : #ffffff;
-			height : 15px;
-			cursor : hand;
-		}
-		.node_selected{
-			padding-top: 3px;
-			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
-			font-size: 9pt;
-			height : 15px;
-			background-color : #ECF3BA;
-			cursor : hand;
-		}
-		.node_hover{
-			padding-top: 3px;
-			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
-			font-size: 9pt;
-			background-color : #F7FAE0;
-			height : 15px;
-			cursor : hand;
-		}
-		</style>
 	</head>
 	<body class="popup"> 
-	<h1><spring:message code='ezBoard.t135'/></h1>
-	<div class="box" style="width:320px;height:490px;overflow:auto" id="TopBoardsList"> 
-	     
-	</div>
-	<div class="btnposition">
-	    <a class="imgbtn" onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
-	    <a class="imgbtn" onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
-	</div>
+		<h1><spring:message code='ezBoard.t135'/></h1>
+		<div class="box" style="width:316px;height:490px;overflow:auto" id=TopBoardsList></div>
+		<div class="btnposition">
+		    <a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
+		    <a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
+		</div>
 	</body>
 </html>

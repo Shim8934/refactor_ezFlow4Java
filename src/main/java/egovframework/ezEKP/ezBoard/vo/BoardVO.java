@@ -24,6 +24,18 @@ public class BoardVO {
 	private String orderOption;
 	/** 언어 */
 	private String lang;
+	/** 검색 조건 */
+	private String searchQuery;
+	/** 리스트타입*/
+	private String type;
+	/** 검색조건 제목*/
+	private String title;
+	/** 검색조건 작성자*/
+	private String writerName;
+	/** 검색조건*/
+	private String ABSTRACT;
+	/** 검색 여부*/
+	private String subFlag;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -91,4 +103,41 @@ public class BoardVO {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
+	public String getSearchQuery() {
+		return searchQuery;
+	}
+	public void setSearchQuery(String searchQuery) {
+		this.searchQuery = searchQuery;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
+	public String getABSTRACT() {
+		return ABSTRACT;
+	}
+	public void setABSTRACT(String aBSTRACT) {
+		ABSTRACT = aBSTRACT;
+	}
+	public String getSubFlag() {
+		return subFlag;
+	}
+	public void setSubFlag(String subFlag) {
+		this.subFlag = subFlag;
+	}
+	
 }

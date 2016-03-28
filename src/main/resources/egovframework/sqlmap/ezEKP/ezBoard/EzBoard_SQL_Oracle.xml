@@ -3,7 +3,7 @@
 
 <sqlMap namespace="ezBoard">
 
-	<typeAlias  alias="EzBoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
+	<typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
@@ -106,6 +106,21 @@
 		{CALL EZBOARDSTD.EZSP_CHECKITEMID(#v_ITEMID#, #v_BOARDTYPE#, #v_ACCESSID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="BoardVO" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#boardId#, #subFlag#, #searchQuery#, #title#, #writerName#, #ABSTRACT#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SAVEATTACHMENTSINFO(#v_STRITEMID#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_SET_LISTORDER(#v_ORDERBOARDIDLIST#, #v_ORDERBOARDLISTCOUNT#, #v_DELBOARDIDLIST#, #v_DELBOARDLISTCOUNT#, #v_USERID#, #v_ERR_CD,javaType=java.lang.Integer,jdbcType=INTEGER,mode=INOUT#)}
 	</procedure>
@@ -126,19 +141,16 @@
 		{CALL EZBOARDSTD.EZSP_BRDSETASREADS(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.updateMoveItem" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.deleteItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_DELETEITEM(#v_STRITEMLIST#, #v_BOARDID#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.deleteTempItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_DELETEITEM_TEMP(#v_STRITEMLIST#, #v_BOARDID#)}
-	</procedure>
-	
-	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
-		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
-										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
@@ -227,16 +239,6 @@
 				background = 'Y'
 		]]>                
 	</select>
-	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS(
-	        	itemid, 	    guid, 	     filepath, 		      filesize, 	 filename 
-	        )
-       		VALUES( 
-       			#v_STRITEMID#,  SYS_GUID(),  #v_STRATTACHMENTS#,  #v_FILESIZE#,  #v_FILENAME# 
-       		)
-		]]>
-	</insert>
 	
 	<update id="EzBoardDAO.updateCopyItem" parameterClass="String">
 		<![CDATA[

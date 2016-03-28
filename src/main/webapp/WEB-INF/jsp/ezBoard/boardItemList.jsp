@@ -193,7 +193,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -201,7 +201,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		
@@ -250,6 +250,7 @@
 		    }
 		    var xmlhttp = createXMLHttpRequest();
 		    function getBoardList(type) {
+alert(SQLPARADATA);
 		        if (type == "1") {
 		            SQLPARADATA = "";
 		            CurPage = 1;
@@ -275,7 +276,7 @@
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
 							 type 		 : type
-								  },
+							},
 					success: function(xml){
 						getBoardList_after(xml);
 					}        			
@@ -823,7 +824,7 @@
 		        return true;
 		    }
 		    function refresh_onclick() {
-		        window.location.href = window.location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?Page=" + CurPage.toString() + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType + "&AdminType=" + pAdminType;
+		        window.location.href = window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -915,7 +916,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            OpenWin = GetOpenWindow("admin/MoveBoardItem_Cross.aspx?ItemIDList=" + strItemList + "&BoardIDList=" + pBoardID, "MoveBoardItem_Cross", 340, 600);
+		            OpenWin = GetOpenWindow("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID, "MoveBoardItem", 340, 600);
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -925,7 +926,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("admin/MoveBoardItem_Cross.aspx?ItemIDList=" + strItemList + "&BoardIDList=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
@@ -1182,7 +1183,7 @@
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
 		        <li id="right"><spring:message code='ezBoard.t10020' /><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>         
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
-		        <c:if test="${boardInfo.boardAdmin_FG ==true}">
+		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
 		        <li style="background:none">

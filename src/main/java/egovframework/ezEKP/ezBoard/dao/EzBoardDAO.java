@@ -147,6 +147,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
 	
+	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception{
+		return (int) select("EzBoardDAO.getSearchBoardItemCount", boardVO);
+	}
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception{
 		insert("EzBoardDAO.brdNewItem", boardListVO);
 	}
@@ -177,6 +181,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void updateCopyItem(String itemID) throws Exception{
 		update("EzBoardDAO.updateCopyItem", itemID);
+	}
+	
+	public void updateMoveItem(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.updateMoveItem", map);
 	}
 	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{

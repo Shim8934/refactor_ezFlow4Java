@@ -171,6 +171,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void updateMoveItem(String destItemID, String orgItemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PITEMID", destItemID);
+		map.put("v_PORGITEMID", orgItemID);
+		ezBoardDAO.updateMoveItem(map);
+	}
+
+	@Override
 	public void deleteItem(String itemIDs, String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_STRITEMLIST", itemIDs);
@@ -301,6 +309,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PUSERID", userID);
 		map.put("v_PITEMID", itemID);
 		return ezBoardDAO.getCheckApprUserList(map);
+	}
+
+	@Override
+	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception {
+		return ezBoardDAO.getSearchBoardItemCount(boardVO);
 	}
 
 	@Override

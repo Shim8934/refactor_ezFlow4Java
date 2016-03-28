@@ -71,6 +71,8 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID) throws Exception;
 	
+	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
@@ -87,9 +89,10 @@ public interface EzBoardService {
 
 	public void updateCopyItem(String itemID) throws Exception;
 	
+	public void updateMoveItem(String destItemID, String orgItemID) throws Exception;
+	
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
-
 
 }
