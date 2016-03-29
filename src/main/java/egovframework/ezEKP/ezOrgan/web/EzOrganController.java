@@ -1,8 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
 import java.util.Properties;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +37,7 @@ public class EzOrganController {
 	private EgovMessageSource messageSource;
 	
 	@RequestMapping(value = "/ezOrgan/getSIPUriList.do")
-	public String  getSIPUriList(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request, Model model) throws Exception{
+	public String getSIPUriList(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request, Model model) throws Exception{
 		loginVO = commonUtil.userInfo(loginCookie);
 		String cnList = request.getParameter("cnList");
         String emailList = request.getParameter("emailList");
@@ -47,12 +45,12 @@ public class EzOrganController {
         
         model.addAttribute("strRet",strRet);
         
-		return"json";
+		return "json";
 	}
 	
 	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String  getDeptTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = "";
@@ -68,11 +66,11 @@ public class EzOrganController {
 	
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String  getDeptMemberList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String deptid = request.getParameter("deptID");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
-		String listtype = request.getParameter("type");
+		String listtype = request.getParameter("type");		
 		String lang = config.getProperty("config.primary");
 		String page = request.getParameter("page");
 		String infoXML = "";
@@ -123,14 +121,15 @@ public class EzOrganController {
                     {
                         xmldom.GetElementsByTagName("ROW").Item(i).ChildNodes.Item(idx).ChildNodes.Item(0).InnerText = "";
                     }*/
+                    //xmldom.GetElementsByTagName("ROW").Item(i).ChildNodes.Item(idx).ChildNodes.Item(0).InnerText = "";
+                    doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("");
                 }
             }
         }
-
-        /*Response.ContentType = "text/xml; charset=utf-8";
-        xmldom.Save(response.OutputStream);*/
 		
-		return "";
+		String result = commonUtil.convertDocumentToString(doc);
+		
+		return result;
 	}
 
 }

@@ -202,16 +202,15 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		ezBoardAdminService.trunkBoard();
 	}
 	
-	@RequestMapping(value="/admin/ezBoard/getSubBoards.do")
-	public void getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@RequestMapping(value="/admin/ezBoard/getSubBoards.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String upperBoardID = request.getParameter("upperBoardID");		
 		String boardTree = ezBoardController.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
 
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Cache-Control", "no-cache");
-		response.getWriter().write(boardTree);		
+		return boardTree;	
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/boardDelete.do")
@@ -251,8 +250,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		return "admin/ezBoard/boardBackGround";
 	}
 	
-	@RequestMapping(value="/admin/ezBoard/getBackGroundImage.do")
-	public void getBackGroundImage(HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
+	@RequestMapping(value="/admin/ezBoard/getBackGroundImage.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getBackGroundImage(HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception{		
 		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 		
 		StringBuffer xmlStr = new StringBuffer();
@@ -275,13 +275,9 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 	        	xmlStr.append("</ROW>");
         	}     
         	
-        	xmlStr.append("</DATA>");        	
-        	
-        	response.setContentType("text/xml"); 
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("Cache-Control", "no-cache");
-            response.getWriter().write(xmlStr.toString());
-        }		
+        	xmlStr.append("</DATA>");
+        }
+		return xmlStr.toString();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/statusChangeBackGroundImage.do")
@@ -528,18 +524,15 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 		}
 		sb.append("</ROWS>");
 
-		return sb.toString();
-		/*response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/xml");
-		response.setHeader("Cache-Control", "no-cache");
-		response.getWriter().write(sb.toString());*/
+		return sb.toString();		
 	}
 	
-	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do")
-	public void getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{		
+	@RequestMapping(value="/admin/ezBoard/getBoardHeader.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception{		
 		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getColType(), boardAttributeVO.getBoardID());
 		
-		StringBuilder sb = new StringBuilder();		
+		StringBuilder sb = new StringBuilder();
 		sb.append("<ROWS>");
 		
 		if(list != null){
@@ -553,11 +546,8 @@ public class EzBoardAdminController extends EgovFileMngUtil{
 			}
 		}	
 		sb.append("</ROWS>");
-
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/xml");
-		response.setHeader("Cache-Control", "no-cache");
-		response.getWriter().write(sb.toString());
+		
+		return sb.toString();
 	}
 	
 	@RequestMapping(value="/admin/ezBoard/saveAttribute.do", produces="text/xml;charset=utf-8")

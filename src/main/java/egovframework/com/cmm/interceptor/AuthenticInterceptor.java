@@ -36,7 +36,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class AuthenticInterceptor extends WebContentInterceptor {
 	
 	/** CRYPTO */
-    @Resource(name="crypto") 
+    @Resource(name="crypto")
     private EgovFileScrty egovFileScrty;
     
     /** Logger */

@@ -108,10 +108,11 @@
             
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "text",
+		        	dataType : "xml",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayname;description;title", type : "user"},
 		        	success : function(result){
+alert(result);		        		
 		        		document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
@@ -120,7 +121,7 @@
 		                listview.SetRowOnDblClick("ListViewNodeDblClick");
 		                listview.DataSource(document.getElementById("listviewheader2"));
 		                listview.DataBind("OrganListView");
-		                listview.DataSource(g_xmlHTTP.responseXML);
+		                listview.DataSource(result);
 		                listview.RowDataBind();
 		        	},
 		        	error : function(error){

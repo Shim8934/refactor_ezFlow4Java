@@ -20,6 +20,7 @@ package egovframework.let.utl.fcc.service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,6 +29,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -137,6 +143,17 @@ public class CommonUtil {
 		} catch(Exception e){}
 		
 		return doc;		
+	}
+	
+	public String convertDocumentToString(Document doc) throws Exception{
+		TransformerFactory tf = TransformerFactory.newInstance();
+	    Transformer transformer = tf.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	    StringWriter writer = new StringWriter();
+	    transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	    String output = writer.getBuffer().toString();	    
+		
+		return output;		
 	}
 }
 

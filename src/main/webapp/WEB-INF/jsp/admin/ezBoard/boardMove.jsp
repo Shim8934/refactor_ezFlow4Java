@@ -76,6 +76,20 @@
 		    		}
 		    	});		    	
 		    }
+			
+			function MoveSelect_Complete(ret) {
+		        if (typeof (ret) == "undefined") return;
+
+		        if (ret[0] == "cancel") {
+		            alert("<spring:message code='ezBoard.t128'/>");
+		        }
+		        else {
+		            SelectedBoardID = ret[0];
+		            selectedBoardGroupID = ret[1];
+		            pSelectBoardName.innerHTML = ret[2];
+		            MoveCheck.style.display = "";
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">	
