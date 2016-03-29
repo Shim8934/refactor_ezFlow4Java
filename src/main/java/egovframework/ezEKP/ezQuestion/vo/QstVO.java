@@ -17,6 +17,8 @@ public class QstVO {
 	String multiSelect;
 	/** 질문표시순서(순번변경가능)*/
 	int quesSn;
+	/** 결과보기 html문*/
+	String strData;
 	
 	public int getBrdId() {
 		return brdId;
@@ -66,4 +68,11 @@ public class QstVO {
 	public void setQuesSn(int quesSn) {
 		this.quesSn = quesSn;
 	}
+	public String getStrData() {
+		return strData;
+	}
+	public void setStrData(String strData) {
+		this.strData = strData;
+	}
+	
 }

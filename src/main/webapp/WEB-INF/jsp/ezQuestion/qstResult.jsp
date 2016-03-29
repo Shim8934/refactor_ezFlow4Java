@@ -78,10 +78,10 @@
 			    window.location.href = szUrl;
 			}
 
-			/* function menuQstResponseList(pflag){
+			function menuQstResponseList(pflag){
 			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&responseYN=" + pflag;
 			    window.location.href = szUrl;
-			} */
+			}
 
 			/* function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
 				var pUrl = "/ezQuestion/qstAttachView.do?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);	
@@ -113,11 +113,11 @@
 			<div id="mainmenu">
 				<ul>
 					<li><span onClick="menuQstList()"><spring:message code='ezQuestion.t130' /></span></li>
-					<c:if test="${resCnt > '0' && publicFlg == '0'}">
+					<c:if test="${resCnt > '0' && qstUserPermissionVO.publicFlg == '0'}">
 						<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
 						<li><span  onClick="menuQst_ResponseList('Y')"><spring:message code='ezQuestion.t350' /></span></li>
 					</c:if>
-					<c:if test="${responseRange == '1' && publicFlg == '0'}">
+					<c:if test="${qstUserPermissionVO.responseRange == '1' && qstUserPermissionVO.publicFlg == '0'}">
 						<li><span onClick="menuQstResponseList('N')"><spring:message code='ezQuestion.t390' /></span></li>
 					</c:if>
 				</ul>
@@ -154,7 +154,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t325' /></th>
-					<td>${qstUserPollItemVO.resCnt} <spring:message code='ezQuestion.t391' />${qstUserPollItemVO.readCnt} ] </td>
+					<td>${resCnt} <spring:message code='ezQuestion.t391' />${qstUserPollItemVO.readCnt} ] </td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t327' /></th>
@@ -162,7 +162,11 @@
 				</tr>
 			</table>
 			<br>
-			<%-- <div><%=strData%></div> --%>
+			<div>
+				<c:forEach var="list" items="${qstVOList}">
+					${list.strData}
+				</c:forEach>
+			</div>
 		</form>
 	</body>
 </html>

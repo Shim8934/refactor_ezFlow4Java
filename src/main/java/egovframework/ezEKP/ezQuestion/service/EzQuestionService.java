@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezQuestion.service;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
@@ -35,6 +37,10 @@ public interface EzQuestionService {
 	public QstUserPermissionVO getUserPermission(QstUserPermissionVO qstUserPermissionVO) throws Exception;
 	
 	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO) throws Exception;
+	
+	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception;
+	
+	public String getResponseAnswer(int brdId, int itemNo, int questionNo) throws Exception;
 
 	public String getItemSeq(String brdId) throws Exception;
 	
@@ -57,6 +63,10 @@ public interface EzQuestionService {
 	public int getAnsCnt(QstAnswerVO answerVO) throws Exception;
 	
 	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception;
+	
+	public Integer pollRespCnt(int brdId, int itemNo, int questionNo, int iAnsCnt) throws Exception;
+
+	public Integer pollRespCnt2(int brdId, int itemNo, int questionNo, int iAnsCnt) throws Exception;
 	
 	public int getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception;
 
@@ -99,6 +109,12 @@ public interface EzQuestionService {
 	public void updateResCnt(int brdId, int itemNo) throws Exception;
 
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
+	
+	
+
+	
+
+	
 
 		
 }

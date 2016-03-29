@@ -46,6 +46,16 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<QstAnswerVO>) list("EzQuestionDAO.getAnswerCnt", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getTableAnswer(Map<String, Object> map) {
+		return (List<String>) list("EzQuestionDAO.getTableAnswer", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getResponseAnswer(Map<String, Object> map) {
+		return (List<String>) list("EzQuestionDAO.getResponseAnswer", map);
+	}
+	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
 		return (QstResponsePersonVO) select("EzQuestionDAO.getResponsePerson", map);
 	}
@@ -115,6 +125,14 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public int getResponsePersonCnt(Map<String, Object> map) {
 		return (Integer) select("EzQuestionDAO.getResponsePersonCnt", map);
+	}
+	
+	public Integer pollRespCnt(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.pollRespCnt", map);
+	}
+	
+	public Integer pollRespCnt2(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.pollRespCnt2", map);
 	}
 	
 	public void callCreateMother(Map<String,Object> map) {
@@ -195,4 +213,5 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -22,6 +23,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
@@ -485,5 +487,70 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
 		map.put("v_pUserID", userId);
 		return ezQuestionDAO.getReadDateItemForResult(map);
+	}
+
+	@Override
+	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		List<String> list = ezQuestionDAO.getTableAnswer(map);
+		StringBuilder sb = new StringBuilder();
+		if(list != null){
+			sb.append("<DATA>");
+			for(String answerAnswerContent : list){
+				sb.append("<ROW>");
+				sb.append("<ANSWER_ANSWERCONTENT>");
+				sb.append("<ANSWER_ANSWERCONTENT>");
+				sb.append(answerAnswerContent);
+				sb.append("</ROW>");
+			}
+			sb.append("</DATA>");
+		}	
+		return sb.toString();
+	}
+
+	@Override
+	public String getResponseAnswer(int brdId, int itemNo, int questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		List<String> list = ezQuestionDAO.getResponseAnswer(map);
+		StringBuilder sb = new StringBuilder();
+		if(list != null){
+			sb.append("<DATA>");
+			for(String answerSubjectivity : list){
+				sb.append("<ROW>");
+				sb.append("<ANSWER_SUBJECTIVITY>");
+				sb.append(answerSubjectivity);
+				sb.append("</ANSWER_SUBJECTIVITY>");
+				sb.append("</ROW>");
+			}
+			sb.append("</DATA>");
+		}	
+		return sb.toString();
+	}
+
+	@Override
+	public Integer pollRespCnt(int brdId, int itemNo, int questionNo, int iAnsCnt) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		map.put("v_piCount", iAnsCnt);
+		return ezQuestionDAO.pollRespCnt(map);
+	}
+
+	@Override
+	public Integer pollRespCnt2(int brdId, int itemNo, int questionNo, int iAnsCnt) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		map.put("v_piCount", iAnsCnt);
+		return ezQuestionDAO.pollRespCnt2(map);
 	}	
+	
 }

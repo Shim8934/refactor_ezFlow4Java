@@ -156,6 +156,14 @@
 		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 	</procedure>
@@ -363,6 +371,40 @@
 				ITEM_NO = #v_pItemNo#
 			AND 
 				QUESTION_NO = #v_pQuesNo#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.pollRespCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)  CNT  
+			FROM 
+				EZQUESTION.TBLPOLL_RESPONSE 
+			WHERE  
+				BRD_ID = #v_pstrBrdID#
+			AND 
+				ITEM_NO = #v_pItemNo#
+			AND 
+				QUESTION_NO = #v_pQuesNo#
+			AND 
+				ANSWER_OBJECTIVITY = #v_piCount#
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.pollRespCnt2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)  CNT  
+			FROM 
+				EZQUESTION.TBLPOLL_RESPONSE 
+			WHERE  
+				BRD_ID = #v_pstrBrdID#
+			AND 
+				ITEM_NO = #v_pItemNo#
+			AND 
+				QUESTION_NO = #v_pQuesNo#
+			AND 
+				ANSWER_VIEWSELECT = #v_piCount#
 		]]>
 	</select>
 	
