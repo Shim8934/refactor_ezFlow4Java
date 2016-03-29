@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -462,4 +463,66 @@ public class EzEmailMailListController {
 		}										
 	}
 		
+	@RequestMapping(value="/ezEmail/mailDelete.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailDelete(@CookieValue("loginCookie") String loginCookie, 
+			@RequestParam("cmd") String cmd,
+			@RequestBody String bodyData, Model model) throws Exception {
+		logger.debug("mailDelete started");
+		logger.debug("cmd=" + cmd);
+		logger.debug("bodyData=" + bodyData);
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdAndPassword.get(0);
+		String password = userIdAndPassword.get(1);		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
+		
+		String folderId = null;
+		long[] uids = null;
+		if (cmd.equalsIgnoreCase("ALL")) {
+			folderId = uniqueId;
+		}
+		else {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+			String[] folderAndMsgIdArray = uniqueId.split(",");
+			folderId = folderAndMsgIdArray[0].split("/")[0];			
+			uids = new long[folderAndMsgIdArray.length];
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
+				String msgId = folderAndMsgId.split("/")[1];
+				uids[i] = Long.parseLong(msgId);
+			}	
+		}
+		logger.debug("folderId=" + folderId);		
+		
+		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource);
+				
+		IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
+		sourceFolder.open(Folder.READ_WRITE);		
+				
+		Message[] deleteMsgs = null;
+		if (cmd.equalsIgnoreCase("ALL")) {
+			deleteMsgs = sourceFolder.getMessages();
+		}
+		else {
+			deleteMsgs = sourceFolder.getMessagesByUID(uids);
+		}
+		
+		if (cmd.equalsIgnoreCase("BMOVE")) {
+			IMAPFolder deletedFolder = (IMAPFolder)imapAccess.getFolder(egovMessageSource.getMessage("ezEmail.t647"));			
+			sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+		}
+		sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				
+		sourceFolder.close(true);
+		imapAccess.close();		
+		
+		String returnData = "";
+		logger.debug("mailDelete ended");
+		
+		return returnData;				
+	}
+	
 }

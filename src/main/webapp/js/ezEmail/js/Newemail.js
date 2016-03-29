@@ -384,7 +384,7 @@ function Mail_MoveDeletePostSend(Mode, Url, szItemID) {
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", Url);
-    xmlhttp_mailMoveDelete.open("POST", "/myoffice/ezEmail/remote/mail_delete.aspx?cmd=" + Mode, true);
+    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDelete.do?cmd=" + Mode, true);
     xmlhttp_mailMoveDelete.onreadystatechange = event_xmlhttp_mailMoveDelete_Complete;
     event_xmlhttp_mailMoveDelete_Complete.mode = Mode;
     xmlhttp_mailMoveDelete.send(xmlpara);
