@@ -103,16 +103,14 @@
 	        }
 		        
 		    function displayUserList(DeptID) {
-		    	var xmlpara = createXmlDom();
-		        var objNode;
+		    	var xmlpara = createXmlDom();		        
             
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "xml",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayname;description;title", type : "user"},
-		        	success : function(result){
-alert(result);		        		
+		        	success : function(result){		        		
 		        		document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
@@ -395,6 +393,113 @@ alert(result);
 		            document.getElementById("admin_OK").checked = false;
 		            document.getElementById("admin_NO").checked = true;
 		        }	        
+		    }
+		    
+		    function confirm_onClick() {
+		        var listview = new ListView();
+		        listview.LoadFromID("ListViewMsgToView");
+		        var listviewSelected = listview.GetDataRows();
+		        var selectedTarget = "";
+		        var selectTargetListXML = "<DATA>";
+		        for (var nCnt1 = 0; nCnt1 < listviewSelected.length; nCnt1++) {
+		            selectTargetListXML += "<CN>" + listviewSelected[nCnt1].getAttribute("data1") + "</CN>";
+		            selectTargetListXML += "<NAME><![CDATA[" + listviewSelected[nCnt1].getAttribute("data2") + "]]></NAME>";
+		            selectTargetListXML += "<NAME2><![CDATA[" + listviewSelected[nCnt1].getAttribute("data3") + "]]></NAME2>";
+		            selectTargetListXML += "<DEPT><![CDATA[" + listviewSelected[nCnt1].getAttribute("data4") + "]]></DEPT>";
+		            selectTargetListXML += "<GROUP><![CDATA[" + listviewSelected[nCnt1].getAttribute("data5") + "]]></GROUP>";
+		            if (nCnt1 == 0)
+		                selectedTarget = listviewSelected[nCnt1].cells[0].innerText;
+		            else
+		                selectedTarget += ", " + listviewSelected[nCnt1].cells[0].innerText;
+		        }
+		        selectTargetListXML += "</DATA>";
+		        RetValue["window"].document.getElementById("selectedTarget").innerHTML = MakeXMLString(selectedTarget);
+		        if (ReturnFunction != null) {
+		            ReturnFunction(selectTargetListXML);
+		        }
+		        else {
+		            window.returnValue = selectTargetListXML;
+		        }
+		        window.close();
+		    }
+		    
+		    var checkname2_cross_dialogArguments = new Array();
+		    var rgParams = new Array();
+		    function cnsearch_click(pMode){
+		        if (cnkeyword.value == ""){
+		            alert("<spring:message code='ezBoard.t23'/>");
+		            cnkeyword.focus();
+		            return;
+		        }		        
+		        var adCount = 0;		        
+		        var xmlDOM = createXmlDom();
+
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : false,
+		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
+		        	success : function(result){
+		        		xmlDOM = result;
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		        	},
+		        	error : function(error){
+		        		alert("<spring:message code='ezBoard.t24'/>" + error);
+		        		xmlDOM = null;
+		        	}
+		        });		        
+		        
+		        if (adCount == 0) {
+		            alert("<spring:message code='ezBoard.t25'/>");
+		            return;
+		        }else if (adCount == 1){
+		            bSearch = true;
+		            g_xmlHTTP = createXMLHttpRequest();
+		            
+		            if (CrossYN()){
+		                var strQuery = "<DATA><DEPTID>" + GetElementsByTagName(xmlDOM, "DATA3")[0].textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            }else{
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA3").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            }
+		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }else{		            
+		            rgParams["addrBook"] = xmlDOM;
+		            rgParams["deptid"] = "";
+		            
+		            if (CrossYN()){
+		                checkname2_cross_dialogArguments[0] = rgParams;
+		                checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
+		                var checkName2_Cross = window.open("checkName2_Cross.aspx", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+		                try { checkName2_Cross.focus(); } catch (e) { }
+		            }else{
+		                var feature = "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(609, 352);
+		                window.showModalDialog("checkName2_Cross.aspx", rgParams, feature);
+
+		                if (rgParams["deptid"] != "") {
+		                    bSearch = true;
+		                    g_xmlHTTP = createXMLHttpRequest();
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		                    g_xmlHTTP.send(strQuery);
+		                }
+		            }
+		        }
+		    }
+
+		    function cnsearch_click_Complete(RetValue) {
+		        if (RetValue["deptid"] != "") {
+		            bSearch = true;
+		            g_xmlHTTP = createXMLHttpRequest();
+		            var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }
 		    }
 	    </script>
 	</head>
