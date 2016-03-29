@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,6 +23,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -645,20 +650,20 @@ System.out.println(strQuestionNo+"strQuestionNo");
 	            switch (attachVO.getAttachType()){
 	            case "1":
 	            	strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"1\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img style=\"cursor:pointer\" src=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(1," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
 	            	break;
 	            case "2":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"2\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(2," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
 	            case "3":
 	            	break;
 	            case "4":
 	            	break;
 	            case "5":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(\"3\",\"" + brdId + "\",\"" + itemNo + "\",\"" + strQuestionNo + "\",\"" + strAnswer + "\",\"" + strAttachNo + "\")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(3," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
 	            default:
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
 	            	break;
 	            }
 	        }
@@ -953,10 +958,12 @@ System.out.println(strQuestionNo+"strQuestionNo");
 		/** EZSP_GETREADDATEITEMFORRESULT*/
 		String readDate = ezQuestionService.getReadDateItemForResult(qstUserPollItemVO, userId);
 		/** EZSP_UPDATEREADDATE*/
+		Date sysDate=new Date();
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		if(readDate != null){
 			ezQuestionService.updateReadDate(qstUserPollItemVO, readDate, userId);
 		}else{
-			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, readDate);
+			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, formatter.format(sysDate));
 		}
 		
 		/** EZSP_GETUSERPERMISSION*/
@@ -1675,4 +1682,285 @@ System.out.println("idName:"+idName);
 		return "/ezQuestion/qstAttachFile";
 	}
 	
+	@RequestMapping(value="/ezQuestion/qstAttachView.do")
+	public String attachView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,ModelMap model) throws Exception{
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String href = "", type = "", title = "", filename = "";
+		String vBrdId = "5";
+		String vItemNo = "";
+		String strQuestionNo = "";
+		String strAnswer = "";
+		String strAttID = "";
+		 
+		if (request.getParameter("type") != null)
+            type = request.getParameter("type");
+        if (request.getParameter("BOARDID") != null)
+            vBrdId = request.getParameter("BOARDID");
+        if (request.getParameter("ITEMID") != null)
+            vItemNo = request.getParameter("ITEMID");
+        if (request.getParameter("QSTNO") != null)
+            strQuestionNo = request.getParameter("QSTNO");
+        if (request.getParameter("ANSNO") != null)
+            strAnswer = request.getParameter("ANSNO");
+        if (request.getParameter("ATTID") != null)
+            strAttID = request.getParameter("ATTID");
+        if (request.getParameter("href") != null){
+        	href=request.getParameter("href");
+        }
+        
+System.out.println("type@" + type);
+System.out.println("BOARDID@" + vBrdId);
+System.out.println("ITEMID@" + vItemNo);
+System.out.println("QSTNO@" + strQuestionNo);
+System.out.println("ANSNO@" + strAnswer);
+System.out.println("ATTID@" + strAttID);
+
+		
+//        QstAttachVO qstAttachVO = new QstAttachVO();
+//        qstAttachVO.setBrdId(Integer.parseInt(vBrdId));
+//        qstAttachVO.setItemNo(Integer.parseInt(vItemNo));
+//        qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
+//        qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
+//        qstAttachVO.setAttachNo(Integer.parseInt(strAttID));
+        
+        QstAttachVO qstAttachVO = ezQuestionService.getAttachInfo2(vBrdId, vItemNo, strQuestionNo, strAnswer, strAttID);
+        href=qstAttachVO.getAttachUrl();
+        filename = qstAttachVO.getAttachName();
+        
+        String fileExt = href.substring(href.lastIndexOf(","));
+        filename += fileExt;
+        
+        switch(type){
+        case "1":
+        	title = egovMessageSource.getMessage("ezQuestion.t178");
+        	break;
+        case "2":
+        	title = egovMessageSource.getMessage("ezQuestion.t179");
+        	break;
+        case "3":
+        	title = egovMessageSource.getMessage("ezQuestion.t180");
+        	break;
+        case "4":
+        	title = "URL " + egovMessageSource.getMessage("ezQuestion.t171");
+        	break;
+        }
+        model.addAttribute("qstAttachVO", qstAttachVO);
+        
+        return "/ezQuestion/qstAttachView";
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstInterFace.do")
+	public void qstInterFace(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception{
+		String pType = "5";
+		String pBoardID = "";
+		String pItemID = "";
+		String pQstNo = "";
+        String pAnsNo = "";
+        String pAttID = "";
+        String pFileName = "";
+        String pFilePath = "";
+		 
+		if (request.getParameter("TYPE") != null)
+            pType = request.getParameter("TYPE");
+		if (request.getParameter("FILENAME") != null)
+			pFileName = request.getParameter("FILENAME");
+        if (request.getParameter("BOARDID") != null)
+        	pBoardID = request.getParameter("BOARDID");
+        if (request.getParameter("ITEMID") != null)
+        	pItemID = request.getParameter("ITEMID");
+        if (request.getParameter("QSTNO") != null)
+        	pQstNo = request.getParameter("QSTNO");
+        if (request.getParameter("ANSNO") != null)
+        	pAnsNo = request.getParameter("ANSNO");
+        if (request.getParameter("ATTID") != null)
+        	pAttID = request.getParameter("ATTID");
+        
+        if(pType.equals("QUESTION")){
+                if (pFileName != "")
+                    pFilePath = "/Upload_BoardSTD/Upload_Question/" + pFileName;
+                else{
+                    pFilePath = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachUrl();
+                    pFileName = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
+                }
+                if (pFilePath != null && pFilePath != "")
+                    responseAttach(pFilePath, pFileName, true, request, response);
+        }
+	}
+	
+	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception{
+//		Response.Buffer = false;
+        String isUTF8 = "0";
+
+        for(Cookie cookie : request.getCookies()){
+        	if(cookie.getName().equals("UTF8_Option")){
+        		isUTF8 = cookie.getValue();
+        	}
+        }
+        
+        String filepath = pPhysicalFilePath;
+        String filename = pFileName;
+        String fileext = "";
+        if (filename.lastIndexOf(".") > -1)
+        {
+            fileext = filename.substring(filename.lastIndexOf(".")).toLowerCase();
+        }
+
+        filename = getProperFileName(filename, fileext, isUTF8);
+        boolean bAttachment = false;
+        if (pAttachment)
+        {
+            switch (fileext)
+            {
+                case ".eml":
+                case ".mht":
+                case ".xls":
+                case ".doc":
+                case ".pdf":
+                case ".hwp":
+                case ".ppt":
+                case ".docx":
+                case ".pptx":
+                case ".xlsx":
+                case ".rtf":
+                case ".jpg":
+                case ".gif":
+                case ".bmp":
+                case ".wmv":
+                case ".avi":
+                case ".mp4":
+                case ".mpeg":
+                    bAttachment = true;
+                    break;
+                default:
+                    bAttachment = false;
+                    break;
+            }
+            bAttachment = true;
+        }
+        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent")=="") ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
+                            "IE" : request.getHeader("User-Agent").indexOf("Trident") > -1 ? "IE" : "NONE";
+
+        if (bAttachment)
+        {
+            if (isUTF8 == "0" && usebrowser == "IE")
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"),"UTF-8") + "\"");
+            else if (isUTF8 == "0" && usebrowser != "IE")
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + (filename) + "\"");
+            else
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+        }
+        else
+        {
+            if (isUTF8 == "0" && usebrowser == "IE")
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+            else if (isUTF8 == "0" && usebrowser != "IE")
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+            else
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+        }
+
+        if (fileext == ".pdf")
+            response.setContentType("application/pdf");
+        else
+            response.setContentType("application/octet-stream");
+
+        filepath = "C:\\/FileData" +filepath;
+        File file = new File(filepath);
+        FileInputStream is = new FileInputStream(file);
+        
+        IOUtils.copy(is,response.getOutputStream());
+	}
+	
+	public String getProperFileName(String pOrgFileName, String pOrgFileExt, String pIsUTF8) throws Exception{
+		int length = 0;
+        int lengthLimit = 10000;
+        String newFileName = "";
+
+        if (pOrgFileExt != "")
+        	pOrgFileName = pOrgFileName.substring(0, pOrgFileName.lastIndexOf("."));
+        if (pOrgFileExt == ".doc" || pOrgFileExt == ".xls" || pOrgFileExt == ".ppt")
+        	lengthLimit = 110;
+        if (pIsUTF8 == "0")
+        	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
+        else
+        	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
+
+        if (length > lengthLimit){
+            newFileName = pOrgFileName;
+            while (length > lengthLimit){
+                newFileName = newFileName.substring(0, newFileName.length() - 1);
+                if (pIsUTF8 == "0") 
+                	length = URLEncoder.encode(newFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
+                else 
+                	length = URLEncoder.encode(newFileName + pOrgFileExt, "UTF-8").replace("+", "%20").length();
+            }
+            pOrgFileName = newFileName;
+        }
+
+        return pOrgFileName + pOrgFileExt;
+	}
+	//답변보기
+	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
+	public String qstResultSubjective(HttpServletRequest request){
+		String brdId = "", itemNo = "", questionNo = "";
+        int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
+        int pPageSize = 0, pageCount = 0, pBlockSize = 0;
+        String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
+        String pAnsType = "";
+        
+        if (request.getParameter("brd_id") != null)
+            brdId = request.getParameter("brd_id");
+        if (request.getParameter("item_no") != null)
+            itemNo = request.getParameter("item_no");
+        if (request.getParameter("question_no") != null)
+            questionNo = request.getParameter("question_no");
+        if (request.getParameter("page_count") != null)
+            pageCount = Integer.parseInt(request.getParameter("page_count"));
+        
+        pPageSize = 15;
+        pBlockSize = 10;
+        
+        if (request.getParameter("page") != null){
+            if (request.getParameter("page") != "")
+                pCurrPage = Integer.parseInt(request.getParameter("page"));
+            else
+                pCurrPage = 1;
+        }else
+            pCurrPage = 1;
+
+//        SettingPermission();
+        QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+        qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+        qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
+//        qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
+        publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
+        publicFlg = qstUserPermissionVO.getPublicFlg();
+        multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
+        
+        
+//        DataCount();
+        /** EZSP_RESULTSUBJECTIVELISTCNT*/
+//        null체크
+//        pTotalCnt = ezQuestionService.resultSubjectiveListCnt();
+        
+        pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
+        if (pageCount == 0)
+            pageCount = -1;
+        else
+            pageCount = pageCount - 1;
+        
+//        dataProcess();
+        int iStart = (pCurrPage - 1) * pPageSize;
+        /** EZSP_RESULTSUBJECTIVELIST*/
+//        ezQuestionService.resultSubjectiveList();    -> 결과물 XML로 변환
+        
+        
+		return null;
+	}
+	public String DataProcessType(){
+		String pAnsType = "";
+//		QstVO qstVO = ezQuestionService.getQuestionForSubjective();
+//		pAnsType = qstVO.getAnswerType();
+		return null;
+	}
 }

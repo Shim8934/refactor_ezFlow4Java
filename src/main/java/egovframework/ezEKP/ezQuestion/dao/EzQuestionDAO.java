@@ -72,6 +72,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (QstUserPermissionVO) select("EzQuestionDAO.getResponseRange", map);
 	}
 	
+	public QstAttachVO getAttachInfo2(Map<String, Object> map) {
+		return (QstAttachVO) select("EzQuestionDAO.getAttachInfo2",map);
+	}
+	
 	public String getItemSeq(String brdId) {
 		return (String)select("EzQuestionDAO.getItemSeq", brdId);
 	}
@@ -213,5 +217,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+
+
 
 }

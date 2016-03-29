@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -23,7 +22,6 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl implements EzQuestionService{
@@ -551,6 +549,19 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pQuesNo", questionNo);
 		map.put("v_piCount", iAnsCnt);
 		return ezQuestionDAO.pollRespCnt2(map);
+	}
+
+	@Override
+	public QstAttachVO getAttachInfo2(String vBrdId, String vItemNo, String strQuestionNo, String strAnswer, String strAttID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", vBrdId);
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", strQuestionNo);
+		map.put("v_pAnswerNo", strAnswer);
+		map.put("v_pAttachNo", strAttID);
+		return ezQuestionDAO.getAttachInfo2(map);
 	}	
+	
+	
 	
 }
