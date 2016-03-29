@@ -147,6 +147,10 @@
 	<procedure id="EzQuestionDAO.getResponsePerson" parameterClass="Map" resultMap="qstResponsePersonVO">
 		{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzQuestionDAO.getAttachInfo2" parameterClass="Map" resultMap="qstAttachVO">
+		{CALL EZQUESTION.EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}

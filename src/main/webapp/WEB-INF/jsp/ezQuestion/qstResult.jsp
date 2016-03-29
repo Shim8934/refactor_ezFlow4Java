@@ -33,13 +33,14 @@
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
+alert(receve);
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
-			<%-- function fun_ResponseView(question_no) {
-				var szUrl = "Qst_Result_Subjective_Cross.aspx?brd_id=" + '<%=v_brd_id%>' + "&item_no=" + '<%=v_item_no%>' + "&question_no=" + question_no;
+			function fun_ResponseView(question_no) {
+				var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + brdId + "&item_no=" + itemNo + "&question_no=" + question_no;
 			    window.location.href = szUrl;
-			} --%>
+			}
 			
 			function UserInfo(questionNo, answerNo, type){
 			}
@@ -83,15 +84,18 @@
 			    window.location.href = szUrl;
 			}
 
-			/* function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
-				var pUrl = "/ezQuestion/qstAttachView.do?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);	
-			    if(pType == "1")
-			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
-			    else if(pType == "3")
-			        openwindow(pUrl, "", "420px", "410px", "0", "0", "500");
-			    else
-			        openwindow(pUrl, "", "415px", "120px", "0", "0", "500");
-			} */
+			function file_open(pHref, pType, pFileName) {
+alert(pHref);
+alert(pType);
+alert(pFileName);
+		        var pUrl = "/ezQuestion/qstAttachView.do?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);
+		        if (pType == "1")
+		            openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
+		        else if (pType == "3")
+		            openwindow(pUrl, "", "440px", "490px", "0", "0", "500");
+		        else
+		            openwindow(pUrl, "", "440px", "310px", "0", "0", "500");
+		    }
 
 			function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {
 			    try {

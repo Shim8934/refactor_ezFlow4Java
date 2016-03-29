@@ -252,6 +252,12 @@ alert(receve);
 			}
 			
 			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
+alert(pType);
+alert(pBrdID);
+alert(pItemID);
+alert(pQstNo);
+alert(pAnsNo);
+alert(pAttID);
 			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
 	
 			    if(pType == "1")
