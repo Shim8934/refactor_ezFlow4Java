@@ -59,6 +59,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchBoardItemList(Map<String, Object> map) {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchBoardItemList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception{
 		return (List<String>) list("EzBoardDAO.getCopyItemAttach", orgItemID);
 	}
@@ -147,8 +152,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getCheckApprUserList", map);
 	}
 	
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception{
-		return (int) select("EzBoardDAO.getSearchBoardItemCount", boardVO);
+	public int getSearchBoardItemCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getSearchBoardItemCount", map);
 	}
 	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception{
@@ -198,5 +203,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void deleteTempItem(Map<String, Object> map) throws Exception{
 		delete("EzBoardDAO.deleteTempItem", map);
 	}
+
 
 }

@@ -250,7 +250,6 @@
 		    }
 		    var xmlhttp = createXMLHttpRequest();
 		    function getBoardList(type) {
-alert(SQLPARADATA);
 		        if (type == "1") {
 		            SQLPARADATA = "";
 		            CurPage = 1;
@@ -828,7 +827,7 @@ alert(SQLPARADATA);
 		    }
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/AddToMyBoards.aspx?BoardID=" + pBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + pBoardID, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {

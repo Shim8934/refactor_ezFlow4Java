@@ -885,13 +885,14 @@ public class EzBoardController extends EgovFileMngUtil{
         }else{
         	boardXML = getSearchBoardListItemXML(userInfo, boardVO);
         }
-    	return "";
+    	return boardXML;
     }
 
 	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception{
 		String orderOption1 = "";
         String orderOption2 = "";
         String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        boardVO.setLang(userInfo.getLang());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
 
@@ -911,10 +912,104 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
             }
         }
-System.out.println(boardVO.getSearchQuery());
         int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
-System.out.println(boardCount);
-		return null;
+        BoardListVO boardListVO = new BoardListVO();
+        boardListVO.setPageCount(boardCount);
+        boardListVO.setTotalCount(boardCount);
+        boardListVO.setStartRow(1);
+        boardListVO.setEndRow(0);
+        boardListVO.setOrderBySub(orderOption1);
+        boardListVO.setOrderByMain(orderOption2);
+        boardListVO.setUserID(userInfo.getId());
+        
+        BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo.getId());
+        
+        boardListVO.setStartRow(boardConfigVO.getListCount() * (boardVO.getPageNum()-1) + 1);
+        boardListVO.setEndRow(boardConfigVO.getListCount() * boardVO.getPageNum());
+        
+        if(boardVO.getTitle() == null){
+        	boardVO.setTitle("");
+        }
+        if(boardVO.getABSTRACT() == null){
+        	boardVO.setABSTRACT("");
+        }
+        if(boardVO.getWriterName() == null){
+        	boardVO.setWriterName("");
+        }
+        List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(boardListVO, boardVO);
+		
+        int dlength = boardSearchList.size();
+        //XML 생성 수정요망
+        StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>"+boardConfigVO.getTotalCnt()+"</TOTALCNT>");
+        resultXML.append("<PAGECNT>"+boardConfigVO.getPageCnt()+"</PAGECNT>");
+        resultXML.append("<PERSONALCNT>"+boardConfigVO.getTotalCnt()+"</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for(BoardListHeaderVO vo:headerList){
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        String fieldName = "";
+        String fieldValue = "";
+        
+        for(int j = 0; j < dlength; j++){
+        	resultXML.append("<ROW>");
+            for(i = 0; i < hlength; i++){
+            	resultXML.append("<CELL>");
+            	fieldName = headerList.get(i).getColName().toUpperCase();
+
+                if(fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")){
+                    fieldName = fieldName + strMultiData;
+                }
+                if(fieldName.equals("WRITEDATE")){
+                	fieldValue =(String)boardSearchList.get(j).get(fieldName);
+                }else
+                    fieldValue = String.valueOf(boardSearchList.get(j).get(fieldName));
+                
+                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                
+                if(i == 0){
+                	resultXML.append("<DATA1>"+boardSearchList.get(j).get("BOARDID")+"</DATA1>");
+                	resultXML.append("<DATA2>"+boardSearchList.get(j).get("ITEMID")+"</DATA2>");
+        			resultXML.append("<DATA3>"+boardSearchList.get(j).get("WRITERID")+"</DATA3>");
+					resultXML.append("<DATA4>"+boardSearchList.get(j).get("IMPORTANCE")+"</DATA4>");
+					resultXML.append("<DATA5>"+boardSearchList.get(j).get("READFLAG")+"</DATA5>");
+					resultXML.append("<DATA6>"+boardSearchList.get(j).get("ABSTRACT")+"</DATA6>");
+					if(EgovDateUtil.getDaysDiff(boardSearchList.get(j).get("WRITEDATE").toString().substring(0, 10), EgovDateUtil.getToday()) < 0){
+						resultXML.append("<DATA7>Y</DATA7>");
+					}else{
+						resultXML.append("<DATA7>N</DATA7>");
+					}
+					resultXML.append("<DATA8>"+boardSearchList.get(j).get("ITEMLEVEL")+"</DATA8>");
+					resultXML.append("<DATA9>"+boardSearchList.get(j).get("NOTICE")+"</DATA9>");
+					resultXML.append("<DATA10>"+boardSearchList.get(j).get("GUBUN")+"</DATA10>");
+					resultXML.append("<DATA11>"+boardSearchList.get(j).get("ONELINECNT")+"</DATA11>");
+					resultXML.append("<DATA12>"+boardSearchList.get(j).get("MAINCONTENT")+"</DATA12>");
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
+        }
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+		return resultXML.toString();
 	}
 
 	public String getNewItemList(BoardVO boardVO, LoginVO userInfo) throws Exception{
@@ -1001,7 +1096,6 @@ System.out.println(boardCount);
             	resultXML.append("<CELL>");
             	fieldName = headerList.get(i).getColName().toUpperCase();
 
-            	// 수정(2007.06.18) : multidata 기능 추가
                 if(fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")){
                     fieldName = fieldName + strMultiData;
                 }

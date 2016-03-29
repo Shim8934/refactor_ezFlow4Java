@@ -10,6 +10,8 @@ public class BoardListVO {
 	private int endRow;
 	/** 게시글 총갯수*/
 	private int totalCount;
+	/** 페이지 개수*/
+	private int pageCount;
 	/** 서브쿼리 정렬*/
 	private String orderBySub;
 	/** 메인쿼리 정렬*/
@@ -466,6 +468,12 @@ public class BoardListVO {
 	}
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+	public int getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
 	}
 	
 }

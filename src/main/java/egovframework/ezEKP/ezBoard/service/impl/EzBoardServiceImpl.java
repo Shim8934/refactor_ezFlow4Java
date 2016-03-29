@@ -252,6 +252,24 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PBOARDID", boardVO.getBoardId());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TITLE", boardVO.getTitle());
+		map.put("v_WRITERNAME", boardVO.getWriterName());
+		map.put("v_ABSTRACT", boardVO.getABSTRACT());
+		return ezBoardDAO.getSearchBoardItemList(map);
+	}
+
+	@Override
 	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ITEMID", itemID);
@@ -313,7 +331,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Override
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception {
-		return ezBoardDAO.getSearchBoardItemCount(boardVO);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardVO.getBoardId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		return ezBoardDAO.getSearchBoardItemCount(map);
 	}
 
 	@Override
