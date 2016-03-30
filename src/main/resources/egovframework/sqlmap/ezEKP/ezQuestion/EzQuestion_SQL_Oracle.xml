@@ -216,6 +216,10 @@
 		{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.deletePermission" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
@@ -454,5 +458,6 @@
 				 brd_id = #v_pstrBrdID#  
 		]]>
 	</update>
+
 	
 </sqlMap>
