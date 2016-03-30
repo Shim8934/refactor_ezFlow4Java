@@ -259,6 +259,7 @@ alert(pQstNo);
 alert(pAnsNo);
 alert(pAttID);
 			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
+alert(pUrl);
 	
 			    if(pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");

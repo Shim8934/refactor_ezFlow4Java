@@ -84,18 +84,16 @@ alert(receve);
 			    window.location.href = szUrl;
 			}
 
-			function file_open(pHref, pType, pFileName) {
-alert(pHref);
-alert(pType);
-alert(pFileName);
-		        var pUrl = "/ezQuestion/qstAttachView.do?href=" + pHref + "&type=" + pType + "&filename=" + escape(pFileName);
-		        if (pType == "1")
-		            openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
-		        else if (pType == "3")
-		            openwindow(pUrl, "", "440px", "490px", "0", "0", "500");
-		        else
-		            openwindow(pUrl, "", "440px", "310px", "0", "0", "500");
-		    }
+			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID) {
+			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
+
+			    if (pType == "1")
+			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
+			    else if (pType == "3")
+			        openwindow(pUrl, "", "420px", "410px", "0", "0", "500");
+			    else
+			        openwindow(pUrl, "", "415px", "120px", "0", "0", "500");
+			}
 
 			function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {
 			    try {
