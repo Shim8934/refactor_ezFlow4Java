@@ -3,6 +3,7 @@
 <html>
 	<head>
 		<title></title>
+		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script  type="text/javascript" src="/js/ckEditor/ckeditor.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
@@ -40,7 +41,7 @@
 			    var tempStr = "";
 			    tempStr = ConvertMHTtoHTML(url);
 			    tempXML = loadXMLString(tempStr);
-		
+
 			    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 			    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 			    return getNodeText(XmlBodyDATA);

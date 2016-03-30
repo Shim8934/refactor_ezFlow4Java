@@ -20,24 +20,30 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /**
  * 공통적으로 사용되는 메소드 집합 Controller
  */
 @Controller
-public class EzCommonController{
+public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -599,7 +605,7 @@ public class EzCommonController{
 	
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTML(HttpServletRequest request) throws Exception{
+	public String mhtToHTMLContent(HttpServletRequest request) throws Exception{
 		String itemID = "";
 		String type = "";
 		String realPath = request.getServletContext().getRealPath("");
@@ -607,7 +613,7 @@ public class EzCommonController{
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		strResult = getMHTtoHTML(type, itemID.replace("%7B", "{").replace("%7D", "}"), realPath);
+		strResult = getMHTtoHTML(type, itemID, realPath);
 
 		return strResult;
 	}
@@ -631,7 +637,7 @@ public class EzCommonController{
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         if(strHTML.trim().length() > 0){
-        	return strHTML;
+        	return strHTML.replace("&amp;", "&").replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
         }else{
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
@@ -739,5 +745,89 @@ public class EzCommonController{
 	    }
         return strMhtData;
     }
+	
+	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mhtToHTML(HttpServletRequest request) throws Exception{
+		String filePath = "";
+        String uploadModule = config.getProperty("LocalPath");
+        String realPath = request.getServletContext().getRealPath("");
+        String strURL = request.getParameter("strURL");
+        
+        strURL = strURL.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+        filePath = realPath + uploadModule;
+        
+        File file = new File(filePath);
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        String m_strMHT = "";
+        
+        try {
+        	m_strMHT = loadMHTFile(realPath + strURL);
+		} catch (Exception e) {
+			m_strMHT= "";
+		}
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+        strHTML = makeXMLString(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
+        
+		return "<BODYDATA>" + strHTML + "</BODYDATA>";
+	}
+	
+	public String makeXMLString(String orgString){
+		if(orgString != null){
+			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		}else{
+			return orgString;
+		}
+	}
+	
+	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
+	public String ckImageUpload(){
+		return "ezCommon/ckImageUpload";
+	}
+	
+	@RequestMapping(value = "/ezCommon/ckUpload.do")
+	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		MultipartFile multiFile = request.getFile("file1");
+		
+		String fileType = multiFile.getContentType().split("/")[1];
+		String filePath = config.getProperty("upload_common.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		String today = EgovDateUtil.getToday();
+		String fileName = UUID.randomUUID() + "." + fileType;		
+		
+		filePath = filePath + "/" + today;
+		File file = new File(realPath + filePath);
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        
+        int width = 0;
+		int height = 0;
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		File imageFile = new File(realPath + filePath + "/" + fileName);			
+	
+		if(imageFile.exists()){			
+			BufferedImage bi = ImageIO.read(new File(realPath + filePath + "/" + fileName));			    
+			width = bi.getWidth();
+			height = bi.getHeight();
+		}
+		
+		model.addAttribute("imgPath", (realPath + filePath).replace("\\", "/") + "/" + fileName +  "|!|" + width + "|!|" + height);
+		
+		if(request.getParameter("CKEditor") != null){
+			response.setContentType("text/plain"); 
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write(("<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (realPath + filePath).replace("\\", "/") + "/" + fileName + "', '')</script>"));
+            
+            return "";
+		}else{
+			return "ezCommon/ckUpload";
+		}
+	}
 
 }

@@ -676,19 +676,18 @@ function CrossYN() {
 // CK Editer 관련 함수 ////////////////////////////////////////////////
 function ConvertMHTtoHTML(pURL) {
     var rtnVal = '';
-    try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "strURL", pURL);
-        xmlhttp.open("POST", "/myoffice/CKEditor/MHTtoHTML.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        if (xmlhttp.status == "200") rtnVal = xmlhttp.responseText;
-    }
-    catch (e) { }
-    finally { return rtnVal }
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezCommon/mhtToHTML.do",
+		data : { strURL   : pURL 
+  			   },
+		success: function(result){
+			rtnVal = result;
+		}        			
+	});
+    return rtnVal;
 }
 
 function ConvertHTMLtoMHT(pContent) {

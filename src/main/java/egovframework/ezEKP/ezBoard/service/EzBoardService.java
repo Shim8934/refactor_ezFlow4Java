@@ -80,6 +80,8 @@ public interface EzBoardService {
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
 	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
+	
+	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
 	
@@ -102,5 +104,6 @@ public interface EzBoardService {
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+
 
 }

@@ -129,6 +129,13 @@
 										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_TEMP(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_SET_LISTORDER(#v_ORDERBOARDIDLIST#, #v_ORDERBOARDLISTCOUNT#, #v_DELBOARDIDLIST#, #v_DELBOARDLISTCOUNT#, #v_USERID#, #v_ERR_CD,javaType=java.lang.Integer,jdbcType=INTEGER,mode=INOUT#)}
 	</procedure>

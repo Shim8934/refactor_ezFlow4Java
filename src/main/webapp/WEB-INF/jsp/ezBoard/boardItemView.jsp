@@ -59,7 +59,7 @@
 			var gubun = "${guBun}";
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
-		
+			var pNoneActiveX = "YES";
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";
 		    var AtttributeCount = 0; 
@@ -75,7 +75,7 @@
 						async : false,
 						url : "/ezCommon/mhtToHTMLContent.do",
 						data : { type   : "BOARDCONTENT", 
-								 itemID 	 : escape(pItemID)
+								 itemID 	 : pItemID
 							   },
 						success: function(result){
 							html = result;
@@ -304,20 +304,20 @@
 		            alert("<spring:message code='ezBoard.t303' />");
 		            return;
 		        }
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
-		        }
-		        else {
-		            if (pUse_IE11Browser == "CK") {
-		                window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
-		            }
-		            else {
-		                if(pUse_Editor == "")
-		                    window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
-		                else
-		                    window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=reply";
-		            }
-		        }
+// 		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+// 		        }
+// 		        else {
+// 		            if (pUse_IE11Browser == "CK") {
+// 		                window.location.href = "NewBoardItem_Cross.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+// 		            }
+// 		            else {
+// 		                if(pUse_Editor == "")
+// 		                    window.location.href = "NewBoardItem.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+// 		                else
+// 		                    window.location.href = "NewBoardItem_IE.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+// 		            }
+// 		        }
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {

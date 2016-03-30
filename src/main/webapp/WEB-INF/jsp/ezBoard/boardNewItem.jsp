@@ -410,7 +410,6 @@
 		                return;
 		            }
 		        }
-		
 		        if (MHTLoadComplete != "true") {
 		            alert("<spring:message code='ezBoard.t368' />");
 		            return;
@@ -539,41 +538,42 @@
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
-		            if (SSUserName == "" || SSUserName2 == "" ||
-				        SSDeptName == "" || SSDeptName2 == "" ||
-				        SSCompanyName == "" || SSCompanyName2 == "") {
-		                var tmpXmlDom = createXmlDom();
-		                var tmpXmlHttp = createXMLHttpRequest();
+		        	//ad 가져오는 부분이라 안쓰임
+// 		            if (SSUserName == "" || SSUserName2 == "" ||
+// 				        SSDeptName == "" || SSDeptName2 == "" ||
+// 				        SSCompanyName == "" || SSCompanyName2 == "") {
+// 		                var tmpXmlDom = createXmlDom();
+// 		                var tmpXmlHttp = createXMLHttpRequest();
 
-		                var objNode;
-		                createNodeInsert(tmpXmlDom, objNode, "DATA");
-		                createNodeAndInsertText(tmpXmlDom, objNode, "CN", SSUserID);
-		                createNodeAndInsertText(tmpXmlDom, objNode, "PROP", "DisplayName;Description;Company");
-		                createNodeAndInsertText(tmpXmlDom, objNode, "CATE", "user");
-		                tmpXmlHttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-		                tmpXmlHttp.send(tmpXmlDom);
-		                var tmpRetXml = loadXMLString(tmpXmlHttp.responseText);
-		                if (getXmlString(tmpRetXml) != "") {
-		                    var tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME1"));
-		                    if (tmpVal != "")
-		                        SSUserName = tmpVal;
-		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME2"));
-		                    if (tmpVal != "")
-		                        SSUserName2 = tmpVal;
-		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION1"));
-		                    if (tmpVal != "")
-		                        SSDeptName = tmpVal;
-		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION2"));
-		                    if (tmpVal != "")
-		                        SSDeptName2 = tmpVal;
-		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY1"));
-		                    if (tmpVal != "")
-		                        SSCompanyName = tmpVal;
-		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY2"));
-		                    if (tmpVal != "")
-		                        SSCompanyName2 = tmpVal;
-		                }
-		            }
+// 		                var objNode;
+// 		                createNodeInsert(tmpXmlDom, objNode, "DATA");
+// 		                createNodeAndInsertText(tmpXmlDom, objNode, "CN", SSUserID);
+// 		                createNodeAndInsertText(tmpXmlDom, objNode, "PROP", "DisplayName;Description;Company");
+// 		                createNodeAndInsertText(tmpXmlDom, objNode, "CATE", "user");
+// 		                tmpXmlHttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
+// 		                tmpXmlHttp.send(tmpXmlDom);
+// 		                var tmpRetXml = loadXMLString(tmpXmlHttp.responseText);
+// 		                if (getXmlString(tmpRetXml) != "") {
+// 		                    var tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME1"));
+// 		                    if (tmpVal != "")
+// 		                        SSUserName = tmpVal;
+// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME2"));
+// 		                    if (tmpVal != "")
+// 		                        SSUserName2 = tmpVal;
+// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION1"));
+// 		                    if (tmpVal != "")
+// 		                        SSDeptName = tmpVal;
+// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION2"));
+// 		                    if (tmpVal != "")
+// 		                        SSDeptName2 = tmpVal;
+// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY1"));
+// 		                    if (tmpVal != "")
+// 		                        SSCompanyName = tmpVal;
+// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY2"));
+// 		                    if (tmpVal != "")
+// 		                        SSCompanyName2 = tmpVal;
+// 		                }
+// 		            }
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
@@ -1247,7 +1247,19 @@
 		            flag = true;
 		            if (pMode == "new" || pModeOld == "loadpc" || pMode == "boardAttach") {
 		                if (pcheckForm.toUpperCase() == "TRUE") {
-		                    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
+		                	var fullPath = "";
+		                	$.ajax({
+		    					type : "POST",
+		    					dataType : "text",
+		    					async : false,
+		    					url : "/ezBoard/getContentInfo.do",	        			
+		    					data : { type : "BOARDFORM", 
+		    							 docID: pBoardID
+		    						   },
+		    					success: function(result){
+		    						fullPath = result;
+		    					}        			
+		    				});	
 		                    var htmlData = message.SetEditorContentURL2(fullPath);
 		                    message.SetEditorContent(htmlData);
 		                }
@@ -1259,11 +1271,15 @@
 		            }
 		            else {
 		                if (pUrl == "") {
-		                    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+		                    var fullPath = strContentLocation;
 		                    if (pMode == "reply") {
 		                        var htmlData = message.SetEditorContentURL2(fullPath);
 		                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
+		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
+		                        htmlData = ReplaceText(htmlData, "&lt;", "<");
+		                        htmlData = ReplaceText(htmlData, "&gt;", ">");
+		                        
 		                        htmlData = "<body free>" + htmlData + "</body>";
 		                        if (gubun != "2")
 		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "${boardListVO.title}" + "<br><br>" + htmlData;
@@ -1533,95 +1549,92 @@
 		
 		    var backxmlhttp = null;
 		    function GetBackGroundImage() {
-		        backxmlhttp = null;
-		        backxmlhttp = createXMLHttpRequest();
-		
-		        var Xmldom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(Xmldom, objNode, "DATA");
-		        createNodeAndInsertText(Xmldom, objNode, "TYPE", "USE");
-		        createNodeAndInsertText(Xmldom, objNode, "BACKGROUNDID", "");
-		
-		        backxmlhttp.open("POST", "admin/interASP/GetBackGroundImage.aspx", true);
-		        backxmlhttp.onreadystatechange = event_Get_listComplite;
-		        backxmlhttp.send(Xmldom);
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/admin/ezBoard/getBackGroundImage.do",	        			
+					data : { type : "USE", 
+							 backGroundID: ""
+						   },
+					success: function(resultXml){
+						event_Get_listComplite(resultXml);
+					}        			
+				});	
 		    }
 		
-		    function event_Get_listComplite() {
-		        if (backxmlhttp == null || backxmlhttp.readyState != 4)
-		            return;
-		        if (backxmlhttp.status >= 200 && backxmlhttp.status < 300) {
-		            var backxml = loadXMLString(backxmlhttp.responseText);
-		            var i;
-		            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {
-		                if (i == 5) {
-		                    var br = document.createElement("BR");
-		                    document.getElementById("backgroundtd").appendChild(br);
-		                }
-		                var span = document.createElement("SPAN");
-		                span.setAttribute("imgwidth", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "WIDTH")[i]));
-		                span.setAttribute("imgheight", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "HEIGHT")[i]));
-		                span.setAttribute("filemane", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]));
-		
-		                var input = document.createElement("INPUT");
-		                input.style.verticalAlign = "top";
-		                input.style.marginTop = "10px";
-		                input.name = "backradio";
-		                input.type = "radio";
-		                input.onchange = function () { backgroundimagechange(); };
-		
-		                var img = document.createElement("IMG");
-		                img.width = 90;
-		                img.height = 30;
-		                img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDBACKGROUND&ITEMID=1&ATTID=SS_" + getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
-		                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
-		                img.style.cursor = "pointer";
-		
-		                span.appendChild(input);
-		                span.appendChild(img);
-		
-		                document.getElementById("backgroundtd").appendChild(span);
-		            }
-		            if (i == 5) {
-		                var br = document.createElement("BR");
-		                document.getElementById("backgroundtd").appendChild(br);
-		            }
-		            var span = document.createElement("SPAN");
-		            var input = document.createElement("INPUT");
-		            input.style.verticalAlign = "top";
-		            input.style.marginTop = "10px";
-		            input.name = "backradio";
-		            input.type = "radio";
-		            input.onchange = function () { backgroundimagechange(); };
-		
-		            var label = document.createElement("LABEL");
-		            label.style.display = "inline-block";
-		            label.style.verticalAlign = "top";
-		            label.style.marginTop = "10px";
-		            label.style.marginBottom = "5px";
-		
-		            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
-		            label.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
-		            label.style.cursor = "pointer";
-		
-		            span.appendChild(input);
-		            span.appendChild(label);
-		
-		            document.getElementById("backgroundtd").appendChild(span);
-		
-		            var a = document.createElement("A");
-		            a.className = "imgbtn";
-		            a.style.verticalAlign = "top";
-		            a.style.marginTop = "5px";
-		            a.style.marginLeft = "10px";
-		
-		            var span = document.createElement("SPAN");
-		            span.innerHTML = "<spring:message code='ezBoard.t5010' />";
-		            span.onclick = function () { BackImageUp(); };
-		
-		            a.appendChild(span);
-		            document.getElementById("backgroundtd").appendChild(a);
-		        }
+		    function event_Get_listComplite(resultXml) {
+	            var backxml = loadXMLString(resultXml);
+	            var i;
+	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {
+	                if (i == 5) {
+	                    var br = document.createElement("BR");
+	                    document.getElementById("backgroundtd").appendChild(br);
+	                }
+	                var span = document.createElement("SPAN");
+	                span.setAttribute("imgwidth", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "WIDTH")[i]));
+	                span.setAttribute("imgheight", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "HEIGHT")[i]));
+	                span.setAttribute("filemane", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]));
+	
+	                var input = document.createElement("INPUT");
+	                input.style.verticalAlign = "top";
+	                input.style.marginTop = "10px";
+	                input.name = "backradio";
+	                input.type = "radio";
+	                input.onchange = function () { backgroundimagechange(); };
+	
+	                var img = document.createElement("IMG");
+	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
+	                img.width = 90;
+	                img.height = 30;
+	                img.src = "<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")' />" + "/S_" + filepath;
+	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
+	                img.style.cursor = "pointer";
+	
+	                span.appendChild(input);
+	                span.appendChild(img);
+	
+	                document.getElementById("backgroundtd").appendChild(span);
+	            }
+	            if (i == 5) {
+	                var br = document.createElement("BR");
+	                document.getElementById("backgroundtd").appendChild(br);
+	            }
+	            var span = document.createElement("SPAN");
+	            var input = document.createElement("INPUT");
+	            input.style.verticalAlign = "top";
+	            input.style.marginTop = "10px";
+	            input.name = "backradio";
+	            input.type = "radio";
+	            input.onchange = function () { backgroundimagechange(); };
+	
+	            var label = document.createElement("LABEL");
+	            label.style.display = "inline-block";
+	            label.style.verticalAlign = "top";
+	            label.style.marginTop = "10px";
+	            label.style.marginBottom = "5px";
+	
+	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
+	            label.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
+	            label.style.cursor = "pointer";
+	
+	            span.appendChild(input);
+	            span.appendChild(label);
+	
+	            document.getElementById("backgroundtd").appendChild(span);
+	
+	            var a = document.createElement("A");
+	            a.className = "imgbtn";
+	            a.style.verticalAlign = "top";
+	            a.style.marginTop = "5px";
+	            a.style.marginLeft = "10px";
+	
+	            var span = document.createElement("SPAN");
+	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";
+	            span.onclick = function () { BackImageUp(); };
+	
+	            a.appendChild(span);
+	            document.getElementById("backgroundtd").appendChild(a);
 		    }
 		
 		    function backgroundimagechange() {
@@ -1643,7 +1656,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDBACKGROUND&ITEMID=1&ATTID=" + "S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
+		                    Td.style.backgroundImage = "URL(<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
@@ -1675,101 +1688,53 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 330) / 2;
 		        var pLeft = (pwidth - 610) / 2;
-		        window.open("ImageUpload.aspx?", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=355,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=355,width=610,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
-		    function BackImageUp_After(rtn) {
-		        var xmlhttp = null;
-		        xmlhttp = createXMLHttpRequest();
-		
-		        var Xmldom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(Xmldom, objNode, "DATA");
-		        createNodeAndInsertText(Xmldom, objNode, "FILEPATH", rtn[0]);
-		        createNodeAndInsertText(Xmldom, objNode, "WIDTH", rtn[1]);
-		        createNodeAndInsertText(Xmldom, objNode, "HEIGHT", rtn[2]);
-		
-		        xmlhttp.open("POST", "interASP/upload_backimage_Cross.aspx", false);
-		        xmlhttp.send(Xmldom);
-		
-		        var imgSrc = rtn[0];
-		        var imgWidth = rtn[1];
-		        var imgHeight = rtn[2];
-		
-		        var Table = document.createElement("TABLE");
-		        var Tr = document.createElement("TR");
-		        var Td = document.createElement("TD");
-		        Tr.appendChild(Td);
-		        Table.appendChild(Tr);
-		        Td.innerHTML = message.GetEditorContent();
-		        var temp = Td.getElementsByTagName("TD");
-		
-		        Td.id = "imagediv";
-		        Td.style.verticalAlign = "top";
-		        Td.style.fontSize = "10pt";
-		        Td.style.lineHeight = "20px";
-		        Td.style.wordBreak = "break-all";
-		
-		        Td.style.backgroundImage = "URL(/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDBACKGROUND&ITEMID=1&ATTID=" + "S_" + imgSrc + ")";
-		        Table.style.width = imgWidth + "px";
-		        Table.style.height = imgHeight + "px";
-		
-		        if (temp.length > 0) {
-		            for (var j = 0; j < temp.length; j++) {
-		                if (temp[j].id == "imagediv") {
-		                    Td.innerHTML = temp[j].innerHTML;
-		                    message.SetEditorContent(Table.outerHTML);
-		                    break;
-		                }
-		            }
-		        }
-		        message.SetEditorContent(Table.outerHTML);
-		    }
-		
-		        //추가항목 관련 Function 추가
-		        function SetRadioVal(pObjectName, p_strVal) {
-		            var RadioBtns = document.getElementsByName(pObjectName);
-		            var i;
-		            for (i = 0; i < RadioBtns.length; i++) {
-		                if (RadioBtns[i].value == p_strVal) { RadioBtns[i].checked = true; break; }
-		            }
-		        }
-		
-		        //추가항목 관련 Function 추가
-		        function GetRadioVal(pObjectName) {
-		            var RadioBtns = document.getElementsByName(pObjectName);
-		            var strReturn = "";
-		            var i;
-		            for (i = 0; i < RadioBtns.length; i++) {
-		                if (RadioBtns[i].checked) { strReturn = RadioBtns[i].value; break; }
-		            }
-		            return strReturn;
-		        }
-		
-		        function GetCheckVal(pObjectName) {
-		            var chkBoxes = document.getElementsByName(pObjectName);
-		            var strReturn = "";
-		            var i, j;
-		            for (i = 0; i < chkBoxes.length; i++) {
-		                if(chkBoxes[i].checked){
-		                    strReturn = strReturn + chkBoxes[i].value + ",";
-		                }
-		            }
-		            return (strReturn.length==0) ? "":strReturn.substr(0, strReturn.length-1);
-		        }
-		
-		        function SetCheckVal(pObjectName, p_strVal) {
-		            var chkBoxes = document.getElementsByName(pObjectName);
-		            var strCheckVals = p_strVal.split(",");
-		            var i, j;
-		            for (i = 0; i < chkBoxes.length; i++) {
-		                for (j = 0; j < strCheckVals.length; j++) {
-		                    if (chkBoxes[i].value == strCheckVals[j]) {
-		                        chkBoxes[i].checked = true; break;
-		                    }
-		                }
-		            }
-		        }
+	        //추가항목 관련 Function 추가
+	        function SetRadioVal(pObjectName, p_strVal) {
+	            var RadioBtns = document.getElementsByName(pObjectName);
+	            var i;
+	            for (i = 0; i < RadioBtns.length; i++) {
+	                if (RadioBtns[i].value == p_strVal) { RadioBtns[i].checked = true; break; }
+	            }
+	        }
+	
+	        //추가항목 관련 Function 추가
+	        function GetRadioVal(pObjectName) {
+	            var RadioBtns = document.getElementsByName(pObjectName);
+	            var strReturn = "";
+	            var i;
+	            for (i = 0; i < RadioBtns.length; i++) {
+	                if (RadioBtns[i].checked) { strReturn = RadioBtns[i].value; break; }
+	            }
+	            return strReturn;
+	        }
+	
+	        function GetCheckVal(pObjectName) {
+	            var chkBoxes = document.getElementsByName(pObjectName);
+	            var strReturn = "";
+	            var i, j;
+	            for (i = 0; i < chkBoxes.length; i++) {
+	                if(chkBoxes[i].checked){
+	                    strReturn = strReturn + chkBoxes[i].value + ",";
+	                }
+	            }
+	            return (strReturn.length==0) ? "":strReturn.substr(0, strReturn.length-1);
+	        }
+	
+	        function SetCheckVal(pObjectName, p_strVal) {
+	            var chkBoxes = document.getElementsByName(pObjectName);
+	            var strCheckVals = p_strVal.split(",");
+	            var i, j;
+	            for (i = 0; i < chkBoxes.length; i++) {
+	                for (j = 0; j < strCheckVals.length; j++) {
+	                    if (chkBoxes[i].value == strCheckVals[j]) {
+	                        chkBoxes[i].checked = true; break;
+	                    }
+	                }
+	            }
+	        }
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">

@@ -1,12 +1,12 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzBoardService")
@@ -26,6 +27,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 
 	@Resource(name="EzBoardDAO")
 	private EzBoardDAO ezBoardDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 
 	@Override
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
@@ -404,21 +408,12 @@ public class EzBoardServiceImpl implements EzBoardService {
 	@Override
 	public String getNoticePostItemAll(String boardID) throws Exception {
 		List<BoardListVO> resultList = ezBoardDAO.getNoticePostItemAll(boardID);
-
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
 		for(int i = 0; i < resultList.size(); i++){
-			sb.append("<ROW>");
-			for (Field field : BoardListVO.class.getDeclaredFields()){
-				field.setAccessible(true);
-				if(field.get(resultList.get(i)) != null){
-					sb.append("<" + field.getName().toUpperCase() + ">");
-					sb.append(field.get(resultList.get(i)));
-					sb.append("</" + field.getName().toUpperCase() + ">");                    
-				}
-			}
-			sb.append("</ROW>");
+			sb.append(commonUtil.getQueryResult(resultList.get(i)));
 		}
 		sb.append("</DATA>");
 		
@@ -433,6 +428,12 @@ public class EzBoardServiceImpl implements EzBoardService {
 	@Override
 	public void brdNewItem(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItem(boardListVO);
+		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
+
+	@Override
+	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.brdNewItemTemp(boardListVO);
 		ezBoardDAO.newItem(boardListVO.getItemID());
 	}
 

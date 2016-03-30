@@ -169,6 +169,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.brdNewItem", boardListVO);
 	}
 	
+	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.brdNewItemTemp", boardListVO);
+	}
+	
 	public void newItem(String itemID) throws Exception{
 		insert("EzBoardDAO.newItem", itemID);
 	}

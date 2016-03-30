@@ -18,9 +18,9 @@ function Insert_ImageCmd_Complete(rtn) {
 		exec : function( editor )
 		{
 		    var selection = editor.getSelection();
-
+		    
 		    if (!CrossYN()) {
-		        var rtn = showModalDialog("/myoffice/ckeditor/ImageUpload.aspx", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		        var rtn = showModalDialog("/ezCommon/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
 		        if (rtn == undefined)
 		            return;
 		        var imgSrc = rtn[0];
@@ -30,9 +30,9 @@ function Insert_ImageCmd_Complete(rtn) {
 		    }
 		    else {
 		        if (parent.document.getElementById("mailPanel") != null)
-		            parent.DivPopUpShow(470, 400, "/myoffice/ckeditor/ImageUpload.aspx");
+		            parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
 		        else
-		            parent.parent.DivPopUpShow(470, 400, "/myoffice/ckeditor/ImageUpload.aspx");
+		            parent.parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
 		    }
 		}
 	};
