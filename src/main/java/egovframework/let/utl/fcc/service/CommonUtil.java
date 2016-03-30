@@ -165,7 +165,7 @@ public class CommonUtil {
 		StringBuilder stb = new StringBuilder();		
 		
 		try{
-			stb.append("<DATA><ROW>");
+			stb.append("<ROW>");
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
 		        field.setAccessible(true);
@@ -174,7 +174,7 @@ public class CommonUtil {
 		        stb.append(field.get(vo));
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
-			stb.append("</ROW></DATA>");
+			stb.append("</ROW>");
 			
 			return stb.toString();
 		}catch(Exception e){
