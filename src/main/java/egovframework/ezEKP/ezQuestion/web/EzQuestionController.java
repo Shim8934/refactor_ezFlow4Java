@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.FileInputStream;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +36,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
+import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -91,7 +89,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(request.getParameter("brdId")!=null)
 			brdId = request.getParameter("brdId");
 		if(request.getParameter("title")!=null)
-			title = new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8");
+			title = request.getParameter("title");
 		if(request.getParameter("responseRange")!=null)
 			responseRange = request.getParameter("responseRange");
 		if(request.getParameter("postDate")!=null)
@@ -102,7 +100,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			lang = request.getParameter("lang");
 		if(request.getParameter("currPage")!=null)
 			currPage = request.getParameter("currPage");
-		
 		qstListVO.setBrdId(Integer.parseInt(brdId));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
@@ -1390,8 +1387,9 @@ System.out.println("iResult : "+iResult);
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent());
+
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
-			
+System.out.println("pQstTitle:"+pQstTitle);			
 			//첨부
 			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
@@ -1432,7 +1430,6 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
 			}
 		}
-		
 		questionAddVO.setpMultiSel(pMultiSel);
 		questionAddVO.setpSelectOption(pSelectOption);
 		questionAddVO.setQuestionContent(pQstTitle);
@@ -1445,6 +1442,7 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 	
 	public String callGetItemSeq(String pBrdID) throws Exception {
 		int get_itemNo = -1;
+		
 		if(ezQuestionService.getItemSeq(pBrdID) == "") {
 			get_itemNo = 1;
 		} else {
@@ -1466,7 +1464,7 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 	public String qstCompleteCross(@RequestBody String xmlDoc ,HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
 		Document doc = commonUtil.convertStringToDocument(xmlDoc);
 		loginVO = commonUtil.userInfo(loginCookie);
-
+		
 		String pUserID = loginVO.getId();
 		String pBrdID = "";
 		String vItemID = "";
@@ -1478,10 +1476,10 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 		
 		String pRtn = SaveQuestion(pBrdID, vItemID, doc, pUserID);
 		
-		/*if(!pRtn.equals("OK")) {
+		if(!pRtn.equals("OK")) {
 			DeleteQuestion(pBrdID, vItemID);
 			pRtn = "ERROR";
-		}*/
+		}
 
 		String strXML = "<DATA>" + pRtn + "</DATA>";
 		
@@ -1493,8 +1491,7 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 
 
 	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID) throws Exception {
-		String pResult = "";
-		
+	
 		int dataCount = 0;
 		dataCount = ezQuestionService.getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID));
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1519,6 +1516,33 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 		//대상범위
 		if(doc.getElementsByTagName("TARGET").item(0).getTextContent().equals("1")) {
 			
+			if(doc.getElementsByTagName("RANGE").item(0).getChildNodes().getLength() > 0) {
+				int pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+				
+				for(int i=0; i<pDeptCnt; i++) {
+					NodeList list = doc.getElementsByTagName("DEPT").item(0).getChildNodes();
+					Node fstNode = list.item(i);
+					
+					if(fstNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element fstElement = (Element) fstNode;
+						String deptId = fstElement.getAttributeNode("id").getValue();
+						String deptNm = fstElement.getAttributeNode("nm").getValue();
+						String deptNm2 = fstElement.getAttributeNode("nm2").getValue();
+						QstCompleteVO qstCompleteVO = new QstCompleteVO();
+						qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+						qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+						qstCompleteVO.setGubunFg("0");
+						qstCompleteVO.setGubunID(deptId);
+						qstCompleteVO.setGubunNm(deptNm);
+						qstCompleteVO.setGubunNm2(deptNm2);
+						ezQuestionService.callCreateMother(qstCompleteVO);
+						
+						String cellList = "department";
+                        String propList = "department;mail;displayname;title;description;company;title";
+                        String pClass = "all";
+					}
+				}
+			}
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
@@ -1586,7 +1610,7 @@ System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent
 		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 		ezQuestionService.updatePollItem(qstCompleteVO);
 		
-		return pResult;
+		return "OK";
 	}
 	
 
@@ -1666,7 +1690,7 @@ System.out.println("idName:"+idName);
 			if(type == "1") {
 				
 			}
-			pFilePath = "/Upload_BoardSTD/Upload_Question/"+newFileName;
+			pFilePath = "/files/upload_board/uploadQuestion/"+newFileName;
 			
 			writeUploadedFile(file, pFileName, qDirPath+pDirPath);
 			
@@ -1682,6 +1706,63 @@ System.out.println("idName:"+idName);
 		return "/ezQuestion/qstAttachFile";
 	}
 	
+
+	@RequestMapping(value="/ezQuestion/qstTempSave.do")
+	public void qstTempSave(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		if(req.getParameter("TempSaveData") != null) {
+			String tempData = req.getParameter("TempSaveData").toString();
+			sb.append(tempData);
+		} else  {
+			return;
+		}
+		
+		resp.setContentType("application/octet-stream");
+		resp.setCharacterEncoding("utf-8");
+		resp.setHeader("Content-Disposition", "attachment;filename=\"TempQuestion.qst\"");
+		resp.setHeader("Cache-Control", "public");
+		resp.getWriter().write(sb.toString());	
+		resp.flushBuffer();
+	}
+	
+	@RequestMapping(value="/ezQuestion/formTempLoadSafari.do")
+	public void formTempLoadSafari(MultipartHttpServletRequest req,Model model, HttpServletResponse resp) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		if(req.getFile("cmuds") != null) {
+			InputStreamReader myFile = new InputStreamReader(req.getFile("cmuds").getInputStream());
+System.out.println("!!");
+			int line = 0; 
+			while((line = myFile.read()) != -1) {
+				sb.append(String.valueOf(line));
+			}
+		}
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstCancel.do")
+	public void qstCancel(HttpServletRequest req, Model model, HttpServletResponse resp) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+	}
+	
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode) {
+			pLangCode = ConvertLangCode(pLangCode);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_CLASS", pClass);
+			map.put("v_CN", pDeptID);
+			map.put("v_LANGDATA", pLangCode);
+			
+		return "";
+	}
+	
+	public String ConvertLangCode(String pLangCode) {
+		if(pLangCode != "2") {
+			return "1";
+		} else {
+			return "2";
+		}
+	}
+	
+
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
 	public String attachView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,ModelMap model) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
