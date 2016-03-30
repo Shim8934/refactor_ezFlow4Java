@@ -142,7 +142,7 @@ public class EzOrganController {
 		String infoXML = "";
 		
 		if(page == null){
-			//infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang);
+			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang);
 		}else{
 			/* 2016-03-29 장진혁과장 pagination 작업 필요 */
 			//infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page);
@@ -184,6 +184,6 @@ public class EzOrganController {
 		result = result.replaceAll("null", "");
 		
 		return result;
-	} 
+	}
 
 }

@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -75,41 +76,41 @@ public class CommonUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
-	public LoginVO userInfo(String loginCookie) throws Exception {	
-		String decData = egovFileScrty.decryptAES(loginCookie);
-		String userID = decData.split("///")[1];
-		
-		LoginVO login = new LoginVO();
-		login.setId(userID);
-		login.setDn("NOPASSWORD");
-
-		LoginVO user = loginService.selectUser(login);
-
-		user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
-		user.setLang(config.getProperty("config.primary"));
-		
-		return user;
-	}
+	public LoginVO userInfo(String loginCookie){
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			String userID = decData.split("///")[1];
+			
+			LoginVO login = new LoginVO();
+			login.setId(userID);
+			login.setDn("NOPASSWORD");
 	
-	public List<String> getUserIdAndPassword(String loginCookie) throws Exception {	
-		String decData = egovFileScrty.decryptAES(loginCookie);
-		List<String> returnObject = new ArrayList<String>();
-		
-		String userId = decData.split("///")[1];
-		String pass = decData.split("///")[4];
-		returnObject.add(userId);
-		returnObject.add(pass);
-
-		return returnObject;
-	}
+			LoginVO user = loginService.selectUser(login);
 	
-	public String getMultiData(String lang) throws Exception{
-		if(!lang.equals(config.getProperty("config.primary"))){
-			return "2";
-		}else{
-			return "";
+			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
+			user.setLang(config.getProperty("config.primary"));
+			
+			return user;
+		}catch(Exception e){
+			return null;
 		}
 	}
+	
+	public List<String> getUserIdAndPassword(String loginCookie) {
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			List<String> returnObject = new ArrayList<String>();
+			
+			String userId = decData.split("///")[1];
+			String pass = decData.split("///")[4];
+			returnObject.add(userId);
+			returnObject.add(pass);
+	
+			return returnObject;
+		}catch(Exception e){
+			return null;
+		}
+	}	
 		
 	public Document convertStringToDocument(String xmlStr) {		
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
@@ -145,15 +146,56 @@ public class CommonUtil {
 		return doc;		
 	}
 	
-	public String convertDocumentToString(Document doc) throws Exception{
-		TransformerFactory tf = TransformerFactory.newInstance();
-	    Transformer transformer = tf.newTransformer();
-	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-	    StringWriter writer = new StringWriter();
-	    transformer.transform(new DOMSource(doc), new StreamResult(writer));
-	    String output = writer.getBuffer().toString();	    
+	public String convertDocumentToString(Document doc){
+		try{
+			TransformerFactory tf = TransformerFactory.newInstance();
+		    Transformer transformer = tf.newTransformer();
+		    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		    StringWriter writer = new StringWriter();
+		    transformer.transform(new DOMSource(doc), new StreamResult(writer));
+		    String output = writer.getBuffer().toString();	    
+			
+			return output;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public String getQueryResult(Object vo){
+		StringBuilder stb = new StringBuilder();		
 		
-		return output;		
+		try{
+			stb.append("<DATA><ROW>");
+			
+			for(Field field : vo.getClass().getDeclaredFields()){
+		        field.setAccessible(true);
+		        
+		        stb.append("<" + field.getName().toUpperCase() + ">");
+		        stb.append(field.get(vo));
+		        stb.append("</" + field.getName().toUpperCase() + ">");		        
+		    }
+			stb.append("</ROW></DATA>");
+			
+			return stb.toString();
+		}catch(Exception e){
+			return null;
+		}		
+	}
+	
+	public String convertLangCode(String pLangCode){   
+		if (pLangCode != "2"){
+            return "1";
+        }else{
+            return "2";
+        }        
+    }
+	
+	public String getMultiData(String lang){
+		if(!lang.equals(config.getProperty("config.primary"))){
+			return "2";
+		}else{
+			return "";
+		}
 	}
 }
 

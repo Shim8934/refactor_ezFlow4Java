@@ -82,6 +82,49 @@
 		{CALL EZHRMASTER.EZSP_GETTBLUSERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
+		<isEqual property="type" compareValue="U">
+			SELECT 
+				cn,
+				department as displayName,
+				'' as extensionAttribute15,
+				'user' as type				
+			FROM 
+	    		ezHrmaster.TBLUSERMASTER $strSQL$
+	    		 
+	      	UNION ALL
+	      		      	
+	      	SELECT 
+	      		A.cn,
+	      		deptid as displayName,
+	      		'' as extensionAttribute15,
+	      		'user' as type
+	      	FROM	
+				ezHrmaster.TBLUSERMASTER B INNER JOIN ezHrmaster.TBLADDJOBMASTER A ON A.CN = B.CN $strSQL$
+				
+			<isEqual property="class" compareValue="all">
+				UNION ALL
+				
+				SELECT
+					cn,
+					'' as displayName,
+					'' as extensionAttribute15,
+					'group' as type
+				FROM
+					ezHrmaster.TBLDEPTMASTER $strSQL$	
+			</isEqual>	      				
+	    </isEqual>
+	    <isEqual property="type" compareValue="G">
+	    	SELECT
+	    		cn,
+	    		'' as displayName,
+	    		'' as extensionAttribute15,
+	    		'group' as type
+	    	FROM
+	    		ezHrmaster.TBLDEPTMASTER $strSQL$
+	    </isEqual>
+	</select>
+	
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="String" resultClass="int">
 		<![CDATA[
 			SELECT 

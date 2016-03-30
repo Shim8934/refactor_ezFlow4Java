@@ -32,6 +32,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
+		
 		return ezOrganDAO.getPropertyValue(map);
 	}
 
@@ -40,6 +41,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_CNLIST", pCNList);
 		map.put("iv_EMAILLIST", eMailList);
+		
 		return ezOrganDAO.getSIPUriList(map);
 	}
 
@@ -53,6 +55,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("primary", primary);
+		
 		return ezOrganDAO.getPropertyList(map);
 	}
 
@@ -66,10 +69,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 			pDeptID = pTopID;
 		}
 		
+		OrganDeptVO vo = null;
 		String prevDeptID = "";
         String deptInfo = "";
-        String deptID = pDeptID;
-        OrganDeptVO vo = null;        
+        String deptID = pDeptID;               
         
         do{
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -205,9 +208,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		String[] memberInfo2 = new String[list.size()];
 		
 		for (int i = 0; i < list.size(); i++){
-			StringBuilder sb = new StringBuilder();
-    		sb.append("<DATA><ROW>");
-    		
+			StringBuilder sb = new StringBuilder();    		
 			OrganDeptVO obj = list.get(i);			
             
             if (obj.getType().toLowerCase().equals("user")){
@@ -215,33 +216,16 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
         		
-        		OrganUserVO vo = ezOrganDAO.getTBLUserMaster(map1);        		
-        		Object userVO = vo;        		
-        		
-                for (Field field : userVO.getClass().getDeclaredFields()){
-                    field.setAccessible(true);
-                    
-                    sb.append("<" + field.getName().toUpperCase() + ">");
-                    sb.append(field.get(userVO));
-                    sb.append("</" + field.getName().toUpperCase() + ">");                    
-                }                        
+        		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
+                sb.append(commonUtil.getQueryResult(userVO));
             }else{
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pDeptID);
         		                
-                OrganDeptVO vo = ezOrganDAO.getTBLDeptMaster(map1);
-                Object userVO = vo;
-                
-                for (Field field : userVO.getClass().getDeclaredFields()){
-                    field.setAccessible(true);
-                    
-                    sb.append("<" + field.getName().toUpperCase() + ">");
-                    sb.append(field.get(userVO));
-                    sb.append("</" + field.getName().toUpperCase() + ">");                    
-                }
+        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
+                sb.append(commonUtil.getQueryResult(userVO));
             }            
-            sb.append("</ROW></DATA>");
-            
+
             String cn2 = obj.getCn();
             String displayname2 = obj.getDisplayName();
             
@@ -260,6 +244,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pDeptID, String pDeptName, String pCategory){		
 		Document doc = commonUtil.convertStringToDocument(pXMLString);
+
         StringBuilder nodeInfo = new StringBuilder("<ROW>");
         String[] celllist = pCellList.split(";");
         String cellvalue = "";
@@ -335,7 +320,124 @@ public class EzOrganServiceImpl implements EzOrganService {
         nodeInfo.append("</ROW>");
 
         return nodeInfo.toString();        
-    }
+    }	
+
+	@Override
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode) throws Exception {
+		pLangCode = commonUtil.convertLangCode(pLangCode);	
+		
+        String[] searchParemeta = null;
+        String[] searchList;
+        String[] searchInfo;
+        String listInfo = "";
+        String strSize = "";
+        String strSQL = "";
+        String strXml = "";
+        String type = "";        
+        int i = 0;
+        
+        if (pLimit != 0){
+            strSize = " AND ROWNUM <= " + pLimit;
+        }
+        
+        if (pSearchList != ""){
+            pSearchList = pSearchList.replace(";;", "##");
+            pSearchList = pSearchList.replace("::", "@@");
+            searchList = pSearchList.split("##");
+            searchParemeta = new String[searchList.length];
+            
+            for (i = 0; i < searchList.length; i++){      	
+                searchInfo = searchList[i].split("@@");
+
+                if (i == 0){
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                    
+                    if (checkSearchField(searchInfo[0])){
+                        if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i] + "')";
+                            searchParemeta[0] = searchParemeta[0].substring(0, searchParemeta[0].length() - 1);
+                        }else{
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
+                        }
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + " + '%' ";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}else{
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}
+                    }
+                }else{
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                    
+                    if (checkSearchField(searchInfo[0])){
+                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + " %' ";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }else{
+                            strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }
+                    }
+                }
+            }
+        }        
+        
+        if (pClass.equals("user") || pClass.equals("all")){
+            strSQL = strSQL.replace("cn", "a.cn");
+            strSQL = strSQL.replace("title", "a.title");
+            type = "U";
+        }else{
+        	type = "G";
+        }
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        map.put("strSQL", strSQL + strSize);
+        map.put("type", type);
+        map.put("class", pClass);
+        
+        List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
+        
+        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        
+		for(int j=0; j < list.size(); j++){
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			OrganDeptVO organVO = list.get(j);
+			Object result = null;
+			
+			if(!organVO.getCn().equals("") && organVO.getCn() != null){
+				if(organVO.getType().equals("user")){
+					map1.put("v_CN", organVO.getCn());
+	        		map1.put("v_DEPTCD", organVO.getDisplayName());
+	        		map1.put("v_LANGDATA", pLangCode);
+	        		
+	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
+	        	}else{
+	        		map1.put("v_CN", organVO.getCn());
+					map1.put("v_LANGDATA", pLangCode);
+					
+					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
+				}				
+				strXml = commonUtil.getQueryResult(result);
+				
+				listInfo = getMemberInfo(strXml, pCellList, pPropList, "", "", organVO.getType());
+				memberlist2.append(listInfo);
+			}			
+		}
+		memberlist2.append("</ROWS></LISTVIEWDATA>");
+        
+		return memberlist2.toString();
+	}
 
 	private String convertAddandConvert(String pClass, String pProvValue){        
         String[] arryProvValue = pProvValue.split(";");
@@ -388,5 +490,24 @@ public class EzOrganServiceImpl implements EzOrganService {
             }
         }
         return strRet;
+    }
+	
+	private boolean checkSearchField(String pFieldName){
+		boolean bRet = false;
+		
+        try{
+            switch (pFieldName.toUpperCase()){
+                case "DISPLAYNAME":
+                    bRet = true;
+                    break;
+                case "DESCRIPTION":
+                    bRet = true;
+                    break;
+                case "TITLE":
+                    bRet = true;
+                    break;
+            }
+        }catch (Exception Ex){ }
+        return bRet;
     }
 }

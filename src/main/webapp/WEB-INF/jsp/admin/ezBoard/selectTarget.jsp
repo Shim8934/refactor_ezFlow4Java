@@ -440,7 +440,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
-		        	success : function(result){
+		        	success : function(result){	
 		        		xmlDOM = result;
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
@@ -462,28 +462,28 @@
 		            }else{
 		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA3").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
 		            }
-		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
-		        }else{		            
+		        }else{
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
 		            
 		            if (CrossYN()){
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-		                var checkName2_Cross = window.open("checkName2_Cross.aspx", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+		                var checkName2_Cross = window.open("/ezOrgan/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
 		                try { checkName2_Cross.focus(); } catch (e) { }
 		            }else{
 		                var feature = "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(609, 352);
-		                window.showModalDialog("checkName2_Cross.aspx", rgParams, feature);
+		                window.showModalDialog("/ezOrgan/checkName.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
 		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
-		                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
 		                }
@@ -496,7 +496,7 @@
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
 		            var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
-		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
 		        }
