@@ -109,5 +109,7 @@ public interface EzQuestionService {
 	public void updateResCnt(int brdId, int itemNo) throws Exception;
 
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
+
+	public void deletePermission(int brdId, int itemNo) throws Exception;
 	
 }
