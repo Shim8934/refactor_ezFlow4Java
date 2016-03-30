@@ -64,14 +64,8 @@ public class EzEmailMailListController {
 			Model model) throws Exception {
 		logger.debug("showMailList started");
 		String dispname = request.getParameter("dispname");
-		if (dispname != null) {
-			dispname = new String(dispname.getBytes("ISO-8859-1"),"UTF-8");
-		}
 		String url = request.getParameter("url");
-		if (url != null) {
-			url = new String(url.getBytes("ISO-8859-1"),"UTF-8");
-		}		
-		else {
+		if (url == null) {
 			url = "INBOX";
 		}
 		logger.debug("dispname=" + dispname + ",url=" + url);
