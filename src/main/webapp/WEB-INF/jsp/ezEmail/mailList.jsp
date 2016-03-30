@@ -21,6 +21,7 @@
 	    var g_bdraft = false;
 	    var g_moveUrl = "${url}";
 	    var g_expath = "exchange";
+	    var g_szRootFolderName = '${folderName}';
 	    var g_bPrevShow = false;
 	    var g_ViewID = null;
 	    var g_PreViewID = null;
