@@ -217,7 +217,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
-
-
-
+	public void deletePermission(Map<String,Object> map) {
+		delete("EzQuestionDAO.deletePermission", map);
+	}
 }
