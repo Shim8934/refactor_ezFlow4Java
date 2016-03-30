@@ -486,7 +486,14 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pUserID", userId);
 		return ezQuestionDAO.getReadDateItemForResult(map);
 	}
-
+	
+	@Override
+	public void deletePermission(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.deletePermission(map);
+	}
 	@Override
 	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
@@ -561,7 +568,4 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pAttachNo", strAttID);
 		return ezQuestionDAO.getAttachInfo2(map);
 	}	
-	
-	
-	
 }
