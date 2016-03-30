@@ -10,6 +10,7 @@
 	<typeAlias	alias="QstVO" 						type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
 	<typeAlias	alias="QstAnswerVO"					type="egovframework.ezEKP.ezQuestion.vo.QstAnswerVO"/>
 	<typeAlias	alias="QstResponsePersonVO"			type="egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO"/>
+	<typeAlias  alias="QstResponseVO"				type="egovframework.ezEKP.ezQuestion.vo.QstResponseVO"/>
 	
 	<resultMap class="QstListVO" id="qstListVO">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -111,6 +112,27 @@
 		<result property="userId"					column="USER_ID"					columnIndex="1"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="2"/>
 	</resultMap>
+	
+	<resultMap class="QstResponseVO" id="qstResponseVO">
+		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="responseNo"				column="RESPONSENO"					columnIndex="4"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="5" 	nullValue="0"/>
+		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="6"		javaType="String" jdbcType="CLOB"/>
+		<result property="answerViewSelect"			column="ANSWER_VIEWSELECT"			columnIndex="7"		nullValue="0"/>
+		<result property="responseUserId"			column="RESPONSEUSER_ID"			columnIndex="8"/>
+		<result property="responseUserName"			column="RESPONSEUSER_NAME"			columnIndex="9"/>
+		<result property="responseUserEmail"		column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
+		<result property="responseUserDeptId"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
+		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="12"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"/>
+		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
+		<result property="responseUserGender"		column="RESPONSEUSER_GENDER"		columnIndex="15"/>
+		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"/>
+		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="17"/>
+		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
+	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -132,6 +154,10 @@
 		{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.getQuestionForSubjective" parameterClass="Map" resultMap="qstVO">
+		{CALL EZQUESTION.EZSP_GETQUESTIONFORSUBJECTIVE(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstAnswerAnswerVO">
 		{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -151,6 +177,10 @@
 	<procedure id="EzQuestionDAO.getAttachInfo2" parameterClass="Map" resultMap="qstAttachVO">
 		{CALL EZQUESTION.EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzQuestionDAO.resultSubjectiveList" parameterClass="Map" resultMap="qstResponseVO">
+		{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -158,6 +188,14 @@
 	
 	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.resultSubjectiveListCnt" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
@@ -188,12 +226,8 @@
 		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
 	<procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
+		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, )}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
@@ -458,6 +492,4 @@
 				 brd_id = #v_pstrBrdID#  
 		]]>
 	</update>
-
-	
 </sqlMap>

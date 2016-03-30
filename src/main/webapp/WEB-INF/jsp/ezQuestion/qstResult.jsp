@@ -33,7 +33,6 @@
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
-alert(receve);
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
@@ -79,8 +78,9 @@ alert(receve);
 			    window.location.href = szUrl;
 			}
 
-			function menuQstResponseList(pflag){
-			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&responseYN=" + pflag;
+			function menuQst_ResponseList(pflag){
+alert(receve);
+			    var szUrl = "/ezQuestion/qstResponseList.do?brd_id=" + brdId + "&item_no=" + itemNo + "&responseYN=" + pflag;
 			    window.location.href = szUrl;
 			}
 

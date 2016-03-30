@@ -21,7 +21,7 @@ public class QstResponseVO {
 	/** 응답자이름(기명일때만)*/
 	String responseUserName;
 	/** 응답자이름(기명일때만)(다국어)*/
-	String responseUserName2;
+	String responseUserName2="";
 	/** 응답자이메일(기명일때만)*/
 	String responseUserEmail;
 	/** 응답자부서아이디(기명일때만)*/
@@ -29,15 +29,15 @@ public class QstResponseVO {
 	/** 응답자부서이름(기명일때만)*/
 	String responseUserDeptName;
 	/** 응답자부서이름(기명일때만)(다국어)*/
-	String responseUserDeptName2;
+	String responseUserDeptName2="";
 	/** 응답자직위(기명일때만)*/
 	String responseUserPosition;
 	/** 응답자직위(기명일때만)(다국어)*/
-	String responseUserPosition2;
+	String responseUserPosition2="";
 	/** 응답자직책(기명일때만)*/
 	String responseUserJikgub;
 	/** 응답자직책(기명일때만)(다국어)*/
-	String responseUserJikgub2;
+	String responseUserJikgub2="";
 	/** 응답자성별(남:1,여:2)(기명일때만)*/
 	String responseUserGender = "1";
 	/** 응답자나이(기명일때만)*/

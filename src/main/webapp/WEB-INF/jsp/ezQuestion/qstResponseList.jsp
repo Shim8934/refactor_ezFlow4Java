@@ -5,11 +5,11 @@
 <html>
 	<head>
 		<c:choose>
-			<c:when test="${pAnsType==4 }">
-				<title><spring:message code='ezQuestion.t561' /></title>
+			<c:when test="${Response_YN==Y }">
+				<title><spring:message code='ezQuestion.t335' /></title>
 			</c:when>
 			<c:otherwise>
-				<title><spring:message code='ezQuestion.t402' /></title>
+				<title><spring:message code='ezQuestion.t336' /></title>
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -29,6 +29,7 @@
 			var szBrdID = "${brd_id}";
 			var szItemNo = "${item_no}";
 			var szQuestionNo = "${question_no}";
+			var pResponse_YN = "${Response_YN}";
 			var pTotalPage = "${pTotalPage}";
 			var pCurrPage = "${pCurrPage}";
 			var totalCount = "${pTotalCnt}";
@@ -55,42 +56,41 @@
 				var tableXml="";
 				
 				for(i=0;nodes.length>i; i++){
-					tableXml += "<tr>";
-					tableXml += "<td style='width:40px;text-align:center'>";
-					tableXml += SelectSingleNodeValue(nodes[i], 'NO');
-					tableXml += "</td>";
-					if("${public_flg}"==0){
-						tableXml += "<td style='width:140px'>";
+					if("${pTotalCnt}" != 0){
+						tableXml += "<tr>";
+						tableXml += "<td style='width:50px;text-align:center'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'NO');
+						tableXml += "</td>";
+						if("${public_flg}"==0){
+							tableXml += "<td style='width:150px'>";
+							tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(";
+							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
+							tableXml += ")'>";
+							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
+							tableXml += "</td>";
+						}
+						tableXml += "<td>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERDEPTNAME');
 						tableXml += "</td>";
-						tableXml += "<td style='width:80px'>";
-						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERPOSITION');
-						tableXml += "</td>";
-						tableXml += "<td style='width:90px'>";
-						tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(";
-						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
-						tableXml += ")'>";
-						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
-						tableXml += "</td>";
-						tableXml += "<td style='text-align:center'>";
-						tableXml += SelectSingleNodeValue(nodes[i], 'ANSWERSUBJECTIVITY');
-						tableXml += "</td>";
-						
-						
-					}
-					SelectSingleNodeValue(nodes[i], 'OPTION').replace("\r\n","<br>");
-					tableXml += "</tr>";
-					if("${pTotalCnt}" ==0){
-						tableXml += "<tr>";
-						tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
-						tableXml += "<spring:message code='ezQuestion.t413' />"
+					}else{
+						tableXml += "<tr style='text-align:center'>";
+						tableXml += "<td colspan='3' style='height:30px'>";
+						if("${Response}"==N){
+							tableXml += "<spring:message code='ezQuestion.t347' />"
+						}else{
+							tableXml += "<spring:message code='ezQuestion.t121' />"
+						}
 						tableXml += "</td>";
 						tableXml += "</tr>";
 					}
+					
+					
 				}
-
 				document.getElementById("xmlTable").innerHTML =document.getElementById("xmlTable").innerHTML + tableXml;
 			}
+
+
+
 			
 			function fun_UserView(responseno) {
 			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brd_id=" + '${brd_id}' + "&item_no=" + '${item_no}' + "&question_no=" + '${question_no}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
@@ -105,12 +105,12 @@
 			    history.go("${page_count}");
 			}
 			
-			function search_Set(pPage) {
+/* 			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
 			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + szBrdID + "&item_no=" + szItemNo + "&page=" + pPage + "&page_count=" + "${page_count}" + "&question_no=" + szQuestionNo;
 				window.location.href = szUrl;
 				}
-			}
+			} */
 			
 			function changePage() {
 			    if (event.keyCode == 13) {
@@ -119,97 +119,6 @@
 			        return false;
 			    }
 			    return true;
-			}
-			
-			function menuQst_Total_view() {
-				<%-- var open_Url = "/ezQuestion/qstResultSave.do?brd_id=<%=brd_id%>&item_no=<%=item_no%>&question_no=<%=question_no%>" --%>
-			
-				xmlHTTP.open("POST", open_Url, false);
-				xmlHTTP.send();
-				var xmldom = loadXMLString(xmlHTTP.responseText);
-				rows = xmldom.getElementsByTagName("ROW");
-				//rows = xmlHTTP.responseXML.getElementsByTagName("ROW");
-			
-				var Clength = rows.length;
-			
-			
-				if (Clength != 0) {
-				    SaveCSV(Clength)
-				}else{
-				    alert("<spring:message code='ezQuestion.t121' />");
-				}
-			}
-			
-			function SaveCSV(Clength) {
-			    var Rlength = Clength;
-			
-			    var col = new Array(4);
-			    var row = new Array(Rlength);
-			    var fPath;
-			    var bResult
-			    if (CrossYN()) {
-			        for (var i = 0; i < Rlength; i++) {
-			            var cells = rows[i].getElementsByTagName("CELL");
-			            var Clength = cells.length;
-			            var txt = cells[0].getElementsByTagName("VALUE")[0].textContent;
-			            var cnt = cells[1].getElementsByTagName("VALUE")[0].textContent;
-			            if (i != 0) {
-			                var dept = cells[2].getElementsByTagName("VALUE")[0].textContent;
-			                var jikgub = cells[3].getElementsByTagName("VALUE")[0].textContent;
-			            }
-			            col[0] = repComMa(txt);
-			            col[1] = repComMa(cnt);
-			            if (i != 0) {
-			                col[2] = repComMa(dept);
-			                col[3] = repComMa(jikgub);
-			            }
-			            else {
-			                col[3] = "\n";
-			            }
-			            document.getElementById("AnalysisData").value += col;
-			        }
-			        form_analysissave.submit();
-			    }else {
-			    	var objSave = new ActiveXObject("EzUtil.MiscFunc");
-			        var strFilter = objSave.OpenSaveDlg("CSV files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0\0", "text");
-			
-			        for (var i = 0; i < Rlength; i++) {
-			            var cells = rows[i].getElementsByTagName("CELL");
-			            var Clength = cells.length;
-			            var txt = cells[0].getElementsByTagName("VALUE")[0].text;
-			            var cnt = cells[1].getElementsByTagName("VALUE")[0].text;
-			            if (i != 0) {
-			                var dept = cells[2].getElementsByTagName("VALUE")[0].text;
-			                var jikgub = cells[3].getElementsByTagName("VALUE")[0].text;
-			            }
-			            col[0] = repComMa(txt);
-			            col[1] = repComMa(cnt);
-			            if (i != 0) {
-			                col[2] = repComMa(dept);
-			                col[3] = repComMa(jikgub);
-			            }
-			            row[i] = col.join();
-			        }
-			        var strCSV = row.join("\r\n");
-			        bResult = objSave.SaveTextToFile(strFilter, strCSV);
-			    }
-			    if (bResult) {
-			        alert("<spring:message code='ezQuestion.t344' />");
-			    }
-			}
-	
-			function ReplaceText(orgStr, findStr, replaceStr) {
-			    var re = new RegExp(findStr, "gi");
-			
-			    return (orgStr.replace(re, replaceStr));
-			}
-	
-			function repComMa(param) {
-			    param = ReplaceText(param, "\"", "\"\"");
-			    if (param.indexOf(",") != -1 || param.indexOf("\"") != -1 || param.indexOf("\n") != -1) {
-			        param = "\"" + param + "\"";
-			    }
-			    return param;
 			}
 			
 			var BlockSize = 10;
@@ -331,42 +240,38 @@
 	</head>
 	<body class="mainbody">
 		<c:choose>
-			<c:when test="${pAnsType == 4}">
-				 <h1><spring:message code='ezQuestion.t561' /><span id="mailBoxInfo"></span></h1>
+			<c:when test="${Response_YN == Y}">
+				 <h1><spring:message code='ezQuestion.t340' /><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
-				<h1><spring:message code='ezQuestion.t402' /><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='ezQuestion.t341' /><span id="mailBoxInfo"></span></h1>
 			</c:otherwise>
 		</c:choose>
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onclick="menuQst_ResultView()"><spring:message code='ezQuestion.t303' /></span></li>
-	            <li><span onclick="menuQst_Total_view()"><spring:message code='ezQuestion.t405' /></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
+	    <table border="0" class="mwidth">
+		  <tr>
+		    <td  class="line"></td>
+		  </tr>
+		  <tr>
+		    <td style="height:1px; background-color:#FFFFFF"></td>
+		  </tr>
+		</table>
 	    <table id="xmlTable" class="mainlist" style="width: 100%">
 	        <tr>
-	            <!--- 번호 ----->
-	            <th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
-	            <!--- 응답자 명 ----->
-	            <% //# 기명으로 설문조사를 실시한 경우 %>
-	            <c:if test="${public_flg == 0 }">
-	            	<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
-		            <th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
-		            <th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
+	            <th style="width:50px"><spring:message code='ezQuestion.t344' /></th>
+	            <c:if test="${public_flg == 0 }">	            	
+		            <th style="width:150px"><spring:message code='ezQuestion.t8' /></th>
 	            </c:if>
-	            <th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
+	            <th><spring:message code='ezQuestion.t5' /></th>
 	        </tr>
 	    </table>
 	    <div id="tblPageRayer"></div>
-		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="Result_AnalysisSave.aspx" target="_self">
-		    <input type="hidden" name="AnalysisData" id="AnalysisData" />
-		    <input type="hidden" name="hidQst2" id="hidQst2" value="ALL" /><!-- 전체/문항 구분 -->
-		    <input type="hidden" name="hidCatalog2" id="hidCatalog2" value="0" /><!-- Catalog 구분 -->
-		    <input type="hidden" name="hidRType2" id="hidRType2" value="A" /><!-- 표/그래프 구분 --->
-		</form>
 	</body>
 </html>

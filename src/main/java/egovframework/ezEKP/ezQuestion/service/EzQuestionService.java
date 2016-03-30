@@ -28,6 +28,8 @@ public interface EzQuestionService {
 	
 	public List<QstAnswerVO> getAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception;
 	
+	public List<QstResponseVO> resultSubjectiveList(String brdId, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -45,6 +47,8 @@ public interface EzQuestionService {
 	public String getItemSeq(String brdId) throws Exception;
 	
 	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
+	
+	public QstVO getQuestionForSubjective(String brdId, String itemNo, String questionNo) throws Exception;
 
 	public int getQstListCnt(QstListVO qstListVO) throws Exception;
 
@@ -60,7 +64,7 @@ public interface EzQuestionService {
 
 	public Integer resCount(String brdId,String itemNo) throws Exception;
 	
-	public int getAnsCnt(QstAnswerVO answerVO) throws Exception;
+	public Integer getAnsCnt(QstAnswerVO answerVO) throws Exception;
 	
 	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception;
 	
@@ -68,7 +72,9 @@ public interface EzQuestionService {
 
 	public Integer pollRespCnt2(int brdId, int itemNo, int questionNo, int iAnsCnt) throws Exception;
 	
-	public int getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception;
+	public Integer getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception;
+	
+	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang)throws Exception;
 
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 
@@ -111,5 +117,6 @@ public interface EzQuestionService {
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void deletePermission(int brdId, int itemNo) throws Exception;
+
 	
 }

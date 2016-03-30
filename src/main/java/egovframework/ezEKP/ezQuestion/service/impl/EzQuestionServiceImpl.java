@@ -408,7 +408,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getAnsCnt(QstAnswerVO answerVO) throws Exception {
+	public Integer getAnsCnt(QstAnswerVO answerVO) throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", answerVO.getBrdId());
@@ -470,7 +470,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public int getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception {
+	public Integer getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdId);
 		map.put("v_pItemNo", itemNo);
@@ -567,5 +567,39 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pAnswerNo", strAnswer);
 		map.put("v_pAttachNo", strAttID);
 		return ezQuestionDAO.getAttachInfo2(map);
-	}	
+	}
+
+	@Override
+	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		map.put("v_pLang", lang);
+		return Integer.parseInt(ezQuestionDAO.resultSubjectiveListCnt(map));
+	}
+
+	@Override
+	public List<QstResponseVO> resultSubjectiveList(String brdId, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		map.put("v_pTotalCnt", pTotalCnt);
+		map.put("v_pPageSize", pPageSize);
+		map.put("v_pLang", lang);
+		return ezQuestionDAO.resultSubjectiveList(map);
+	}
+
+	@Override
+	public QstVO getQuestionForSubjective(String brdId, String itemNo, String questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		return ezQuestionDAO.getQuestionForSubjective(map);
+	}
+	
+	
+	
 }
