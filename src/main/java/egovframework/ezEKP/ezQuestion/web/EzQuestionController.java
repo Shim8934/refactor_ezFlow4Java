@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
@@ -2043,5 +2046,54 @@ System.out.println("ATTID@" + strAttID);
 //		QstVO qstVO = ezQuestionService.getQuestionForSubjective();
 //		pAnsType = qstVO.getAnswerType();
 		return null;
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstDeleteItemMsg.do")
+	public String qstDeleteItemMsg(HttpServletRequest req,Model model)  {
+		String pBrdID = "";
+		String itemNo = "";
+		
+		if(req.getParameter("brd_id") != null) {
+			pBrdID = req.getParameter("brd_id");
+		}
+		
+		if(req.getParameter("item_no") != null) {
+			itemNo = req.getParameter("item_no");
+		}
+
+		model.addAttribute("pBrdID", pBrdID);
+		model.addAttribute("itemNo", itemNo);
+		return "/ezQuestion/qstDeleteItemMsg";
+	}
+	
+	@RequestMapping(value="/ezQuestion/callDeleteItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String qstDeleteItem(HttpServletRequest req,Model model) throws Exception {
+		Document doc = commonUtil.convertRequestToDocument(req);
+		
+		String pBrdID = "";
+		String itemNo = "";
+		
+		if(req.getParameter("brd_id") != null) {
+			pBrdID = req.getParameter("brd_id");
+		}
+		
+		if(req.getParameter("item_no") != null) {
+			itemNo = req.getParameter("item_no");
+		}
+		
+		ezQuestionService.deletePermission(Integer.parseInt(pBrdID), Integer.parseInt(itemNo));
+		String strXML = "<DATA>DELETE_OK</DATA>";
+		return strXML;
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstSearch.do")
+	public String qstSearch(HttpServletRequest req,Model model)  {
+		String pBrdID = "";
+		if(req.getParameter("brd_id") != null) {
+			pBrdID = req.getParameter("brd_id");
+		}
+		model.addAttribute("pBrdID", pBrdID);
+		return "/ezQuestion/qstSearch";
 	}
 }
