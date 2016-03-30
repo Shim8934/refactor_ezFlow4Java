@@ -31,6 +31,8 @@ public interface EzBoardAdminService {
 	
 	public List<BoardPropertyVO> getBoardAccessList(String boardID) throws Exception;
 	
+	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type) throws Exception;
+	
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
@@ -81,5 +83,6 @@ public interface EzBoardAdminService {
 
 	public void trunkBoard() throws Exception;
 
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;
 
 }

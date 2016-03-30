@@ -472,12 +472,12 @@
 		            if (CrossYN()){
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-		                var checkName2_Cross = window.open("/ezOrgan/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
 		                try { checkName2_Cross.focus(); } catch (e) { }
 		            }else{
 		                var feature = "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(609, 352);
-		                window.showModalDialog("/ezOrgan/checkName.do", rgParams, feature);
+		                window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
@@ -499,6 +499,12 @@
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
+		        }
+		    }
+		    
+		    function Key_Down(e){
+		        if (e.keyCode == 13){
+		            cnsearch_click("displayname");
 		        }
 		    }
 	    </script>

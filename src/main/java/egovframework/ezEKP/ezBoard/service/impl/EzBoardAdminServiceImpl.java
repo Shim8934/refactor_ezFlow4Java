@@ -149,14 +149,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception {
-		// TODO Auto-generated method stub
 		return ezBoardAdminDAO.get_Admin_TopBoardList(parentBoardID);
 		
 	}
 	
 	@Override
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
-		// TODO Auto-generated method stub
 		return ezBoardAdminDAO.getBackGroundImage(boardBackgroundVO);
 		
 	}
@@ -176,8 +174,18 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", boardID);
-		// TODO Auto-generated method stub
+
 		return ezBoardAdminDAO.getBoardAccessList(map);
+	}	
+
+	@Override
+	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PTYPE", type);
+		
+		return ezBoardAdminDAO.getUnderBoardID(map);
 	}
 
 	@Override
@@ -201,7 +209,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");
-		// TODO Auto-generated method stub
+		
 		ezBoardAdminDAO.createBoardGroup(map);
 	}
 
@@ -217,7 +225,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());	
-		// TODO Auto-generated method stub
+		
 		ezBoardAdminDAO.createBoard(map);
 	}
 
@@ -228,7 +236,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		
 		map.put("v_pBoardIDList", pBoardIDList);
 		map.put("v_pBoardListCount", pBoardListCount);
-		// TODO Auto-generated method stub
+		
 		ezBoardAdminDAO.saveBoardOrder(map);
 	}
 
@@ -237,13 +245,12 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pBoardID", boardID);
-		// TODO Auto-generated method stub
+		
 		ezBoardAdminDAO.deleteBoard(map);
 	}
 
 	@Override
 	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.statusChangeBackGroundImage(boardBackgroundVO);
 	}
 
@@ -270,20 +277,18 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
         map.put("v_HEIGHT",boardBackgroundVO.getHeight());
         map.put("v_MODE",boardBackgroundVO.getType());
 		
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveBackGroundImage(map);
 	}
 	
 	@Override
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.deleteBackGroundImage(boardBackgroundVO);
 	}
 
 	@Override
 	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		// TODO Auto-generated method stub
+		
 		map.put("v_pOrgBoardID", orgBoardID);
         map.put("v_pNewParentBoardID", newParentBoardID);
         map.put("v_pNewBoardGroupID", newBoardGroupID);
@@ -294,7 +299,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	@Override
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		// TODO Auto-generated method stub
+		
 		map.put("v_PBOARDID", boardPropertyVO.getBoardID());
 		map.put("v_PATTACHMAX", boardPropertyVO.getAttachSizeLimit());
 		map.put("v_PDESCRIPTION", boardPropertyVO.getBoardDescription());
@@ -338,19 +343,16 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void deleteHeader(String boardID) throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.deleteHeader(boardID);
 	}
 
 	@Override
 	public void saveHeader(BoardListHeaderVO boardListHeaderVO)	throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveHeader(boardListHeaderVO);
 	}
 
 	@Override
 	public void saveACL(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.saveACL(map);
 	}
 
@@ -366,9 +368,18 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void trunkBoard() throws Exception {
-		// TODO Auto-generated method stub
 		ezBoardAdminDAO.trunkBoard();
-	}	
-	
+	}
+
+	@Override
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PDEFAULTBOARDID", defaultBoardID);
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTBOARDID", parentBoardID);
+		
+		ezBoardAdminDAO.setUnderBoardIDAcl2(map);		
+	}
 	
 }

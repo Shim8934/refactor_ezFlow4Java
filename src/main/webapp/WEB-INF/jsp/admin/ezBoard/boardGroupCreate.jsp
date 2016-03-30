@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html style="height:100%">
 	<head>
-		<title>BoardGroupCreate</title>
+		<title><spring:message code="ezBoard.jjh04" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	

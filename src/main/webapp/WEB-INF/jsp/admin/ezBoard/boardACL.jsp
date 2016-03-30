@@ -25,10 +25,11 @@
 	        var selectTargetListXML = "";
 	        
 	        document.onselectstart = function () {
-	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
 	                return false;
-	            else
+	            }else{
 	                return true;
+	            }
 	        };
 	        
 			$(document).ready(function(){			
@@ -43,11 +44,11 @@
 	            listview.SetMulSelectable(true);
 	            listview.SetRowOnClick("AccessList_onDblclick");
 	            
-	            if (CrossYN())
+	            if (CrossYN()){
 	                listview.DataSource(document.getElementById("listviewheader"));
-	            else
+	            }else{
 	                listview.DataSource(loadXMLString(document.getElementById("listviewheader").xml.trim()));
-	            
+	            }
 	            listview.DataBind("AccessList");
 	            var xmldomNode = SelectNodes(xmldom, "DATA/ROW")
 
@@ -58,25 +59,27 @@
 	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 	                        
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true")
+	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true"){
 	                            listTDText = document.createTextNode("●");
-	                        else if (getNodeText(xmldomNode[i].childNodes[j]) == "false")
+	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "false"){
 	                            listTDText = document.createTextNode("");
-	                        else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null)
+	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null){
 	                            listTDText = document.createTextNode("");
-	                        else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1")
+	                        }else {
+	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1"){
 	                                listTDText = document.createTextNode("●");
-	                            else if (getNodeText(xmldomNode[i].childNodes[j]) == "0")
+	                            }else if (getNodeText(xmldomNode[i].childNodes[j]) == "0"){
 	                                listTDText = document.createTextNode("");
-	                            else
+	                            }else{
 	                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                            }
 	                        }
-	                        if (j == 7)
+	                        if (j == 7){
 	                            j = 12;
-	                        if (j >= 13)
+	                        }
+	                        if (j >= 13){
 	                            listTD.setAttribute("style", "text-align:center;");
-	                        
+	                        }	                        
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
@@ -88,30 +91,33 @@
 	                    listTR.setAttribute("DATA3", SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL"));
 	                    listTR = null;
 	                }
-	            } else {  	
+	            }else{  	
 	                for (i = 0; i < xmldomNode.length; i++) {
 	                    listTR = listview.AddRow(listview.GetRowCount());                    
 	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true")
+	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true"){
 	                            listTDText = document.createTextNode("●");
-	                        else if (getNodeText(xmldomNode[i].childNodes[j]) == "false")
+	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "false"){
 	                            listTDText = document.createTextNode("");
-	                        else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null)
+	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null){
 	                            listTDText = document.createTextNode("");
-	                        else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1")
+	                        }else {
+	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1"){
 	                                listTDText = document.createTextNode("●");
-	                            else if (getNodeText(xmldomNode[i].childNodes[j]) == "0")
+	                            }else if (getNodeText(xmldomNode[i].childNodes[j]) == "0"){
 	                                listTDText = document.createTextNode("");
-	                            else
+	                            }else{
 	                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                            }
 	                        }
-	                        if (j == 3)
+	                        if (j == 3){
 	                            j = 11;
-	                        if (j >= 12)
+	                        }
+	                        if (j >= 12){
 	                            listTD.setAttribute("style", "text-align:center;");
+	                        }
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
@@ -139,15 +145,16 @@
 	                selectTargetListXML = "<DATA>";
 
 	                if (selnode.length == 1) {
-	                    if (CrossYN())
+	                    if (CrossYN()){
 	                        selectedTarget.textContent = selnode[0].cells[2].textContent;
-	                    else
+	                    }else{
 	                        selectedTarget.innerText = selnode[0].cells[2].innerText;
-
+	                    }
 	                    selectedTargetID = selnode[0].getAttribute("data1")
 	                    selectedTargetName = selnode[0].getAttribute("data")
 	                    selectedTargetName2 = selnode[0].getAttribute("data2")
 	                    selectedTargetGroup = selnode[0].getAttribute("data3")
+	                    
 	                    if (para != "false") {
 	                        FillACLTable();
 	                    }
@@ -155,11 +162,13 @@
 	                    selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                    selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                    selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                    if (selnode[0].cells[0].innerHTML == "" || selnode[0].cells[0].innerHTML == null)
+	                    
+	                    if (selnode[0].cells[0].innerHTML == "" || selnode[0].cells[0].innerHTML == null){
 	                        selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
-	                    else
+	                    }else{
 	                        selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
-	                } else {
+	                    }
+	                }else{
 	                    selectedTarget.innerText = "";
 
 	                    for (var i = 0; i < selnode.length; i++) {
@@ -180,10 +189,12 @@
 	                        selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                        selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                        selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                        if (selnode[i].cells[0].innerHTML == "" || selnode[i].cells[0].innerHTML == null)
+	                        
+	                        if (selnode[i].cells[0].innerHTML == "" || selnode[i].cells[0].innerHTML == null){
 	                            selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
-	                        else
+	                        }else{
 	                            selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
+	                        }
 	                    }
 	                }
 	                selectTargetListXML += "</DATA>";
@@ -304,7 +315,6 @@
 	                    PostNotice.checked = false;
 	                }
 	            }
-
 	            xmldom = null;
 
 	            if (pParentBoardID == "top") {
@@ -362,21 +372,17 @@
 	            inherit_NO.checked = true;
 	        }
 	        function checkbox_onclick(e) {
-	            if (window.ActiveXObject)
-	                srcElementID = window.event.srcElement.id;
-	            else
-	                srcElementID = e.target.id;
-	            
+	            srcElementID = e.target.id;	            
 	            toggle(srcElementID);
+	            
 	            if (srcElementID == "admin_OK" && admin_OK.checked) {
+	            	PostSpan.style.display = "";
 	                access_OK.checked = true;
 	                list_OK.checked = true;
 	                read_OK.checked = true;
 	                write_OK.checked = true;
 	                reply_OK.checked = true;
-	                delete_OK.checked = true;
-	                PostSpan.style.display = "";
-
+	                delete_OK.checked = true;                
 	                access_NO.checked = false;
 	                list_NO.checked = false;
 	                read_NO.checked = false;
@@ -397,7 +403,6 @@
 	                    delete_NO.checked = true;
 	                    PostNotice.checked = false;
 	                }
-
 	                return;
 	            }
 	        }
@@ -535,9 +540,9 @@
 	                alert("<spring:message code='ezBoard.t600'/>")
 	                return;
 	            }
-	            if (_type)
+	            if (_type){
 	                AccessList_onDblclick("false");
-	            
+	            }	            
 	            var xmldom2 = loadXMLString(selectTargetListXML);
 	            var xmlhttp = createXMLHttpRequest();
 	            for (var i = 0; i < xmldom2.getElementsByTagName("CN").length; i++) {
@@ -587,10 +592,12 @@
 	            var listview = new ListView();
 	            listview.LoadFromID("AccessListView");
 	            var selnode = listview.GetSelectedRows();
-	            if (type == "one")
+	            
+	            if (type == "one"){
 	                selnode = listview.GetSelectedRows();
-	            else
+	            }else{
 	                selnode = listview.GetDataRows();
+	            }
 	            if (selnode.length == 0 && type == "one") {
 	                alert("<spring:message code='ezBoard.t601'/>");
 	                return;
@@ -613,7 +620,24 @@
 	                alert("<spring:message code='ezBoard.t54'/>");
 	            }
 	            window.location.reload();
-	         }
+	        }
+			function UnderBoardCopy() {
+			    var listview = new ListView();
+			    listview.LoadFromID("AccessListView");
+			    var selnode = listview.GetSelectedRows();
+			    
+			    if (selnode.length == 0) {
+			        alert("<spring:message code='ezBoard.t600'/>");
+			        return;
+			    }
+			    var pheigth = window.screen.availHeight;
+			    var pwidth = window.screen.availWidth;
+			    pheigth = parseInt(pheigth) / 2;
+			    pwidth = parseInt(pwidth) / 2;
+			    pheigth = pheigth - 192;
+			    pwidth = pwidth - 260;
+			    window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=350px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+			}
 	    </script>
 	</head>
 	<c:if test="${pParentNeed == 'Y'}">

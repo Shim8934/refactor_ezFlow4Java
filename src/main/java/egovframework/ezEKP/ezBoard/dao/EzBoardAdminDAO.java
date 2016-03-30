@@ -59,8 +59,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<BoardPropertyVO> getBoardAccessList(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getBoardAccessList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getUnderBoardID(Map<String, Object> map) throws Exception{
+		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getUnderBoardID", map);
 	}
 	
 	public BoardPropertyVO getACL(Map<String, Object> map) throws Exception{		
@@ -112,13 +116,15 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 
 	public void saveHeader(BoardListHeaderVO boardListHeaderVO) throws Exception{
-		// TODO Auto-generated method stub
 		insert("EzBoardAdminDAO.saveHeader", boardListHeaderVO);
 	}
 
 	public void saveACL(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		insert("EzBoardAdminDAO.saveACL", map);
+	}	
+
+	public void setUnderBoardIDAcl2(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.setUnderBoardIDAcl2", map);
 	}
 	
 	public void setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
@@ -162,19 +168,15 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteHeader(String boardID) throws Exception{
-		// TODO Auto-generated method stub
 		delete("EzBoardAdminDAO.deleteHeader", boardID);
 	}
 
 	public void deleteACL(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		delete("EzBoardAdminDAO.deleteACL", map);		
 	}
 
 	public void trunkBoard() throws Exception{
-		// TODO Auto-generated method stub
 		delete("EzBoardAdminDAO.trunkBoard", "");
 	}
-
 
 }

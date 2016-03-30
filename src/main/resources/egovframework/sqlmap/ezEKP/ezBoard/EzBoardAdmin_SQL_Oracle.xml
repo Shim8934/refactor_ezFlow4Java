@@ -173,6 +173,14 @@
 		{CALL EZBOARDSTD.EZSP_BRDDELETEACL(#v_pBoardID#, #v_pAccessID#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.getUnderBoardID" parameterClass="Map" resultClass="BoardPropertyVO">
+		{CALL EZBOARDSTD.EZSP_GETUNDERBOARDID(#v_PBOARDID#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL2(#v_PDEFAULTBOARDID#, #v_PBOARDID#, #v_PPARENTBOARDID#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 
