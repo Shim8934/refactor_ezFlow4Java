@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -105,7 +105,7 @@
 		    var pMailListDiv_H = 0;
 		    var pMailPreVDiv_H = 0;
 		    var p_ListorderValue = "";
-		    var pPreviewShow_HOW = "OFF"
+		    var pPreviewShow_HOW = "OFF";
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmlhttp2 = createXMLHttpRequest();
 		    var onclickFlag = false;
@@ -128,7 +128,7 @@
 		        //document.getElementById("divList").style.height = height + "px";
 		        Window_resize();
 		        
-		    }
+		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -152,7 +152,7 @@
 		        //document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
 		        window_onunload_Event = true;
-		    }
+		    };
 		    var Save_unloadSave = false;
 		    function Window_onunload() {
 		        if (window_onunload_Event && !Save_unloadSave) {
@@ -1090,12 +1090,12 @@
 		    }
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            OpenWin = GetOpenWindow("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=ADD&BoardID=" + pBoardID, "MyBoardConfig", 450, 415);
+		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 450, 415);
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		        }
 		        else
-		            showModalDialog("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=ADD&BoardID=" + pBoardID, null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function ChangeNotiOrder() {
@@ -1105,22 +1105,19 @@
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 315) / 2;
 		        
-		        GetOpenWindow("admin/BoardNotiOrder.aspx?BoardID=" + pBoardID, "MyBoardConfig", 320, 450);
+		        GetOpenWindow("/ezBoard/boardNotiOrder.do?boardID=" + pBoardID, "MyBoardConfig", 320, 450);
 		
 		    }
 		    function SetBoardAcl() {
 		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var xml = "<DATA><BOARDID>" + pBoardID + "</BOARDID></DATA>";
-		        xmlpara = loadXMLString(xml);
-		        xmlhttp.open("POST", "interASP/getParentBoardID.aspx", false);
-		        xmlhttp.send(xmlpara);
+		        xmlhttp.open("POST", "/ezBoard/getParentBoardID.do", false);
+		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
 		            if(parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "admin/BoardACL.aspx?AdminType=y&PARENTNEED=Y&BoardID=" + pBoardID + "&ParentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&BoardType=" + pBoardType + "&BoardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		            else
-		                location.href = "admin/BoardACL.aspx?AdminType=y&PARENTNEED=N&BoardID=" + pBoardID + "&ParentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&BoardType=" + pBoardType + "&BoardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		        }
 		        else {
 		            alert("ERROR");

@@ -40,6 +40,44 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	}
 
 	@Override
+	public String addMyBoards(String userID, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userID);
+		map.put("v_PBOARDID", boardID);
+		
+		try {
+			ezBoardAdminDAO.addMyBoards(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "NO";
+		}
+	}
+
+	@Override
+	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
+		try {
+			ezBoardAdminDAO.setMyBoardTreeConfig(boardMyFavoriteVO);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR"; 
+		}
+	}
+
+	@Override
+	public String setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
+		try {
+			ezBoardAdminDAO.setMyBoardTreeMoveCopy(boardMyFavoriteVO);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR"; 
+		}
+	}
+
+	@Override
 	public List<BoardVO> checkApplyUser() throws Exception{
 		return ezBoardAdminDAO.checkApplyUser();
 	}

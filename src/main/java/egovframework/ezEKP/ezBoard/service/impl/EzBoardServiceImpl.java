@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,12 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -117,11 +118,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
+	public int getBrdNewItemCount(String userID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pUserID", myFavoriteVO.getUserId());
-		map.put("v_pNow", myFavoriteVO.getNowDate());
-		map.put("v_pFromNow", myFavoriteVO.getFromNow());
+		map.put("v_pUserID", userID);
 		return ezBoardDAO.getBrdNewItemCount(map);
 	}
 
@@ -139,7 +138,6 @@ public class EzBoardServiceImpl implements EzBoardService {
 	public int getBrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
-		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
 		map.put("v_PTYPE", myFavoriteVO.getType());
 		return ezBoardDAO.getBrdTotalItemCount(map);
@@ -165,6 +163,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 		ezBoardDAO.setTabUsed(map);
 	}
 	
+	@Override
+	public void setNotiOrder(String itemID) throws Exception {
+		ezBoardDAO.setNotiOrder(itemID);
+	}
+
 	@Override
 	public void updateCopyItem(String destItemID) throws Exception {
 		ezBoardDAO.updateCopyItem(destItemID);
@@ -396,6 +399,35 @@ public class EzBoardServiceImpl implements EzBoardService {
 			check = "FALSE";
 		}
 		return check;
+	}
+
+	@Override
+	public String getNoticePostItemAll(String boardID) throws Exception {
+		List<BoardListVO> resultList = ezBoardDAO.getNoticePostItemAll(boardID);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		
+		for(int i = 0; i < resultList.size(); i++){
+			sb.append("<ROW>");
+			for (Field field : BoardListVO.class.getDeclaredFields()){
+				field.setAccessible(true);
+				if(field.get(resultList.get(i)) != null){
+					sb.append("<" + field.getName().toUpperCase() + ">");
+					sb.append(field.get(resultList.get(i)));
+					sb.append("</" + field.getName().toUpperCase() + ">");                    
+				}
+			}
+			sb.append("</ROW>");
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getParentBoardID(String boardID) throws Exception {
+		return ezBoardDAO.getParentBoardID(boardID);
 	}
 
 	@Override

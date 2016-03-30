@@ -346,7 +346,7 @@
 		        var pos = 0;
 		        var filename = "";
 		        var filepath = "";
-		        xmlhttp.open("POST", "interASP/GetItemAttachments.aspx?ItemID=" + strItemID + "&pMode=" + pMode + "&ConLocation=" + strContentLocation + "&Title=" + escape("${strTitle}"), false);
+		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + strItemID + "&mode=" + pMode + "&conLocation=" + strContentLocation + "&title=" + escape("${strTitle}"), false);
 		        xmlhttp.send();
 		        xmldom.async = false;
 		        xmldom.preserveWhiteSpace = true;
@@ -511,25 +511,26 @@
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 		            }
 		        }
-		        else {
-		            var xmldom_attachlist = createXmlDom();
-		            xmldom_attachlist = loadXMLString(pAttachListXml);
-		            var itemid = "";
-		            if (typeof (pAttachListXml) == "string")
-		                pAttachListXml = loadXMLString(pAttachListXml);
-		            var xmldomNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-		            var xmlhttp2 = createXMLHttpRequest();
-		            xmlhttp2.open("POST", "interASP/GetGuid.aspx?count=" + xmldomNodes.length, false);
-		            xmlhttp2.send();
-		            itemid = xmlhttp2.responseText;
-		            itemid = itemid.substring('8', itemid.lastIndexOf("</RESULT>"));
-		            if (pMode != "modify") {
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
-		            } else {
-		                itemid = strItemID + ";";
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
-		            }
-		        }
+		        //안쓰임
+// 		        else {
+// 		            var xmldom_attachlist = createXmlDom();
+// 		            xmldom_attachlist = loadXMLString(pAttachListXml);
+// 		            var itemid = "";
+// 		            if (typeof (pAttachListXml) == "string")
+// 		                pAttachListXml = loadXMLString(pAttachListXml);
+// 		            var xmldomNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
+// 		            var xmlhttp2 = createXMLHttpRequest();
+// 		            xmlhttp2.open("POST", "interASP/GetGuid.aspx?count=" + xmldomNodes.length, false);
+// 		            xmlhttp2.send();
+// 		            itemid = xmlhttp2.responseText;
+// 		            itemid = itemid.substring('8', itemid.lastIndexOf("</RESULT>"));
+// 		            if (pMode != "modify") {
+// 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
+// 		            } else {
+// 		                itemid = strItemID + ";";
+// 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
+// 		            }
+// 		        }
 		        var importance = "";
 		        if (document.getElementById('chkEmergent').checked) {
 		            importance = "1";
@@ -889,14 +890,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("BoardItemPreView_Cross.aspx?gubun=" + gubun + "&boardid=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=772,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=772,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("BoardItemPreView_Cross.aspx?gubun=" + gubun + "&boardid=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=640,width=772,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=640,width=772,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("BoardItemPreView_Cross.aspx?gubun=" + gubun + "&boardid=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=772,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=772,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }

@@ -55,9 +55,13 @@ public interface EzBoardService {
 
 	public String brdCheckIfHasReply(String itemIDs) throws Exception;
 	
+	public String getNoticePostItemAll(String boardID) throws Exception;
+	
+	public String getParentBoardID(String boardID) throws Exception;
+	
 	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
 
-	public int getBrdNewItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
+	public int getBrdNewItemCount(String userID) throws Exception;
 
 	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception;
 
@@ -88,6 +92,8 @@ public interface EzBoardService {
 	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
+	
+	public void setNotiOrder(String itemID) throws Exception;
 
 	public void updateCopyItem(String itemID) throws Exception;
 	

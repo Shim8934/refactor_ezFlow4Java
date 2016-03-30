@@ -68,6 +68,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<String>) list("EzBoardDAO.getCopyItemAttach", orgItemID);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getNoticePostItemAll(String boardID) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getNoticePostItemAll", boardID);
+	}
+	
 	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
 		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
 	}
@@ -94,6 +99,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public String get_parentBoardName(Map<String, Object> map) throws Exception{
 		return (String) select("EzBoardDAO.get_parentBoardName", map);
+	}
+	
+	public String getParentBoardID(String boardID) throws Exception{
+		return (String) select("EzBoardDAO.getParentBoardID", boardID);
 	}
 	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
@@ -182,6 +191,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void setTabUsed(Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.set_TabUsed",map);
+	}
+	
+	public void setNotiOrder(String itemID) {
+		update("EzBoardDAO.setNotiOrder", itemID);
 	}
 	
 	public void updateCopyItem(String itemID) throws Exception{

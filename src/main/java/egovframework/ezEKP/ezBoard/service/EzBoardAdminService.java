@@ -37,6 +37,12 @@ public interface EzBoardAdminService {
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception;
 	
+	public String addMyBoards(String userID, String boardID) throws Exception;
+	
+	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
+	
+	public String setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
+	
 	public int checkIfLeafBoard(String pBoardID) throws Exception;
 	
 	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;	
@@ -74,6 +80,6 @@ public interface EzBoardAdminService {
 	public void deleteACL(String boardID, String targetID) throws Exception;
 
 	public void trunkBoard() throws Exception;
-	
+
 
 }

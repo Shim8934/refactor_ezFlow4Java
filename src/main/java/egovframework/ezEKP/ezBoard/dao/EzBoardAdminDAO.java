@@ -103,6 +103,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		select("EzBoardAdminDAO.deleteBoard", map);
 	}
 	
+	public void addMyBoards(Map<String, Object> map) {
+		insert("EzBoardAdminDAO.addMyBoards", map);
+	}
+	
 	public void saveAttribute(BoardAttributeVO boardAttributeVO) throws Exception{		
 		insert("EzBoardAdminDAO.saveAttribute", boardAttributeVO);
 	}
@@ -115,6 +119,14 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void saveACL(Map<String, Object> map) throws Exception{
 		// TODO Auto-generated method stub
 		insert("EzBoardAdminDAO.saveACL", map);
+	}
+	
+	public void setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		update("EzBoardAdminDAO.setMyBoardTreeConfig", boardMyFavoriteVO);
+	}
+	
+	public void setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		update("EzBoardAdminDAO.setMyBoardTreeMoveCopy", boardMyFavoriteVO);
 	}
 
 	public void getBoardTree_Set(Map<String, Object> map) throws Exception{		

@@ -108,6 +108,10 @@
 		{CALL EZBOARDSTD.EZSP_CHECKIFLEAFBOARD(#v_PBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_BRDADDTOMYBOARDS(#v_PUSERID#, #v_PBOARDID#)}
+	</procedure>
+	
 	<procedure id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map" >
 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_SET(#v_STRLANG#, #v_PQUERY#, #v_RESULT#)}
 	</procedure>
@@ -150,6 +154,14 @@
 	
 	<procedure id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
 		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.setMyBoardTreeConfig" parameterClass="MyFavoriteVO">
+		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE(#treeId#, #userId#, #treeName#, #treeName2#, #treeUpper#, #mode#, #boardId#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
+		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE_MOVECOPY(#userId#, #selTreeID#, #moveTreeID#, #mode#)}
 	</procedure>
 	
 	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map">

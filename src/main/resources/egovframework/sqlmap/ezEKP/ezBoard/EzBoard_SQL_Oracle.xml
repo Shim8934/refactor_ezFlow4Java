@@ -70,6 +70,10 @@
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getNoticePostItemAll" parameterClass="String" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEMALL(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.getSearchBoardItemList" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_GETSEARCHBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_TITLE#, #v_WRITERNAME#, #v_ABSTRACT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -99,7 +103,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#, #v_PTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer">
@@ -143,6 +147,10 @@
 	
 	<procedure id="EzBoardDAO.setAsReads" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSETASREADS(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.setNotiOrder" parameterClass="String">
+		{CALL EZBOARDSTD.EZSP_SETNOTIORDER(#itemID#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.updateMoveItem" parameterClass="Map">
@@ -241,6 +249,17 @@
 	       		boardid = #boardID#
 			AND 
 				background = 'Y'
+		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.getParentBoardID" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				parentboardid 
+        	FROM 
+        		ezBoardSTD.TBL_BOARD_BOARDINFO 
+        	WHERE  
+        		boardid = #boardID#
 		]]>                
 	</select>
 	

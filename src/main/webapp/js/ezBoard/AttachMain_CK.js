@@ -327,7 +327,7 @@ function AppendFileAttachInfo(ret) {
         oTable.appendChild(objTr);
         dadiframe.document.getElementById("lstAttachLink").appendChild(oTable);
 
-        for (i = 0; i < objAttachNodes.length; i++) {
+        for (var i = 0; i < objAttachNodes.length; i++) {
             var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
@@ -391,7 +391,7 @@ function AttachFileList() {
             if (filepath.indexOf(pBoardID) != -1) {
                 strRet += filepath + ";";
             } else {
-            strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+            strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
             }
         }
     }
@@ -563,9 +563,9 @@ function AttachFileList_Photo()
 		    strRet += filepath + ";";
 		} else {
 		    if (saveItemBoardId != "" && saveItemBoardId == pBoardID )
-		        strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+		        strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
 		    else
-		        strRet += saveItemBoardId + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+		        strRet += saveItemBoardId + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
 		}
 	}
 	

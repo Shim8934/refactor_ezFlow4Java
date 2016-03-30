@@ -46,6 +46,12 @@ public class BoardMyFavoriteVO {
 	private String type;
 	/** */
 	private String boardAdmin_FG;
+	/** */
+	private String mode;
+	/** 선택한 트리아이디*/
+	private String selTreeID;
+	/** 옮겨질 트리아이디*/
+	private String moveTreeID;
 	
 	public String getBoardId() {
 		return boardId;
@@ -178,6 +184,24 @@ public class BoardMyFavoriteVO {
 	}
 	public void setBoardAdmin_FG(String boardAdmin_FG) {
 		this.boardAdmin_FG = boardAdmin_FG;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	public String getSelTreeID() {
+		return selTreeID;
+	}
+	public void setSelTreeID(String selTreeID) {
+		this.selTreeID = selTreeID;
+	}
+	public String getMoveTreeID() {
+		return moveTreeID;
+	}
+	public void setMoveTreeID(String moveTreeID) {
+		this.moveTreeID = moveTreeID;
 	}
 	
 }
