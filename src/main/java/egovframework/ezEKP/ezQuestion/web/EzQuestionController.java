@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -1134,7 +1134,7 @@ System.out.println("iResult : "+iResult);
 		strData += "<table class=\"question\"><tr>";
 		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "</th>";
 		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
-		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(\"" + strNo + "\");\">" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
+		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + strNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
 		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
 		strData += getAttachList(strNo, "0", brdId, itemNo) + "</td>";
 		strData += "</tr>";
@@ -1791,29 +1791,20 @@ System.out.println("!!");
         if (request.getParameter("href") != null){
         	href=request.getParameter("href");
         }
-        
-System.out.println("type@" + type);
-System.out.println("BOARDID@" + vBrdId);
-System.out.println("ITEMID@" + vItemNo);
-System.out.println("QSTNO@" + strQuestionNo);
-System.out.println("ANSNO@" + strAnswer);
-System.out.println("ATTID@" + strAttID);
 
-		
-//        QstAttachVO qstAttachVO = new QstAttachVO();
-//        qstAttachVO.setBrdId(Integer.parseInt(vBrdId));
-//        qstAttachVO.setItemNo(Integer.parseInt(vItemNo));
-//        qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
-//        qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
-//        qstAttachVO.setAttachNo(Integer.parseInt(strAttID));
-        
         QstAttachVO qstAttachVO = ezQuestionService.getAttachInfo2(vBrdId, vItemNo, strQuestionNo, strAnswer, strAttID);
         href=qstAttachVO.getAttachUrl();
         filename = qstAttachVO.getAttachName();
         
-        String fileExt = href.substring(href.lastIndexOf(","));
+        String fileExt = href.substring(href.lastIndexOf("."));
         filename += fileExt;
-        
+
+        qstAttachVO.setBrdId(Integer.parseInt(vBrdId));
+        qstAttachVO.setItemNo(Integer.parseInt(vItemNo));
+        qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
+        qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
+        qstAttachVO.setAttachNo(Integer.parseInt(strAttID));
+
         switch(type){
         case "1":
         	title = egovMessageSource.getMessage("ezQuestion.t178");
@@ -1828,8 +1819,10 @@ System.out.println("ATTID@" + strAttID);
         	title = "URL " + egovMessageSource.getMessage("ezQuestion.t171");
         	break;
         }
-        model.addAttribute("qstAttachVO", qstAttachVO);
         
+        model.addAttribute("qstAttachVO", qstAttachVO);
+        model.addAttribute("title", title);
+       
         return "/ezQuestion/qstAttachView";
 	}
 	
@@ -1991,7 +1984,7 @@ System.out.println("ATTID@" + strAttID);
         int pPageSize = 0, pageCount = 0, pBlockSize = 0;
         String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
         String pAnsType = "";
-        
+
         if (request.getParameter("brd_id") != null)
             brdId = request.getParameter("brd_id");
         if (request.getParameter("item_no") != null)
