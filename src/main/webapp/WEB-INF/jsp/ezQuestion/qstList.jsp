@@ -34,7 +34,6 @@
 			var totalPage = "${qstListVO.totalPage}";
 		    var totalCount = "${qstListVO.totalCnt}";
 		    var receve = "${receve}";
-		    alert(szSearchParam);
 		    
 			document.onselectstart = function(){ return false; };
 			window.onload = function(){
@@ -263,8 +262,8 @@
 		        } --%>
 		    }
 		    
+		    var qst_delete_itemmsg_dialogArguments = new Array();
 		    function menu_Delete(){
-		    	var qst_delete_itemmsg_dialogArguments = new Array();
 		        var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
 		        var szLen = table.rows.length;
@@ -286,6 +285,7 @@
 		                            p_SelectedTitle = ret;
 		                        }else{
 		                            p_SelectedTitle = row.cells[1].innerText;
+
 		                        }
 		                        if(navigator.userAgent.indexOf("Firefox") > -1){
 		                            var ret = row.cells[5].innerHTML;
@@ -312,11 +312,10 @@
 		            var rgParams = new Array();
 		            rgParams["TITLE"] = p_SelectedTitle;
 		            rgParams["WRITER"] = p_SelectedWriter;
-
 		            qst_delete_itemmsg_dialogArguments[0] = rgParams;
 		            qst_delete_itemmsg_dialogArguments[1] = menu_Delete_Complete;
 
-		            var Qst_Delete_ItemMsg = GetOpenWindow("Qst_Delete_ItemMsg.aspx?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "Qst_Delete_ItemMsg", 400, 230);
+		            var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
 		            try{
 		            	Qst_Delete_ItemMsg.focus(); 
 		            }catch (e){
