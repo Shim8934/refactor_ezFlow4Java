@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -433,7 +434,7 @@ public class EzEmailMailReadController {
 				Part part = getAttachPart(message, filename);
 				if(part != null){
 					response.setContentType(part.getContentType());
-					response.addHeader("content-disposition", "attachment; filename=" + filename);
+					response.addHeader("content-disposition", "attachment; filename=" + URLEncoder.encode(filename,"UTF-8"));
 					InputStream input = part.getInputStream();
 					OutputStream output = response.getOutputStream();
 					byte[] buffer = new byte[4096];
@@ -452,8 +453,7 @@ public class EzEmailMailReadController {
 
 	private Part getAttachPart(Part part, String filename) throws Exception{
 		if(part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
-			System.out.println("1");
-			if(part.getFileName().equals(filename)){
+			if(part.getFileName()!=null && MimeUtility.decodeText(part.getFileName()).equals(filename)){
 				return part;
 			}
 		}
