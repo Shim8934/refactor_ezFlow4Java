@@ -240,7 +240,7 @@
 <img src='/images/mtgrsp-decline.gif' width="20" height="20" title="<spring:message code='ezEmail.t902' />" onclick="Schedule_btn('DECLINE');" style='cursor:pointer;' />
 </span>
 <div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;">
-<p class="title"><spring:message code='ezEmail.t99000003' /><span>${ pAttachListHtml_sub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
+<p class="title"><spring:message code='ezEmail.t99000003' /><span>${ pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
 <span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
 	<ul class="list" id="PreviewAttachList">${pAttachListHtml}</ul>
 </div>

@@ -43,7 +43,7 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	var ITSMName = "${ _ITSMName }";
 	var sentItems = "${ _IsSentItems }";
 	var IsSecurityMail = "Normal";
-	var ReadCountCheck ="${pReadFlag}";
+	var ReadCountCheck ="N"; //${pReadFlag}
     var IsAttach = "${pIsAttach}";
     var pUse_Editor = "${Use_Editor}";
     var pisDelete = "${ isDelete}";

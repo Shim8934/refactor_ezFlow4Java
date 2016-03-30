@@ -184,7 +184,6 @@
                 return;
             if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
                 var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
-                var unreadcount = 0;
                 var caption = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
 
                 if (get_unreadend_2010.href == PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) {

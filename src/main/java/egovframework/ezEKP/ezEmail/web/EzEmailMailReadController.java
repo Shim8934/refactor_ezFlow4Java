@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -8,9 +9,9 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
@@ -168,7 +169,10 @@ public class EzEmailMailReadController {
 					String name = null;
 					for(int i=0; i<arrRecipientsCC.length; i++){
 						name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-						if(name != null){
+						if(name == null){
+							name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
+						}
+						else{
 							name = MimeUtility.decodeText(name);
 						}
 						if(ccListme){
@@ -231,7 +235,8 @@ public class EzEmailMailReadController {
 				if(subject != null){
 					title = egovMessageSource.getMessage("ezEmail.t565") + subject;
 				}
-
+				
+				message.setFlag(Flag.SEEN, true);
 			}
 			f.close(true);
 		}
@@ -260,12 +265,13 @@ public class EzEmailMailReadController {
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
 		
-		String htmlBody = null;
 		
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
 		Folder f = ia.getFolder(folderPath);
 
+		List<String> bodyInfoList = null;
+		String pAttachListHtmlSub = "";
 		if(f != null){
 			f.open(Folder.READ_ONLY);
 			Message message = null;
@@ -273,62 +279,137 @@ public class EzEmailMailReadController {
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
 			if(message != null){
-				htmlBody = test(message);
+				bodyInfoList = getBodyInfo(message);
+				int size = Integer.parseInt(bodyInfoList.get(2));
+				String strSize = "";
+                if (size > 1024 * 1024)
+                {
+                	size = size / 1024 / 1024;
+                	strSize = size + "MB";
+                }
+                else if (size > 1024)
+                {
+                	size = size / 1024;
+                	strSize = size + "KB";
+                }
+                else
+                	strSize = size + "B";
+                pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180") + "</b>(" + strSize + ")";
+				
 			}
 		}
-		
-		model.addAttribute("htmlBody", htmlBody);
+		ia.close();
+		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
+		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
+		model.addAttribute("isAttach", bodyInfoList.get(4));
 		return "ezEmail/mailReadContent";
 	}
 
-	public String test(Part part){
-		String result = "";
+	public List<String> getBodyInfo(Part part){
+		List<String> resultList = new ArrayList<String>();
 		try {
+			String htmlBody = "";
+			String pAttachListHtml = "";
+			String filesize = "0";
+			String filecnt = "0";
+			String isAttach = "";
+			
 			System.out.println(part.getContentType());
-			if(part.isMimeType("text/html")){
-				result += part.getContent().toString();
+			if(part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
+				String strSize = "";
+				String filename = part.getFileName();
+				int size = part.getSize();
+                if (size > 1024 * 1024)
+                {
+                    size = size / 1024 / 1024;
+                    strSize = size + "MB";
+                }
+                else if (size > 1024)
+                {
+                    size = size / 1024;
+                    strSize = size + "KB";
+                }
+                else
+                    strSize = size + "B";
+
+                if (filename == null){
+                    filename = "";
+                }
+                else{
+                	filename = MimeUtility.decodeText(filename);
+                }
+
+                System.out.println(part.getSize());
+                String aitem = "/ezEmail/downloadAttach.do?mode=Attach&ID=111(추후수정)&ATTID=111(추후수정)";
+                pAttachListHtml += " <li><span onclick=\"DownloadPC(this);\" _filehref='" + aitem + "' _filesize='" + part.getSize() + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+                pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+                pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+                isAttach = "OK";
+                filesize = (Integer.parseInt(filesize) + part.getSize()) + "";
+                filecnt = (Integer.parseInt(filecnt) + 1) + "";
 			}
-			else if(part.isMimeType("text/plain")){
-				result += part.getContent().toString();
+			else if(part.isMimeType("text/html")){
+				htmlBody += part.getContent().toString();
 			}
-			else if(part.isMimeType("multipart/alternative")){
+			else if(part.isMimeType("text/plain")){ //인코딩 해야함(\r\n..)
+				htmlBody += part.getContent().toString();
+			}
+			else if(part.isMimeType("multipart/alternative")){ //더 좋은 알고리즘으로 수정하고싶음
 				Multipart mp = (Multipart)part.getContent();
 				int count = mp.getCount();
 				Part p = null;
 				for (int i = 0; i < count; i++) {
 					p = mp.getBodyPart(i);
+					System.out.println(p.getContentType());
 					if(mp.getBodyPart(i).isMimeType("text/html")){
-						result += p.getContent().toString();
+						htmlBody += p.getContent().toString();
 					}
 				}
-				if(result.equals("")){
+				if(htmlBody.equals("")){
 					for (int i = 0; i < count; i++) {
 						p = mp.getBodyPart(i);
+						System.out.println(p.getContentType());
 						if(mp.getBodyPart(i).isMimeType("text/plain")){
-							result += p.getContent().toString();
+							htmlBody += p.getContent().toString();
 						}
 					}
 				}
 			}
-			else if (part.isMimeType("multipart/mixed")) {
+			else if (part.isMimeType("multipart/mixed")) { //재귀
 				Multipart mp = (Multipart)part.getContent();
 		         int count = mp.getCount();
 		         for (int i = 0; i < count; i++) {
-		        	 result += test(mp.getBodyPart(i));
+		        	 List<String> tempList = getBodyInfo(mp.getBodyPart(i));
+		        	 htmlBody += tempList.get(0);
+		        	 pAttachListHtml += tempList.get(1);
+		        	 filesize = (Integer.parseInt(filesize) + Integer.parseInt(tempList.get(2))) + "";
+		        	 filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+		        	 if(tempList.get(4).equals("OK")){
+		        		 isAttach = "OK";
+		        	 }
 		         }
 			}
-			else if(part.isMimeType("multipart/related")){
-				result += part.getContent().toString();
+			else if(part.isMimeType("multipart/related")){ //related메소드 따로 만들기
+				htmlBody += part.getContent().toString();
 			}
-			else if(part.isMimeType("image/*")){
-				 
-			}
+			
+			resultList.add(htmlBody);
+			resultList.add(pAttachListHtml);
+			resultList.add(filesize);
+			resultList.add(filecnt);
+			resultList.add(isAttach);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return resultList;
 	}
 
+	@RequestMapping(value="/ezEmail/downloadAttach.do")
+	public void downloadAttach(){
+		
+	}
+	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}

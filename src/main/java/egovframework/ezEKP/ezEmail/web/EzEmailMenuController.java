@@ -182,7 +182,7 @@ public class EzEmailMenuController {
 			}
 			Document doc = commonUtil.convertStringToDocument(sb.toString());
 			String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
-			response.setContentType("text/plain; charset=utf-8");
+			response.setContentType("text/xml; charset=utf-8");
 			
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
