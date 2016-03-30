@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title><spring:message code="ezQuestion.t270" /></title>		
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -26,11 +26,17 @@
 		<style>
 		</style>
 		<script language="JavaScript" type="text/javascript">
-			var time = new Date("yyyy-mm-dd");
+			//현재 시간 구하는 함수
+			Date.prototype.yyyymmdd = function() {
+		    	var yyyy = this.getFullYear().toString();
+		    	var mm = (this.getMonth() + 1).toString();
+		    	var dd = this.getDate().toString();
+		    	return yyyy +"-"+ (mm[1] ? mm : '0'+mm[0]) +"-"+ (dd[1] ? dd : '0'+dd[0]);
+			}
+			var time = new Date();
 			var g_Dateinit = false;
-			var L_SearchStartDt = time.getFullYear()+time.getMonth()+time.getDate();
-alert(L_SearchStartDt);
-			<%-- var L_SearchEndDt = "<%=DateTime.Now.Date.ToString("yyyy-MM-dd")%>"; --%>
+			var L_SearchStartDt = new Date().yyyymmdd();
+			var L_SearchEndDt = new Date().yyyymmdd(); 
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31)
 			document.onselectstart = function () { return false; };
@@ -134,9 +140,9 @@ alert(L_SearchStartDt);
     	}
     	function menuQst_List() {
         	if(CrossYN())
-            	var szUrl = "Qst_List_Cross.aspx?brd_id='${pBrdID}'"
+            	var szUrl = "qstList.do?brd_id='${pBrdID}'"
         	else
-            	var szUrl = "Qst_List.aspx?brd_id='${pBrdID}'"
+            	var szUrl = "qstList.do?brd_id='${pBrdID}'"
         	window.location.href = szUrl;	
     	}
     	function form_check() {
@@ -184,15 +190,15 @@ alert(L_SearchStartDt);
             	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-            	var strSearch = "title=" + escape(ReplaceText(document.getElementById("txtSubject").value, "'", "'"));
-            	strSearch += "&range=" + escape(document.getElementById("hidRange").value);
-            	strSearch += "&sdate=" + escape(document.getElementById("hidStartDate").value);
-            	strSearch += "&edate=" + escape(document.getElementById("hidEndDate").value);
-            	var szUrl = "";
+            	var strSearch = "title=" + encodeURI((document.getElementById("txtSubject").value), "'", "'");
+            	strSearch += "&responseRange=" + escape(document.getElementById("hidRange").value);
+            	strSearch += "&postDate=" + escape(document.getElementById("hidStartDate").value);
+            	strSearch += "&pollEndDate=" + escape(document.getElementById("hidEndDate").value);
+            	var szUrl = "";			    
             	if(CrossYN())
-                	szUrl = "Qst_List_Cross.aspx?brd_id='${pBrdID}'&" + strSearch
+                	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
             	else
-                	szUrl = "Qst_List.aspx?brd_id='${pBrdID}'&" + strSearch
+                	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
 
             	window.location.href = szUrl;
         	}	
@@ -205,7 +211,7 @@ alert(L_SearchStartDt);
 		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" action="Qst_Search.aspx">
+		<form method="post" action="/ezQuestion/qstSearch.do" >
   			<h1><spring:message code='ezQuestion.t300' /></h1>
   			<div id="mainmenu">
     			<ul>
