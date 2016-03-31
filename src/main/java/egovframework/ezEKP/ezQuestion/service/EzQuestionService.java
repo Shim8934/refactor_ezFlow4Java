@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
+import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -41,6 +42,8 @@ public interface EzQuestionService {
 	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO) throws Exception;
 	
 	public QstAttachVO getAttachInfo2(String vBrdId, String vItemNo, String strQuestionNo, String strAnswer, String strAttID) throws Exception;
+	
+	public QstReuseQuestionVO reUseQuestionData (int brdId, int itemNo) throws Exception; 
 	
 	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception;
 	
@@ -79,7 +82,7 @@ public interface EzQuestionService {
 	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang)throws Exception;
 	
 	public Integer responseListCnt(String brdId, String itemNo, String responseYN, String lang) throws Exception;
-
+	
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 
 	public void stepSave2(Map<String, Object> map) throws Exception;
@@ -117,7 +120,11 @@ public interface EzQuestionService {
 	public void updateResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public void updateResCnt(int brdId, int itemNo) throws Exception;
-
+	
+	public void updatePollEndDate(int brdId, int itemNo, String endDate, String endFlag) throws Exception;
+	
+	public void changePermission(QstUserPermissionVO qstUserPermissionVO, QstUserPollItemVO qstUserPollItemVO) throws Exception;
+	
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void deletePermission(int brdId, int itemNo) throws Exception;

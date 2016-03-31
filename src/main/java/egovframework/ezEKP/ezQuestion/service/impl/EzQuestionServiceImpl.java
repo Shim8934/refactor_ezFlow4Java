@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
+import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -91,7 +92,7 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pContent", map.get("content"));
 		map.put("v_pPostDate", dateFormat.format(calendar.getTime()));
 		map.put("v_pPostTerm", map.get("expiredate"));
-		map.put("v_pItemRef", map.get("itemId"));
+		map.put("v_pItemRef", map.get("itemNo"));
 		map.put("v_pItemImp", map.get("importance"));
 		map.put("v_pSDate", map.get("startdate"));
 		map.put("v_pEdate", map.get("enddate"));
@@ -568,6 +569,42 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pAttachNo", strAttID);
 		return ezQuestionDAO.getAttachInfo2(map);
 	}
+	
+	@Override
+	public void changePermission(QstUserPermissionVO qstUserPermissionVO, QstUserPollItemVO qstUserPollItemVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstUserPermissionVO.getBrdId());
+		map.put("v_pItemNo", qstUserPermissionVO.getItemNo());
+		map.put("v_psubject", qstUserPollItemVO.getTitle());
+		map.put("v_pcontent", qstUserPollItemVO.getContent());
+		map.put("v_ppostterm", qstUserPollItemVO.getPostTerm());
+		map.put("v_pstartdate", qstUserPollItemVO.getPostDate());
+		map.put("v_penddate", qstUserPollItemVO.getPollEndDate());
+		map.put("v_presultflg", qstUserPermissionVO.getPublicResultFlg());
+		map.put("v_pflg", qstUserPermissionVO.getPublicFlg());
+		map.put("v_pmultiflg", qstUserPermissionVO.getMultiResponseFlg());
+		map.put("v_pendflg", qstUserPermissionVO.getEndFlg());
+		map.put("v_presponserange", qstUserPermissionVO.getResponseRange());
+		ezQuestionDAO.changePermission(map);
+	}
+	
+	@Override
+	public void updatePollEndDate(int brdId, int itemNo, String endDate, String endFlag) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_penddate", endDate);
+		map.put("v_pendflg", endFlag);
+		ezQuestionDAO.updatePollEndDate(map);
+	}
+	
+	@Override
+	public QstReuseQuestionVO reUseQuestionData(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BRD_ID", brdId);
+		map.put("v_ITEM_NO", itemNo);
+		return ezQuestionDAO.reUseQuestionData(map);
+	}
 
 	@Override
 	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang) throws Exception {
@@ -627,6 +664,4 @@ System.out.println("pPageSize = " + pPageSize);
 System.out.println("lang = " + lang);
 		return ezQuestionDAO.responseList(map);
 	}	
-	
-	
 }
