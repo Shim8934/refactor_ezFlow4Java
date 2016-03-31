@@ -122,8 +122,6 @@
 		<result property="multiResponseFlg"				column="MULTI_RESPONSE_FLG"				columnIndex="4"/>
 		<result property="publicResultFlg"				column="PUBLIC_RESULT_FLG"				columnIndex="5"/>
 		<result property="responseRange"				column="RESPONSE_RANGE"				columnIndex="6"/>
-		<result property="itemNo"				column="ITEM_NO"				columnIndex="7"/>
-		<result property="brdId"				column="BRD_ID"				columnIndex="8"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseVO">
@@ -258,8 +256,7 @@
 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-
-	<procedure id="EzQuestionDAO.reUseQuestionData" parameterClass="Map" resultMap="qstReuseQuestionVO">
+	<procedure id="EzQuestionDAO.reUseQuestionData"  parameterClass="Map" resultMap="qstReuseQuestionVO">
 		{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		
@@ -288,7 +285,7 @@
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, )}
+		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
