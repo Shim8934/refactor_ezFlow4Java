@@ -170,7 +170,6 @@
         	else {
             	document.getElementById("hidStartDate").value = L_SearchStartDt + " 00:00:00";
             	document.getElementById("hidEndDate").value = L_SearchEndDt + " 23:59:59";
-            	document.frmCreate.action = "qstStep2ReUse.do?item_no=${qstReuseQuestionVO.itemNo}&brd_no=${qstReuseQuestionVO.brdId}";
             	document.frmCreate.submit();
         	}
     	}
@@ -261,9 +260,9 @@
     }
     function menuQst_List() {
          if(CrossYN())
-            var szUrl = "/ezQuestion/qstList.do?brd_id=${qstReuseQuestionVO.brdId}&brd_nm=${qstReuseQuestionVO.brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
+            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
         else
-            var szUrl = "/ezQuestion/qstList.do?brd_id=${qstReuseQuestionVO.brdId}&brd_nm=${qstReuseQuestionVO.brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
+            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
         window.location.href = szUrl; 
     } 
     function menu_SelectRange() {
@@ -312,7 +311,7 @@
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
-         var szUrl = "/ezQuestion/qstRangeSelect/rangeSelect.do?brd_id='${ezQuestionVO.brdID}'&item_no=" + item_no; 
+         var szUrl = "/ezQuestion/qstRangeSelect/rangeSelect.do?brd_id='${brdId}'&item_no=" + item_no; 
         if ((g_windowReference == null) || (g_windowReference.closed == true)) {
             if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                 var feature = GetOpenPosition(560, 630);
@@ -373,7 +372,7 @@
 </style>
 </HEAD>
 <body class="mainbody"> 
-<form id="frmCreate" method="post" action="/ezQuestion/qstStep2.do" name="frmCreate"> 
+<form id="frmCreate" method="post" action="/ezQuestion/qstStep2ReUse.do" name="frmCreate"> 
         <h1><spring:message code="ezQuestion.t436" /></h1>
         <div id="mainmenu">
             <ul>
@@ -424,11 +423,11 @@
                         <input type="text" name="hidOpenResult" id="hidopenResult" value="${qstUserPermissionVO.publicResultFlg}" style="display:none"> 
                         <input type="text" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" style="display:none"> 
                         <input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-                        <input type="text" name="brdId" id="brd_id" value="${qstListVO.brdId}" style="display:none"> 
+                        <input type="text" name="brdId" id="brd_id" value="${brdId}" style="display:none"> 
                         <input type="text" name="brdNm" id="brd_nm" value="${ezQuestionVO.brdNm}" style="display:none"> 
                         <input type="text" name="brdPostterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" style="display:none"> 
                         <input type="text" name="itemNo" id="item_no" style="display:none"> 
-                        <input type="text" name="old_item_num" id="old_item_num" value="${qstUserPollItemVO.itemNo}" style="display:none">
+                        <input type="text" name="old_item_num" id="old_item_num" value="${itemId}" style="display:none">
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
                         <input type="text" name="selectYN" id="select_YN" style="display:none">
@@ -486,7 +485,7 @@
             </tr> 
             <tr> 
                 <th><spring:message code="ezQuestion.t257" /></th> 
-                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols="">${qstUserPollItemVO.content}</textarea> </td> 
+                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols="">${qstReuseQuestionVO.content}</textarea> </td> 
             </tr>
         </table> 
         <div class="btnposition">
