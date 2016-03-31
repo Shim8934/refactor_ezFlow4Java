@@ -159,6 +159,12 @@
 		<result property="responseUserAge"			column="USER_AGE"				columnIndex="9"/>
 		<result property="responseDate"				column="RESPONSE_DATE"			columnIndex="10"/>
 	</resultMap>
+	
+	<resultMap class="QstVO" id="objQuestion">
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="2"/>
+		<result property="answerType"				column="ANSWERTYPE"					columnIndex="3"/>
+	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -218,6 +224,14 @@
 	
 	<procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
 		{CALL EZQUESTION.EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getObjQuestion" parameterClass="Map" resultMap="objQuestion">
+		{CALL EZQUESTION.EZSP_GETOBJQUESTION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQuestion" parameterClass="Map" resultMap="qstVO">
+		{CALL EZQUESTION.EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">

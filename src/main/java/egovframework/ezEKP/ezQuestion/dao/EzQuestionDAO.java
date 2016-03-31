@@ -62,8 +62,19 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<String>) list("EzQuestionDAO.getResponseAnswer", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<QstResponseVO> responseList(Map<String, Object> map) {
 		return (List<QstResponseVO>) list("EzQuestionDAO.responseList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstVO> getObjQuestion(Map<String, Object> map) {
+		return (List<QstVO>) list("EzQuestionDAO.getObjQuestion", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstVO> getQuestion(Map<String, Object> map) {
+		return (List<QstVO>) list("EzQuestionDAO.getQuestion", map);
 	}
 	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {

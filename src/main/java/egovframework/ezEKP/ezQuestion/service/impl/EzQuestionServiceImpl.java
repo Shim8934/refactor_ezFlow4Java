@@ -279,8 +279,8 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	@Override
 	public Integer resCount(String brdId, String itemNo) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_pstrBrdID", brdId);
-		map.put("v_pItemNo", itemNo);
+		map.put("v_pstrBrdID", Integer.parseInt(brdId));
+		map.put("v_pItemNo", Integer.parseInt(itemNo));
 		return ezQuestionDAO.resCount(map);
 	}
 
@@ -409,12 +409,12 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public Integer getAnsCnt(QstAnswerVO answerVO) throws Exception {
+	public Integer getAnsCnt(int brdId, int itemNo, int quesNo) throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object> ();
-		map.put("v_pstrBrdID", answerVO.getBrdId());
-		map.put("v_pItemNo", answerVO.getItemNo());
-		map.put("v_pQuesNo", answerVO.getQuestionNo());
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", quesNo);
 		return ezQuestionDAO.getAnsCnt(map);
 	}
 
@@ -656,12 +656,23 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
-System.out.println("brdId = " + brdId);
-System.out.println("itemNo = " + itemNo);
-System.out.println("responseYN = " + responseYN);
-System.out.println("pTotalCnt = " + pTotalCnt);
-System.out.println("pPageSize = " + pPageSize);
-System.out.println("lang = " + lang);
 		return ezQuestionDAO.responseList(map);
+	}
+
+	@Override
+	public List<QstVO> getObjQuestion(String pBrdID, String pItemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", pBrdID);
+		map.put("v_pItemNo", pItemNo);
+		return ezQuestionDAO.getObjQuestion(map);
+	}
+
+	@Override
+	public List<QstVO> getQuestion(String vBrdId, String vItemNo, String vQuesNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", vBrdId);
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", vQuesNo);
+		return ezQuestionDAO.getQuestion(map);
 	}	
 }

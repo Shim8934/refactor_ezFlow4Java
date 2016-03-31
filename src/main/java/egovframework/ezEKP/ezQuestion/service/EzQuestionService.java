@@ -33,6 +33,10 @@ public interface EzQuestionService {
 	
 	public List<QstResponseVO> responseList(String brdId, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang) throws Exception;
 	
+	public List<QstVO> getObjQuestion(String pBrdID, String pItemNo) throws Exception;
+	
+	public List<QstVO> getQuestion(String vBrdId, String vItemNo, String vQuesNo) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -69,7 +73,7 @@ public interface EzQuestionService {
 
 	public Integer resCount(String brdId,String itemNo) throws Exception;
 	
-	public Integer getAnsCnt(QstAnswerVO answerVO) throws Exception;
+	public Integer getAnsCnt(int brdId, int itemNo, int quesNo) throws Exception;
 	
 	public Integer getResponseMaxNo(int brdId, int itemNo, int questionNo) throws Exception;
 	
@@ -128,6 +132,4 @@ public interface EzQuestionService {
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void deletePermission(int brdId, int itemNo) throws Exception;
-
-	
 }
