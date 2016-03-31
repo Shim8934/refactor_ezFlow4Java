@@ -79,8 +79,7 @@
 			}
 
 			function menuQst_ResponseList(pflag){
-alert(receve);
-			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&responseYN=" + pflag;
+			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&response_YN=" + pflag;
 			    window.location.href = szUrl;
 			}
 

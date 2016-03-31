@@ -30,7 +30,7 @@ public interface EzQuestionService {
 	
 	public List<QstResponseVO> resultSubjectiveList(String brdId, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang) throws Exception;
 	
-	public List<QstResponseVO> responseList(String brdId, String itemNo, String responseYN, int i, int pPageSize, String lang) throws Exception;
+	public List<QstResponseVO> responseList(String brdId, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang) throws Exception;
 	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	

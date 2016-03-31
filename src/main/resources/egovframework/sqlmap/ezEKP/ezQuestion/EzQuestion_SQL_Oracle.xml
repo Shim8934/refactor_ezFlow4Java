@@ -194,7 +194,11 @@
 	<procedure id="EzQuestionDAO.resultSubjectiveList" parameterClass="Map" resultMap="qstResponseVO">
 		{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-		
+	
+	<procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
+		{CALL EZQUESTION.EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>

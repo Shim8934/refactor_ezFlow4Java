@@ -912,7 +912,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			currPage = request.getParameter("currPage");
 		
 		String receve = "brdId=" + request.getParameter("brdId") +
-				"%itemNo=" + request.getParameter("itemNo") +
+				"&itemNo=" + request.getParameter("itemNo") +
                 "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
                 "&responseRange=" + request.getParameter("responseRange") +
                 "&postDate=" + request.getParameter("postDate") +
@@ -1059,7 +1059,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			/** EZSP_POLLRESPCNT*/
 			iResult = ezQuestionService.pollRespCnt(brdId, itemNo, questionNo, iAnsCnt);
 		}
-System.out.println("iResult : "+iResult);
 		return iResult;	
 	}
 	
@@ -2104,7 +2103,6 @@ System.out.println("!!");
         model.addAttribute("public_flg", publicFlg);
         model.addAttribute("page_count", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
-        model.addAttribute("xmlRtnDom", commonUtil.convertDocumentToString(xmlRtnDom));
         
 		return "/ezQuestion/qstResultSubjective";
 	}
@@ -2163,7 +2161,7 @@ System.out.println("!!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", responseRange = "";
         String brdId = "", itemNo = "", questionNo = "", responseYN = "", pCurrBlock = "";
-        int pPageSize = 0, pBlockSize = 0, pageCount = 1, pCurrPage = 1, pTotalCnt = 0, pTotalPage = 0;
+        int pPageSize = 0, pBlockSize = 0, pageCount = 0, pCurrPage = 1, pTotalCnt = 0, pTotalPage = 0;
         String lang="";
         String pAnsType = "";
         
@@ -2177,10 +2175,10 @@ System.out.println("!!");
         	if (request.getParameter("page_count").equals(""))
         		pageCount = 1;
         	else
-        		pageCount = Integer.parseInt(request.getParameter("page_count"));
+        		pageCount = pageCount-1;
         }
         if (request.getParameter("currPage") != null)
-        	if (request.getParameter("page_count").equals(""))
+        	if (request.getParameter("currPage").equals(""))
         		pCurrPage = 1;
         	else
         		pCurrPage = Integer.parseInt(request.getParameter("currPage"));
@@ -2210,19 +2208,18 @@ System.out.println("!!");
             pageCount = pageCount - 1;
         
         int iStart = (pCurrPage - 1) * pPageSize;
-//System.out.println("pTotalCnt =" + pTotalCnt);
+        
         /** EZSP_RESPONSELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdId, itemNo, responseYN.trim(), pTotalCnt-iStart, pPageSize, lang);
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
-        Document xmlRtnDom = commonUtil.convertStringToDocument(data);
         
         int iNum = 0;
-        String pAnsSubjectivity = "";
         for(QstResponseVO qstResponseVO : qstResponseVOList){
         	Node targetNode = xmlMainDom.getFirstChild();
-            Node newRow = commonUtil.convertStringToDocument(commonUtil.getQueryResult(qstResponseVO));
+        	targetNode.appendChild(xmlMainDom.importNode(commonUtil.convertStringToDocument(commonUtil.getQueryResult(qstResponseVO)).getFirstChild(), true));
+        	Node newRow = targetNode.getChildNodes().item(iNum);
             Node No = xmlMainDom.createElement("NO");
             
             iNum++;
@@ -2233,7 +2230,6 @@ System.out.println("!!");
             No.appendChild(ivalue);
             newRow.appendChild(No);
             targetNode.appendChild(newRow);
-//System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom));
         }        
         model.addAttribute("brd_id", brdId);
         model.addAttribute("item_no", itemNo);

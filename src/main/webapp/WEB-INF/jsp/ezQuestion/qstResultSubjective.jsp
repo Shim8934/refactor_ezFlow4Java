@@ -32,8 +32,7 @@
 			var pTotalPage = "${pTotalPage}";
 			var pCurrPage = "${pCurrPage}";
 			var totalCount = "${pTotalCnt}";
-			/* var xmlHTTP = createXMLHttpRequest();
-			var xmlRtn = createXmlDom(); */
+			var xmlHTTP = createXMLHttpRequest();
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {

@@ -619,6 +619,12 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
+System.out.println("brdId = " + brdId);
+System.out.println("itemNo = " + itemNo);
+System.out.println("responseYN = " + responseYN);
+System.out.println("pTotalCnt = " + pTotalCnt);
+System.out.println("pPageSize = " + pPageSize);
+System.out.println("lang = " + lang);
 		return ezQuestionDAO.responseList(map);
 	}	
 	
