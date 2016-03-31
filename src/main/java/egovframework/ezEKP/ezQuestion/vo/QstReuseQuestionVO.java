@@ -13,23 +13,7 @@ public class QstReuseQuestionVO {
 	private String publicResultFlg;
 	//공개범위		
 	private String responseRange;
-	//아이템번호
-	private int itemNo;
-	//게시글번호
-	private int brdId;
 	
-	public int getItemNo() {
-		return itemNo;
-	}
-	public void setItemNo(int itemNo) {
-		this.itemNo = itemNo;
-	}
-	public int getBrdId() {
-		return brdId;
-	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
-	}
 	public String getTitle() {
 		return title;
 	}
