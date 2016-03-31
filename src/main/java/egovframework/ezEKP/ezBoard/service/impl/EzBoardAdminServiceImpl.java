@@ -369,6 +369,34 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	@Override
 	public void trunkBoard() throws Exception {
 		ezBoardAdminDAO.trunkBoard();
+	}	
+
+	@Override
+	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", vo.getBoardID());
+		map.put("v_PACCESSID", vo.getAccessID());
+		map.put("v_PACCESSNAME", vo.getAccessName());
+		map.put("v_PACCESSNAME2", vo.getAccessName2());
+		
+		if(vo.getAccessLevel() != null && !vo.getAccessLevel().trim().equals("")){
+			map.put("v_PACCESSLEVEL", Integer.parseInt(vo.getAccessLevel()));
+		}else{
+			map.put("v_PACCESSLEVEL", -1);
+		}		
+		map.put("v_PACCESS", vo.getAccess_());
+		map.put("v_PPARENTBOARDID", vo.getParentBoardID());
+		map.put("v_PBOARDADMIN_FG", vo.getBoardAdmin_FG());
+		map.put("v_PLISTVIEW_FG", vo.getListView_FG());
+		map.put("v_PREAD_FG", vo.getRead_FG());
+		map.put("v_PWRITE_FG", vo.getWrite_FG());
+		map.put("v_PREPLY_FG", vo.getReply_FG());
+		map.put("v_PDELETE_FG", vo.getDelete_FG());
+		map.put("v_PINHERIT_FG", vo.getInherit_FG());
+		map.put("v_PPOSTNOTICE", vo.getPostNotice());
+		map.put("v_PBOARDGROUPACL", vo.getBoardGroupACL());
+		
+		ezBoardAdminDAO.setUnderBoardIDAcl(map);
 	}
 
 	@Override
@@ -379,7 +407,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTBOARDID", parentBoardID);
 		
-		ezBoardAdminDAO.setUnderBoardIDAcl2(map);		
+		ezBoardAdminDAO.setUnderBoardIDAcl2(map);
 	}
 	
 }

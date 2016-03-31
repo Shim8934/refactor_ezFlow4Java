@@ -121,7 +121,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	public void saveACL(Map<String, Object> map) throws Exception{
 		insert("EzBoardAdminDAO.saveACL", map);
-	}	
+	}
+	
+	public void setUnderBoardIDAcl(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.setUnderBoardIDAcl", map);		
+	}
 
 	public void setUnderBoardIDAcl2(Map<String, Object> map) throws Exception{
 		insert("EzBoardAdminDAO.setUnderBoardIDAcl2", map);
@@ -178,5 +182,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void trunkBoard() throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard", "");
 	}
+
 
 }

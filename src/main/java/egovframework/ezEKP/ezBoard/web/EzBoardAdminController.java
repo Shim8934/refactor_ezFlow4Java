@@ -799,19 +799,69 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public void setUnderBoardAcl(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		String boardID = request.getParameter("boardID");
 		String type = request.getParameter("type");
-
-		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2");
 		
+		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2");
+
 		if(type.equals("1")){
+			List<BoardPropertyVO> list2 = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "1");
+
 			for(int i = 0; i < list.size(); i++){
-				BoardPropertyVO vo = list.get(i);
-System.out.println(vo.getBoardName());				
-			}
+				BoardPropertyVO vo1 = list.get(i);
+				
+				for(int j = 0; j < list2.size(); j++){
+					BoardPropertyVO vo2 = list2.get(j);
+					vo2.setBoardID(vo1.getBoardID());
+					
+					ezBoardAdminService.setUnderBoardIDAcl(vo2);
+				}				
+			}			
 		}else{			
 			for(int i = 0; i < list.size(); i++){
-				BoardPropertyVO vo = list.get(i);				
+				BoardPropertyVO vo = list.get(i);
 				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID());
 			}
 		}		
 	}
+	
+	@RequestMapping(value = "/admin/ezBoard/boardAclList.do")	
+	public String boardAclList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO, Model model) throws Exception{				
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardID = request.getParameter("boardID");
+		String serverName = config.getProperty("config.ServerName");
+		/*
+		 * 2016-03-31 장진혁 아직사용되지 않아서 주석처리
+		String strLang = config.getProperty("config.primary");
+		String use_editor = config.getProperty("config.EDITOR");
+		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
+		String pRootBoardID = "top";
+		String pExcludeBoardID = " ";
+        String pSubFlag = "0";
+        
+        int pSelectBy = 0;
+        int pMode = 0;        
+        
+		loginVO = commonUtil.userInfo(loginCookie);
+		String pUserID = loginVO.getId();
+		String pDeptID = loginVO.getDeptID();
+		String pCompanyID = loginVO.getCompanyID();
+		String pRollInfo = loginVO.getRollInfo();
+        
+        String BoardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID);
+        
+        if (BoardGroupAdmin_FG == "OK" || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1){
+            pMode = 0;
+        }else{
+            pMode = 1;
+        }
+        
+        String resultXML = ezBoardController.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang));
+        */
+        
+        model.addAttribute("boardID", boardID);
+        model.addAttribute("serverName", serverName);
+        model.addAttribute("parentBoardID", parentBoardID);
+		
+		return "admin/ezBoard/boardAclList";
+	}
 }
+

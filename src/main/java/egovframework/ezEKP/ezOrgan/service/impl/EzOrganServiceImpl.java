@@ -206,7 +206,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 		String[] memberInfo2 = new String[list.size()];
 		
 		for (int i = 0; i < list.size(); i++){
-			StringBuilder sb = new StringBuilder();    		
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
 			OrganDeptVO obj = list.get(i);			
             
             if (obj.getType().toLowerCase().equals("user")){
@@ -222,7 +224,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         		                
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
                 sb.append(commonUtil.getQueryResult(userVO));
-            }            
+            }
+            sb.append("</DATA>");
 
             String cn2 = obj.getCn();
             String displayname2 = obj.getDisplayName();
@@ -329,8 +332,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String[] searchInfo;
         String listInfo = "";
         String strSize = "";
-        String strSQL = "";
-        String strXml = "";
+        String strSQL = "";        
         String type = "";        
         int i = 0;
         
@@ -409,11 +411,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
 		for(int j=0; j < list.size(); j++){
-			Map<String, Object> map1 = new HashMap<String, Object>();
+			Map<String, Object> map1 = new HashMap<String, Object>();			
 			OrganDeptVO organVO = list.get(j);
-			Object result = null;
+			Object result = null;			
 			
 			if(!organVO.getCn().equals("") && organVO.getCn() != null){
+				StringBuilder sb = new StringBuilder();
+				sb.append("<DATA>");
+				
 				if(organVO.getType().equals("user")){
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
@@ -425,10 +430,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 					map1.put("v_LANGDATA", pLangCode);
 					
 					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
-				}				
-				strXml = commonUtil.getQueryResult(result);
+				}
 				
-				listInfo = getMemberInfo(strXml, pCellList, pPropList, "", "", organVO.getType());
+				sb.append(commonUtil.getQueryResult(result));
+				sb.append("</DATA>");
+				
+				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", "", organVO.getType());
 				memberlist2.append(listInfo);
 			}			
 		}

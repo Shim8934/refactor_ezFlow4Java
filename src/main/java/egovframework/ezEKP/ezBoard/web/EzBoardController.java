@@ -1408,7 +1408,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    StringWriter writer = new StringWriter();
 	    transformer.transform(new DOMSource(doc), new StreamResult(writer));
 	    String output = writer.getBuffer().toString();
-
+System.out.println(output);
 	    res.setContentType("text/xml"); 
         res.setCharacterEncoding("UTF-8");
         res.setHeader("Cache-Control", "no-cache");

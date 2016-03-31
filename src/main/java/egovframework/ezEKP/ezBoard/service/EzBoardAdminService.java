@@ -82,7 +82,9 @@ public interface EzBoardAdminService {
 	public void deleteACL(String boardID, String targetID) throws Exception;
 
 	public void trunkBoard() throws Exception;
+	
+	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;	
 
 }

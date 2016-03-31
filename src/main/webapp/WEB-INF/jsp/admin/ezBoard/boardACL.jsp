@@ -638,6 +638,23 @@
 			    pwidth = pwidth - 260;
 			    window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=350px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 			}
+			function AclCopy() {
+	            var listview = new ListView();
+	            listview.LoadFromID("AccessListView");
+	            var selnode = listview.GetSelectedRows();
+	            
+	            if (selnode.length == 0) {
+	                alert('<spring:message code="ezBoard.t600"/>');
+	                return;
+	            }
+	            var pheigth = window.screen.availHeight;
+	            var pwidth = window.screen.availWidth;
+	            pheigth = parseInt(pheigth) / 2;
+	            pwidth = parseInt(pwidth) / 2;
+	            pheigth = pheigth - 192;
+	            pwidth = pwidth - 260;
+	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=655,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	        }
 	    </script>
 	</head>
 	<c:if test="${pParentNeed == 'Y'}">
