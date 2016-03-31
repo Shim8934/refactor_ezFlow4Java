@@ -254,12 +254,12 @@
 		    }
 		    
 		    function menu_InfoModify(){
-		        <%-- if(menu_Checking()){
+		         if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "InfoModify") == false)
 		            	return;
 		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&itemNo=" + szSelectedItemNo;
 		            window.location.href = szUrl;
-		        } --%>
+		        } 
 		    }
 		    
 		    var qst_delete_itemmsg_dialogArguments = new Array();
@@ -523,7 +523,7 @@
 		        if (szCheckCnt == 1) {
 		            if (checkUserPollStatus(p_SelectedItemNo, "Reuse") == false)
 		            	return;
-		            var szUrl = "/ezQuestion/qstStep1Reuse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
+		            var szUrl = "/ezQuestion/qstStep1ReUse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
 		            window.location.href = szUrl;
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
