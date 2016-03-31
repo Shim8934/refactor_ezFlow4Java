@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
+import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
@@ -87,6 +88,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 
 	public QstVO getQuestionForSubjective(Map<String, Object> map) {
 		return (QstVO) select("EzQuestionDAO.getQuestionForSubjective", map);
+	}
+	
+	public QstReuseQuestionVO reUseQuestionData(Map<String, Object> map) {
+		return (QstReuseQuestionVO) select("EzQuestionDAO.reUseQuestionData", map);
 	}
 	
 	public String getItemSeq(String brdId) {
@@ -212,6 +217,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		update("EzQuestionDAO.updateItemSeq", map);
 	}
 	
+	public void updatePollEndDate(Map<String,Object> map) {
+		update("EzQuestionDAO.updatePollEndDate", map);
+	}
+	
 	public void stepSave2(Map<String,Object> map) {
 		update("EzQuestionDAO.stepSave2", map);
 	}
@@ -235,11 +244,15 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void updateResCnt(Map<String, Object> map) {
 		update("EzQuestionDAO.updateResCnt", map);
 	}
+	
+	public void changePermission(Map<String, Object> map) {
+		update("EzQuestionDAO.changePermission", map);
+	}
+	
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
 	public void deletePermission(Map<String,Object> map) {
 		delete("EzQuestionDAO.deletePermission", map);
 	}
-
 }
