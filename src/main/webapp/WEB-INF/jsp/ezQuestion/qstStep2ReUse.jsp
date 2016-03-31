@@ -31,8 +31,8 @@
 		    var usertitle = "UserTitle";
 		    var userdept = "UserDepteName";
 		    var g_senderinfo = "UserCompanyName"+" UserDepteName "+"UserTitle";
-		    var v_brdid = "${qstUserPollItemVO.brdId}";
-		    var v_itemid = "${qstUserPollItemVO}.itemNo";
+		    var v_brdid = "${qstStep1VO.brdId}";
+		    var v_itemid = "${qstStep1VO.itemNo}";
 			var surveyState = "";
 			var WinRef;
 
@@ -200,7 +200,7 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id='<c:out value='${qstUserPollItemVO.itemNo}'/>'" , "addques", 700, 440); 
+            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id=${qstStep1VO.itemNo}/>'" , "addques", 700, 440); 
 		        }
 		        else {
             		WinRef.focus();
@@ -222,7 +222,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=" + '<c:out value='${qstUserPollItemVO.brdId}'/>' + "&item_id=" + '<c:out value='${qstUserPollItemVO.itemNo}'/>';
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}";
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
 
@@ -285,8 +285,8 @@
                 		var xmlDoc = createXmlDom();
                 		var objNode;
                 		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${qstUserPollItemVO.brdId}'/>'); 
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${qstUserPollItemVO.itemNo}'/>'); 
+                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdId}"); 
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}"); 
                 		xmlHttp.open("POST","qstCancel.do",false);
                 		xmlHttp.send(xmlDoc);
                 		var resultXML = xmlHttp.responseXML;
@@ -309,8 +309,8 @@
                     		var xmlDoc = createXmlDom();
                     		var objNode;
                     		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${qstUserPollItemVO.brdId}'/>');
-                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${qstUserPollItemVO.itemNo}'/>'); 
+                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdId}");
+                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}"); 
                     		xmlHttp.open("POST","qstCancel.do",false);
                     		xmlHttp.send(xmlDoc);
                     		var resultXML = xmlHttp.responseXML;
@@ -430,8 +430,8 @@
 		        		var xmlDoc = createXmlDom();
 		        		var objNode;
 		        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${qstUserPollItemVO.brdId}'/>');
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${qstUserPollItemVO.itemNo}'/>');
+		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdId}");
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}");
 		        		xmlHttp.open("POST", "/ezQuestion/qstCancel.do", false);
 		        		xmlHttp.send(xmlDoc);
 		        		var resultXML = xmlHttp.responseXML;
@@ -451,7 +451,7 @@
 				  function menuQst_tempSave_old() {
 				        var xmlHttp = createXMLHttpRequest();
 
-				        xmlHttp.open("POST", "callTempSave.do?brd_id=${qstUserPollItemVO.brdId}&item_id=${qstUserPollItemVO.itemNo}", false);
+				        xmlHttp.open("POST", "callTempSave.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}", false);
 				            xmlHttp.send();
 				        //alert(xmlHttp.responseText);
 				            var tempxml = loadXMLString(xmlHttp.responseText);
@@ -493,7 +493,7 @@
 				
 				        xmlDom2 = loadXMLString(strQuestion);
 				
-				        xmlHttp2.open("POST","callTempLoad.do?brd_id=${qstUserPollItemVO.brdId}&item_id=${qstUserPollItemVO.itemNo}" ,false);
+				        xmlHttp2.open("POST","callTempLoad.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}" ,false);
 				        xmlHttp2.send(xmlDom2)	
 				
 				        if ( xmlHttp2.responseText == "" ) return;
@@ -552,7 +552,7 @@
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${qstUserPollItemVO.title}'/>"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
            			</tr>
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
@@ -582,7 +582,7 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<c:out value='${requestScope.pStep1DataXML}'/>" />
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<c:out value='${pStep1DataXML}'/>" />
 			</div>
 		</form>
 	    	<div id="Privew_List" style="display: none;">
