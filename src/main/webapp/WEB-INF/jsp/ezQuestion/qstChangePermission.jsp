@@ -63,7 +63,7 @@
 	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
-	        	var NowDate = new Date("${qstListVO.pollStartDate}");
+	        	var NowDate = new Date("${qstListVO.postDate}");
 	        	var NowDate2 = new Date("${qstListVO.pollEndDate}");
 	        	NowDate.setHours(NowDate.getHours() - 9);
 	        	NowDate2.setHours(NowDate2.getHours() - 9);
@@ -242,13 +242,13 @@
 	        	}
 	    	}
 	    	function PollEnd() {
-		        var StatusEnd = "${qstListVO.endFlg}";
+		        var StatusEnd = "${qstUserPermissionVO.endFlg}";
 		        if (StatusEnd == "1") {
 	    	        alert("<spring:message code='ezQuestion.t203' />");
 	        	    return;
 	        	}
 		        //sysdate 가져올것
-	        	var m_PostDate = String('');
+	        	var m_PostDate = new Date();
 	        	if (L_SearchStartDt.length > 10) {
 	            	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	}
@@ -295,9 +295,53 @@
 		        return document.getElementById("RangeXMLStr").value;
 		    }
 		</script>
+		<script ID="clientEventHandlersJS" type="text/javascript">
+			function set_anonymity_onchange() {
+				var idx = document.getElementById("set_anonymity").selectedIndex;
+				document.getElementById("hidanonymity").value = document.getElementById("set_anonymity")[idx].value;	
+			}
+			function set_MultiResponse_onchange() {
+				var idx = document.getElementById("set_MultiResponse").selectedIndex;
+				document.getElementById("hidMultiResponse").value = document.getElementById("set_MultiResponse")[idx].value;
+			}
+			function set_openResult_onchange() {
+				var idx = document.getElementById("set_openResult").selectedIndex;
+				document.getElementById("hidopenResult").value = document.getElementById("set_openResult")[idx].value;
+			}
+			function set_Target_onchange() {
+				var idx = document.getElementById("set_Target").selectedIndex;
+				document.getElementById("hidTarget").value = document.getElementById("set_Target")[idx].value;
+			}
+			function Save_OK_chk() {
+	    		var ResultYN = '${resultYN}';
+	    		if (ResultYN == "True") {
+	        		document.getElementById("set_anonymity").disabled = true;
+	        		document.getElementById("set_Target").disabled = true;
+	        		document.getElementById("aLinkbtn").style.display = "none";
+	    		}
+	    		var tmpChk = '${saveFlg}'
+	    		if (tmpChk == "OK") {
+	        		alert("<spring:message code='ezQuestion.t212' />");
+	        		menuQst_List();
+	    		}
+			}
+    		function updateParent(_element, _value, _Type) {
+        		var elementRef = document.getElementsByName(_element);
+        		if (elementRef.length > 0) {
+            		switch (_Type) {
+                		case "selectedIndex":
+                    		elementRef[0].selectedIndex = _value;
+                    		break;
+                		case "value":
+                    		elementRef[0].value = _value;
+                    		break;
+            		}
+        		}
+    		}
+		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" action="Call_Change_Permission.aspx" name="frmCreate" id="frmCreate"> 
+		<form method="post" action="/ezQuestion/callChangePermission.do" name="frmCreate" id="frmCreate"> 
         	<input type="hidden" value="${receveStr2}" name="Receve_str2" id="Receve_str2" /> 
         	<h1><spring:message code='ezQuestion.t213' /></h1>
         	<div id="mainmenu">
@@ -336,8 +380,8 @@
 	                    <spring:message code='ezQuestion.t237' />
     	                <select onchange="return set_anonymity_onchange()" name="set_anonymity" id="set_anonymity">
     	                	<c:choose>
-    	                		<c:when test="${qstListVO.publicFlg eq '0'}"> 
-            	            		<option value="0"><spring:message code='ezQuestion.t238' /></option> 
+    	                		<c:when test="${qstUserPermissionVO.publicFlg eq '0'}"> 
+            	            		<option value="0" selected="selected"><spring:message code='ezQuestion.t238' /></option> 
                 	        		<option value="1"><spring:message code='ezQuestion.t239' /></option>
 								</c:when>                	        		 
                     	    	<c:otherwise>
@@ -349,7 +393,7 @@
                     	<spring:message code='ezQuestion.t240' />
                     	<select onchange="return set_MultiResponse_onchange()" name="set_MultiResponse" id="set_MultiResponse">
                     		<c:choose>  
-	                        	<c:when test="${qstListVO.multiResponseFlg eq '0'}">  
+	                        	<c:when test="${qstUserPermissionVO.multiResponseFlg eq '0'}">  
     	                    		<option value="1"><spring:message code='ezQuestion.t241' /></option> 
         	                		<option value="0" selected="selected"><spring:message code='ezQuestion.t242' /></option>
         	                	</c:when> 
@@ -362,7 +406,7 @@
                     	<spring:message code='ezQuestion.t243' />
                     	<select onchange="return set_openResult_onchange()" name="set_openResult" id="set_openResult">
                     		<c:choose>   
-	                        	<c:when test="${qstListVO.publicResultFlg eq '0'}">
+	                        	<c:when test="${qstUserPermissionVO.publicResultFlg eq '0'}">
     	                    		<option value="1"><spring:message code='ezQuestion.t244' /></option> 
         	                		<option value="0" selected="selected"><spring:message code='ezQuestion.t245' /></option>
         	                	</c:when>	 
@@ -398,7 +442,7 @@
     	            <td>
         	            <select style="WIDTH: 100px; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" onchange="return set_Target_onchange()" name="set_Target" id="set_Target">
         	            	<c:choose> 
-        	            		<c:when test="${qstListVO.responseRange eq '0'}">
+        	            		<c:when test="${qstUserPermissionVO.responseRange eq '0'}">
                 	        		<option value="0" selected="selected"><spring:message code='ezQuestion.t251' /></option> 
                     	    		<option value="1"><spring:message code='ezQuestion.t252' /></option>
                     	    	</c:when> 
@@ -413,11 +457,11 @@
             	</tr> 
             	<tr> <!----------- 설문제목 -------------> 
 	                <th><spring:message code='ezQuestion.t255' /></th> 																																							<!-- 	//자바단에서 replace해주기 -->		
-    	            <td><input type="text" maxlength="500" name="txtSubject" id="txtSubject" style="FONT-SIZE:9pt;  WIDTH:99%;  FONT-FAMILY:'<spring:message code='ezQuestion.t105' />'" value="${ezQuestionVO.txtSubject}"> </td> 
+    	            <td><input type="text" maxlength="500" name="txtSubject" id="txtSubject" style="FONT-SIZE:9pt;  WIDTH:99%;  FONT-FAMILY:'<spring:message code='ezQuestion.t105' />'" value="${qstUserPollItemVO.title}"> </td> 
         	    </tr>
             	<tr>    <!----------- 설문취지 ------------------> 
 	                <th><spring:message code='ezQuestion.t257' /></th> 
-    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 99%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" rows="10" cols="">${ezQuestionVO.txtContent}</textarea></td> 
+    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 99%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" rows="10" cols="">${qstUserPollItemVO.content}</textarea></td> 
         	    </tr> 
         	</table> 
         	<div class="btnposition">
@@ -426,27 +470,27 @@
         	</div>
         	<div id="hidField" style="display:none">
 	            <input type="hidden" name="brd_id" id="brd_id" value="${qstListVO.brdId}" /> 
-    	        <input type="hidden" name="item_no" id="item_no" value="${qstListVO.itemNo}" /> 
-        	    <input type="hidden" name="hidanonymity" id="hidanonymity" value="${qstListVO.publicFlg}" /> 
-            	<input type="hidden" name="hidopenResult" id="hidopenResult" value="${qstListVO.publicResultFlg}" /> 
-            	<input type="hidden" name="hidMultiResponse" id="hidMultiResponse" value="${qstListVO.multiResponseFlg}" /> 
-            	<input type="hidden" name="hidendpoll" id="hidendpoll" value="${qstListVO.endFlg}" /> 
+    	        <input type="hidden" name="item_no" id="item_no" value="${qstUserPollItemVO.itemNo}" /> 
+        	    <input type="hidden" name="hidanonymity" id="hidanonymity" value="${qstUserPermissionVO.publicFlg}" /> 
+            	<input type="hidden" name="hidopenResult" id="hidopenResult" value="${qstUserPermissionVO.publicResultFlg}" /> 
+            	<input type="hidden" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" /> 
+            	<input type="hidden" name="hidendpoll" id="hidendpoll" value="${qstUserPermissionVO.endFlg}" /> 
             	<input type="hidden" name="brd_id2" id="brd_id2" value="${qstListVO.brdId}" /> 
             	<input type="hidden" name="brd_nm" id="brd_nm" value="${ezQuestionVO.brdNm}" /> 
             	<input type="hidden" name="brd_postterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" />        
             	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${qstListVO.pollStartDate}" />
             	<input type="hidden" name="item_no2" id="item_no2" value="${ezQuestionVO.itemId}" />        
             	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${qstListVO.pollEndDate}" />
-            	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstListVO.responseRange}" /> 
+            	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
             	<input type="hidden" name="select_YN" id="select_YN" />
             	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="<%-- <%= Server.HtmlEncode(_SB.ToString()) %> --%>" />
         	</div>
 		</form> 
-    	<form name="frmEndPoll" action="callEndPoll.do" method="post"> 
+    	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 
         	<input type="hidden" value="${qstListVO.brdId}" name="brd_id"/> 
         	<input type="hidden" value="${qstListVO.itemNo}" name="item_no" /> 
         	<input type="hidden" value="1" name="hidEndPoll" /> 
-        	<input type="hidden" value="${receveStr2}" name="Receve_str2" /> 
+        	<input type="hidden" value="${receve}" name="Receve_str2" /> 
 		</form> 	
 	</body>
 </html>
