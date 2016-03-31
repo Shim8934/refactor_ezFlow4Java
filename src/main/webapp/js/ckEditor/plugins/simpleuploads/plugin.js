@@ -1766,7 +1766,7 @@ function createXHRupload(editor, data)
 	}
 
 	data.xhr = xhr;
-
+	
 	// Upload the file
 	xhr.open("POST", data.url );
 	xhr.onload = function() {

@@ -5,12 +5,11 @@
 <html style="height:100%">
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
-		<meta name="CODE_LANGUAGE" Content="C#">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
@@ -186,7 +185,7 @@
 		    }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/CheckIfHasReply.aspx?ItemList=" + pItemID + ",;", false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -228,7 +227,7 @@
 		
 		                    if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + pItemID + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -254,7 +253,7 @@
 		            if (BoardAdmin_FG == "true" || gubun != "2") {
 		                if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + pItemID + ";", false);
+		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "NO") {
@@ -329,6 +328,7 @@
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
+		        //익명게시판
 		        if (gubun == "2") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
@@ -346,39 +346,39 @@
 		                    return;
 		                }
 		
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                }
-		                else {
-		                    if (pUse_IE11Browser == "CK") {
-		                        window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                    }
-		                    else {
-		                        if (pUse_Editor == "")
-		                            window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                        else
-		                            window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                    }
-		                }
+// 		                if (CrossYN() || pNoneActiveX == "YES") {
+		                    window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+// 		                }
+// 		                else {
+// 		                    if (pUse_IE11Browser == "CK") {
+// 		                        window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                    }
+// 		                    else {
+// 		                        if (pUse_Editor == "")
+// 		                            window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                        else
+// 		                            window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                    }
+// 		                }
 		                window.resizeTo(785, 780);
 		            }
 		        }
 		        if (gubun != "2") {
-		            if (CrossYN() || pNoneActiveX == "YES") {
-		                window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		            }
-		            else {
+// 		            if (CrossYN() || pNoneActiveX == "YES") {
+		                window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+// 		            }
+// 		            else {
 		
-		                if (pUse_IE11Browser == "CK") {
-		                    window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                }
-		                else {
-		                    if(pUse_Editor == "")
-		                        window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                    else
-		                        window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                }
-		            }
+// 		                if (pUse_IE11Browser == "CK") {
+// 		                    window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                }
+// 		                else {
+// 		                    if(pUse_Editor == "")
+// 		                        window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                    else
+// 		                        window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                }
+// 		            }
 		            window.resizeTo(785, 780);
 		        }
 		    }
@@ -390,21 +390,21 @@
 		            return;
 		        }
 		
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		        }
-		        else {
+// 		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+// 		        }
+// 		        else {
 		
-		            if (pUse_IE11Browser == "CK") {
-		                window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		            }
-		            else {
-		                if(pUse_Editor == "")
-		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		                else
-		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-		            }
-		        }
+// 		            if (pUse_IE11Browser == "CK") {
+// 		                window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		            }
+// 		            else {
+// 		                if(pUse_Editor == "")
+// 		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		                else
+// 		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
+// 		            }
+// 		        }
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Copy_Onclick() {
@@ -426,7 +426,7 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature + GetOpenPosition(340,656);
-		        window.open("CopyBoardItem_Cross.aspx?ItemIDList=" + pItemID + ";" + "&BoardID=" + pBoardID, "", feature, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", feature, "");
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -449,7 +449,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = btn_Move_Onclick_Complete;
-		            var OpenWin = window.open("admin/MoveBoardItem_Cross.aspx?ItemIDList=" + pItemID + ";" + "&BoardIDList=" + pBoardID, "MoveBoardItem_Cross", GetOpenWindowfeature(340, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "MoveBoardItem", GetOpenWindowfeature(340, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -460,7 +460,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("admin/MoveBoardItem_Cross.aspx?ItemIDList=" + pItemID + ";" + "&BoardIDList=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
 		                    window.opener.location.reload();
@@ -613,7 +613,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 400) / 2;
-		        var szHref = "Item_ReadList_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID;
+		        var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
 		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
@@ -631,20 +631,20 @@
 		    function btn_Print_Onclick() {
 		        if (CrossYN()) {
 		            url = window.location.href;
-		            url = url.replace(".aspx", "_Print_Option.aspx");
+		            url = url.replace(".do", "PrintOption.do");
 		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
-		            var OpenWin = window.open(url, "boarditemview_cross_print_option", GetOpenWindowfeature(380, 200));
+		            var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var parameter = "";
 		            url = window.location.href;
-		            url = url.replace(".aspx", "_Print_Option.aspx");
+		            url = url.replace(".do", "PrintOption.do");
 		            var feature = "status:no;dialogWidth:380px;dialogHeight:200px;help:no;";
 		            feature = feature + GetShowModalPosition(380, 200);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		            if (RtnVal[0] != "0" && RtnVal[1] != "0") {
-		                url = url.replace("_Print_Option.aspx", "_Print.aspx");
+		                url = url.replace("PrintOption.do", "Print.do");
 		                url = url + "&oneline=" + RtnVal[0] + "&attach=" + RtnVal[1];
 		                window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 		            }
@@ -874,12 +874,12 @@
 		        if (CrossYN()) {
 		            board_retransoption_dialogArguments[0] = "";
 		            board_retransoption_dialogArguments[1] = btn_Retrans_Onclick_Complete;
-		            DivPopUpShow(310, 200, "/myoffice/ezBoardSTD/Board_RetransOption.aspx");
+		            DivPopUpShow(310, 200, "/ezBoard/boardRetransOption.do");
 		
 		        }
 		        else {
 		            var parameter = "";
-		            var url = "Board_RetransOption.aspx";
+		            var url = "/ezBoard/boardRetransOption.do";
 		            var feature = "status:no;dialogWidth:300px;dialogHeight:200px;help:no;";
 		            feature = feature + GetShowModalPosition(300, 200);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -925,37 +925,37 @@
 		    }
 		    function Retrans_boardContent() {
 		        var feature = GetOpenWindowfeature(765, 820);
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-		        }
-		        else {
-		            if (pUse_IE11Browser == "CK") {
-		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-		            }
-		            else {
-		                if(pUse_Editor == "")
-		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-		                else
-		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-		            }
-		        }
+// 		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
+// 		        }
+// 		        else {
+// 		            if (pUse_IE11Browser == "CK") {
+// 		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
+// 		            }
+// 		            else {
+// 		                if(pUse_Editor == "")
+// 		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
+// 		                else
+// 		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
+// 		            }
+// 		        }
 		    }
 		    function Retrans_boardAttach() {
 		        var feature = GetOpenWindowfeature(765, 820);
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-		        }
-		        else {
-		            if (pUse_IE11Browser == "CK") {
-		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-		            }
-		            else {
-		                if(pUse_Editor == "")
-		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-		                else
-		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-		            }
-		        }
+// 		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
+// 		        }
+// 		        else {
+// 		            if (pUse_IE11Browser == "CK") {
+// 		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
+// 		            }
+// 		            else {
+// 		                if(pUse_Editor == "")
+// 		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
+// 		                else
+// 		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
+// 		            }
+// 		        }
 		    }
 		    function Retrans_mailContent() {
 		        var pheight = window.screen.availHeight;
@@ -1016,9 +1016,9 @@
 	        <ul>
 	        	<c:choose>
 	        		<c:when test="${boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
-	        			<c:when test="${guBun != '3'}">
+	        			<c:if test="${guBun != '3'}">
 		        			<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-	        			</c:when>
+	        			</c:if>
 	        		</c:when>
 	        		<c:when test="${pReservedItem == 'true'}">
 	        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
@@ -1027,10 +1027,10 @@
 	        		<c:when test="${apprFlag == 'N'}">
 	        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
 	                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
-	                    	<c:when test="${boardItem.writerID == userInfo.id}">
+	                    	<c:if test="${boardItem.writerID == userInfo.id}">
 		                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
-	                    	</c:when>
+	                    	</c:if>
 	        		</c:when>
 	        		<c:when test="${apprFlag == 'C'}">
 	        			<li><span onClick="btn_Modify_Onclick()"><spring:message code='ezBoard.t999021' /></span></li>
@@ -1049,61 +1049,51 @@
 		        				</c:choose>
 		        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
-		                        <c:choose>
-			                        <c:when test="${guBun != '3'}">
-			                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
-			                        </c:when>
-		                        </c:choose>
+		                        <c:if test="${guBun != '3'}">
+		                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+		                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+		                        </c:if>
 		        			</c:when>
 		        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-		        				<c:choose>
-			        				<c:when test="${guBun != '3'}">
-			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-			        				</c:when>
-		        				</c:choose>
+		        				<c:if test="${guBun != '3'}">
+		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+		        				</c:if>
 		        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
-		                        <c:choose>
-			                        <c:when test="${guBun != '3'}">
-			                        	<c:choose>
-				                        	<c:when test="${guBun != '2'}">
-						                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
-									            <%--게시물이동추가--%>
-									            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
-				                        	</c:when>
-			                        	</c:choose>
-			                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-			                    	</c:when>
-			                    	<c:when test="${guBun != '2'}">
-			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-			                    	</c:when>
-			                    	<c:when test="${guBun != '3'}">
-			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
-			                        </c:when>
-		                        </c:choose>
+		                        <c:if test="${guBun != '3'}">
+		                        	<c:if test="${guBun != '2'}">
+				                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+							            <%--게시물이동추가--%>
+							            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+		                        	</c:if>
+		                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+		                    	</c:if>
+		                    	<c:if test="${guBun != '2'}">
+		                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+		                    	</c:if>
+		                    	<c:if test="${guBun != '3'}">
+		                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+		                        </c:if>
 		        			</c:when>
 		        			<c:otherwise>
-		        				<c:when test="${guBun != '3'}">
+		        				<c:if test="${guBun != '3'}">
 			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			                        <li ID='btn_Move' style="display:none;"><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
 			                        <li ID='btn_Move' style="display:none;"><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                        <li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
-			                    </c:when>
+			                    </c:if>
 		        			</c:otherwise>
 	        			</c:choose>
 	        		</c:otherwise>
 	        	</c:choose>
-	        	<c:choose>
-		        	<c:when test="${useEzKMS == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-		        		<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-		        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t321' /></span></li>
-		        		</c:when>
-		        	</c:when>
-		        	<c:when test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
-		        	</c:when>
-	        	</c:choose>
+	        	<c:if test="${useEzKMS == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+	        		<c:if test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+	        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t321' /></span></li>
+	        		</c:if>
+	        	</c:if>
+	        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+	        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
+	        	</c:if>
 	        </ul>
 	      </div>    
 	      <div id="close">

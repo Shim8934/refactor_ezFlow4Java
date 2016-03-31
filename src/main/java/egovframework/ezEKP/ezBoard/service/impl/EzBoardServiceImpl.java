@@ -17,10 +17,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl implements EzBoardService {
@@ -54,6 +54,38 @@ public class EzBoardServiceImpl implements EzBoardService {
 		return ezBoardDAO.get_parentBoardName(map);
 	}
 
+	@Override
+	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception{
+		BoardPropertyVO strProp = ezBoardDAO.getBoardProperty(pBoardID);
+		
+		StringBuilder sb = new StringBuilder();
+
+        sb.append("<NODES>");
+        sb.append("<NODE>");
+        sb.append("<ITEMEXPIRES>" + strProp.getItemExpires() + "</ITEMEXPIRES>");
+        sb.append("<ATTACHLIMIT>" + strProp.getAttachSizeLimit() + "</ATTACHLIMIT>");
+        sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
+        sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
+        sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
+        sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
+        sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
+        sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
+        sb.append("<GUBUN><![CDATA[" + strProp.getGuBun() + "]]></GUBUN>");
+        sb.append("<DELETEAFTER><![CDATA[" + strProp.getDeleteAfter() + "]]></DELETEAFTER>");
+        sb.append("<BOARDCOLOR><![CDATA[" + strProp.getBoardColor() + "]]></BOARDCOLOR>");
+        sb.append("<BOARDNO><![CDATA[" + strProp.getBoardNo() + "]]></BOARDNO>");
+        sb.append("<PORTLET><![CDATA[" + strProp.getPortlet() + "]]></PORTLET>");
+        sb.append("<ONELINEREPLY>" + strProp.getOneLineReply() + "</ONELINEREPLY>");
+        sb.append("<BACKGROUND>" + strProp.getBackGround() + "</BACKGROUND>");
+        sb.append("<FORMFLAG>" + strProp.getFormFlag() + "</FORMFLAG>");
+        sb.append("<APPRFLAG>" + strProp.getApprFlag() + "</APPRFLAG>");
+        sb.append("<APPRMAILFLAG>" + strProp.getApprMailFlag() + "</APPRMAILFLAG>");
+        sb.append("</NODE>");
+        sb.append("</NODES>");
+        
+        return sb.toString();
+	}
+	
 	@Override
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
 		return ezBoardDAO.getBoardProperty(pBoardID);
@@ -216,6 +248,16 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
+		return ezBoardDAO.getReaderList(map);
+	}
+
+	@Override
 	public int getNoticePostItemCount(String boardId) throws Exception {
 		return ezBoardDAO.getNoticePostItemCount(boardId);
 	}
@@ -224,7 +266,6 @@ public class EzBoardServiceImpl implements EzBoardService {
 	public int getBoardTotalItemCount(String boardId, String userID, String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", boardId);
-		map.put("v_PNOW", EgovDateUtil.getToday());
 		map.put("v_PUSERID", userID);
 		map.put("v_PTYPE", type);
 		return ezBoardDAO.getBrdTotalItemCount(map);

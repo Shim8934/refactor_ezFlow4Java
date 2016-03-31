@@ -339,18 +339,29 @@
 		        }
 		    }
 		    function MakeAttachList() {
-		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
 		        var str = "";
 		        var i = 0;
-		        var pos = 0;
 		        var filename = "";
 		        var filepath = "";
-		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + strItemID + "&mode=" + pMode + "&conLocation=" + strContentLocation + "&title=" + escape("${strTitle}"), false);
-		        xmlhttp.send();
+		        var resText = "";
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getItemAttachments.do",	        			
+					data : { itemID : strItemID, 
+							 mode   : pMode,
+							 conLocation : strContentLocation,
+							 title  : "${strTitle}"
+						   },
+					success: function(result){
+						resText = result;
+					}        			
+				});	
 		        xmldom.async = false;
 		        xmldom.preserveWhiteSpace = true;
-		        xmldom = loadXMLString(xmlhttp.responseText);
+		        xmldom = loadXMLString(resText);
 		        xmlhttp = null;
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        str += "<LISTVIEWDATA><HEADERS><HEADER><NAME>"+"<spring:message code='ezBoard.t375' />"+"</NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME>"+"<spring:message code='ezBoard.t376' />"+"</NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
@@ -360,7 +371,7 @@
 		            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
 		            filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
 		            
-		            filepath = MakeXMLString("/Upload_BoardSTD/" + filepath);
+		            filepath = MakeXMLString("/upload_BoardSTD/" + filepath);
 		            str += "<ROW><CELL>";
 		            str += "<VALUE>" + filename + "</VALUE>";
 		            str += "<DATA1>" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "</DATA1>";

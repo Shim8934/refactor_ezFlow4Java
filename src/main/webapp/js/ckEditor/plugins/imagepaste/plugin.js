@@ -50,7 +50,6 @@ CKEDITOR.plugins.add( 'imagepaste',
 					var id = CKEDITOR.tools.getNextId();
 
 					var url= editor.config.filebrowserImageUploadUrl + '&CKEditor=' + editor.name + '&CKEditorFuncNum=2&langCode=' + editor.langCode;
-
 					var xhr = new XMLHttpRequest();
 
 					xhr.open("POST", url);

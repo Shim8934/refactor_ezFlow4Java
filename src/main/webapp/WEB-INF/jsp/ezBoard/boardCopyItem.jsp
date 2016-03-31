@@ -49,6 +49,7 @@
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t355'/>");
 		            window.returnValue = "OK";
+		            window.close();
 		        } else {
 		            window.returnValue = "ERROR";
 		            window.close();

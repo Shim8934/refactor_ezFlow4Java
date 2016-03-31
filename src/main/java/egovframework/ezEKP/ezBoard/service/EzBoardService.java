@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -25,6 +26,8 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception;
 	
+	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
@@ -34,6 +37,8 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
+	
+	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
@@ -104,6 +109,5 @@ public interface EzBoardService {
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
-
 
 }

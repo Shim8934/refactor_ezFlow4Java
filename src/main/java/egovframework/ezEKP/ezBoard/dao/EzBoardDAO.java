@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -41,6 +42,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception{
 		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetItemAttachmentInfo", pItemID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardReadVO> getReaderList(Map<String, Object> map) {
+		return (List<BoardReadVO>) list("EzBoardDAO.getReaderList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

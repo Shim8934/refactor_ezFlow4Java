@@ -25,7 +25,6 @@
 		    }
 		    function btn_AttachAdd_onclick() {
 		        var extension = document.getElementById("file1").value.split('.');
-alert(extension[extension.length - 1]);
 		        var check = false;
 		        check = compareExtension(check, extension[extension.length - 1]);
 		

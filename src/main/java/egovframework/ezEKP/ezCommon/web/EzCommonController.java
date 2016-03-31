@@ -93,7 +93,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //        }
         strHTML = strHTML.replace("replace_" + scheme, scheme);
 
-        // reform 리폼관련 소스는 "부장님 부탁드립니다."
+        // reform 리폼관련 
 //        if (strHTML.IndexOf("__reform_data_bind_list") > -1){
 //            HTMLDocument iDoc = new HTMLDocument();
 //            iDoc.designMode = "on";
@@ -141,8 +141,10 @@ public class EzCommonController extends EgovFileMngUtil{
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
         	m_ImageList = extractImageSource(m_strHTML);
+System.out.println(m_ImageList);
             //백그라운드 경로 추출 및 가상경로 매칭
         	m_BackImageList = extractBackgroundSource(m_strHTML, m_ImageList);
+System.out.println(m_BackImageList);
             //본문 인코딩
         	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
             //이미지 인코딩
@@ -312,7 +314,6 @@ public class EzCommonController extends EgovFileMngUtil{
         if (nImgCount > 0){
             //m_ImageList = new string[nImgCount];
             strTempList = new String[nImgCount];
-            
             int i = 0;
             npos = 0;
             while (true){
@@ -322,8 +323,7 @@ public class EzCommonController extends EgovFileMngUtil{
                     if (nposStart > 0){
                         nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
                         if ((nposEnd - nposStart - 6) > 0){
-                            strImgsrc = strHtml.substring(nposStart + 6, nposEnd - nposStart - 6);
-
+                            strImgsrc = strHtml.substring(nposStart + 6, nposEnd);
                             npos = nposEnd;
                             strTempList[i] = strImgsrc;
                             i++;
@@ -348,7 +348,7 @@ public class EzCommonController extends EgovFileMngUtil{
             for (int j = 0; j < strTempList.length; j++){
                 strtempResource = strTempList[j];
                 for (int k = 0; k < j; k++){
-                    if (j != k && strTempList[k] == strtempResource){
+                    if (j != k && strTempList[k].equals(strtempResource)){
                         isSameUrl = true;
                     }
                 }
@@ -368,7 +368,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 for (int j = 0; j < strTempList.length; j++){
                     strtempResource = strTempList[j];
                     for (int k = 0; k < j; k++){
-                        if (j != k && strTempList[k] == strtempResource){
+                        if (j != k && strTempList[k].equals(strtempResource)){
                             isSameUrl = true;
                         }
                     }
@@ -476,7 +476,7 @@ public class EzCommonController extends EgovFileMngUtil{
             for (int j = 0; j < L_BackImage.size(); j++){
                 strtempResource = L_BackImage.get(j);
                 for (int k = 0; k < j; k++){
-                    if (j != k && L_BackImage.get(k) == strtempResource){
+                    if (j != k && L_BackImage.get(k).equals(strtempResource)){
                         isSameUrl = true;
                     }
                 }
@@ -495,7 +495,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 for (int j = 0; j < L_BackImage.size(); j++){
                     strtempResource = L_BackImage.get(j);
                     for (int k = 0; k < j; k++){
-                        if (j != k && L_BackImage.get(k) == strtempResource){
+                        if (j != k && L_BackImage.get(k).equals(strtempResource)){
                             isSameUrl = true;
                         }
                     }
@@ -542,27 +542,24 @@ public class EzCommonController extends EgovFileMngUtil{
             m_strMHT.append("\n");
             //이미지 본문 영역
 
-            BufferedImage imageSample = null;
-
-            String strExt = m_ImageList[i].substring(m_ImageList[i].lastIndexOf(".") + 1);
             String strTemp = m_ImageList[i].substring(0, 4);
-            if (strTemp == "http"){
+            BufferedImage imageSample = null;
+            BufferedImage newImage = null;
+            
+            if (strTemp.equals("http")){
             	URL url = new URL(m_ImageList[i].replace("&amp;", "&"));
-                InputStream inputStream = url.openStream();
-                ImageInputStream Imgstream = ImageIO.createImageInputStream(inputStream);
-                imageSample = ImageIO.read(Imgstream);
+            	imageSample = ImageIO.read(url);
+            	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
             }else{
             	File file = new File(m_ImageList[i].replace("&amp;", "&"));
             	imageSample = ImageIO.read(file);
+            	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
             }
             
-            ImageOutputStream outputStream = ImageIO.createImageOutputStream(imageSample);
-            ImageIO.write(imageSample, strExt, outputStream);
-            byte[] imageByte = outputStream.toString().getBytes();
+            byte[] imageByte = newImage.toString().getBytes();
             String strImageData = Base64.encodeBase64String(imageByte);
-            outputStream.close();
+            
             imageSample.flush();
-
 
             m_strMHT.append(strImageData + "\n");
             m_strMHT.append("--" + m_strBoundary);
@@ -581,7 +578,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
             String strExt = m_ImageList[i].substring(m_ImageList[i].lastIndexOf(".") + 1);
             String strTemp = m_BackImageList[i].substring(0, 4);
-            if (strTemp == "http"){
+            if (strTemp.equals("http")){
             	URL url = new URL(m_BackImageList[i].replace("&amp;", "&"));
                 InputStream inputStream = url.openStream();
                 ImageInputStream Imgstream = ImageIO.createImageInputStream(inputStream);
@@ -818,16 +815,12 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		model.addAttribute("imgPath", (realPath + filePath).replace("\\", "/") + "/" + fileName +  "|!|" + width + "|!|" + height);
 		
-		if(request.getParameter("CKEditor") != null){
-			response.setContentType("text/plain"); 
-            response.setCharacterEncoding("UTF-8");
-            response.setHeader("Cache-Control", "no-cache");
-            response.getWriter().write(("<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (realPath + filePath).replace("\\", "/") + "/" + fileName + "', '')</script>"));
-            
-            return "";
-		}else{
-			return "ezCommon/ckUpload";
-		}
+		return "ezCommon/ckUpload";
 	}
 
+	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public void ckSimpleUpload(HttpServletRequest request){
+//		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + "" + "', '')</script>";
+	}
 }

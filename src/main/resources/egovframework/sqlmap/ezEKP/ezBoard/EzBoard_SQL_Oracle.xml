@@ -5,6 +5,7 @@
 
 	<typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
+	<typeAlias  alias="BoardReadVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardReadVO"/>
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
@@ -52,6 +53,10 @@
 	
 	<procedure id="EzBoardDAO.getItemInfo" parameterClass="String" resultClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_GETITEMINFO(#itemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
+		{CALL EZBOARDSTD.EZSP_BRDGETREADERLIST(#boardID#, #itemID#, #userID#, #lang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">

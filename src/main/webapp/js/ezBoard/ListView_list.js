@@ -682,7 +682,6 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-
                     for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
                     {
                         titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

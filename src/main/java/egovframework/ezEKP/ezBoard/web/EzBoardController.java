@@ -63,6 +63,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -575,7 +576,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setSs_board_maxRows(20);
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
-		if(pBoardID == ""){
+		if(pBoardID.equals("")){
 			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
 			return null;
 		}
@@ -646,7 +647,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
 	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
-		    if(userInfo.getPrimary() == "2" && boardInfo.getBoardName2() != ""){
+		    if(userInfo.getPrimary() != null && boardInfo.getBoardName2() != null && userInfo.getPrimary().equals("2") && !boardInfo.getBoardName2().equals("")){
 		    	boardInfo.setBoardName(boardInfo.getBoardName2());
 		    }else{
 		    	boardInfo.setBoardName(boardInfo.getBoardName1());
@@ -735,7 +736,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
 	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
-		    if(userInfo.getPrimary() == "2" && boardInfo.getBoardName2() != ""){
+	    	if(userInfo.getPrimary() != null && boardInfo.getBoardName2() != null && userInfo.getPrimary().equals("2") && !boardInfo.getBoardName2().equals("")){
 		    	boardInfo.setBoardName(boardInfo.getBoardName2());
 		    }else{
 		    	boardInfo.setBoardName(boardInfo.getBoardName1());
@@ -971,7 +972,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardSearchList.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardSearchList.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardSearchList.get(j).get("ABSTRACT")+"</DATA6>");
-					if(EgovDateUtil.getDaysDiff(boardSearchList.get(j).get("WRITEDATE").toString().substring(0, 10), EgovDateUtil.getToday()) < 0){
+					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					if(boardSearchList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0){
 						resultXML.append("<DATA7>Y</DATA7>");
 					}else{
 						resultXML.append("<DATA7>N</DATA7>");
@@ -1216,7 +1219,9 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
     					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
     					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-    					if(EgovDateUtil.getDaysDiff(noticeList.get(k).get("WRITEDATE").toString().substring(0, 10), EgovDateUtil.getToday()) < 0){
+    				    String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+    				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+    					if(noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0){
     						resultXML.append("<DATA7>Y</DATA7>");
     					}else{
     						resultXML.append("<DATA7>N</DATA7>");
@@ -1303,7 +1308,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					if(EgovDateUtil.getDaysDiff(boardListItem.get(j).get("WRITEDATE").toString().substring(0, 10), EgovDateUtil.getToday()) < 0){
+					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					if(boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0){
 						resultXML.append("<DATA7>Y</DATA7>");
 					}else{
 						resultXML.append("<DATA7>N</DATA7>");
@@ -2305,11 +2312,10 @@ System.out.println(output);
         String strXML = "";
 
         if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))){
-        	strXML = getItemAttachmentXML_Retrans(pItemID, realPath + config.getProperty("upload_board.ROOT"), pMode, pConLocation, pTitle);
+        	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle);
         }else{
         	strXML = getItemAttachmentXML(pItemID);
         }
-        
         return strXML;
 	}
 
@@ -2324,14 +2330,14 @@ System.out.println(output);
             File file = new File(filePath + "\\" + pConLocation);
             String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
             String newFilePath = "tempUploadFile\\" + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
-            File fileMove = new File(filePath + "\\" + newFilePath);
+            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + "\\" + newFilePath);
+            FileUtils.copyFile(file, fileMove);
+            
             long mhtSize = file.length();
-            FileUtils.moveFile(file, fileMove);
-
 
             resultXML.append("<NODE>");
             resultXML.append("<ItemID>" + pItemID + "</ItemID>");
-            resultXML.append("<FilePath>" + newFilePath.replace("\\", "/") + "</FilePath>");
+            resultXML.append("<FilePath>" + makeXMLString(newFilePath.replace("\\", "/")) + "</FilePath>");
             resultXML.append("<FileSize>" + getProperSizeDisplay(String.valueOf(mhtSize)) + "</FileSize>");
             resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
             resultXML.append("</NODE>");
@@ -2341,20 +2347,19 @@ System.out.println(output);
             String pFilePath = boardAttachVOList.get(i).getFilePath();
             String newFilePath = pFilePath.split("/")[pFilePath.split("/").length - 1];
 
-            newFilePath = "TempUploadFile\\" + "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length() - newFilePath.indexOf("_"));
+            newFilePath = "tempUploadFile\\" + "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length() - newFilePath.indexOf("_"));
 
             File file = new File(filePath + "\\" + pFilePath);
-            File fileMove = new File(filePath + "\\" + newFilePath);
-            FileUtils.moveFile(file, fileMove);
+            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + "\\" + newFilePath);
+            FileUtils.copyFile(file, fileMove);
             
             resultXML.append("<NODE>");
             resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
-            resultXML.append("<FilePath>" + newFilePath.replace("\\", "/") + "</FilePath>");
+            resultXML.append("<FilePath>" + makeXMLString(newFilePath.replace("\\", "/")) + "</FilePath>");
             resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
             resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
             resultXML.append("</NODE>");
         }
-        
         resultXML.append("</NODES>");
         
         return resultXML.toString();
@@ -3013,5 +3018,62 @@ System.out.println(output);
 		filePath = ezCommonService.getContentInfo(type, docID);
 		
 		return filePath;
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardRetransOption.do")
+	public String boardRetransOption(){
+		return "ezBoard/boardRetransOption";
+	}
+	
+	@RequestMapping(value = "/ezBoard/itemReadList.do")
+	public String itemReadList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		
+		List<BoardReadVO> boardReadList = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang()));
+		
+		model.addAttribute("boardReadList", boardReadList);
+		
+		return "ezBoard/boardItemReadList";
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemViewPrintOption.do")
+	public String boardItemViewPrintOption(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String btnStyle1 = "";
+        String btnStyle2 = "";
+        String btnStyle3 = "";
+        
+		if(userInfo.getLang().equals("1")){
+            btnStyle1 = "width:80px";
+            btnStyle2 = "width:80px";
+            btnStyle3 = "width:100px";
+        }else if(userInfo.getLang().equals("2")){
+            btnStyle1 = "width:70px";
+            btnStyle2 = "width:100px";
+            btnStyle3 = "width:150px";
+        }else if(userInfo.getLang().equals("3")){
+            btnStyle1 = "width:80px";
+            btnStyle2 = "width:80px";
+            btnStyle3 = "width:110px";
+        }else if(userInfo.getLang().equals("4")){
+            btnStyle1 = "width:80px";
+            btnStyle2 = "width:80px";
+            btnStyle3 = "width:110px";
+        }
+		
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("btnStyle1", btnStyle1);
+		model.addAttribute("btnStyle2", btnStyle2);
+		model.addAttribute("btnStyle3", btnStyle3);
+		model.addAttribute("oneLineReplyFlag", boardPropertyVO.getOneLineReply());
+		
+		return "ezBoard/boardItemViewPrintOption";
 	}
 } 
