@@ -269,7 +269,7 @@
                 		createNodeInsert(xmlDoc, objNode, "PARAMETER");
                 		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>'); 
                 		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>'); 
-                		xmlHttp.open("POST","Qst_Cancel.aspx",false);
+                		xmlHttp.open("POST","qstCancel.do",false);
                 		xmlHttp.send(xmlDoc);
                 		var resultXML = xmlHttp.responseXML;
                 		State = SelectSingleNodeValue(resultXML, "DATA");
