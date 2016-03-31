@@ -133,6 +133,19 @@
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="17"/>
 		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
 	</resultMap>
+	
+	<resultMap class="QstResponseVO" id="qstResponseList">
+		<result property="responseUserId"			column="USER_ID"				columnIndex="1"/>
+		<result property="responseUserName"			column="USER_NAME"				columnIndex="2"/>
+		<result property="responseUserEmail"		column="USER_EMAIL"				columnIndex="3"/>
+		<result property="responseUserDeptId"		column="USER_DEPT_ID"			columnIndex="4"/>
+		<result property="responseUserDeptName"		column="USER_DEPT_NAME"			columnIndex="5"/>
+		<result property="responseUserPosition"		column="USER_POSITION"			columnIndex="6"/>
+		<result property="responseUserJikgub"		column="USER_JIKGUB"			columnIndex="7"		nullValue="0"/>
+		<result property="responseUserGender"		column="USER_GENDER"			columnIndex="8"/>
+		<result property="responseUserAge"			column="USER_AGE"				columnIndex="9"/>
+		<result property="responseDate"				column="RESPONSE_DATE"			columnIndex="10"/>
+	</resultMap>
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -204,6 +217,10 @@
 	
 	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >

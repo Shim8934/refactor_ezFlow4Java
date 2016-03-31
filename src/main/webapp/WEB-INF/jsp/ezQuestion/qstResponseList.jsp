@@ -31,10 +31,9 @@
 			var szQuestionNo = "${question_no}";
 			var pResponse_YN = "${Response_YN}";
 			var pTotalPage = "${pTotalPage}";
-			var pCurrPage = "${pCurrPage}";
+			var CurPage = "${pCurrPage}";
 			var totalCount = "${pTotalCnt}";
-			/* var xmlHTTP = createXMLHttpRequest();
-			var xmlRtn = createXmlDom(); */
+
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -133,7 +132,7 @@
 			    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
-			    var pageNum = pCurrPage;
+			    var pageNum = CurPage;
 			    if (pTotalPage > 1 && pageNum != 1) {
 			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 			        PagingHTML += strtext;
@@ -204,37 +203,33 @@
 			    td_Create1(PagingHTML);
 			}
 			function goToPageByNum(Value) {
-			    pCurrPage = Value;
+			    CurPage = Value;
 			    makePageSelPage();
-			    search_Set(pCurrPage);
+			    search_Set(CurPage);
 			}
 			function selbeforeBlock() {
-			    var pageNum = parseInt(pCurrPage);
+			    var pageNum = parseInt(CurPage);
 			    pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
 			    goToPageByNum(pageNum);
 			}
 			function selbeforeBlock_one() {
-			    var pageNum = parseInt(pCurrPage);
+			    var pageNum = parseInt(CurPage);
 			    if (parseInt(pageNum - 1) > 0)
 			        goToPageByNum(parseInt(pageNum - 1));
 			    else
 			        return;
 			}
 			function selafterBlock() {
-			    var pageNum = parseInt(pCurrPage);
+			    var pageNum = parseInt(CurPage);
 			    pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
 			    goToPageByNum(pageNum);
 			}
 			function selafterBlock_one() {
-			    var pageNum = parseInt(pCurrPage);
+			    var pageNum = parseInt(CurPage);
 			    if (parseInt(pageNum + 1) <= pTotalPage)
 			        goToPageByNum(parseInt(pageNum + 1));
 			    else
 			        return;
-			}
-			
-			function title_Onclick(pReceve) {
-			    document.location.href = "/ezQuestion/qstPollOpen.do?" + pReceve;
 			}
 		</script>
 	</head>

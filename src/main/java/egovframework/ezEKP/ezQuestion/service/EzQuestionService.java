@@ -30,6 +30,8 @@ public interface EzQuestionService {
 	
 	public List<QstResponseVO> resultSubjectiveList(String brdId, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang) throws Exception;
 	
+	public List<QstResponseVO> responseList(String brdId, String itemNo, String responseYN, int i, int pPageSize, String lang) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -75,6 +77,8 @@ public interface EzQuestionService {
 	public Integer getResPersonCnt(int brdId, int itemNo, int questionNo) throws Exception;
 	
 	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang)throws Exception;
+	
+	public Integer responseListCnt(String brdId, String itemNo, String responseYN, String lang) throws Exception;
 
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 

@@ -203,7 +203,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(endPoll == false){
 			if(responseCnt <= 0){
 				response.getWriter().write("<script language='javascript'>");
-System.out.println("1");
 				response.getWriter().write("window.location.href='/ezQuestion/qstResponse.do?" + receve + "';");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
@@ -217,7 +216,6 @@ System.out.println("1");
 					response.getWriter().flush();
 				}else{
 					response.getWriter().write("<script language='javascript'>");
-System.out.println("2");
 					response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -238,7 +236,6 @@ System.out.println("2");
 						response.getWriter().flush();
 					}else{
 						response.getWriter().write("<script language='javascript'>");
-System.out.println("3");
 						response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
@@ -262,7 +259,6 @@ System.out.println("3");
 		}else{
 			if (qstUserPermissionVO.getPublicResultFlg().equals("1")){
 				response.getWriter().write("<script language='javascript'>");
-System.out.println("4");
 				response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
@@ -274,7 +270,6 @@ System.out.println("4");
 				}
 				if (rsUserId.equals(userId) || adminYN == true){
 					response.getWriter().write("<script language='javascript'>");
-System.out.println("5");
 					response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -623,7 +618,6 @@ System.out.println("5");
         QstAttachVO qstAttachVO = new QstAttachVO();
         qstAttachVO.setBrdId(brdId);
         qstAttachVO.setItemNo(itemNo);
-System.out.println(strQuestionNo+"strQuestionNo");
         qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
         qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
         List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO);
@@ -825,17 +819,17 @@ System.out.println(strQuestionNo+"strQuestionNo");
 			List<String> multiQ = null;
 			
 			if(multiSelect == "1"){
-				int iDataCount = 0;
+				int iNum = 0;
 				String strData = "";
 				for(int j=0; j<ansRCnt; j++){
-					iDataCount ++;
-					tmp = "chk" + questionNo + "_" + Integer.toString(iDataCount);
+					iNum ++;
+					tmp = "chk" + questionNo + "_" + Integer.toString(iNum);
 					
 					multiQ = new ArrayList<String>();
 					multiQ.add(request.getParameter(tmp.trim()));
 					
 					if(multiQ.get(j) == "1"){
-						qstResponseVO.setAnswerObjectivity(iDataCount);
+						qstResponseVO.setAnswerObjectivity(iNum);
 						ezQuestionService.insertResponse(qstResponseVO);
 						responseNo = Integer.toString(Integer.parseInt(responseNo)+1); 
 					}
@@ -1017,21 +1011,16 @@ System.out.println(strQuestionNo+"strQuestionNo");
 			
 			if(answerType == 2){
 				strData = dataProcessType2(brdId, itemNo, quesContent, quesContent, multiSelect, answerType, iCount);
-System.out.println("strType 2  = "+strData);
 			}else{
 				List<QstAnswerVO> qstAnswerVOList = dataProcessAns(brdId, itemNo, questionNo);
 				if(answerType == 1){
 					strData = dataProcessType1(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstAnswerVOList);
-System.out.println("strType 1  = "+strData);
 				}else if(answerType == 3){
 					strData = dataProcessType3(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstAnswerVOList);
-System.out.println("strType 3  = "+strData);
 				}else if(answerType == 4){
 					strData = dataProcessType4(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList);
-System.out.println("strType 4  = "+strData);
 				}else if(answerType == 5){
 					strData = dataProcessType5(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList);
-System.out.println("strType 5  = "+strData);
 				}
 			}
 			qstVO.setStrData(strData);
@@ -1969,7 +1958,6 @@ System.out.println("!!");
             }
             pOrgFileName = newFileName;
         }
-
         return pOrgFileName + pOrgFileExt;
 	}
 
@@ -2103,7 +2091,6 @@ System.out.println("!!");
                 newDataName = null;
                 newDataValue = null;
                 targetNode.appendChild(newRow);
-System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom));
             }
         }        
 
@@ -2174,31 +2161,35 @@ System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom
 	@RequestMapping(value="/ezQuestion/qstResponseList.do")
 	public String qstResponseList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brdId = "", itemNo = "", questionNo = "", lang="";
-        int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
-        int pPageSize = 0, pageCount = 0, pBlockSize = 0;
-        String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
+		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", responseRange = "";
+        String brdId = "", itemNo = "", questionNo = "", responseYN = "", pCurrBlock = "";
+        int pPageSize = 0, pBlockSize = 0, pageCount = 1, pCurrPage = 1, pTotalCnt = 0, pTotalPage = 0;
+        String lang="";
         String pAnsType = "";
         
-        if (request.getParameter("brd_id") != null)
-            brdId = request.getParameter("brd_id");
-        if (request.getParameter("item_no") != null)
-            itemNo = request.getParameter("item_no");
-        if (request.getParameter("question_no") != null)
-            questionNo = request.getParameter("question_no");
-        if (request.getParameter("page_count") != null)
-            pageCount = Integer.parseInt(request.getParameter("page_count"));        
+        if (request.getParameter("brdId") != null)
+            brdId = request.getParameter("brdId");
+        if (request.getParameter("itemNo") != null)
+            itemNo = request.getParameter("itemNo");
+        if (request.getParameter("response_YN") != null)
+            responseYN = request.getParameter("response_YN");
+        if (request.getParameter("page_count") != null){
+        	if (request.getParameter("page_count").equals(""))
+        		pageCount = 1;
+        	else
+        		pageCount = Integer.parseInt(request.getParameter("page_count"));
+        }
+        if (request.getParameter("currPage") != null)
+        	if (request.getParameter("page_count").equals(""))
+        		pCurrPage = 1;
+        	else
+        		pCurrPage = Integer.parseInt(request.getParameter("currPage"));
+        	
         if(loginVO.getLang().equals("1")){
         	lang ="";
         }else
         	lang = loginVO.getLang();
-        if (request.getParameter("page") != null){
-            if (request.getParameter("page") != "")
-                pCurrPage = Integer.parseInt(request.getParameter("page"));
-            else
-                pCurrPage = 1;
-        }else
-            pCurrPage = 1;
+        	
         pPageSize = 15;
         pBlockSize = 10;
 
@@ -2209,9 +2200,9 @@ System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom
         publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
         publicFlg = qstUserPermissionVO.getPublicFlg();
         multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
-
-        /** EZSP_RESULTSUBJECTIVELISTCNT*/
-        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdId), Integer.parseInt(itemNo), Integer.parseInt(questionNo), lang);
+        responseRange = qstUserPermissionVO.getResponseRange();
+        /** EZSP_RESPONSELISTCNT*/
+        pTotalCnt = ezQuestionService.responseListCnt(brdId, itemNo, responseYN.trim(), lang);
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         if (pageCount == 0)
             pageCount = -1;
@@ -2219,92 +2210,31 @@ System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom
             pageCount = pageCount - 1;
         
         int iStart = (pCurrPage - 1) * pPageSize;
-        /** EZSP_RESULTSUBJECTIVELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdId, itemNo, questionNo, pTotalCnt-iStart, pPageSize, lang);
+//System.out.println("pTotalCnt =" + pTotalCnt);
+        /** EZSP_RESPONSELIST*/
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdId, itemNo, responseYN.trim(), pTotalCnt-iStart, pPageSize, lang);
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
         Document xmlRtnDom = commonUtil.convertStringToDocument(data);
         
-        int iDataCount = 0;
+        int iNum = 0;
         String pAnsSubjectivity = "";
         for(QstResponseVO qstResponseVO : qstResponseVOList){
         	Node targetNode = xmlMainDom.getFirstChild();
-            Node newRow = xmlMainDom.createElement("ROW");
+            Node newRow = commonUtil.convertStringToDocument(commonUtil.getQueryResult(qstResponseVO));
             Node No = xmlMainDom.createElement("NO");
             
-            iDataCount++;
+            iNum++;
             int iCurrNumber = 0;
-            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            iCurrNumber = iNum + (pCurrPage - 1) * pPageSize;
             
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
             newRow.appendChild(No);
             targetNode.appendChild(newRow);
-            for(Field field : qstResponseVO.getClass().getDeclaredFields()){
-            	field.setAccessible(true);
-            	if(field.getName().equals("ANSWER_SUBJECTIVITY")){
-            		pAnsSubjectivity = (String) field.get(qstResponseVO);
-            		//////////////////////////
-            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdId, itemNo, questionNo);
-            		pAnsType = Integer.toString(qstVO.getAnswerType());
-            		if(pAnsType.equals("4")){
-            			List<QstAnswerVO> rtnList = dataProcessAns(Integer.parseInt(brdId), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
-            			StringBuilder rtnXML = new StringBuilder();
-            			rtnXML.append("<DATA>");
-            			for(QstAnswerVO qstAnswerVO : rtnList){
-            				rtnXML.append(commonUtil.getQueryResult(qstAnswerVO));
-            			}
-            			rtnXML.append("</DATA>");
-            			
-            			xmlRtnDom = commonUtil.convertStringToDocument(rtnXML.toString());
-            			String[] arrayContent = pAnsSubjectivity.split(";");
-            			pAnsSubjectivity = "";
-            			
-            			for(int j=0; j < arrayContent.length-1; j++){
-            				int k = 0;
-            				k = Integer.parseInt(arrayContent[j]);
-            				
-            				if(xmlRtnDom.getElementsByTagName("DATA/ROW/ANSWERCONTENT").getLength() > 0)
-            					pAnsSubjectivity = pAnsSubjectivity + xmlRtnDom.getElementsByTagName("DATA/ROW/ANSWERCONTENT").item(k-1).getTextContent() + " ; ";
-            				else
-            					pAnsSubjectivity = pAnsSubjectivity + " ; ";
-            			}
-            		}
-            		if(pAnsSubjectivity.length() > 70){
-            			String strTag = "<td style='width:100%;height:100%;word-break:break-all;white-space:normal;'><div style='height:40px;overflow-y:auto;'>" + modifyData(pAnsSubjectivity) + "</div></td>";
-            			Node option = xmlMainDom.createElement("OPTIOIN");
-            			option.appendChild(xmlMainDom.createTextNode(strTag));
-            			newRow.appendChild(option);
-            			targetNode.appendChild(newRow);
-            		}else{
-            			String strTag = "<td>" + modifyData(pAnsSubjectivity) + "</td>";
-            			Node option = xmlMainDom.createElement("OPTIOIN");
-            			option.appendChild(xmlMainDom.createTextNode(strTag));
-            			newRow.appendChild(option);
-            			targetNode.appendChild(newRow);
-            		}
-            	}
-            	Node newDataName = xmlMainDom.createElement(field.getName().toUpperCase());
-            	Node newDataValue = null;
-            	//""이라 Exception
-            	if(field.get(qstResponseVO)!=null){
-            		if(field.get(qstResponseVO).getClass() != String.class){
-            			newDataValue = xmlMainDom.createTextNode(modifyData(Integer.toString((int)field.get(qstResponseVO))).trim());
-            		}
-            		else{
-            			newDataValue = xmlMainDom.createTextNode(modifyData((String)field.get(qstResponseVO)).trim());
-            		}
-            	}
-            	newDataName.appendChild(newDataValue);
-                newRow.appendChild(newDataName);
-                newDataName = null;
-                newDataValue = null;
-                targetNode.appendChild(newRow);
-System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom));
-            }
+//System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom));
         }        
-
         model.addAttribute("brd_id", brdId);
         model.addAttribute("item_no", itemNo);
         model.addAttribute("question_no", questionNo);
@@ -2315,7 +2245,6 @@ System.out.println("xmlMainDom : "+commonUtil.convertDocumentToString(xmlMainDom
         model.addAttribute("public_flg", publicFlg);
         model.addAttribute("page_count", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
-        model.addAttribute("xmlRtnDom", commonUtil.convertDocumentToString(xmlRtnDom));
         
 		return "/ezQuestion/qstResponseList";
 	}

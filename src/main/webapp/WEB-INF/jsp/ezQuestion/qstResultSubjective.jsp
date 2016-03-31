@@ -324,9 +324,10 @@
 			        return;
 			}
 			
-			function title_Onclick(pReceve) {
+// 			사용안함
+			/* function title_Onclick(pReceve) {
 			    document.location.href = "/ezQuestion/qstPollOpen.do?" + pReceve;
-			}
+			} */
 		</script>
 	</head>
 	<body class="mainbody">

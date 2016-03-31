@@ -599,7 +599,28 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pQuesNo", questionNo);
 		return ezQuestionDAO.getQuestionForSubjective(map);
 	}
+
+	@Override
+	public Integer responseListCnt(String brdId, String itemNo, String responseYN, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pResYN", responseYN);
+		map.put("v_pLang", lang);
+		return Integer.parseInt(ezQuestionDAO.responseListCnt(map));
+	}
 	
+	@Override
+	public List<QstResponseVO> responseList(String brdId, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pResYN", responseYN);
+		map.put("v_pTotalCnt", pTotalCnt);
+		map.put("v_pPageSize", pPageSize);
+		map.put("v_pLang", lang);
+		return ezQuestionDAO.responseList(map);
+	}	
 	
 	
 }
