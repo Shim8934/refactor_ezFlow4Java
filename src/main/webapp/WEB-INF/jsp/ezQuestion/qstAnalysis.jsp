@@ -93,11 +93,9 @@
 		                alert("<spring:message code='ezQuestion.t119' />");
 		                return;
 		            }
-	
 	           		szParam += "&ques_no=" + SelectedQuesNo;
 				}
 	        	szUrl += szParam;
-	
 				try {
 					document.getElementById("message").innerHTML = "<font  color=bule>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code='ezQuestion.t120' /></font>"
 					buttonFlag = "enableFalse";
@@ -105,7 +103,7 @@
 					xmlHttp = createXMLHttpRequest();
 					xmlHttp.open("POST", szUrl, true);
 					xmlHttp.onreadystatechange = HandleStateChange;
-					xmlHttp.send()
+					xmlHttp.send();
 				}catch (e) {
 					alert(e.description);
 				}
@@ -113,14 +111,15 @@
 	    	var StateChangeClickFlag = false;
 	    	function HandleStateChange() {
 	        	if (xmlHttp.readyState != 4) {
-alert("성공");
 	            	return;
 	        	}
 		        StateChangeClickFlag = true;
 		        document.getElementById("message").innerHTML = "";
-		        if (getXmlString(xmlHttp.responseXML) != "") {
-		            xmlRtn = xmlHttp.responseXML;
-		            var rows = SelectNodes(xmlRtn, "ROW");
+
+		        if (xmlHttp.responseText != "") {
+		            xmlTemp = loadXMLString(xmlHttp.responseText);
+		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
+		            var rows = SelectNodes(xmlRtn, "ROWS");
 		            var Rlength = rows.length;
 		            if (Rlength != 0) {
 		                document.getElementById("hidRType2").value = szRType;
@@ -135,8 +134,7 @@ alert("성공");
 		                    listview.SetRowOnDblClick("ListViewNodeDblClick");
 		                    listview.DataSource(xmlRtn);
 		                    listview.DataBind("AnalysisListView");
-		                }
-		                else {
+		                } else {
 		                    var strHTML = "<table width=100% border=0 cellspacing=0 cellpadding=1 border=0>";
 		                    for (var i = 0; i < Rlength; i++) {
 		                        var SelNode = rows.item(i);
@@ -180,62 +178,44 @@ alert("성공");
 		                    document.getElementById("Graph").innerHTML = strHTML;
 		                    document.getElementById("AnalysisData").innerHTML = strHTML;
 		                }
-		            }
-		            else {
+		            } else {
 		                document.getElementById("AnalysisData").value = "";
 		                document.getElementById("hidRType2").value = "";
 		                alert("<spring:message code='ezQuestion.t121' />");
 		            }
 		            buttonFlag = "";
-		        }
-		        else {
+		        }else {
 		            buttonFlag = "";
 		            return false;
 		        }
 		    }
 		    function AnalysisGResult(strXML) {
 		        var xmlRtn = createXmlDom();
-		        alert(xmlRtn);
 		        xmlRtn.loadXML(strXML);
 		        var rows = xmlRtn.getElementsByTagName("ROW");
-		        alert(rows);
 		        var Rlength = rows.length;
-		        alert(Rlength);
 		        var strHTML = "<table width=100% border=0 cellspacing=0 cellpadding=1 border=0>";
-		        alert(strHTML);
 		        for (var i = 0; i < Rlength; i++) {
 		            var cells = rows[i].getElementsByTagName("CELL");
-		            alert(cells);
 		            var Clength = cells.length;
-		            aler(Clength);
 		            var gubun = cells[0].getElementsByTagName("DATA1")[0].text;
-		            alert(gubun);
+
 		            if (gubun == "TOT") {
-		                alert(gubun);
 		                var txt = cells[0].getElementsByTagName("VALUE")[0].text;
-		                alert(txt);
 		                var cnt = cells[1].getElementsByTagName("VALUE")[0].text;
-		                alert(cnt);
 		                strHTML += "<tr>"
 		                strHTML += "<td colspan=5>" + txt + " " + cnt;
 		                strHTML += "</td></tr>"
-		            }
-		            else if (gubun == "Q") {
-		                alert(gubun);
+		            }else if (gubun == "Q") {
 		                var txt = cells[0].getElementsByTagName("VALUE")[0].text;
-		                alert(txt);
 		                strHTML += "<tr>";
 		                strHTML += "<td colspan=5>" + txt;
 		                strHTML += "</td></tr>"
-		            }
-		            else if (gubun == "A") {
-		                alert(gubun);
+		            }else if (gubun == "A") {
 		                var txt = cells[0].getElementsByTagName("VALUE")[0].text;
-		                alert(txt);
 		                var cnt = cells[1].getElementsByTagName("VALUE")[0].text;
-		                alert(cnt);
 		                var percent = cells[2].getElementsByTagName("VALUE")[0].text;
-		                alert(percent);
+		                
 		                strHTML += "<tr>";
 		                strHTML += "<td>&nbsp;</td>";
 		                strHTML += "<td>" + txt + "</td>";
@@ -255,10 +235,9 @@ alert("성공");
 		        Graph.innerHTML = strHTML;
 		    }
 		    function SaveCSV() {
-		        var _MSIE = 'MSIE';
+				var _MSIE = 'MSIE';
 		        var useragentstr = navigator.userAgent;
 		        
-		
 		            if (!StateChangeClickFlag) {
 		                return;
 		            }
@@ -271,8 +250,7 @@ alert("성공");
 		                }
 		                document.getElementById("AnalysisData").value = AnalysisListView.innerHTML;
 		                form_analysissave.submit();
-		            }
-		            else {
+		            }else {
 		                if (Graph.innerHTML != "") {
 		                    for (var i = 0 ; i < Graph.getElementsByTagName("TR").length ; i++) {
 		                        if (Graph.getElementsByTagName("TR")[i].childNodes.length == 5)
@@ -282,12 +260,10 @@ alert("성공");
 		                    }
 		                    document.getElementById("AnalysisData").value = Graph.innerHTML;
 		                    form_analysissave.submit();
-		                }
-		                else {
+		                }else {
 		                    alert("분석결과가 없습니다.");
 		                }
 		            }
-		        
 		    }
 		    function repComMa(param) {
 		        while (param.indexOf(",") != -1) {
@@ -301,14 +277,12 @@ alert("성공");
 		    function listQst_onchange() {
 		        var idx = document.getElementsByName("listQst")[0].selectedIndex;
 		        SelectedQuesNo = document.getElementsByName("listQst")[0][idx].value;
-		
 		    }
 		    function rdoQst_onclick(idx) {
 		        hidQst.value = document.getElementsByName("rdoQst")[idx].value;
 		        if (idx == 1) {
 		            document.getElementsByName("listQst")[0].disabled = "";
-		        }
-		        else {
+		        }else {
 		            document.getElementsByName("listQst")[0].disabled = "disabled";
 		        }
 		    }
@@ -320,8 +294,7 @@ alert("성공");
 		        if (hidRType.value == "T") {
 		            AnalysisListView.style.display = "";
 		            Graph.style.display = "none";
-		        }
-		        else {
+		        }else {
 		            AnalysisListView.style.display = "none";
 		            Graph.style.display = "";
 		        }
@@ -430,6 +403,5 @@ alert("성공");
 		    <input type="hidden" name="hidCatalog2" id="hidCatalog2" value="0" /><!-- Catalog 구분 -->
 		    <input type="hidden" name="hidRType2" id="hidRType2" value="T" /><!-- 표/그래프 구분 --->
 		</form>
-		
 	</body>
 </html>

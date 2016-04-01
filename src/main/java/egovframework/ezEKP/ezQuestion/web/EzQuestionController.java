@@ -14,11 +14,13 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.print.Doc;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.CopyUtils;
 import org.apache.logging.log4j.core.pattern.AnsiEscape;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2285,7 +2287,7 @@ System.out.println("!!");
 		return "/ezQuestion/qstAnalysis";
 	}
 	
-	@RequestMapping(value="/ezQuestion/qstCallAnalysisAll.do")
+	@RequestMapping(value="/ezQuestion/qstCallAnalysisAll.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstCallAnalysisAll(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String vBrdId="", vItemNo="", vQuesNo="";
@@ -2298,6 +2300,7 @@ System.out.println("!!");
         	vItemNo = request.getParameter("item_no");
         if (request.getParameter("ques_no") != null)
         	vQuesNo = request.getParameter("ques_no");
+System.out.println("vQuesNo = "+vQuesNo);
         
         Document resultXML =  commonUtil.convertStringToDocument("<ROWS></ROWS>");
         Node rNodes = resultXML.getFirstChild();
@@ -2316,7 +2319,7 @@ System.out.println("!!");
         
         Node nodeData = resultXML.createElement("VALUE");
         nodeData.setTextContent(egovMessageSource.getMessage("ezQuestion.t54"));
-        rNode.appendChild(nodeData);
+        node.appendChild(nodeData);
 
         nodeData = resultXML.createElement("DATA1");
         nodeData.setTextContent("TOT");
@@ -2337,158 +2340,160 @@ System.out.println("!!");
 
         String strQuestion = "";
         
-        List<QstVO> qstVOList = ezQuestionService.getQuestion(vBrdId, vItemNo, vQuesNo);
+        /** EZSP_GETQUESTION*/
+        List<QstVO> qstVOList = ezQuestionService.getQuestion(vBrdId, vItemNo, vQuesNo);        
         for(QstVO qstVO : qstVOList){
         	questionNo = Integer.toString(qstVO.getQuestionNo());
         	quesContent = qstVO.getQuesContent();
         	multiSelect = qstVO.getMultiSelect();
         	answerType = Integer.toString(qstVO.getAnswerType());
         	/** EZSP_GETRESPERSONCNT*/
-        	responseCnt = ezQuestionService.getResPersonCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(vQuesNo));
-        	
-        	 rNode = resultXML.createElement("ROW");
-             rNodes.appendChild(rNode);
+        	responseCnt = ezQuestionService.getResPersonCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo));
+        	System.out.println("responseCnt = "+responseCnt );
+        	rNode = resultXML.createElement("ROW");
+        	rNodes.appendChild(rNode);
 
-             node = resultXML.createElement("CELL");
-             rNode.appendChild(node);
+        	node = resultXML.createElement("CELL");
+        	rNode.appendChild(node);
 
-             nodeData = resultXML.createElement("VALUE");
+        	nodeData = resultXML.createElement("VALUE");
 
-             if (multiSelect == "1")
-                 CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55"));
-             else
-                 CDATASection = resultXML.createCDATASection(quesContent);
+        	if (multiSelect == "1")
+        		CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55"));
+        	else
+        		CDATASection = resultXML.createCDATASection(quesContent);
 
-             nodeData.appendChild(CDATASection);
-             node.appendChild(nodeData);
+        	nodeData.appendChild(CDATASection);
+        	node.appendChild(nodeData);
 
-             nodeData = resultXML.createElement("DATA1");
-             nodeData.setTextContent("Q");
-             node.appendChild(nodeData);
+        	nodeData = resultXML.createElement("DATA1");
+        	nodeData.setTextContent("Q");
+        	node.appendChild(nodeData);
 
-             node = resultXML.createElement("CELL");
-             rNode.appendChild(node);
+        	node = resultXML.createElement("CELL");
+        	rNode.appendChild(node);
 
-             nodeData = resultXML.createElement("VALUE");
-             nodeData.setTextContent("");
-             node.appendChild(nodeData);
+        	nodeData = resultXML.createElement("VALUE");
+        	nodeData.setTextContent("");
+        	node.appendChild(nodeData);
 
-             node = resultXML.createElement("CELL");
-             rNode.appendChild(node);
+        	node = resultXML.createElement("CELL");
+        	rNode.appendChild(node);
 
-             nodeData = resultXML.createElement("VALUE");
-             nodeData.setTextContent("");
-             node.appendChild(nodeData);
-             /** EZSP_GETANSCNT*/
-             List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo));
-             int ansRCnt = qstAnswerVOList.size();
-             if(ansRCnt > 0){
-            	 /** dataAnswerProcessSP*/
-            	 int rCnt = 0, percent = 0, iCount = 0;
-            	 float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
-            	 for(QstAnswerVO qstAnswer : qstAnswerVOList){
-            		 iCount ++;
-		        	 rCnt = ezQuestionService.pollRespCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo), iCount);
-		        	 
-		        	 fRCnt = rCnt;
-		        	 fResponseCnt = responseCnt;
-		        	 if(responseCnt <= 0){
-		        		 percent=0;
-		        	 }else{
-		        		 fPercent = fRCnt / responseCnt;
-		        		 percent = Math.round(fPercent*100);
-		        	 }
-                    rNode = resultXML.createElement("ROW");
-                    rNodes.appendChild(rNode);
+        	nodeData = resultXML.createElement("VALUE");
+        	nodeData.setTextContent("");
+        	node.appendChild(nodeData);
+        	/** EZSP_GETANSCNT*/
+        	List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo));
+        	int ansRCnt = qstAnswerVOList.size();
+        	if(ansRCnt > 0){
+        		/** dataAnswerProcessSP*/
+        		int rCnt = 0, percent = 0, iCount = 0;
+        		float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
+        		for(QstAnswerVO qstAnswer : qstAnswerVOList){
+        			iCount ++;
+        			rCnt = ezQuestionService.pollRespCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo), iCount);
 
-                    node = resultXML.createElement("CELL");
-                    rNode.appendChild(node);
+        			fRCnt = rCnt;
+        			fResponseCnt = responseCnt;
+        			if(responseCnt <= 0){
+        				percent=0;
+        			}else{
+        				fPercent = fRCnt / responseCnt;
+        				percent = Math.round(fPercent*100);
+        			}
+        			rNode = resultXML.createElement("ROW");
 
-                    nodeData = resultXML.createElement("VALUE");
-                    CDATASection = resultXML.createCDATASection(qstAnswer.getAnswerContent());
-                    nodeData.appendChild(CDATASection);
-                    node.appendChild(nodeData);
+        			node = resultXML.createElement("CELL");
 
-                    nodeData= resultXML.createElement("DATA1");
-                    nodeData.setTextContent("A");
-                    node.appendChild(nodeData);
+        			nodeData = resultXML.createElement("VALUE");
+        			CDATASection = resultXML.createCDATASection(qstAnswer.getAnswerContent());
+        			nodeData.appendChild(CDATASection);
+        			node.appendChild(nodeData);
 
-                    node = resultXML.createElement("CELL");
-                    rNode.appendChild(node);
+        			nodeData= resultXML.createElement("DATA1");
+        			nodeData.setTextContent("A");
+        			node.appendChild(nodeData);
 
-                    nodeData = resultXML.createElement("VALUE");
-                    nodeData.setTextContent(rCnt + " " + egovMessageSource.getMessage("ezQuestion.t53"));
-                    node.appendChild(nodeData);
+        			rNode.appendChild(node);
 
-                    node = resultXML.createElement("CELL");
-                    rNode.appendChild(node);
+        			node = resultXML.createElement("CELL");
 
-                    nodeData = resultXML.createElement("VALUE");
-                    nodeData.setTextContent(percent+ "%");
-                    node.appendChild(nodeData);
-            	 }
-             }
-             Node listView = resultXML.createElement("LISTVIEWDATA");
+        			nodeData = resultXML.createElement("VALUE");
+        			nodeData.setTextContent(rCnt + " " + egovMessageSource.getMessage("ezQuestion.t53"));
+        			node.appendChild(nodeData);
 
-             Node hNodes = resultXML.createElement("HEADERS");
-             listView.appendChild(hNodes);
+        			rNode.appendChild(node);
 
-             nodeData = resultXML.createElement("HEADER");
-             hNodes.appendChild(nodeData);
+        			node = resultXML.createElement("CELL");
 
-             node = resultXML.createElement("STYLE");
-             nodeData.appendChild(node);
-             node.setTextContent("background-color:#C4D4EB;");
+        			nodeData = resultXML.createElement("VALUE");
+        			nodeData.setTextContent(percent+ "%");
+        			node.appendChild(nodeData);
 
-             node = resultXML.createElement("NAME");
-             nodeData.appendChild(node);
-             node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
-
-             node = resultXML.createElement("WIDTH");
-             nodeData.appendChild(node);
-             node.setTextContent("60");
-
-             nodeData = resultXML.createElement("HEADER");
-             hNodes.appendChild(nodeData);
-
-             node = resultXML.createElement("STYLE");
-             nodeData.appendChild(node);
-             node.setTextContent("background-color:#C4D4EB;");
-
-             node = resultXML.createElement("NAME");
-             nodeData.appendChild(node);
-             node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
-
-             node = resultXML.createElement("WIDTH");
-             nodeData.appendChild(node);
-             node.setTextContent("20");
-
-             nodeData = resultXML.createElement("HEADER");
-             hNodes.appendChild(nodeData);
-
-             node = resultXML.createElement("STYLE");
-             nodeData.appendChild(node);
-             node.setTextContent("background-color:#C4D4EB;");
-
-             node = resultXML.createElement("NAME");
-             nodeData.appendChild(node);
-             node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
-
-             node = resultXML.createElement("WIDTH");
-             nodeData.appendChild(node);
-             node.setTextContent("20");
-             
-             resultXML.importNode(listView, true);
-             listView.appendChild(rNodes);
-
-             resultXML = null;
-             listView = null;
-             rNodes = null;
-             rNode = null;
-             hNodes = null;
-             nodeData = null;
-             CDATASection = null;
+        			rNode.appendChild(node);
+        			rNodes.appendChild(rNode);
+        		}
+        	}
         }
-		return commonUtil.convertDocumentToString(resultXML);
+        Node listView = resultXML.createElement("LISTVIEWDATA");
+
+        Node hNodes = resultXML.createElement("HEADERS");
+        listView.appendChild(hNodes);
+
+        nodeData = resultXML.createElement("HEADER");
+        hNodes.appendChild(nodeData);
+
+        node = resultXML.createElement("STYLE");
+        node.setTextContent("background-color:#C4D4EB;");
+        nodeData.appendChild(node);
+
+        node = resultXML.createElement("NAME");
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
+        nodeData.appendChild(node);
+
+
+        node = resultXML.createElement("WIDTH");
+        node.setTextContent("60");
+        nodeData.appendChild(node);
+
+        nodeData = resultXML.createElement("HEADER");
+        hNodes.appendChild(nodeData);
+
+        node = resultXML.createElement("STYLE");
+        node.setTextContent("background-color:#C4D4EB;");
+        nodeData.appendChild(node);
+
+        node = resultXML.createElement("NAME");
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
+        nodeData.appendChild(node);
+
+        node = resultXML.createElement("WIDTH");
+        node.setTextContent("20");
+        nodeData.appendChild(node);
+
+
+        nodeData = resultXML.createElement("HEADER");
+        hNodes.appendChild(nodeData);
+
+        node = resultXML.createElement("STYLE");
+        node.setTextContent("background-color:#C4D4EB;");
+        nodeData.appendChild(node);
+
+        node = resultXML.createElement("NAME");
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
+        nodeData.appendChild(node);
+
+        node = resultXML.createElement("WIDTH");
+        node.setTextContent("20");
+        nodeData.appendChild(node);
+
+
+        listView.appendChild(rNodes);
+        resultXML.appendChild(listView);
+
+System.out.println(commonUtil.convertDocumentToString(resultXML));
+        
+        return commonUtil.convertDocumentToString(resultXML);
 	}
 }
