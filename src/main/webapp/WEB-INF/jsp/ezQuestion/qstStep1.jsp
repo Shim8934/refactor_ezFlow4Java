@@ -239,12 +239,12 @@
         var szSDay = tempS[2];
         m_PollStartDate = szSYear + szSMonth + szSDay
         if (m_PostDate > m_PollStartDate) {
-        	alert("<spring:message code='ezQuestion.t199' />");
+        	alert("<spring:message code='ezQuestion.t199'/>");
             return false;
         }
     }
     function fun_cancel() {
-        if (confirm("<spring:message code='ezQuestion.t434' />")) {
+        if (confirm("<spring:message code='ezQuestion.t434'/>")) {
             menuQst_List();
         }
     }
