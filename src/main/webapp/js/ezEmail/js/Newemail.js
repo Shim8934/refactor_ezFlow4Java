@@ -582,7 +582,7 @@ function prevShow() {
         Old_Preview_Href = Preview_Href;
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
-        xmlhttp_mailPreview.open("POST", "/myoffice/ezEmail/remote/mail_prevShow.aspx?MSGFLAG=N", true);
+        xmlhttp_mailPreview.open("POST", "/ezEmail/mailPrevShow.do?MSGFLAG=N", true);
         xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
         xmlhttp_mailPreview.send(strQuery);
 
