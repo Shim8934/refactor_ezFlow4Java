@@ -8,14 +8,15 @@
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/myoffice/ezQuestion/controls/ListView_list.js"></script>
-		<script type="text/javascript" src="/myoffice/ezQuestion/controls/TreeView.js"></script>
+		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/TreeView.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
-			var L_BRDID = "${pBrdId}"; 
-			var L_ITEMNO = "${pItemNo}"; 
+			var L_BRDID = "${qstRangeSelectVO.brdId}"; 
+			var L_ITEMNO = "${qstRangeSelectVO.itemId}"; 
 			var g_aChanged = false;
 			var g_bChanged = false;
 			var g_bTreeLoad = false;
@@ -231,7 +232,7 @@
         	}
     	}
     	function on_view() {
-	        var strQuery = "<DATA><DEPTID>${userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>"; 
+	        var strQuery = "<DATA><DEPTID>${qstRangeSelectVO.userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>"; 
     	    xmlHttp_Depttree = null;
 	        xmlHttp_Depttree = createXMLHttpRequest();
     	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -275,7 +276,7 @@
     	    displayUserList(nodeIdx.GetNodeData("CN"));
     	}
     	function displayUserList(DeptID) {
-	        var xmlDoc = createXmlDom();
+	        /* var xmlDoc = createXmlDom();
         	var objNode;
         	createNodeInsert(xmlDoc, objNode, "DATA");
         	createNodeAndInsertText(xmlDoc, objNode, "DEPTID", DeptID);
@@ -286,7 +287,31 @@
         	xmlHttp_UserList = createXMLHttpRequest();
         	xmlHttp_UserList.open("POST", "/ezOrgan/getDeptMemberList.do", true);
         	xmlHttp_UserList.onreadystatechange = event_displayUserList;
-        	xmlHttp_UserList.send(xmlDoc);
+        	xmlHttp_UserList.send(xmlDoc); */
+        	$(document).ready(function(){	
+        	var xmlpara = createXmlDom();		        
+	        $.ajax({
+	        	type : "POST",
+	        	dataType : "xml",
+	        	url : "/ezOrgan/getDeptMemberList.do",
+	        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayname;description;title", type : "user"},
+	        	success : function(result){		        		
+	        		document.getElementById("OrganListView").innerHTML = "";
+	                var listview = new ListView();
+	                listview.SetID("OrganList");
+	                listview.SetSelectFlag(false);
+	                listview.SetMulSelectable(false);
+	                listview.SetRowOnDblClick("ListViewNodeDblClick");
+	                listview.DataSource(document.getElementById("listviewheader2"));
+	                listview.DataBind("OrganListView");
+	                listview.DataSource(result);
+	                listview.RowDataBind();
+	        	},
+	        	error : function(error){
+	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+	        	}
+	        	});
+        	});
     	}
     	function event_displayUserList() {
 	        if (xmlHttp_UserList != null && xmlHttp_UserList.readyState == 4) {
