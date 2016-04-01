@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
@@ -1345,8 +1346,40 @@ public class EzQuestionController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezQuestion/qstRangeSelect.do")
-	public String qstRangeSelect()  {
-
+	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String brdId = "";
+		String itemId = "";
+		String strDeptACL = "", strMemberACL="",userInfoDeptCode="",serverName="",pCompanyID="";
+		String strGenderACL0="",strGenderACL1="",strGenderACL2="";
+		
+		if(req.getParameter("brd_id") != null)
+			brdId = req.getParameter("brd_id");
+System.out.println("brdId"+brdId);
+		if(req.getParameter("item_no") != null) {
+			itemId = req.getParameter("item_no");
+System.out.println("itemId"+itemId);
+		}
+		strGenderACL0 = "checked";
+		strGenderACL1 = "";
+		strGenderACL2 = "";
+		userInfoDeptCode = loginVO.getDeptID();
+		pCompanyID = loginVO.getCompanyID();
+		serverName = req.getServerName();
+		
+		QstRangeSelectVO qstRangeSelectVO = new QstRangeSelectVO();
+		qstRangeSelectVO.setBrdId(brdId);
+		qstRangeSelectVO.setItemId(itemId);
+		qstRangeSelectVO.setStrGenderACL0(strGenderACL0);
+		qstRangeSelectVO.setStrGenderACL1(strGenderACL1);
+		qstRangeSelectVO.setStrGenderACL2(strGenderACL2);
+		qstRangeSelectVO.setUserInfoDeptCode(userInfoDeptCode);
+		qstRangeSelectVO.setpCompanyID(pCompanyID);
+		qstRangeSelectVO.setServerName(serverName);
+		
+		model.addAttribute("brdId",qstRangeSelectVO.getBrdId());
+		model.addAttribute("itemNo",qstRangeSelectVO.getItemId());
+		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
 		return "/ezQuestion/qstRangeSelect/rangeSelect";
 	}
 
