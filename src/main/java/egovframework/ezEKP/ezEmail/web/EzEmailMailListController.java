@@ -246,7 +246,13 @@ public class EzEmailMailListController {
 					else {
 						addressStr = MimeUtility.decodeText(addressStr);
 					}
-				}				
+				}			
+				else {
+					String[] fromHeaders = message.getHeader("From");
+					if (fromHeaders != null) {
+						addressStr = MimeUtility.decodeText(fromHeaders[0]);
+					}
+				}
 			}
 			else {
 				addresses = message.getRecipients(Message.RecipientType.TO);
