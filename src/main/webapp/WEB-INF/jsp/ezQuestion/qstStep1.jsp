@@ -301,7 +301,7 @@
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
-         var szUrl = "/ezQuestion/qstRangeSelect/rangeSelect.do?brd_id='${ezQuestionVO.brdID}'&item_no=" + item_no; 
+         var szUrl = "/ezQuestion/qstRangeSelect/rangeSelect.do?brd_id=5&item_no=" + item_no; 
         if ((g_windowReference == null) || (g_windowReference.closed == true)) {
             if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                 var feature = GetOpenPosition(560, 630);
