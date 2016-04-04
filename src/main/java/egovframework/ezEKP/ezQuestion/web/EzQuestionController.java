@@ -1012,7 +1012,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			strData = "";
 			
 			if(answerType == 2){
-				strData = dataProcessType2(brdId, itemNo, quesContent, quesContent, multiSelect, answerType, iCount);
+				strData = dataProcessType2(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount);
 			}else{
 				List<QstAnswerVO> qstAnswerVOList = dataProcessAns(brdId, itemNo, questionNo);
 				if(answerType == 1){
@@ -1089,8 +1089,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         	rCnt = responseCount(questionNo, strContent, strSel, answerType, iAnsCount, brdId, itemNo);
         	fRCnt = rCnt;
         	fResponseCnt = responseCnt;
-System.out.println(responseCnt);
-System.out.println(rCnt);
+
 			if(responseCnt <= 0){
 				percent=0;
 			}else{
@@ -1117,14 +1116,14 @@ System.out.println(rCnt);
 		return strData;
 	}
 
-	public String dataProcessType2(int brdId, int itemNo, String strNo, String strContent, String strSel, int answerType, int iDataCount) throws Exception{
+	public String dataProcessType2(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount) throws Exception{
 		String strData = "";
 		strData += "<table class=\"question\"><tr>";
 		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "</th>";
 		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
-		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + strNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
+		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
 		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
-		strData += getAttachList(strNo, "0", brdId, itemNo) + "</td>";
+		strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo) + "</td>";
 		strData += "</tr>";
 		strData += "</table>";
 		strData += "<br>";
@@ -2889,4 +2888,6 @@ System.out.println("!!");
         
 		return commonUtil.convertDocumentToString(resultXML);
 	}
+	
+	
 }
