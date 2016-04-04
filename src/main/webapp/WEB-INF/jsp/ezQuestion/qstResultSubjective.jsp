@@ -46,6 +46,16 @@
 			    }
 			    makePageSelPage();
 			    tableXML();
+			    
+			    $("#saveExcel").click(function () {
+			    	if(document.getElementById("hidRType2").value=="A"){
+			            $("#xmlTable").battatech_excelexport({
+			                containerid: "xmlTable"
+			               , datatype: 'table'
+			            });
+			    	}
+		        });
+			    
 			}
 			
 			function tableXML(){
@@ -123,80 +133,16 @@
 			}
 			
 			function menuQst_Total_view() {
-				<%-- var open_Url = "/ezQuestion/qstResultSave.do?brd_id=<%=brd_id%>&item_no=<%=item_no%>&question_no=<%=question_no%>" --%>
-			
-				xmlHTTP.open("POST", open_Url, false);
-				xmlHTTP.send();
-				var xmldom = loadXMLString(xmlHTTP.responseText);
-				rows = xmldom.getElementsByTagName("ROW");
-				//rows = xmlHTTP.responseXML.getElementsByTagName("ROW");
-			
-				var Clength = rows.length;
-			
-			
-				if (Clength != 0) {
-				    SaveCSV(Clength)
+				if ("${pTotalCnt}" != 0) {
+			    	if(document.getElementById("hidRType2").value=="A"){
+			            $("#xmlTable").battatech_excelexport({
+			                containerid: "xmlTable"
+			               , datatype: 'table'
+			            });
+			    	}
 				}else{
 				    alert("<spring:message code='ezQuestion.t121' />");
 				}
-			}
-			
-			function SaveCSV(Clength) {
-			    var Rlength = Clength;
-			
-			    var col = new Array(4);
-			    var row = new Array(Rlength);
-			    var fPath;
-			    var bResult
-			    if (CrossYN()) {
-			        for (var i = 0; i < Rlength; i++) {
-			            var cells = rows[i].getElementsByTagName("CELL");
-			            var Clength = cells.length;
-			            var txt = cells[0].getElementsByTagName("VALUE")[0].textContent;
-			            var cnt = cells[1].getElementsByTagName("VALUE")[0].textContent;
-			            if (i != 0) {
-			                var dept = cells[2].getElementsByTagName("VALUE")[0].textContent;
-			                var jikgub = cells[3].getElementsByTagName("VALUE")[0].textContent;
-			            }
-			            col[0] = repComMa(txt);
-			            col[1] = repComMa(cnt);
-			            if (i != 0) {
-			                col[2] = repComMa(dept);
-			                col[3] = repComMa(jikgub);
-			            }
-			            else {
-			                col[3] = "\n";
-			            }
-			            document.getElementById("AnalysisData").value += col;
-			        }
-			        form_analysissave.submit();
-			    }else {
-			    	var objSave = new ActiveXObject("EzUtil.MiscFunc");
-			        var strFilter = objSave.OpenSaveDlg("CSV files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0\0", "text");
-			
-			        for (var i = 0; i < Rlength; i++) {
-			            var cells = rows[i].getElementsByTagName("CELL");
-			            var Clength = cells.length;
-			            var txt = cells[0].getElementsByTagName("VALUE")[0].text;
-			            var cnt = cells[1].getElementsByTagName("VALUE")[0].text;
-			            if (i != 0) {
-			                var dept = cells[2].getElementsByTagName("VALUE")[0].text;
-			                var jikgub = cells[3].getElementsByTagName("VALUE")[0].text;
-			            }
-			            col[0] = repComMa(txt);
-			            col[1] = repComMa(cnt);
-			            if (i != 0) {
-			                col[2] = repComMa(dept);
-			                col[3] = repComMa(jikgub);
-			            }
-			            row[i] = col.join();
-			        }
-			        var strCSV = row.join("\r\n");
-			        bResult = objSave.SaveTextToFile(strFilter, strCSV);
-			    }
-			    if (bResult) {
-			        alert("<spring:message code='ezQuestion.t344' />");
-			    }
 			}
 	
 			function ReplaceText(orgStr, findStr, replaceStr) {
@@ -364,7 +310,7 @@
 	        </tr>
 	    </table>
 	    <div id="tblPageRayer"></div>
-		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="Result_AnalysisSave.aspx" target="_self">
+		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="" target="_self">
 		    <input type="hidden" name="AnalysisData" id="AnalysisData" />
 		    <input type="hidden" name="hidQst2" id="hidQst2" value="ALL" /><!-- 전체/문항 구분 -->
 		    <input type="hidden" name="hidCatalog2" id="hidCatalog2" value="0" /><!-- Catalog 구분 -->

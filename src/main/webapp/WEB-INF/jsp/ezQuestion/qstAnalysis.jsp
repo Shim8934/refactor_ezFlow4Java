@@ -44,16 +44,34 @@
 			    tableXML();
 			    
 			    $("#saveExcel").click(function () {
+			    	if (!StateChangeClickFlag) {
+		                return;
+		            }
+			    	
 			    	if(document.getElementById("hidRType2").value=="T"){
+			    		var tr = AnalysisListView.getElementsByTagName("tr");
+		                for (var i = 0; i < tr.length; i++) {
+		                    if (tr[i].getAttribute("selected") == "true") {
+		                        tr[i].style.backgroundColor = "white";
+		                    }
+		                }
+		                document.getElementById("AnalysisData").value = AnalysisListView.innerHTML;
+		                
 			            $("#AnalysisList").battatech_excelexport({
 			                containerid: "AnalysisList"
 			               , datatype: 'table'
 			            });
 			    	}else{
-			    		$("#Graph").battatech_excelexport({
+			    		 if (Graph.innerHTML != "") {
+			    		 	document.getElementById("AnalysisData").value = Graph.innerHTML;
+			    		 
+							$("#Graph").battatech_excelexport({
 			                containerid: "Graph"
-			               , datatype: 'table'
-			            });
+			               	, datatype: 'table'
+			            	});
+			    		 }else{
+			    			 alert("분석결과가 없습니다.");
+			    		 }
 			    	}
 		        });
 			    
