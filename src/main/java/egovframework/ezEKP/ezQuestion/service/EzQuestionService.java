@@ -37,6 +37,12 @@ public interface EzQuestionService {
 	
 	public List<QstVO> getQuestion(String vBrdId, String vItemNo, String vQuesNo) throws Exception;
 	
+	public List<QstResponseVO> gwPollGetSearch(String vItemNo, String vQuesNo) throws Exception;
+	
+	public List<QstResponseVO> gwPollPositionSearch(String vItemNo, String vQuesNo) throws Exception;
+	
+	public List<QstResponseVO> gwPollJikgubSearch(String vItemNo, String vQuesNo) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -86,6 +92,8 @@ public interface EzQuestionService {
 	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang)throws Exception;
 	
 	public Integer responseListCnt(String brdId, String itemNo, String responseYN, String lang) throws Exception;
+	
+	public String analysisCount(String vItemNo, String vQuesNo) throws Exception;
 	
 	public void stepSave(String pUserID, Map<String, Object> map) throws Exception;
 

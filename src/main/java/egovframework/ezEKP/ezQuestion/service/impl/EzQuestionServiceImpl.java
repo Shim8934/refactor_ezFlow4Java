@@ -674,5 +674,38 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", vQuesNo);
 		return ezQuestionDAO.getQuestion(map);
+	}
+
+	@Override
+	public String analysisCount(String vItemNo, String vQuesNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", vQuesNo);
+		return ezQuestionDAO.analysisCount(map);
+	}
+
+	@Override
+	public List<QstResponseVO> gwPollGetSearch(String vItemNo, String vQuesNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", vQuesNo);
+		return ezQuestionDAO.gwPollGetSearch(map);
+	}
+
+	@Override
+	public List<QstResponseVO> gwPollPositionSearch(String vItemNo, String vQuesNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", vQuesNo);
+		return ezQuestionDAO.gwPollPositionSearch(map);
+	}
+
+	@Override
+	public List<QstResponseVO> gwPollJikgubSearch(String vItemNo, String vQuesNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", vItemNo);
+		map.put("v_pQuesNo", vQuesNo);
+		return ezQuestionDAO.gwPollJikgubSearch(map);
 	}	
+	
 }

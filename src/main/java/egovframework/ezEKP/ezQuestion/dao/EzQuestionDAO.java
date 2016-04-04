@@ -105,6 +105,21 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (QstReuseQuestionVO) select("EzQuestionDAO.reUseQuestionData", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollGetSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollGetSearch", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollPositionSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollPositionSearch", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollJikgubSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollJikgubSearch", map);
+	}
+	
 	public String getItemSeq(String brdId) {
 		return (String)select("EzQuestionDAO.getItemSeq", brdId);
 	}
@@ -166,6 +181,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public Integer pollRespCnt2(Map<String, Object> map) {
 		return (Integer) select("EzQuestionDAO.pollRespCnt2", map);
+	}
+	
+	public String analysisCount(Map<String, Object> map) {
+		return (String) select("EzQuestionDAO.analysisCount", map);
 	}
 	
 	public String resultSubjectiveListCnt(Map<String, Object> map) {

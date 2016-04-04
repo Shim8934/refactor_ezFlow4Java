@@ -46,7 +46,12 @@ public class QstResponseVO {
 	String responseDate;
 	/** 응답IP주소*/
 	String responseUserIp;
-	
+	/** 상세분석시 필요한 quesContent*/
+	String quesContent="";
+	/** 상세분석시 필요한 answerContent*/
+	String answer="";
+	/** 상세분석시 필요한 Count*/
+	int qCount=0;
 	public int getBrdId() {
 		return brdId;
 	}
@@ -178,5 +183,23 @@ public class QstResponseVO {
 	}
 	public void setResponseUserIp(String responseUserIp) {
 		this.responseUserIp = responseUserIp;
+	}
+	public String getQuesContent() {
+		return quesContent;
+	}
+	public void setQuesContent(String quesContent) {
+		this.quesContent = quesContent;
+	}
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+	public int getqCount() {
+		return qCount;
+	}
+	public void setqCount(int qCount) {
+		this.qCount = qCount;
 	}
 }

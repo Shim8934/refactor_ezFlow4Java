@@ -115,11 +115,10 @@
 	        	}
 		        StateChangeClickFlag = true;
 		        document.getElementById("message").innerHTML = "";
-
 		        if (xmlHttp.responseText != "") {
 		            xmlTemp = loadXMLString(xmlHttp.responseText);
 		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
-		            var rows = SelectNodes(xmlRtn, "ROWS");
+		            var rows = SelectNodes(xmlRtn, "ROW");
 		            var Rlength = rows.length;
 		            if (Rlength != 0) {
 		                document.getElementById("hidRType2").value = szRType;
@@ -137,30 +136,28 @@
 		                } else {
 		                    var strHTML = "<table width=100% border=0 cellspacing=0 cellpadding=1 border=0>";
 		                    for (var i = 0; i < Rlength; i++) {
-		                        var SelNode = rows.item(i);
-		                        var cells = null;
-		                        cells = SelectNodes(SelNode, "CELL");
-		
-		                        // SelectSingleNodeValue(rows.item(0).childNodes[1], "DATA1")
+								var SelNode = rows.item(i);
+								var cells = null;
+								cells = SelectNodes(SelNode, "CELL");
 		                        var Clength = cells.length;
-		                        var gubun = SelectSingleNodeValue(rows.item(i).childNodes[1], "DATA1");
+		                        var gubun = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "DATA1");
 		                        if (gubun == "TOT") {
-		                            var txt = SelectSingleNodeValue(rows.item(i).childNodes[1], "VALUE");
-		                            var cnt = SelectSingleNodeValue(rows.item(i).childNodes[2], "VALUE");
-		                            strHTML += "<tr>"
+		                            var txt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "VALUE");
+		                            var cnt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[1], "VALUE");
+		                            strHTML += "<tr>";
 		                            strHTML += "<td colspan=5>" + txt + " " + cnt;
-		                            strHTML += "</td></tr>"
+		                            strHTML += "</td></tr>";
 		                        }
 		                        else if (gubun == "Q") {
-		                            var txt = SelectSingleNodeValue(rows.item(i).childNodes[1], "VALUE");
+		                            var txt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "VALUE");
 		                            strHTML += "<tr>";
 		                            strHTML += "<td colspan=5>" + txt;
 		                            strHTML += "</td></tr>"
 		                        }
 		                        else if (gubun == "A") {
-		                            var txt = SelectSingleNodeValue(rows.item(i).childNodes[1], "VALUE");
-		                            var cnt = SelectSingleNodeValue(rows.item(i).childNodes[3], "VALUE");
-		                            var percent = SelectSingleNodeValue(rows.item(i).childNodes[5], "VALUE");
+		                            var txt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "VALUE");
+		                            var cnt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[1], "VALUE");
+		                            var percent = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[2], "VALUE");
 		                            strHTML += "<tr>";
 		                            strHTML += "<td>&nbsp;</td>";
 		                            strHTML += "<td>" + txt + "</td>";
@@ -168,13 +165,13 @@
 		                            strHTML += "<td width='50' align='right'>[" + percent + "]</td>";
 		                            percent = percent.replace("%", "");
 		                            strHTML += "<td width=150 valign=middle>";
-		                            if (percent != "0") {
+		                            if (percent != 0) {
 		                                strHTML += "<img src='http://" + document.location.host + "/images/img_graph.gif' width='" + percent + "' height='16'  align='absmiddle'>";
 		                            }
 		                            strHTML += "</td></tr>";
 		                        }
 		                    }
-		                    strHTML += "</table>"
+		                    strHTML += "</table>";
 		                    document.getElementById("Graph").innerHTML = strHTML;
 		                    document.getElementById("AnalysisData").innerHTML = strHTML;
 		                }

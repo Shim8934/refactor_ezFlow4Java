@@ -145,17 +145,44 @@
 		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
 	</resultMap>
 	
+	<resultMap class="QstResponseVO" id="responseDeptVO">
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
+		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
+		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
+	</resultMap>
+	
+	<resultMap class="QstResponseVO" id="responsePositionVO">
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
+		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
+	</resultMap>
+	
+	<resultMap class="QstResponseVO" id="responseJikgubVO">
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
+		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
+		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
+	</resultMap>
+	
 	<resultMap class="QstResponseVO" id="qstResponseList">
-		<result property="responseUserId"			column="USER_ID"				columnIndex="1"/>
-		<result property="responseUserName"			column="USER_NAME"				columnIndex="2"/>
-		<result property="responseUserEmail"		column="USER_EMAIL"				columnIndex="3"/>
-		<result property="responseUserDeptId"		column="USER_DEPT_ID"			columnIndex="4"/>
-		<result property="responseUserDeptName"		column="USER_DEPT_NAME"			columnIndex="5"/>
-		<result property="responseUserPosition"		column="USER_POSITION"			columnIndex="6"/>
-		<result property="responseUserJikgub"		column="USER_JIKGUB"			columnIndex="7"		nullValue="0"/>
-		<result property="responseUserGender"		column="USER_GENDER"			columnIndex="8"/>
-		<result property="responseUserAge"			column="USER_AGE"				columnIndex="9"/>
-		<result property="responseDate"				column="RESPONSE_DATE"			columnIndex="10"/>
+		<result property="responseUserId"			column="USER_ID"					columnIndex="1"/>
+		<result property="responseUserName"			column="USER_NAME"					columnIndex="2"/>
+		<result property="responseUserEmail"		column="USER_EMAIL"					columnIndex="3"/>
+		<result property="responseUserDeptId"		column="USER_DEPT_ID"				columnIndex="4"/>
+		<result property="responseUserDeptName"		column="USER_DEPT_NAME"				columnIndex="5"/>
+		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"/>
+		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
+		<result property="responseUserGender"		column="USER_GENDER"				columnIndex="8"/>
+		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"/>
+		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="QstVO" id="objQuestion">
@@ -232,6 +259,18 @@
 		{CALL EZQUESTION.EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.gwPollGetSearch" parameterClass="Map" resultMap="responseDeptVO">
+		{CALL EZQUESTION.GWPOLL_GET_SERACH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
+		{CALL EZQUESTION.GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
+		{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
@@ -242,6 +281,10 @@
 	
 	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
 		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.analysisCount" parameterClass="Map" resultClass="String">
+		{CALL EZQUESTION.EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.resultSubjectiveListCnt" parameterClass="Map" resultClass="String">
