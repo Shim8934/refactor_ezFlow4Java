@@ -445,11 +445,11 @@
     </tr>
     </table>
 </div>
-<form name="PrevViewFormH" action="mail_Previewcontent.aspx" method="post" target="ifrmPreViewH" >
+<form name="PrevViewFormH" action="mailPreviewContent.do" method="post" target="ifrmPreViewH" >
 <input  type="hidden"  name="iptURL" value="">
 <input  type="hidden" name="iSecurity" value="">
 </form>
-    <form name="PrevViewFormW" action="mail_Previewcontent.aspx" method="post" target="ifrmPreViewW">
+<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
 <input  type="hidden"  name="iptURL" value="">
 <input  type="hidden" name="iSecurity" value="">
 </form>               
