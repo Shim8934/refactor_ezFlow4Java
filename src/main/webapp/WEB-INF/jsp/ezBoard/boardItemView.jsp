@@ -209,12 +209,12 @@
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-		                    var OpenWin = window.open("interASP/CheckPassWord.aspx?ItemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                } else {
 		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("interASP/CheckPassWord.aspx?ItemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		                    if (typeof (ret) == "undefined") {
 		                        alert("<spring:message code='ezBoard.t265' />");
 		                        return;
@@ -283,7 +283,7 @@
 		
 		        if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + pItemID + ";", false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -333,13 +333,13 @@
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-		                var OpenWin = window.open("interASP/CheckPassWord.aspx?ItemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("interASP/CheckPassWord.aspx?ItemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
@@ -652,7 +652,7 @@
 		    }
 		    function btn_Print_Onclick_Complete(RtnVal) {
 		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
-		            url = url.replace("_Print_Option.aspx", "_Print.aspx");
+		            url = url.replace("PrintOption.do", "Print.do");
 		            url = url + "&oneline=" + RtnVal[0] + "&attach=" + RtnVal[1];
 		            window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 		        }

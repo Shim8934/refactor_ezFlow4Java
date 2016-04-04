@@ -105,15 +105,17 @@
 		    var pcheckForm = "${checkForm}";
 		    var pUseBackGround = "${useBackGround}";
 		    var FirstFlag = false;
+		    var rsa = new RSAKey();
 		    window.onload = function () {
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
 		            GetBackGroundImage();
 		        }
-		        else
+		        else{
 		            document.getElementById("pUseBackGroundTR").style.display = "none";
-		        //RSA 관련 왜하는지 모르겠음
-    			//	initKey();
+		        }
+				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+				
 			    if (pMode == "reply")
 			        if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
 			            document.getElementById("file1").multiple = false;
@@ -701,7 +703,7 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
 
 		        if (gubun == "2")
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", Crypt_Encrytion(document.getElementById('txtPassWord').value));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
@@ -2128,6 +2130,7 @@
 			</c:choose>
 	    </table>
 	    <input id="publicModulus" value="${publicModulus}" type="hidden"/>
+	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/myoffice/blank.htm" style="border:none;" id="iFrameLayer"></iframe>

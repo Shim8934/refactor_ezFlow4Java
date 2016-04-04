@@ -38,8 +38,6 @@ public interface EzBoardService {
 
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
 	
-	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
-	
 	public BoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
 	public BoardConfigVO getPersonalCount(String userID) throws Exception;
@@ -52,6 +50,8 @@ public interface EzBoardService {
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception;
 	
+	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
+	
 	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
 	
 	public String checkForm(String boardID, String mode) throws Exception;
@@ -63,6 +63,8 @@ public interface EzBoardService {
 	public String getNoticePostItemAll(String boardID) throws Exception;
 	
 	public String getParentBoardID(String boardID) throws Exception;
+	
+	public String getDocPassWord(String itemID) throws Exception;
 	
 	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
 
@@ -109,5 +111,6 @@ public interface EzBoardService {
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+
 
 }

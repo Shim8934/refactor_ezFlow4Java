@@ -20,7 +20,6 @@
 	        var SSCompanyName = "${userInfo.companyName1}";
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
-	        var SS_ServerName = "test.yoonz44.com";
 	        var RedirectBoardGroupID = "";
 	        var RedirectBoardID = "";
 	        var Func = "${func}";
@@ -72,7 +71,7 @@
 		                        BoardRedirect();
 		                        return;
 		                    }
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + RedirectBoardID;
+		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
 		                }
 		
 		                var menuSize = (parseInt(items) + 2) * 30;
@@ -223,15 +222,15 @@
 		                GetBoardInfo(SelectedBoardID);
 		
 		                if (gubun == 3)
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
+		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=" + gubun;
 		                else if (gubun == 4)
-		                    window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
+		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=" + gubun;
 		                else {
 		                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=N";
 		                    }
 		                    else{
-		                        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(pBoardName) + "&BoardType=" + gubun;
+		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=" + gubun;
 		                    }
 		                }
 		            }
@@ -246,7 +245,7 @@
 		    var gubun = "";
 		    function GetBoardInfo(SelBoardID) {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "interASP/GetBoardInfo.aspx?BoardID=" + SelBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + SelBoardID, false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(xmlhttp_boardinfo.responseXML, "BOARDNAME")[0]);
@@ -283,9 +282,9 @@
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
 		            if (chkPhotoBrd == 3)
-		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
+		                window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + escape(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 		            else if (chkPhotoBrd == 4)
-		                window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd;
+		                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + escape(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 		            else {
 		                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(treeNode.GetNodeData("DATA2")) + "&boardType=N";
@@ -301,7 +300,7 @@
 		    }
 		    function DisplayTopBoard() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?RootBoardID=top&SubFlag=0", false);
+		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText != "ERROR") {
@@ -323,17 +322,19 @@
 		        first++;
 		    }
 		    function GetMyBoardItem(pRootTreeID) {
+		    	var returnXML = "";
 		    	$.ajax({
 					type : "POST",
 					dataType : "xml",
 					async : false,
-					url : "/ezBoard/getMyBoards_Config.do",	        			
-					data : { RootTreeID : pRootTreeID, 
-								 COUNTFLAG : "YES"},
+					url : "/ezBoard/getMyBoardsConfig.do",	        			
+					data : { rootTreeID : pRootTreeID, 
+							 countFlag : "YES"},
 					success: function(xml){
-			        	return xml;
+						returnXML = xml;
 					}        			
 				});	
+		    	return returnXML;
 		    }
 		    var tempID;
 		    var clickFlag = false;
@@ -469,7 +470,7 @@
 		        }
 		    }
 		    function favoriteList() {
-		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do?MODE=USE";
+		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
 		        var OpenWin = window.open("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));

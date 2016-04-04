@@ -141,10 +141,8 @@ public class EzCommonController extends EgovFileMngUtil{
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
         	m_ImageList = extractImageSource(m_strHTML);
-System.out.println(m_ImageList);
             //백그라운드 경로 추출 및 가상경로 매칭
         	m_BackImageList = extractBackgroundSource(m_strHTML, m_ImageList);
-System.out.println(m_BackImageList);
             //본문 인코딩
         	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
             //이미지 인코딩

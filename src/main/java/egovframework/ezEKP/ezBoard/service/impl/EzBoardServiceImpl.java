@@ -467,6 +467,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public String getDocPassWord(String itemID) throws Exception {
+		return ezBoardDAO.getDocPassWord(itemID);
+	}
+
+	@Override
 	public void brdNewItem(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItem(boardListVO);
 		ezBoardDAO.newItem(boardListVO.getItemID());

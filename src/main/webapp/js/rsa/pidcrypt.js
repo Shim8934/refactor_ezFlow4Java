@@ -76,7 +76,7 @@ var RSAparams = {};
 var RSAkey;
 var RSArsa;
 var RSAasn;
-var RSAtree
+var RSAtree;
 var RSAt;
 function initKey() {
     RSAparams = certParser(document.getElementById('publicModulus').value);
@@ -88,7 +88,7 @@ function initKey() {
     RSAt = new Date();
 }
 function Crypt_Encrytion(inputString) {
-    return pidCryptUtil.fragment(pidCryptUtil.encodeBase64(RSArsa.encrypt(inputString), 64))
+    return pidCryptUtil.fragment(pidCryptUtil.encodeBase64(RSArsa.encrypt(inputString), 64));
 }
 function certParser(cert) {
     var lines = cert.split('\n');

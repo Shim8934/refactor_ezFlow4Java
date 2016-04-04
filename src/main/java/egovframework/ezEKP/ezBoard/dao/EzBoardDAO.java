@@ -111,6 +111,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.getParentBoardID", boardID);
 	}
 	
+	public String getDocPassWord(String itemID) throws Exception{
+		return (String) select("EzBoardDAO.getDocPassWord", itemID);
+	}
+	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
 		select("EzBoardDAO.getBrdNewItemCount",map);
 		return (int)map.get("v_pCount");

@@ -275,6 +275,17 @@
 		]]>                
 	</select>
 	
+	<select id="EzBoardDAO.getDocPassWord" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				docpassword 
+			FROM 
+				ezBoardSTD.TBL_BOARD_ITEM 
+			WHERE 
+				itemid = #itemID#
+		]]>                
+	</select>
+	
 	<update id="EzBoardDAO.updateCopyItem" parameterClass="String">
 		<![CDATA[
 			UPDATE ezBoardSTD.TBL_BOARD_ITEM
