@@ -235,7 +235,6 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("CopyBoardListViewTable");
 		        var rowData = listview.GetDataRows();
-
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 
@@ -243,6 +242,7 @@
 		        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
 		        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
 		        objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "DEFAULTBOARDID", pBoardID);
+		        
 		        for (var i = 0; i < rowData.length; i++) {
 		            objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
 		            objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "BOARDID", rowData[i].getAttribute("DATA1"));
@@ -250,7 +250,7 @@
 		            objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "UNDERGROUP", rowData[i].getAttribute("DATA3"));
 		        }
 
-		        xmlhttp.open("POST","/myoffice/ezBoardSTD/Admin/interASP/copyBoardAcl.aspx",false)
+		        xmlhttp.open("POST","/admin/ezBoard/copyBoardAcl.do",false)
 		        xmlhttp.send(xmlpara)
 
 		        if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {

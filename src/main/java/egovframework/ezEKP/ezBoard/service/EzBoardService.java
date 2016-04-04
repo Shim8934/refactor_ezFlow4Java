@@ -17,6 +17,8 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzBoardService {
 
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception;
+	
+	public List<BoardVO> get_apprUserList(String boardID) throws Exception;
 
 	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception;
 
@@ -111,6 +113,8 @@ public interface EzBoardService {
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+	
+
 
 
 }

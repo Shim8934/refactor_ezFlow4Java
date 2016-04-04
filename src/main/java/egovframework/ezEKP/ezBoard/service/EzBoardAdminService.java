@@ -85,6 +85,14 @@ public interface EzBoardAdminService {
 	
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;	
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;
+
+	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID) throws Exception;
+
+	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode) throws Exception;
+
+	public void apprProperty_info(String boardID, String string) throws Exception;
+
+	public void saveBoardProperty_port(String boardID) throws Exception;
 
 }

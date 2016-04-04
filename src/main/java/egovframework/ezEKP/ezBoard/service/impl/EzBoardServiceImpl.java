@@ -36,6 +36,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("redirectBoardID", redirectBoardID);
 		return ezBoardDAO.getLeft_BoardSTD(map);
+	}	
+
+	@Override
+	public List<BoardVO> get_apprUserList(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		
+		return ezBoardDAO.get_apprUserList(map);
 	}
 
 	@Override

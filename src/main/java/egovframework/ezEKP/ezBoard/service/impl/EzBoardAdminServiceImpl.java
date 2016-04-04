@@ -409,5 +409,50 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		
 		ezBoardAdminDAO.setUnderBoardIDAcl2(map);
 	}
+
+	@Override
+	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PDEFAULTBOARDID", defaultBoardID);
+		map.put("v_PPARENTBOARDID", parentBoardID);
+		
+		ezBoardAdminDAO.copyBoardAcl(map);		
+	}
+
+	@Override
+	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pAPPRUSERID", apprUserID);
+		map.put("v_pMODE", pMode);
+		
+		ezBoardAdminDAO.saveBoardProperty_appr(map);
+		
+	}
+
+	@Override
+	public void apprProperty_info(String boardID, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PMODE", mode);
+		
+		ezBoardAdminDAO.apprProperty_info(map);
+	}
+
+	@Override
+	public void saveBoardProperty_port(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);		
+		
+		ezBoardAdminDAO.saveBoardProperty_port(map);		
+	}
+	
+	
+	
 	
 }

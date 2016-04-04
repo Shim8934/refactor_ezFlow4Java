@@ -492,7 +492,46 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do")
 	public void saveBoardProperty(HttpServletResponse response,	BoardPropertyVO boardPropertyVO) throws Exception {
-		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
+		String boardID = boardPropertyVO.getBoardID();
+		ezBoardAdminService.saveBoardProperty(boardPropertyVO);		
+		
+		if(boardPropertyVO.getPortlet() != null){
+			if(boardPropertyVO.getPortlet().equals("Y")){
+				ezBoardAdminService.saveBoardProperty_port(boardID);
+			}
+		}
+		
+		if(boardPropertyVO.getApprFlag() != null){			
+			
+			if(boardPropertyVO.getApprFlag().equals("Y")){
+				String[] flag = boardPropertyVO.getApprUserList().split(";");				
+				
+				for(int i=0; i < flag.length; i++){
+					String apprUserID = flag[i];
+					String pMode = "DEL";
+					
+					if(i != 0){
+						pMode = "";
+					}					
+					ezBoardAdminService.saveBoardProperty_appr(boardID, apprUserID, pMode);
+				}
+				
+				if(boardPropertyVO.getOrgApprFlag() != null){
+					if(!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())){
+						ezBoardAdminService.apprProperty_info(boardID, "Y");
+					}
+				}
+			}else{
+				String pMode = "DEL";				
+				ezBoardAdminService.saveBoardProperty_appr(boardID, "", pMode);
+				
+				if(boardPropertyVO.getOrgApprFlag() != null){
+					if(!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())){
+						ezBoardAdminService.apprProperty_info(boardID, "N");
+					}
+				}
+			}
+		}		
 		// board_treechache 테이블 trunk
 		ezBoardAdminService.trunkBoard();
 	}
@@ -781,6 +820,26 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		return "admin/ezBoard/selectTarget";
 	}
+	
+	@RequestMapping(value = "/admin/ezBoard/selectTarget2.do")
+	public String selectTarget2(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String topid = "";
+
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topid = user.getCompanyID();
+		} else {
+			topid = "Top";
+		}
+
+		model.addAttribute("defaultwin", "To");
+		model.addAttribute("strXML", "");
+		model.addAttribute("topid", topid);
+		model.addAttribute("userLang", "");
+		model.addAttribute("deptID", user.getDeptID());
+
+		return "admin/ezBoard/selectTarget2";
+	}	
 
 	@RequestMapping(value = "/admin/ezBoard/checkName.do")
 	public String checkName() throws Exception {
@@ -829,7 +888,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String serverName = config.getProperty("config.ServerName");
 		/*
-		 * 2016-03-31 장진혁 아직사용되지 않아서 주석처리
+		 * 2016-03-31 장진혁 현재 사용되지 않아서 주석처리
 		String strLang = config.getProperty("config.primary");
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
@@ -862,6 +921,22 @@ public class EzBoardAdminController extends EgovFileMngUtil {
         model.addAttribute("parentBoardID", parentBoardID);
 		
 		return "admin/ezBoard/boardAclList";
+	}
+	
+	@RequestMapping(value = "/admin/ezBoard/copyBoardAcl.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String copyBoardAcl(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		for(int i=0; i < doc.getElementsByTagName("BOARDID").getLength(); i++){
+			String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent();
+			String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(i).getTextContent();
+			String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent();
+			
+			ezBoardAdminService.copyBoardAcl(boardID, defaultBoardID, parentBoardID);
+		}
+		
+		return "OK";
 	}
 }
 

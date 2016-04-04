@@ -187,6 +187,18 @@
 		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL2(#v_PDEFAULTBOARDID#, #v_PBOARDID#, #v_PPARENTBOARDID#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETCOPYBOARDACL(#v_PBOARDID#, #v_PPARENTBOARDID#, #v_PDEFAULTBOARDID#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.saveBoardProperty_appr" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY_APPR(#v_pBoardID#, #v_pAPPRUSERID#, #v_pMODE#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_APPRPROPERTY_INFO(#v_PBOARDID#, #v_PMODE#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 

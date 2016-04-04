@@ -23,6 +23,15 @@
 		<result property="tabUsed" 					column="TABUSED" 				columnIndex="4"/>
 	</resultMap>
 	
+	<resultMap id="get_apprUserList" class="BoardVO">
+		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
+		<result property="apprUserId" 				column="APPRUSERID" 			columnIndex="2"/>
+		<result property="boardName" 				column="DISPLAYNAME" 			columnIndex="3"/>
+		<result property="boardType" 				column="DISPLAYNAME2" 			columnIndex="4"/>
+		<result property="orderCell" 				column="DESCRIPTION" 			columnIndex="5"/>
+		<result property="orderOption" 				column="DESCRIPTION2" 			columnIndex="6"/>
+	</resultMap>
+	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -177,6 +186,10 @@
 		{CALL EZBOARDSTD.EZSP_DELETEITEM_TEMP(#v_STRITEMLIST#, #v_BOARDID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList">
+		{CALL EZBOARDSTD.EZSP_GETAPPRUSERLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 
@@ -187,7 +200,7 @@
 				boardid = #pBoardID#
 		]]>		
 	</select>
-	
+		
 	<select id="EzBoardDAO.getBoardList_Config"  resultClass="BoardConfigVO">
 		<![CDATA[
 			SELECT 

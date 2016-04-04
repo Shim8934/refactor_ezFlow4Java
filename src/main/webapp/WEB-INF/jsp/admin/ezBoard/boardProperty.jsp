@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
-	    <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+	    <script type="text/javascript" src="/js/ezPersonal/ListView_list.js"></script>
 		<script type="text/javascript" language="javascript">
 			var BoardID = "${model.boardID}";
 	        var brd_color = "${model.boardColor}";
@@ -176,6 +176,8 @@
 	            else
 	            	oneLineReply = 1;
 
+alert(ApprUserList);	            
+	            
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
@@ -335,7 +337,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("OrganAdmin/SelectTarget_Cross2.aspx", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			function SelectTarget_Complete(ret) {
@@ -349,7 +351,6 @@
 			        listview.SetMulSelectable(true);
 			        listview.DataSource(document.getElementById("listviewheader"));
 			        listview.DataBind("AccessList");
-
 			        var xmldom = loadXMLString(selectTargetListXML);
 			        var xmldomNode = SelectNodes(xmldom, "DATA/NAME");
 			        for (i = 0; i < xmldomNode.length; i++) {
@@ -362,7 +363,6 @@
 			            listTR.appendChild(listTD);
 			        }
 
-
 			        var xmldomNode2 = SelectNodes(xmldom, "DATA/CN");
 			        ApprUserList = "";
 			        for (var i = 0; i < xmldomNode2.length; i++) {
@@ -374,24 +374,17 @@
 			    }
 			}			
 			function getApprUserList() {
-			    var xmlpara = createXmlDom();
-			    var objNode;
-			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "pBoardID", BoardID);
-
-			    xmlhttp = null;
-			    xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/myoffice/ezBoardSTD/aspx/Get_ApprUserList.aspx", true);
-			    xmlhttp.onreadystatechange = getApprUserList_after;
-			    xmlhttp.send(xmlpara);
-			}
-			function getApprUserList_after() {
-			    if (xmlhttp == null || xmlhttp.readyState != 4) return;
-			    if (xmlhttp.statusText == "OK") {
-			        makeApprUserList(xmlhttp.responseXML);
-			    }
-			    
-			}
+				$.ajax({
+					type : "POST",
+					dataType : "xml",
+					url : "/ezBoard/get_apprUserList.do",
+					async : true,
+					data : {pBoardID : BoardID},
+					success : function(result){
+						makeApprUserList(result);
+					}
+				});
+			}			
 			function makeApprUserList(getApprXml){
 			    document.getElementById("AccessList").innerHTML = "";
 

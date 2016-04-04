@@ -130,6 +130,22 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void setUnderBoardIDAcl2(Map<String, Object> map) throws Exception{
 		insert("EzBoardAdminDAO.setUnderBoardIDAcl2", map);
 	}
+
+	public void copyBoardAcl(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.copyBoardAcl", map);		
+	}
+	
+	public void saveBoardProperty_appr(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.saveBoardProperty_appr", map);		
+	}
+	
+	public void apprProperty_info(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.apprProperty_info", map);	
+	}
+
+	public void saveBoardProperty_port(Map<String, Object> map) throws Exception{		
+		insert("EzBoardAdminDAO.trunkBoard", map);
+	}
 	
 	public void setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
 		update("EzBoardAdminDAO.setMyBoardTreeConfig", boardMyFavoriteVO);
@@ -177,11 +193,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	public void deleteACL(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.deleteACL", map);		
-	}
-
+	}
 	public void trunkBoard() throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard", "");
 	}
+
+	
 
 
 }

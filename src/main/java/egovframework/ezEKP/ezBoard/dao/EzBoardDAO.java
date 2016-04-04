@@ -25,6 +25,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardVO> get_apprUserList(Map<String, Object> map) throws Exception{
+		return (List<BoardVO>) list("EzBoardDAO.get_apprUserList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<BoardMyFavoriteVO> get_favoriteList(Map<String, Object> map) throws Exception{
 		return (List<BoardMyFavoriteVO>) list("EzBoardDAO.get_favoriteList", map);
 	}

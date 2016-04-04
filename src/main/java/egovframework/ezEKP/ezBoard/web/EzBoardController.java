@@ -3168,4 +3168,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "";
 	}
+	
+	@RequestMapping(value = "/ezBoard/get_apprUserList.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String get_apprUserList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String boardID = request.getParameter("pBoardID");
+		List<BoardVO> list = ezBoardService.get_apprUserList(boardID);
+
+		StringBuilder result = new StringBuilder("<NODES>");
+		
+		for(int i=0; i < list.size(); i++){
+			BoardVO vo = list.get(i);
+			
+			result.append("<NODE>");
+			result.append("<BOARDID>" + vo.getBoardId() + "</BOARDID>");
+			result.append("<APPRUSERID>" + vo.getApprUserId() + "</APPRUSERID>");
+			result.append("<DISPLAYNAME>" + vo.getBoardName() + "</DISPLAYNAME>");
+			result.append("<DISPLAYNAME2>" + vo.getBoardType() + "</DISPLAYNAME2>");
+			result.append("<DESCRIPTION>" + vo.getOrderCell() + "</DESCRIPTION>");
+			result.append("<DESCRIPTION2>" + vo.getOrderOption() + "</DESCRIPTION2>");
+			result.append("</NODE>");
+		}
+		result.append("</NODES>");
+		
+		return result.toString();
+	}
 } 
