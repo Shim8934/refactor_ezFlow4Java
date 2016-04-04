@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,12 +12,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +35,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -77,6 +74,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
@@ -1878,120 +1878,8 @@ System.out.println("!!");
                     pFileName = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
                 }
                 if (pFilePath != null && pFilePath != "")
-                    responseAttach(pFilePath, pFileName, true, request, response);
+                    ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
         }
-	}
-	
-	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception{
-//		Response.Buffer = false;
-        String isUTF8 = "0";
-
-        for(Cookie cookie : request.getCookies()){
-        	if(cookie.getName().equals("UTF8_Option")){
-        		isUTF8 = cookie.getValue();
-        	}
-        }
-        
-        String filepath = pPhysicalFilePath;
-        String filename = pFileName;
-        String fileext = "";
-        if (filename.lastIndexOf(".") > -1)
-        {
-            fileext = filename.substring(filename.lastIndexOf(".")).toLowerCase();
-        }
-
-        filename = getProperFileName(filename, fileext, isUTF8);
-        boolean bAttachment = false;
-        if (pAttachment)
-        {
-            switch (fileext)
-            {
-                case ".eml":
-                case ".mht":
-                case ".xls":
-                case ".doc":
-                case ".pdf":
-                case ".hwp":
-                case ".ppt":
-                case ".docx":
-                case ".pptx":
-                case ".xlsx":
-                case ".rtf":
-                case ".jpg":
-                case ".gif":
-                case ".bmp":
-                case ".wmv":
-                case ".avi":
-                case ".mp4":
-                case ".mpeg":
-                    bAttachment = true;
-                    break;
-                default:
-                    bAttachment = false;
-                    break;
-            }
-            bAttachment = true;
-        }
-        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent")=="") ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
-                            "IE" : request.getHeader("User-Agent").indexOf("Trident") > -1 ? "IE" : "NONE";
-
-        if (bAttachment)
-        {
-            if (isUTF8 == "0" && usebrowser == "IE")
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"),"UTF-8") + "\"");
-            else if (isUTF8 == "0" && usebrowser != "IE")
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + (filename) + "\"");
-            else
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
-        }
-        else
-        {
-            if (isUTF8 == "0" && usebrowser == "IE")
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
-            else if (isUTF8 == "0" && usebrowser != "IE")
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
-            else
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
-        }
-
-        if (fileext == ".pdf")
-            response.setContentType("application/pdf");
-        else
-            response.setContentType("application/octet-stream");
-
-        filepath = "C:\\/FileData" +filepath;
-        File file = new File(filepath);
-        FileInputStream is = new FileInputStream(file);
-        
-        IOUtils.copy(is,response.getOutputStream());
-	}
-	
-	public String getProperFileName(String pOrgFileName, String pOrgFileExt, String pIsUTF8) throws Exception{
-		int length = 0;
-        int lengthLimit = 10000;
-        String newFileName = "";
-
-        if (pOrgFileExt != "")
-        	pOrgFileName = pOrgFileName.substring(0, pOrgFileName.lastIndexOf("."));
-        if (pOrgFileExt == ".doc" || pOrgFileExt == ".xls" || pOrgFileExt == ".ppt")
-        	lengthLimit = 110;
-        if (pIsUTF8 == "0")
-        	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
-        else
-        	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
-
-        if (length > lengthLimit){
-            newFileName = pOrgFileName;
-            while (length > lengthLimit){
-                newFileName = newFileName.substring(0, newFileName.length() - 1);
-                if (pIsUTF8 == "0") 
-                	length = URLEncoder.encode(newFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
-                else 
-                	length = URLEncoder.encode(newFileName + pOrgFileExt, "UTF-8").replace("+", "%20").length();
-            }
-            pOrgFileName = newFileName;
-        }
-        return pOrgFileName + pOrgFileExt;
 	}
 
 	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
