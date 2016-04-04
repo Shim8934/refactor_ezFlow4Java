@@ -7,9 +7,13 @@
 		<title><spring:message code="ezQuestion.t115" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="/js/ezQuestion/jquery.battatech.excelexport.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>
+		
+	
 		<script type="text/javascript" >
 			var SelectedQuesNo = "";
 			var returnXML = "";
@@ -38,6 +42,21 @@
 			    listview.DataSource(listviewheader);
 			    listview.DataBind("AnalysisListView");
 			    tableXML();
+			    
+			    $("#saveExcel").click(function () {
+			    	if(document.getElementById("hidRType2").value=="T"){
+			            $("#AnalysisList").battatech_excelexport({
+			                containerid: "AnalysisList"
+			               , datatype: 'table'
+			            });
+			    	}else{
+			    		$("#Graph").battatech_excelexport({
+			                containerid: "Graph"
+			               , datatype: 'table'
+			            });
+			    	}
+		        });
+			    
 			}
 			
 			function tableXML(){
@@ -231,37 +250,7 @@
 		        strHTML += "</table>"
 		        Graph.innerHTML = strHTML;
 		    }
-		    function SaveCSV() {
-				var _MSIE = 'MSIE';
-		        var useragentstr = navigator.userAgent;
-		        
-		            if (!StateChangeClickFlag) {
-		                return;
-		            }
-		            if (hidRType.value == "T") {
-		                var tr = AnalysisListView.getElementsByTagName("tr");
-		                for (var i = 0; i < tr.length; i++) {
-		                    if (tr[i].getAttribute("selected") == "true") {
-		                        tr[i].style.backgroundColor = "white";
-		                    }
-		                }
-		                document.getElementById("AnalysisData").value = AnalysisListView.innerHTML;
-		                form_analysissave.submit();
-		            }else {
-		                if (Graph.innerHTML != "") {
-		                    for (var i = 0 ; i < Graph.getElementsByTagName("TR").length ; i++) {
-		                        if (Graph.getElementsByTagName("TR")[i].childNodes.length == 5)
-		                        {
-		                            Graph.getElementsByTagName("TR")[i].childNodes[4].innerHTML = "&nbsp;";
-		                        }
-		                    }
-		                    document.getElementById("AnalysisData").value = Graph.innerHTML;
-		                    form_analysissave.submit();
-		                }else {
-		                    alert("분석결과가 없습니다.");
-		                }
-		            }
-		    }
+		    
 		    function repComMa(param) {
 		        while (param.indexOf(",") != -1) {
 		            param = param.replace(",", "<spring:message code='ezQuestion.t126' />");
@@ -338,8 +327,8 @@
 			<ul>
 			    <li><span onclick="menuQst_List()"><spring:message code='ezQuestion.t130' /></span></li>
 			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
-			    <li><span onclick="SaveCSV()"><spring:message code='ezQuestion.t131' /></span></li>
-			    <li><span onclick="TotalSaveCSV()"><spring:message code='ezQuestion.t132' /></span></li>
+			    <li><span id="saveExcel"><spring:message code='ezQuestion.t131' /></span></li>
+			    <li><span id="saveTotalExcel"><spring:message code='ezQuestion.t132' /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
