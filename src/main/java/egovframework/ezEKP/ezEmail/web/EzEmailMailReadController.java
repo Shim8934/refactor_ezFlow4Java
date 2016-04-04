@@ -35,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.w3c.dom.Document;
 
 import com.sun.mail.imap.IMAPFolder;
 
@@ -74,7 +75,6 @@ public class EzEmailMailReadController {
 				uid = Long.parseLong(url.substring(index+1));
 			}
 		}
-		logger.debug(folderPath);
 		String pnFlag = request.getParameter("PNFlag");
 		String contentClass = request.getParameter("CONTENTCLASS");
 
@@ -97,7 +97,7 @@ public class EzEmailMailReadController {
 		String dateStr = null;
 		String title = null;
 		if(f != null){
-			f.open(Folder.READ_ONLY);
+			f.open(Folder.READ_WRITE);
 			Message message = null;
 			if(f.isOpen() && f instanceof IMAPFolder){
 				message = ((IMAPFolder)f).getMessageByUID(uid);
@@ -703,7 +703,244 @@ public class EzEmailMailReadController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value="/ezEmail/mailPrevShow.do")
+	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
 
+		StringBuilder sbXml = new StringBuilder();
+		char[] charBuffer = new char[128];
+		int bytesRead=0;
+		while ( (bytesRead = request.getReader().read(charBuffer)) != -1 ) {
+			sbXml.append(charBuffer, 0, bytesRead);
+		}
+		Document doc = commonUtil.convertStringToDocument(sbXml.toString());
+		String url = doc.getElementsByTagName("URL").item(0).getTextContent();
+		long uid = 0;
+		String folderPath = null;
+		if(url != null){
+			int index = url.lastIndexOf("/");
+			if(index != -1){
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index+1));
+			}
+		}
+		logger.debug(folderPath);
+
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+		Folder f = ia.getFolder(folderPath);
+		Address[] arrFroms = null;
+		Address[] arrRecipientsTo = null;
+		Address[] arrRecipientsCC = null;
+		Address[] arrRecipientsBCC = null;
+		Date date = null;
+		String fromStr = null;
+		String fromEmail = null;
+		String toStr = "";
+		String ccStr = "";
+		String bccStr = "";
+		String subject = null;
+		String dateStr = null;
+		int unread = 0;
+		int importance = 1;
+		if(f != null){
+			f.open(Folder.READ_WRITE);
+			Message message = null;
+			if(f.isOpen() && f instanceof IMAPFolder){
+				message = ((IMAPFolder)f).getMessageByUID(uid);
+			}
+			if(message != null){
+				arrFroms = message.getFrom();
+				if(arrFroms != null){
+					fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
+					if(fromStr == null){
+						fromStr = ((InternetAddress)arrFroms[0]).getAddress();
+					}
+					else{
+						fromStr = MimeUtility.decodeText(fromStr);
+					}
+					fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+				}
+				else{
+					String[] fromHeaders = message.getHeader("From");
+					if(fromHeaders != null){
+						fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+					}
+				}
+				arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+				if(arrRecipientsTo != null){
+					InternetAddress iAddress = null;
+					String name = null;
+					for(int i=0; i<arrRecipientsTo.length; i++){
+						iAddress = ((InternetAddress)arrRecipientsTo[i]);
+						name = iAddress.getPersonal();
+						if (i != 0)
+                        {
+							toStr += ";";
+                        }
+						
+						if(name == null){
+							toStr += "<"+iAddress.getAddress()+">";
+						}
+						else{
+							name = MimeUtility.decodeText(name);
+							toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+				}
+
+				arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+				if(arrRecipientsCC != null){
+					InternetAddress iAddress = null;
+					String name = null;
+					for(int i=0; i<arrRecipientsCC.length; i++){
+						iAddress = ((InternetAddress)arrRecipientsCC[i]);
+						name = iAddress.getPersonal();
+						if (i != 0)
+                        {
+							ccStr += ";";
+                        }
+						
+						if(name == null){
+							ccStr += "<"+iAddress.getAddress()+">";
+						}
+						else{
+							name = MimeUtility.decodeText(name);
+							ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+				}
+
+				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+				if(arrRecipientsBCC != null){
+					InternetAddress iAddress = null;
+					String name = null;
+					for(int i=0; i<arrRecipientsBCC.length; i++){
+						iAddress = ((InternetAddress)arrRecipientsBCC[i]);
+						name = iAddress.getPersonal();
+						if (i != 0)
+                        {
+							bccStr += ";";
+                        }
+						
+						if(name == null){
+							bccStr += "<"+iAddress.getAddress()+">";
+						}
+						else{
+							name = MimeUtility.decodeText(name);
+							bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+				}
+
+				date = message.getReceivedDate();
+				if(date != null){
+					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
+				}
+
+				subject = message.getSubject();
+				
+				if(!message.isSet(Flag.SEEN)){
+					unread = 1;
+				}
+				message.setFlag(Flag.SEEN, true);
+				
+				String[] headers = message.getHeader("importance");
+				String header = headers != null ? headers[0] : "normal";
+				if (header.equalsIgnoreCase("high")) {
+					importance = 2;
+				}
+				else if (header.equalsIgnoreCase("low")) {
+					importance = 0;
+				}
+			}
+			f.close(true);
+		}
+		ia.close();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		sb.append("<UNREAD><![CDATA["+unread+"]]></UNREAD>");
+		sb.append("<DATE><![CDATA["+dateStr+"]]></DATE>");
+		sb.append("<FROM><![CDATA["+fromStr+"]]></FROM>");
+		sb.append("<FROMEMAIL><![CDATA["+fromEmail+"]]></FROMEMAIL>");
+		sb.append("<FROMNAME><![CDATA["+fromStr+"]]></FROMNAME>");
+		sb.append("<TO><![CDATA["+toStr+"]]></TO>");
+		sb.append("<CC><![CDATA["+ccStr+"]]></CC>");
+		sb.append("<BCC><![CDATA["+bccStr+"]]></BCC>");
+		sb.append("<SUBJECT><![CDATA["+subject+"]]></SUBJECT>");
+		sb.append("<HTMLDESCRIPTION><![CDATA["+"]]></HTMLDESCRIPTION>"); //?
+		sb.append("<COMMENT><![CDATA["+"]]></COMMENT>"); //?
+		sb.append("<IMPORTANCE><![CDATA["+importance+"]]></IMPORTANCE>");
+		sb.append("<SENSITIVITY><![CDATA["+"Normal"+"]]></SENSITIVITY>"); //?
+		sb.append("<HASEMBEDED><![CDATA["+0+"]]></HASEMBEDED>"); //?
+		sb.append("<ITEMID><![CDATA["+url+"]]></ITEMID>");
+		sb.append("<CONTENTCLASS><![CDATA["+"]]></CONTENTCLASS>");
+		sb.append("</DATA>");
+
+		response.setContentType("text/xml; charset=utf-8");
+		response.getWriter().print(sb.toString());
+	}
+	
+	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
+	public String previewContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		String url = request.getParameter("iptURL");
+		long uid = 0;
+		String folderPath = null;
+		if(url != null){
+			int index = url.lastIndexOf("/");
+			if(index != -1){
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index+1));
+			}
+		}
+
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+		Folder f = ia.getFolder(folderPath);
+
+		List<String> bodyInfoList = null;
+		String pAttachListHtmlSub = "";
+		if(f != null){
+			f.open(Folder.READ_ONLY);
+			Message message = null;
+			if(f.isOpen() && f instanceof IMAPFolder){
+				message = ((IMAPFolder)f).getMessageByUID(uid);
+			}
+			if(message != null){
+				bodyInfoList = getBodyInfo(message, folderPath, uid);
+				int size = Integer.parseInt(bodyInfoList.get(2));
+				String strSize = "";
+				if (size > 1024 * 1024)
+				{
+					size = size / 1024 / 1024;
+					strSize = size + "MB";
+				}
+				else if (size > 1024)
+				{
+					size = size / 1024;
+					strSize = size + "KB";
+				}
+				else
+					strSize = size + "B";
+				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180") + "</b>(" + strSize + ")";
+
+			}
+		}
+		ia.close();
+		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
+		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
+		model.addAttribute("isAttach", bodyInfoList.get(4));
+		return "ezEmail/mailPreviewContent";
+	}
+	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}

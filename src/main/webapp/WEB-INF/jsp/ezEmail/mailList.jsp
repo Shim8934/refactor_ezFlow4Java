@@ -34,9 +34,11 @@
 	    var g_foldertype = "${folderType}";
 	    var importanceColor = "#ff0000";
 	    var g_userLang = "${userLang}";
+	    var USE_OCS = "NO";
 	    var searchMode = false;
 	    var SearchKeyword = "";
 	    var g_loginID = "${userId}";
+	    var g_useremail = g_loginID + "@opensol2016.com";
 	    var SecurityMailReadUndo = true;
 	    var p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
 	    var p_Listoption = "1";
