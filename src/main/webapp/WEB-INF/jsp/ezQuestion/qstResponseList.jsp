@@ -97,19 +97,19 @@
 			
 			function Detail_UserInfo(pUserID) {
 			    var feature = GetOpenPosition(420, 450);
-			    window.open("/myoffice/common/ShowPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			    window.open("/ezCommon/ShowPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 			
 			function menuQst_ResultView() {
 			    history.go("${page_count}");
 			}
 			
-/* 			function search_Set(pPage) {
+ 			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
 			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + szBrdID + "&item_no=" + szItemNo + "&page=" + pPage + "&page_count=" + "${page_count}" + "&question_no=" + szQuestionNo;
 				window.location.href = szUrl;
 				}
-			} */
+			}
 			
 			function changePage() {
 			    if (event.keyCode == 13) {
