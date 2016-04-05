@@ -150,7 +150,8 @@ function MailPreviewResize(e) {
 }
 function new_mail_onclick() {
     var pURI;
-    if (CrossYN() || pNoneActiveX == "YES") {
+    pURI = "/ezEmail/mailWrite.do?cmd=NEW";
+    /*if (CrossYN() || pNoneActiveX == "YES") {
         pURI = "mail_write_Cross.aspx?cmd=NEW";
     }
     else {
@@ -158,7 +159,7 @@ function new_mail_onclick() {
             pURI = "mail_write.aspx?cmd=NEW";
         else
             pURI = "mail_write_IE.aspx?cmd=NEW";
-    }
+    }*/
     var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
     newwin.focus();
 }

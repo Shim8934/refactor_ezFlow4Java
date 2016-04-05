@@ -527,9 +527,6 @@ public class EzEmailMailReadController {
 					}
 				}
 			}
-			else{
-				htmlBody += part.getContent().toString();
-			}
 			
 			resultList.add(htmlBody);
 			resultList.add(pAttachListHtml);

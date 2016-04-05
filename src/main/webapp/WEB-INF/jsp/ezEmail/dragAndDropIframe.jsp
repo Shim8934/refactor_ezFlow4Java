@@ -1,0 +1,401 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
+<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
+<style>
+#lstAttachLink {
+height: 117px;
+border: 1px solid #3C2F2E;
+}
+</style>
+<script type="text/javascript">
+    var lstAttachLink = document.getElementById("lstAttachLink");
+    function onDragEnter(evt) {
+        evt.dataTransfer.dropEffect = "copy";
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+    function onDragOver(evt) {
+        evt.dataTransfer.dropEffect = "copy";
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    var filesize = 0;
+    var bigfilesize = 0;
+
+    var file = new Array;
+    var bigfile = new Array;
+    var xhr = new XMLHttpRequest();
+    var filelist;
+    var isfileup = false;
+
+    var isbigyn = "N";
+
+    function onDrop(evt) {
+        if (evt != undefined) {
+            evt.stopPropagation();
+            evt.preventDefault();
+        }
+
+        if (isfileup) {
+            alert(strLang86);
+            return;
+        }
+
+        if (evt == undefined) {
+            filelist = document.getElementById("file").files;
+        }
+        else {
+            filelist = evt.dataTransfer.files;
+        }
+
+        var tempfilesize = 0;
+        var tempbigfilesize = 0;
+
+        var filecnt = file.length;
+        var bigFileCheck = false;
+        for (var i = 0; i < filelist.length; i++) {
+            if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize) {
+                bigFileCheck = true;
+                bigfile[filecnt + i] = filelist[i];
+                tempbigfilesize += filelist[i].size;
+            }
+            else {
+                file[filecnt + i] = filelist[i];
+                tempfilesize += filelist[i].size;
+            }
+        }
+
+        if (isbigyn == "Y")
+        {
+            bigFileCheck = true;
+        }
+
+        if (bigFileCheck)
+            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+
+        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
+            if("${ userinfo.lang }" == "2")
+                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+            else
+                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+
+            file.splice(file.length - filelist.length, filelist.length);
+            return;
+        }
+
+        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
+            if ("${ userinfo.lang }" == "2")
+                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
+            else
+                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
+            file.splice(file.length - filelist.length, filelist.length);
+            return;
+        }
+
+        filesize += tempfilesize;
+        bigfilesize += tempbigfilesize;
+
+        fileupload();
+        if (CrossYN()) {
+            document.getElementById("file").value = "";
+        }
+        else {
+            document.getElementById("file").type = "text";
+            document.getElementById("file").type = "file";
+        }
+    }
+    function uploadProgress(evt) {
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            var ua = navigator.userAgent;
+            document.getElementById('prog_bar').style.width = percentComplete + "%";
+            document.getElementById('prog_num').innerHTML = percentComplete;
+        }
+        else {
+            document.getElementById('prog').innerHTML = 'unable to compute';
+        }
+    }
+
+    window.onload = function () {
+        var ua = navigator.userAgent;
+        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
+            document.getElementById("file").multiple = false;
+        }
+        var oTable = document.createElement("TABLE");
+        oTable.style.width = "100%";
+        oTable.id = "filelist";
+        oTable.className = "sublist";
+
+        var objTr = document.createElement("TR");
+
+        var objTh = document.createElement("TH");
+        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
+            objTh.style.width = "24px";
+        }
+        else
+            objTh.style.width = "15px";
+        var input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = "checkboxall";
+        input.onclick = function () { checkall(); };
+        objTh.appendChild(input);
+        objTr.appendChild(objTh);
+
+        var objTh2 = document.createElement("TH");
+        objTh2.style.width = "87%";
+        if(CrossYN())
+            objTh2.textContent = "<spring:message code='ezEmail.t725' />";
+        else
+            objTh2.innerText = "<spring:message code='ezEmail.t725' />";
+        objTr.appendChild(objTh2);
+
+        var objTh3 = document.createElement("TH");
+        if(CrossYN())
+            objTh3.textContent = "<spring:message code='ezEmail.t726' />";
+        else
+            objTh3.innerText = "<spring:message code='ezEmail.t726' />";
+        objTh3.style.width = "13%";
+        objTr.appendChild(objTh3);
+
+        oTable.appendChild(objTr);
+        document.getElementById("lstAttachLink").appendChild(oTable);
+        parent.DragObjectComplet();
+    }
+    var AttatchReturnValue;
+    function uploadComplete(evt) {
+        document.getElementById('prog_bar').style.width = "0%";
+        document.getElementById('prog_num').innerHTML = "0";
+        document.getElementById('progdiv').style.display = "none";
+
+        if (xhr.responseText == "OVERFLOW") {
+            alert(strLang167);
+        }
+        else if (xhr.responseText == "NODATA") {
+            alert(strLang223);
+        }
+        else {
+            var tempxmldom = loadXMLString(xhr.responseText);
+            var filecnt = document.getElementById("filelist").childNodes.length;
+            var j = 0;
+            for (var i = 0; i < filecnt - 1; i++) {
+                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
+
+                if (filelistnode.getAttribute("VALUE") == "" || filelistnode.getAttribute("VALUE") == null) {
+                    var node = SelectNodes(tempxmldom, "ROOT/NODES/NODE")[j];
+                    filelistnode.setAttribute("VALUE", SelectSingleNodeValue(node, "PUPLOADSN"));
+                    filelistnode.setAttribute("NEWFILE", "Y");
+                    j++;
+                }
+            }
+            AttatchReturnValue = null;
+            window.parent.returnvalue(xhr.responseText);
+            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
+            isfileup = false;
+            FileUpdataAfterComplete();
+        }
+    }
+
+    function uploadComplete2(evt) {
+        document.getElementById('prog_bar').style.width = "0%";
+        document.getElementById('prog_num').innerHTML = "0";
+        document.getElementById('progdiv').style.display = "none";
+
+        if (xhr2.responseText == "OVERFLOW") {
+            alert(strLang167);
+        }
+        else if (xhr2.responseText == "NODATA") {
+            alert(strLang223);
+        }
+        else {
+            var tempxmldom = loadXMLString(xhr2.responseText);
+            var filecnt = document.getElementById("filelist").childNodes.length;
+            var j = 0;
+            for (var i = 0; i < filecnt - 1; i++) {
+                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
+
+                if (filelistnode.getAttribute("VALUE") == "" || filelistnode.getAttribute("VALUE") == null) {
+                    var node = SelectNodes(tempxmldom, "ROOT/NODES/NODE")[j];
+                    filelistnode.setAttribute("VALUE", SelectSingleNodeValue(node, "PUPLOADSN"));
+                    filelistnode.setAttribute("NEWFILE", "Y");
+                    j++;
+                }
+            }
+            AttatchReturnValue = null;
+            window.parent.returnvalue(xhr2.responseText);
+            AttatchReturnValue = window.parent.FileUpdateAfter(xhr2.responseText);
+            isfileup = false;
+            FileUpdataAfterComplete();
+        }
+    }
+
+    function FileUpdataAfterComplete() {
+        var filelist = SelectNodes(AttatchReturnValue, "DATA/ROW");
+        for (var i = 0; i < filelist.length; i++) {
+            var FilePath = SelectSingleNodeValue(filelist[i], "FILEPATH");
+            var FileURL = SelectSingleNodeValue(filelist[i], "URL");
+            var FileBIG = SelectSingleNodeValue(filelist[i], "BIG");
+            var FileITEMID = SelectSingleNodeValue(filelist[i], "ITEMID");
+            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID);
+        }
+        AttatchReturnValue = null;
+    }
+    function SetAttachItemLink(filepath, url,big,itemid) {
+        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
+        for (var i = 0; i < TRRows.length; i++) {
+            if (TRRows.item(i).getAttribute("value") != null && TRRows.item(i).getAttribute("value") != "") {
+                if (TRRows.item(i).getAttribute("value") == filepath) {
+                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
+                    TRRows.item(i).setAttribute("_big", big);
+                    TRRows.item(i).setAttribute("_itemid", itemid);
+                    TRRows.item(i).childNodes.item(1).ondblclick = function () { FileDownload(this); };
+                }
+            }
+        }
+    }
+    function FileDownload(obj) {
+        window.parent.DownloadAttach(obj.getAttribute("_href"));
+    }
+    function uploadFailed(evt) {
+        alert("There was an error attempting to upload the file.");
+    }
+
+    function uploadCanceled(evt) {
+        alert("The upload has been canceled by the user or the browser dropped the connection.");
+    }
+
+    function defaultenter(evt) {
+        evt.dataTransfer.dropEffect = "none";
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    function btnfileup() {
+        isbigyn = "N";
+        document.getElementById("file").click();
+    }
+
+    function btnfileup_big() {
+        isbigyn = "Y";
+        document.getElementById("file").click();
+    }
+
+    function filechange(e) {
+        onDrop();
+    }
+
+    function btnfiledel() {
+        var filecnt = document.getElementById("filelist").childNodes.length;
+        for (var i = 1; i < filecnt; i++) {
+            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+                var pAttachDelSN;
+                var pAttachDelFileName;
+                var is_newfile;
+                var pNewNodeName = "";
+                var Rtnval;
+                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
+
+                var delfilesize;
+                if(CrossYN())
+                    delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent.replace('KB', '');
+                else
+                    delfilesize = document.getElementById("filelist").childNodes[i].lastChild.innerText.replace('KB', '');
+
+                filesize -= delfilesize;
+                file.splice(i - 1, 1);
+                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
+                i--;
+                filecnt--;
+            }
+        }
+    }
+
+    function checkall() {
+        var filecnt = document.getElementById("filelist").childNodes.length;
+
+        for (var i = 1; i < filecnt; i++) {
+            if (document.getElementById("checkboxall").checked == true) {
+                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
+            }
+            else {
+                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
+            }
+        }
+    }
+
+    function fileupload() {
+        var fd = new FormData();
+
+        for (var i = 0; i < filelist.length; i++) {
+            fd.append("fileToUpload", filelist[i]);
+        }
+
+        var newid = window.parent.g_newid;
+        fd.append("maxsize", window.parent.FtotSizeAttachSize);
+        fd.append("cnt", filelist.length);
+        fd.append("newid", newid);
+        fd.append("bigmaxsize", window.parent.FtotBigSizeAttachSize);
+        fd.append("changesize", window.parent.FBigSizeAttachSize);
+        fd.append("txtName", window.parent.filedate);
+        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
+
+        isfileup = true;
+        xhr.upload.addEventListener("progress", uploadProgress, false);
+        xhr.addEventListener("load", uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadCanceled, false);
+        xhr.open("POST", "../ezEmail/remote/mail_interuploadX_CK.aspx?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn);
+        xhr.send(fd);
+        document.getElementById('progdiv').style.display = "inline-block";
+    }
+
+    var xhr2 = new XMLHttpRequest();
+    function fileupload2(fileXml) {
+        var fd = new FormData();
+        isfileup = true;
+
+        var newid = window.parent.g_newid;
+        fd.append("maxsize", window.parent.FtotSizeAttachSize);
+        fd.append("cnt", window.parent.bigtrue);
+        fd.append("newid", newid);
+        fd.append("bigmaxsize", window.parent.FtotBigSizeAttachSize);
+        fd.append("changesize", window.parent.FBigSizeAttachSize);
+        fd.append("txtName", window.parent.filedate);
+        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
+        fd.append("fileXml", fileXml);
+
+        xhr2.upload.addEventListener("progress", uploadProgress, false);
+        xhr2.addEventListener("load", uploadComplete2, false);
+        xhr2.addEventListener("error", uploadFailed, false);
+        xhr2.addEventListener("abort", uploadCanceled, false);
+        xhr2.open("POST", "../ezEmail/remote/mail_interUploadCopyX_CK.aspx?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn);
+        xhr2.send(fd);
+        document.getElementById('progdiv').style.display = "inline-block";
+    }
+</script>
+</head>  
+    <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
+        <div style="width:845px;white-space:nowrap;display:inline-block">
+            <span style="float:left">
+                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
+                <a class="imgbtn" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
+                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+            </span>
+            <div id="progdiv" class="progarea" style="display:none">
+             	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+             </div>
+        </div>
+        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        </div>
+        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px" />
+        <input type="hidden" value="업로드" onclick ="fileupload()" />
+  </body>
+</html>
