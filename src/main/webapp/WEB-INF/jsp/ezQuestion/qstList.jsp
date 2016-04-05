@@ -88,7 +88,7 @@
 						return rv;
 					},
 					error: function(xhr, status, e){
-// 						alert(e.message);
+						alert(e.message);
 					 	
 						EndPollYN = "";
 						ResponseYN = "";
