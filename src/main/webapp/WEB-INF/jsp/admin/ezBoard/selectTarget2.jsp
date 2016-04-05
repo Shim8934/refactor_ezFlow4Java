@@ -96,9 +96,7 @@
 	            displayUserList(nodeIdx);
 	        }
 		        
-		    function displayUserList(DeptID) {
-		    	var xmlpara = createXmlDom();		        
-            
+		    function displayUserList(DeptID) {            
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "xml",

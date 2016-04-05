@@ -1,0 +1,34 @@
+﻿var strLang1 = "retirees who want to move into management?"
+var strLang2 = "retirees to manage users please select Go."
+var strLang3 = "selected users have been handled retirees."
+var strLang4 = "selected users failed to handle retirement."
+var strLang5 = "people who really want to delete?"
+var strLang6 = "Please select a user to recover."
+var strLang7 = "people want to restore the user?"
+var strLang8 = "retirement recovery"
+var strLang9 = "users have been Nordic."
+var strLang10 = "User has failed to recover."
+var strLang11 = "Signature images can not exceed the ";
+var strLang12 = ".";
+
+var strLang13 = "Choose your users.";
+var strLang14 = "Permission settings have been saved.";
+var strLang15 = "Failed to save the permission settings.";
+var strLang16 = "Persons";
+var strLang17 = "Permission settings applied.";
+var strLang18 = "Administrator permissions alert email";
+var strLang19 = "'s ";
+var strLang20 = "Permission to delete ?";
+var strLang21 = "All permissions deleted.";
+var strLang22 = "Permissions to have been removed.";
+var strLang23 = "Total";
+var strLang24 = "Person";
+var strLang25 = "Duplicate registration.";
+var strLang26 = "Added dept. of additional role";
+var strLang27 = "Addition Role registered e-mail";
+var strLang28 = "Prev";
+var strLang29 = "Next";
+var strLang30 = "Are you sure you want to delete all the concurrent position?";
+
+
+var strLang535 = "No Items";

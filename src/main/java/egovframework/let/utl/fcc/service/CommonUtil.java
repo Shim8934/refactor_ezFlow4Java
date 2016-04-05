@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -76,6 +77,9 @@ public class CommonUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -93,6 +97,27 @@ public class CommonUtil {
 			return user;
 		}catch(Exception e){
 			return null;
+		}
+	}
+	
+	public boolean checkAdmin(String loginCookie){
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			String userID = decData.split("///")[1];
+			
+			LoginVO login = new LoginVO();
+			login.setId(userID);
+			login.setDn("NOPASSWORD");
+	
+			LoginVO user = loginService.selectUser(login);
+	
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return false;
+			}else{
+				return true;
+			}
+		}catch(Exception e){
+			return false;
 		}
 	}
 	

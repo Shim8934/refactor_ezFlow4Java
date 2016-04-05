@@ -302,7 +302,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 }
                 nodeInfo.append("<DATA1>" + pCategory + "</DATA1><DATA2>" + strNode + "</DATA2>");
 
-                if (pPropList != ""){
+                if (!pPropList.equals("")){
                     String[] proplist = pPropList.split(";");
                     String propvalue;
                     
