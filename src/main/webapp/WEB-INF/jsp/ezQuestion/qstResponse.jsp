@@ -73,7 +73,6 @@
 			var brdId = "${qstUserPermissionVO.brdId}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;
-alert(receve);
 		    function fun_Save(){
 		        if(form_check() == false)
 		            return;
@@ -252,14 +251,7 @@ alert(receve);
 			}
 			
 			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
-alert(pType);
-alert(pBrdID);
-alert(pItemID);
-alert(pQstNo);
-alert(pAnsNo);
-alert(pAttID);
 			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
-alert(pUrl);
 	
 			    if(pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");

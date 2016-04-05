@@ -203,14 +203,6 @@
 		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getQstResponse"	parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzQuestionDAO.changePermission"	parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
-	</procedure>
-	
 	<procedure id="EzQuestionDAO.getAttachInfo" parameterClass="Map" resultMap="qstAttachVO">
 		{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -271,18 +263,14 @@
 		{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	<procedure id="EzQuestionDAO.getResponsePersonForResultTotalSave" parameterClass="Integer" resultMap="qstResponseVO">
+		{CALL EZQUESTION.EZSP_GETRESPERSONFORRESULTTOTA(#v_pItemNo#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	<procedure id="EzQuestionDAO.reUseQuestionData"  parameterClass="Map" resultMap="qstReuseQuestionVO">
+		{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-	
-	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
+		
 	<procedure id="EzQuestionDAO.analysisCount" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -298,13 +286,25 @@
 	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-	
-	<procedure id="EzQuestionDAO.reUseQuestionData"  parameterClass="Map" resultMap="qstReuseQuestionVO">
-		{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
 		
 	<procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.getQstResponse"	parameterClass="Map" resultClass="Integer">
+		{CALL EZQUESTION.EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
@@ -377,6 +377,10 @@
 	
 	<procedure id="EzQuestionDAO.insertItemRead" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.changePermission"	parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
 	</procedure>
 	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
@@ -554,6 +558,18 @@
 				ANSWER_VIEWSELECT = #v_piCount#
 		]]>
 	</select>
+	
+	<select id="EzQuestionDAO.getQuestionNoCnt" parameterClass="String" resultClass="String">
+		SELECT 
+			COUNT(QUESTION_NO)  
+		FROM 
+			ezQuestion.TBLPOLL_QUESTION 
+		WHERE
+			ITEM_NO = #v_pItemNo#
+		AND 
+			QUES_SN IS NOT NULL
+	</select>
+	
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="String">
 		<![CDATA[

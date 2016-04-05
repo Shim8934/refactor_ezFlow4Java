@@ -119,7 +119,7 @@
 						<li><span  onClick="menuQst_ResponseList('Y')"><spring:message code='ezQuestion.t350' /></span></li>
 					</c:if>
 					<c:if test="${qstUserPermissionVO.responseRange == '1' && qstUserPermissionVO.publicFlg == '0'}">
-						<li><span onClick="menuQstResponseList('N')"><spring:message code='ezQuestion.t390' /></span></li>
+						<li><span onClick="menuQst_ResponseList('N')"><spring:message code='ezQuestion.t390' /></span></li>
 					</c:if>
 				</ul>
 			</div>

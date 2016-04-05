@@ -334,7 +334,7 @@
 				    </HEADER>
 				    <HEADER>
 					    <STYLE>background-color:#C4D4EB;</STYLE>
-					    <NAME><spring:message code='ezQuestion.t48' />.Replace(" ", "")%></NAME>
+					    <NAME><spring:message code='ezQuestion.t48' /></NAME>
 					    <WIDTH>20</WIDTH>
 				    </HEADER>
 			    </HEADERS>
@@ -346,7 +346,7 @@
 			    <li><span onclick="menuQst_List()"><spring:message code='ezQuestion.t130' /></span></li>
 			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
 			    <li><span id="saveExcel"><spring:message code='ezQuestion.t131' /></span></li>
-			    <li><span id="saveTotalExcel"><spring:message code='ezQuestion.t132' /></span></li>
+			    <li><span onclick="TotalSaveCSV()"><spring:message code='ezQuestion.t132' /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
@@ -372,12 +372,12 @@
 			    		<c:when test="${pPubFlag == 1 }">
 			    			<input type="radio" name="Catalog" value="1" disabled onclick="javascript:return Catalog_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t139' />
 					        <input type="radio" name="Catalog" value="2" disabled onclick="javascript:return Catalog_onclick(2)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t140' />
-					        <input type="radio" name="Catalog" value="3" disabled onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' />
+<%-- 					        <input type="radio" name="Catalog" value="3" disabled onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' /> --%>
 			    		</c:when>
 			    		<c:otherwise>
 							<input type="radio" name="Catalog" value="1" onclick="javascript:return Catalog_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t139' />
 					        <input type="radio" name="Catalog" value="2" onclick="javascript:return Catalog_onclick(2)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t140' />
-					        <input type="radio" name="Catalog" value="3" onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' />
+<%-- 					        <input type="radio" name="Catalog" value="3" onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' /> --%>
 			    		</c:otherwise>
 			    	</c:choose>
 		    	</td>

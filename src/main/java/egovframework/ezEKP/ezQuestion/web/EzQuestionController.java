@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -16,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -763,7 +768,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstResponseVO.setResponseDate(EgovDateUtil.getToday());
 		qstResponseVO.setResponseUserIp(responseUserIp);
 		/** EZSP_GETQUESTIONFORRESPONSE*/
-		String question_no = "", quescontent = "", multiselect = "", answertype = "";
 		QstVO questionVO = new QstVO();
 		questionVO.setBrdId(Integer.parseInt(brdId));
 		questionVO.setItemNo(Integer.parseInt(itemNo));
@@ -1881,6 +1885,7 @@ System.out.println("!!");
         }
 	}
 
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -2077,11 +2082,12 @@ System.out.println("!!");
 		return "/ezQuestion/qstSearch";
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseList.do")
 	public String qstResponseList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", responseRange = "";
-        String brdId = "", itemNo = "", questionNo = "", responseYN = "", pCurrBlock = "";
+        String brdId = "", itemNo = "", questionNo = "", responseYN = "";
         int pPageSize = 0, pBlockSize = 0, pageCount = 0, pCurrPage = 1, pTotalCnt = 0, pTotalPage = 0;
         String lang="";
         String pAnsType = "";
@@ -2127,11 +2133,8 @@ System.out.println("!!");
             pageCount = -1;
         else
             pageCount = pageCount - 1;
-        
-        int iStart = (pCurrPage - 1) * pPageSize;
-        
         /** EZSP_RESPONSELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdId, itemNo, responseYN.trim(), pTotalCnt-iStart, pPageSize, lang);
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdId, itemNo, responseYN.trim(), pTotalCnt, pPageSize, lang);
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
@@ -2253,8 +2256,6 @@ System.out.println("!!");
 
         nodeData = resultXML.createElement("VALUE");
         node.appendChild(nodeData);
-
-        String strQuestion = "";
         
         /** EZSP_GETQUESTION*/
         List<QstVO> qstVOList = ezQuestionService.getQuestion(vBrdId, vItemNo, vQuesNo);        
@@ -2410,6 +2411,7 @@ System.out.println("!!");
         return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisDept4.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstCallAnalysisDept4(HttpServletRequest request) throws Exception{
@@ -2569,6 +2571,7 @@ System.out.println("!!");
         return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisPos2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstCallAnalysisPos2(HttpServletRequest request) throws Exception{
@@ -2889,5 +2892,139 @@ System.out.println("!!");
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
-	
+	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
+	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String brforeQuestionNo="", questionNo = "", qUser="", comma="";
+		String answer="", answerStr="";
+		String itemNo="", headerInfo="";
+		int maxNum=0, sNo=0;
+		String qNum = "0";
+		String Rid = "";
+        String strData = "", strKey = "";
+        
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("report");
+		Row row;
+		Cell cell;
+		
+		if(request.getParameter("item_no") != null){
+			itemNo = request.getParameter("item_no");
+		}
+		
+		if(itemNo != ""){
+			row = sheet.createRow(0);
+			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552") + "\r\n";
+			cell = row.createCell(0);
+			cell.setCellValue(headerInfo);
+            headerInfo = egovMessageSource.getMessage("ezQuestion.t553");
+            
+			/** EZSP_GETQUESTIONNOCNT*/
+            String strMaxNum = ezQuestionService.getQuestionNoCnt(itemNo);
+            if(strMaxNum==null){
+            	maxNum = 0;
+            }else{
+            	maxNum = Integer.parseInt(strMaxNum);
+            }
+			
+			if(maxNum != 0){
+				for(int i=1; i<maxNum+1; i++){
+					headerInfo = headerInfo + "," + i;
+				}
+				headerInfo = headerInfo + "\r\n";
+				
+				List<QstResponseVO> qstResponseVOList = ezQuestionService.getRespersonForResultTotalSave(Integer.parseInt(itemNo));
+				
+				Hashtable<String, Object> tbl = new Hashtable<String, Object>();
+				
+				for(QstResponseVO qstResponseVO : qstResponseVOList){
+					brforeQuestionNo = Integer.toString(qstResponseVO.getQuestionNo()); 
+					answer="";
+					questionNo="";
+					qUser=qstResponseVO.getResponseUserName();
+					strKey=qstResponseVO.getResponseUserId()+","+qUser+","+qstResponseVO.getResponseUserPosition()+","+qstResponseVO.getResponseUserDeptName();
+		
+					if(qstResponseVO.getQuestionNo() != Integer.parseInt(qNum) || Rid != qstResponseVO.getResponseUserId()){
+						comma = ",";
+					}else{
+						comma = "- -";
+					}
+					Rid = qstResponseVO.getResponseUserId();
+					if (qstResponseVO.getAnswerObjectivity() == 0){
+						answer = comma + qstResponseVO.getAnswerSubjectivity().replace("," , "，");
+						answer = answer.replace(";", "；");
+						answer = answer.replace("\"", " &quout;");
+						answer = answer.replace("\n", " ");
+						answer = answer.replace("\r", " ");
+					}else{
+						answer = comma + qstResponseVO.getAnswerObjectivity();
+					}
+					if(tbl.isEmpty()){
+						strData = answer;
+						tbl.put(strKey, strData);
+					}else{
+						if(tbl.get(strKey) == null){
+							strData = answer;
+							tbl.put(strKey,  strData);
+						}else{
+							strData = (String) tbl.get(strKey);
+							strData = strData + answer;
+							tbl.remove(strKey);
+							tbl.put(strKey, strData);
+						}
+					}
+					qNum = Integer.toString(qstResponseVO.getQuestionNo());
+				}
+				String[] header = headerInfo.split(",");
+				row = sheet.createRow(1);
+				for(int i=0; i<header.length; i++){
+					cell = row.createCell(i);
+					cell.setCellValue(header[i]);
+				}
+				if(qUser != ""){
+					for(String key : tbl.keySet()){
+						sNo=sNo+1;
+						answerStr = answerStr + sNo + "," + key + tbl.get(key) + "\r\n";
+						row = sheet.createRow(sNo+1);
+						cell = row.createCell(0);
+						cell.setCellValue(sNo);
+						int i =1;
+						for(String keySplit : key.split(",")){
+							cell = row.createCell(i);
+							cell.setCellValue(keySplit);
+							i++;
+						}
+						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
+							cell = row.createCell(i);
+							cell.setCellValue(valueSplit);
+							i++;
+						}
+					}
+				}else{
+					for(String key : tbl.keySet()){
+						sNo=sNo+1;
+						answerStr = answerStr + sNo + ",,,," + tbl.get(key) + "\r\n";
+						row = sheet.createRow(sNo+1);
+						cell = row.createCell(0);
+						cell.setCellValue(sNo);
+						int i =1;
+						for(String keySplit : key.split(",")){
+							cell = row.createCell(i);
+							cell.setCellValue(keySplit);
+							i++;
+						}
+						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
+							cell = row.createCell(i);
+							cell.setCellValue(valueSplit);
+							i++;
+						}
+					}
+				}
+				tbl.clear();
+				tbl = null;
+			}
+		}
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + "report" + ".xls\"");
+		workbook.write(response.getOutputStream());
+	}
 }

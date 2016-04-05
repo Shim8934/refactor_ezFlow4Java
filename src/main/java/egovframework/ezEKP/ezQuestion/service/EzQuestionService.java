@@ -43,6 +43,8 @@ public interface EzQuestionService {
 	
 	public List<QstResponseVO> gwPollJikgubSearch(String vItemNo, String vQuesNo) throws Exception;
 	
+	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -54,6 +56,8 @@ public interface EzQuestionService {
 	public QstAttachVO getAttachInfo2(String vBrdId, String vItemNo, String strQuestionNo, String strAnswer, String strAttID) throws Exception;
 	
 	public QstReuseQuestionVO reUseQuestionData (int brdId, int itemNo) throws Exception; 
+
+	public QstVO getQuestionForSubjective(String brdId, String itemNo, String questionNo) throws Exception;
 	
 	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception;
 	
@@ -62,20 +66,18 @@ public interface EzQuestionService {
 	public String getItemSeq(String brdId) throws Exception;
 	
 	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
+
+	public Integer getQstListCnt(QstListVO qstListVO) throws Exception;
+
+	public Integer getItemNoCnt(int brdId,int itemNo) throws Exception;
+
+	public Integer getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userId) throws Exception;
+
+	public Integer getQuestionNo(int brdId,int itemNo) throws Exception;
+
+	public Integer getResponseDateCnt(QstUserPermissionVO userPermissionVO, String userId) throws Exception;
 	
-	public QstVO getQuestionForSubjective(String brdId, String itemNo, String questionNo) throws Exception;
-
-	public int getQstListCnt(QstListVO qstListVO) throws Exception;
-
-	public int getItemNoCnt(int brdId,int itemNo) throws Exception;
-
-	public int getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userId) throws Exception;
-
-	public int getQuestionNo(int brdId,int itemNo) throws Exception;
-
-	public int getResponseDateCnt(QstUserPermissionVO userPermissionVO, String userId) throws Exception;
-	
-	public int getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
+	public Integer getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
 
 	public Integer resCount(String brdId,String itemNo) throws Exception;
 	
@@ -92,6 +94,8 @@ public interface EzQuestionService {
 	public Integer resultSubjectiveListCnt(int brdId, int itemNo, int questionNo, String lang)throws Exception;
 	
 	public Integer responseListCnt(String brdId, String itemNo, String responseYN, String lang) throws Exception;
+	
+	public String getQuestionNoCnt(String itemNo) throws Exception;
 	
 	public String analysisCount(String vItemNo, String vQuesNo) throws Exception;
 	

@@ -77,6 +77,26 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (List<QstVO>) list("EzQuestionDAO.getQuestion", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollGetSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollGetSearch", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollPositionSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollPositionSearch", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> gwPollJikgubSearch(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollJikgubSearch", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> getResponsePersonForResultTotalSave(int v_pItemNo) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.getResponsePersonForResultTotalSave",v_pItemNo);
+	}
+	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
 		return (QstResponsePersonVO) select("EzQuestionDAO.getResponsePerson", map);
 	}
@@ -103,21 +123,6 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public QstReuseQuestionVO reUseQuestionData(Map<String, Object> map) {
 		return (QstReuseQuestionVO) select("EzQuestionDAO.reUseQuestionData", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<QstResponseVO> gwPollGetSearch(Map<String, Object> map) {
-		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollGetSearch", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<QstResponseVO> gwPollPositionSearch(Map<String, Object> map) {
-		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollPositionSearch", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<QstResponseVO> gwPollJikgubSearch(Map<String, Object> map) {
-		return (List<QstResponseVO>) list("EzQuestionDAO.gwPollJikgubSearch", map);
 	}
 	
 	public String getItemSeq(String brdId) {
@@ -181,6 +186,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public Integer pollRespCnt2(Map<String, Object> map) {
 		return (Integer) select("EzQuestionDAO.pollRespCnt2", map);
+	}
+	
+	public String getQuestionNoCnt(String v_pItemNo){
+		return (String) select("EzQuestionDAO.getQuestionNoCnt", v_pItemNo);
 	}
 	
 	public String analysisCount(Map<String, Object> map) {
