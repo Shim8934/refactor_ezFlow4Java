@@ -5,6 +5,7 @@
 
 	<typeAlias alias="OrganDeptVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias alias="OrganGetUserInfoVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganGetUserInfoVO"/>
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -62,7 +63,53 @@
 		<result property="type" 								column="type" 							columnIndex="40"/>
 		<result property="sipUri" 								column="sipUri" 						columnIndex="41"/>
 		<result property="positionCD" 							column="positionCD" 					columnIndex="42"/>
-	</resultMap>	
+	</resultMap>
+	
+	<resultMap id="getUserInfo" class="OrganGetUserInfoVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="department" 							column="department" 					columnIndex="2"/>
+		<result property="displayName" 							column="displayName"					columnIndex="3"/>
+		<result property="displayName1" 						column="displayName1" 					columnIndex="4"/>
+		<result property="displayName2" 						column="displayName2" 					columnIndex="5"/>
+		<result property="mail" 								column="mail" 							columnIndex="6"/>
+		<result property="description" 							column="description" 					columnIndex="7"/>
+		<result property="description1" 						column="description1" 					columnIndex="8"/>
+		<result property="description2" 						column="description2" 					columnIndex="9"/>
+		<result property="physicalDeliveryOfficeName" 			column="physicalDeliveryOfficeName" 	columnIndex="10"/>
+		<result property="company" 								column="company" 						columnIndex="11"/>
+		<result property="company1" 							column="company1" 						columnIndex="12"/>
+		<result property="company2" 							column="company2" 						columnIndex="13"/>
+		<result property="title" 								column="title" 							columnIndex="14"/>
+		<result property="title1" 								column="title1" 						columnIndex="15"/>
+		<result property="title2" 								column="title2" 						columnIndex="16"/>
+		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="17"/>
+		<result property="homePhone" 							column="homePhone" 						columnIndex="18"/>
+		<result property="mobile" 								column="mobile" 						columnIndex="19"/>
+		<result property="facsimileTelephoneNumber" 			column="facsimileTelephoneNumber" 		columnIndex="20"/>
+		<result property="streetAddress" 						column="streetAddress" 					columnIndex="21"/>
+		<result property="info" 								column="info" 							columnIndex="22"/>
+		<result property="extensionAttribute1" 					column="extensionAttribute1" 			columnIndex="23"/>
+		<result property="extensionAttribute2" 					column="extensionAttribute2" 			columnIndex="24"/>
+		<result property="extensionAttribute3" 					column="extensionAttribute3" 			columnIndex="25"/>
+		<result property="extensionAttribute4" 					column="extensionAttribute4" 			columnIndex="26"/>
+		<result property="extensionAttribute5" 					column="extensionAttribute5" 			columnIndex="27"/>
+		<result property="extensionAttribute6" 					column="extensionAttribute6" 			columnIndex="28"/>
+		<result property="extensionAttribute7" 					column="extensionAttribute7" 			columnIndex="29"/>
+		<result property="extensionAttribute8" 					column="extensionAttribute8" 			columnIndex="30"/>
+		<result property="extensionAttribute9" 					column="extensionAttribute9" 			columnIndex="31"/>
+		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="32"/>
+		<result property="extensionAttribute11" 				column="extensionAttribute11" 			columnIndex="33"/>
+		<result property="extensionAttribute12" 				column="extensionAttribute12" 			columnIndex="34"/>
+		<result property="extensionAttribute13" 				column="extensionAttribute13" 			columnIndex="35"/>
+		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="36"/>
+		<result property="extensionAttribute15" 				column="extensionAttribute15" 			columnIndex="37"/>
+		<result property="adsPath" 								column="adsPath" 						columnIndex="38"/>
+		<result property="updateDT" 							column="updateDT" 						columnIndex="39"/>
+		<result property="type" 								column="type" 							columnIndex="40"/>
+		<result property="positionCD" 								column="positionCD" 						columnIndex="41"/>
+		<result property="birth" 							column="birth" 					columnIndex="42"/>
+		<result property="birthType" 							column="birthType" 					columnIndex="43"/>
+	</resultMap>		
 
 	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String">
 		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -90,6 +137,10 @@
 	
 	<procedure id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
 		{CALL EZHRMASTER.EZSP_GETTBLUSERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultMap="getUserInfo">
+		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
