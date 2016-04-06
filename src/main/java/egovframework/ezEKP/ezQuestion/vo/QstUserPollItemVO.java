@@ -55,7 +55,7 @@ public class QstUserPollItemVO {
 	String pollEndDate;
 	/** 참여자수*/
 	int responseCnt;
-	/** 종려여부*/
+	/** 종료여부*/
 	String completeFlag;
 	
 	public int getBrdId() {
