@@ -28,6 +28,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.StyledEditorKit.BoldAction;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -222,6 +223,299 @@ public class CommonUtil {
 			return "";
 		}
 	}
+	
+	public String convertAddandConvert(String pClass, String pProvValue) {
+		String[] arraryProvValue = pProvValue.split(";");
+		String returnValue = "";
+		String addPopList = pProvValue;
+		for(int i=0; i<arraryProvValue.length; i++) {
+			returnValue = "";
+			returnValue = addPropList(pClass, arraryProvValue[i]);
+			if(returnValue != "") {
+				addPopList = addPopList + ";" + returnValue;
+			}
+		}
+		return addPopList;
+	}
+	
+	public String addPropList(String pType, String pAttribute) {
+		String strRet = "";
+		//부서
+		if(pType != "user") {
+			switch (pAttribute.toUpperCase()) {
+			case "DISPLAYNAME": strRet = "DISPLAYNAME1;DISPLAYNAME2".toUpperCase();
+				break;
+			case "DESCRIPTION": strRet = "DESCRIPTION1;DESCRIPTION2".toUpperCase();
+				break;
+			case "COMPANY": strRet = "COMPANY1;COMPANY2".toUpperCase();
+				break;
+			default: strRet = "";
+				break;
+			}
+		//사용자
+		} else {
+			switch (pAttribute.toUpperCase()) {
+			case "DISPLAYNAME": strRet = "DISPLAYNAME1;DISPLAYNAME2".toUpperCase();
+				break;
+			case "DESCRIPTION": strRet = "DESCRIPTION1;DESCRIPTION2".toUpperCase();
+				break;
+			case "COMPANY": strRet = "COMPANY1;COMPANY2".toUpperCase();
+				break;
+			case "TITLE": strRet = "TITLE1;TITLE2".toUpperCase();
+				break;
+			case "EXTENSIONATTRIBUTE10": strRet = "EXTENSIONATTRIBUTE101;EXTENSIONATTRIBUTE102".toUpperCase();
+				break;
+			case "UPNNAME": strRet = "UPNNAME";
+				break;
+			default: strRet = "";
+				break;
+			}
+		}
+		return strRet;
+	}
+	
+	public boolean checkDBColum(String pProvValue) {
+		boolean bRet = false;
+		switch (pProvValue.toUpperCase()) {
+		case "CN":
+            bRet = true;
+            break;
+        case "DISPLAYNAME":
+            bRet = true;
+            break;
+        case "DISPLAYNAME1":
+            bRet = true;
+            break;
+        case "DISPLAYNAME2":
+            bRet = true;
+            break;
+        case "MAIL":
+            bRet = true;
+            break;
+        case "MAILNICKNAME":
+            bRet = true;
+            break;
+        case "UPNNAME":
+            bRet = true;
+            break;
+        case "DEPARTMENT":
+            bRet = true;
+            break;
+        case "DESCRIPTION":
+            bRet = true;
+            break;
+        case "DESCRIPTION1":
+            bRet = true;
+            break;
+        case "DESCRIPTION2":
+            bRet = true;
+            break;
+        case "PHYSICALDELIVERYOFFICENAME":
+            bRet = true;
+            break;
+        case "COMPANY":
+            bRet = true;
+            break;
+        case "COMPANY1":
+            bRet = true;
+            break;
+        case "COMPANY2":
+            bRet = true;
+            break;
+        case "TITLE":
+            bRet = true;
+            break;
+        case "TITLE1":
+            bRet = true;
+            break;
+        case "TITLE2":
+            bRet = true;
+            break;
+        case "TELEPHONENUMBER":
+            bRet = true;
+            break;
+        case "HOMEPHONE":
+            bRet = true;
+            break;
+        case "FACSIMILETELEPHONENUMBER":
+            bRet = true;
+            break;
+        case "MOBILE":
+            bRet = true;
+            break;
+        case "POSTALCODE":
+            bRet = true;
+            break;
+        case "STREETADDRESS":
+            bRet = true;
+            break;
+        case "INFO":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE1":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE2":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE3":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE4":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE5":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE6":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE7":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE8":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE9":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE10":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE101":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE102":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE11":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE12":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE13":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE14":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE15":
+            bRet = true;
+            break;
+        case "ADSPATH":
+            bRet = true;
+            break;
+        case "UPDATEDT":
+            bRet = true;
+            break;
+        case "SIPURI":
+            bRet = true;
+            break;
+        case "BIRTH":
+            bRet = true;
+            break;
+        case "BIRTHTYPE":
+            bRet = true;
+            break;
+		
+		}
+		switch (pProvValue.toUpperCase()) {
+		case "CN":
+            bRet = true;
+            break;
+        case "DISPLAYNAME":
+            bRet = true;
+            break;
+        case "DISPLAYNAME1":
+            bRet = true;
+            break;
+        case "DISPLAYNAME2":
+            bRet = true;
+            break;
+        case "USEFLAG":
+            bRet = true;
+            break;
+        case "COMPANY":
+            bRet = true;
+            break;
+        case "COMPANY1":
+            bRet = true;
+            break;
+        case "COMPANY2":
+            bRet = true;
+            break;
+        case "DEPTLEVEL":
+            bRet = true;
+            break;
+        case "DEPT_CD_PATH":
+            bRet = true;
+            break;
+        case "DEPT_NM_PATH":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE1":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE2":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE3":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE4":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE5":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE6":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE7":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE8":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE9":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE10":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE11":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE12":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE13":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE14":
+            bRet = true;
+            break;
+        case "EXTENSIONATTRIBUTE15":
+            bRet = true;
+            break;
+        case "ADFLAG":
+            bRet = true;
+            break;
+        case "ADSPATH":
+            bRet = true;
+            break;
+        case "UPDATEDT":
+            bRet = true;
+            break;
+		}
+	 return bRet;
+	}
+	
+	public String makeXMLString(String pOrgString) {
+		return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	
 }
 
 
