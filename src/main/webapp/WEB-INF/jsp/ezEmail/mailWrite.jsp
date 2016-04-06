@@ -918,7 +918,7 @@
         <tr>
             <td style="padding-top: 10px;height:20px;vertical-align:middle;">
                 <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
-                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDropIframe.do"></iframe>
+                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
             </td>
         </tr>
     </table>

@@ -352,7 +352,7 @@ border: 1px solid #3C2F2E;
         xhr.addEventListener("load", uploadComplete, false);
         xhr.addEventListener("error", uploadFailed, false);
         xhr.addEventListener("abort", uploadCanceled, false);
-        xhr.open("POST", "../ezEmail/remote/mail_interuploadX_CK.aspx?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn);
+        xhr.open("POST", "/ezEmail/mailInterUploadXCK.do?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn);
         xhr.send(fd);
         document.getElementById('progdiv').style.display = "inline-block";
     }
