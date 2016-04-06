@@ -2881,6 +2881,39 @@ System.out.println("!!");
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do")
+	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response){
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String hidRType2 = "";
+		
+		if(request.getParameter("hidRType2") != null){
+			hidRType2 = request.getParameter("hidRType2");
+		}
+		
+		String pFileName = "";
+		
+		
+//		subjective
+		if(hidRType2.equals("A")){
+			pFileName = "_Report.xls";
+//		table
+		}else if(hidRType2.equals("T")){
+			pFileName = "_Report.xls";
+		
+//		graph
+		}else{
+			pFileName = "_Report.xls";
+		}
+		
+		
+
+        
+		
+		/** EZSP_GETQUESTIONNOCNT*/
+		
+		
+	}
+	
 	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
 	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{

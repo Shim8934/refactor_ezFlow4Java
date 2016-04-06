@@ -310,7 +310,7 @@
 	        </tr>
 	    </table>
 	    <div id="tblPageRayer"></div>
-		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="" target="_self">
+		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="/ezQuestion/qstResultAnalysisSave.do" target="_self">
 		    <input type="hidden" name="AnalysisData" id="AnalysisData" />
 		    <input type="hidden" name="hidQst2" id="hidQst2" value="ALL" /><!-- 전체/문항 구분 -->
 		    <input type="hidden" name="hidCatalog2" id="hidCatalog2" value="0" /><!-- Catalog 구분 -->
