@@ -25,6 +25,7 @@
 			var pBrdID = "${pBrdID}";
 			var pItemNo = "${pItemNo}";
 			var pCurrPage = "${pCurrPage}";
+			var pAnswerType = "${pAnswerType}";
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
@@ -75,7 +76,6 @@
 			    		 }
 			    	}
 		        });
-			    
 			}
 			
 			function tableXML(){

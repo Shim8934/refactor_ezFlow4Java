@@ -2159,7 +2159,7 @@ System.out.println("!!");
 	
 	@RequestMapping(value="/ezQuestion/qstAnalysis.do")
 	public String qstAnalysis(HttpServletRequest request, ModelMap model) throws Exception{
-		String pBrdID = "", pItemNo = "", pAnswerType = "", pCurrPage = "";
+		String pBrdID = "", pItemNo = "", pCurrPage = "";
 		String pPubFlag = "";
 		
 		if (request.getParameter("brdId") != null)
@@ -2187,14 +2187,13 @@ System.out.println("!!");
 			sb.append(qstVO.getAnswerType());
 			sb.append("</ANSWERTYPE>");
 			sb.append("</ROW>");
-			pAnswerType = Integer.toString(qstVO.getAnswerType());
+			
 		}
 		sb.append("</DATA>");
 		
         model.addAttribute("xmlMainDom",sb.toString());
         model.addAttribute("pBrdID",pBrdID);
         model.addAttribute("pItemNo",pItemNo);
-        model.addAttribute("pAnswerType",pAnswerType);       
 		model.addAttribute("pPubFlag", pPubFlag);
 		model.addAttribute("pCurrPage", pCurrPage);
 		
