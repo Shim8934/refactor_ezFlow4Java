@@ -119,6 +119,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }while(!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
         deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";
+        
         return deptInfo;
 	}
 	
@@ -173,14 +174,19 @@ public class EzOrganServiceImpl implements EzOrganService {
 			String propColumn = "";
 
 			for(String propname : proplist){
+				propname = propname.toUpperCase();
 				if(propname.equals("mail")){
 					propColumn = vo.getMail();
-				}else if(propname.equals("DisplayName")){
+				}else if(propname.equals("DISPLAYNAME")){
 					propColumn = vo.getDisplayName();
 				}else if(propname.equals("DISPLAYNAME1")){
 					propColumn = vo.getDisplayName1();
 				}else if(propname.equals("DISPLAYNAME2")){
 					propColumn = vo.getDisplayName2();
+				}else if(propname.equals("EXTENSIONATTRIBUTE1")){
+					propColumn = vo.getExtensionAttribute1();
+				}else if(propname.equals("EXTENSIONATTRIBUTE2")){
+					propColumn = vo.getExtensionAttribute2();
 				}else{
 					propColumn = "";
 				}						

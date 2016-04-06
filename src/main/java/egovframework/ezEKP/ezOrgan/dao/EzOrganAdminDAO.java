@@ -1,0 +1,29 @@
+package egovframework.ezEKP.ezOrgan.dao;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+
+@Repository("EzOrganAdminDAO")
+public class EzOrganAdminDAO extends EgovAbstractDAO {
+
+	public int companyCheck(String cn) throws Exception{		
+		return (int) select("EzOrganAdminDAO.companyCheck", cn);
+	}
+	
+	public int companyChildCheck(String cn) {
+		return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
+	}
+
+	public void insertDBData_company(Map<String, Object> map) throws Exception{
+		insert("EzOrganAdminDAO.insertDBData_company", map);
+	}
+
+	public void deleteDBData(Map<String, Object> map) throws Exception{
+		delete("EzOrganAdminDAO.deleteDBData", map);
+	}
+
+	
+}

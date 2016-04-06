@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOrganAdmin">
+	
+	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
+	</procedure>
+	
+	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(cn)
+     		FROM 
+     			ezHrmaster.TBLDeptmaster 
+      		WHERE  
+      			cn = #cn#
+	     ]]> 
+	</select>
+
+	<select id="EzOrganAdminDAO.companyChildCheck" parameterClass="String" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(cn)
+     		FROM 
+     			ezHrmaster.TBLDeptmaster 
+      		WHERE  
+      			extensionattribute1 = #cn#
+	     ]]> 
+	</select>
+	
+</sqlMap>

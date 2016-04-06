@@ -7,6 +7,7 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoardAdmin_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommon/EzCommon_SQL_Oracle.xml"/>
