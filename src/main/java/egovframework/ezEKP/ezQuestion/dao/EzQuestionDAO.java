@@ -133,6 +133,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (String) select("EzQuestionDAO.getReadDateItemForResult", map);
 	}
 	
+	public int callGetItemSeq(Map<String, Object> map){
+		return (int) select("EzQuestionDAO.callGetItemSeq", map);
+	}
+	
 	public int getQstListCnt(Map<String, Object> map){
 		select("EzQuestionDAO.getQstListCnt", map);
 		return (int) map.get("v_pCount");
@@ -248,8 +252,16 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		insert("EzQuestionDAO.insertResponse2", map);
 	}
 	
+	public void callInsertItemSeq(Map<String,Object> map) {
+		insert("EzQuestionDAO.callInsertItemSeq", map);
+	}
+	
 	public void stepSave(Map<String,Object> map) {
 		update("EzQuestionDAO.stepSave", map);
+	}
+	
+	public void callUpdateItemSeq(Map<String,Object> map) {
+		update("EzQuestionDAO.callUpdateItemSeq", map);
 	}
 	
 	public void updateItemSeq(Map<String,Object> map) {
@@ -293,5 +305,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	public void deletePermission(Map<String,Object> map) {
 		delete("EzQuestionDAO.deletePermission", map);
+	}
+	public void callDeleteItemSeq(Map<String,Object> map) {
+		delete("EzQuestionDAO.callDeleteItemSeq", map);
+	}
+	public void callDeletePollResponseper(Map<String,Object> map) {
+		delete("EzQuestionDAO.callDeletePollResponseper", map);
 	}
 }
