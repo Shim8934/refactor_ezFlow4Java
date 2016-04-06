@@ -375,7 +375,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return map;
 	}
 	
-	@SuppressWarnings("unused")
+
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
@@ -389,12 +389,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
-		List<Integer> arrAnswer = new ArrayList<Integer>();
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		boolean multiResponseOK = false;
 		int responseCnt = 0;
-		int readCnt = 0;
+	
 		/**UserPermission*/
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -481,6 +480,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				row.appendChild(multiSelect);
 				row.appendChild(quesSn);
 				data.appendChild(row);
+
 				if(question.getAnswerType() == 2){
 					strTagData = "<tr>";
 					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\">";
@@ -497,7 +497,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}else{
 					if(question.getAnswerType() == 4){
 						 strTagData = "<tr>";
-                         strTagData += "	<td style='word-break:break-all;padding:10px'>";
+                         strTagData += "	<td style=\"word-break:break-all;padding:10px\">";
                          strTagData += "		<input type=\"text\" maxlength=\"500\" READONLY style=\"Width:760\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></td>";
                          strTagData += "</tr>";
                          Element subRow = doc.createElement("SUBROW");
@@ -513,14 +513,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				strResult += "</SUBDATA>";
 			}
 		}
-		/** XML to String */
-/*		DOMSource domSource = new DOMSource(doc);
-		StringWriter writer = new StringWriter();
-		StreamResult result = new StreamResult(writer);
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
-		transformer.transform(domSource, result);*/
-		
+
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", commonUtil.convertDocumentToString(doc));
@@ -529,10 +522,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstResponse";
 	}
 	
-	@SuppressWarnings("unused")
 	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
 		Node snewRow = doc.createElement("ITEM");
-        int iCount = 0, iAddCount = 0;
+        int iCount = 0;
         if (answerType == 5){
         	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
         	if(qstAnswerAnswerList != null){
@@ -586,9 +578,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 					itemNode = null;
 					break;
         		case 4:
-        			strTagData = "<input type=\"checkbox\" onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",\"frmResponse.chk" + qstNo + "\", \"frmResponse.txt" + qstNo + "\")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getQuestionNo() + "\">" + modifyData(qstAnswer.getAnswerContent());
+        			strTagData = "<input type=\"checkbox\" onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + modifyData(qstAnswer.getAnswerContent());
                     strTagData += getAttachList(Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdId(), qstAnswer.getItemNo());
-                    String strEtcTag = "";
                     iValueNode = doc.createTextNode(strTagData);
                     strTagData = "";
                     itemNode.appendChild(iValueNode);
@@ -625,8 +616,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		StringBuilder strResult = new StringBuilder();
         String strAttachName = "";
         String strAttachUrl = "";
-        /** 쓰는곳이 업는 거 같음*/
-        String strSAttachUrl = "";
         String strAttachNo = "";
         boolean bFirst = true;
         
@@ -654,7 +643,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	
 	            switch (attachVO.getAttachType()){
 	            case "1":
-	            	strSAttachUrl = strAttachUrl.replace("/Upload_BoardSTD/Upload_Question/", "/Upload_BoardSTD/Upload_Question/");
 	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(1," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
 	            	break;
 	            case "2":
@@ -679,15 +667,15 @@ public class EzQuestionController extends EgovFileMngUtil {
         return strResult.toString();
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brdId = "5", itemNo = "", responseUserIp = "", vPermission = "", vResponseRange = "", receve = "", currPage = "1";
+		String brdId = "5", itemNo = "", responseUserIp = "", vPermission = "", vResponseRange = "", receve = "";
 		String userId = "", userName = "", email = "", deptId = "", depart = "", position = "", jikGub = "", gender = "1", age = "29";
 		String userName2 = "", depart2 = "", position2 = "", jikGub2 = "";
 		String tableAnswer = "";
         int eleCnt = 0;
-        int tempTableAnswerCnt = 0;
         
         if(request.getParameter("hidEleCnt")!=null);
         	eleCnt = Integer.parseInt(request.getParameter("hidEleCnt"));
@@ -804,7 +792,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public void subDataProcess(int questionNo, String quesContent, String multiSelect, int answerType, int brdId, int itemNo,HttpServletRequest request, QstResponseVO qstResponseVO, HttpServletResponse response) throws Exception {
 		String tmp = "", receve ="";
         int ansRCnt = 0, tempTableAnswerCnt = 0;
-        String responseNo = "1", strResponseInsert = "", answerSubjectivity = "";
+        String responseNo = "1", answerSubjectivity = "";
 		if(request.getParameter("receve")!=null)
 			receve  = request.getParameter("receve").replace("&amp;", "&");
         
@@ -830,7 +818,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			
 			if(multiSelect == "1"){
 				int iNum = 0;
-				String strData = "";
 				for(int j=0; j<ansRCnt; j++){
 					iNum ++;
 					tmp = "chk" + questionNo + "_" + Integer.toString(iNum);
@@ -890,15 +877,15 @@ public class EzQuestionController extends EgovFileMngUtil {
         response.getWriter().flush();
 	}
 
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResult.do")
 	public String qstResult(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		String brdId="5", brdNm="", itemNo="", title="", responseRange="", postDate="", pollEndDate="", currPage="";
-		String strItemRead = "", StrReadInsert = "", StrPermission = "", publicResultFlg = "", publicFlg = "", multiResponseFlg = "", endFlg = "";
+		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", endFlg = "";
 		int readCnt=0, resCnt=0;
-		int iCount = 0, ResponseCnt = 0, percent = 0;
-		boolean bDisplay=false;
+		int percent = 0;
 		
 		if(request.getParameter("brdId")!=null)
 			brdId = request.getParameter("brdId");
@@ -1056,7 +1043,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	
 	public int responseCount(int questionNo, String strContent, String strSel, int answerType, int iAnsCnt, int brdId, int itemNo) throws Exception{
 		int iResult = 0;
-		String strResponse = "";
 		
 		if(answerType == 3){
 			iResult = ezQuestionService.pollRespCnt2(brdId, itemNo, questionNo, iAnsCnt);
@@ -1068,6 +1054,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return iResult;	
 	}
 	
+	@SuppressWarnings("unused")
 	public String dataProcessType1(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
@@ -1135,6 +1122,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData;
 	}
 	
+	@SuppressWarnings("unused")
 	public String dataProcessType3(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
 		int rCnt = 0, jCnt =0, responseCnt =0;;
@@ -1202,6 +1190,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData;
 	}
 	
+	@SuppressWarnings("unused")
 	public String dataProcessType4(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
 		int iAnsCount = 0, responseCnt = 0;
@@ -1513,7 +1502,6 @@ System.out.println("pQstTitle:"+pQstTitle);
 		return strXML;
 	}
 
-
 	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID) throws Exception {
 	
 		int dataCount = 0;
@@ -1787,9 +1775,9 @@ System.out.println("!!");
 	}
 	
 
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
-	public String attachView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,ModelMap model) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public String attachView(HttpServletRequest request,ModelMap model) throws Exception{
 		String href = "", type = "", title = "", filename = "";
 		String vBrdId = "5";
 		String vItemNo = "";
@@ -2170,8 +2158,8 @@ System.out.println("!!");
 	}
 	
 	@RequestMapping(value="/ezQuestion/qstAnalysis.do")
-	public String qstAnalysis(HttpServletRequest request,ModelMap model) throws Exception{
-		String pBrdID = "", pItemNo = "";
+	public String qstAnalysis(HttpServletRequest request, ModelMap model) throws Exception{
+		String pBrdID = "", pItemNo = "", pAnswerType = "", pCurrPage = "";
 		String pPubFlag = "";
 		
 		if (request.getParameter("brdId") != null)
@@ -2180,7 +2168,9 @@ System.out.println("!!");
             pItemNo = request.getParameter("item_no");
         if (request.getParameter("pubflag") != null)
             pPubFlag = request.getParameter("pubflag");
-		
+        if (request.getParameter("currPage") != null)
+        	pCurrPage = request.getParameter("currPage"); 
+
         StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		/** EZSP_GETOBJQUESTION*/
@@ -2197,16 +2187,21 @@ System.out.println("!!");
 			sb.append(qstVO.getAnswerType());
 			sb.append("</ANSWERTYPE>");
 			sb.append("</ROW>");
+			pAnswerType = Integer.toString(qstVO.getAnswerType());
 		}
 		sb.append("</DATA>");
 		
         model.addAttribute("xmlMainDom",sb.toString());
         model.addAttribute("pBrdID",pBrdID);
         model.addAttribute("pItemNo",pItemNo);
+        model.addAttribute("pAnswerType",pAnswerType);       
 		model.addAttribute("pPubFlag", pPubFlag);
+		model.addAttribute("pCurrPage", pCurrPage);
+		
 		return "/ezQuestion/qstAnalysis";
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisAll.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstCallAnalysisAll(HttpServletRequest request) throws Exception{
@@ -2732,6 +2727,7 @@ System.out.println("!!");
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisJikgub2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstCallAnalysisJikgub2(HttpServletRequest request) throws Exception{
@@ -2892,6 +2888,7 @@ System.out.println("!!");
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
 	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);

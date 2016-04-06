@@ -65,6 +65,7 @@
 					}
 				}
 				document.getElementById("xmlTable").innerHTML = tableXml;
+alert(tableXml);
 			}
 		</script>
 		<script type="text/javascript">

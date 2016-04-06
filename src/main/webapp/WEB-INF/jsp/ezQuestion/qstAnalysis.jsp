@@ -24,7 +24,8 @@
 			var buttonFlag = "";
 			var pBrdID = "${pBrdID}";
 			var pItemNo = "${pItemNo}";
-
+			var pCurrPage = "${pCurrPage}";
+			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -90,7 +91,7 @@
 			}
 			
 			function menuQst_List() {
-	            var szUrl = "/ezQuestion/qstList.do?brd_id="+pBrdID+"";
+	            var szUrl = "/ezQuestion/qstList.do?brd_id="+pBrdID+"&currPage="+pCurrPage;
 			    window.location.href = szUrl;
 			}
 		    function menu_AnalyStart() {
