@@ -66,7 +66,9 @@ public interface EzQuestionService {
 	public String getItemSeq(String brdId) throws Exception;
 	
 	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userId) throws Exception;
-
+	
+	public int callGetItemSeq(int brdId) throws Exception;
+	
 	public Integer getQstListCnt(QstListVO qstListVO) throws Exception;
 
 	public Integer getItemNoCnt(int brdId,int itemNo) throws Exception;
@@ -117,6 +119,8 @@ public interface EzQuestionService {
 
 	public void insertResponse2(QstResponseVO qstResponseVO) throws Exception;
 	
+	public void callInsertItemSeq(int brdId) throws Exception;
+	
 	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void callInsertPollResponsep1(QstCompleteVO qstCompleteVO) throws Exception;
@@ -124,6 +128,8 @@ public interface EzQuestionService {
 	public void callInsertPollResponseper(QstCompleteVO qstCompleteVO) throws Exception;
 	
 	public void pollSaveAttach(QstCompleteVO qstCompleteVO) throws Exception;
+	
+	public void callUpdateItemSeq(int brdId,int itemNo) throws Exception;
 
 	public void updateItemSeq(int brdId,int itemNo) throws Exception;
 	
@@ -141,7 +147,12 @@ public interface EzQuestionService {
 	
 	public void changePermission(QstUserPermissionVO qstUserPermissionVO, QstUserPollItemVO qstUserPollItemVO) throws Exception;
 	
+	public void callDeleteItemSeq(int brdId, int itemNo) throws Exception;
+	
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void deletePermission(int brdId, int itemNo) throws Exception;
+	
+	public void callDeletePollResponseper(int brdId, int itemNo) throws Exception;
+	
 }
