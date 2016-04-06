@@ -795,7 +795,6 @@ public class EzQuestionController extends EgovFileMngUtil {
         String responseNo = "1", answerSubjectivity = "";
 		if(request.getParameter("receve")!=null)
 			receve  = request.getParameter("receve").replace("&amp;", "&");
-        
         Integer responseMaxNo = ezQuestionService.getResponseMaxNo(brdId, itemNo, questionNo);
         if(responseMaxNo!=null){
         	responseNo = responseMaxNo.toString();
@@ -814,25 +813,20 @@ public class EzQuestionController extends EgovFileMngUtil {
 	        	ansRCnt = 0;
 	        }
 			/** EZSP_INSERTRESPONSE*/
-			List<String> multiQ = null;
-			
-			if(multiSelect == "1"){
+			if(multiSelect.equals("1")){
 				int iNum = 0;
 				for(int j=0; j<ansRCnt; j++){
 					iNum ++;
 					tmp = "chk" + questionNo + "_" + Integer.toString(iNum);
-					
-					multiQ = new ArrayList<String>();
-					multiQ.add(request.getParameter(tmp.trim()));
-					
-					if(multiQ.get(j) == "1"){
+
+					if(request.getParameter(tmp)!=null && request.getParameter(tmp).equals("1")){
 						qstResponseVO.setAnswerObjectivity(iNum);
 						ezQuestionService.insertResponse(qstResponseVO);
-						responseNo = Integer.toString(Integer.parseInt(responseNo)+1); 
+						responseNo = Integer.toString(Integer.parseInt(responseNo)+1);
+						qstResponseVO.setResponseNo(Integer.parseInt(responseNo));
 					}
 				}
-				multiQ.clear();
-				multiQ = null;
+
 			}else{
 				tmp = "rdo" + questionNo;
 				String SingleQ = request.getParameter(tmp);
@@ -2318,7 +2312,7 @@ System.out.println("!!");
         			node = resultXML.createElement("CELL");
 
         			nodeData = resultXML.createElement("VALUE");
-        			CDATASection = resultXML.createCDATASection("질문"+qstAnswer.getAnswerContent());
+        			CDATASection = resultXML.createCDATASection(" [" + egovMessageSource.getMessage("ezQuestion.t57")+qstAnswer.getAnswerContent());
         			nodeData.appendChild(CDATASection);
         			node.appendChild(nodeData);
 
