@@ -181,9 +181,9 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
-		map.put("v_pGubunID", qstCompleteVO.getUserID());
-		map.put("v_pGubunNm", qstCompleteVO.getUserNm());
-		map.put("v_pGubunNm2", qstCompleteVO.getUserNm2());
+		map.put("v_pGubunID", qstCompleteVO.getGubunID());
+		map.put("v_pGubunNm", qstCompleteVO.getGubunNm());
+		map.put("v_pGubunNm2", qstCompleteVO.getGubunNm2());
 		map.put("v_pUserEmail", qstCompleteVO.getUserEmail());
 		map.put("v_pUserDeptID", qstCompleteVO.getUserDeptID());
 		map.put("v_pUserDeptNM", qstCompleteVO.getUserDeptNm());
@@ -675,7 +675,44 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pQuesNo", vQuesNo);
 		return ezQuestionDAO.getQuestion(map);
 	}
+	
+	@Override
+	public int callGetItemSeq(int brdId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		return ezQuestionDAO.callGetItemSeq(map);
+	}
 
+	@Override
+	public void callUpdateItemSeq(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.callUpdateItemSeq(map);
+	}
+	
+	@Override
+	public void callInsertItemSeq(int brdId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		ezQuestionDAO.callInsertItemSeq(map);
+	}
+
+	@Override
+	public void callDeleteItemSeq(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.callDeleteItemSeq(map);
+	}
+
+	@Override
+	public void callDeletePollResponseper(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.callDeletePollResponseper(map);
+	}
 	@Override
 	public String analysisCount(String vItemNo, String vQuesNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
