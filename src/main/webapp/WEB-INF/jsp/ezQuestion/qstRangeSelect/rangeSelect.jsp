@@ -9,14 +9,15 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/TreeView.js"></script>
+		<script type="text/javascript" src="/js/ezQuestion/TreeView.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
 			var L_BRDID = "${qstRangeSelectVO.brdId}"; 
-			var L_ITEMNO = "${qstRangeSelectVO.itemId}"; 
+			var L_ITEMNO = "${qstRangeSelectVO.itemId}";
+			var pCompanyID = "${pCompanyID}";
 			var g_aChanged = false;
 			var g_bChanged = false;
 			var g_bTreeLoad = false;
@@ -298,9 +299,9 @@
 	        	success : function(result){		        		
 	        		document.getElementById("OrganListView").innerHTML = "";
 	                var listview = new ListView();
-	                listview.SetID("OrganList");
+	                listview.SetID("Organ");
 	                listview.SetSelectFlag(false);
-	                listview.SetMulSelectable(false);
+	                listview.SetMulSelectable(true);
 	                listview.SetRowOnDblClick("ListViewNodeDblClick");
 	                listview.DataSource(document.getElementById("listviewheader2"));
 	                listview.DataBind("OrganListView");
@@ -348,7 +349,7 @@
         	var count;
         	var adCount = 0;
         	var xmlDOM = createXmlDom();
-        	var objNode;
+        /* 	var objNode;
         	createNodeInsert(xmlDOM, objNode, "DATA");
         	createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + cnkeyword.value);
         	createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;title;displayname;mail");
@@ -379,7 +380,22 @@
         	}
         	finally {
             	xmlHttp_UserList = null;
-        	}
+        	} */
+        	$.ajax({
+	        	type : "POST",
+	        	dataType : "xml",
+	        	url : "/ezOrgan/getSearchList.do",
+	        	async : false,
+	        	data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
+	        	success : function(result){	
+	        		xmlDOM = result;
+	                adCount = xmlDOM.getElementsByTagName("ROW").length;
+	        	},
+	        	error : function(error){
+	        		alert("<spring:message code='ezBoard.t24'/>" + error);
+	        		xmlDOM = null;
+	        	}
+	        });		        
         	if (adCount == 0) {
 	            alert("<spring:message code='ezQuestion.t24' />");
     	        return;
@@ -399,7 +415,7 @@
         	        rgParams["addrBook"] = xmlDOM;
             	    rgParams["deptid"] = "";
                 	var feature = GetShowModalPosition(609, 352);
-                	window.showModalDialog("/ezEmail/htm/checkName2.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
+                	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
                 	if (rgParams["deptid"] != "") {
 	                    bSearch = true;
     	                xmlHttp_Depttree = null;
@@ -416,7 +432,7 @@
         	        rgParams["deptid"] = "";
             	    checkname2_cross_dialogArguments[0] = rgParams;
                 	checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-                	var checkName2_Cross = window.open("/ezEmail/htm/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+                	var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
                 	try { checkName2_Cross.focus(); } catch (e) {
                 	}
             	}
@@ -467,26 +483,26 @@
 	        var arrRows2 = selList2.GetDataRows();
     	    if (arrRows.length + arrRows2.length > 0) {
         	    SaveRangeACL();
-            	window.opener.updateParent("set_Target", 1, "selectedIndex");
+            	window.opener.updateParent("setTarget", 1, "selectedIndex");
             	window.opener.updateParent("hidTarget", "1", "value");
-            	window.opener.updateParent("select_YN", "YES", "value");
+            	window.opener.updateParent("selectYN", "YES", "value");
             	window.opener.updateParent("RangeXMLStr", MakeXml_Range(), "value");
-            	window.opener.updateParent("item_no", L_ITEMNO, "value");
+            	window.opener.updateParent("itemNo", L_ITEMNO, "value");
             	window.opener.closeWindow();
         	}
         	else {
-            	window.opener.updateParent("set_Target", 0, "selectedIndex");
+            	window.opener.updateParent("setTarget", 0, "selectedIndex");
             	window.opener.updateParent("hidTarget", "0", "value");
-            	window.opener.updateParent("select_YN", "NO", "value");
+            	window.opener.updateParent("selectYN", "NO", "value");
             	window.opener.updateParent("RangeXMLStr", "", "value");
-            	window.opener.updateParent("item_no", L_ITEMNO, "value");
+            	window.opener.updateParent("itemNo", L_ITEMNO, "value");
             	window.opener.closeWindow();
         	}
     	}
     	function GetItemNo() {
 	        var xmldom = createXmlDom();
     	    var xmlHttp = createXMLHttpRequest();
-        	var szUrl = "../callGetItemSeqXML.do?brd_id=" + L_BRDID;
+        	var szUrl = "/ezQuestion/callGetItemSeqXML.do?brd_id=" + L_BRDID;
         	xmlHttp.open("POST", szUrl, false);
         	xmlHttp.send(xmldom)
         	if (getXmlString(xmlHttp.responseXML) != "") {
@@ -541,8 +557,8 @@
         	}
         	createNodeAndInsertText(xmlDoc, objNode, "BRDID", L_BRDID);
         	createNodeAndInsertText(xmlDoc, objNode, "ITEMNO", L_ITEMNO);
-        	<%-- createNodeAndInsertText(xmlDoc, objNode, "PcompanyID", "<%=pCompanyID%>"); --%>
-        	var szUrl = "callSaveRangeACL.do";
+        	createNodeAndInsertText(xmlDoc, objNode, "PcompanyID", pCompanyID); 
+        	var szUrl = "/ezQuestion/callSaveRangeACL.do";
         	xmlHttp = null;
         	xmlHttp = createXMLHttpRequest();
         	xmlHttp.open("POST", szUrl, false);
@@ -640,12 +656,12 @@
                 	//lastindex = deptlist.length;
                 	var pVaule = "";
                 	
-                	<%-- if ("<%= userinfo.lang %>" == "1") {
+                	 //userInfo 부분 추가
                     	pVaule = CurrNM;
-                	}
-                	else {
+                	
+                	
 	                    pVaule = CurrNM2;
-					} --%>
+					 
                 	//newoption = new Option(pVaule,
                 	//    CurrID + "\t" + CurrNM + "\t" + CurrNM2);
                 	//deptlist.options[lastindex] = newoption;
@@ -740,7 +756,7 @@
                     	document.getElementById("MemberListView").getElementsByTagName("TD")[y].style.overflow = "";
                 	}
 	            }
-	        }
+        	}
     	}
 		</script>
 	</head>
