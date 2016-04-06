@@ -120,6 +120,14 @@ public class BoardListVO {
 	private String mail;
 	/** 업데이트날짜*/
 	private String updateDate;
+	/** 포토게시판 이미지 개수*/
+	private int imageCount;
+	/** 포토게시판 이미지 경로*/
+	private String imagePath;
+	/** 포토게시판 이미지 내용*/
+	private String imageContent;
+	/** 포토게시판 이미지 명*/
+	private String imageNames;
 	
 	public int getrNum() {
 		return rNum;
@@ -474,6 +482,30 @@ public class BoardListVO {
 	}
 	public void setPageCount(int pageCount) {
 		this.pageCount = pageCount;
+	}
+	public int getImageCount() {
+		return imageCount;
+	}
+	public void setImageCount(int imageCount) {
+		this.imageCount = imageCount;
+	}
+	public String getImagePath() {
+		return imagePath;
+	}
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	public String getImageContent() {
+		return imageContent;
+	}
+	public void setImageContent(String imageContent) {
+		this.imageContent = imageContent;
+	}
+	public String getImageNames() {
+		return imageNames;
+	}
+	public void setImageNames(String imageNames) {
+		this.imageNames = imageNames;
 	}
 	
 }

@@ -64,9 +64,6 @@
 		    var AtttributeCount = 0; 
 		    window.onload = function () {
 		        try {
-// 		            initKey();
-		
-// 		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/ezCommonInterFace.do&type=BOARDCONTENT&docID=" + escape(pItemID);
 					var html = "";
 					$.ajax({
 						type : "POST",
@@ -80,7 +77,6 @@
 							html = result;
 						}        			
 					});	
-		            //document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?type=BOARDCONTENT&itemID=" + escape(pItemID);
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
 					doc.write(html);

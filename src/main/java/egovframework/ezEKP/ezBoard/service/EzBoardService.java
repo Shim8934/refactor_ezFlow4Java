@@ -37,6 +37,10 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	
+	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	
+	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
 	
@@ -88,9 +92,17 @@ public interface EzBoardService {
 	
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
 	
+	public int checkApprUserList(String userID, String itemID) throws Exception;
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 	
+	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception;
+	
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception;
+	
+	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception;
+	
+	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
 	
@@ -104,6 +116,8 @@ public interface EzBoardService {
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 	
+	public void setMainImageID(String mainImageID, String itemID, String type) throws Exception;
+	
 	public void setNotiOrder(String itemID) throws Exception;
 
 	public void updateCopyItem(String itemID) throws Exception;
@@ -113,8 +127,5 @@ public interface EzBoardService {
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
-	
-
-
 
 }

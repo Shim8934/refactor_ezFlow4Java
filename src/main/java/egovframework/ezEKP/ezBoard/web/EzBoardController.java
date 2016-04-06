@@ -763,9 +763,9 @@ public class EzBoardController extends EgovFileMngUtil{
         boardVO.setLang(userInfo.getLang());
         
         if(boardType.equals("4")){ // 썸네일 
-//            boardXml = getThumbList(ezBoardVO);
+        	resultXML = getThumbList(boardVO, userInfo, type);
         }else if(boardType.equals("5")){ //Q&A
-//            boardXml = getQnAListItem(ezBoardVO);
+//            resultXML = getQnAListItem(ezBoardVO);
         }else{
             if(boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")){
             	boardVO.setBoardType("N");
@@ -810,7 +810,145 @@ public class EzBoardController extends EgovFileMngUtil{
         
     }
     
-    @RequestMapping(value = "/ezBoard/getSearchBoardList.do", produces = "text/xml; charset=utf-8")
+    public String getThumbList(BoardVO boardVO, LoginVO userInfo, String type) throws Exception{
+    	String orderOption1 = "";
+        String orderOption2 = "";
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        boardVO.setLang(userInfo.getLang());
+        boardVO.setType(type);
+
+        List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+        
+        int i = 0;
+        int hlength = headerList.size();
+
+        for (i = 0; i < hlength; i++){
+            if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())){
+                if (boardVO.getOrderCell().equals("")){
+                	if(headerList.get(i).getColName().indexOf("WRITEDATE") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
+                	}else if(headerList.get(i).getColName().indexOf("WRITERNAME") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITERNAME", "A.WRITERNAME") + " ";
+                	}else{
+                		orderOption1 = headerList.get(i).getColName()+ " ";
+                	}
+                }
+                else{
+                	if(headerList.get(i).getColName().indexOf("WRITEDATE") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " DESC";
+                	}else if(headerList.get(i).getColName().indexOf("WRITERNAME") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITERNAME", "A.WRITERNAME") + " DESC";
+                	}else{
+                		orderOption1 = headerList.get(i).getColName()+ " DESC";
+                	}
+                }
+            }
+        }
+        BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+        myFavoriteVO.setBoardId(boardVO.getBoardId());
+        myFavoriteVO.setUserId(userInfo.getId());
+        myFavoriteVO.setType(type);
+        
+        int boardCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+        
+        BoardListVO boardListVO = new BoardListVO();
+        boardListVO.setPageCount(boardCount);
+        boardListVO.setTotalCount(boardCount);
+        boardListVO.setStartRow(1);
+        boardListVO.setEndRow(0);
+        boardListVO.setOrderBySub(orderOption1);
+        boardListVO.setOrderByMain(orderOption2);
+        boardListVO.setUserID(userInfo.getId());
+        
+        BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo.getId());
+        
+        boardListVO.setStartRow(boardConfigVO.getListCount() * (boardVO.getPageNum()-1) + 1);
+        boardListVO.setEndRow(boardConfigVO.getListCount() * boardVO.getPageNum());
+        
+        if(boardVO.getTitle() == null){
+        	boardVO.setTitle("");
+        }
+        if(boardVO.getABSTRACT() == null){
+        	boardVO.setABSTRACT("");
+        }
+        if(boardVO.getWriterName() == null){
+        	boardVO.setWriterName("");
+        }
+        List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getThumbnailList(boardListVO, boardVO);
+		
+        int dlength = boardThumbnailList.size();
+        //XML 생성 수정요망
+        StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>"+boardConfigVO.getTotalCnt()+"</TOTALCNT>");
+        resultXML.append("<PAGECNT>"+boardConfigVO.getPageCnt()+"</PAGECNT>");
+        resultXML.append("<PERSONALCNT>"+boardConfigVO.getTotalCnt()+"</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for(BoardListHeaderVO vo:headerList){
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        String fieldName = "";
+        String fieldValue = "";
+        
+        for(int j = 0; j < dlength; j++){
+        	resultXML.append("<ROW>");
+            for(i = 0; i < hlength; i++){
+            	resultXML.append("<CELL>");
+            	fieldName = headerList.get(i).getColName().toUpperCase();
+
+                if(fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")){
+                    fieldName = fieldName + strMultiData;
+                }
+                if(fieldName.equals("WRITEDATE")){
+                	fieldValue =(String)boardThumbnailList.get(j).get(fieldName);
+                }else
+                    fieldValue = String.valueOf(boardThumbnailList.get(j).get(fieldName));
+                
+                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                
+                if(i == 0){
+                	resultXML.append("<DATA1>"+boardThumbnailList.get(j).get("BOARDID")+"</DATA1>");
+                	resultXML.append("<DATA2>"+boardThumbnailList.get(j).get("ITEMID")+"</DATA2>");
+        			resultXML.append("<DATA3>"+boardThumbnailList.get(j).get("WRITERID")+"</DATA3>");
+					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					if(boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0){
+						resultXML.append("<DATA4>Y</DATA4>");
+					}else{
+						resultXML.append("<DATA4>N</DATA4>");
+					}
+					resultXML.append("<DATA5>"+boardThumbnailList.get(j).get("FILEPATH")+"</DATA5>");
+					resultXML.append("<DATA6>"+boardThumbnailList.get(j).get("MAINCONTENT")+"</DATA6>");
+					resultXML.append("<DATA7>"+boardThumbnailList.get(j).get("ONELINECNT")+"</DATA7>");
+					resultXML.append("<DATA8>"+boardThumbnailList.get(j).get("READFLAG")+"</DATA8>");
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
+        }
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+		return resultXML.toString();
+	}
+
+	@RequestMapping(value = "/ezBoard/getSearchBoardList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getSearchBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
     	String returnQuery = "(1=1) ";
@@ -858,12 +996,145 @@ public class EzBoardController extends EgovFileMngUtil{
         String boardXML = "";
         
         if(boardVO.getBoardType().equals("4")){
-//        	boardXML = getSearchThumbListXML();
+        	boardXML = getSearchThumbListXML(userInfo, boardVO);
         }else{
         	boardXML = getSearchBoardListItemXML(userInfo, boardVO);
         }
     	return boardXML;
     }
+
+	public String getSearchThumbListXML(LoginVO userInfo, BoardVO boardVO) throws Exception{
+		String orderOption1 = "";
+        String orderOption2 = "";
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        boardVO.setLang(userInfo.getLang());
+
+        List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+        
+        int i = 0;
+        int hlength = headerList.size();
+
+        for (i = 0; i < hlength; i++){
+            if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())){
+                if (boardVO.getOrderCell().equals("")){
+                	if(headerList.get(i).getColName().indexOf("WRITEDATE") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
+                	}else if(headerList.get(i).getColName().indexOf("WRITERNAME") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITERNAME", "A.WRITERNAME") + " ";
+                	}else{
+                		orderOption1 = headerList.get(i).getColName()+ " ";
+                	}
+                }
+                else{
+                	if(headerList.get(i).getColName().indexOf("WRITEDATE") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " DESC";
+                	}else if(headerList.get(i).getColName().indexOf("WRITERNAME") > -1){
+                		orderOption1 = headerList.get(i).getColName().replace("WRITERNAME", "A.WRITERNAME") + " DESC";
+                	}else{
+                		orderOption1 = headerList.get(i).getColName()+ " DESC";
+                	}
+                }
+            }
+        }
+        
+        int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+        
+        BoardListVO boardListVO = new BoardListVO();
+        boardListVO.setPageCount(boardCount);
+        boardListVO.setTotalCount(boardCount);
+        boardListVO.setStartRow(1);
+        boardListVO.setEndRow(0);
+        boardListVO.setOrderBySub(orderOption1);
+        boardListVO.setOrderByMain(orderOption2);
+        boardListVO.setUserID(userInfo.getId());
+        
+        BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo.getId());
+        
+        boardListVO.setStartRow(boardConfigVO.getListCount() * (boardVO.getPageNum()-1) + 1);
+        boardListVO.setEndRow(boardConfigVO.getListCount() * boardVO.getPageNum());
+        
+        if(boardVO.getTitle() == null){
+        	boardVO.setTitle("");
+        }
+        if(boardVO.getABSTRACT() == null){
+        	boardVO.setABSTRACT("");
+        }
+        if(boardVO.getWriterName() == null){
+        	boardVO.setWriterName("");
+        }
+        List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getSearchThumbnailList(boardListVO, boardVO);
+		
+        int dlength = boardThumbnailList.size();
+        //XML 생성 수정요망
+        StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>"+boardConfigVO.getTotalCnt()+"</TOTALCNT>");
+        resultXML.append("<PAGECNT>"+boardConfigVO.getPageCnt()+"</PAGECNT>");
+        resultXML.append("<PERSONALCNT>"+boardConfigVO.getTotalCnt()+"</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for(BoardListHeaderVO vo:headerList){
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        String fieldName = "";
+        String fieldValue = "";
+        
+        for(int j = 0; j < dlength; j++){
+        	resultXML.append("<ROW>");
+            for(i = 0; i < hlength; i++){
+            	resultXML.append("<CELL>");
+            	fieldName = headerList.get(i).getColName().toUpperCase();
+
+                if(fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")){
+                    fieldName = fieldName + strMultiData;
+                }
+                if(fieldName.equals("WRITEDATE")){
+                	fieldValue =(String)boardThumbnailList.get(j).get(fieldName);
+                }else
+                    fieldValue = String.valueOf(boardThumbnailList.get(j).get(fieldName));
+                
+                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                
+                if(i == 0){
+                	resultXML.append("<DATA1>"+boardThumbnailList.get(j).get("BOARDID")+"</DATA1>");
+                	resultXML.append("<DATA2>"+boardThumbnailList.get(j).get("ITEMID")+"</DATA2>");
+        			resultXML.append("<DATA3>"+boardThumbnailList.get(j).get("WRITERID")+"</DATA3>");
+					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					if(boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0){
+						resultXML.append("<DATA4>Y</DATA4>");
+					}else{
+						resultXML.append("<DATA4>N</DATA4>");
+					}
+					resultXML.append("<DATA5>"+boardThumbnailList.get(j).get("FILEPATH")+"</DATA5>");
+					resultXML.append("<DATA6>"+boardThumbnailList.get(j).get("MAINCONTENT")+"</DATA6>");
+					resultXML.append("<DATA7>"+boardThumbnailList.get(j).get("ONELINECNT")+"</DATA7>");
+					resultXML.append("<DATA8>"+boardThumbnailList.get(j).get("READFLAG")+"</DATA8>");
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
+        }
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+		return resultXML.toString();
+	}
 
 	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception{
 		String orderOption1 = "";
@@ -2032,7 +2303,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 
 		if(pMode.equals("modify")){
-//			ezBoardService.brdUpdateItem(boardListVO);
+			ezBoardService.brdUpdateItem(boardListVO, "BOARD");
 		}else if(pMode.equals("temp")){
 			ezBoardService.brdNewItemTemp(boardListVO);
 		}else{
@@ -2046,7 +2317,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}else{
 			boardListVO.setHasAttach("0");
 		}
-		//통계 남기는 부분
+		
 		return "OK";
 	}
 
@@ -2066,12 +2337,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		try {
 		    stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
 		    File cFile = new File(docPath);
-	
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdir();
 				cFile = new File(stordFilePathReal);
 				cFile.mkdir();
-				cFile = new File(docPath + "/upoadFile");
+				cFile = new File(docPath + "/uploadFile");
 				cFile.mkdir();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
@@ -2159,9 +2429,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 fileSize = file.length();
                 filePath2 = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.split(";")[i].split("/")[2];
 
-                File fileinfo = new File(filePath);
+                File fileinfo = new File(filePath2);
                 if (!fileinfo.exists())
-                	FileUtils.copyFile(file, fileinfo);
+                	FileUtils.moveFile(file, fileinfo);
                 file = null;
             }
             temp = strAttachments.split(";")[i].split("_");
@@ -3162,11 +3432,467 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value = "/ezBoard/boardItemViewPhoto.do")
-	public String boardItemViewPhoto() throws Exception{
+	public String boardItemViewPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		String mode = "new";
 		String apprFlag = "Y";
+		String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
+		String showAdjacent = request.getParameter("showAdjacent");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String reservedItem = request.getParameter("pReservedItem");
+		String location = request.getParameter("location");
+		BoardListVO boardItem = new BoardListVO();
+		
+		mode = request.getParameter("mode");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if(!accessCheck(itemID, location, userInfo)){
+			return "main/warning";
+		}
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if(!boardInfo.getRead_FG().equals("true")){
+			return "main/warning";
+		}
+		
+		if(mode == null || !mode.equals("temp")){
+			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+		}else{
+//			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
+		}
+		
+		ezBoardService.setAsRead(userInfo, boardID, itemID);
+		
+		if(boardItem.getWriterID() != null && boardItem.getWriterID().equals("")){
+			return "main/error";
+		}
+		
+		if(boardItem.getApprFlag().equals("N")){
+			int checkCnt = ezBoardService.checkApprUserList(userInfo.getId(), itemID);
+			if(checkCnt == 0){
+				boardItem.setApprFlag("");
+			}
+		}
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID);
+		
+		String nowTime = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+		String parentTime = boardItem.getParentWriteDate().replace(":", "").replace(" ", "").replace("-", "");
+		
+		if(parentTime.compareTo(nowTime) > 0){
+			reservedItem = "true";
+		}
+		if(boardItem.getParentWriteDate().compareTo(boardItem.getWriteDate()) > 0){
+			boardItem.setWriteDate(boardItem.getParentWriteDate());
+		}
+		if(boardItem.getEndDate().substring(0, 4).equals("9999")){
+			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287"));
+		}
+		
+		if(adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")){
+			
+		}
+		
 		
 		return "";
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemListThumbnail.do")
+	public String boardItemListThumbnail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String mode = "new";
+		String apprFlag = "Y";
+		String useOCS = config.getProperty("config.USE_OCS");
+		String boardID = request.getParameter("boardID");
+		String boardType = request.getParameter("boardType");
+		String adminType = request.getParameter("adminType");
+		String buttonHidden = "N";
+		String boardName = request.getParameter("boardName");
+		String useOneLineCount = "NO";
+		String sortBy = "";
+		int page = 0;
+		
+		if(request.getParameter("buttonHidden") != null){
+			buttonHidden = request.getParameter("buttonHidden");
+		}
+		userInfo = commonUtil.userInfo(loginCookie);
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID);
+		
+		if(boardInfo.getListView_FG().equals("true")){
+			boardName = boardInfo.getBoardName();
+			
+			if(request.getParameter("sortBy") != null){
+				sortBy = request.getParameter("sortBy");
+			}
+			
+			if(request.getParameter("page") == null){
+				page = 1;
+			}else{
+				page = Integer.parseInt(request.getParameter("page"));
+			}
+		}
+		
+		model.addAttribute("mode", mode);
+		model.addAttribute("apprFlag", apprFlag);
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardType", boardType);
+		model.addAttribute("adminType", adminType);
+		model.addAttribute("buttonHidden", buttonHidden);
+		model.addAttribute("boardName", boardName);
+		model.addAttribute("useOneLineCount", useOneLineCount);
+		model.addAttribute("sortBy", sortBy);
+		model.addAttribute("page", page);
+		model.addAttribute("boardProperty", boardProperty);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezBoard/boardItemListThumbnail";
+	}
+	
+	@RequestMapping(value = "/ezBoard/newBoardItemPhoto.do")
+	public String newBoardItemPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = userInfo.getDisplayName1();
+		String userEditor = config.getProperty("config.EDITOR");
+		String boardID = request.getParameter("boardID");
+		String url = request.getParameter("url");
+		String boardType = request.getParameter("bType");
+		String realPath = request.getServletContext().getRealPath("");
+		String uploadFilePath = "";
+		String strNow = "";
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if(userInfo.getLang().equals("1")){
+			boardInfo.setBoardName(boardInfo.getBoardName1());
+		}else{
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		if(boardInfo.getWrite_FG().equals("false")){
+			return "main/warning"; 
+		}
+		uploadFilePath = realPath + config.getProperty("upload_board.ROOT");
+		uploadFilePath = uploadFilePath.replace("\\", "\\\\");
+		strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		
+		model.addAttribute("userID", userID);
+		model.addAttribute("userEditor", userEditor);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("url", url);
+		model.addAttribute("boardType", boardType);
+		model.addAttribute("uploadFilePath", uploadFilePath);
+		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezBoard/BoardNewItemPhoto";
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardImageUpload.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String imageUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String mode = request.getParameter("mode");
+		String pFileLimit = request.getParameter("fileLimit");
+		String uniqueIDs = request.getParameter("uniqueIDs");
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = "";
+		String serverPath = "";
+		String resultUpload = "";
+		String fileName = "";
+		String fileLocation = "";
+		String thumbnailName = "";
+		long fileSize = 0;
+		List<MultipartFile> multiFile = null;
+		if(mode.equals("PICTURE") || mode.equals("PHOTO")){
+			multiFile = request.getFiles("file1");
+			dirPath = realPath + config.getProperty("upload_board.ROOT");
+			serverPath = dirPath + File.separator + "tempUploadFile" + File.separator;
+		}else if(mode.equals("DEL")){
+			String delServerPath = realPath + config.getProperty("upload_board.ROOT");
+			String imagePath = "";
+			String s_imagePath = "";
+			String unique_ID = "";
+			
+			for(int i = 0; i < uniqueIDs.split(";").length; i++){
+				unique_ID = uniqueIDs.split(";")[i];
+				imagePath = delServerPath + File.separator + "tempUploadFile" + File.separator + unique_ID;
+				s_imagePath = delServerPath + File.separator + "tempUploadFile" + File.separator + "s_" + unique_ID;
+				File file = new File(imagePath);
+				File file1 = new File(s_imagePath);
+				
+				if(file.exists()){
+					FileUtils.deleteQuietly(file);
+				}
+				if(file1.exists()){
+					FileUtils.deleteQuietly(file1);
+				}
+			}
+			return " ";
+		}else{
+			multiFile = request.getFiles("file1");
+			dirPath = realPath + config.getProperty("upload_personal.ROOT");
+			serverPath = dirPath + File.separator + "photo" + File.separator +"temp" + File.separator;
+		}
+		
+		String uniqueName = "";
+		File file = new File(serverPath);
+		
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		StringBuffer strXML = new StringBuffer();
+
+		strXML.append("<ROOT><NODES>");
+		
+		if(pFileLimit != null && pFileLimit.equals("0") || pFileLimit.equals("")){
+			pFileLimit = "2";
+		}
+		int fileLimit = Integer.parseInt(pFileLimit) * 1024 * 1024;
+		
+		for(int i = 0; i < multiFile.size(); i++){
+			fileSize = multiFile.get(i).getSize();
+			if(fileSize > fileLimit){
+				resultUpload = "overflow";
+                strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+                strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+                strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+                strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+                strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+                strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+                strXML.append("</NODE>");
+			}else{
+				if(multiFile.get(i).getOriginalFilename() != null && !multiFile.get(i).getOriginalFilename().equals("")){
+					String pFileName = multiFile.get(i).getOriginalFilename();
+					if(pFileName.indexOf(File.separator.toString()) > 0){
+						pFileName = pFileName.split(File.separator)[pFileName.split(File.separator).length - 1];
+					}
+					fileName = makeXMLString(pFileName);
+				}
+				fileName = fileName.replace("+", "%2b");
+				fileName = fileName.replace(";", "%3b");
+				
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+				String guid = UUID.randomUUID().toString();
+				uniqueName = guid + "." + extension;
+				thumbnailName = "s_" + guid + "." + extension;
+				
+				writeUploadedFile(multiFile.get(i), uniqueName, serverPath);
+				fileLocation = uniqueName;
+				File imageFile = new File(serverPath + File.separator + uniqueName);			
+				int nImgWidth = 0;
+				int nImgHeight = 0;
+				if(imageFile.exists()){			
+					BufferedImage bi = ImageIO.read(imageFile);			    
+					nImgWidth = bi.getWidth();
+					nImgHeight = bi.getHeight();
+					int nWidth = 0, nHeight = 0;
+					
+                    if (nImgWidth > nImgHeight){
+                        nWidth = 200;
+                        nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+                    }else{
+                        nHeight = 200;
+                        nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+                    }
+                    BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+                    bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+                    ImageIO.write(bufferedImage, extension, new File(serverPath + File.separator + thumbnailName));
+				}
+				resultUpload = "true";
+
+                strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
+                strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+                strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+                strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+                strXML.append("<FILELOCATION><![CDATA[" + serverPath + File.separator + thumbnailName + "]]></FILELOCATION>");
+                strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+                strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
+                strXML.append("</NODE>");
+			}
+		}
+		strXML.append("</NODES></ROOT>");
+		
+		return strXML.toString();
+	}
+	
+	@RequestMapping(value = "/ezBoard/getBoardThumbnailInfo.do")
+	public void getBoardThumbnailInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String fileName = request.getParameter("fileName");
+		String pSignatureDir = config.getProperty("upload_board.ROOT");
+		String filePath = "";
+		
+        if(type.equals("BOARDTHUM")){
+        	pSignatureDir = pSignatureDir + File.separator + boardID + File.separator + "uploadFile";
+        }
+        else{
+        	pSignatureDir = pSignatureDir + File.separator  + "tempUploadFile";
+        }
+        filePath = pSignatureDir + File.separator + fileName;
+        
+        if(filePath != null && !filePath.equals("")){
+        	ezCommonService.responseAttach(filePath, fileName, false, request, response);
+        }
+	}
+	
+	@RequestMapping(value = "/ezBoard/saveItemPhoto.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String saveItemPhoto(HttpServletRequest request, @RequestBody String resultXML, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		String mode = request.getParameter("mode");
+		String guBun = request.getParameter("guBun");
+        String itemIDs = "";
+        String[] itemID = null;
+        String realPath = request.getServletContext().getRealPath("");
+		Document doc = commonUtil.convertStringToDocument(resultXML);
+		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+		if(boardInfo.getWrite_FG().equals("false")){
+			return "<RESULT>INACCESSIBLE</RESULT>";
+		}
+		
+		if(guBun.equals("3") || guBun.equals("4")){
+			itemIDs = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
+			itemID = itemIDs.split(";");
+		}
+		
+		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + "23:59:59");
+		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("\r\n", "<br>"));
+		
+		if(!mode.equals("temp")){
+			mode = "New";
+		}
+		doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemID[0]);
+		doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID[0]);
+		
+		String result = "";
+		result = newItemPhoto(doc, mode, realPath);
+		
+		if(result.equals("OK")){
+			ezBoardService.setMainImageID(mainImageID, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "1");
+		}
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+
+	public String newItemPhoto(Document doc, String mode, String realPath) throws Exception{
+		BoardListVO boardListVO = new BoardListVO();
+
+		boolean saveMHTResult = false;
+		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+		boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
+		boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
+		boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
+		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
+		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
+		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+		
+		if(mode.equals("copy")){
+			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+		}else{
+			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+"/" + boardListVO.getBoardID() + "/doc/" + boardListVO.getItemID() + ".mht");
+		}
+		
+		boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
+		
+		if(boardListVO.getStartDate() != null && boardListVO.getStartDate().equals("")){
+			boardListVO.setStartDate(boardListVO.getWriteDate());
+		}
+		
+		boardListVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
+		
+		if(mode.equals("reply")){
+			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
+		}
+		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
+		
+		if(!mode.equals("copy")){
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+		}else{
+			boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+		}
+		
+		if(boardListVO.getParentWriteDate().equals("")){
+			boardListVO.setParentWriteDate(boardListVO.getStartDate());
+		}
+
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")){
+			boardListVO.setExtensionAttribute1("0");
+		}else{
+			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
+		}
+		
+		if(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")){
+			boardListVO.setExtensionAttribute2("0");
+		}else{
+			boardListVO.setExtensionAttribute2(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+		}
+		
+		boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
+		boardListVO.setExtensionAttribute32(doc.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
+		boardListVO.setExtensionAttribute4(doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
+		boardListVO.setExtensionAttribute5(doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
+		boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		
+		if(!mode.equals("copy")){
+			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO");
+			if(saveMHTResult == false){
+				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+			}
+		}
+		
+		if(boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")){
+			boardListVO.setHasAttach("1");
+		}else{
+			boardListVO.setHasAttach("0");
+		}
+		
+		if(boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")){
+			boardListVO.setItemLevel("0");
+		}
+		
+		boardListVO.setImageCount(Integer.parseInt(doc.getElementsByTagName("IMAGE_COUNT").item(0).getTextContent()));
+		boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
+		boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
+		boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+		
+		if(mode.equals("modify")){
+			ezBoardService.brdUpdateItem(boardListVO, "PHOTO");
+		}else if(mode.equals("temp")){
+			ezBoardService.brdNewItemTempPhoto(boardListVO);
+		}else{
+			ezBoardService.brdNewItemPhoto(boardListVO);
+		}
+		
+		if(boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")){
+			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO")){
+				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
+			}
+			boardListVO.setHasAttach("1");
+		}else{
+			boardListVO.setHasAttach("0");
+		}
+		
+		return "OK";
 	}
 	
 	@RequestMapping(value = "/ezBoard/get_apprUserList.do", produces="text/xml;charset=utf-8")

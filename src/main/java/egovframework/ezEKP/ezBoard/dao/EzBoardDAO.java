@@ -50,7 +50,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardReadVO> getReaderList(Map<String, Object> map) {
+	public List<BoardReadVO> getReaderList(Map<String, Object> map) throws Exception{
 		return (List<BoardReadVO>) list("EzBoardDAO.getReaderList", map);
 	}
 	
@@ -70,8 +70,18 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getSearchBoardItemList(Map<String, Object> map) {
+	public List<HashMap<String, Object>> getSearchBoardItemList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchBoardItemList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getThumbnailList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getThumbnailList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchThumbnailList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchThumbnailList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -180,12 +190,32 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getSearchBoardItemCount", map);
 	}
 	
+	public int getThumbnailItemCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getThumbnailItemCount", map);
+	}
+	
+	public int checkApprUserList(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.checkApprUserList", map);
+	}
+	
+	public void photoSaveDB(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.photoSaveDB", map);
+	}
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception{
 		insert("EzBoardDAO.brdNewItem", boardListVO);
 	}
 	
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception{
 		insert("EzBoardDAO.brdNewItemTemp", boardListVO);
+	}
+	
+	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.brdNewItemPhoto", boardListVO);
+	}
+
+	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.brdNewItemTempPhoto", boardListVO);
 	}
 	
 	public void newItem(String itemID) throws Exception{
@@ -212,7 +242,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.set_TabUsed",map);
 	}
 	
-	public void setNotiOrder(String itemID) {
+	public void setNotiOrder(String itemID) throws Exception{
 		update("EzBoardDAO.setNotiOrder", itemID);
 	}
 	
@@ -224,8 +254,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.updateMoveItem", map);
 	}
 	
+	public void brdUpdateItem(BoardListVO boardListVO) throws Exception{
+		update("EzBoardDAO.brdUpdateItem", boardListVO);
+	}
+	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.setBoardList_Config", map);
+	}
+	
+	public void setMainImageID(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.setMainImageID", map);
 	}
 
 	public void deleteItem(Map<String, Object> map) throws Exception{
@@ -235,6 +273,5 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void deleteTempItem(Map<String, Object> map) throws Exception{
 		delete("EzBoardDAO.deleteTempItem", map);
 	}
-
 
 }

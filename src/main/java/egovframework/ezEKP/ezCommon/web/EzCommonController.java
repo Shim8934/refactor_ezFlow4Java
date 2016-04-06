@@ -790,7 +790,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String filePath = config.getProperty("upload_common.ROOT");
 		String realPath = request.getServletContext().getRealPath("");
 		String today = EgovDateUtil.getToday();
-		String fileName = UUID.randomUUID() + "." + fileType;		
+		String fileName = UUID.randomUUID() + "." + fileType;
 		
 		filePath = filePath + "/" + today;
 		File file = new File(realPath + filePath);

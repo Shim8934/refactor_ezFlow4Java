@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -172,7 +174,6 @@ public class EzBoardServiceImpl implements EzBoardService {
 	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
-		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
 		map.put("v_PTYPE", myFavoriteVO.getType());
 		return ezBoardDAO.getThumbNailCount(map);
@@ -207,6 +208,16 @@ public class EzBoardServiceImpl implements EzBoardService {
 		ezBoardDAO.setTabUsed(map);
 	}
 	
+	@Override
+	public void setMainImageID(String mainImageID, String itemID, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_IMAGEID", mainImageID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_TYPE", type);
+		ezBoardDAO.setMainImageID(map);
+		
+	}
+
 	@Override
 	public void setNotiOrder(String itemID) throws Exception {
 		ezBoardDAO.setNotiOrder(itemID);
@@ -315,14 +326,46 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
-		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
-		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub().trim());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain().trim());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TITLE", boardVO.getTitle());
 		map.put("v_WRITERNAME", boardVO.getWriterName());
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
 		return ezBoardDAO.getSearchBoardItemList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PBOARDID", boardVO.getBoardId());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub().trim());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain().trim());
+		map.put("v_PTYPE", boardVO.getType());
+		return ezBoardDAO.getThumbnailList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PBOARDID", boardVO.getBoardId());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub().trim());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain().trim());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TITLE", boardVO.getTitle());
+		map.put("v_WRITERNAME", boardVO.getWriterName());
+		map.put("v_ABSTRACT", boardVO.getABSTRACT());
+		return ezBoardDAO.getSearchThumbnailList(map);
 	}
 
 	@Override
@@ -392,6 +435,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		return ezBoardDAO.getSearchBoardItemCount(map);
+	}
+
+	@Override
+	public int checkApprUserList(String userID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PITEMID", itemID);
+		return ezBoardDAO.checkApprUserList(map);
 	}
 
 	@Override
@@ -486,9 +537,62 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.brdNewItemPhoto(boardListVO);
+		photoSaveDB(boardListVO);
+		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
+
+	@Override
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItemTemp(boardListVO);
 		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
+
+	@Override
+	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.brdNewItemTempPhoto(boardListVO);
+		photoSaveDB(boardListVO);
+		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
+
+	@Override
+	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception {
+		ezBoardDAO.brdUpdateItem(boardListVO);
+		if(mode.equals("PHOTO")){
+			photoSaveDB(boardListVO);
+		}
+		ezBoardDAO.newItem(boardListVO.getItemID());
+	}
+
+	public void photoSaveDB(BoardListVO boardListVO) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		String strFilePath = "";
+		
+		for(int i = 0; i < boardListVO.getImageCount(); i++){
+			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
+			File file = new File(boardListVO.getFilePath() + File.separator + strFilePath);
+			strFilePath = boardListVO.getBoardID() + "/uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
+			File mvFile = new File(boardListVO.getFilePath() + File.separator + strFilePath);
+			
+			if(!mvFile.exists()){
+				FileUtils.copyFile(file, mvFile);
+				FileUtils.deleteQuietly(file);
+			}
+			
+			map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());
+			map.put("v_pItemID", boardListVO.getItemID());
+			map.put("v_pBoardID", boardListVO.getBoardID());
+			map.put("v_pWriterID", boardListVO.getWriterID());
+			map.put("v_pWriterName", boardListVO.getWriterName());
+			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
+			map.put("v_pFilePath", strFilePath.replace("\\", "/"));
+			map.put("v_pWriteDate", boardListVO.getWriteDate());
+			map.put("v_pFileContent", boardListVO.getImageContent().split(";")[i]);
+			map.put("v_pImageName", boardListVO.getImageNames().split(";")[i]);
+			
+			ezBoardDAO.photoSaveDB(map);
+		}
 	}
 
 	@Override

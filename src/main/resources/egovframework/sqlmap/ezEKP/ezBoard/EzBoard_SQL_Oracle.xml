@@ -23,6 +23,27 @@
 		<result property="tabUsed" 					column="TABUSED" 				columnIndex="4"/>
 	</resultMap>
 	
+	<resultMap id="getThumbnailList" class="HashMap">
+		<result property="RNUM" 					/>
+		<result property="BOARDID" 					/>
+		<result property="ITEMID" 					/>
+		<result property="WRITERID" 				/>
+		<result property="WRITERNAME" 				/>
+		<result property="WRITERDEPTNAME" 			/>
+		<result property="WRITERCOMPANYNAME" 		/>
+		<result property="WRITEDATE" 				/>
+		<result property="TITLE" 					/>
+		<result property="READCOUNT" 				/>
+		<result property="WRITERNAME2" 				/>
+		<result property="WRITERDEPTNAME2" 			/>
+		<result property="WRITERCOMPANYNAME2" 		/>
+		<result property="ONELINECNT" 				/>
+		<result property="DOCNO" 					/>
+		<result property="MAINCONTENT" 				jdbcType="CLOB" javaType="String" nullValue=""/>
+		<result property="FILEPATH" 				/>
+		<result property="READFLAG" 				/>
+	</resultMap>
+	
 	<resultMap id="get_apprUserList" class="BoardVO">
 		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
 		<result property="apprUserId" 				column="APPRUSERID" 			columnIndex="2"/>
@@ -84,6 +105,14 @@
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
+		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILLISTXML(#v_PUSERID#,#v_PBOARDID#,#v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
+		{CALL EZBOARDSTD.EZSP_GETSEARCHTHUMBNAILLISTXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_TITLE#, #v_WRITERNAME#, #v_ABSTRACT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.getNoticePostItemAll" parameterClass="String" resultClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEMALL(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -121,7 +150,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
@@ -136,6 +165,10 @@
 		{CALL EZBOARDSTD.EZSP_SAVEATTACHMENTSINFO(#v_STRITEMID#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.photoSaveDB" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTADD(#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
 										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
@@ -145,9 +178,21 @@
 	
 	<procedure id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_TEMP(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
-										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
+										      #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										      #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										      #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_PHOTO(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										       #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										       #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#mainContent#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.brdNewItemTempPhoto" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_TEMPPHOTO(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										 		   #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										 		   #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#mainContent#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map">
@@ -174,8 +219,19 @@
 		{CALL EZBOARDSTD.EZSP_SETNOTIORDER(#itemID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.setMainImageID" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETMAINIMAGEID(#v_IMAGEID#, #v_ITEMID#, #v_TYPE#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.updateMoveItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_BRDUPDATEITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
+										    #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
+										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										    #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.deleteItem" parameterClass="Map">
@@ -274,6 +330,23 @@
 	       		boardid = #boardID#
 			AND 
 				background = 'Y'
+		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.checkApprUserList" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(B.appruserid)
+        	FROM 
+        		ezBoardSTD.TBL_BOARD_ITEM A
+	        JOIN 
+	        	ezBoardSTD.TBL_BOARD_APPRLIST B   
+	        ON 
+	        	A.boardid = B.boardid
+	        WHERE  
+	        	A.itemid = #v_PITEMID#
+	        AND 
+	        	B.appruserid = #v_PUSERID#
 		]]>                
 	</select>
 	
