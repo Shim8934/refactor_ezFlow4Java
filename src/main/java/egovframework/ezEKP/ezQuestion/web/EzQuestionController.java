@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -36,11 +37,11 @@ import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -73,6 +74,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Autowired
+	private EzOrganService ezOrganService;	
 
 	@Resource(name="EzQuestionService")
 	private EzQuestionService ezQuestionService;
@@ -1320,8 +1324,14 @@ public class EzQuestionController extends EgovFileMngUtil {
 		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+		if(req.getParameter("RangeXMLStr") != null) {
+			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""));
+		}
 		pStep1DataXML.append("</PARAMETER>");
-
+		if(req.getParameter("RangeXMLStr") != "") {
+			Document doc = commonUtil.convertStringToDocument(req.getParameter("RangeXMLStr"));
+		}
+		
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
 		model.addAttribute("questionAddVO", questionAddVO);
 		model.addAttribute("pStep1DataXML", pStep1DataXML);
@@ -1362,6 +1372,7 @@ System.out.println("itemId"+itemId);
 		
 		model.addAttribute("brdId",qstRangeSelectVO.getBrdId());
 		model.addAttribute("itemNo",qstRangeSelectVO.getItemId());
+		model.addAttribute("pCompanyID",pCompanyID);
 		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
 		return "/ezQuestion/qstRangeSelect/rangeSelect";
 	}
@@ -1459,7 +1470,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 			ezQuestionService.insertItemSeq(pBrdID);
 			get_itemNo = 1;
 		} else {
-			get_itemNo = get_itemNo + 1;
+			get_itemNo = get_itemNo+1;
 			ezQuestionService.updateItemSeq(Integer.parseInt(pBrdID), get_itemNo);
 		}
 		
@@ -1518,7 +1529,15 @@ System.out.println("pQstTitle:"+pQstTitle);
 		
 		ezQuestionService.stepSave(pUserID, map);
 		
-		ezQuestionService.stepSave2(map);
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("brdId", pBrdID);
+		map2.put("itemNo", Integer.parseInt(vItemID));
+		map2.put("openresult", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
+		map2.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
+		map2.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
+		map2.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
+		map2.put("dataCount", dataCount);
+		ezQuestionService.stepSave2(map2);
 		//대상범위
 		if(doc.getElementsByTagName("TARGET").item(0).getTextContent().equals("1")) {
 			
@@ -1526,27 +1545,111 @@ System.out.println("pQstTitle:"+pQstTitle);
 				int pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
 				
 				for(int i=0; i<pDeptCnt; i++) {
-					NodeList list = doc.getElementsByTagName("DEPT").item(0).getChildNodes();
-					Node fstNode = list.item(i);
-					
-					if(fstNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element fstElement = (Element) fstNode;
-						String deptId = fstElement.getAttributeNode("id").getValue();
-						String deptNm = fstElement.getAttributeNode("nm").getValue();
-						String deptNm2 = fstElement.getAttributeNode("nm2").getValue();
-						QstCompleteVO qstCompleteVO = new QstCompleteVO();
-						qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-						qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-						qstCompleteVO.setGubunFg("0");
-						qstCompleteVO.setGubunID(deptId);
-						qstCompleteVO.setGubunNm(deptNm);
-						qstCompleteVO.setGubunNm2(deptNm2);
-						ezQuestionService.callCreateMother(qstCompleteVO);
+					QstCompleteVO qstCompleteVO = new QstCompleteVO();
+					String deptId = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+		        	String deptNm = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
+		        	String deptNm2 = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
+		        	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+		        	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+		        	qstCompleteVO.setGubunFg("0");
+		        	qstCompleteVO.setGubunID(deptId);
+		        	qstCompleteVO.setGubunNm(deptNm);
+		        	qstCompleteVO.setGubunNm2(deptNm2);
+		        	ezQuestionService.callCreateMother(qstCompleteVO);
 						
-						String cellList = "department";
-                        String propList = "department;mail;displayname;title;description;company;title";
-                        String pClass = "all";
+					String cellList = "department";
+                    String propList = "department;mail;displayname;title;description;company;title";
+                    String pClass = "all";
+                       
+                    String sXML = ezOrganService.getDeptMemberList(deptId, cellList, propList, pClass, config.getProperty("config.primary"));
+             		Document xmlDom = commonUtil.convertStringToDocument(sXML);
+             			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
+             				if(xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent() != "") {
+             					String userId = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+             					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+             					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+             					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+             					String deptID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+             					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
+             					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
+             					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
+             					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(9).getTextContent();
+             					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+                             	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+                             	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+                             	qstCompleteVO2.setUserID(userId);
+                             	qstCompleteVO2.setUserNm(userNm);
+                             	qstCompleteVO2.setUserNm2(userNm2);
+                             	qstCompleteVO2.setUserEmail(userEmail);
+                             	qstCompleteVO2.setUserDeptID(deptID);
+                             	qstCompleteVO2.setUserDeptNm(deptNM);
+                             	qstCompleteVO2.setUserDeptNm2(deptNM2);
+                             	qstCompleteVO2.setUserPOS(userPos);
+                             	qstCompleteVO2.setUserPOS2(userPos2);
+                             	ezQuestionService.callInsertPollResponsep1(qstCompleteVO2);
+             				}
+             			}
+				}
+				int pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+				for(int i=0; i<pUserCnt; i++) {
+					String userId = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+		        	String userNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
+		        	String userNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
+		        	
+                	QstCompleteVO qstCompleteVO = new QstCompleteVO();
+                	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+                	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+                	qstCompleteVO.setGubunFg("1");
+                	qstCompleteVO.setGubunID(userId);
+                	qstCompleteVO.setGubunNm(userNm);
+                	qstCompleteVO.setGubunNm2(userNm2);
+                	ezQuestionService.callCreateMother(qstCompleteVO);
+                	
+                	String propList = "department;mail;displayname;title;description;company";
+                	String pXML = ezOrganService.getPropertyList(userId, propList, config.getProperty("config.primary"));
+System.out.println("pXML:"+pXML);
+					Document infoXML = commonUtil.convertStringToDocument(pXML);
+					String userDeptId = "";
+					String userGender = "";
+					String userAge = "";
+					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() == "") {
+						userDeptId = "TOP";
+					} else {
+						userDeptId = infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
 					}
+					String userEmail = infoXML.getElementsByTagName("MAIL").item(0).getTextContent();
+					String userPos = infoXML.getElementsByTagName("TITLE1").item(0).getTextContent();
+					String userPos2 = infoXML.getElementsByTagName("TITLE2").item(0).getTextContent();
+					String userDeptNm = infoXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+					String userDeptNm2 = infoXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+					/*String userJumin = "1111111111111";*/
+					
+					/*if(userJumin.substring(7, 1).equals("1")) {
+						userGender = "1";
+					} else {
+						userGender = "2";
+					}
+					userAge = userJumin.substring(0, 2);
+					
+					if(userAge == "11") {
+						userAge = "NULL";
+					}*/
+					
+					QstCompleteVO qstCompleteVO3 = new QstCompleteVO();
+					qstCompleteVO3.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO3.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO3.setGubunID(userId);
+					qstCompleteVO3.setGubunNm(userNm);
+					qstCompleteVO3.setGubunNm2(userNm2);
+					qstCompleteVO3.setUserEmail(userEmail);
+					qstCompleteVO3.setUserDeptID(userDeptId);
+					qstCompleteVO3.setUserDeptNm(userDeptNm);
+					qstCompleteVO3.setUserDeptNm2(userDeptNm2);
+					qstCompleteVO3.setUserPOS(userPos);
+					qstCompleteVO3.setUserPOS2(userPos2);
+					qstCompleteVO3.setUserGender("");
+					qstCompleteVO3.setUserAge(0);
+					ezQuestionService.callInsertPollResponseper(qstCompleteVO3);
 				}
 			}
 		}
@@ -1598,7 +1701,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 				}
 			}
 			
-			if(doc.getElementsByTagName("ANSWER").item(0).getChildNodes().getLength() > 0) {
+			if(doc.getElementsByTagName("ANSWER").getLength() > 0) {
 				int ansCnt = doc.getElementsByTagName("ANSWER").getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
 					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
@@ -1607,6 +1710,8 @@ System.out.println("pQstTitle:"+pQstTitle);
 					qstCompleteVO.setAnswerNo(iAns+1);
 					qstCompleteVO.setAnswerContent(doc.getElementsByTagName("TITLE").item(iAns).getTextContent().replace("'", "''"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO);
+					
+					 
 				}
 			}
 		}
@@ -1684,21 +1789,24 @@ System.out.println("idName:"+idName);
 			
 			String pDirPath = config.getProperty("upload_board.UPLOADQUESTION");
 			String qDirPath = req.getServletContext().getRealPath("");
-
+System.out.println("pDirPath:"+pDirPath);
+System.out.println("pDirPath:"+qDirPath);
 			File temp = new File(qDirPath);
 			if(!temp.exists()) {
 				temp.mkdirs();
 			}
 			
 			String fileSize = String.valueOf(req.getFile("cmuds").getSize());
-			String newFileName = pFileName;
+			String pFileName_Guid = UUID.randomUUID().toString();
+			String newFileName = pFileName_Guid+pFileName.substring(pFileName.lastIndexOf("."));
 			
 			if(type == "1") {
 				
 			}
 			pFilePath = "/files/upload_board/uploadQuestion/"+newFileName;
 			
-			writeUploadedFile(file, pFileName, qDirPath+pDirPath);
+			//writeUploadedFile(file, pFileName, qDirPath+pDirPath);
+			writeUploadedFile(file, newFileName, qDirPath+pDirPath);
 			
 			model.addAttribute("pFilePath", pFilePath);
 			model.addAttribute("type", type);
@@ -2558,6 +2666,161 @@ System.out.println("!!");
         
         return commonUtil.convertDocumentToString(resultXML);
 	}
+
+	@RequestMapping(value="/ezQuestion/callSaveRangeACL.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String callSaveRangeACL(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlDoc,HttpServletRequest request,Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(xmlDoc);
+System.out.println(doc.getElementsByTagName("BRDID").item(0).getTextContent());
+System.out.println(doc.getElementsByTagName("ITEMNO").item(0).getTextContent());
+		boolean deptFlag = false;
+		String pBrdID = doc.getElementsByTagName("BRDID").item(0).getTextContent(), pItemNo = doc.getElementsByTagName("ITEMNO").item(0).getTextContent();
+        String USER_DEPT_ID = "", USER_EMAIL = "", USER_POS = "", USER_DEPT_NM = "", USER_JUMIN = "", USER_GENDER = "", MotherID = "", USER_AGE = "";
+        int Get_ItemNo = 0;
+        String strSQL = "";
+        String GubunNm = "", GubunID = "", GubunFg = "";
+        String GubunNm2 = "";
+        String USER_POS2 = "", USER_DEPT_NM2 = "";
+        
+            
+       /* if(pItemNo == "")  {
+        	ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
+         
+        Get_ItemNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
+        
+        if(Get_ItemNo == 0) {
+        	Get_ItemNo = 1;
+        	ezQuestionService.callInsertItemSeq(Integer.parseInt(pBrdID));
+        } else {
+        	Get_ItemNo = Get_ItemNo + 1;
+        	ezQuestionService.callUpdateItemSeq(Integer.parseInt(pBrdID), Get_ItemNo);
+        }
+        pItemNo = String.valueOf(Get_ItemNo);
+        } else {
+        	ezQuestionService.callDeleteItemSeq(Integer.parseInt(pBrdID), Integer.parseInt(pItemNo));
+        }*/
+        
+        int deptSize = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+System.out.println("deptsize:"+deptSize);
+        for(int i=0; i<deptSize; i++) {
+        	System.out.println(doc.getElementsByTagName("DATA").item(i).getTextContent());
+        	System.out.println(doc.getElementsByTagName("DATA").item(i).getAttributes().getNamedItem("nm").getTextContent());
+        	System.out.println(doc.getElementsByTagName("DATA").item(i).getAttributes().getNamedItem("nm2").getTextContent());
+        	GubunNm = doc.getElementsByTagName("DATA").item(i).getAttributes().getNamedItem("nm").getTextContent();
+        	GubunNm2 = doc.getElementsByTagName("DATA").item(i).getAttributes().getNamedItem("nm2").getTextContent();
+        	GubunID = doc.getElementsByTagName("DATA").item(i).getTextContent();
+        	GubunFg = "0";
+        	QstCompleteVO qstCompleteVO = new QstCompleteVO();
+        	qstCompleteVO.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
+        	qstCompleteVO.setItemNo(Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
+        	qstCompleteVO.setGubunFg(GubunFg);
+        	qstCompleteVO.setGubunID(GubunID);
+        	qstCompleteVO.setGubunNm(GubunNm);
+        	qstCompleteVO.setGubunNm2(GubunNm2);
+        	ezQuestionService.callCreateMother(qstCompleteVO);
+        }
+        
+        ezQuestionService.callDeletePollResponseper(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
+        
+        int memberSize = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+        System.out.println("membersize:"+memberSize);
+                for(int i=0; i<memberSize; i++) {
+                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getTextContent());
+                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent());
+                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent());
+                	GubunID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getTextContent();
+                	GubunNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
+                	GubunNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
+                	GubunFg = "1";
+                	QstCompleteVO qstCompleteVO = new QstCompleteVO();
+                	qstCompleteVO.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
+                	qstCompleteVO.setItemNo(Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
+                	qstCompleteVO.setGubunFg(GubunFg);
+                	qstCompleteVO.setGubunID(GubunID);
+                	qstCompleteVO.setGubunNm(GubunNm);
+                	qstCompleteVO.setGubunNm2(GubunNm2);
+                	ezQuestionService.callCreateMother(qstCompleteVO);
+                	
+                	String propList = "department;mail;displayname;title;description;company";
+                	//OrganDeptVO pXML = ezOrganService.getPropertyList(GubunID, user.getPrimary());
+                	
+                	//ezOrgan 라이브러리 getPropertyList
+                	//String pXML = _ezOrgan.GetPropertyList(GubunID, proplist, userinfo.primary);
+                	
+                	QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+                	qstCompleteVO2.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
+                	qstCompleteVO2.setItemNo(Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
+                	qstCompleteVO2.setGubunID(GubunID);
+                	qstCompleteVO2.setGubunNm(GubunNm);
+                	qstCompleteVO2.setGubunNm2(GubunNm2);
+                	qstCompleteVO2.setUserEmail(USER_EMAIL);
+                	qstCompleteVO2.setUserDeptID(USER_DEPT_ID);
+                	qstCompleteVO2.setUserDeptNm(USER_DEPT_NM);
+                	qstCompleteVO2.setUserDeptNm2(USER_DEPT_NM2);
+                	qstCompleteVO2.setUserPOS(USER_POS);
+                	qstCompleteVO2.setUserPOS2(USER_POS2);
+                	qstCompleteVO2.setUserGender(USER_GENDER);
+                	qstCompleteVO2.setUserAge(25);
+                	ezQuestionService.callInsertPollResponseper(qstCompleteVO2);
+                }
+                
+                if(deptFlag) {
+                	String strTest;
+                	String userID = "",  userNM = "" ,userEmail = "", userDeptID = "", userDeptNM = "";
+                	String userPos = "", userJikgub = "", userGender = "", userAge = "";
+                	String userCompany = "";
+                	String userNM2 = "", userDeptNM2 = "", userPos2 = "";
+                	
+                	String celllist = "department";
+                    String proplist = "department;mail;displayname;title;description;company;title";
+                    String pclass = "all";
+                	
+                    for(int i=0; i<deptSize; i++) {
+                    	//GetDeptMemberList
+                    	//String sXml =  _ezOrgan.GetDeptMemberList(xmlData[0].ChildNodes[i].InnerText, celllist, proplist, pclass, userinfo.primary);
+                    	int iCount = 0;
+                    }
+                }
+                String result = "";
+                String strXML = "";
+               strXML = "<RESULT>";
+               strXML = strXML + "<DATA>" + result + "</DATA>";
+               strXML = strXML + "<ITEMNO>" + Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()) + "</ITEMNO>";
+               strXML = strXML + "</RESULT>";
+               return strXML;
+	} 
+	
+	@RequestMapping(value="/ezQuestion/callGetItemSeqXML.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String callGetItemSeqXML(HttpServletRequest req, Model model) throws Exception{
+		String pBrdID = "", pItemNo = "";
+		if(req.getParameter("brd_id") != null) {
+			pBrdID = req.getParameter("brd_id");
+		}
+        int Get_ItemNo = 0;
+        int maxNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
+        if(String.valueOf(maxNo) == "")  {
+        	Get_ItemNo = 0;
+        } else {
+        	Get_ItemNo = maxNo;
+        }
+        if(Get_ItemNo == 0) {
+        	Get_ItemNo = 1;
+        	ezQuestionService.callInsertItemSeq(Integer.parseInt(pBrdID));
+        } else {
+        	Get_ItemNo = Get_ItemNo + 1;
+        	ezQuestionService.callUpdateItemSeq(Integer.parseInt(pBrdID), Get_ItemNo);
+        }
+       
+        String strXML = "<RESULT>";
+        strXML = strXML + "<DATA>OK</DATA>";
+        strXML = strXML + "<ITEMNO>"+Get_ItemNo+"</ITEMNO>";
+        strXML = strXML + "</RESULT>";
+        
+        return strXML;
+	}
+
 	
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisPos2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
