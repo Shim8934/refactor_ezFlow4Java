@@ -319,6 +319,18 @@
 		{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.callGetItemSeq" parameterClass="Map" resultClass="Integer" >
+		{CALL EZQUESTION.EZSP_CALLGETITEMSEQ(#v_pstrBrdID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callUpdateItemSeq" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callInsertItemSeq" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map" >
 		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
 	</procedure>
@@ -351,12 +363,20 @@
 		{CALL EZQUESTION.EZSP_UPDATEPOLLENDDATE(#v_pstrBrdID#, #v_pItemNo#, #v_penddate#, #v_pendflg#)}
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.callDeleteItemSeq" parameterClass="Map" >
+		{CALL EZQUESTION.EZSP_CALLDELETEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
 	<procedure id="EzQuestionDAO.deleteItem" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.deletePermission" parameterClass="Map">
 		{CALL EZQUESTION.EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
+	</procedure>
+	
+	<procedure id="EzQuestionDAO.callDeletePollResponseper" parameterClass="Map">
+		{CALL EZQUESTION.EZSP_CALLDELETEPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
