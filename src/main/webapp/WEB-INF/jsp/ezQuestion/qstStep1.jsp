@@ -277,7 +277,7 @@
                 else if (rv[0] == "NO") {
                     document.getElementById("set_Target").selectedIndex = 0;
                     document.getElementById("hidTarget").value = "0";
-                    document.getElementById("select_YN").value = "NO";
+                    document.getElementById("selectYN").value = "NO";
                     document.getElementById("RangeXMLStr").value = "";
                 }
             }
