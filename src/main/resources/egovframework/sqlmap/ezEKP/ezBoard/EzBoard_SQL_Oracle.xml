@@ -52,6 +52,54 @@
 		<result property="orderCell" 				column="DESCRIPTION" 			columnIndex="5"/>
 		<result property="orderOption" 				column="DESCRIPTION2" 			columnIndex="6"/>
 	</resultMap>
+	 
+	<resultMap id="photoViewDB" class="BoardAttachVO">
+		<result property="rnum" 					column="RNUM" 					columnIndex="1"/>
+		<result property="imageCount" 				column="IMAGECOUNT" 			columnIndex="2"/>
+		<result property="imageID" 					column="IMAGEID" 				columnIndex="3"/>
+		<result property="filePath" 				column="FILEPATH" 				columnIndex="4"/>
+		<result property="fileContent" 				column="FILECONTENT" 			columnIndex="5"		jdbcType="CLOB" javaType="String" nullValue=""/>
+		<result property="flag" 					column="FLAG" 					columnIndex="6"/>
+		<result property="imageName" 				column="IMAGENAME" 				columnIndex="7"/>
+	</resultMap> 
+	
+	<resultMap id="getBrdGetItemInfo" class="BoardListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+        <result property="writerID" 				column="WRITERID" 				columnIndex="2"/>
+        <result property="writerName" 				column="WRITERNAME" 			columnIndex="3"/>
+        <result property="writerName2" 				column="WRITERNAME2" 			columnIndex="4"/>
+        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="5"/>
+        <result property="writerDeptName2" 			column="WRITERDEPTNAME2" 		columnIndex="6"/>
+        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="7"/>
+        <result property="writerCompanyName2" 		column="WRITERCOMPANYNAME2" 	columnIndex="8"/>
+        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="9"/>
+        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="10"/>
+        <result property="importance" 				column="IMPORTANCE" 			columnIndex="11"/>
+        <result property="title" 					column="TITLE" 					columnIndex="12"/>
+        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="13"/>
+        <result property="startDate" 				column="STARTDATE" 				columnIndex="14"/>
+        <result property="endDate" 					column="ENDDATE" 				columnIndex="15"/>
+        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="16"/>
+        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="17"/>
+        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="18" 	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="19"/>
+        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="20"/>
+        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="21"/>
+        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="22"/>
+        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="23"/>
+        <result property="extensionAttribute32" 	column="EXTENSIONATTRIBUTE32" 	columnIndex="24"/>
+        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="25"/>
+        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="26"/>
+        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="27"	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="apprFlag" 				column="APPRFLAG" 				columnIndex="28"/>
+        <result property="guBun" 					column="GUBUN" 					columnIndex="29"/>
+        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="30"/>
+        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="31"/>
+        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="32"/>
+        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="33"/>
+        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="34"/>
+        <result property="boardID" 					column="BOARDID" 				columnIndex="35"/>
+	</resultMap>
 	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -72,6 +120,10 @@
 	<procedure id="EzBoardDAO.getListHeaderBoardID" parameterClass="Map" resultClass="BoardListHeaderVO">
 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_BOARDID(#v_PBOARDID#, #v_PSTRLANG#, #v_PBOARDTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW(#v_pItemID#, #v_pBoardID#, #v_pStartRow#, #v_pEndRow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 
 	<procedure id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -91,6 +143,10 @@
 	
 	<procedure id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_COPYITEM_GET1(#v_PORGITEMID#, #v_PORGBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getAdjacentItems3" parameterClass="Map" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_GETADJACENTITEMS3(#v_PBOARDID#, #v_PPARENTWRITEDATE#, #v_PITEMID#, #v_PUPPERITEMIDTREE#, #v_PREVIOUSITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
@@ -125,7 +181,7 @@
 		{CALL EZBOARDSTD.EZSP_COPYITEM_GET2(#v_PORGITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultClass="BoardListVO">
+	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
 		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -227,6 +283,10 @@
 		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.photoListUpdate" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTUPDATE(#v_ImageID#, #v_BoardID#, #v_FilePath#, #v_FileContent#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDUPDATEITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
 										    #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
@@ -281,6 +341,112 @@
 	        	ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS 
 	       	WHERE  
 	       		itemid = #pItemID#
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.getAdjacentItems1" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT 
+				itemid ,title 
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        WHERE  
+	        	boardid = #v_PBOARDID#
+            AND 
+            	parentwritedate = #v_PPARENTWRITEDATE#
+            AND 
+            	upperitemidtree LIKE #v_PUPPERITEMIDTREE# || '%'
+            AND 
+            	startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+            AND 
+            	enddate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+	        ORDER BY 
+	        	upperitemidtree, 
+	        	startdate DESC
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.getAdjacentItems2" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT 
+				*  
+	        FROM 
+	        	(SELECT 
+	        		itemid ,
+	                title 
+	        	 FROM 
+	        	 	ezBoardSTD.TBL_BOARD_ITEM 
+	        	 WHERE  
+	        	 	boardid = #v_PBOARDID#
+	             AND 
+	             	parentwritedate >= #v_PPARENTWRITEDATE#
+	             AND 
+	             	startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             AND 
+	             	enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	        	 ORDER BY 
+	        	 	parentwritedate ASC,
+	                upperitemidtree ,
+	                startdate ASC 
+	             )
+	        WHERE 
+	        	ROWNUM <= 20
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.getAdjacentItems2Photo" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT 
+				* 
+	        FROM 
+	        	(SELECT 
+	        		itemid ,title 
+	             FROM 
+	             	ezBoardSTD.TBL_BOARD_ITEM 
+	        	 WHERE  
+	        	 	boardid = #v_PBOARDID#
+	             AND 
+	             	parentwritedate >= #v_PPARENTWRITEDATE#
+	             AND 
+	             	startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             AND 
+	             	enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             ORDER BY 
+	             	parentwritedate DESC,
+	             	startdate DESC,
+	             	docno DESC,
+	             	upperitemidtree 
+	            )
+	        WHERE 
+	        	ROWNUM <= 20
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.getAdjacentItems3Photo" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT 
+				*
+        	FROM (SELECT 
+        			 itemid ,
+                     title 
+        		  FROM 
+        		  	 ezBoardSTD.TBL_BOARD_ITEM 
+       			  WHERE  
+       			  	 boardid = #v_PBOARDID#
+                  AND 
+                  	 parentwritedate <= #v_PPARENTWRITEDATE#
+                  AND 
+                  	 startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                  	 enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+        		  ORDER BY 
+        		  	 parentwritedate DESC,
+                  	 startdate DESC,
+                  	 docno DESC,
+                  	 upperitemidtree 
+                  )
+        	WHERE 
+        		ROWNUM <= 20
        	]]>
 	</select>
 	
@@ -371,6 +537,17 @@
 				itemid = #itemID#
 		]]>                
 	</select>
+	
+	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO ezBoardSTD.TBL_PHOTO_IMAGEITEM(
+				boardid, 	itemid, 	imageid, 	filepath, 	filecontent, 	writedate, 	 writerdeptid, 	 writerid, 	 writername,   imagename, 	 main_flag
+			)
+        	VALUES(
+        	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N' 
+        	)
+		]]>
+	</insert>
 	
 	<update id="EzBoardDAO.updateCopyItem" parameterClass="String">
 		<![CDATA[

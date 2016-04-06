@@ -224,6 +224,17 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ImageID", imageID);
+		map.put("v_BoardID", boardID);
+		map.put("v_FilePath", file_Path);
+		map.put("v_FileContent", content);
+		ezBoardDAO.photoListUpdate(map);
+		setMainImageID(imageID, itemID, "1");
+	}
+
+	@Override
 	public void updateCopyItem(String destItemID) throws Exception {
 		ezBoardDAO.updateCopyItem(destItemID);
 	}
@@ -399,6 +410,60 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+		return ezBoardDAO.getAdjacentItems1(map);
+	}
+
+	@Override
+	public List<BoardListVO> getAdjacentItems2(String boardID, String parentWriteDate) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		return ezBoardDAO.getAdjacentItems2(map);
+	}
+
+	@Override
+	public List<BoardListVO> getAdjacentItems3(String boardID, String parentWriteDate, String itemID, String upperItemIDTree, String previousItemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		map.put("v_PITEMID", itemID);
+		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+		map.put("v_PREVIOUSITEMID", previousItemID);
+		return ezBoardDAO.getAdjacentItems3(map);
+	}
+
+	@Override
+	public List<BoardListVO> getAdjacentItems2Photo(String boardID, String parentWriteDate) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		return ezBoardDAO.getAdjacentItems2Photo(map);
+	}
+
+	@Override
+	public List<BoardListVO> getAdjacentItems3Photo(String boardID, String parentWriteDate) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		return ezBoardDAO.getAdjacentItems3Photo(map);
+	}
+
+	@Override
+	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID", itemID);
+		map.put("v_pBoardID", boardID);
+		map.put("v_pStartRow", pStartRow);
+		map.put("v_pEndRow", pEndRow);
+		return ezBoardDAO.photoViewDB(map);
+	}
+
+	@Override
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception {
 		return ezBoardDAO.getCopyItemAttach(orgItemID);
 	}
@@ -557,6 +622,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void photoListInsert(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.photoListInsert(boardListVO);
+	}
+
+	@Override
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception {
 		ezBoardDAO.brdUpdateItem(boardListVO);
 		if(mode.equals("PHOTO")){
@@ -588,7 +658,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
 			map.put("v_pFilePath", strFilePath.replace("\\", "/"));
 			map.put("v_pWriteDate", boardListVO.getWriteDate());
-			map.put("v_pFileContent", boardListVO.getImageContent().split(";")[i]);
+			map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
 			map.put("v_pImageName", boardListVO.getImageNames().split(";")[i]);
 			
 			ezBoardDAO.photoSaveDB(map);

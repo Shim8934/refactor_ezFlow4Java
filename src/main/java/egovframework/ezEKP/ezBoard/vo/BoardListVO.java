@@ -128,6 +128,10 @@ public class BoardListVO {
 	private String imageContent;
 	/** 포토게시판 이미지 명*/
 	private String imageNames;
+	/** 이미지아이디*/
+	private String imageID;
+	/** 파일내용*/
+	private String fileContent;
 	
 	public int getrNum() {
 		return rNum;
@@ -506,6 +510,18 @@ public class BoardListVO {
 	}
 	public void setImageNames(String imageNames) {
 		this.imageNames = imageNames;
+	}
+	public String getImageID() {
+		return imageID;
+	}
+	public void setImageID(String imageID) {
+		this.imageID = imageID;
+	}
+	public String getFileContent() {
+		return fileContent;
+	}
+	public void setFileContent(String fileContent) {
+		this.fileContent = fileContent;
 	}
 	
 }

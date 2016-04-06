@@ -3432,7 +3432,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	@RequestMapping(value = "/ezBoard/boardItemViewPhoto.do")
-	public String boardItemViewPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+	public String boardItemViewPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		String mode = "new";
 		String apprFlag = "Y";
 		String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
@@ -3441,7 +3441,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String reservedItem = request.getParameter("pReservedItem");
 		String location = request.getParameter("location");
+		String useOCS = config.getProperty("config.USE_OCS");
 		BoardListVO boardItem = new BoardListVO();
+		BoardVO boardAdjacent = null;
 		
 		mode = request.getParameter("mode");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3489,13 +3491,116 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if(adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")){
+			if(boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")){
+				boardItem.setUpperItemIDTree(itemID);
+			}
+			if(boardInfo.getGuBun().equals("3")){
+				boardAdjacent = getAdjacentItems(itemID, boardID, boardItem.getUpperItemIDTree(), boardItem.getParentWriteDate());
+			}else{
+				boardAdjacent = getAdjacentItemsPhoto(itemID, boardID, boardItem.getUpperItemIDTree(), boardItem.getParentWriteDate());
+			}
 			
+			if(boardAdjacent.getPreviousTitle().equals("")){
+				boardAdjacent.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330"));
+			}
+			
+			if(boardAdjacent.getNextTitle().equals("")){
+				boardAdjacent.setNextTitle(egovMessageSource.getMessage("ezBoard.t331"));
+			}
 		}
 		
+		model.addAttribute("boardAdjacent", boardAdjacent);
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("apprFlag", apprFlag);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("boardItem", boardItem);
+		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("reservedItem", reservedItem);
+		model.addAttribute("oneLineReplyFlag", boardProperty.getOneLineReply());
 		
-		return "";
+		return "ezBoard/boardItemViewPhoto";
 	}
 	
+	public BoardVO getAdjacentItemsPhoto(String itemID, String boardID, String upperItemIDTree, String parentWriteDate) throws Exception{
+		BoardVO boardVO = new BoardVO();
+		
+		if(boardVO.getPreviousItemID().equals("")){
+			List<BoardListVO> adjacentItem = ezBoardService.getAdjacentItems2Photo(boardID, parentWriteDate);
+			
+			for(int k = 0; k < adjacentItem.size(); k++){
+				if(adjacentItem.get(k).getItemID().equals(itemID)){
+					boardVO.setPreviousItemID(adjacentItem.get(k-1).getItemID());
+					boardVO.setPreviousTitle(adjacentItem.get(k-1).getTitle());
+				}
+			}
+		}
+		
+		if(boardVO.getNextItemID().equals("")){
+			List<BoardListVO> adjacentItem = ezBoardService.getAdjacentItems3Photo(boardID, parentWriteDate);
+			
+			for(int k = 0; k < adjacentItem.size(); k++){
+				if(adjacentItem.get(k).getItemID().equals(itemID)){
+					boardVO.setNextItemID(adjacentItem.get(k+1).getItemID());
+					boardVO.setNextTitle(adjacentItem.get(k+1).getTitle());
+				}
+			}
+		}
+		
+		boardVO.setPreviousTitle(makeXMLString(boardVO.getPreviousTitle()));
+		boardVO.setNextTitle(makeXMLString(boardVO.getNextTitle()));
+		
+		return boardVO;
+	}
+
+	public BoardVO getAdjacentItems(String itemID, String boardID, String upperItemIDTree, String parentWriteDate) throws Exception{
+		BoardVO boardVO = new BoardVO();
+		String tempItemID = "";
+		String tempTitle = "";
+		List<BoardListVO> adjacentItem = ezBoardService.getAdjacentItems1(boardID, parentWriteDate, upperItemIDTree.substring(0, 38));
+		
+		for(int i = 0; i < adjacentItem.size(); i++){
+			if(adjacentItem.get(i).getItemID().equals(itemID)){
+				boardVO.setPreviousItemID(tempItemID);
+				boardVO.setPreviousTitle(tempTitle);
+			}
+			
+			if(adjacentItem.get(i).getItemID().equals(itemID) && i < (adjacentItem.size() - 1)){
+				boardVO.setNextItemID(adjacentItem.get(i+1).getItemID());
+				boardVO.setNextTitle(adjacentItem.get(i+1).getTitle());
+			}
+			tempItemID = adjacentItem.get(i).getItemID();
+			tempTitle = adjacentItem.get(i).getTitle();
+		}
+		
+		if(boardVO.getPreviousItemID().equals("")){
+			adjacentItem = ezBoardService.getAdjacentItems2(boardID, parentWriteDate);
+			
+			for(int j = 0; j < adjacentItem.size() - 1; j++){
+				if(adjacentItem.get(j).getItemID().equals(itemID)){
+					boardVO.setPreviousItemID(adjacentItem.get(j+1).getItemID());
+					boardVO.setPreviousTitle(adjacentItem.get(j+1).getTitle());
+				}
+			}
+		}
+		
+		if(boardVO.getNextItemID().equals("")){
+			adjacentItem = ezBoardService.getAdjacentItems3(boardID, parentWriteDate, itemID, upperItemIDTree.substring(0, 38), boardVO.getPreviousItemID());
+			
+			if(adjacentItem.size() > 0){
+				boardVO.setNextItemID(adjacentItem.get(0).getItemID());
+				boardVO.setNextTitle(adjacentItem.get(0).getTitle());
+			}
+		}
+		boardVO.setPreviousTitle(makeXMLString(boardVO.getPreviousTitle()));
+		boardVO.setNextTitle(makeXMLString(boardVO.getNextTitle()));
+		
+		return boardVO;
+	}
+
 	@RequestMapping(value = "/ezBoard/boardItemListThumbnail.do")
 	public String boardItemListThumbnail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		String mode = "new";
@@ -3918,5 +4023,237 @@ public class EzBoardController extends EgovFileMngUtil{
 		result.append("</NODES>");
 		
 		return result.toString();
+	}
+	
+	@RequestMapping(value = "/ezBoard/imageViewList.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String imageViewList(HttpServletRequest request) throws Exception{
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String g_ImageUrl = "";
+		String realPath = request.getServletContext().getRealPath("");
+		int imageCnt = 10;
+		int page = Integer.parseInt(request.getParameter("page"));
+		int pStartRow = (page - 1) * imageCnt + 1;
+        int pEndRow = page * imageCnt;
+        
+        List<BoardAttachVO> photoViewList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow);
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("<DATA>");
+        
+        for(int k = 0; k < photoViewList.size(); k++){
+        	sb.append("<ROW>");
+        	sb.append("<RNUM>" + photoViewList.get(k).getRnum() +"</RNUM>");
+        	sb.append("<IMAGECOUNT>" + photoViewList.get(k).getImageCount() +"</IMAGECOUNT>");
+        	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() +"</IMAGEID>");
+        	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() +"</FILEPATH>");
+        	sb.append("<FILECONTENT>" + photoViewList.get(k).getFileContent() +"</FILECONTENT>");
+        	sb.append("<FLAG>" + photoViewList.get(k).getFlag() +"</FLAG>");
+        	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() +"</IMAGENAME>");
+        	
+        	String filePath = photoViewList.get(k).getFilePath();
+        	int idx = filePath.lastIndexOf("/");
+        	g_ImageUrl = config.getProperty("upload_board.ROOT") + File.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
+
+            String pDirPath = realPath + config.getProperty("upload_board.ROOT");
+            String orgpDirPath = pDirPath + "\\" + filePath.substring(0, idx + 1).replace("/", "\\") + filePath.substring(idx + 1).replace("/", "\\");
+            String despPath = pDirPath + "\\tempUploadFile\\" + filePath.substring(idx + 1);
+        	
+            File file = new File(orgpDirPath);
+            File file2 = new File(despPath);
+            File file3 = new File(despPath.replace("s_", ""));
+            
+            if(file.exists() && !file2.exists()){
+            	FileUtils.copyFile(file, file2);
+            	FileUtils.copyFile(file, file3);
+            }
+            
+            sb.append("<IMAGEPATH>" + g_ImageUrl +";" +"</IMAGEPATH>");
+            sb.append("</ROW>");
+        }
+        
+        sb.append("</DATA>");
+        
+		return sb.toString();
+	}
+	
+	@RequestMapping(value = "/ezBoard/addImageItem.do")
+	public String addImageItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardInfo", boardInfo);
+		
+		return "ezBoard/boardAddImageItem";
+	}
+	
+	@RequestMapping(value = "/ezBoard/saveImageItem.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String saveImageItem(@RequestBody String requestXML, HttpServletRequest request) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(requestXML);
+		BoardListVO boardListVO = new BoardListVO();
+		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+		boardListVO.setImageID(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
+		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+		boardListVO.setFileContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
+		boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+		boardListVO.setWriteDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
+		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		
+		int savecount = 0;
+        String[] imageIDs = boardListVO.getImageID().split(";");
+        String[] filePaths = boardListVO.getFilePath().split(";");
+        String[] fileContents = boardListVO.getFileContent().split(";:;");
+        String[] imageName = boardListVO.getImageNames().split(";");
+        String uploadFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT");
+        
+        savecount = boardListVO.getImageID().split(";").length;
+        boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
+        
+        for(int k = 0; k < savecount; k++){
+        	File file = new File(uploadFilePath + "\\" + filePaths[k].replace("/", "\\"));
+            if (file.exists()){
+            	boardListVO.setFilePath(uploadFilePath + "\\" + boardListVO.getBoardID() + "\\uploadFile" + filePaths[k].replace("/", "\\").replace("tempUploadFile", ""));
+            }
+            FileUtils.copyFile(file, new File(boardListVO.getFilePath()));
+            FileUtils.deleteQuietly(file);
+
+            File file2 = new File(uploadFilePath + "\\" + filePaths[k].replace("s_", "").replace("/", "\\"));
+            if (file2.exists()){
+            	filePaths[k] = uploadFilePath + "\\" + boardListVO.getBoardID() + "\\uploadFile" + filePaths[k].replace("s_", "").replace("/", "\\").replace("tempUploadFile", "");
+            }
+            FileUtils.copyFile(file2, new File(filePaths[k]));
+            FileUtils.deleteQuietly(file2);
+            
+            boardListVO.setImageID(imageIDs[k].trim());
+            boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + "\\", "").replace("\\", "/"));
+            boardListVO.setFileContent(fileContents[k].trim());
+            boardListVO.setImageNames(imageName[k].trim());
+            
+            ezBoardService.photoListInsert(boardListVO);
+        }
+        
+		return "OK";
+	}
+	
+	@RequestMapping(value = "/ezBoard/modifyImageItem.do")
+	public String modifyImageItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String imageID = request.getParameter("imageID");
+		int page = Integer.parseInt(request.getParameter("page"));
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String guBun = request.getParameter("guBun");
+		String imageContent = "";
+		String g_ImageUrl = "";
+		String listImages = "";
+		String mainFg = "";
+		String g_Width = "230";
+		String g_Height = "230";
+		int imageCnt = 10;
+		int pStartRow = (page - 1) * imageCnt + 1;
+        int pEndRow = page * imageCnt;
+        
+        userInfo = commonUtil.userInfo(loginCookie);
+        List<BoardAttachVO> photoViewList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow);
+        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+        
+        for(int k = 0; k < photoViewList.size(); k++){
+        	String listImage = photoViewList.get(k).getImageID();
+        	
+        	if(imageID.equals(listImage)){
+        		imageContent += photoViewList.get(k).getFileContent() + ";";
+        		String filePath = photoViewList.get(k).getFilePath();
+        		int idx = filePath.lastIndexOf("/");
+        		
+        		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
+        		listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("s_", "").split("/")[2] + ";";
+        		mainFg = photoViewList.get(k).getFlag();
+        	}
+        }
+        
+        model.addAttribute("listCount", photoViewList.size());
+        model.addAttribute("listImage", imageID);
+        model.addAttribute("listImages", listImages);
+        model.addAttribute("imageContent", imageContent);
+        model.addAttribute("boardID", boardID);
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("mainFg", mainFg);
+        model.addAttribute("itemID", itemID);
+        model.addAttribute("guBun", guBun);
+        model.addAttribute("g_Width", g_Width);
+        model.addAttribute("g_Height", g_Height);
+        model.addAttribute("orgImagePath", listImages.split(";")[0]);
+		
+		return "ezBoard/boardModifyImageItem";
+	}
+	
+	@RequestMapping(value = "/ezBoard/deleteImageItem.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String deleteImageItem(HttpServletRequest request, @RequestBody String resultXML) throws Exception{
+		String imageID = "";
+        String boardID = "";
+        String filePath = "";
+        String mod = "";
+        String content = "";
+        Document doc = commonUtil.convertStringToDocument(resultXML);
+        
+        mod = request.getParameter("mod");
+        
+        if(mod.equals("Del")){
+        	boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+        }else if(mod.equals("Mod")){
+        	String uploadFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT");
+        	
+        	boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+        	imageID = doc.getElementsByTagName("IMAGEID").item(0).getTextContent();
+        	filePath = doc.getElementsByTagName("FILEPATH").item(0).getTextContent();
+        	content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
+        	
+        	String file_Path = "";
+            if (!filePath.equals("")){
+                File file = new File(uploadFilePath + "\\" + filePath.replace("/", "\\"));
+                if (file.exists()){
+                	file_Path = uploadFilePath + "\\" + boardID + "\\uploadFile" + filePath.replace("/", "\\").replace("tempUploadFile", "");
+                }
+                FileUtils.copyFile(file, new File(file_Path));
+                FileUtils.deleteQuietly(file);
+
+                File file2 = new File(uploadFilePath + "\\" + filePath.replace("s_", "").replace("/", "\\"));
+                if (file2.exists()){
+                	filePath = uploadFilePath + "\\" + boardID + "\\uploadFile" + filePath.replace("s_", "").replace("/", "\\").replace("tempUploadFile", "");
+                }
+                FileUtils.copyFile(file2, new File(filePath));
+                FileUtils.deleteQuietly(file2);
+            }
+            
+            if(!filePath.equals("")){
+            	file_Path = file_Path.replace(uploadFilePath + "\\", "").replace("\\", "/");
+            }else{
+            	file_Path = "";
+            }
+            
+            ezBoardService.photoListUpdate(imageID, boardID, content, file_Path, doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+            
+            return "OK";
+            
+        }else if (mod.equals("add")){
+        	
+        }else if (mod.equals("temp")){
+        	
+        }else{
+        	
+        }
+        
+		return "";
 	}
 } 

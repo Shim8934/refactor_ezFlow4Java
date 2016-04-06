@@ -55,6 +55,41 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getNoticePostItemAll(String boardID) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getNoticePostItemAll", boardID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getAdjacentItems1(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getAdjacentItems1", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getAdjacentItems2(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getAdjacentItems2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getAdjacentItems3(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getAdjacentItems3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getAdjacentItems2Photo(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getAdjacentItems2Photo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getAdjacentItems3Photo(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getAdjacentItems3Photo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardAttachVO> photoViewDB(Map<String, Object> map) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.photoViewDB", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
@@ -87,11 +122,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception{
 		return (List<String>) list("EzBoardDAO.getCopyItemAttach", orgItemID);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<BoardListVO> getNoticePostItemAll(String boardID) throws Exception{
-		return (List<BoardListVO>) list("EzBoardDAO.getNoticePostItemAll", boardID);
 	}
 	
 	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
@@ -234,6 +264,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.saveAttachInfo", map);
 	}
 	
+	public void photoListInsert(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.photoListInsert", boardListVO);
+	}
+	
 	public void setListOrder(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.set_ListOrder",map);
 	}
@@ -256,6 +290,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void brdUpdateItem(BoardListVO boardListVO) throws Exception{
 		update("EzBoardDAO.brdUpdateItem", boardListVO);
+	}
+	
+	public void photoListUpdate(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.photoListUpdate", map);
 	}
 	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception{

@@ -11,6 +11,18 @@ public class BoardAttachVO {
 	private String fileSize;
 	/** 첨부파일 이름*/
 	private String fileName;
+	/** 행번호*/
+	private int rnum;
+	/** 이미지갯수*/
+	private int imageCount;
+	/** 이미지아이디*/
+	private String imageID;
+	/** 파일컨탠츠*/
+	private String fileContent;
+	/** 메인플래그*/
+	private String flag;
+	/** 이미지명*/
+	private String imageName;
 	
 	public String getItemID() {
 		return itemID;
@@ -42,5 +54,40 @@ public class BoardAttachVO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-
+	public int getRnum() {
+		return rnum;
+	}
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+	public int getImageCount() {
+		return imageCount;
+	}
+	public void setImageCount(int imageCount) {
+		this.imageCount = imageCount;
+	}
+	public String getImageID() {
+		return imageID;
+	}
+	public void setImageID(String imageID) {
+		this.imageID = imageID;
+	}
+	public String getFileContent() {
+		return fileContent;
+	}
+	public void setFileContent(String fileContent) {
+		this.fileContent = fileContent;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
 }

@@ -201,7 +201,7 @@
 	
 	            if (isdad || pNoneActiveX == "YES") {
 	                for (var i = 0; i < bodycount; i++) {
-	                    content += document.getElementsByName('imgContent')[i].value + "\\";
+	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
 	                    filename += document.getElementsByName('imgView')[i].title + ";";
 	                }
 	
@@ -213,7 +213,7 @@
 	                    //경로
 	                    file += document.getElementById(checkreuslt.value).getAttribute('name') + "|";
 	                    //내용
-	                    content += checkreuslts.value + "\\";
+	                    content += checkreuslts.value + ";:;";
 	
 	                    var imagenamelength = document.getElementById(checkreuslt.value).getAttribute('name').lastIndexOf("\\");
 	                    //사진실제이름
@@ -288,52 +288,6 @@
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 			
 			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가
-			    //AD 삭제
-// 			    if (SSUserName == "" || SSUserName2 == "" ||
-// 			        SSDeptName == "" || SSDeptName2 == "" ||
-// 			        SSCompanyName == "" || SSCompanyName2 == "")
-// 			    {
-// 			        var tmpXmlHttp = createXMLHttpRequest();
-// 			        var tmpXmlDom = createXmlDom();
-	
-// 			        var objNode;
-// 			        createNodeInsert(tmpXmlDom, objNode, "DATA");
-// 			        createNodeAndInsertText(tmpXmlDom, objNode, "CN", SSUserID);
-// 			        createNodeAndInsertText(tmpXmlDom, objNode, "PROP", "DisplayName;Description;Company");
-// 			        createNodeAndInsertText(tmpXmlDom, objNode, "CATE", "user");
-	
-// 	                tmpXmlHttp.open("POST","/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx",false);
-// 	                tmpXmlHttp.send(tmpXmlDom);
-	
-// 	                var tmpRetXml = loadXMLString(tmpXmlHttp.responseText);
-	                
-// 	                if (tmpRetXml.xml != "")
-// 	                {
-// 	                    var tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/DISPLAYNAME1");
-// 	                    if (tmpVal != "")
-// 	                        SSUserName = tmpVal;
-	                    
-// 	                    tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/DISPLAYNAME2");
-// 	                    if (tmpVal != "")
-// 	                        SSUserName2 = tmpVal;
-	                    
-// 	                    tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/DESCRIPTION1");
-// 	                    if (tmpVal != "")
-// 	                        SSDeptName = tmpVal;
-	                    
-// 	                    tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/DESCRIPTION2");
-// 	                    if (tmpVal != "")
-// 	                        SSDeptName2 = tmpVal;
-	                    
-// 	                    tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/COMPANY1");
-// 	                    if (tmpVal != "")
-// 	                        SSCompanyName = tmpVal;
-	                    
-// 	                    tmpVal = SelectSingleNodeValueNew(tmpRetXml, "DATA/COMPANY2");
-// 	                    if (tmpVal != "")
-// 	                        SSCompanyName2 = tmpVal;
-// 	                }
-// 	            }
 	
 				strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
 				strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";

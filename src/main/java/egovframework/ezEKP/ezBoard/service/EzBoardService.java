@@ -30,6 +30,18 @@ public interface EzBoardService {
 	
 	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang) throws Exception;
 	
+	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree) throws Exception;
+	
+	public List<BoardListVO> getAdjacentItems2(String boardID, String parentWriteDate) throws Exception;
+	
+	public List<BoardListVO> getAdjacentItems3(String boardID, String parentWriteDate, String itemID, String upperItemIDTree, String previousItemID) throws Exception;
+	
+	public List<BoardListVO> getAdjacentItems2Photo(String boardID, String parentWriteDate) throws Exception;
+
+	public List<BoardListVO> getAdjacentItems3Photo(String boardID, String parentWriteDate) throws Exception;
+	
+	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
@@ -102,6 +114,8 @@ public interface EzBoardService {
 	
 	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception;
 	
+	public void photoListInsert(BoardListVO boardListVO) throws Exception;
+	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
@@ -119,6 +133,8 @@ public interface EzBoardService {
 	public void setMainImageID(String mainImageID, String itemID, String type) throws Exception;
 	
 	public void setNotiOrder(String itemID) throws Exception;
+	
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID) throws Exception;
 
 	public void updateCopyItem(String itemID) throws Exception;
 	

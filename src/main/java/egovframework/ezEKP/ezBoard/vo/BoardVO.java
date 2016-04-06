@@ -36,6 +36,14 @@ public class BoardVO {
 	private String ABSTRACT;
 	/** 검색 여부*/
 	private String subFlag;
+	/** 이전 게시물아이디*/
+	private String previousItemID;
+	/** 이전 게시물타이틀*/
+	private String previousTitle;
+	/** 다음게시물아이디*/
+	private String nextItemID;
+	/** 다음게시물타이틀*/
+	private String nextTitle;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -138,6 +146,30 @@ public class BoardVO {
 	}
 	public void setSubFlag(String subFlag) {
 		this.subFlag = subFlag;
+	}
+	public String getPreviousItemID() {
+		return previousItemID;
+	}
+	public void setPreviousItemID(String previousItemID) {
+		this.previousItemID = previousItemID;
+	}
+	public String getPreviousTitle() {
+		return previousTitle;
+	}
+	public void setPreviousTitle(String previousTitle) {
+		this.previousTitle = previousTitle;
+	}
+	public String getNextItemID() {
+		return nextItemID;
+	}
+	public void setNextItemID(String nextItemID) {
+		this.nextItemID = nextItemID;
+	}
+	public String getNextTitle() {
+		return nextTitle;
+	}
+	public void setNextTitle(String nextTitle) {
+		this.nextTitle = nextTitle;
 	}
 	
 }
