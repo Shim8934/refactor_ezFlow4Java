@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -1328,9 +1327,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""));
 		}
 		pStep1DataXML.append("</PARAMETER>");
-		if(req.getParameter("RangeXMLStr") != "") {
+		/*if(req.getParameter("RangeXMLStr") != "") {
 			Document doc = commonUtil.convertStringToDocument(req.getParameter("RangeXMLStr"));
-		}
+		}*/
 		
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
 		model.addAttribute("questionAddVO", questionAddVO);
@@ -1683,7 +1682,7 @@ System.out.println("pXML:"+pXML);
 			qstCompleteVO.setMultiSelect(multiSelect);
 			ezQuestionService.insertQuestion(qstCompleteVO);
 			
-			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+	/*		if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				int qstAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
 				for(int qa=0; qa < qstAttachCnt; qa++) {
 					String attachType = doc.getElementsByTagName("TYPE").item(qa).getTextContent();
@@ -1692,15 +1691,19 @@ System.out.println("pXML:"+pXML);
 					if(attachType == "3" || attachType == "4" || attachType == "6" || attachType == "7") {
 						
 					}
-					qstCompleteVO.setAnswerNo(0);
-					qstCompleteVO.setAttachNo(qa);
-					qstCompleteVO.setAttachName(doc.getElementsByTagName("TITLE").item(qa).getTextContent());
-					qstCompleteVO.setAttachURL(tmpAttachUrl);
-					qstCompleteVO.setAttachType(attachType);
-					ezQuestionService.pollSaveAttach(qstCompleteVO);
+					QstCompleteVO qstCompleteVO3 = new QstCompleteVO();
+					qstCompleteVO3.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO3.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO3.setQuesNo(v_quesNo);
+					qstCompleteVO3.setAnswerNo(0);
+					qstCompleteVO3.setAttachNo(qa);
+					qstCompleteVO3.setAttachName(doc.getElementsByTagName("TITLE").item(qa).getTextContent());
+					qstCompleteVO3.setAttachURL(tmpAttachUrl);
+					qstCompleteVO3.setAttachType(attachType);
+					ezQuestionService.pollSaveAttach(qstCompleteVO3);
 				}
 			}
-			
+			*/
 			if(doc.getElementsByTagName("ANSWER").getLength() > 0) {
 				int ansCnt = doc.getElementsByTagName("ANSWER").getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
@@ -1710,8 +1713,30 @@ System.out.println("pXML:"+pXML);
 					qstCompleteVO.setAnswerNo(iAns+1);
 					qstCompleteVO.setAnswerContent(doc.getElementsByTagName("TITLE").item(iAns).getTextContent().replace("'", "''"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO);
+System.out.println("ansCnt:"+ansCnt);					
 					
-					 
+					if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+						int ansAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
+System.out.println("ansAttachCnt:"+ansAttachCnt);
+						for(int aa=0; aa<ansAttachCnt; aa++) {
+							String ansAttachType = doc.getElementsByTagName("TYPE").item(iAns).getTextContent();
+							String ansAttachUrl = doc.getElementsByTagName("HREF").item(iAns).getTextContent();
+							
+							if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
+								
+							}
+							QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+							qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+							qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+							qstCompleteVO2.setQuesNo(v_quesNo);
+							qstCompleteVO2.setAnswerNo(iAns+1);
+							qstCompleteVO2.setAttachNo(iAns+1);
+							qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(iAns).getTextContent().replace("'", "''"));
+							qstCompleteVO2.setAttachURL(ansAttachUrl);
+							qstCompleteVO2.setAttachType(ansAttachType);
+							ezQuestionService.pollSaveAttach(qstCompleteVO2);
+						}
+					}
 				}
 			}
 		}
