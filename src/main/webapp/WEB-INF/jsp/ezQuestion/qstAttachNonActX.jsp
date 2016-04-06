@@ -175,7 +175,7 @@
 			            var lastindex = SelectNodes(xmlDom, "ATTACH/ROW").length;
 			            for (var count = 0; count < lastindex; count++) {
 			                var selType = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "TYPE");
-			                var pTitle = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "TITLE");
+			                var pTitle = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE");
 			                var pPath = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "HREF");
 			                var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
 			                document.all("input_Value").options[count] = newoption;
@@ -196,6 +196,9 @@
 			    }
 			    function Save_Onclick() {
 			        if (document.all("input_Value").length > 0) {
+			        	 
+					     
+			        	
 			            if (CrossYN())
 			                window.opener.AttachComplete_NonIE(pAttachType, pAttachMode, GetInfoList(), pAttachModeIndex);
 			            else {
@@ -247,7 +250,7 @@
 			                pInfoList = pValue.split(";");
 			                m_AttachInfo += "<ROW>";
 			                m_AttachInfo += "<TYPE>" + pInfoList[0] + "</TYPE>";
-			                m_AttachInfo += "<TITLE>" + pInfoList[1] + "</TITLE>";
+			                m_AttachInfo += "<ATTACHTITLE>" + pInfoList[1] + "</ATTACHTITLE>";
 			                m_AttachInfo += "<HREF>" + pInfoList[2] + "</HREF>";
 			                m_AttachInfo += "</ROW>";
 			            }
@@ -307,6 +310,7 @@
 			            document.all.AttachPath.value = FilePath.target.responseText
 			        fileup = true;
 			    }
+			    
 				</script>
 	</head>
 	<body class="popup">
