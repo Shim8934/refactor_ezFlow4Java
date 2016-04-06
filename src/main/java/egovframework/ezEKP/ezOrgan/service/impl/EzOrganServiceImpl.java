@@ -13,6 +13,8 @@ import org.w3c.dom.Document;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGetUserInfoVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganService")
@@ -557,4 +559,63 @@ public class EzOrganServiceImpl implements EzOrganService {
         }catch (Exception Ex){ }
         return bRet;
     }
+
+	@Override
+	public OrganUserVO getTBLUserMaster(String userID, String deptID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userID);
+		map.put("v_DEPTCD", deptID);
+		map.put("v_LANGDATA", lang);
+		return ezOrganDAO.getTBLUserMaster(map);
+	}
+	
+	@Override
+	public OrganGetUserInfoVO getUserInfo(String userID, String primary) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userID);
+		map.put("v_LANGDATA", primary);
+		return ezOrganDAO.getUserInfo(map);
+	}
+	
+	public String getPropertyList(String userID, String pPropList, String lang) throws Exception {
+		String propValue = "";
+		StringBuilder propInfo = new StringBuilder("<DATA>");
+		lang = commonUtil.convertLangCode(lang);
+		String dataType = "user";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userID);
+		map.put("v_LANGDATA", lang);
+		
+		OrganGetUserInfoVO userInfo =  ezOrganDAO.getUserInfo(map);
+		String strXML = commonUtil.getQueryResult(userInfo);
+		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+		if(xmlDom.getElementsByTagName("ROW").getLength() == 0) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("v_CN", userID);
+			map2.put("v_LANGDATA", lang);
+			OrganDeptVO userDeptInfo = ezOrganDAO.getDeptInfo(map2);
+			strXML = commonUtil.getQueryResult(userDeptInfo);
+			xmlDom = commonUtil.convertStringToDocument(strXML);
+			dataType = "group";
+		}
+		pPropList = commonUtil.convertAddandConvert(dataType, pPropList);
+		String[] propList = pPropList.split(";");
+		for (String propName : propList) {
+			if(commonUtil.checkDBColum(propName.toUpperCase()) == false) {
+				propValue = getPropertyValue(userID, propName);
+				propInfo.append("<"+propName.toUpperCase()+">"+commonUtil.makeXMLString(propValue) + "</" + propName.toUpperCase() + ">");
+			} else if(propName.toUpperCase() != "") {
+				if(xmlDom.getElementsByTagName(propName.toUpperCase()).getLength() > 0) {
+					propInfo.append("<" + propName.toUpperCase() + ">" + commonUtil.makeXMLString(xmlDom.getElementsByTagName(propName.toUpperCase()).item(0).getTextContent()) + "</" + propName.toUpperCase() + ">" );
+				} else {
+					propInfo.append("<" + propName.toUpperCase() + "></" + propName.toUpperCase() + ">");
+				}
+			}
+		}
+		propInfo.append("</DATA>");
+		return propInfo.toString();
+		
+	}
+	
 }
