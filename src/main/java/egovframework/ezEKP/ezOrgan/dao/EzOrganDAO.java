@@ -18,6 +18,11 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getDeptSubTreeInfo(Map<String, Object> map) {		
+		return (List<OrganDeptVO>) list("EzOrganDAO.getDeptSubTreeInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getDeptMemberList(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberList", map);		
 	}
@@ -25,7 +30,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> organSearch(Map<String, Object> map) throws Exception {		
 		return (List<OrganDeptVO>) list("EzOrganDAO.organSearch", map);
-	}
+	}	
 
 	public OrganUserVO getTBLUserMaster(Map<String, Object> map) throws Exception {
 		return (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
@@ -35,7 +40,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (OrganDeptVO) select("EzOrganDAO.getTBLDeptMaster", map);
 	}
 	
-	public OrganDeptVO getPropertyList(Map<String, Object> map) {
+	public OrganDeptVO getDeptInfo(Map<String, Object> map) {
 		return (OrganDeptVO) select("EzOrganDAO.getDeptInfo", map);
 	}
 

@@ -216,7 +216,8 @@
 		        var xmlpara = createXmlDom();
 
 		        var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>mail;DisplayName</PROP></DATA>";
-		        xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+		        
+		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(strQuery);
 
 		        xmlRtn = loadXMLString(xmlHTTP.responseText);

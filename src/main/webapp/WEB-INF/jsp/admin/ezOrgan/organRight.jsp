@@ -96,8 +96,8 @@
 			    createNodeInsert(xmlpara, objNode, "DATA");
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName");
-
-			    xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+			    
+			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);
 			    xmlRtn = loadXMLString(xmlHTTP.responseText);
 			    

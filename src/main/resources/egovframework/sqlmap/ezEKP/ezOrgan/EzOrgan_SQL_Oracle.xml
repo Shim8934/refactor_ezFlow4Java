@@ -13,6 +13,12 @@
 		<result property="type" 								column="type" 							columnIndex="4"/>		
 	</resultMap>
 	
+	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
+		<result property="type" 								column="type" 							columnIndex="3"/>		
+	</resultMap>
+	
 	<resultMap id="userInfo" class="OrganUserVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
 		<result property="department" 							column="department" 					columnIndex="2"/>
@@ -68,6 +74,10 @@
 	
 	<procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
 		{CALL EZHRMASTER.EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
+		{CALL EZHRMASTER.EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo">

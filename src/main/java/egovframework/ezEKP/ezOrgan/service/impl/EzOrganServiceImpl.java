@@ -49,18 +49,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public OrganDeptVO getPropertyList(String userID,  String primary) throws Exception {
+	public OrganDeptVO getDeptInfo(String userID,  String primary) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("primary", primary);
 		
-		return ezOrganDAO.getPropertyList(map);
+		return ezOrganDAO.getDeptInfo(map);
 	}
 
 	@Override
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String pLangCode) throws Exception {		
-		if (!pUserID.equals("") && pDeptID.equals("")){        
-			OrganDeptVO organVo = getPropertyList(pUserID, pLangCode);
+		if (!pUserID.equals("") && pDeptID.equals("")){
+			OrganDeptVO organVo = getDeptInfo(pUserID, pLangCode);
 			pDeptID = organVo.getDeptID();
         }		
 		if (pDeptID.equals("")){
@@ -120,7 +120,43 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
         deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";
         return deptInfo;
-	}	       
+	}
+	
+	@Override
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String pLangCode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", pDeptID);
+		map.put("v_LANGDATA", pLangCode);
+		
+		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
+				
+		String[] memberInfo2 = new String[list.size()];
+		int memberCount2 = 0;
+		
+		for(int i=0; i<list.size(); i++){
+			OrganDeptVO obj = list.get(i);
+			
+			if(obj.getType().toLowerCase().equals("dept")){
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("v_CN", obj.getCn());
+				map1.put("v_LANGDATA", pLangCode);
+				
+				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
+                
+                memberInfo2[memberCount2] = getTreeNodeInfo(result, "", "", "", pPropList);
+                memberCount2++;
+			}		
+		}
+		StringBuilder deptlist = new StringBuilder("<NODES>");
+		
+        for (int k = 0; k < memberCount2; k++){
+        	deptlist.append(memberInfo2[k]);
+        }
+        deptlist.append("</NODES>");   
+
+		return deptlist.toString();
+	}
 	
 	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception{
 		StringBuilder nodeInfo = new StringBuilder();
@@ -185,8 +221,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    nodeInfo.append("</NODE>");
 
 	    return nodeInfo.toString();
-	}	
-	
+	}
+
 	@Override
 	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode) throws Exception {	
 		if (!pLangCode.equals("2")){

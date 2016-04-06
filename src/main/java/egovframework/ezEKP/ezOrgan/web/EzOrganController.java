@@ -62,6 +62,20 @@ public class EzOrganController {
 		return deptInfo;
 	}
 	
+	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDeptSubTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);
+				
+		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
+        String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+        String lang = config.getProperty("config.primary");
+        
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, lang);
+		
+		return deptInfo;
+	}
+	
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptMemberList(HttpServletRequest request, HttpServletResponse response) throws Exception{

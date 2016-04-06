@@ -33,7 +33,7 @@ public class EzOrganAdminController {
 	@RequestMapping(value = "/admin/ezOrgan/organRight.do")
 	public String organRight(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);		
-		
+		//관리자 권한 체크
 		if(user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
 			return "cmm/error/adminDenied";
 		}
