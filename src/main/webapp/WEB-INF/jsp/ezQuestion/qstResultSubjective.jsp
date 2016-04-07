@@ -46,16 +46,6 @@
 			    }
 			    makePageSelPage();
 			    tableXML();
-			    
-			    $("#saveExcel").click(function () {
-			    	if(document.getElementById("hidRType2").value=="A"){
-			            $("#xmlTable").battatech_excelexport({
-			                containerid: "xmlTable"
-			               , datatype: 'table'
-			            });
-			    	}
-		        });
-			    
 			}
 			
 			function tableXML(){
@@ -134,12 +124,7 @@
 			
 			function menuQst_Total_view() {
 				if ("${pTotalCnt}" != 0) {
-			    	if(document.getElementById("hidRType2").value=="A"){
-			            $("#xmlTable").battatech_excelexport({
-			                containerid: "xmlTable"
-			               , datatype: 'table'
-			            });
-			    	}
+					SaveCSV();
 				}else{
 				    alert("<spring:message code='ezQuestion.t121' />");
 				}
@@ -275,6 +260,18 @@
 			/* function title_Onclick(pReceve) {
 			    document.location.href = "/ezQuestion/qstPollOpen.do?" + pReceve;
 			} */
+			
+			function SaveCSV() {
+				alert(document.getElementById("AnaylsisTable").innerHTML);
+				
+				if (hidRType2.value == "A") { 
+					document.getElementById("AnalysisData").value = document.getElementById("AnaylsisTable").innerHTML;
+					form_analysissave.submit();
+					alert("<spring:message code='ezQuestion.t124' />"); 
+				}else{
+					
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -295,20 +292,19 @@
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
-	    <table id="xmlTable" class="mainlist" style="width: 100%">
-	        <tr>
-	            <!--- 번호 ----->
-	            <th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
-	            <!--- 응답자 명 ----->
-	            <% //# 기명으로 설문조사를 실시한 경우 %>
-	            <c:if test="${public_flg == 0 }">
-	            	<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
-		            <th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
-		            <th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
-	            </c:if>
-	            <th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
-	        </tr>
-	    </table>
+	    <div id="AnaylsisTable">
+		    <table id="xmlTable" class="mainlist" style="width: 100%">
+		        <tr>
+		            <th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
+		            <c:if test="${public_flg == 0 }">
+		            	<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
+			            <th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
+			            <th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
+		            </c:if>
+		            <th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
+		        </tr>
+		    </table>
+	    </div>
 	    <div id="tblPageRayer"></div>
 		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="/ezQuestion/qstResultAnalysisSave.do" target="_self">
 		    <input type="hidden" name="AnalysisData" id="AnalysisData" />

@@ -45,7 +45,7 @@
 			    listview.DataBind("AnalysisListView");
 			    tableXML();
 			    
-			    $("#saveExcel").click(function () {
+			    /* $("#saveExcel").click(function () {
 			    	if (!StateChangeClickFlag) {
 		                return;
 		            }
@@ -75,7 +75,7 @@
 			    			 alert("분석결과가 없습니다.");
 			    		 }
 			    	}
-		        });
+		        }); */
 			}
 			
 			function tableXML(){
@@ -155,7 +155,7 @@
 		        document.getElementById("message").innerHTML = "";
 		        if (xmlHttp.responseText != "") {
 		            xmlTemp = loadXMLString(xmlHttp.responseText);
-alert(xmlHttp.responseText);
+// alert(xmlHttp.responseText);
 		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
 		            var rows = SelectNodes(xmlRtn, "ROW");
 		            var Rlength = rows.length;
@@ -305,6 +305,42 @@ alert(xmlHttp.responseText);
 		            Graph.style.display = "";
 		        }
 		    }
+		    
+		    function SaveCSV() {
+		        var _MSIE = 'MSIE';
+		        var useragentstr = navigator.userAgent;
+		        
+
+		            if (!StateChangeClickFlag) {
+		                return;
+		            }
+		            if (hidRType.value == "T") {
+		                var tr = AnalysisListView.getElementsByTagName("tr");
+		                for (var i = 0; i < tr.length; i++) {
+		                    if (tr[i].getAttribute("selected") == "true") {
+		                        tr[i].style.backgroundColor = "white";
+		                    }
+		                }
+		                document.getElementById("AnalysisData").value = AnalysisListView.innerHTML;
+		                form_analysissave.submit();
+		            }
+		            else {
+		                if (Graph.innerHTML != "") {
+		                    for (var i = 0 ; i < Graph.getElementsByTagName("TR").length ; i++) {
+		                        if (Graph.getElementsByTagName("TR")[i].childNodes.length == 5)
+		                        {
+		                            Graph.getElementsByTagName("TR")[i].childNodes[4].innerHTML = "&nbsp;";
+		                        }
+		                    }
+		                    document.getElementById("AnalysisData").value = Graph.innerHTML;
+		                    form_analysissave.submit();
+		                }
+		                else {
+		                    alert("<spring:message code='ezQuestion.t413' />");
+		                }
+		            }
+		    }
+		    
 		    function TotalSaveCSV() {
 		        if (buttonFlag != "") {
 		            alert("<spring:message code='ezQuestion.t128' />")
@@ -347,7 +383,7 @@ alert(xmlHttp.responseText);
 			<ul>
 			    <li><span onclick="menuQst_List()"><spring:message code='ezQuestion.t130' /></span></li>
 			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
-			    <li><span id="saveExcel"><spring:message code='ezQuestion.t131' /></span></li>
+			    <li><span onclick="SaveCSV()"><spring:message code='ezQuestion.t131' /></span></li>
 			    <li><span onclick="TotalSaveCSV()"><spring:message code='ezQuestion.t132' /></span></li>
 			</ul>
 		</div>
