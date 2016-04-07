@@ -465,7 +465,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-
+System.out.println(getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
 				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount+1) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
@@ -629,7 +629,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
         qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
         List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO);
-        
+System.out.println(qstAttachVOList.size());
         if(qstAttachVOList!=null){
 	        for(QstAttachVO attachVO : qstAttachVOList){
 	        	if (bFirst){
@@ -1729,7 +1729,7 @@ System.out.println("pXML:"+pXML);
 							String ansAttachUrl = doc.getElementsByTagName("HREF").item(aa).getTextContent();*/
 							String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
 							String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-							
+
 							if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
 								
 							}
@@ -3179,36 +3179,85 @@ System.out.println("deptsize:"+deptSize);
 	}
 	
 	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do")
-	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response){
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String hidRType2 = "";
 		
 		if(request.getParameter("hidRType2") != null){
 			hidRType2 = request.getParameter("hidRType2");
 		}
 		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		Row row;
+		Cell cell;
+		
 		String pFileName = "";
-		
-		
+		Date sysDate=new Date();
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String strDate = formatter.format(sysDate);
+		String StrAnalysisDate = request.getParameter("AnalysisData").replaceAll("&nbsp;", "").trim();
+
+		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+		Node tableNode = analysisData.getElementsByTagName("table").item(0);
+		Node tableHeadNode;
+		Node tableBodyNode ;
 //		subjective
 		if(hidRType2.equals("A")){
-			pFileName = "_Report.xls";
+			pFileName = strDate+"_Report.xls";
+			sheet = workbook.createSheet("report");
+			tableHeadNode = tableNode.getChildNodes().item(1);
+			tableBodyNode = tableNode.getChildNodes().item(2);
+			row = sheet.createRow(0);
+			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+			}
+			
+			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
+				row = sheet.createRow(i);
+				Node tr = tableBodyNode.getChildNodes().item(i-1);
+				for(int j=0; j<tr.getChildNodes().getLength(); j++){
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+				}
+			}
 //		table
 		}else if(hidRType2.equals("T")){
-			pFileName = "_Report.xls";
-		
+			pFileName = strDate+"_Table.xls";
+			sheet = workbook.createSheet("table");
+			tableHeadNode = tableNode.getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(1);
+			row = sheet.createRow(0);
+			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+			}
+			
+			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
+				row = sheet.createRow(i);
+				Node tr = tableBodyNode.getChildNodes().item(i-1);
+				for(int j=0; j<tr.getChildNodes().getLength(); j++){
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+				}
+			}
 //		graph
 		}else{
-			pFileName = "_Report.xls";
+			pFileName = strDate+"_Graph.xls";			
+			sheet = workbook.createSheet("graph");
+			tableBodyNode = tableNode.getChildNodes().item(0);
+			for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
+				row = sheet.createRow(i);
+				Node tr = tableBodyNode.getChildNodes().item(i);
+				for(int j=0; j<tr.getChildNodes().getLength(); j++){
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+				}
+			}
 		}
 		
-		
-
-        
-		
-		/** EZSP_GETQUESTIONNOCNT*/
-		
-		
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
 	}
 	
 	@SuppressWarnings({ "unused", "resource" })
