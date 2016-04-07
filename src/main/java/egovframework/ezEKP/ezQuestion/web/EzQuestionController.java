@@ -36,6 +36,7 @@ import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1713,14 +1714,21 @@ System.out.println("pXML:"+pXML);
 					qstCompleteVO.setAnswerNo(iAns+1);
 					qstCompleteVO.setAnswerContent(doc.getElementsByTagName("TITLE").item(iAns).getTextContent().replace("'", "''"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO);
-System.out.println("ansCnt:"+ansCnt);					
+
+					NodeList nList = doc.getElementsByTagName("ANSWER");
 					
-					if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-						int ansAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
-System.out.println("ansAttachCnt:"+ansAttachCnt);
+					if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
+					//if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+						//int ansAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
+						int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+						
+						int ansAttachTitleCnt = doc.getElementsByTagName("ATTACHTITLE").getLength();
+
 						for(int aa=0; aa<ansAttachCnt; aa++) {
-							String ansAttachType = doc.getElementsByTagName("TYPE").item(iAns).getTextContent();
-							String ansAttachUrl = doc.getElementsByTagName("HREF").item(iAns).getTextContent();
+							/*String ansAttachType = doc.getElementsByTagName("TYPE").item(aa).getTextContent();
+							String ansAttachUrl = doc.getElementsByTagName("HREF").item(aa).getTextContent();*/
+							String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
+							String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
 							
 							if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
 								
@@ -1731,7 +1739,8 @@ System.out.println("ansAttachCnt:"+ansAttachCnt);
 							qstCompleteVO2.setQuesNo(v_quesNo);
 							qstCompleteVO2.setAnswerNo(iAns+1);
 							qstCompleteVO2.setAttachNo(aa+1);
-							qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(iAns).getTextContent().replace("'", "''"));
+							qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+							qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
 							qstCompleteVO2.setAttachURL(ansAttachUrl);
 							qstCompleteVO2.setAttachType(ansAttachType);
 							ezQuestionService.pollSaveAttach(qstCompleteVO2);
