@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganGetUserInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -43,10 +42,6 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
 	public OrganDeptVO getDeptInfo(Map<String, Object> map) {
 		return (OrganDeptVO) select("EzOrganDAO.getDeptInfo", map);
-	}
-	
-	public OrganGetUserInfoVO getUserInfo(Map<String, Object> map) {
-		return (OrganGetUserInfoVO) select("EzOrganDAO.getUserInfo", map);
 	}
 	
 	public String getPropertyValue(Map<String, Object> map) throws Exception{

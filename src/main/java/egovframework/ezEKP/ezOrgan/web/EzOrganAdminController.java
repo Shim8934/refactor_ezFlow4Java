@@ -135,7 +135,7 @@ public class EzOrganAdminController {
 		String proplist = request.getParameter("prop");		
 	
 		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1");		
-		
+
 		return infoXML;
 	}	
 

@@ -176,7 +176,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);					
 																
-				nodeInfo.append("<" + propname.toUpperCase() + ">" + field.get(vo) + "</" + propname.toUpperCase() + ">");						
+				nodeInfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? field.get(vo) : "") + "</" + propname.toUpperCase() + ">");						
 			}
 		}
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDeptID());

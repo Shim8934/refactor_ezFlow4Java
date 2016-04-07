@@ -63,7 +63,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             	Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);          	            		
             	
-            	propinfo.append("<" + propname.toUpperCase() + ">" + field.get(vo) + "</" + propname.toUpperCase() + ">");            	            	            	                
+            	propinfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? field.get(vo) : "") + "</" + propname.toUpperCase() + ">");            	            	            	                
             }
         }
         propinfo.append("</DATA>");
