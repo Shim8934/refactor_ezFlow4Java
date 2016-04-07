@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
 public class OrganDeptVO {
+	/** 부모 회사/부서*/
+	private String parentCn;
 	/** 회사/부서아이디*/
 	private String cn;
 	/** 회사/부서명*/
@@ -202,4 +204,36 @@ public class OrganDeptVO {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getParentCn() {
+		return parentCn;
+	}
+	public void setParentCn(String parentCn) {
+		this.parentCn = parentCn;
+	}
+	@Override
+	public String toString() {
+		return "OrganDeptVO [parentCn=" + parentCn + ", cn=" + cn + ", deptID="
+				+ deptID + ", displayName=" + displayName + ", displayName1="
+				+ displayName1 + ", displayName2=" + displayName2 + ", deptNM="
+				+ deptNM + ", mail=" + mail + ", extensionAttribute1="
+				+ extensionAttribute1 + ", extensionAttribute2="
+				+ extensionAttribute2 + ", extensionAttribute3="
+				+ extensionAttribute3 + ", extensionAttribute4="
+				+ extensionAttribute4 + ", extensionAttribute5="
+				+ extensionAttribute5 + ", extensionAttribute6="
+				+ extensionAttribute6 + ", extensionAttribute7="
+				+ extensionAttribute7 + ", extensionAttribute8="
+				+ extensionAttribute8 + ", extensionAttribute9="
+				+ extensionAttribute9 + ", extensionAttribute10="
+				+ extensionAttribute10 + ", extensionAttribute11="
+				+ extensionAttribute11 + ", extensionAttribute12="
+				+ extensionAttribute12 + ", extensionAttribute13="
+				+ extensionAttribute13 + ", extensionAttribute14="
+				+ extensionAttribute14 + ", extensionAttribute15="
+				+ extensionAttribute15 + ", adsPath=" + adsPath + ", updateDT="
+				+ updateDT + ", type=" + type + "]";
+	}
+	
+	
+	
 }

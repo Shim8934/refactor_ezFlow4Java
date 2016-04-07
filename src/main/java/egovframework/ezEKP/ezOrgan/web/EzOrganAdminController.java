@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -137,6 +140,32 @@ public class EzOrganAdminController {
 		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1");		
 
 		return infoXML;
-	}	
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", produces = "text/html;charset=utf-8")	
+	@ResponseBody
+	public String saveDeptInfo(OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{	
+		String domain = config.getProperty("config.DomainName");
+		String result = "";		
+System.out.println(vo.toString());
+		if(vo.getParentCn() == null){
+			
+		}else{
+System.out.println("in");
+			String cn = vo.getCn();
+			int cnt = ezOrganAdminService.companyCheck(cn);
+			
+			if(cnt > 0){
+				result = "PRE";
+			}else{							
+				String mailAddr = cn + "@" + domain;
+				//ezOrganAdminService.insertDBData_dept(vo);
+				
+				result = "OK";
+			}
+		}
+		
+		return result;
+	}
 
 }

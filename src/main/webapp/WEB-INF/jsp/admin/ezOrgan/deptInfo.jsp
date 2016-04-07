@@ -86,6 +86,83 @@
 			    }
 			    catch (e){ }
 			});
+			
+			function Check_ID(pValue){
+				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
+					if(pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90){
+						// A-Z
+					}else if(pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122){
+						// a-z
+					}else if(pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57){
+						// 0-9
+					}else{
+						return false;
+					}
+				}				
+				return true;
+			}
+			
+			function OK_Click(){
+				if (DeptID.value == ""){
+					alert("<spring:message code='ezOrgan.t210' />");
+					return;
+				}				
+				if (DeptID.value.length < 3){
+					alert("<spring:message code='ezOrgan.t211' />");
+					return;
+				}				
+				if (!Check_ID(DeptID.value)){
+					alert("<spring:message code='ezOrgan.t212' />");
+					return;
+				}				
+				if (DeptName.value == ""){
+					alert("<spring:message code='ezOrgan.t213' />");
+					return;
+				}
+				if (DeptName.value.indexOf("(") != -1 || DeptName.value.indexOf(")") != -1){
+					alert("<spring:message code='ezOrgan.t214' /><,>,_,-,& <spring:message code='ezOrgan.t215' />");
+					return 0;	
+				}
+												
+				var parentCn;
+				var extensionattribute8 = "0";
+				var extensionattribute11 = "N";
+				
+				if (OldDeptName == ""){
+					parentCn = ParentID.value;
+			    }				
+				if (InsDept.checked){
+					extensionattribute8 = "1";
+				}				
+				if (document.getElementById("ouDoumentReceiveYN").checked){
+					extensionattribute11 = "Y";
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/saveDeptInfo.do",
+					async : false,
+					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value, displayName2: DeptName2.value, extensionAttribute10: SusinSymbol.value, 
+						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
+						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11},
+					success : function(result){						
+						if (result == "PRE"){
+							alert("<spring:message code='ezOrgan.t119' />");
+						}else{
+							if (ReturnFunction != null){
+					            ReturnFunction(DeptID.value);
+						    }else{
+					            window.returnValue = DeptID.value;
+						    }
+							window.close();
+						}
+					},
+					error : function(){
+						alert("<spring:message code='ezOrgan.t217' />");
+					}
+				});
+			}
 	    </script>
 	</head>
 	<body class="popup">
