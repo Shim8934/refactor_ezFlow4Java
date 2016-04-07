@@ -16,6 +16,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1512,7 +1515,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	}
 
 	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID) throws Exception {
-	
+		NodeList nList = null;
 		int dataCount = 0;
 		dataCount = ezQuestionService.getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID));
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1660,9 +1663,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-		
+System.out.println("qstCnt:"+qstCnt);		
 		for(int i=0; i<qstCnt; i++) {
-			
+			NodeList qList = doc.getElementsByTagName("QUESTION");
 			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
@@ -1710,45 +1713,41 @@ System.out.println("pQstTitle:"+pQstTitle);
 				}
 			}
 			*/
-			if(doc.getElementsByTagName("ANSWER").getLength() > 0) {
-				int ansCnt = doc.getElementsByTagName("ANSWER").getLength();
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+
+			if(nodes.getLength() > 0) {
+				int ansCnt = nodes.getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
 					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
 					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 					qstCompleteVO.setQuesNo(v_quesNo);
 					qstCompleteVO.setAnswerNo(iAns+1);
-					qstCompleteVO.setAnswerContent(doc.getElementsByTagName("TITLE").item(iAns).getTextContent().replace("'", "''"));
+					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "''"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO);
-
-					NodeList nList = doc.getElementsByTagName("ANSWER");
 					
-					if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
-					//if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-						//int ansAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
-						int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
-						
-						int ansAttachTitleCnt = doc.getElementsByTagName("ATTACHTITLE").getLength();
-
-						for(int aa=0; aa<ansAttachCnt; aa++) {
-							/*String ansAttachType = doc.getElementsByTagName("TYPE").item(aa).getTextContent();
-							String ansAttachUrl = doc.getElementsByTagName("HREF").item(aa).getTextContent();*/
-							String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
-							String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-
-							if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
-								
+					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
+						nList = doc.getElementsByTagName("ANSWER");	
+					
+						if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
+							int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+							for(int aa=0; aa<ansAttachCnt; aa++) {
+								String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
+								String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
+								if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
+								}
+								QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+								qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+								qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+								qstCompleteVO2.setQuesNo(v_quesNo);
+								qstCompleteVO2.setAnswerNo(iAns+1);
+								qstCompleteVO2.setAttachNo(aa+1);
+								qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+								qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
+								qstCompleteVO2.setAttachURL(ansAttachUrl);
+								qstCompleteVO2.setAttachType(ansAttachType);
+								ezQuestionService.pollSaveAttach(qstCompleteVO2);
 							}
-							QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-							qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-							qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-							qstCompleteVO2.setQuesNo(v_quesNo);
-							qstCompleteVO2.setAnswerNo(iAns+1);
-							qstCompleteVO2.setAttachNo(aa+1);
-							qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
-							qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
-							qstCompleteVO2.setAttachURL(ansAttachUrl);
-							qstCompleteVO2.setAttachType(ansAttachType);
-							ezQuestionService.pollSaveAttach(qstCompleteVO2);
 						}
 					}
 				}
@@ -1883,7 +1882,6 @@ System.out.println("pDirPath:"+qDirPath);
 		StringBuilder sb = new StringBuilder();
 		if(req.getFile("cmuds") != null) {
 			InputStreamReader myFile = new InputStreamReader(req.getFile("cmuds").getInputStream());
-System.out.println("!!");
 			int line = 0; 
 			while((line = myFile.read()) != -1) {
 				sb.append(String.valueOf(line));
