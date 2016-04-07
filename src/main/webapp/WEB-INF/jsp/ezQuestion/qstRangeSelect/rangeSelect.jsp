@@ -233,7 +233,7 @@
         	}
     	}
     	function on_view() {
-	        var strQuery = "<DATA><DEPTID>${qstRangeSelectVO.userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>"; 
+	        var strQuery = "<DATA><DEPTID>${qstRangeSelectVO.userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>"; 
     	    xmlHttp_Depttree = null;
 	        xmlHttp_Depttree = createXMLHttpRequest();
     	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -254,7 +254,7 @@
         	var objNode;
         	createNodeInsert(xmlpara, objNode, "DATA");
         	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;DisplayName");
+        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
         	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
         	xmlHTTP.send(xmlpara);
         	xmlRtn = loadXMLString(xmlHTTP.responseText);
@@ -295,7 +295,7 @@
 	        	type : "POST",
 	        	dataType : "xml",
 	        	url : "/ezOrgan/getDeptMemberList.do",
-	        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayname;description;title", type : "user"},
+	        	data : {deptID : DeptID, cell : "displayName;title;description", prop : "mail;displayName;description;title", type : "user"},
 	        	success : function(result){		        		
 	        		document.getElementById("OrganListView").innerHTML = "";
 	                var listview = new ListView();
@@ -386,7 +386,7 @@
 	        	dataType : "xml",
 	        	url : "/ezOrgan/getSearchList.do",
 	        	async : false,
-	        	data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
+	        	data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
 	        	success : function(result){	
 	        		xmlDOM = result;
 	                adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -402,7 +402,7 @@
 	        }
     	    else if (adCount == 1) {
         	    bSearch = true;
-            	var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
+            	var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
             	xmlHttp_Depttree = null;
             	xmlHttp_Depttree = createXMLHttpRequest();
             	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -420,7 +420,7 @@
 	                    bSearch = true;
     	                xmlHttp_Depttree = null;
         	            xmlHttp_Depttree = createXMLHttpRequest();
-            	        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
+            	        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
                 	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                     	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
                     	xmlHttp_Depttree.send(strQuery);
@@ -443,7 +443,7 @@
         	    bSearch = true;
             	xmlHttp_Depttree = null;
             	xmlHttp_Depttree = createXMLHttpRequest();
-            	var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>DisPlayName</PROP></DATA>";
+            	var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
             	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
             	xmlHttp_Depttree.send(strQuery);
