@@ -1730,7 +1730,7 @@ System.out.println("ansAttachCnt:"+ansAttachCnt);
 							qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
 							qstCompleteVO2.setQuesNo(v_quesNo);
 							qstCompleteVO2.setAnswerNo(iAns+1);
-							qstCompleteVO2.setAttachNo(iAns+1);
+							qstCompleteVO2.setAttachNo(aa+1);
 							qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(iAns).getTextContent().replace("'", "''"));
 							qstCompleteVO2.setAttachURL(ansAttachUrl);
 							qstCompleteVO2.setAttachType(ansAttachType);
