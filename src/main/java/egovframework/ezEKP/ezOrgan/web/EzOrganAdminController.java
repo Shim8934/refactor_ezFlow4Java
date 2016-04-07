@@ -126,6 +126,17 @@ public class EzOrganAdminController {
 		model.addAttribute("secondary", secondary);
 		
 		return "admin/ezOrgan/deptInfo";
+	}
+		
+	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", produces = "text/xml;charset=utf-8")	
+	@ResponseBody
+	public String getEntryInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String cn = request.getParameter("cn");
+		String proplist = request.getParameter("prop");		
+	
+		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1");		
+		
+		return infoXML;
 	}	
 
 }

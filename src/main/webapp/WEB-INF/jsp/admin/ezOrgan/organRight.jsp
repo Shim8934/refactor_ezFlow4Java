@@ -47,7 +47,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>EXTENSIONATTRIBUTE1;EXTENSIONATTRIBUTE2;DISPLAYNAME</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -95,7 +95,7 @@
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "DATA");
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-			    createNodeAndInsertText(xmlpara, objNode, "PROP", "EXTENSIONATTRIBUTE2;EXTENSIONATTRIBUTE3;EXTENSIONATTRIBUTE9;DISPLAYNAME");
+			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 			    
 			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);

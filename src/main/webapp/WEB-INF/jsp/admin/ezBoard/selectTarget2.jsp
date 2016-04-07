@@ -80,7 +80,7 @@
 		        applyCurrentData();
 
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID>${deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID>${deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		        g_xmlHTTP.send(strQuery);
@@ -101,7 +101,7 @@
 		        	type : "POST",
 		        	dataType : "xml",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayname;description;title", type : "user"},
+		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayName;description;title", type : "user"},
 		        	success : function(result){		        		
 		        		document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
@@ -215,7 +215,7 @@
 		        var xmlRtn = createXmlDom();
 		        var xmlpara = createXmlDom();
 
-		        var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>mail;DisplayName</PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>mail;displayName</PROP></DATA>";
 		        
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(strQuery);
@@ -449,7 +449,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -462,7 +462,7 @@
 		        if (RetValue["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);

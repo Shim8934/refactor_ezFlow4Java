@@ -3,6 +3,8 @@
 
 <sqlMap namespace="ezOrganAdmin">
 	
+	<typeAlias alias="OrganUserVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
 	</procedure>
@@ -11,6 +13,10 @@
 		{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
 	</procedure>
 	
+	<procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
 	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
 		<![CDATA[
 			SELECT 

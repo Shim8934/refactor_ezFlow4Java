@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,6 @@ import org.w3c.dom.Document;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganGetUserInfoVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganService")
@@ -171,29 +170,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		if (!pPropList.equals("")){					
 			pPropList = convertAddandConvert("group", pPropList);
 			
-			String[] proplist = pPropList.split(";");
-			String propvalue = "";
-			String propColumn = "";
+			String[] proplist = pPropList.split(";");						
 
 			for(String propname : proplist){
-				propname = propname.toUpperCase();
-				if(propname.equals("mail")){
-					propColumn = vo.getMail();
-				}else if(propname.equals("DISPLAYNAME")){
-					propColumn = vo.getDisplayName();
-				}else if(propname.equals("DISPLAYNAME1")){
-					propColumn = vo.getDisplayName1();
-				}else if(propname.equals("DISPLAYNAME2")){
-					propColumn = vo.getDisplayName2();
-				}else if(propname.equals("EXTENSIONATTRIBUTE1")){
-					propColumn = vo.getExtensionAttribute1();
-				}else if(propname.equals("EXTENSIONATTRIBUTE2")){
-					propColumn = vo.getExtensionAttribute2();
-				}else{
-					propColumn = "";
-				}						
-				propvalue = (propColumn != null && !propColumn.equals("") ? propColumn : "");												
-				nodeInfo.append("<" + propname.toUpperCase() + ">" + propvalue + "</" + propname.toUpperCase() + ">");						
+				Field field = vo.getClass().getDeclaredField(propname);
+            	field.setAccessible(true);					
+																
+				nodeInfo.append("<" + propname.toUpperCase() + ">" + field.get(vo) + "</" + propname.toUpperCase() + ">");						
 			}
 		}
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDeptID());
@@ -487,8 +470,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         
 		return memberlist2.toString();
 	}
-
-	private String convertAddandConvert(String pClass, String pProvValue){        
+	
+	public String convertAddandConvert(String pClass, String pProvValue){        
         String[] arryProvValue = pProvValue.split(";");
         String returnValue = "";
         String addPopList = pProvValue;
@@ -509,11 +492,11 @@ public class EzOrganServiceImpl implements EzOrganService {
         if (!pType.equals("user")){
             // 부서
             switch (pAttribute.toUpperCase()){
-                case "DISPLAYNAME": strRet = "DISPLAYNAME1;DISPLAYNAME2".toUpperCase();
+                case "DISPLAYNAME": strRet = "displayName1;displayName2";
                     break;
-                case "DESCRIPTION": strRet = "DESCRIPTION1;DESCRIPTION2".toUpperCase();
+                case "DESCRIPTION": strRet = "description1;description2";
                     break;
-                case "COMPANY": strRet = "COMPANY1;COMPANY2".toUpperCase();
+                case "COMPANY": strRet = "company1;company2";
                     break;
                 default: strRet = "";
                     break;
@@ -521,18 +504,18 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	//사용자
             switch (pAttribute.toUpperCase()){
-                case "DISPLAYNAME": strRet = "DISPLAYNAME1;DISPLAYNAME2".toUpperCase();
+                case "DISPLAYNAME": strRet = "displayName1;displayName2";
                     break;
-                case "DESCRIPTION": strRet = "DESCRIPTION1;DESCRIPTION2".toUpperCase();
+                case "DESCRIPTION": strRet = "description1;description2";
                     break;
-                case "COMPANY": strRet = "COMPANY1;COMPANY2".toUpperCase();
+                case "COMPANY": strRet = "company1;company2";
                     break;
-                case "TITLE": strRet = "TITLE1;TITLE2".toUpperCase();
+                case "TITLE": strRet = "title1;title2";
                     break;
-                case "EXTENSIONATTRIBUTE10": strRet = "EXTENSIONATTRIBUTE101;EXTENSIONATTRIBUTE102".toUpperCase();
+                case "EXTENSIONATTRIBUTE10": strRet = "extensionAttribute101;extensionAttribute102";
                     break;
                 case "UPNNAME":
-                    strRet = "UPNNAME";
+                    strRet = "upnName";
                     break;
                 default: strRet = "";
                     break;
@@ -541,7 +524,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         return strRet;
     }
 	
-	private boolean checkSearchField(String pFieldName){
+	public boolean checkSearchField(String pFieldName){
 		boolean bRet = false;
 		
         try{
@@ -559,63 +542,169 @@ public class EzOrganServiceImpl implements EzOrganService {
         }catch (Exception Ex){ }
         return bRet;
     }
+	
+	public boolean checkDBColum(String pProvValue) throws Exception{
+		boolean bRet = false;    
 
-	@Override
-	public OrganUserVO getTBLUserMaster(String userID, String deptID, String lang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_CN", userID);
-		map.put("v_DEPTCD", deptID);
-		map.put("v_LANGDATA", lang);
-		return ezOrganDAO.getTBLUserMaster(map);
-	}
-	
-	@Override
-	public OrganGetUserInfoVO getUserInfo(String userID, String primary) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_CN", userID);
-		map.put("v_LANGDATA", primary);
-		return ezOrganDAO.getUserInfo(map);
-	}
-	
-	public String getPropertyList(String userID, String pPropList, String lang) throws Exception {
-		String propValue = "";
-		StringBuilder propInfo = new StringBuilder("<DATA>");
-		lang = commonUtil.convertLangCode(lang);
-		String dataType = "user";
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_CN", userID);
-		map.put("v_LANGDATA", lang);
-		
-		OrganGetUserInfoVO userInfo =  ezOrganDAO.getUserInfo(map);
-		String strXML = commonUtil.getQueryResult(userInfo);
-		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-		if(xmlDom.getElementsByTagName("ROW").getLength() == 0) {
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map2.put("v_CN", userID);
-			map2.put("v_LANGDATA", lang);
-			OrganDeptVO userDeptInfo = ezOrganDAO.getDeptInfo(map2);
-			strXML = commonUtil.getQueryResult(userDeptInfo);
-			xmlDom = commonUtil.convertStringToDocument(strXML);
-			dataType = "group";
-		}
-		pPropList = commonUtil.convertAddandConvert(dataType, pPropList);
-		String[] propList = pPropList.split(";");
-		for (String propName : propList) {
-			if(commonUtil.checkDBColum(propName.toUpperCase()) == false) {
-				propValue = getPropertyValue(userID, propName);
-				propInfo.append("<"+propName.toUpperCase()+">"+commonUtil.makeXMLString(propValue) + "</" + propName.toUpperCase() + ">");
-			} else if(propName.toUpperCase() != "") {
-				if(xmlDom.getElementsByTagName(propName.toUpperCase()).getLength() > 0) {
-					propInfo.append("<" + propName.toUpperCase() + ">" + commonUtil.makeXMLString(xmlDom.getElementsByTagName(propName.toUpperCase()).item(0).getTextContent()) + "</" + propName.toUpperCase() + ">" );
-				} else {
-					propInfo.append("<" + propName.toUpperCase() + "></" + propName.toUpperCase() + ">");
-				}
-			}
-		}
-		propInfo.append("</DATA>");
-		return propInfo.toString();
-		
-	}
+        switch (pProvValue.toUpperCase()){
+            case "CN":
+                bRet = true;
+                break;
+            case "DISPLAYNAME":
+                bRet = true;
+                break;
+            case "DISPLAYNAME1":
+                bRet = true;
+                break;
+            case "DISPLAYNAME2":
+                bRet = true;
+                break;
+            case "USEFLAG":
+                bRet = true;
+                break;
+            case "MAIL":
+                bRet = true;
+                break;
+            case "MAILNICKNAME":
+                bRet = true;
+                break;
+            case "UPNNAME":
+                bRet = true;
+                break;
+            case "DEPARTMENT":
+                bRet = true;
+                break;
+            case "DESCRIPTION":
+                bRet = true;
+                break;
+            case "DESCRIPTION1":
+                bRet = true;
+                break;
+            case "DESCRIPTION2":
+                bRet = true;
+                break;
+            case "PHYSICALDELIVERYOFFICENAME":
+                bRet = true;
+                break;
+            case "COMPANY":
+                bRet = true;
+                break;
+            case "COMPANY1":
+                bRet = true;
+                break;
+            case "COMPANY2":
+                bRet = true;
+                break;
+            case "DEPTLEVEL":
+                bRet = true;
+                break;
+            case "DEPT_CD_PATH":
+                bRet = true;
+                break;
+            case "DEPT_NM_PATH":
+                bRet = true;
+                break;
+            case "TITLE":
+                bRet = true;
+                break;
+            case "TITLE1":
+                bRet = true;
+                break;
+            case "TITLE2":
+                bRet = true;
+                break;
+            case "TELEPHONENUMBER":
+                bRet = true;
+                break;
+            case "HOMEPHONE":
+                bRet = true;
+                break;
+            case "FACSIMILETELEPHONENUMBER":
+                bRet = true;
+                break;
+            case "MOBILE":
+                bRet = true;
+                break;
+            case "POSTALCODE":
+                bRet = true;
+                break;
+            case "STREETADDRESS":
+                bRet = true;
+                break;
+            case "INFO":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE1":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE2":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE3":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE4":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE5":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE6":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE7":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE8":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE9":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE10":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE101":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE102":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE11":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE12":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE13":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE14":
+                bRet = true;
+                break;
+            case "EXTENSIONATTRIBUTE15":
+                bRet = true;
+                break;
+            case "ADSPATH":
+                bRet = true;
+                break;
+            case "ADFLAG":
+                bRet = true;
+                break;
+            case "UPDATEDT":
+                bRet = true;
+                break;
+            case "SIPURI":
+                bRet = true;
+                break;
+            case "BIRTH":
+                bRet = true;
+                break;
+            case "BIRTHTYPE":
+                bRet = true;
+                break;
+        }     
+        return bRet;
+    }
 	
 }

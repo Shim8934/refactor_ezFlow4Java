@@ -39,39 +39,36 @@
 					OldDeptName = DeptName.value;
 					SusinSymbol.focus();
 
-					var xmlDom = createXmlDom();
-					var xmlHTTP = createXMLHttpRequest();
-
-				    var objNode;
-				    createNodeInsert(xmlDom, objNode, "DATA");
-				    createNodeAndInsertText(xmlDom, objNode, "CN", DeptID.value);
-			        /* 2015-06-30 표준모듈:수정(extensionAttribute11:결재문서수신여부) - KSK */
-				    createNodeAndInsertText(xmlDom, objNode, "PROP", "displayname;displayname2;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11");
-
-					xmlHTTP.open("POST", "GetEntryInfo.aspx?pMode=dept", false);
-					xmlHTTP.send(xmlDom);
-
-					if (xmlHTTP.status == 200){
-						xmlDom = xmlHTTP.responseXML;
-						DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
-						DeptName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
-						OldDeptName2 = DeptName2.value.trim()
-						SimpleName.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE6").trim();
-						Manager.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE9").trim();
-						BalsinPerson.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE5").trim();
-						SusinSymbol.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE10").trim();
-						SortNum.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
-						ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
-						DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
-						
-						if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
-							InsDept.checked = true;			
+					var xmlDom = createXmlDom();				
+					
+					$.ajax({
+						type : "POST",
+						dataType : "xml",
+						url : "/admin/ezOrgan/getEntryInfo.do",
+						async : false,
+						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11", pMode : "dept" },
+						success : function(result){
+							xmlDom = result;
+							DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
+							DeptName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
+							OldDeptName2 = DeptName2.value.trim()
+							SimpleName.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE6").trim();
+							Manager.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE9").trim();
+							BalsinPerson.value = SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE5").trim();
+							SusinSymbol.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE10").trim();
+							SortNum.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
+							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
+							DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
+							
+							if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
+								InsDept.checked = true;			
+							}
+				            /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
+							if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11") == "Y"){
+							    document.getElementById("ouDoumentReceiveYN").checked = true;
+							}
 						}
-			            /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
-						if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11") == "Y"){
-						    document.getElementById("ouDoumentReceiveYN").checked = true;
-						}
-					}
+					});
 				}
 			    try{
 			        var ua = navigator.userAgent;

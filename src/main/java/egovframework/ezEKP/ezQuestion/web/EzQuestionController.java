@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
@@ -76,7 +77,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 	private EgovFileScrty egovFileScrty;
 	
 	@Autowired
-	private EzOrganService ezOrganService;	
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;	
 
 	@Resource(name="EzQuestionService")
 	private EzQuestionService ezQuestionService;
@@ -1606,12 +1610,13 @@ System.out.println("pQstTitle:"+pQstTitle);
                 	ezQuestionService.callCreateMother(qstCompleteVO);
                 	
                 	String propList = "department;mail;displayname;title;description;company";
-                	String pXML = ezOrganService.getPropertyList(userId, propList, config.getProperty("config.primary"));
-System.out.println("pXML:"+pXML);
+                	String pXML = ezOrganAdminService.getPropertyList(userId, propList, config.getProperty("config.primary"));
+
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
 					String userDeptId = "";
 					String userGender = "";
 					String userAge = "";
+					
 					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() == "") {
 						userDeptId = "TOP";
 					} else {

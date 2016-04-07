@@ -1,14 +1,18 @@
 package egovframework.ezEKP.ezOrgan.dao;
 
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzOrganAdminDAO")
 public class EzOrganAdminDAO extends EgovAbstractDAO {
-
+	
+	public OrganUserVO getUserInfo(Map<String, Object> map) {
+		return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
+	}
+	
 	public int companyCheck(String cn) throws Exception{		
 		return (int) select("EzOrganAdminDAO.companyCheck", cn);
 	}

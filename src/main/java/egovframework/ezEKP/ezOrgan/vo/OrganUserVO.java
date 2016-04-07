@@ -13,6 +13,10 @@ public class OrganUserVO {
 	private String displayName2;	
 	/** 메일주소*/
 	private String mail;
+	/** 메일닉네임*/
+	private String mailNickName;
+	/** */
+	private String upnName;
 	/** */
 	private String description;
 	/** */
@@ -43,6 +47,8 @@ public class OrganUserVO {
 	private String facsimileTelephoneNumber;
 	/** */
 	private String streetAddress;
+	/** */
+	private String postalCode;
 	/** */
 	private String info;
 	/** 상위부서ID*/
@@ -75,16 +81,26 @@ public class OrganUserVO {
 	private String extensionAttribute14;
 	/** 정렬순서값*/
 	private String extensionAttribute15;
+	/** */
+	private String extensionAttribute101;
+	/** */
+	private String extensionAttribute102;
 	/** LDAP 경로*/
 	private String adsPath;
 	/** 최종업데이트일자*/
 	private String updateDT;
+	/** */
+	private String displayNamePrintable;
 	/** */
 	private String type;
 	/** */
 	private String sipUri;
 	/** */
 	private String positionCD;
+	/** */
+	private String birth;
+	/** */
+	private String birthType;
 	
 	
 	
@@ -339,6 +355,54 @@ public class OrganUserVO {
 	}
 	public void setPositionCD(String positionCD) {
 		this.positionCD = positionCD;
+	}
+	public String getMailNickName() {
+		return mailNickName;
+	}
+	public void setMailNickName(String mailNickName) {
+		this.mailNickName = mailNickName;
+	}
+	public String getUpnName() {
+		return upnName;
+	}
+	public void setUpnName(String upnName) {
+		this.upnName = upnName;
+	}
+	public String getPostalCode() {
+		return postalCode;
+	}
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+	public String getExtensionAttribute101() {
+		return extensionAttribute101;
+	}
+	public void setExtensionAttribute101(String extensionAttribute101) {
+		this.extensionAttribute101 = extensionAttribute101;
+	}
+	public String getExtensionAttribute102() {
+		return extensionAttribute102;
+	}
+	public void setExtensionAttribute102(String extensionAttribute102) {
+		this.extensionAttribute102 = extensionAttribute102;
+	}
+	public String getDisplayNamePrintable() {
+		return displayNamePrintable;
+	}
+	public void setDisplayNamePrintable(String displayNamePrintable) {
+		this.displayNamePrintable = displayNamePrintable;
+	}
+	public String getBirth() {
+		return birth;
+	}
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+	public String getBirthType() {
+		return birthType;
+	}
+	public void setBirthType(String birthType) {
+		this.birthType = birthType;
 	}	
 	
 	

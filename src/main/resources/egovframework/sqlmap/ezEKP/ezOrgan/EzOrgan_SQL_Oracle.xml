@@ -219,14 +219,14 @@
 					ELSE 
 						displayname2   
 					END 
-						displayname  ,
+						displayname,
 	            CASE #primary#
 					WHEN '1' THEN 
 						displayname
 					ELSE 
 						displayname2   
 					END 
-						deptnm
+						deptnm,
 	            displayname displayname1  ,
 	            displayname2 ,
 	            mail ,
