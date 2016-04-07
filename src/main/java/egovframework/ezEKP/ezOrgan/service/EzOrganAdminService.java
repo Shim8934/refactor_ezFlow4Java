@@ -1,8 +1,12 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+
 public interface EzOrganAdminService {
 	
 	public String getPropertyList(String cn, String proplist, String string) throws Exception;
+	
+	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
 
 	public int companyCheck(String cn) throws Exception;
 	

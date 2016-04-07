@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganAdminService")
@@ -37,11 +37,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		StringBuilder propinfo = new StringBuilder("<DATA>");
 		pLangCode = commonUtil.convertLangCode(pLangCode);
 		
-		Map<String, Object> map = new HashMap<String, Object>();		
-		map.put("v_CN", pCN);
-		map.put("v_LANGDATA", pLangCode);
-		
-		vo = ezOrganAdminDao.getUserInfo(map);
+		vo = getUserInfo(pCN, pLangCode);
 
 		if(vo == null){
 			Map<String, Object> map1 = new HashMap<String, Object>();
@@ -103,7 +99,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CLASS", pClass);
 		
 		ezOrganAdminDao.deleteDBData(map);
-	}	
+	}
+
+	@Override
+	public OrganUserVO getUserInfo(String cn, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();		
+		
+		map.put("v_CN", cn);
+		map.put("v_LANGDATA", lang);
+		
+		return ezOrganAdminDao.getUserInfo(map);
+	}
+	
+	
 	
 	
 }
