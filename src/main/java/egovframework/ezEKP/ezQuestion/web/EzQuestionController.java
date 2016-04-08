@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
+import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstStep1VO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
@@ -1355,11 +1356,9 @@ System.out.println(qstAttachVOList.size());
 		
 		if(req.getParameter("brd_id") != null)
 			brdId = req.getParameter("brd_id");
-System.out.println("brdId"+brdId);
-		if(req.getParameter("item_no") != null) {
+		if(req.getParameter("item_no") != null)
 			itemId = req.getParameter("item_no");
-System.out.println("itemId"+itemId);
-		}
+		
 		strGenderACL0 = "checked";
 		strGenderACL1 = "";
 		strGenderACL2 = "";
@@ -1411,10 +1410,8 @@ System.out.println("itemId"+itemId);
 			pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
-System.out.println(doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent());
-
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
-System.out.println("pQstTitle:"+pQstTitle);			
+			
 			//첨부
 			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
@@ -1486,7 +1483,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String qstCompleteCross(@RequestBody String xmlDoc ,HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
+	public String qstComplete(@RequestBody String xmlDoc ,HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
 		Document doc = commonUtil.convertStringToDocument(xmlDoc);
 		loginVO = commonUtil.userInfo(loginCookie);
 		
@@ -1612,7 +1609,7 @@ System.out.println("pQstTitle:"+pQstTitle);
                 	qstCompleteVO.setGubunNm2(userNm2);
                 	ezQuestionService.callCreateMother(qstCompleteVO);
                 	
-                	String propList = "department;mail;displayname;title;description;company";
+                	String propList = "department;mail;displayName;title;description;company";
                 	String pXML = ezOrganAdminService.getPropertyList(userId, propList, config.getProperty("config.primary"));
 
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
@@ -1663,9 +1660,8 @@ System.out.println("pQstTitle:"+pQstTitle);
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-System.out.println("qstCnt:"+qstCnt);		
+		
 		for(int i=0; i<qstCnt; i++) {
-			NodeList qList = doc.getElementsByTagName("QUESTION");
 			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
@@ -1797,7 +1793,7 @@ System.out.println("qstCnt:"+qstCnt);
 		if(req.getParameter("m_AttachModIndex") != null) {
 			attachModeIndex = String.valueOf(req.getParameter("m_AttachModIndex"));
 		}
-System.out.println("idName:"+idName);		
+		
 		model.addAttribute("idName", idName);
 		model.addAttribute("attachInfo", attachInfo);
 		model.addAttribute("attachType", attachType);
@@ -1812,12 +1808,10 @@ System.out.println("idName:"+idName);
 		String pFilePath = "";
 		String type = "";
 		String mode = "";
-		if(req.getParameter("QstType") != null) {
+		if(req.getParameter("QstType") != null)
 			type = String.valueOf(req.getParameter("QstType"));
-		} 
-		if(req.getParameter("mode") != null) {
-			type = String.valueOf(req.getParameter("mode"));
-		}
+		if(req.getParameter("mode") != null)
+			mode = String.valueOf(req.getParameter("mode"));
 		String pFileName = "";
 		MultipartFile file = req.getFile("cmuds");
 		if(file != null) {
@@ -1827,8 +1821,7 @@ System.out.println("idName:"+idName);
 			
 			String pDirPath = config.getProperty("upload_board.UPLOADQUESTION");
 			String qDirPath = req.getServletContext().getRealPath("");
-System.out.println("pDirPath:"+pDirPath);
-System.out.println("pDirPath:"+qDirPath);
+
 			File temp = new File(qDirPath);
 			if(!temp.exists()) {
 				temp.mkdirs();
@@ -1843,7 +1836,6 @@ System.out.println("pDirPath:"+qDirPath);
 			}
 			pFilePath = "/files/upload_board/uploadQuestion/"+newFileName;
 			
-			//writeUploadedFile(file, pFileName, qDirPath+pDirPath);
 			writeUploadedFile(file, newFileName, qDirPath+pDirPath);
 			
 			model.addAttribute("pFilePath", pFilePath);
@@ -1853,12 +1845,10 @@ System.out.println("pDirPath:"+qDirPath);
 			model.addAttribute("pDirPath", pDirPath);
 			model.addAttribute("qDirPath", qDirPath);
 			model.addAttribute("fileSize", fileSize);
-			
 		}
 		return "/ezQuestion/qstAttachFile";
 	}
 	
-
 	@RequestMapping(value="/ezQuestion/qstTempSave.do")
 	public void qstTempSave(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -1868,7 +1858,6 @@ System.out.println("pDirPath:"+qDirPath);
 		} else  {
 			return;
 		}
-		
 		resp.setContentType("application/octet-stream");
 		resp.setCharacterEncoding("utf-8");
 		resp.setHeader("Content-Disposition", "attachment;filename=\"TempQuestion.qst\"");
@@ -1895,25 +1884,6 @@ System.out.println("pDirPath:"+qDirPath);
 		
 	}
 	
-	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode) {
-			pLangCode = ConvertLangCode(pLangCode);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_CLASS", pClass);
-			map.put("v_CN", pDeptID);
-			map.put("v_LANGDATA", pLangCode);
-			
-		return "";
-	}
-	
-	public String ConvertLangCode(String pLangCode) {
-		if(pLangCode != "2") {
-			return "1";
-		} else {
-			return "2";
-		}
-	}
-	
-
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
 	public String attachView(HttpServletRequest request,ModelMap model) throws Exception{
@@ -3398,5 +3368,220 @@ System.out.println("deptsize:"+deptSize);
 		}
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + "report" + ".xls\"");
 		workbook.write(response.getOutputStream());
+	}
+	
+	@RequestMapping("/ezQuestion/qstChangePermission.do")
+	public String qstChangePermission(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest req) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		QstListVO qstListVO = new QstListVO();
+		String brdId = "5";
+		String itemId = "";
+		String saveFlg = "";
+		String title = "", responseRange = "", postDate = "", pollEndDate = "", currPage = "1";
+		int pageSize=15;
+		boolean resultYN = false;
+		qstListVO.setUserId(loginVO.getId());
+		
+		if(req.getParameter("brdId") != null) 
+			brdId = req.getParameter("brdId");
+		if(req.getParameter("itemNo") != null) 
+			itemId = req.getParameter("itemNo");
+		if(req.getParameter("save") != null) 
+			saveFlg = req.getParameter("save");
+		if(req.getParameter("title")!=null)
+			title = req.getParameter("title");
+		if(req.getParameter("responseRange")!=null)
+			responseRange = req.getParameter("responseRange");
+		if(req.getParameter("postDate")!=null)
+			postDate = req.getParameter("postDate");
+		if(req.getParameter("pollEndDate")!=null)
+			pollEndDate = req.getParameter("pollEndDate");
+		if(req.getParameter("currPage")!=null)
+			currPage = req.getParameter("currPage");
+		
+		if(itemId == null || itemId == "" || itemId.equals("")) {
+			itemId = "0";
+		}
+		
+		qstListVO.setBrdId(Integer.parseInt(brdId));
+		qstListVO.setTitle(title);
+		qstListVO.setResponseRange(responseRange);
+		qstListVO.setPostDate(postDate);
+		qstListVO.setPollEndDate(pollEndDate);
+		qstListVO.setCurrPage(Integer.parseInt(currPage));
+		qstListVO.setPageSize(pageSize);
+
+		String receve = "brdId=" + qstListVO.getBrdId() +
+                "&title=" + new String(qstListVO.getTitle()) +
+                "&responseRange=" + qstListVO.getResponseRange() +
+                "&postDate=" + qstListVO.getPostDate() +
+                "&pollEndDate=" + qstListVO.getPollEndDate() +
+                "&currPage=" + qstListVO.getCurrPage();
+		
+		String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
+		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		qstUserPollItemVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(itemId));
+		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
+		
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(itemId));
+		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
+		
+		/*String publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
+		String publicFlg = qstUserPermissionVO.getPublicFlg();
+		String multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
+		String endFlg = qstUserPermissionVO.getEndFlg();
+		responseRange = qstUserPermissionVO.getResponseRange();*/
+		
+		/*boolean bPublic;
+        if (publicFlg == "1"){
+            bPublic = true;
+        }else{
+            bPublic = false;
+        }*/
+        
+        //권한
+        //int responseNo = ezQuestionService.getQstResponse(Integer.parseInt(req.getParameter("brdId")), Integer.parseInt(req.getParameter("itemNo")));
+//System.out.println(responseNo+"!!");
+       /* if(responseNo == 2) {
+        		resultYN = true;
+        } else {
+        		resultYN = false;
+        }*/
+        
+		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
+		model.addAttribute("qstListVO", qstListVO);
+		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
+		model.addAttribute("receve", receve);
+		model.addAttribute("resultYN", resultYN);
+		model.addAttribute("saveFlg", saveFlg);
+		return "/ezQuestion/qstChangePermission";
+	}
+	
+	@RequestMapping("/ezQuestion/callChangePermission.do")
+	public void callChangePermission(Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		String brdId = "5";
+		String itemId = "";
+		if(req.getParameter("item_no") != null) 
+		itemId = req.getParameter("item_no");
+		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
+		qstUserPollItemVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(itemId));
+		qstUserPollItemVO.setTitle(req.getParameter("txtSubject"));
+		qstUserPollItemVO.setContent(req.getParameter("txtContent"));
+		qstUserPollItemVO.setPostTerm(Integer.parseInt(req.getParameter("txtExpiredate")));
+		qstUserPollItemVO.setPostDate(req.getParameter("hidStartDate"));
+		qstUserPollItemVO.setPollEndDate(req.getParameter("hidEndDate"));
+		
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(itemId));
+		qstUserPermissionVO.setPublicResultFlg(req.getParameter("hidopenResult"));
+		qstUserPermissionVO.setPublicFlg(req.getParameter("hidanonymity"));
+		qstUserPermissionVO.setMultiResponseFlg(req.getParameter("hidMultiResponse"));
+		qstUserPermissionVO.setEndFlg("1");
+		qstUserPermissionVO.setResponseRange(req.getParameter("hidTarget"));
+		
+		ezQuestionService.changePermission(qstUserPermissionVO, qstUserPollItemVO);
+		
+		resp.sendRedirect("/ezQuestion/qstChangePermission.do?endpoll="+qstUserPermissionVO.getEndFlg()+"&item_no="+qstUserPermissionVO.getItemNo()+"&"+req.getParameter("Receve_str2")+"&save=OK");
+	}
+	
+	@RequestMapping("/ezQuestion/callEndPoll.do")
+	public void callEndPoll(Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		String brdId = "5";
+		String itemId = "";
+		String endDate = "";
+		
+		if(req.getParameter("item_no") != null) 
+		itemId = req.getParameter("item_no");
+
+		if(req.getParameter("hidEndPoll").equals("1")){
+			 endDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).toString();
+		}
+		ezQuestionService.updatePollEndDate(Integer.parseInt(brdId), Integer.parseInt(itemId), endDate, req.getParameter("hidEndPoll"));
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstStep1ReUse.do")
+	public String qstStep1ReUse(HttpServletRequest req,Model model) throws Exception {
+		String brdId = "";
+		String itemId = "";
+		if(req.getParameter("brd_id") != null) 
+			brdId = req.getParameter("brd_id");
+		if(req.getParameter("item_id") != null)
+			itemId = req.getParameter("item_id");
+		String brdNm = req.getParameter("brd_nm");
+		String brdPostterm = req.getParameter("brd_postterm");
+		String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
+		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+
+		QstReuseQuestionVO qstReuseQuestionVO = new QstReuseQuestionVO();
+		
+		qstReuseQuestionVO =  ezQuestionService.reUseQuestionData(Integer.parseInt(brdId),Integer.parseInt(itemId));
+		
+		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
+		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(itemId));
+		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
+
+		model.addAttribute("brdId", brdId);
+		model.addAttribute("itemId", itemId);
+		model.addAttribute("brdNm", brdNm);
+		model.addAttribute("brdPostterm", brdPostterm);
+		model.addAttribute("qstReuseQuestionVO", qstReuseQuestionVO);
+		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
+		return "/ezQuestion/qstStep1ReUse";
+	}
+	
+	@RequestMapping(value="/ezQuestion/qstStep2ReUse.do")
+	public String qstStep2ReUse(HttpServletRequest req,Model model, QstStep1VO qstStep1VO, QstAddVO qstAddVO) throws Exception {
+		String brdId = "";
+		if(req.getParameter("brdId") != null) {
+			brdId = req.getParameter("brdId"); 
+		}
+		String oldItemNum = "";
+		if(req.getParameter("old_item_num") != null) {
+			oldItemNum = req.getParameter("old_item_num"); 
+		}
+		String itemId = "";
+		if(req.getParameter("itemNo") != null) {
+			itemId = req.getParameter("itemNo"); 
+		}
+		
+		StringBuilder pStep1DataXML = new StringBuilder();
+		pStep1DataXML.append("<PARAMETER>");
+		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
+		pStep1DataXML.append("<CONTENT><![CDATA[" + req.getParameter("txtContent") + "]]></CONTENT>");
+		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
+		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
+		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
+		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("hidAnonymity")+"</ANONYMITY>");
+		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("hidOpenResult")+"</OPENRESULT>");
+		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
+		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
+		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+		pStep1DataXML.append("</PARAMETER>");
+		
+		qstStep1VO.setItemNo(itemId);
+		model.addAttribute("oldItemNum", Integer.parseInt(oldItemNum));
+		model.addAttribute("qstStep1VO", qstStep1VO);
+		model.addAttribute("qstAddVO", qstAddVO);
+		model.addAttribute("pStep1DataXML", pStep1DataXML);
+		return "/ezQuestion/qstStep2ReUse";
+	}
+	
+	@RequestMapping(value="/ezQuestion/callTempLoad.do")
+	public String callTempLoad(HttpServletRequest req,Model model) throws Exception {
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/ezQuestion/callTempSave.do")
+	public String callTempSave(HttpServletRequest req,Model model) throws Exception {
+		return "";
 	}
 }
