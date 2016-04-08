@@ -3413,13 +3413,13 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&currPage=" + qstListVO.getCurrPage();
 		
 		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
-		//String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdId(Integer.parseInt(brdId));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(itemId));
 		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
-		
+
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemId));
@@ -3446,13 +3446,20 @@ public class EzQuestionController extends EgovFileMngUtil {
         } else {
         		resultYN = false;
         }*/
-        
+		SimpleDateFormat s = new SimpleDateFormat("YYYY-MM-dd");
+        String pollStartDate = s.parse(qstUserPollItemVO.getPollStartDate()).toString(); 
+        pollEndDate = s.parse(qstUserPollItemVO.getPollEndDate()).toString(); 
+        String uploadSDate = isoUTFDate(pollStartDate).toString();
+        String uploadEDate = isoUTFDate(pollEndDate).toString();
+		model.addAttribute("uploadSDate", uploadSDate);
+		model.addAttribute("uploadEDate", uploadEDate);
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("receve", receve);
 		model.addAttribute("resultYN", resultYN);
 		model.addAttribute("saveFlg", saveFlg);
+		model.addAttribute("mPostDate", curDate);
 		return "/ezQuestion/qstChangePermission";
 	}
 	
@@ -3512,6 +3519,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String brdPostterm = req.getParameter("brd_postterm");
 		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
 		//String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		
+		String startDateTime = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).toString();
+		String endDateTime = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).toString();
 
 		QstReuseQuestionVO qstReuseQuestionVO = new QstReuseQuestionVO();
 		
@@ -3526,6 +3536,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("itemId", itemId);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
+		model.addAttribute("uploadSDate", startDateTime);
+		model.addAttribute("uploadEDate", endDateTime);
 		model.addAttribute("qstReuseQuestionVO", qstReuseQuestionVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		return "/ezQuestion/qstStep1ReUse";
@@ -3574,4 +3586,40 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String callTempSave(HttpServletRequest req,Model model) throws Exception {
 		return "";
 	}
+	
+	public String isoUTFDate(String dateTimeStr) throws Exception{
+        String timeSetStr = "";
+        String resultStr = "";
+
+        if (!dateTimeStr.trim().equals("")){
+            if (dateTimeStr.indexOf(" ") != -1){
+                if ((dateTimeStr.split(" ")[1].equals("오후") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                    timeSetStr = (dateTimeStr.split(" ")[2].split(":")[0]) + 12;
+                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                }
+                else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))){
+                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
+                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
+                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else{
+                        timeSetStr = dateTimeStr.split(" ")[2];
+                    }
+                }
+                else{
+                    timeSetStr = dateTimeStr.split(" ")[2];
+                }
+                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
+            }
+            else{
+                resultStr = dateTimeStr + "T00:00:00.000Z";
+            }
+        }
+        else{
+            resultStr = "";
+        }
+        return resultStr;
+    }
 }
