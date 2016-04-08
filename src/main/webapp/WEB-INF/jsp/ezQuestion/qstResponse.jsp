@@ -64,8 +64,7 @@
 						}
 					}
 				}
-				document.getElementById("xmlTable").innerHTML = tableXml;
-alert(tableXml);
+				$("#xmlTable").html(tableXml);
 			}
 		</script>
 		<script type="text/javascript">

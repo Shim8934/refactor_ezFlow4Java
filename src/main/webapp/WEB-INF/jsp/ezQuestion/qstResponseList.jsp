@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<STYLE> 
 			.pagetd{padding-top:6px; }
 			.pcol{padding-top:6px; }
@@ -82,10 +83,9 @@
 						tableXml += "</td>";
 						tableXml += "</tr>";
 					}
-					
-					
 				}
-				document.getElementById("xmlTable").innerHTML =document.getElementById("xmlTable").innerHTML + tableXml;
+				$("#xmlTable").html($("#xmlTable").html()+tableXml);
+				//document.getElementById("xmlTable").innerHTML =document.getElementById("xmlTable").innerHTML + tableXml;
 			}
 
 
