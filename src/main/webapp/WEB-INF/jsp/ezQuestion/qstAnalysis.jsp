@@ -36,6 +36,12 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
+				   
+				if(pAnswerType==2){
+					alert("<spring:message code='ezQuestion.lhj1' />");
+				 	window.location.href = "/ezQuestion/qstList.do?brd_id="+pBrdID+"&currPage="+pCurrPage;
+				}
+				
 			    var listview = new ListView();
 			    listview.SetID("AnalysisList");
 			    listview.SetSelectFlag(false);
