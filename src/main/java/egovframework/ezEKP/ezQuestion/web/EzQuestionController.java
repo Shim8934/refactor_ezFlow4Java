@@ -637,7 +637,7 @@ System.out.println(getAttachList(Integer.toString(question.getQuestionNo()), "0"
         qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
         qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
         List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO);
-System.out.println(qstAttachVOList.size());
+
         if(qstAttachVOList!=null){
 	        for(QstAttachVO attachVO : qstAttachVOList){
 	        	if (bFirst){
