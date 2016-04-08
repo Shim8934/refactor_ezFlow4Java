@@ -19,24 +19,24 @@
     <script type="text/javascript">
         var g_szAuthor = "";
         var g_szExchange = "exchange";
-        var g_cmd = "${ _cmd }";
-        var Org_cmd = "${ _cmd }";
+        var g_cmd = "${cmd}";
+        var Org_cmd = "${cmd}";
         var g_servername = document.location.hostname;
-        var g_myname = "${ userinfo.DisplayName}";
-        var g_myemail = "${ userinfo.Email }";
-        var g_szUserID = "${ userinfo.EmailID }";
-        var g_companyID = "${ userinfo.CompanyID }";
-        var g_senderinfo = "${ userinfo.CompanyName}" + ", " + "${ userinfo.DeptName}" + ", " + "${ userinfo.Title }";
-        var g_eImportance = "${ _importance }";
-        var g_ePostType = "${ _posttype }";
-        var g_url = "${ _url }";
-        var g_unread = "${ _unread }";
+        var g_myname = "${userInfo.displayName}";
+        var g_myemail = "${userInfo.mail}";
+        var g_szUserID = "${userInfo.mailNickName}";
+        var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
+        var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
+        var g_eImportance = "${importance}";
+        var g_ePostType = "${postType}";
+        var g_url = "${url}";
+        var g_unread = "${unread}";
         var m_rgParams4PostOption = new Array();
         var g_bDirty = false;
         var m_addrBook = null;
         var g_bSended = false;
         var objMHT;
-        var g_SendFrom = "${ _SendFrom }";
+        var g_SendFrom = "${sendFrom}";
         var g_charset = "utf-8";
         var g_encoding = "BASE64";
         var g_font = "<spring:message code='ezEmail.t409' />";
@@ -46,37 +46,37 @@
         var g_xmldoc = createXmlDom();
         var useMultiLangMail = "${useMultiLangMail}";
         var g_isFormat = false;
-        var g_DisplayNamePrintable = "${ _DisplayNamePrintable }";
+        var g_DisplayNamePrintable = "${displayNamePrintable}";
         var g_showEnglishDisplay = "";
-        var g_charsetCheck = "${ _charsetCheck }";
-	    var g_use_ApprovalG = "${_UserInfo_ApprovalG}";
-        var g_ReSendFlag = "${_ReSendFlag}";
-        var BigSizeAttachMBSize = "${_BigSizeMailAttachLimit}";
-        var totBigSizeAttachMBSize = "${_totBigSizeMailAttachLimit}";
-        var totSizeAttachMBSize = "${_MailAttachLimit}";
+        var g_charsetCheck = "${charsetCheck}";
+	    var g_use_ApprovalG = "${userInfoApprovalG}";
+        var g_ReSendFlag = "${reSendFlag}";
+        var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
+        var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
+        var totSizeAttachMBSize = "${mailAttachLimit}";
         var BigSizeAttachSize = BigSizeAttachMBSize * 1024 * 1024;
         var totBigSizeAttachSize = totBigSizeAttachMBSize * 1024 * 1024;
         var totSizeAttachSize = totSizeAttachMBSize * 1024 * 1024;
         var FBigSizeAttachSize = parseInt(BigSizeAttachSize);
         var FtotBigSizeAttachSize = parseInt(totBigSizeAttachSize);
         var FtotSizeAttachSize = parseInt(totSizeAttachSize);
-        var BigSizeMailAttachDelDay = "${_BigSizeMailAttachDelDay}";
-        var charsetControlFlag = "${_UserLang}";
-        var userTimezone = "${_UserTimeset}";
-        var isPrimary = "${_UserPrimary}";
+        var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDay}";
+        var charsetControlFlag = "${userLang}";
+        var userTimezone = "${userTimeset}";
+        var isPrimary = "${userPrimary}";
         var initFlag = false;
-        var gg_cmd = "${_cmd_own}";
-        var gg_url = "${_Url_own}";        
-        var g_newid = ""; <%--=this.newwindowid--%>
-        var FileUploadtype = "${_FileUploadtype }";
+        var gg_cmd = "${cmdOwn}";
+        var gg_url = "${urlOwn}";        
+        var g_newid = "${newWindowId}";
+        var FileUploadtype = "${fileUploadType}";
         var iseachMail = "false";
-        var individualmailuser = "${ individualmailuser }";
-        var pSecurity = "${ pSecurity }";
-        var docHref = "${_DocHref }";
+        var individualmailuser = "${individualMailUser}";
+        var pSecurity = "${pSecurity}";
+        var docHref = "${docHref}";
         var isReserve = "NO";
         var pCDOMessageId = "";
         var Add_xmlhttp = "";
-        var mailsel = "${MailSignSel }";
+        var mailsel = "${mailSignSel}";
         var mailpath = "";
         var fileSize_add = "";
         var fileName_add = "";
@@ -84,17 +84,17 @@
         var bigtrue = 0;
         var tmpXML = "";
         var tempUrl = "";
-        var folderDate = "${ folderDate }";
-        var filedate = "${statename }";
+        var folderDate = "${folderDate}";
+        var filedate = "${stateName}";
         var gubunlist = "1";
         var tempvalue = "0";
-        var _pBigAttachDownloadDay = "${pBigAttachDownloadDay }";
-        var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod }";
+        var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
+        var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
         var ua = navigator.userAgent;
-        var InnerDomain = "${ MailInnerDomain }";
-        var inMailColor = "${ _inMailColor }";
-        var outMailColor = "${ _outMailColor }";
-        var pUse_Editor = "${ Use_Editor}";
+        var InnerDomain = "${mailInnerDomain}";
+        var inMailColor = "${inMailColor}";
+        var outMailColor = "${outMailColor}";
+        var pUse_Editor = "${useEditor}";
         window.onload = function () {
 
             if (g_unread == "1") {
@@ -113,7 +113,7 @@
             m_rgParams4PostOption["important"] = g_eImportance;
             m_rgParams4PostOption["postType"] = g_ePostType;
             m_rgParams4PostOption["replySendTime"] = "0";
-            m_rgParams4PostOption["replyReadTime"] = "${ _ReadDefaultOption }";
+            m_rgParams4PostOption["replyReadTime"] = "1";
             m_rgParams4PostOption["delaySendDate"] = "";
             m_rgParams4PostOption["showMsgCC"] = true;
             m_rgParams4PostOption["showMsgBCC"] = true;
@@ -146,10 +146,10 @@
             if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML != "") {
                 AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
             }
-            SelMailSign.value = "${MailSignSel }";
+            SelMailSign.value = "${mailSignSel}";
 
         Simple_Choice();
-        var pSaveTime = "${pAutoSaveTime }";
+        var pSaveTime = "${pAutoSaveTime}";
         var pSaveInterval = parseInt(pSaveTime) * 1000;
         if (pSaveInterval > 0)
             window.setInterval("Mail_AutoSave()", pSaveInterval);
@@ -209,7 +209,7 @@
     var isClosedSave = false;
     window.onbeforeunload = function () {
         var retVal = "";
-        if (retVal != "0" && g_url != "" && ("${ folderpath }" != "Draft" && g_cmd != "EDIT")) {
+        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
             if (!isDelted)
                 delDrafts();
         }
@@ -241,7 +241,7 @@
             }
             LoopCnt++;
         }
-        if (retVal != "0" && g_url != "" && ("${ folderpath }" != "Draft" && g_cmd != "EDIT")) {
+        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
             delDrafts();
         }
         if (retVal != "2")
@@ -394,7 +394,7 @@
     }
 
     function MailSignLoad() {
-        SelMailSign.value = "${MailSignSel }";
+        SelMailSign.value = "${mailSignSel}";
         MailSignSel();
     }
 
@@ -635,16 +635,16 @@
     function Editor_Complete() {
         if (initFlag == false) {
             if (Org_cmd == "board") {
-                GetBoardItemInfo_New("${ _BoardID }", "${ _ItemID }", "${ _RetransType }");
+                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}");
             }
             else if (Org_cmd == "Community") {
-                GetBoardItemInfo_New3("${ _BoardID }", "${ _ItemID }");
+                GetBoardItemInfo_New3("${boardID}", "${itemID}");
             }
             else if (Org_cmd == "report") {
-                GetUpmooItemInfo_New("${_ItemID}", "${_DocHref}")
+                GetUpmooItemInfo_New("${itemID}", "${docHref}")
             }
             else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc")
-                GetDocumentInfo("${ _DocID }", "${ _DocHref }", "${_DocImagCnt}", "${_DocTarget}");
+                GetDocumentInfo("${docID}", "${docHref}", "${docImagCnt}", "${docTarget}");
             initFlag = true;
             pOrgAttachListXml = pAttachListXml;
         }
@@ -758,9 +758,9 @@
                         </li>
                         <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                             <img src="/images/pbar.gif"></li> 
-                        <li class="sel" style="${ _DisplaySender } background:none; border:none; padding:0px;padding-top:4px;">
+                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
                             <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
-                            ${ MailSendObject }
+                            ${mailSendObject}
                             </select>
                         </li>
                         <li class="bar" style="background: none; border: 0; padding-left: 10px; padding-right: 0; cursor: default; display: none;" nowrap="nowrap">
@@ -858,24 +858,24 @@
                             <spring:message code='ezEmail.t98' />
                         </th>
                         <td colspan="3">
-                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${ HttpUtility.HtmlAttributeEncode(_subject) }"
+                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${encodedSubject}"
                                 tabindex="4" style="width: 99%">
                         </td>
                     </tr>
                 </table>
-                <div id="messageBody" mbody="${ _body }" style="display: none">
+                <div id="messageBody" mbody="${body}" style="display: none">
                 </div>
-                <xmp id="xmpTo" style="display: none">${ _to }</xmp>
-                <xmp id="xmpCc" style="display: none">${ _cc }</xmp>
-                <xmp id="xmpBcc" style="display: none">${ _bcc }</xmp>
-                <xmp id="xmpFrom" style="display: none">${ _from }</xmp>
-                <xmp id="xmpSubject" style="display: none">${ _subject }</xmp>
+                <xmp id="xmpTo" style="display: none">${to}</xmp>
+                <xmp id="xmpCc" style="display: none">${cc}</xmp>
+                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
+                <xmp id="xmpFrom" style="display: none">${from}</xmp>
+                <xmp id="xmpSubject" style="display: none">${subject}</xmp>
                 <xmp id="test" style="display: none"></xmp>
-                <xmp id="xmpMailSign1" style="display: none">${ MailSign1 }</xmp>
-                <xmp id="xmpMailSign2" style="display: none">${ MailSign2 }</xmp>
-                <xmp id="xmpMailSign3" style="display: none">${ MailSign3 }</xmp>
-                <xmp id="bodyValue" style="display: none">${ bodyValue }</xmp>
-                <xmp id="tempbody" style="display: none">${ tempbody }</xmp>
+                <xmp id="xmpMailSign1" style="display: none">${mailSign1}</xmp>
+                <xmp id="xmpMailSign2" style="display: none">${mailSign2}</xmp>
+                <xmp id="xmpMailSign3" style="display: none">${mailSign3}</xmp>
+                <xmp id="bodyValue" style="display: none">${bodyValue}</xmp>
+                <xmp id="tempbody" style="display: none">${tempBody}</xmp>
             </td>
         </tr>
         <tr>
@@ -943,7 +943,7 @@
     <input id="eFrom" type="hidden" name="eFrom">
     <input type="hidden" name="eImportant" style="display: none;">
     <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-     <form method="post" id="form" name="form" enctype="multipart/form-data" action="../ezEmail/remote/mail_interuploadX_CK.aspx?timestamp=${statename }" target="ifrm" style="display:none;" >
+     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
         <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
         <input type="hidden" name="maxsize" id="maxsize" />
         <input type="hidden" name="cnt" id="cnt" />
@@ -965,7 +965,7 @@
     </script>
 </body>
  <xmp id="AttachXmlList" style="display:none;">
-    ${ _attach }
+    ${attach}
  </xmp>
     
 </html>
