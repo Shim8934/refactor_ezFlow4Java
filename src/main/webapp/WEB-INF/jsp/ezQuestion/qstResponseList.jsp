@@ -85,7 +85,6 @@
 					}
 				}
 				$("#xmlTable").html($("#xmlTable").html()+tableXml);
-				//document.getElementById("xmlTable").innerHTML =document.getElementById("xmlTable").innerHTML + tableXml;
 			}
 
 
