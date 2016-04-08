@@ -1351,7 +1351,7 @@ System.out.println(qstAttachVOList.size());
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String brdId = "";
 		String itemId = "";
-		String strDeptACL = "", strMemberACL="",userInfoDeptCode="",serverName="",pCompanyID="";
+		String userInfoDeptCode="",serverName="",pCompanyID="";
 		String strGenderACL0="",strGenderACL1="",strGenderACL2="";
 		
 		if(req.getParameter("brd_id") != null)
@@ -1385,29 +1385,29 @@ System.out.println(qstAttachVOList.size());
 
 	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
 	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
-		String brdId = "";
-		String itemId = "";
-		String pMode = "";
+		//String brdId = "";
+		//String itemId = "";
+		//String pMode = "";
 		String pQstTitle = "", pAnswerType, pMultiSel = "";
 		String pSelectOption = "";
-		String pEditIndex;
+		//String pEditIndex = "";
 		String pQstAnsInfo = "";
 		String pQstAttach = "";
 		String pDataXML = "";
-		String pNoneActiveX = "";
+		//String pNoneActiveX = "";
 		
-		pMode = "NEW";
+		//pMode = "NEW";
 		pAnswerType = "1";
-		if(req.getParameter("brd_id") != null) {
+		/*if(req.getParameter("brd_id") != null) {
 			brdId = req.getParameter("brd_id").trim(); 
 		}
 		
 		if(req.getParameter("item_id") != null) {
 			itemId = req.getParameter("item_id").trim(); 
-		}
+		}*/
 
 		if(req.getParameter("DataXML") != null) {
-			pMode = "EDIT";
+			//pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
@@ -1449,9 +1449,10 @@ System.out.println(qstAttachVOList.size());
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
-				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
+				//pEditIndex = String.valueOf(req.getParameter("dataIndex"));
 			}
 		}
+		
 		questionAddVO.setpMultiSel(pMultiSel);
 		questionAddVO.setpSelectOption(pSelectOption);
 		questionAddVO.setQuestionContent(pQstTitle);
@@ -1505,8 +1506,8 @@ System.out.println(qstAttachVOList.size());
 
 		String strXML = "<DATA>" + pRtn + "</DATA>";
 		
-		int brdId = Integer.parseInt(pBrdID);
-		int itemNo = Integer.parseInt(vItemID);
+		//int brdId = Integer.parseInt(pBrdID);
+		//int itemNo = Integer.parseInt(vItemID);
 		
 		return strXML;
 	}
@@ -1614,8 +1615,8 @@ System.out.println(qstAttachVOList.size());
 
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
 					String userDeptId = "";
-					String userGender = "";
-					String userAge = "";
+					//String userGender = "";
+					//String userAge = "";
 					
 					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() == "") {
 						userDeptId = "TOP";
@@ -1665,8 +1666,8 @@ System.out.println(qstAttachVOList.size());
 			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
-			String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
-			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();
+			//String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
+			//String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();
 			
 			int v_quesNo = 1;
 
@@ -1880,7 +1881,6 @@ System.out.println(qstAttachVOList.size());
 	
 	@RequestMapping(value="/ezQuestion/qstCancel.do")
 	public void qstCancel(HttpServletRequest req, Model model, HttpServletResponse resp) throws Exception {
-		StringBuilder sb = new StringBuilder();
 		
 	}
 	
@@ -2151,7 +2151,7 @@ System.out.println(qstAttachVOList.size());
 	@RequestMapping(value="/ezQuestion/callDeleteItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstDeleteItem(HttpServletRequest req,Model model) throws Exception {
-		Document doc = commonUtil.convertRequestToDocument(req);
+		//Document doc = commonUtil.convertRequestToDocument(req);
 		
 		String pBrdID = "";
 		String itemNo = "";
@@ -2676,16 +2676,15 @@ System.out.println(qstAttachVOList.size());
 
 	@RequestMapping(value="/ezQuestion/callSaveRangeACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String callSaveRangeACL(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlDoc,HttpServletRequest request,Model model) throws Exception{
-		LoginVO user = commonUtil.userInfo(loginCookie);
+	public String callSaveRangeACL(@RequestBody String xmlDoc,HttpServletRequest request,Model model) throws Exception{
 		Document doc = commonUtil.convertStringToDocument(xmlDoc);
-System.out.println(doc.getElementsByTagName("BRDID").item(0).getTextContent());
-System.out.println(doc.getElementsByTagName("ITEMNO").item(0).getTextContent());
-		boolean deptFlag = false;
-		String pBrdID = doc.getElementsByTagName("BRDID").item(0).getTextContent(), pItemNo = doc.getElementsByTagName("ITEMNO").item(0).getTextContent();
-        String USER_DEPT_ID = "", USER_EMAIL = "", USER_POS = "", USER_DEPT_NM = "", USER_JUMIN = "", USER_GENDER = "", MotherID = "", USER_AGE = "";
-        int Get_ItemNo = 0;
-        String strSQL = "";
+
+		//boolean deptFlag = false;
+		//String pBrdID = doc.getElementsByTagName("BRDID").item(0).getTextContent(), pItemNo = doc.getElementsByTagName("ITEMNO").item(0).getTextContent();
+        String USER_DEPT_ID = "", USER_EMAIL = "", USER_POS = "", USER_DEPT_NM = "", USER_GENDER = "";
+
+        /*int Get_ItemNo = 0;*/
+        /*String strSQL = "";*/
         String GubunNm = "", GubunID = "", GubunFg = "";
         String GubunNm2 = "";
         String USER_POS2 = "", USER_DEPT_NM2 = "";
@@ -2709,7 +2708,7 @@ System.out.println(doc.getElementsByTagName("ITEMNO").item(0).getTextContent());
         }*/
         
         int deptSize = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
-System.out.println("deptsize:"+deptSize);
+
         for(int i=0; i<deptSize; i++) {
         	System.out.println(doc.getElementsByTagName("DATA").item(i).getTextContent());
         	System.out.println(doc.getElementsByTagName("DATA").item(i).getAttributes().getNamedItem("nm").getTextContent());
@@ -2731,11 +2730,7 @@ System.out.println("deptsize:"+deptSize);
         ezQuestionService.callDeletePollResponseper(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
         
         int memberSize = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
-        System.out.println("membersize:"+memberSize);
                 for(int i=0; i<memberSize; i++) {
-                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getTextContent());
-                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent());
-                	System.out.println(doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent());
                 	GubunID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getTextContent();
                 	GubunNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
                 	GubunNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
@@ -2749,7 +2744,7 @@ System.out.println("deptsize:"+deptSize);
                 	qstCompleteVO.setGubunNm2(GubunNm2);
                 	ezQuestionService.callCreateMother(qstCompleteVO);
                 	
-                	String propList = "department;mail;displayname;title;description;company";
+                	//String propList = "department;mail;displayname;title;description;company";
                 	//OrganDeptVO pXML = ezOrganService.getPropertyList(GubunID, user.getPrimary());
                 	
                 	//ezOrgan 라이브러리 getPropertyList
@@ -2772,7 +2767,7 @@ System.out.println("deptsize:"+deptSize);
                 	ezQuestionService.callInsertPollResponseper(qstCompleteVO2);
                 }
                 
-                if(deptFlag) {
+                /*if(deptFlag) {
                 	String strTest;
                 	String userID = "",  userNM = "" ,userEmail = "", userDeptID = "", userDeptNM = "";
                 	String userPos = "", userJikgub = "", userGender = "", userAge = "";
@@ -2788,7 +2783,7 @@ System.out.println("deptsize:"+deptSize);
                     	//String sXml =  _ezOrgan.GetDeptMemberList(xmlData[0].ChildNodes[i].InnerText, celllist, proplist, pclass, userinfo.primary);
                     	int iCount = 0;
                     }
-                }
+                }*/
                 String result = "";
                 String strXML = "";
                strXML = "<RESULT>";
@@ -2801,7 +2796,7 @@ System.out.println("deptsize:"+deptSize);
 	@RequestMapping(value="/ezQuestion/callGetItemSeqXML.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String callGetItemSeqXML(HttpServletRequest req, Model model) throws Exception{
-		String pBrdID = "", pItemNo = "";
+		String pBrdID = "";
 		if(req.getParameter("brd_id") != null) {
 			pBrdID = req.getParameter("brd_id");
 		}
@@ -3418,8 +3413,8 @@ System.out.println("deptsize:"+deptSize);
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
-		String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
-		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
+		//String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdId(Integer.parseInt(brdId));
@@ -3516,8 +3511,8 @@ System.out.println("deptsize:"+deptSize);
 			itemId = req.getParameter("item_id");
 		String brdNm = req.getParameter("brd_nm");
 		String brdPostterm = req.getParameter("brd_postterm");
-		String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
-		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
+		//String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 
 		QstReuseQuestionVO qstReuseQuestionVO = new QstReuseQuestionVO();
 		
@@ -3539,10 +3534,6 @@ System.out.println("deptsize:"+deptSize);
 	
 	@RequestMapping(value="/ezQuestion/qstStep2ReUse.do")
 	public String qstStep2ReUse(HttpServletRequest req,Model model, QstStep1VO qstStep1VO, QstAddVO qstAddVO) throws Exception {
-		String brdId = "";
-		if(req.getParameter("brdId") != null) {
-			brdId = req.getParameter("brdId"); 
-		}
 		String oldItemNum = "";
 		if(req.getParameter("old_item_num") != null) {
 			oldItemNum = req.getParameter("old_item_num"); 
