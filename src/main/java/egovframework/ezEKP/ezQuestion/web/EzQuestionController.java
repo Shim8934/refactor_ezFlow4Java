@@ -473,7 +473,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-System.out.println(getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo()));
 				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount+1) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
