@@ -1972,7 +1972,7 @@ System.out.println(qstAttachVOList.size());
         
         if(pType.equals("QUESTION")){
                 if (pFileName != "")
-                    pFilePath = "/Upload_BoardSTD/Upload_Question/" + pFileName;
+                    pFilePath = File.separator+"Upload_BoardSTD"+File.separator+"Upload_Question"+File.separator+pFileName;
                 else{
                     pFilePath = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachUrl();
                     pFileName = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
