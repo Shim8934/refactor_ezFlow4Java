@@ -212,7 +212,6 @@
 	            <td style="width:100%; height:250px; border:1px solid #b6b6b6; padding:5px;background:#e5e5e5;" >
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
 	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
-	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
 	                	<c:forEach var="res" items="${result}" varStatus="vs">
 		                    <table style="width:100%">
 		                        <tr>
@@ -226,9 +225,7 @@
 	                    <table style="width:100%">
 	                    	<tr>
 	                        	<td style="width:100%; padding:3px 0px 0px 0px;">
-	                            	 <c:forEach var="res" items="${content}">
-		                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="${res}" />
-	                            	 </c:forEach>
+	                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="${imageContent}" />
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -237,9 +234,7 @@
 	        </tr>
 	        <tr>
 	            <td style="width:100%; display:none;">
-	                 <c:forEach var="res" items="${content}">
-		                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="${res}"/>
-	                 </c:forEach>
+	                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="${imageContent}"/>
 	            </td>         
 	        </tr>
 	        <tr>

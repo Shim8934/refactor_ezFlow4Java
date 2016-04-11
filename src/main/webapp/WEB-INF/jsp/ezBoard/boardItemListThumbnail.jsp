@@ -1053,17 +1053,14 @@
 		
 		    function SetBoardAcl() {
 		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var xml = "<DATA><BOARDID>" + pBoardID + "</BOARDID></DATA>";
-		        xmlpara = loadXMLString(xml);
 		        xmlhttp.open("POST", "/ezBoard/getParentBoardID.do", false);
-		        xmlhttp.send(xmlpara);
+		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
 		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		        }
 		        else {
 		            alert("ERROR");

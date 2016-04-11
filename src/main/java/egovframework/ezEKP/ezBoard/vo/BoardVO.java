@@ -44,6 +44,8 @@ public class BoardVO {
 	private String nextItemID;
 	/** 다음게시물타이틀*/
 	private String nextTitle;
+	/** 게시판종류*/
+	private String mode;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -170,6 +172,12 @@ public class BoardVO {
 	}
 	public void setNextTitle(String nextTitle) {
 		this.nextTitle = nextTitle;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 	
 }

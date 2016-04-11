@@ -42,17 +42,31 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow) throws Exception;
 	
+	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
 	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
 	
+	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType) throws Exception;
+	
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
 	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	
+	public List<HashMap<String, Object>> getMyNoticePostItem(String userID, String type, int start, int end) throws Exception;
+	
+	public List<HashMap<String, Object>> getMyBoardListItem(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+
+	public List<HashMap<String, Object>> getMyBoardListItemTemp(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	
+	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+
+	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
 	
@@ -84,7 +98,7 @@ public interface EzBoardService {
 	
 	public String getDocPassWord(String itemID) throws Exception;
 	
-	public int getNewItemListCount(String userID, String nowDate, String fromNow) throws Exception;
+	public int getNewItemListCount(String userID) throws Exception;
 
 	public int getBrdNewItemCount(String userID) throws Exception;
 
@@ -105,6 +119,16 @@ public interface EzBoardService {
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
 	
 	public int checkApprUserList(String userID, String itemID) throws Exception;
+	
+	public int getMyBoardTotalItemCount(String userID) throws Exception;
+
+	public int getMyBoardTotalItemCountTemp(String userID) throws Exception;
+	
+	public int getMyNoticePostItemCount(String userID) throws Exception;
+	
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
 	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 	
@@ -134,14 +158,20 @@ public interface EzBoardService {
 	
 	public void setNotiOrder(String itemID) throws Exception;
 	
-	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID) throws Exception;
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg) throws Exception;
 
 	public void updateCopyItem(String itemID) throws Exception;
 	
 	public void updateMoveItem(String destItemID, String orgItemID) throws Exception;
 	
+	public void photoListAlbumEdit(String boardID, String itemID, String title, String content) throws Exception;
+	
+	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content) throws Exception;
+	
 	public void deleteItem(String itemIDs, String boardID) throws Exception;
 
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+	
+	public void photoListDel(String boardID, String imageID) throws Exception;
 
 }

@@ -9,11 +9,11 @@
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript">
@@ -67,7 +67,7 @@
 		    var endtime;
 		    var pAdminType = "y";
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
-		    var pNoneActiveX = "NO";
+		    var pNoneActiveX = "YES";
 	
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -91,7 +91,11 @@
 					dataType : "xml",
 					async : false,
 					url : "/ezBoard/getBoardList.do",	        			
-					data : { boardType : pBoardType, boardId : pBoardID, pageNum : CurPage, orderCell : OrderCell, orderOption : OrderOption},
+					data : { boardType : pBoardType, 
+							 boardId : pBoardID, 
+							 pageNum : CurPage, 
+							 orderCell : OrderCell, 
+							 orderOption : OrderOption},
 					success: function(xml){
 						getBoardList_after(xml);
 					}        			
@@ -101,19 +105,19 @@
 		    var perCnt = "";
 		    var firstFlag = false;
 		    var allListCnt = "";
-		    function getBoardList_after(xmlHttp) {
+		    function getBoardList_after(xml) {
 		        try {
-		            if (GetElementsByTagName(SelectSingleNodeNew(xmlHttp, "DOCLIST/LISTVIEWDATA"), "ROW").length == 0) {
+		            if (GetElementsByTagName(SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA"), "ROW").length == 0) {
 		                if (CurPage > 1) {
 		                    CurPage = CurPage - 1;
 		                    getBoardList();
 		                    return;
 		                }
 		            }
-		            var cntNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/TOTALCNT");
-		            var perNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/PERSONALCNT");
-		            var listNode = SelectSingleNodeNew(xmlHttp, "DOCLIST/LISTVIEWDATA");
-		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xmlHttp, "DOCLIST/PREVIEWTYPE"));
+		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+		            pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 		            if (listNode == null) return;
 
 		            var lstCnt = getNodeText(cntNode);
@@ -370,13 +374,10 @@
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("BoardItemView_Photo.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + obj.getAttribute("DATA2") + "&BoardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }           
 		            else {
-		                if (CrossYN() || pNoneActiveX == "YES")
-		                    window.open("BoardItemView_Cross.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + obj.getAttribute("DATA2") + "&BoardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                else
-		                    window.open("BoardItemView.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + obj.getAttribute("DATA2") + "&BoardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        //}
 		        //getBoardList();
@@ -384,7 +385,7 @@
 		   
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/CheckIfHasReply.aspx?ItemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -395,7 +396,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/DeleteItem.aspx?BoardID=" + pBoardID + "&ItemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -436,7 +437,7 @@
 		            setReadFlag = false;
 		        }
 		
-		        window.location.href = window.location.href = "New_BoardItemList.aspx?Page=" + CurPage.toString() + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
+		        window.location.href = "/ezBoard/boardItemList_new.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
 		    }
 		    var SetReadCheckCnt = 0;
 		    var setReadFlag = false;
@@ -461,7 +462,7 @@
 				    }
 				    arrList = null;
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "interASP/SetRead.aspx?BoardID=" + pBoardID + "&ItemIDList=" + strItemList, false);
+				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    setReadFlag = true;

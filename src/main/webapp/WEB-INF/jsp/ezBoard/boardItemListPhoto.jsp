@@ -141,7 +141,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -149,7 +149,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		
@@ -391,25 +391,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -434,26 +434,26 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -538,7 +538,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("NewBoardItem_Photo.aspx?BoardID=" + pBoardID + "&Mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        
 		    }
 		    
@@ -767,7 +767,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = window.location.href = "BoardItemList_Photo.aspx?Page=" + CurPage.toString() + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType + "&AdminType=" + pAdminType;
+		        window.location.href = window.location.href = "/ezBoard/boardItemListPhoto.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		
 		    function AddToMyBoards() {
@@ -816,7 +816,7 @@
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
 		
-		        window.open("/ezBoard/copyBoardItem.aspx?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
 		    }
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -1062,17 +1062,14 @@
 		
 		    function SetBoardAcl() {
 		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var xml = "<DATA><BOARDID>" + pBoardID + "</BOARDID></DATA>";
-		        xmlpara = loadXMLString(xml);
 		        xmlhttp.open("POST", "/ezBoard/getParentBoardID.do", false);
-		        xmlhttp.send(xmlpara);
+		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
 		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseXML.getElementsByTagName("PARENTBOARDID")[0]) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + escape(BrdName);
 		        }
 		        else {
 		            alert("ERROR");

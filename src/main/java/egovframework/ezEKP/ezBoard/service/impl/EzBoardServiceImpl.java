@@ -126,11 +126,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public int getNewItemListCount(String userID, String nowDate, String fromNow)  throws Exception{
+	public int getNewItemListCount(String userID)  throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", userID);
-		map.put("v_pNow", nowDate);
-		map.put("v_pFromNow", fromNow);
 		return ezBoardDAO.getNewItemListCount(map);
 	}
 
@@ -224,14 +222,17 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID) throws Exception {
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ImageID", imageID);
 		map.put("v_BoardID", boardID);
 		map.put("v_FilePath", file_Path);
 		map.put("v_FileContent", content);
 		ezBoardDAO.photoListUpdate(map);
-		setMainImageID(imageID, itemID, "1");
+		
+		if(mainFg.equals("Y")){
+			setMainImageID(imageID, itemID, "1");
+		}
 	}
 
 	@Override
@@ -248,6 +249,26 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void photoListAlbumEdit(String boardID, String itemID, String title, String content) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BOARDID", boardID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_TITLE", title);
+		map.put("v_CONTENT", content);
+		ezBoardDAO.photoListAlbumEdit(map);
+	}
+
+	@Override
+	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BOARDID", boardID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_TITLE", title);
+		map.put("v_CONTENT", content);
+		ezBoardDAO.photoListAlbumEditTemp(map);
+	}
+
+	@Override
 	public void deleteItem(String itemIDs, String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_STRITEMLIST", itemIDs);
@@ -261,6 +282,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_STRITEMLIST", itemIDs);
 		map.put("v_BOARDID", boardID);
 		ezBoardDAO.deleteTempItem(map);
+	}
+
+	@Override
+	public void photoListDel(String boardID, String imageID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BoardID", boardID);
+		map.put("v_ImageID", imageID);
+		ezBoardDAO.photoListDel(map);
 	}
 
 	@Override
@@ -330,6 +359,21 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PBOARDID", boardId);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("v_PORDERBYMAIN", orderOption2);
+		map.put("v_TYPE", type);
+		map.put("v_ADMINTYPE", adminType);
+		return ezBoardDAO.getQnABoardListItem(map);
+	}
+
+	@Override
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", boardListVO.getUserID());
@@ -377,6 +421,68 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_WRITERNAME", boardVO.getWriterName());
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
 		return ezBoardDAO.getSearchThumbnailList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getMyNoticePostItem(String userID, String type, int start, int end) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_TYPE", type);
+		map.put("v_START", start);
+		map.put("v_END", end);
+		return ezBoardDAO.getMyNoticePostItem(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getMyBoardListItem(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("v_PORDERBYMAIN", orderOption2);
+		return ezBoardDAO.getMyBoardListItem(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getMyBoardListItemTemp(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("v_PORDERBYMAIN", orderOption2);
+		return ezBoardDAO.getMyBoardListItemTemp(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		return ezBoardDAO.getSearchMyBoardItemList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
 	}
 
 	@Override
@@ -464,6 +570,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID", itemID);
+		map.put("v_pBoardID", boardID);
+		return ezBoardDAO.photoViewDBAll(map);
+	}
+
+	@Override
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception {
 		return ezBoardDAO.getCopyItemAttach(orgItemID);
 	}
@@ -508,6 +622,45 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PUSERID", userID);
 		map.put("v_PITEMID", itemID);
 		return ezBoardDAO.checkApprUserList(map);
+	}
+
+	@Override
+	public int getMyBoardTotalItemCount(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		return ezBoardDAO.getMyBoardTotalItemCount(map);
+	}
+
+	@Override
+	public int getMyBoardTotalItemCountTemp(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		return ezBoardDAO.getMyBoardTotalItemCountTemp(map);
+	}
+
+	@Override
+	public int getMyNoticePostItemCount(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		return ezBoardDAO.getMyNoticePostItemCount(map);
+	}
+
+	@Override
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		return ezBoardDAO.getSearchMyBoardItemCount(map);
+	}
+
+	@Override
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
 
 	@Override
@@ -658,7 +811,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
 			map.put("v_pFilePath", strFilePath.replace("\\", "/"));
 			map.put("v_pWriteDate", boardListVO.getWriteDate());
-			map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
+			try {
+				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
+			} catch (Exception e) {
+				map.put("v_pFileContent", "");
+			}
 			map.put("v_pImageName", boardListVO.getImageNames().split(";")[i]);
 			
 			ezBoardDAO.photoSaveDB(map);

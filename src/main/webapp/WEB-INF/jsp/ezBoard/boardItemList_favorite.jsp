@@ -1,36 +1,35 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html>
 <html style="height: 99%;">
 	<head>
-	    <meta http-equiv="X-UA-Compatible" content="IE=9">
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/tab_over.css" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" language="javascript">
-	        var userLang = "1";
-	        var xmlhttp = new XMLHttpRequest();
+	    <script type="text/javascript">
+	        var userLang = "${userInfo.lang}";
+	        var xmlhttp = createXMLHttpRequest();
 	        window.onload = function () {
 	            GetMyBoardItem();
-	        }
+	        };
 	        function GetMyBoardItem() {
-	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=USE", true);
-	            xmlhttp.onreadystatechange = GetMyBoardItem_event;
+	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?mode=USE", true);
+	            xmlhttp.onreadystatechange = GetMyBoardItem_evnet;
 	            xmlhttp.send();
 	        }
 	        var overCnt = 0;
 	        var widthCheck = false;
-	        function GetMyBoardItem_event() {
+	        function GetMyBoardItem_evnet() {
 	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	            try {
-	            	var result = JSON.parse(xmlhttp.responseText);
-	                if (result.resultList.length != 0) {
-	                    for (var i = 0; i < result.resultList.length; i++) {
-	                        var BoardName = result.resultList[i].boardName;
-	                        var BoardName2 = result.resultList[i].boardName2;
-	                        var BoardId = result.resultList[i].boardId;
-	                        var BoardType = result.resultList[i].guBun;
+	                var xmlnode = SelectNodes(xmlhttp.responseXML, "ROOT/DATA/ROW");
+	                if (xmlnode.length != 0) {
+	                    for (var i = 0; i < xmlnode.length; i++) {
+	                        var BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME"));
+	                        var BoardName2 = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
+	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
+	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 	                        var _p = document.createElement("P");
 	                        _p.id = "FBoard_sub" + i;
 	
@@ -51,6 +50,7 @@
 	                        _p.appendChild(_span);
 	                        document.getElementById("tab1").appendChild(_p);
 	
+	
 	                        if (tabAllWidth() >= document.getElementById("tab1").offsetWidth - 55 || widthCheck) {
 	                            widthCheck = true;
 	                            overCnt = overCnt + 1;
@@ -60,6 +60,7 @@
 	                                _p2.className = "tabpartMore";
 	                                _p2.id = "tabpartMore";
 	                                //_p2.onclick = function () { Tab1_MouseClick_more(document.getElementById("overSpan"), false) }
+	
 	
 	                                var _span2 = document.createElement("SPAN");
 	                                _span2.id = "overSpan";
@@ -77,13 +78,13 @@
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
 	                                _li.textContent = BoardName;
-	                                _li.onclick = function () { Tab1_MouseClick2(this) };
+	                                _li.onclick = function () { Tab1_MouseClick2(this); };
 	                                _li.style.cursor = "pointer";
 	                                _ul.appendChild(_li);
 	                                
 	                                _p2.appendChild(_span2);
 	                                _p2.appendChild(_ul);
-	                                _p2.style.cursor = "pointer"
+	                                _p2.style.cursor = "pointer";
 	
 	                                document.getElementById("tab1").appendChild(_p2);
 	                            }
@@ -93,7 +94,8 @@
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
 	                                _li.style.cursor = "pointer";
-	                                _li.onclick = function () { Tab1_MouseClick2(this) };
+	                                _li.onclick = function () { Tab1_MouseClick2(this); };
+	
 	
 	                                document.getElementById("tabpart01UL").appendChild(_li);
 	
@@ -106,8 +108,9 @@
 	                            }
 	                            //Tab1_MouseClick_more(document.getElementById("overSpan"), false);
 	                        }
+	                       
 	                    }
-	                    if (result.resultList.length > 0)
+	                    if (xmlnode.length > 0)
 	                        Tab1_NewTabIni("tab1");
 	
 	                    document.getElementById("1tab0").setAttribute("class", "tabon");
@@ -123,21 +126,22 @@
 	                    _span.setAttribute("divname", "FBoard_div0");
 	                    _span.setAttribute("DATA1", "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
 	                    if (userLang == "1")
-	                        _span.setAttribute("DATA2", "새게시물");
+	                        _span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
 	                    else
 	                        _span.setAttribute("DATA2", "New BoardItem");
 	                    _span.setAttribute("DATA5", "0");
-	                    _span.innerHTML = "새게시물";
+	                    _span.innerHTML = "<spring:message code='ezBoard.t480'/>";
 	
 	                    _p.appendChild(_span);
 	                    document.getElementById("tab1").appendChild(_p);
-	                    if (result.resultList.length > 0)
+	                    if (xmlnode.length > 0)
 	                        Tab1_NewTabIni("tab1");
 	
 	                    document.getElementById("1tab0").setAttribute("class", "tabon");
 	                    Tab1_SelectID = "1tab0";
 	                    ChangeTab(document.getElementById("1tab0"));
 	                }
+	
 	            } catch (e) { }
 	        }
 	
@@ -181,17 +185,17 @@
 	        function ChangeTab(obj) {
 	            var SelectedBoardID = obj.getAttribute("DATA1");
 	            var chkPhotoBrd = obj.getAttribute("DATA5");
+	            
 	            if (chkPhotoBrd == 3)
-	                document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
+	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + escape(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
 	            else if (chkPhotoBrd == 4)
-	                document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList_Thumbnail.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
+	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + escape(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
 	            else {
 	                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(obj.getAttribute("DATA2")) + "&boardType=N" + "&adminType=y&buttonHidden=N";
 	                }
-	                else{
-	                    document.getElementById("FBoard_ifrm").src = "/myoffice/ezBoardSTD/BoardItemList.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(obj.getAttribute("DATA2")) + "&BoardType=" + chkPhotoBrd + "&AdminType=y&ButtonHidden=N";
-	                }
+	                else
+	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + escape(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
 	            }
 	        }
 	
@@ -236,6 +240,7 @@
 	                            document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).className = "tabon";
 	                            Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).id;
 	                        }
+	
 	                    }
 	                }
 	            }
@@ -243,7 +248,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="height: 89%;">
-	    <h1>즐겨찾기 게시판<span id='mailBoxInfo'></span></h1>
+	    <h1><spring:message code='ezBoard.t10031'/><span id='mailBoxInfo'></span></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        </div>

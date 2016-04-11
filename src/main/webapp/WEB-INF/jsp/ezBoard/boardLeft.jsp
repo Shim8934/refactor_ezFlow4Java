@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript" >
 	        var SSUserID = "${userInfo}";
 	        var SSUserName = "${userInfo.name}";
 	        var SSDeptID = "${userInfo.deptID}";
@@ -27,7 +27,7 @@
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
-	        var items = "11";
+	        var items = "${resultCount}";
 	
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -196,12 +196,12 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1");
-		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+		        if (SelectNodes(xmlRtn, "TREEVIEWDATA/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
-		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+		                xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
 		            }
 		            else {
-		                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+		                xmlRtn.selectNodes("TREEVIEWDATA/NODE")[0].appendChild(xmlRtn.selectNodes("TREEVIEWDATA/NODE/VALUE")[0]);
 		            }
 		        }
 		        var treeView = new TreeView();
@@ -221,10 +221,12 @@
 		
 		                GetBoardInfo(SelectedBoardID);
 		
-		                if (gubun == 3)
+		                if (gubun == 3){
 		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=" + gubun;
-		                else if (gubun == 4)
+		                }
+		                else if (gubun == 4){
 		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=" + gubun;
+		                }
 		                else {
 		                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 		                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + escape(pBoardName) + "&boardType=N";
@@ -261,12 +263,12 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"));
-		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+		        if (SelectNodes(xmlRtn, "TREEVIEWDATA/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
-		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+		                xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
 		            }
 		            else {
-		                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+		                xmlRtn.selectNodes("TREEVIEWDATA/NODE")[0].appendChild(xmlRtn.selectNodes("TREEVIEWDATA/NODE/VALUE")[0]);
 		            }
 		        }
 		        var treeView = new TreeView();
@@ -473,11 +475,11 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/myoffice/ezBoardSTD/MyBoardConfig.aspx?TYPE=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));
+		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_MyList.aspx";
+		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListMyList.do";
 		    }
 		    function TempBoard() {
 		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Temp.aspx";
@@ -502,19 +504,15 @@
 	        <ul id="TreeCtrl_MyBoardTree_ul">
 	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
 	            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
-	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="DeleteMyBoard()"><spring:message code="ezBoard.t361" /></span></h3>--%>
-	            <%--<h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></h3>--%>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
-	<%--        <li><span style="width: 100%; display: inline-block;" onclick="DeleteMyBoard()"><spring:message code="ezBoard.t361" /></span></li>
-	            <li><span style="width: 100%; display: inline-block;" onclick="OrderMyBoard()"><spring:message code="ezBoard.t491" /></span></li>--%>
 	        </ul>
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
-	        		parser=new DOMParser();
-        		    xmlDoc=parser.parseFromString("${resultXML}","text/xml");
+	        		parser = new DOMParser();
+        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");

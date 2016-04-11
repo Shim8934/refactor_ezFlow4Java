@@ -16,13 +16,6 @@
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
 	
-	<resultMap id="get_favoriteList" class="MyFavoriteVO">
-		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
-		<result property="boardName" 				column="BOARDNAME" 				columnIndex="2"/>
-		<result property="boardName2" 				column="BOARDNAME2" 			columnIndex="3"/>
-		<result property="tabUsed" 					column="TABUSED" 				columnIndex="4"/>
-	</resultMap>
-	
 	<resultMap id="getThumbnailList" class="HashMap">
 		<result property="RNUM" 					/>
 		<result property="BOARDID" 					/>
@@ -61,6 +54,14 @@
 		<result property="fileContent" 				column="FILECONTENT" 			columnIndex="5"		jdbcType="CLOB" javaType="String" nullValue=""/>
 		<result property="flag" 					column="FLAG" 					columnIndex="6"/>
 		<result property="imageName" 				column="IMAGENAME" 				columnIndex="7"/>
+	</resultMap>
+	 
+	<resultMap id="photoViewDBAll" class="BoardAttachVO">
+		<result property="imageID" 					column="IMAGEID" 				columnIndex="1"/>
+		<result property="filePath" 				column="FILEPATH" 				columnIndex="2"/>
+		<result property="fileContent" 				column="FILECONTENT" 			columnIndex="3"		jdbcType="CLOB" javaType="String" nullValue=""/>
+		<result property="imageName" 				column="IMAGENAME" 				columnIndex="4"/>
+		<result property="flag" 					column="FLAG" 					columnIndex="5"/>
 	</resultMap> 
 	
 	<resultMap id="getBrdGetItemInfo" class="BoardListVO">
@@ -105,7 +106,7 @@
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultMap="get_favoriteList">
+	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO">
 		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -124,9 +125,13 @@
 	<procedure id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
 		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW(#v_pItemID#, #v_pBoardID#, #v_pStartRow#, #v_pEndRow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzBoardDAO.photoViewDBAll" parameterClass="Map" resultMap="photoViewDBAll">
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW_ALL(#v_pItemID#, #v_pBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 
 	<procedure id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 
 	<procedure id="EzBoardDAO.getPersonalCount" parameterClass="String" resultClass="BoardConfigVO">
@@ -156,9 +161,29 @@
 	<procedure id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_GETBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETQNABOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #v_ADMINTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 
 	<procedure id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETMYNOTICEPOSTITEM(#v_PUSERID#, #v_TYPE#, #v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getMyBoardListItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETMYBOARDLISTITEMXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getMyBoardListItemTemp" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETMYBOARDLISTITEMXMLTEMP(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList">
+		{CALL EZBOARDSTD.EZSP_GETAPPRUSERLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
@@ -177,6 +202,14 @@
 		{CALL EZBOARDSTD.EZSP_GETSEARCHBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_TITLE#, #v_WRITERNAME#, #v_ABSTRACT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getSearchMyBoardItemList" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETSEARCHMYBOARDLISTITEM(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getSearchMyBoardItemListTemp" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETSEARCHMYBOARDLISTTEMP(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.getCopyItemAttach" parameterClass="String" resultClass="String">
 		{CALL EZBOARDSTD.EZSP_COPYITEM_GET2(#v_PORGITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -186,7 +219,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer">
@@ -205,6 +238,14 @@
 		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#, #v_PTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getMyBoardTotalItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_BRDMYTOTALITEMCOUNT(#v_PUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getMyBoardTotalItemCountTemp" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_BRDMYTOTALITEMCOUNT_TEMP(#v_PUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
@@ -215,6 +256,18 @@
 	
 	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#v_pBoardID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_GETMYNOTICEPOSTCOUNT(#v_PUSERID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getSearchMyBoardItemCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_SEARCHBRDMYTOTALITEMCOUNT(#v_PUSERID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getSearchMyBoardItemCountTemp" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_SEARCHBRDMYTOTALITEMCTEMP(#v_PUSERID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
@@ -302,8 +355,8 @@
 		{CALL EZBOARDSTD.EZSP_DELETEITEM_TEMP(#v_STRITEMLIST#, #v_BOARDID#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList">
-		{CALL EZBOARDSTD.EZSP_GETAPPRUSERLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzBoardDAO.photoListDel" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTDEL(#v_ImageID#, #v_BoardID#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
@@ -556,6 +609,32 @@
            		copieditem = 1
            	WHERE  
            		itemid = #itemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.photoListAlbumEdit" parameterClass="Map">
+		<![CDATA[
+			UPDATE ezBoardSTD.TBL_BOARD_ITEM
+	        SET 
+	        	title 		= #v_TITLE#,
+	        	maincontent = #v_CONTENT#
+	        WHERE  
+	        	boardid = #v_BOARDID#
+	        AND 
+	        	itemid = #v_ITEMID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.photoListAlbumEditTemp" parameterClass="Map">
+		<![CDATA[
+			UPDATE ezBoardSTD.TBL_BOARD_ITEM_TEMP
+	        SET 
+	        	title 		= #v_TITLE#,
+	        	maincontent = #v_CONTENT#
+	        WHERE  
+	        	boardid = #v_BOARDID#
+	        AND 
+	        	itemid = #v_ITEMID#
 		]]>
 	</update>
 	

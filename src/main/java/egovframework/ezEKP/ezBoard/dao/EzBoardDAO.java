@@ -90,6 +90,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardAttachVO> photoViewDBAll(Map<String, Object> map) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.photoViewDBAll", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
@@ -97,6 +102,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getBoardListItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getBoardListItem", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getQnABoardListItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getQnABoardListItem", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -117,6 +127,31 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getSearchThumbnailList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchThumbnailList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyNoticePostItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getMyNoticePostItem", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyBoardListItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getMyBoardListItem", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyBoardListItemTemp(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getMyBoardListItemTemp", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchMyBoardItemList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchMyBoardItemList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchMyBoardItemListTemp", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -228,6 +263,31 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.checkApprUserList", map);
 	}
 	
+	public int getMyBoardTotalItemCount(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getMyBoardTotalItemCount", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int getMyBoardTotalItemCountTemp(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getMyBoardTotalItemCountTemp", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getMyNoticePostItemCount(Map<String, Object> map) {
+		select("EzBoardDAO.getMyNoticePostItemCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getSearchMyBoardItemCount(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getSearchMyBoardItemCount", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public int getSearchMyBoardItemCountTemp(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.getSearchMyBoardItemCountTemp", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.photoSaveDB", map);
 	}
@@ -304,12 +364,24 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.setMainImageID", map);
 	}
 
+	public void photoListAlbumEdit(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.photoListAlbumEdit", map);
+	}
+	
+	public void photoListAlbumEditTemp(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.photoListAlbumEditTemp", map);
+	}
+	
 	public void deleteItem(Map<String, Object> map) throws Exception{
 		delete("EzBoardDAO.deleteItem", map);
 	}
 
 	public void deleteTempItem(Map<String, Object> map) throws Exception{
 		delete("EzBoardDAO.deleteTempItem", map);
+	}
+
+	public void photoListDel(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.photoListDel", map);
 	}
 
 }

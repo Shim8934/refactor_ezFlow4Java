@@ -409,7 +409,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					var szHref = "Item_ReadList_cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID;			
+					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
 					var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
@@ -775,7 +775,7 @@
 		                else {
 		                    swidth = 510;
 		                    sheight = 500;
-		                    window.open("BoardItemDelete.aspx?Itemid=" + pItemID + "&BoardID=" + pBoardID + "&MOD=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
 		            else {
@@ -995,14 +995,14 @@
 		            if (CrossYN()) {
 		                photoalbumedit_dialogArguments[0] = params;
 		                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
-		                DivPopUpShow(400, 200, "interASP/photoalbumedit.aspx");
+		                DivPopUpShow(400, 200, "/ezBoard/photoAlbumEdit.do");
 		            }
 		            else {
 		                var swidth = 400;
 		                var sheight = 200;
 		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
 		
-		                var ret = window.showModalDialog("interASP/photoalbumedit.aspx", params, feature);
+		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
 		                if (ret == "OK")
 		                    page_reload();
 		
@@ -1065,7 +1065,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-		            window.open("interASP/imagedownload.aspx?Itemid=" + pItemID + "&BoardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+		            window.open("/ezBoard/imagedownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 		        }
 		
 		    //mouseWheel Event 
