@@ -354,7 +354,7 @@
 	{
 	    return document.getElementById("RangeXMLStr").value;
 	}
-</SCRIPT>
+</script>
 <style type = "text/css">
 	html #mainmenu li span, #mainmenu li span.off{
 	padding-top:4px;
@@ -459,4 +459,4 @@
         </div>
     </form> 
 </body>
-</HTML>
+</html>
