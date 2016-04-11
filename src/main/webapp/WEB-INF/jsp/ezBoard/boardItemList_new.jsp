@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript">
-			var pBoardID = "${boardInfo.boardID}";
+			var pBoardID = "${boardID}";
 		    var SSUserID = "${userInfo.id}";    
 		    var CurPage = "${boardInfo.page}";
 		    var totalPage = "${boardInfo.totalPage}";
@@ -593,7 +593,7 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == N}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>${boardInfo.boardName}<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
@@ -611,7 +611,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>${boardInfo.boardName}<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		    <br />
 		</c:if>

@@ -58,7 +58,7 @@
 		}
 		</style>
 		<script type="text/javascript">
-			var pBoardID = "${boardInfo.boardID}";
+			var pBoardID = "${boardID}";
 	    	var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.name}";
 		    var CurPage = "${boardInfo.page}";
@@ -71,7 +71,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
-		    var BrdName = "${boardInfo.boardName}";
+		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "${boardInfo.sortBy}";
 		    var url = "${boardInfo.url}";
@@ -1091,7 +1091,7 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${boardInfo.adminType != 'y'}">
-			<h1>${boardInfo.boardName}<span id="mailBoxInfo"></span>
+			<h1>${boardName}<span id="mailBoxInfo"></span>
 			      <span style="float:right;font-weight:normal;color:black;">
 			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208'/>
 					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223'/>
@@ -1103,7 +1103,7 @@
 		</c:when>
 		<c:otherwise>
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>"+ "${boardInfo.boardName}" +"<span id='mailBoxInfo'></span></h1>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>"+ "${boardName}" +"<span id='mailBoxInfo'></span></h1>";
 		    </script>
 		    <br />
 		    <span style="display:none; float:right;font-weight:normal;color:black;">
@@ -1249,7 +1249,7 @@
 	        <table class="content">  
 	            <tr>
 	    <th  style="text-align:center"><spring:message code='ezBoard.t185'/></th>
-	    <td>${boardInfo.boardName}
+	    <td>${boardName}
 	      <input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498'/>
 	    </td>
 	  </tr>
