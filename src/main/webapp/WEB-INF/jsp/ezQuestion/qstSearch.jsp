@@ -191,9 +191,9 @@
             	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	var strSearch = "title=" + encodeURI((document.getElementById("txtSubject").value), "'", "'");
-            	strSearch += "&responseRange=" + escape(document.getElementById("hidRange").value);
-            	strSearch += "&postDate=" + escape(document.getElementById("hidStartDate").value);
-            	strSearch += "&pollEndDate=" + escape(document.getElementById("hidEndDate").value);
+            	strSearch += "&responseRange=" + encodeURI(document.getElementById("hidRange").value);
+            	strSearch += "&postDate=" + encodeURI(document.getElementById("hidStartDate").value);
+            	strSearch += "&pollEndDate=" + encodeURI(document.getElementById("hidEndDate").value);
             	var szUrl = "";			    
             	if(CrossYN())
                 	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
