@@ -1665,8 +1665,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
-			//String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
-			//String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();
+			/*String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
+			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();*/
 			
 			int v_quesNo = 1;
 
@@ -1685,6 +1685,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			qstCompleteVO.setQuesContent(qstSubject);
 			qstCompleteVO.setAnswerType(Integer.parseInt(answerType));
 			qstCompleteVO.setMultiSelect(multiSelect);
+			
 			ezQuestionService.insertQuestion(qstCompleteVO);
 			
 	/*		if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
@@ -1709,9 +1710,24 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}
 			*/
+			//////////////////////
 			XPath xpath = XPathFactory.newInstance().newXPath();
+			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
+			if(nodes1.getLength() > 0) {
+				int ansAnsCnt = nodes1.getLength();
+				for(int iAnsAnsCnt=0; iAnsAnsCnt < ansAnsCnt; iAnsAnsCnt++ ) {
+					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO.setQuesNo(v_quesNo);
+					qstCompleteVO.setAnswerNo(iAnsAnsCnt+1);
+					qstCompleteVO.setAnswerAnswerContent(nodes1.item(iAnsAnsCnt).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					ezQuestionService.insertAnswerAnswerContent(qstCompleteVO);
+					
+				}
+			}
+			/////////////////////
+			
 			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
-
 			if(nodes.getLength() > 0) {
 				int ansCnt = nodes.getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
