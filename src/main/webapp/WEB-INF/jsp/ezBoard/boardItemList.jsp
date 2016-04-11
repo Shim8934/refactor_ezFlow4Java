@@ -58,7 +58,7 @@
 			}
 	    </style>
 		<script  type="text/javascript">
-			var pBoardID = "${boardInfo.boardID}";
+			var pBoardID = "${boardID}";
 	    	var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.name}";
 		    var CurPage = "${boardInfo.page}";
@@ -71,7 +71,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
-		    var BrdName = "${boardInfo.boardName}";
+		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "${boardInfo.sortBy}";
 		    var url = "${boardInfo.url}";
@@ -627,10 +627,10 @@
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        if (gubun != "3") {
-		            window.open("BoardItemView_Cross.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		        else {
-		            window.open("BoardItemView_Cross.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + pItemID + "&BoardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
 		    var checkpassword_dialogArguments = new Array();
@@ -682,12 +682,12 @@
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("interASP/CheckPassWord.aspx?ItemID=" + strItemList[0], "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + strItemList[0], "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
 		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("interASP/CheckPassWord.aspx?ItemID=" + arrList[0], "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + arrList[0], "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
@@ -967,11 +967,11 @@
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
 		        //window.location.href = "BoardReservedItemList_Cross.aspx?OrgBoardParameters=" + escape(OrgBoardParameters) + "&BoardType=" + pBoardType;
-		        window.location.href = "/myoffice/ezBoardSTD/BoardReservedItemList_Cross.aspx?OrgBoardParameters=" + escape(OrgBoardParameters) + "&BoardType=" + pBoardType + "&AdminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType + "&AaminType=" + pAdminType;
 		    }
 		    function search_onclick() {
 		        var OrgBoardParameters = "Page=" + CurPage + "&SortBy=" + "&BoardID=" + pBoardID + "&BoardType=" + pBoardType;
-		        window.location.href = "SearchBoardItem_Cross.aspx?BoardID=" + pBoardID + "&BoardType=" + pBoardType + "&OrgBoardParameters=" + escape(OrgBoardParameters);
+		        window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
 		    }
 		
 		    function window_reload() {
@@ -1290,7 +1290,7 @@
 	        <table class="content">  
 	            <tr>
 	    <th  style="text-align:center"><spring:message code='ezBoard.t185' /></th>
-	    <td>${boardInfo.boardName}
+	    <td>${boardName}
 	      <input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
 	    </td>
 	  </tr>

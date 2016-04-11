@@ -497,7 +497,7 @@ public class EzBoardController extends EgovFileMngUtil{
         return sb.toString();
 	}
 	@RequestMapping(value= {"/ezBoard/boardItemList_new.do", "/ezBoard/boardItemList.do", "/ezBoard/boardItemListPhoto.do"})
-	public String boardItemList(HttpServletRequest request, LoginVO loginVO,BoardPropertyVO boardInfoVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String boardItemList(HttpServletRequest request, LoginVO loginVO,BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		String use_ocs = config.getProperty("config.USE_OCS"); 
         String use_Editor = config.getProperty("config.EDITOR"); 
         String use_IE11Browser = config.getProperty("config.IE11EDITOR");
@@ -506,38 +506,61 @@ public class EzBoardController extends EgovFileMngUtil{
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
-		String pBoardID = boardInfoVO.getBoardID();
+		String pBoardID = boardPropertyVO.getBoardID();
+		String pBoardName = boardPropertyVO.getBoardName();
 		
-		if(boardInfoVO.getAdminType() == null){
-			boardInfoVO.setAdminType("");
-		}
-		if(boardInfoVO.getButtonHidden() == null){
-			boardInfoVO.setButtonHidden("N");
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		BoardPropertyVO boardInfo = getBoardInfo(pBoardID,loginVO);
+		
+		if(boardPropertyVO.getAdminType() == null){
+			boardInfo.setAdminType("");
+		}else{
+			boardInfo.setAdminType(boardPropertyVO.getAdminType());
 		}
 		
-        loginVO = commonUtil.userInfo(loginCookie);
-        if((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK"))
-            use_IE11Browser = "CK";
+		if(boardPropertyVO.getButtonHidden() == null){
+			boardInfo.setButtonHidden("N");
+		}else{
+			boardInfo.setButtonHidden(boardPropertyVO.getButtonHidden());
+		}
+		
+		if(boardPropertyVO.getBoardType() == null){
+			boardInfo.setBoardType("");
+		}else{
+			boardInfo.setBoardType(boardPropertyVO.getBoardType());
+		}
+		
+        if((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK")){
+        	use_IE11Browser = "CK";
+        }
         
-//            if(vpnLogin != null)
-//                isVPN = vpnLogin;
-        boardInfoVO = getBoardInfo(boardInfoVO,pBoardID,loginVO);
-        BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(pBoardID);
+        BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID);
         
-        if(boardPropertyVO.getOneLineReply() != null && boardPropertyVO.getOneLineReply().equals("1")){
+        if(boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")){
         	use_oneLineCount = "YES";
         }
         else{
         	use_oneLineCount = "NO";
         }
         
-        if(boardInfoVO.getListView_FG().equals("true")){
+        if(boardInfo.getListView_FG().equals("true")){
             if(request.getParameter("page") == null || request.getParameter("page").equals("")){
-            	boardInfoVO.setPage(1);
+            	boardInfo.setPage(1);
+            }else{
+            	boardInfo.setPage(boardPropertyVO.getPage());
             }
+            
+            if(boardPropertyVO.getSortBy() != null){
+            	boardInfo.setSortBy(boardPropertyVO.getSortBy());
+            }
+            
+            pBoardName = boardInfo.getBoardName();
         }
         
-        model.addAttribute("boardInfo", boardInfoVO);
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("boardName", pBoardName);
+        model.addAttribute("boardID", pBoardID);
         model.addAttribute("userInfo", loginVO);
         model.addAttribute("use_ocs", use_ocs);
         model.addAttribute("use_Editor", use_Editor);
@@ -3412,7 +3435,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if(boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4")){
+		if(boardInfo.getGuBun() != null && boardInfo.getUrl() != null && boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4")){
 			result = "<RESULT>anonyboard</RESULT>";
         }else if (boardInfo.getAttributeYN().equals("Y")){
         	result = "<RESULT>attributeextension</RESULT>";
@@ -5003,5 +5026,65 @@ public class EzBoardController extends EgovFileMngUtil{
         strXML += "</DATA>";
         
 		return strXML;
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardReservedItemList.do")
+	public String boardReservedItemList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		String useEditor = config.getProperty("config.EDITOR");
+		String orgBoardParameters = request.getParameter("orgBoardParameters");
+		int page = Integer.parseInt(request.getParameter("page"));
+		String sortBy = request.getParameter("sortBy");
+		String boardType = request.getParameter("boardType");
+		String adminType = request.getParameter("adminType");
+		String boardName = egovMessageSource.getMessage("ezBoard.t229");
+		String isVpn = "";
+		int totalCount = 0;
+		int totalPage = 0;
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
+		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
+        int endRow = page * boardInfo.getSs_board_maxRows();
+        
+        List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang()));
+        totalCount = ezBoardService.getReservedItemListCount(userInfo.getId());
+        
+        if(reservedList == null && page > 1){
+        	page -= 1;
+        	startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
+        	endRow = page * boardInfo.getSs_board_maxRows();
+        	reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang()));
+        }
+        
+        if(totalCount > 0){
+            if(totalCount > boardInfo.getSs_board_maxRows()){
+                String temp = String.valueOf(totalCount / boardInfo.getSs_board_maxRows());
+                if (temp.indexOf(".") != 0){
+                	totalPage = Integer.parseInt(temp.split(".")[0] + 1);
+                }
+                else{
+                	totalPage = Integer.parseInt(temp);
+                }
+            }else{
+                totalPage = 1;
+            }
+        }else{
+            totalPage = 1;
+        }
+        
+        model.addAttribute("useEditor", useEditor);
+        model.addAttribute("orgBoardParameters", orgBoardParameters);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("adminType", adminType);
+        model.addAttribute("boardName", boardName);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("page", page);
+        model.addAttribute("reservedList", reservedList);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("isVpn", isVpn);
+		
+		return "ezBoard/boardReservedItemList";
 	}
 } 
