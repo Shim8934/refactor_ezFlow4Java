@@ -22,8 +22,8 @@
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript">
-		var L_SearchStartDt = "";
-    	var L_SearchEndDt = "";
+		var L_SearchStartDt = "${uploadSDate}";
+    	var L_SearchEndDt = "${uploadEDate}";
 		var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 		var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31);
 		var g_windowReference = null;
