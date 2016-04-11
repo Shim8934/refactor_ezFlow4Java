@@ -332,7 +332,11 @@
 		    
 		    function menu_Analysis(){
 		       if (menu_Checking()) {
-		            if (checkUserPollStatus(szSelectedItemNo, "Analysis") == false) return;
+		    	   //권한확인해서 본인 / 관리자만 분석가능하게 
+		            if (checkUserPollStatus(szSelectedItemNo, "Analysis") == false){
+		            	alert('<spring:message code="ezQuestion.t276" />');
+		            	return;
+					}
 		            var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
 		            window.location.href = szUrl;
 		        }
