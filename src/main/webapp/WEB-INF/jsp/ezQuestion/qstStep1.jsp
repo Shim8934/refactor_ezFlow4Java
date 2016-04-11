@@ -249,11 +249,11 @@
         }
     }
     function menuQst_List() {
-        <%-- if(CrossYN())
-            var szUrl = "/myoffice/ezQuestion/poll/Qst_List_Cross.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>"
+         if(CrossYN()) 
+            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}";
         else
-            var szUrl = "/myoffice/ezQuestion/poll/Qst_List.aspx?brd_id=<%=v_brdid%>&brd_nm=<%=v_brdname%>&brd_postterm=<%=v_brddefaultpostterm%>"
-        window.location.href = szUrl; --%>
+            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}";
+        window.location.href = szUrl; 
     } 
     function menu_SelectRange() {
          if (CrossYN()) {
