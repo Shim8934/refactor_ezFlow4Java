@@ -760,6 +760,7 @@ public class EzCommonController extends EgovFileMngUtil{
         
         try {
         	m_strMHT = loadMHTFile(realPath + strURL);
+        	m_strMHT = m_strMHT.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
 		} catch (Exception e) {
 			m_strMHT= "";
 		}

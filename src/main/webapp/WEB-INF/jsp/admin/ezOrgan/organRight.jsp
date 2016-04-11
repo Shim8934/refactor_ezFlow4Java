@@ -33,8 +33,7 @@
 					companybutton1.style.display = "none";
 					companybutton2.style.display = "none";
 				}
-		    });
-		    
+		    });		    
 		    function Tree_setconfig(){
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/common/organtree_config3.xml", false);			    
@@ -43,8 +42,7 @@
 			        var treeView = new TreeView();
 			        treeView.SetConfig(xmlHTTP.responseXML);
 			    }
-			}
-		    
+			}		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
 				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
@@ -53,7 +51,6 @@
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 				g_xmlHTTP.send(strQuery);
 			}
-
 			function event_getDeptFullTree(){
 				if(g_xmlHTTP != null && g_xmlHTTP.readyState == 4){
 					if (g_xmlHTTP.statusText == "OK"){
@@ -73,8 +70,7 @@
 						g_xmlHTTP = null;
 					}
 				}
-			}
-			
+			}			
 			function TreeViewRequestData(pNodeID, pTreeID) {
 		        document.getElementById("TreeView").style.height = "509px";
 		        var TreeIdx = pNodeID;
@@ -86,7 +82,6 @@
 			    GetDeptSubTreeInfo(deptID, TreeIdx);
 			    document.getElementById("TreeView").style.height = "510px";
 			}
-			
 			function GetDeptSubTreeInfo(deptID, TreeIdx) {
 			    var xmlHTTP = createXMLHttpRequest();
 			    var xmlRtn = createXmlDom();
@@ -112,8 +107,7 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID("FromTreeView");
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-			}
-			
+			}			
 			function TreeViewNodeClick() {
 			    var nodeIdx = 1;
 			    var treeView = new TreeView();
@@ -121,12 +115,10 @@
 			    var selnode = treeView.GetSelectNode();
 			    DeptID = selnode.GetNodeData("CN");
 			    displayUserList(DeptID);
-			}
-			
+			}			
 			function TreeViewNodeDbClick(){
 			    return;
-			}
-			
+			}			
 			function displayUserList(DeptID){
 				var cellContent;
 				var typeContent;
@@ -176,8 +168,7 @@
 		        		alert("<spring:message code='ezOrgan.t2'/>" + error);	
 		        	}
 		        });	
-			}
-			
+			}			
 			var companyinfo_dialogArguments = new Array();
 			function add_company(){
 		        var treeView = new TreeView();
@@ -203,25 +194,22 @@
 			            getDeptFullTree(rtnValue);
 			        }
 			    }
-			}
-			
+			}			
 		    function add_company_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            getDeptFullTree(rtnValue);
 		        }
-		    }
-		    
+		    }		    
 		    var deptinfo_dialogArguments = new Array();
-			function add_dept()
-			{
+			function add_dept(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
+		        
 		        var nodeIdx = treeView.GetSelectNode();
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(nodeIdx.NodeID);
 
-				if (treeNode.selectedIndex == -1)
-				{
+				if (treeNode.selectedIndex == -1){
 					alert("<spring:message code='ezOrgan.t4' />");
 					return;
 				}
@@ -229,26 +217,25 @@
 				var args = new Array();
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = "";
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
-				    var OpenWin = window.open("DeptInfo.aspx", "DeptInfo", GetOpenWindowfeature(335, 490));
+				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
 				    try { OpenWin.focus(); } catch (e) { }
-				}
-				else {
-				    var rtnValue = window.showModalDialog("DeptInfo.aspx", args,
-		                    "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
+				}else{
+				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
 
-				    if (typeof (rtnValue) != "undefined") {
+				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
 				    }
 				}
 			}
-		    function add_dept_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined") {
+		    function add_dept_Complete(rtnValue){
+		        if (typeof (rtnValue) != "undefined"){
 		            getDeptFullTree(rtnValue);
 		        }
-		    }
+		    }		    
 		    function del_company(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -317,7 +304,7 @@
 				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog("DeptInfo.aspx", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
+				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -331,6 +318,46 @@
 		            getDeptFullTree(rtnValue);
 		        }
 		    }
+		    function del_dept(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (TreeView.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.t32' />");
+					return;
+				}
+		        // 표준모듈 (2007.02.22) 수정 : 회사 삭제 되지 않도록 처리
+				if(treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")){
+					alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t34' />");
+					return;
+				}
+				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t35' />")){
+					return;
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/delDept.do",
+					async : false,
+					data : {cn : treeNode.GetNodeData("CN")},
+					success : function(result){
+						if (result == "HASCHILD"){
+							alert("<spring:message code='ezOrgan.t37' />");
+						}else{
+							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t38' />");
+							getDeptFullTree(topid);
+						}
+					},
+					error : function(){
+						alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36' />");
+					}
+				});				
+			}
 	    </script>
 	</head>
 	<body class="mainbody">

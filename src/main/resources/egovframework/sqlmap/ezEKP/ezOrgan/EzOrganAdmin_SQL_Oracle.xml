@@ -4,9 +4,15 @@
 <sqlMap namespace="ezOrganAdmin">
 	
 	<typeAlias alias="OrganUserVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
+											    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
@@ -22,7 +28,7 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLDeptmaster 
+     			ezHrmaster.TBLDEPTMASTER 
       		WHERE  
       			cn = #cn#
 	     ]]> 
@@ -33,10 +39,39 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLDeptmaster 
+     			ezHrmaster.TBLDEPTMASTER 
       		WHERE  
       			extensionattribute1 = #cn#
 	     ]]> 
 	</select>
+	
+	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">		
+			UPDATE 
+				ezHrmaster.TBLDEPTMASTER
+     		SET 
+     			<dynamic>
+	     			<isNotNull property="displayName">displayName = #displayName#</isNotNull>
+	     			<isNotNull property="displayName2" prepend=","> displayName2 = #displayName2#</isNotNull>     			
+	     			<isNotNull property="mail" prepend=","> mail = #mail#</isNotNull>
+	     			<isNotNull property="extensionAttribute1" prepend=","> extensionattribute1 = #extensionAttribute1#</isNotNull>
+	     			<isNotNull property="extensionAttribute2" prepend=","> extensionattribute2 = #extensionAttribute2#</isNotNull>
+	     			<isNotNull property="extensionAttribute3" prepend=","> extensionattribute3 = #extensionAttribute3#</isNotNull>
+	     			<isNotNull property="extensionAttribute4" prepend=","> extensionattribute4 = #extensionAttribute4#</isNotNull>
+	     			<isNotNull property="extensionAttribute5" prepend=","> extensionattribute5 = #extensionAttribute5#</isNotNull>
+	     			<isNotNull property="extensionAttribute6" prepend=","> extensionattribute6 = #extensionAttribute6#</isNotNull>
+	     			<isNotNull property="extensionAttribute7" prepend=","> extensionattribute7 = #extensionAttribute7#</isNotNull>
+	     			<isNotNull property="extensionAttribute8" prepend=","> extensionattribute8 = #extensionAttribute8#</isNotNull>
+	     			<isNotNull property="extensionAttribute9" prepend=","> extensionattribute9 = #extensionAttribute9#</isNotNull>
+	     			<isNotNull property="extensionAttribute10" prepend=","> extensionattribute10 = #extensionAttribute10#</isNotNull>
+	     			<isNotNull property="extensionAttribute11" prepend=","> extensionattribute11 = #extensionAttribute11#</isNotNull>
+	     			<isNotNull property="extensionAttribute12" prepend=","> extensionattribute12 = #extensionAttribute12#</isNotNull>
+	     			<isNotNull property="extensionAttribute13" prepend=","> extensionattribute13 = #extensionAttribute13#</isNotNull>
+	     			<isNotNull property="extensionAttribute14" prepend=","> extensionattribute14 = #extensionAttribute14#</isNotNull>
+	     			<isNotNull property="extensionAttribute15" prepend=","> extensionattribute15 = #extensionAttribute15#</isNotNull>
+     			</dynamic>
+     			, updatedt = sysdate
+      		WHERE  
+      			cn = #cn#
+	</update>
 	
 </sqlMap>

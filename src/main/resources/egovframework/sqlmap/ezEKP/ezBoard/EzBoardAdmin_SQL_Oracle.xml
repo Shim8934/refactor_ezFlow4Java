@@ -199,6 +199,14 @@
 		{CALL EZBOARDSTD.EZSP_APPRPROPERTY_INFO(#v_PBOARDID#, #v_PMODE#)}
 	</procedure>
 	
+	<procedure id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
+		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETBOARDFORM(#v_PBOARDID#, #v_PFORMLOCATION#)}
+	</procedure>
+	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 

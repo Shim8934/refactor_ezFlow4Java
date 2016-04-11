@@ -91,6 +91,13 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzBoardAdminDAO.checkIfLeafBoard", map);
 	}
 	
+	public int checkForm(Map<String, Object> map) throws Exception{
+		select("EzBoardAdminDAO.checkForm", map);		
+		int ret = (int) map.get("v_pCount");
+		
+		return ret;
+	}
+	
 	public void createBoardGroup(Map<String, Object> map) throws Exception{		
 		select("EzBoardAdminDAO.createBoardGroup", map);
 	}
@@ -178,6 +185,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void updateAttribute(BoardAttributeVO boardAttributeVO) throws Exception{		
 		update("EzBoardAdminDAO.updateAttribute", boardAttributeVO);
 	}
+
+	public void setBoardForm(Map<String, Object> map) throws Exception{
+		update("EzBoardAdminDAO.setBoardForm", map);
+	}
 	
 	public void deleteAttribute(String boardID) throws Exception{		
 		delete("EzBoardAdminDAO.deleteAttribute", boardID);
@@ -197,8 +208,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void trunkBoard() throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard", "");
 	}
-
-	
 
 
 }

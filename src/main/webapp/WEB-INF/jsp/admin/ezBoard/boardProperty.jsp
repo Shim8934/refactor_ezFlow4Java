@@ -171,12 +171,11 @@
 	            
 	            var oneLineReply = "";
 	            
-	            if ($("#chkOneLine").is(":checked") == false)
+	            if ($("#chkOneLine").is(":checked") == false){
 	            	oneLineReply = 0;
-	            else
+	            }else{
 	            	oneLineReply = 1;
-
-alert(ApprUserList);	            
+	            }
 	            
 	            $.ajax({
 	            	type : "POST",
@@ -488,13 +487,11 @@ alert(ApprUserList);
 	    </script>
 	</head>	
 	<c:if test="${adminType != 'y'}">
-		<body class="mainbody">		
-			<h1><spring:message code="ezBoard.t60"/></h1>
+		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
 		<body>
-	</c:if>
-		<br/>
+	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
 		<table class="content">
 	        <tr>

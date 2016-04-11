@@ -46,14 +46,12 @@
 	            var TreeCtrl = getFirstChild(pObjSpan.parentElement);
 	            TreeCtrl.onclick();
 
-	            TreeCtrl.onclick();
 	            var selectItem;
-
 	            var totalboard = "";
+	            
 	            if (pObjSpan.parentElement.nextSibling.nodeType == 1) {
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling)
-	            }
-	            else {
+	            }else{
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling)
 	            }
 
@@ -63,15 +61,14 @@
 	                if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
 	                    selectItem = totalboard.children[0].getElementsByTagName("div")[i];
 	                    break;
-	                }
-	                else {
+	                }else{
 	                    var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
+	                    
 	                    if (imgtag.indexOf("sub") > -1) {
 	                        var treecnt = document.getElementById(parentNodeid).childNodes.length;
 	                        cnt += treecnt;
 	                    }
-
 	                    var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
 	                    cnt += rtnval
 	                }
@@ -80,37 +77,39 @@
 	            var tempid = selectItem.id.split("_");
 	            var tempidlength = tempid.length;
 	            var clicknode = new Array();
+	            
 	            if (CrossYN()) {
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
 	                            clicknode[i] = selectItem.id;
-	                        else
+	                        }else{
 	                            i--;
+	                        }
 	                        selectItem = selectItem.parentElement;
-	                    }
-	                    else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].onclick();
 	                        var j = clicknode.length;
+	                        
 	                        for (var k = j; k > 0; k--) {
 	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
 	                        }
 	                        return;
 	                    }
 	                }
-	            }
-	            else {
+	            }else{
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
 	                            clicknode[i] = selectItem.id;
-	                        else
+	                        }else{
 	                            i--;
+	                        }
 	                        selectItem = selectItem.parentElement;
-	                    }
-	                    else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].click();
 	                        var j = clicknode.length;
+	                        
 	                        for (var k = j; k > 0; k--) {
 	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
 	                        }
@@ -121,12 +120,12 @@
 	        }
 		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
-/* 작업필요    */		    	
 	            var xmlRtn = createXmlDom();
 	            var TreeIdx = pNodeID;
 	            var treeNode = new TreeNode();
 	            treeNode.LoadFromID(TreeIdx);
-	            xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
+	            xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1");
+	            
 	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
 	                if (CrossYN()) {
 	                    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
@@ -193,11 +192,10 @@
 
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
-	                        window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID + "&TabId=1tab2";
+	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID + "&tabID=1tab2";
 	                    }
-	                }else{
-/* 수정필요	*/
-	                    window.parent.frames["board_main"].location.href = "/myoffice/ezBoardSTD/admin/admin_board_config.aspx?BoardID=" + SelectedBoardID + "&BoardName=" + escape(treeNode.GetNodeData("DATA2")) + "&BoardType=" + chkPhotoBrd + "&ParentBoardID=" + SelectedBoardParentBoardID;
+	                }else{                	
+	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID;
 	                }
 	            }
 	            catch (e) {
@@ -257,8 +255,7 @@
 	                document.getElementById(imgtag).onclick();
 	                document.getElementById(imgtag).onclick();
 	                return 0;
-	            }
-	            else {
+	            }else{
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
 	        }	        

@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -89,6 +90,32 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_LDAPPATH", ldapPath);
 		
 		ezOrganAdminDao.insertDBData_company(map);
+	}
+
+	@Override
+	public void insertDBData_dept(OrganDeptVO vo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", vo.getCn());
+		map.put("v_DISPLAYNAME", vo.getDisplayName());
+		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
+		map.put("v_MAIL", vo.getMail());
+		map.put("v_PARENTCN", vo.getParentCn());
+		map.put("v_EXTATTR4", vo.getExtensionAttribute4());
+		map.put("v_EXTATTR5", vo.getExtensionAttribute5());
+		map.put("v_EXTATTR6", vo.getExtensionAttribute6());
+		map.put("v_EXTATTR8", vo.getExtensionAttribute8());
+		map.put("v_EXTATTR9", vo.getExtensionAttribute9());
+		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15());		
+		map.put("v_LDAPPATH", "");
+		
+		ezOrganAdminDao.insertDBData_dept(map);
+	}
+
+	@Override
+	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
+		ezOrganAdminDao.updateDBData_dept(vo);
 	}
 
 	@Override

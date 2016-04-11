@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.ibm.icu.text.SimpleDateFormat;
@@ -47,8 +51,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		map.put("v_PBOARDID", boardID);
 		
 		try {
-			ezBoardAdminDAO.addMyBoards(map);
-			
+			ezBoardAdminDAO.addMyBoards(map);			
 			return "OK";
 		} catch (Exception e) {
 			return "NO";
@@ -58,8 +61,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	@Override
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
 		try {
-			ezBoardAdminDAO.setMyBoardTreeConfig(boardMyFavoriteVO);
-			
+			ezBoardAdminDAO.setMyBoardTreeConfig(boardMyFavoriteVO);			
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR"; 
@@ -69,12 +71,57 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	@Override
 	public String setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
 		try {
-			ezBoardAdminDAO.setMyBoardTreeMoveCopy(boardMyFavoriteVO);
-			
+			ezBoardAdminDAO.setMyBoardTreeMoveCopy(boardMyFavoriteVO);			
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR"; 
 		}
+	}
+
+	@Override
+	public String saveMHT(String boardID, String formContent, String realPath) throws Exception {
+		InputStream stream = null;
+		OutputStream bos = null;
+		String mhtFilePath = "";
+		String dbPath = "";
+		
+		try{
+			String docPath = "/files/upload_board/form/";
+			String fullPath = realPath + docPath;
+			File doc = new File(fullPath);		
+		
+			if(!doc.exists() || !doc.isDirectory()){
+				doc.mkdir();
+			}
+			dbPath = docPath + boardID + ".mht";
+			mhtFilePath = realPath + dbPath;
+			File mht = new File(mhtFilePath);
+			
+			if(mht.exists()){
+				mht.delete();
+			}			
+			stream = new ByteArrayInputStream(formContent.getBytes("UTF-8"));
+			bos = new FileOutputStream(mhtFilePath);
+			
+			int bytesRead = 0;
+			int buffer_size = 1024;
+		    byte[] buffer = new byte[buffer_size];
+		    
+		    while ((bytesRead = stream.read(buffer, 0, buffer_size)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		}catch(Exception e){
+			
+		}finally{
+			if(bos != null){
+				bos.close();
+			}
+			if(stream != null){
+				stream.close();
+			}
+		}
+		
+		return dbPath.replace("\\", "/");
 	}
 
 	@Override
@@ -130,11 +177,20 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public int checkIfLeafBoard(String pBoardID) throws Exception{
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_PBOARDID", pBoardID);
 		
 		return ezBoardAdminDAO.checkIfLeafBoard(map);
+	}
+
+	@Override
+	public int checkForm(String boardID, String mode) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PMODE", mode);
+		
+		return ezBoardAdminDAO.checkForm(map);
 	}
 
 	@Override
@@ -171,8 +227,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public List<BoardPropertyVO> getBoardAccessList(String boardID)	throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_PBOARDID", boardID);
 
 		return ezBoardAdminDAO.getBoardAccessList(map);
@@ -242,8 +297,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void deleteBoard(String boardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_pBoardID", boardID);
 		
 		ezBoardAdminDAO.deleteBoard(map);
@@ -374,6 +428,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	@Override
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception {	
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", vo.getBoardID());
 		map.put("v_PACCESSID", vo.getAccessID());
 		map.put("v_PACCESSNAME", vo.getAccessName());
@@ -445,14 +500,21 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 
 	@Override
 	public void saveBoardProperty_port(String boardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_pBoardID", boardID);		
 		
-		ezBoardAdminDAO.saveBoardProperty_port(map);		
+		ezBoardAdminDAO.saveBoardProperty_port(map);
 	}
-	
-	
+
+	@Override
+	public void setBoardForm(String boardID, String formLocation) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PFORMLOCATION", formLocation);
+		
+		ezBoardAdminDAO.setBoardForm(map);
+	}
 	
 	
 }

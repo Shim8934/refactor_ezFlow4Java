@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -146,12 +145,11 @@ public class EzOrganAdminController {
 	@ResponseBody
 	public String saveDeptInfo(OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{	
 		String domain = config.getProperty("config.DomainName");
-		String result = "";		
-System.out.println(vo.toString());
+		String result = "";
+
 		if(vo.getParentCn() == null){
-			
+			ezOrganAdminService.updateDBData_dept(vo);
 		}else{
-System.out.println("in");
 			String cn = vo.getCn();
 			int cnt = ezOrganAdminService.companyCheck(cn);
 			
@@ -159,7 +157,9 @@ System.out.println("in");
 				result = "PRE";
 			}else{							
 				String mailAddr = cn + "@" + domain;
-				//ezOrganAdminService.insertDBData_dept(vo);
+				vo.setMail(mailAddr);
+				
+				ezOrganAdminService.insertDBData_dept(vo);
 				
 				result = "OK";
 			}
@@ -167,5 +167,6 @@ System.out.println("in");
 		
 		return result;
 	}
+	
 
 }

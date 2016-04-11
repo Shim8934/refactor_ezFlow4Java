@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezOrgan.dao;
 
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -25,9 +27,16 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.insertDBData_company", map);
 	}
 
+	public void insertDBData_dept(Map<String, Object> map) throws Exception{
+		insert("EzOrganAdminDAO.insertDBData_dept", map);
+	}
+	
+	public void updateDBData_dept(OrganDeptVO vo) throws Exception{
+		update("EzOrganAdminDAO.updateDBData_dept", vo);
+	}
+	
 	public void deleteDBData(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.deleteDBData", map);
 	}
-
 	
 }

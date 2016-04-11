@@ -674,15 +674,14 @@ function CrossYN() {
 
 ///////////////////////////////////////////////////////////////////////
 // CK Editer 관련 함수 ////////////////////////////////////////////////
-function ConvertMHTtoHTML(pURL) {
+function ConvertMHTtoHTML(pURL) {	
     var rtnVal = '';
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezCommon/mhtToHTML.do",
-		data : { strURL   : pURL 
-  			   },
+		data : { strURL   : pURL },
 		success: function(result){
 			rtnVal = result;
 		}        			
@@ -697,8 +696,7 @@ function ConvertHTMLtoMHT(pContent) {
 		dataType : "text",
 		async : false,
 		url : "/ezCommon/htmlToMHT.do",
-		data : { strHTML   : pContent 
-  			   },
+		data : { strHTML   : pContent },
 		success: function(result){
 			rtnVal = result;
 		}        			

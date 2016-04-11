@@ -938,5 +938,57 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		return "OK";
 	}
+	
+	@RequestMapping(value = "/admin/ezBoard/boardConfig.do")
+	public String boardConfig(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		String boardID = request.getParameter("boardID");
+		String boardName = request.getParameter("boardName");		
+		String boardType = request.getParameter("boardType");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
+
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardName", boardName);
+		model.addAttribute("boardType", boardType);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("tabID", tabID);		
+		model.addAttribute("use_IE11Browser", config.getProperty("config.IE11EDITOR"));
+		model.addAttribute("use_Editor", config.getProperty("config.EDITOR"));
+		
+		return "admin/ezBoard/boardConfig";
+	}
+	
+	@RequestMapping(value = "/admin/ezBoard/boardFormSave.do")
+	public String boardFormSave(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		String boardID = request.getParameter("boardID");
+		String checkForm = "";
+		
+		int cnt = ezBoardAdminService.checkForm(boardID, "A");
+		
+		if(cnt > 0){
+			checkForm = "TRUE";
+		}else{
+			checkForm = "FALSE";
+		}		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("checkForm", checkForm);
+		model.addAttribute("use_Editor", config.getProperty("config.EDITOR"));
+		
+		return "admin/ezBoard/boardFormSave";
+	}
+	
+	@RequestMapping(value = "/admin/ezBoard/saveForm.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String saveForm(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		String boardID = request.getParameter("boardID");
+		String formContent = request.getParameter("formContent");
+		String realPath = request.getServletContext().getRealPath("");
+		
+		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath);		
+
+		ezBoardAdminService.setBoardForm(boardID, formLocation);
+		
+		return "OK";
+	}
 }
 

@@ -45,7 +45,11 @@ public interface EzBoardAdminService {
 	
 	public String setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	
+	public String saveMHT(String boardID, String formContent, String realPath) throws Exception;
+	
 	public int checkIfLeafBoard(String pBoardID) throws Exception;
+	
+	public int checkForm(String boardID, String mode) throws Exception;
 	
 	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;	
 		
@@ -94,5 +98,8 @@ public interface EzBoardAdminService {
 	public void apprProperty_info(String boardID, String string) throws Exception;
 
 	public void saveBoardProperty_port(String boardID) throws Exception;
+
+	public void setBoardForm(String boardID, String formLocation) throws Exception;
+	
 
 }
