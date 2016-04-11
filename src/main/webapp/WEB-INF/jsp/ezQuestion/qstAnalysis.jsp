@@ -8,7 +8,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-		<script type="text/javascript" src="/js/ezQuestion/jquery.battatech.excelexport.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>

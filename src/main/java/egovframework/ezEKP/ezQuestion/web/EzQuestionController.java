@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -3663,4 +3664,26 @@ public class EzQuestionController extends EgovFileMngUtil {
         }
         return resultStr;
     }
+	
+	@RequestMapping(value="/ezQuestion/msgAdminConfirm.do")
+	public String msgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception{
+		String receve = "brdId=" + request.getParameter("brdId") +
+                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+                "&responseRange=" + request.getParameter("responseRange") +
+                "&postDate=" + request.getParameter("postDate") +
+                "&pollEndDate=" + request.getParameter("pollEndDate") +
+                "&currPage=" + request.getParameter("currPage")+
+                "&itemNo=" + request.getParameter("itemNo");
+		
+		
+		model.addAttribute("brdId",request.getParameter("brdId"));
+		model.addAttribute("title",new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8"));
+		model.addAttribute("responseRange",request.getParameter("responseRange"));
+		model.addAttribute("postDate",request.getParameter("postDate"));
+		model.addAttribute("pollEndDate",request.getParameter("pollEndDate"));
+		model.addAttribute("currPage",request.getParameter("currPage"));
+		model.addAttribute("itemNo",request.getParameter("itemNo"));		
+		model.addAttribute("receve", receve);
+		return "/ezQuestion/msgAdminConfirm";
+	}
 }
