@@ -1386,16 +1386,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
 		//String brdId = "";
 		//String itemId = "";
-		//String pMode = "";
+		String pMode = "";
 		String pQstTitle = "", pAnswerType, pMultiSel = "";
 		String pSelectOption = "";
-		//String pEditIndex = "";
+		String pEditIndex = "";
 		String pQstAnsInfo = "";
 		String pQstAttach = "";
 		String pDataXML = "";
 		//String pNoneActiveX = "";
 		
-		//pMode = "NEW";
+		pMode = "NEW";
 		pAnswerType = "1";
 		/*if(req.getParameter("brd_id") != null) {
 			brdId = req.getParameter("brd_id").trim(); 
@@ -1406,7 +1406,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}*/
 
 		if(req.getParameter("DataXML") != null) {
-			//pMode = "EDIT";
+			pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
@@ -1437,18 +1437,19 @@ public class EzQuestionController extends EgovFileMngUtil {
 					int pCnt = doc.getElementsByTagName("ANSWER").getLength();
 					
 					for(int i=0; i<pCnt; i++) {
-						pSelectOption += "<option value=\"" +doc.getElementsByTagName("TITLE").item(0).getTextContent() + "\" ";
+						pSelectOption += "<option value=\"" +doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "\" ";
 						if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-							pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(0).getTextContent() + "\">";
+							pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
 						} else {
 							pSelectOption += ">";
 						}
-						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("TITLE").item(0).getTextContent() + "</option>";
+						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "</option>";
 					}
+				
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
-				//pEditIndex = String.valueOf(req.getParameter("dataIndex"));
+				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
 			}
 		}
 		
@@ -1457,7 +1458,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		questionAddVO.setQuestionContent(pQstTitle);
 		questionAddVO.setpQstAnsInfo(pQstAnsInfo);
 		questionAddVO.setpQstAttach(pQstAttach);
+		questionAddVO.setAnswerType(Integer.parseInt(pAnswerType));
 		model.addAttribute("questionAddVO",questionAddVO);
+		model.addAttribute("pEditIndex",pEditIndex);
+		model.addAttribute("pMode",pMode);
+		model.addAttribute("pDataXML",pDataXML);
 		
 		return "/ezQuestion/qstStep2QuestionAdd";
 	}
