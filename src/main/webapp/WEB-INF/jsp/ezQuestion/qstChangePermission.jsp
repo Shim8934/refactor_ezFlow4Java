@@ -23,11 +23,10 @@
 		<!-- time picker-->
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<!-- <script src="//code.jquery.com/jquery-1.12.0.min.js"></script> -->
 		<script language="JavaScript" type="text/javascript">
 			var g_Dateinit = true;
-			var L_SearchStartDt = "${qstListVO.pollStartDate}";
-			var L_SearchEndDt = "${qstListVO.pollEndDate}";
+			var L_SearchStartDt = "${qstUserPollItemVO.pollStartDate}";
+			var L_SearchEndDt = "${qstUserPollItemVO.pollEndDate}";
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay = Array(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 			var flgClose=true;
@@ -63,8 +62,9 @@
 	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
-	        	var NowDate = new Date("${qstListVO.postDate}");
-	        	var NowDate2 = new Date("${qstListVO.pollEndDate}");
+	        	var NowDate = new Date("${uploadSDate}");
+	        	var NowDate2 = new Date("${uploadEDate}");
+
 	        	NowDate.setHours(NowDate.getHours() - 9);
 	        	NowDate2.setHours(NowDate2.getHours() - 9);
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -210,8 +210,8 @@
 
 		            PollEndDate = szEYear + szEMonth + szEDay;
 		        }
-	        	//sysdate가져올것
-	    	    var m_PostDate = String('');
+
+	    	    var m_PostDate = "${mPostDate}";
 	        	var m_PollStartDate = L_SearchStartDt;
 	        	var tempS = m_PollStartDate.split("-");
 	        	var szSYear = tempS[0];
@@ -247,8 +247,8 @@
 	    	        alert("<spring:message code='ezQuestion.t203' />");
 	        	    return;
 	        	}
-		        //sysdate 가져올것
-	        	var m_PostDate = new Date();
+		        
+	        	var m_PostDate = "${mPostDate}";
 	        	if (L_SearchStartDt.length > 10) {
 	            	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	}
@@ -478,9 +478,9 @@
             	<input type="hidden" name="brd_id2" id="brd_id2" value="${qstListVO.brdId}" /> 
             	<input type="hidden" name="brd_nm" id="brd_nm" value="${ezQuestionVO.brdNm}" /> 
             	<input type="hidden" name="brd_postterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" />        
-            	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${qstListVO.pollStartDate}" />
-            	<input type="hidden" name="item_no2" id="item_no2" value="${ezQuestionVO.itemId}" />        
-            	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${qstListVO.pollEndDate}" />
+            	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${qstUserPollItemVO.pollStartDate}" />
+            	<input type="hidden" name="item_no2" id="item_no2" value="${qstUserPollItemVO.itemNo}" />        
+            	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${qstUserPollItemVO.pollEndDate}" />
             	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
             	<input type="hidden" name="select_YN" id="select_YN" />
             	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="<%-- <%= Server.HtmlEncode(_SB.ToString()) %> --%>" />
