@@ -95,6 +95,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getReservedItemList(Map<String, Object> map) throws Exception{
+		return (List<BoardListVO>) list("EzBoardDAO.getReservedItemList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
@@ -286,6 +291,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int getSearchMyBoardItemCountTemp(Map<String, Object> map) throws Exception{
 		select("EzBoardDAO.getSearchMyBoardItemCountTemp", map);
 		return (int)map.get("v_pCount");
+	}
+	
+	public int getReservedItemListCount(String userID) throws Exception{
+		return (int) select("EzBoardDAO.getReservedItemListCount", userID);
 	}
 	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{

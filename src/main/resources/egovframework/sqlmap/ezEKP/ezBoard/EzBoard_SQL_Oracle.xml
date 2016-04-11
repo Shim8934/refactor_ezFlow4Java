@@ -129,6 +129,10 @@
 	<procedure id="EzBoardDAO.photoViewDBAll" parameterClass="Map" resultMap="photoViewDBAll">
 		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW_ALL(#v_pItemID#, #v_pBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
+		{CALL EZBOARDSTD.EZSP_GETRESERVEDITEMLISTXML(#v_PENDROW#, #v_PUSERID#, #v_PSORTBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 
 	<procedure id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -589,6 +593,19 @@
 			WHERE 
 				itemid = #itemID#
 		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.getReservedItemListCount" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(itemid)
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        WHERE  
+	        	writerid = #userID#
+	        AND 
+	        	startdate > SYSDATE
+		]]>
 	</select>
 	
 	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">

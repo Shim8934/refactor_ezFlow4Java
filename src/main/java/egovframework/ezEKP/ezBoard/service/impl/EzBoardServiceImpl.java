@@ -749,6 +749,24 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception {
+		if(!(endRow > 0)){
+			endRow = 0;
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PENDROW", endRow);
+		map.put("v_PUSERID", userID);
+		map.put("v_PSORTBY", sortBy);
+		return ezBoardDAO.getReservedItemList(map);
+	}
+
+	@Override
+	public int getReservedItemListCount(String userID) throws Exception {
+		return ezBoardDAO.getReservedItemListCount(userID);
+	}
+
+	@Override
 	public void brdNewItem(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItem(boardListVO);
 		ezBoardDAO.newItem(boardListVO.getItemID());

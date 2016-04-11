@@ -98,6 +98,10 @@ public interface EzBoardService {
 	
 	public String getDocPassWord(String itemID) throws Exception;
 	
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
+	
+	public int getReservedItemListCount(String userID) throws Exception;
+	
 	public int getNewItemListCount(String userID) throws Exception;
 
 	public int getBrdNewItemCount(String userID) throws Exception;
