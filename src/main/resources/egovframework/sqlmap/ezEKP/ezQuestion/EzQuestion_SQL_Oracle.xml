@@ -348,7 +348,7 @@
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertAnswerAnswerContent"	parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
+		{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTEN(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
