@@ -127,18 +127,19 @@ public class QstAddVO {
 	public void setAnswerType(int answerType) {
 		this.answerType = answerType;
 	}
+	public String getpMultiSel() {
+		return pMultiSel;
+	}
+	public void setpMultiSel(String pMultiSel) {
+		this.pMultiSel = pMultiSel;
+	}
 	public int getAnswerViewType() {
 		return answerViewType;
 	}
 	public void setAnswerViewType(int answerViewType) {
 		this.answerViewType = answerViewType;
 	}
-	public String getpMultiSel() {
-		return getpMultiSel();
-	}
-	public void setpMultiSel(String pMultiSel) {
-		this.pMultiSel = pMultiSel;
-	}
+
 	public int getQuesSN() {
 		return quesSN;
 	}
