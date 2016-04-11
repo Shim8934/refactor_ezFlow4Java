@@ -917,7 +917,7 @@
 		            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";            
 		            for(var i = 0; i < ImageCount; i++)
 		            {
-		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + escape(pBoardID) + "&fileName=" + escape(result[i].split('/')[4]);
+		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[4]);
 		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + imagecontet[i] + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";

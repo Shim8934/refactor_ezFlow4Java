@@ -117,7 +117,7 @@
 	                }
 	
 	                if (imagecontent != null && imagecontent != "") {
-	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + escape(pBoardID) + "&fileName=" + escape(imgpath);
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
 	                    document.getElementById(imageid).src = imgSrc;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }

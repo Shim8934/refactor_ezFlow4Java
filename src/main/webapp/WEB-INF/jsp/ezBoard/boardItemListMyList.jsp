@@ -601,8 +601,8 @@
 		        window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + pUserID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
-		        var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
-		        window.location.href = "BoardReservedItemList_Cross.aspx?OrgBoardParameters=" + escape(OrgBoardParameters) + "&BoardType=" + pBoardType;
+		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		
 		    function window_reload() {
@@ -681,6 +681,7 @@
 		            DeleteItem();
 		
 		    }
+		    var copyboarditem_cross_dialogArguments = new Array();
 	        function CopyItem_onclick() {
 	            if (strListInfo == "") {
 	                alert("<spring:message code='ezBoard.t201'/>");
@@ -698,6 +699,8 @@
 	                strBoardItemList += document.getElementById(arrList[i] + ";").parentElement.parentElement.getAttribute("DATA1") + ";";
 	            }
 	            arrList = null;
+	            
+	            copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
 	
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -753,6 +756,15 @@
 	            }
 	        }
 	        function MoveItem_onclick_Complete(ret) {
+	            if (typeof (ret) != "undefined") {
+	                if (ret == "OK") {
+	                    window.location.reload();
+	                    window.close();
+	                }
+	            }
+	        }
+	        
+	        function CopyItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                if (ret == "OK") {
 	                    window.location.reload();

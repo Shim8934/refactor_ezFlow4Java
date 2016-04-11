@@ -474,8 +474,8 @@
 				window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
 			function ReservationItem_onclick() {
-			    var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;	
-			    window.location.href = "BoardReservedItemList_Cross.aspx?OrgBoardParameters=" + escape(OrgBoardParameters) + "&BoardType=" + pBoardType;
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;	
+			    window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType;
 			}
 			
 			function window_reload() {

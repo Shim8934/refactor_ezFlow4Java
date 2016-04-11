@@ -1072,7 +1072,7 @@
 		
 		
 		        if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pUrl);
+		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(pUrl);
 		            var tempXML = createXmlDom();
 		            var XmlBodyATT = createXmlDom();
 		            var XmlBodyDATA = createXmlDom();

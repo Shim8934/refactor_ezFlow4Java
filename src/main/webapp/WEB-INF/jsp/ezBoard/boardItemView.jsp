@@ -566,11 +566,11 @@
 		    function btn_SaveToPC_Onclick() {
 		        var fPath;
 		        var objMHT = new ActiveXObject("MhtFormat.Convert");
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(strContentLocation);
 		        objMHT.sync = true;
 		        var strMht = objMHT.DownloadURL(fullPath);
 		        if (strMht.length > 200000) {
-		            g_progresswin = window.showModelessDialog("show_progress.aspx?fileinfo=" + escape("<spring:message code='ezBoard.t297' />"), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
+		            g_progresswin = window.showModelessDialog("show_progress.aspx?fileinfo=" + encodeURI("<spring:message code='ezBoard.t297' />"), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
 				}
 		        objMHT.mhtData = strMht;
 		        objMHT.filterIn();

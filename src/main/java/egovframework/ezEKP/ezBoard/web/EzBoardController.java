@@ -401,7 +401,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	   Document doc = commonUtil.convertStringToDocument(resultXML);
     	   NodeList nList = doc.getElementsByTagName("NODE");
            String strName = "";
-           int intCount;
+           int intCount = 0;
            
            for(int i = 0; i < nList.getLength(); i++){
                if(nList.item(i).getChildNodes().item(4).getTextContent().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")){
@@ -422,13 +422,14 @@ public class EzBoardController extends EgovFileMngUtil{
                 	   myFavoriteVO.setUserId(userInfo.getId());
                 	   myFavoriteVO.setBoardId(nList.item(i).getChildNodes().item(4).getTextContent());
                 	   myFavoriteVO.setType("1");
-                	   
-                       if(boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")){
-                    	   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-                       }
-                       else{
-                    	   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
-                       }
+                	   if(boardInfo != null){
+                		   if(boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")){
+                			   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+                		   }
+                		   else{
+                			   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+                		   }
+                	   }
                        
                        strName = "";
                        if(intCount != 0){
@@ -5032,7 +5033,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardReservedItemList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		String useEditor = config.getProperty("config.EDITOR");
 		String orgBoardParameters = request.getParameter("orgBoardParameters");
-		int page = Integer.parseInt(request.getParameter("page"));
+		int page = 0;
+		if(request.getParameter("page") != null){
+			page = Integer.parseInt(request.getParameter("page"));
+		}
 		String sortBy = request.getParameter("sortBy");
 		String boardType = request.getParameter("boardType");
 		String adminType = request.getParameter("adminType");

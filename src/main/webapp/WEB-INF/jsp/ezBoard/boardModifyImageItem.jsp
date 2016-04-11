@@ -144,7 +144,7 @@
 	            var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
 	
 	            var imgFileName = getNodeText(GetChildNodes(nodes[0])[0]);
-	            document.getElementsByTagName("IMG")[0].src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + escape(pBoardID) + "&fileName=" + escape(imgFileName);
+	            document.getElementsByTagName("IMG")[0].src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgFileName);
 	        }
 	
 	        function S4() {

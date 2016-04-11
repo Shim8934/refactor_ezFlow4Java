@@ -15,6 +15,9 @@
 		    var ItemIDList = "${itemIDList}";
 		    var BoardID = "${boardID}";
 		    var xmlDom_treeview = createXmlDom();
+		    var rtnVal = "";
+		    var ReturnFunction = "";
+		    
 		    function Select() {
 		        if (selectedBoard == "") {
 		            alert("<spring:message code='ezBoard.t179'/>");
@@ -49,9 +52,11 @@
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t355'/>");
 		            window.returnValue = "OK";
+		            rtnVal = "OK";
 		            window.close();
 		        } else {
 		            window.returnValue = "ERROR";
+		            rtnVal = "ERROR";
 		            window.close();
 		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
 		        }
@@ -77,6 +82,10 @@
 		        return retval;
 		    }
 		    window.onload = function () {
+		    	try {
+		            ReturnFunction = opener.copyboarditem_cross_dialogArguments[1];
+		        } catch (e) { }
+		        
 		        var xmlDom_treeview = createXMLHttpRequest();
 		        xmlDom_treeview.open("GET", "/xml/organtree_config2.xml", false);
 		        xmlDom_treeview.send();
@@ -86,6 +95,13 @@
 		        }
 		        DisplayTopBoard();
 		    };
+		    
+		    window.onunload = function () {
+		        if (ReturnFunction != null){
+		            ReturnFunction(rtnVal);
+		        }
+		    };
+		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
 		        var xmlRtn = createXmlDom();
 		        var TreeIdx = pNodeID;
