@@ -501,10 +501,13 @@ public class EzQuestionController extends EgovFileMngUtil {
                     subRow.appendChild(doc.createTextNode(strTagData));
                     row.appendChild(subRow);
 				}else if(question.getAnswerType() == 5){
-                    strTagData = "<tr>";
-                    strTagData += "	<td style=\"word-break:break-all;padding:10px;\">";
-                    strTagData += "";
+					strTagData = "<tr>";
+					strTagData +=		"<textarea style=\"Width:100%;height:85;\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
                     strTagData += "</tr>";
+                    Element subRow = doc.createElement("SUBROW");
+                    subRow.appendChild(doc.createTextNode(strTagData));
+                    row.appendChild(subRow);
+                    dataSubProcess(question.getBrdId(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);
 				}else{
 					if(question.getAnswerType() == 4){
 						 strTagData = "<tr>";
@@ -536,25 +539,18 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
 		Node snewRow = doc.createElement("ITEM");
         int iCount = 0;
-        if (answerType == 5){
-        	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
-        	if(qstAnswerAnswerList != null){
-        		//결과 받아서 XMl로 변환 -> 표형식 생성안되서 나중에 
-        	}
-        }
+        String strTagData = "";
+        	
         List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdId, itemNo, qstNo);
+
         if(qstAnswerList != null){
         	for(QstAnswerVO qstAnswer : qstAnswerList){
-        		Node itemNode = null;
+                Node itemNode = null;
         		Node iValueNode = null;
-        		String strTagData = "";
         		iCount++;
         		
-        		if(answerType !=  5){
-        			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
-        		}else{
-        			itemNode = doc.createElement("TAG");
-        		}
+        		itemNode = doc.createElement("TAG" + Integer.toString(iCount));
+
         		switch(answerType){
         		case 1:
         			if (multiSelect.equals("1")){
@@ -599,15 +595,43 @@ public class EzQuestionController extends EgovFileMngUtil {
                     itemNode = null;
                     break;
         		case 5:
-        			strTagData =  modifyData(qstAnswer.getAnswerContent());
-                    iValueNode = doc.createTextNode(strTagData);
-                    itemNode.appendChild(iValueNode);
+        			List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
+System.out.println(qstAnswerAnswerList.size());
+        			if(iCount == 1){
+        				strTagData = "<tr>";
+        				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
+	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+	    	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
+	    	    				strTagData += modifyData(qstAnswerVO.getAnswerContent());
+	    	    				strTagData += "</th>";
+						}
+	    				strTagData += "</tr>";
+	    				strTagData += "<tr>";
+	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+modifyData(qstAnswer.getAnswerContent())+"</th>";
+	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+						}
+	    				strTagData += "</tr>";
+System.out.println(strTagData);
+        			}else{
+        				strTagData = "<tr>";
+        				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+modifyData(qstAnswer.getAnswerContent())+"</th>";
+	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+						}
+	    				strTagData += "</tr>";
+System.out.println(strTagData);
+        			}
+        			iValueNode = doc.createTextNode(strTagData);
+					itemNode.appendChild(iValueNode);
                     snewRow.appendChild(itemNode);
                     iValueNode = null;
                     itemNode = null;
                     break;
         		}
         	}
+
+        	
         	Node attr = doc.createAttribute("count");
         	attr.setNodeValue(Integer.toString(iCount));
         	row.appendChild(snewRow);
@@ -1445,7 +1469,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 						}
 						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "</option>";
 					}
-				
+					
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
