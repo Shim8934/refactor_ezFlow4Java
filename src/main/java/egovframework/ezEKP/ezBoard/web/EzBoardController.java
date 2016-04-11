@@ -423,7 +423,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 	   myFavoriteVO.setBoardId(nList.item(i).getChildNodes().item(4).getTextContent());
                 	   myFavoriteVO.setType("1");
                 	   
-                       if(boardInfo.getGuBun().equals("4")){
+                       if(boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")){
                     	   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
                        }
                        else{
