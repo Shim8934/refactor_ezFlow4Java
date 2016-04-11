@@ -2267,7 +2267,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezQuestion/qstAnalysis.do")
 	public String qstAnalysis(HttpServletRequest request, ModelMap model) throws Exception{
-		String pBrdID = "", pItemNo = "", pCurrPage = "";
+		String pBrdID = "", pItemNo = "", pCurrPage = "", pAnswerType="";
 		String pPubFlag = "";
 		
 		if (request.getParameter("brdId") != null)
@@ -2295,7 +2295,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			sb.append(qstVO.getAnswerType());
 			sb.append("</ANSWERTYPE>");
 			sb.append("</ROW>");
-			
+			pAnswerType = Integer.toString(qstVO.getAnswerType());
 		}
 		sb.append("</DATA>");
 		
@@ -2304,6 +2304,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         model.addAttribute("pItemNo",pItemNo);
 		model.addAttribute("pPubFlag", pPubFlag);
 		model.addAttribute("pCurrPage", pCurrPage);
+		model.addAttribute("pAnswerType", pAnswerType);	
 		
 		return "/ezQuestion/qstAnalysis";
 	}
