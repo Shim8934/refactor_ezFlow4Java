@@ -37,7 +37,7 @@
 			        document.body.style.UserSelect = 'none';
 			    }
 				   
-				if(pAnswerType==2){
+				if(pAnswerType!=1){
 					alert("<spring:message code='ezQuestion.lhj1' />");
 				 	window.location.href = "/ezQuestion/qstList.do?brd_id="+pBrdID+"&currPage="+pCurrPage;
 				}
@@ -89,11 +89,11 @@
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
-				var tableXml=document.getElementsByName("listQst")[0].innerHTML;
+				var tableXml=$("#listQst").innerHTML;
 				for(i=0; i<nodes.length ;i++){
 					tableXml += "<option value='" + SelectSingleNodeValue(nodes[i], "QUESTION_NO") +"' anstype='"+SelectSingleNodeValue(nodes[i], "ANSWERTYPE")+"'>"+SelectSingleNodeValue(nodes[i], "QUESCONTENT")+"</option>"
 				}
-				document.getElementsByName("listQst")[0].innerHTML = tableXml;
+				$("#listQst").html(tableXml);
 			}
 			
 			function menuQst_List() {
@@ -403,7 +403,7 @@
 		    	<td>
 		    		<input type="radio" name="rdoQst" value="ALL" onclick="javascript:return rdoQst_onclick(0)" checked="checked" style="vertical-align:-2px;" /><spring:message code='ezQuestion.t138' />
 			      	<input type="radio" name="rdoQst" value="PART" onclick="javascript:return rdoQst_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t135' />
-					<select name="listQst" style=" WIDTH:300px;" onChange="return listQst_onchange()">
+					<select id="listQst" name="listQst" style=" WIDTH:300px;" onChange="return listQst_onchange()">
 						<option value="" selected><spring:message code='ezQuestion.t136' /></option>
 					</select>
 		      	</td>

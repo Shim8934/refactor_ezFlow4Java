@@ -596,7 +596,6 @@ public class EzQuestionController extends EgovFileMngUtil {
                     break;
         		case 5:
         			List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdId, itemNo, qstNo);
-System.out.println(qstAnswerAnswerList.size());
         			if(iCount == 1){
         				strTagData = "<tr>";
         				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
@@ -612,7 +611,6 @@ System.out.println(qstAnswerAnswerList.size());
 	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
 						}
 	    				strTagData += "</tr>";
-System.out.println(strTagData);
         			}else{
         				strTagData = "<tr>";
         				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+modifyData(qstAnswer.getAnswerContent())+"</th>";
@@ -620,7 +618,6 @@ System.out.println(strTagData);
 	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
 						}
 	    				strTagData += "</tr>";
-System.out.println(strTagData);
         			}
         			iValueNode = doc.createTextNode(strTagData);
 					itemNode.appendChild(iValueNode);
@@ -630,8 +627,6 @@ System.out.println(strTagData);
                     break;
         		}
         	}
-
-        	
         	Node attr = doc.createAttribute("count");
         	attr.setNodeValue(Integer.toString(iCount));
         	row.appendChild(snewRow);
@@ -882,16 +877,19 @@ System.out.println(strTagData);
         	ezQuestionService.insertResponse2(qstResponseVO);
         }else if(answerType == 5){
         	 /** EZSP_GETANSCNT*/
+        	tmp = "tableAnswer";
 	        Integer ansCnt = ezQuestionService.getAnsCnt(brdId, itemNo, questionNo);
+
 	        if(ansCnt != null){
 	        	ansRCnt = ansCnt;
 	        }else{
 	        	ansRCnt = 0;
 	        }
-	        String tempTableAnswer = "";
-	        for(; tempTableAnswerCnt < ansRCnt; tempTableAnswerCnt++){
-	        	tempTableAnswer += tempTableAnswer.split(";");
-	        }
+	        String tempTableAnswer = request.getParameter(tmp);
+
+	        /*for(; tempTableAnswerCnt < ansRCnt; tempTableAnswerCnt++){
+	        	tempTableAnswer += tempTableAnswer.split(";")[tempTableAnswerCnt] + ";";
+	        }*/
 	        qstResponseVO.setAnswerSubjectivity(tempTableAnswer);
 	        ezQuestionService.insertResponse2(qstResponseVO);
         }else{
@@ -1001,7 +999,6 @@ System.out.println(strTagData);
         List<QstVO> qstVOList = dataProcessMainData(brdId, itemNo);
         qstVOList = dataProcess(Integer.parseInt(brdId), Integer.parseInt(itemNo), bPublic, qstVOList, percent);
         
-        
         model.addAttribute("qstVOList",qstVOList);
         model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
         model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
@@ -1059,9 +1056,9 @@ System.out.println(strTagData);
 	public int getAnswerPerson(Document xmlDoc, int iAnsCount, int TrOrder) throws Exception{
 		int rtv = 0;
 		for (int i = 0; i < xmlDoc.getElementsByTagName("ANSWER_SUBJECTIVITY").getLength(); i++){
-//			if (xmlDoc.getElementsByTagName("ANSWER_SUBJECTIVITY").item(i).InnerText.Split(';')[iAnsCount] == (TrOrder + 1){
-//				rtv++;
-//            }
+			if (xmlDoc.getElementsByTagName("ANSWER_SUBJECTIVITY").item(i).getTextContent().split(";")[iAnsCount].equals(Integer.toString(TrOrder + 1))){
+                rtv++;
+            }
         }
         return rtv;
 	}
@@ -1267,29 +1264,27 @@ System.out.println(strTagData);
 		String strData = "";
 		
 		/** EZSP_GETTABLEANSWER*/
-		String strXmlDom = ezQuestionService.getTableAnswer(brdId, itemNo, questionNo);
+		String strXmlDom = ezQuestionService.getTableAnswer(brdId, itemNo, questionNo);	
 		Document xmlDom = commonUtil.convertStringToDocument(strXmlDom);
-		String strXmlDoc = ezQuestionService.getResponseAnswer(brdId, itemNo, questionNo);
+		String strXmlDoc = ezQuestionService.getResponseAnswer(brdId, itemNo, questionNo);		
 		Document xmlDoc = commonUtil.convertStringToDocument(strXmlDoc);
 		
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
         percent = 0;
-        
         responseCnt = xmlDoc.getElementsByTagName("ANSWER_SUBJECTIVITY").getLength();
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
         strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
-        if (strSel == "1")
-        {
+        if (strSel.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
         }
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
         strData += "</th>";
         strData += "</tr>";
         strData += "</table>";
-        strData += "<table class=\"ex\">";        
+        strData += "<table class=\"ex\">";
         for(QstAnswerVO qstAnswerVO : qstAnswerVOList){
         	iAnsCount++;
         	if(iAnsCount ==1){
@@ -1298,7 +1293,7 @@ System.out.println(strTagData);
                 	if (i == 0){
                 		strData += "<td style=\"border:1px solid #b6b6b6;\"></td>";
                 	}else{
-//                		strData += "<td colspan='3' style='border:1px solid #b6b6b6;'>" + xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").item(i - 1).InnerText.replace("<", "&lt;").replace(">", "&gt;") + "</td>";
+                		strData += "<td colspan='3' style='border:1px solid #b6b6b6;'>" + xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").item(i - 1).getTextContent().replace("<", "&lt;").replace(">", "&gt;") + "</td>";
                 	}
                 }
                 strData += "</tr>\n";

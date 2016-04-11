@@ -190,6 +190,11 @@
 		<result property="quesContent"				column="QUESCONTENT"				columnIndex="2"/>
 		<result property="answerType"				column="ANSWERTYPE"					columnIndex="3"/>
 	</resultMap>
+	
+	<resultMap class="String" id="responserAnswerCLOB">
+		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="1"		javaType="String" jdbcType="CLOB"/>
+	</resultMap>
+	
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -283,9 +288,9 @@
 		{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 		
 	<procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
 		{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -588,6 +593,19 @@
 			ITEM_NO = #v_pItemNo#
 		AND 
 			QUES_SN IS NOT NULL
+	</select>
+	
+	<select id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultMap="responserAnswerCLOB" >
+		SELECT 
+			ANSWER_SUBJECTIVITY 
+        FROM 
+        	ezQuestion.TBLPOLL_RESPONSE 
+		WHERE
+			BRD_ID = #v_PSTRBRDID#
+        AND 
+        	ITEM_NO = #v_PITEMNO#
+        AND 
+        	QUESTION_NO = #v_PQUESNO#
 	</select>
 	
 	

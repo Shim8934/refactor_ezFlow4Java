@@ -498,9 +498,9 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	@Override
 	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
-		map.put("v_pstrBrdID", brdId);
+		map.put("v_pStrBrdId", brdId);
 		map.put("v_pItemNo", itemNo);
-		map.put("v_pQuesNo", questionNo);
+		map.put("v_pQuestionNo", questionNo);
 		List<String> list = ezQuestionDAO.getTableAnswer(map);
 		StringBuilder sb = new StringBuilder();
 		if(list != null){
@@ -508,8 +508,8 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 			for(String answerAnswerContent : list){
 				sb.append("<ROW>");
 				sb.append("<ANSWER_ANSWERCONTENT>");
-				sb.append("<ANSWER_ANSWERCONTENT>");
 				sb.append(answerAnswerContent);
+				sb.append("</ANSWER_ANSWERCONTENT>");
 				sb.append("</ROW>");
 			}
 			sb.append("</DATA>");
@@ -520,9 +520,9 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	@Override
 	public String getResponseAnswer(int brdId, int itemNo, int questionNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
-		map.put("v_pstrBrdID", brdId);
-		map.put("v_pItemNo", itemNo);
-		map.put("v_pQuesNo", questionNo);
+		map.put("v_PSTRBRDID", brdId);
+		map.put("v_PITEMNO", itemNo);
+		map.put("v_PQUESNO", questionNo);
 		List<String> list = ezQuestionDAO.getResponseAnswer(map);
 		StringBuilder sb = new StringBuilder();
 		if(list != null){
@@ -534,8 +534,8 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 				sb.append("</ANSWER_SUBJECTIVITY>");
 				sb.append("</ROW>");
 			}
-			sb.append("</DATA>");
-		}	
+		sb.append("</DATA>");
+		}
 		return sb.toString();
 	}
 
