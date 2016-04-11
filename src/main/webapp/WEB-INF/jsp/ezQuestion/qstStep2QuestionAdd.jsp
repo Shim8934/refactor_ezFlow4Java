@@ -13,13 +13,13 @@
 			var index = -1;
 			var g_DelAttachList = "";
 			var pBeforeCheck = "";
-			var pEditIndex = "<c:out value='${requestScope.pEditIndex}'/>";
-		    var pAnswerType = "<c:out value='${requestScope.pAnswerType}'/>";
+			var pEditIndex = "${pEditIndex}";
+		    var pAnswerType = "${questionAddVO.answerType}";
     		pAnswerType = (parseInt(pAnswerType)-1).toString();
-    		var pMode = "<c:out value='${requestScope.pMode}'/>";
-    		var pMultiSel = "<c:out value='${requestScope.pMultiSel}'/>";
-    		var pDataXml = "<c:out value='${requestScope.pDataXml}'/>";
-    		var pNoneActiveX = "<c:out value='${requestScope.pNoneActiveX}'/>";
+    		var pMode = "${pMode}";
+    		var pMultiSel = "${questionAddVO.pMultiSel}";
+    		var pDataXml = "${pDataXML}";
+    		
     		var g_windowReference = null;
     
 			window.onload = function () {
@@ -106,8 +106,8 @@
                 		option.text = i;
                 		document.getElementById("vertical").appendChild(option);
             		}
-            		/* if(document.getElementById("ResultTable") == null)
-                 		createTable(pDataXml);  */
+            		 if(document.getElementById("ResultTable") == null)
+                 		createTable(pDataXml);  
         		}
     		}
 
