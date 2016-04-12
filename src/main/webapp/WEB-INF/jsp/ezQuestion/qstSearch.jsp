@@ -49,8 +49,6 @@
 		        	document.body.style.UserSelect = 'none';
 		    	}
 		    	document.getElementById("txtSubject").focus();
-		    	//검색 범위에서 전체값
-		    	document.getElementsByName("hidRange").value = 2;
 			}
 			$(function () {
 				$("#Sdatepicker").datepicker({
@@ -194,7 +192,7 @@
             	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	var strSearch = "title=" + encodeURI((document.getElementById("txtSubject").value), "'", "'");
-            	strSearch += "&responseRange=" + encodeURI(document.getElementsByName("hidRange").value);
+            	strSearch += "&responseRange=" + encodeURI($(":input:radio[name=setRange]:checked").val());
             	strSearch += "&postDate=" + encodeURI(document.getElementById("hidStartDate").value);
             	strSearch += "&pollEndDate=" + encodeURI(document.getElementById("hidEndDate").value);
 
@@ -237,7 +235,7 @@
         				<input type="radio" name="setRange" value="1" onclick="setRangeValue(2)" style="vertical-align:-2px;">
         					<spring:message code='ezQuestion.t252' />
         				<input type="hidden" id="brd_id" name="brd_id" value="${pBrdID}">
-        				<input type="hidden" id="hidRange" name="hidRange">
+        				<input type="hidden" id="hidRange" name="hidRange" value="2">
         				<input type="hidden" id="hidTitle" name="hidTitle">
         				<input type="hidden" id="hidStartDate" name="hidStartDate">
         				<input type="hidden" id="hidEndDate" name="hidEndDate">
