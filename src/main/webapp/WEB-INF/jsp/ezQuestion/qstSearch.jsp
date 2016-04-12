@@ -49,6 +49,8 @@
 		        	document.body.style.UserSelect = 'none';
 		    	}
 		    	document.getElementById("txtSubject").focus();
+		    	//검색 범위에서 전체값
+		    	document.getElementsByName("hidRange").value = 2;
 			}
 			$(function () {
 				$("#Sdatepicker").datepicker({
@@ -195,7 +197,7 @@
             	strSearch += "&responseRange=" + encodeURI(document.getElementsByName("hidRange").value);
             	strSearch += "&postDate=" + encodeURI(document.getElementById("hidStartDate").value);
             	strSearch += "&pollEndDate=" + encodeURI(document.getElementById("hidEndDate").value);
-alert(strSearch);
+
             	var szUrl = "";			    
             	if(CrossYN()) {
                 	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
@@ -208,7 +210,6 @@ alert(strSearch);
     	function setRangeValue(idx) {
         	if( document.getElementsByName("setRange")[idx].checked ) {
             	document.getElementsByName("hidRange").value = document.getElementsByName("setRange")[idx].value;
-alert(document.getElementsByName("hidRange").value);
         	}
     	}
 		</script>
