@@ -465,6 +465,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			int iQueCount = 0;
 			String strTagData = "";
 			for(QstVO question : questionList){
+				iQueCount++;
 				Node row = doc.createElement("ROW");
 				Node qst = doc.createElement("QST");
 				Node brdId = doc.createElement("BRD_ID");
@@ -474,7 +475,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount+1) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
 				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
