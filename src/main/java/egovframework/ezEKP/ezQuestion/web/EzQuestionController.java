@@ -230,7 +230,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			else if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
 				if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 					response.getWriter().write("<script language='javascript'>");
-					response.getWriter().write("window.open('/ezQuestion/msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+					response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 					response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdId=5';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -249,7 +249,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				if(userId.equals(rsUserId) || adminYN == true){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+						response.getWriter().write("window.open('qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						response.getWriter().write("</script>");
 						response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdId=5';");
 						response.getWriter().write("</script>");
@@ -263,7 +263,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}else{
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("window.open('msgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+						response.getWriter().write("window.open('qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
 						response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdId=5';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
@@ -3665,8 +3665,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         return resultStr;
     }
 	
-	@RequestMapping(value="/ezQuestion/msgAdminConfirm.do")
-	public String msgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception{
+	@RequestMapping(value="/ezQuestion/qstMsgAdminConfirm.do")
+	public String qstMsgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
                 "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
                 "&responseRange=" + request.getParameter("responseRange") +
@@ -3684,6 +3684,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("currPage",request.getParameter("currPage"));
 		model.addAttribute("itemNo",request.getParameter("itemNo"));		
 		model.addAttribute("receve", receve);
-		return "/ezQuestion/msgAdminConfirm";
+		return "/ezQuestion/qstMsgAdminConfirm";
 	}
 }
