@@ -207,7 +207,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
             if(brdBoardTreeList.size() > 0){
             	if(brdBoardTreeList.get(0).getBoardGroupAcl() != null){
-            		if(pAccessID.split(";")[i].trim() != pUserID && pAccessID.split(";")[i].trim() != pCompanyID && pAccessID.split(";")[i].trim() != pDeptID){
+            		if(pAccessID.split(",")[i].trim() != pUserID && pAccessID.split(",")[i].trim() != pCompanyID && pAccessID.split(",")[i].trim() != pDeptID){
             			for (int j = 0; j < brdBoardTreeList.size(); j++){
             				if(!pAccessID.split(",")[i].trim().equals("top")){
             					if(brdBoardTreeList.get(j).getBoardGroupAcl().toUpperCase().equals("N")){
@@ -571,7 +571,6 @@ public class EzBoardController extends EgovFileMngUtil{
         return requestURL;
 	}
 
-	// OCS Presence
     public String getEmail(String userid) throws Exception{
         String email = "";
         
@@ -579,7 +578,6 @@ public class EzBoardController extends EgovFileMngUtil{
         return email;
     }
 
-    // OCS Presence
     public String getSIPListByCNList(String[] pCNList) throws Exception{
         String strRet = "";
         
@@ -591,7 +589,6 @@ public class EzBoardController extends EgovFileMngUtil{
         return strRet;
     }
     
-    // 게시판의 정보를 가져오는 함수
 	public BoardPropertyVO getBoardInfo(String pBoardID, LoginVO userInfo) throws Exception{
 		BoardPropertyVO boardInfo = new BoardPropertyVO();
 		boardInfo.setSs_board_maxRows(20);
@@ -599,7 +596,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		if(pBoardID == null || pBoardID.equals("")){
 			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
-			return null;
+			return boardInfo;
 		}
 
 		String deptPath = userInfo.getDeptPathCode();
@@ -2493,7 +2490,7 @@ public class EzBoardController extends EgovFileMngUtil{
         ezBoardService.setAsReads(userInfo, pBoardID, pItemIDList);
 	}
 	
-	@RequestMapping(value = "/ezBoard/newBoardItem.do")
+	@RequestMapping(value = {"/ezBoard/boardNewItem.do", "/ezBoard/boardNewItemTempPhoto.do"})
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
         String extenLang = "1";
@@ -2510,6 +2507,9 @@ public class EzBoardController extends EgovFileMngUtil{
         String useBackGround = "";
         String docID = "";
         String boardType = "";
+        String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        
+        requestURL = requestURL.substring(1, requestURL.length() - 3);
         
         if(request.getParameter("mode") != null){
         	mode = request.getParameter("mode");
@@ -2562,8 +2562,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		if(!mode.equals("temp")){
         			boardListVO = ezBoardService.getBrdGetItemInfo(boardID, itemID);
         		}else{
-        			//temp는 나중에 개발
-//        			boardListVO = ezBoardService.getBrdGetItemInfoTemp();
+        			boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
         		}
         		if(mode.equals("reply")){
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
@@ -2657,7 +2656,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
         
-		return "ezBoard/boardNewItem";
+		return requestURL;
 	}
 	
 	public String isoUTFDate(String dateTimeStr) throws Exception{
@@ -2809,6 +2808,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		boardListVO.setRealPath(realPath);
 		
 		if(pMode.equals("copy")){
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -2892,7 +2892,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if(!pMode.equals("copy")){
-			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), realPath + boardListVO.getFilePath(), "BOARD");
+			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if(saveMHTResult == false){
 				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
 			}
@@ -2916,7 +2916,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			ezBoardService.brdNewItem(boardListVO);
 		}
 		if(boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")){
-			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), realPath + boardListVO.getFilePath(), "BOARD")){
+			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath)){
 				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
 			}
 			boardListVO.setHasAttach("1");
@@ -2927,7 +2927,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "OK";
 	}
 
-	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType) {
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) {
 		String docPath = "";
 		String mhtFilePath = "";
 		
@@ -2942,19 +2942,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		String stordFilePathReal = docPath + "/doc";
 		try {
 		    stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-		    File cFile = new File(docPath);
+		    File cFile = new File(realPath + docPath);
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdir();
-				cFile = new File(stordFilePathReal);
+				cFile = new File(realPath + stordFilePathReal);
 				cFile.mkdir();
-				cFile = new File(docPath + "/uploadFile");
+				cFile = new File(realPath + docPath + "/uploadFile");
 				cFile.mkdir();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
 		    }
 	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + mhtFilePath);
+		    bos = new FileOutputStream(realPath + stordFilePathReal + File.separator + mhtFilePath);
 	
 		    int bytesRead = 0;
 		    byte[] buffer = new byte[BUFF_SIZE];
@@ -3004,7 +3004,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		return reverseDate.toString();
 	}
 	
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType) throws Exception{
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
         long fileSize = 0;
         String filePath = "";
         String filePath2 = "";
@@ -3017,11 +3017,11 @@ public class EzBoardController extends EgovFileMngUtil{
         for (int i = 0; i < strAttachments.split(";").length; i++){
             if (strType.equals("BOARD")){
             	filePath = strFilePath + "\\" + strAttachments.split(";")[i];
-                File file = new File(filePath);
+                File file = new File(realPath + filePath);
                 fileSize = file.length();
                 if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1){
                     filePath2 = strFilePath + "\\" + strBoardID + "\\uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
-                    File fileinfo = new File(filePath2);
+                    File fileinfo = new File(realPath + filePath2);
                     if (!fileinfo.exists()){
                     	FileUtils.moveFile(file, fileinfo);
                     }
@@ -3031,11 +3031,12 @@ public class EzBoardController extends EgovFileMngUtil{
                 file = null;
             }
             else{
-                File file = new File(strFilePath + "\\" + "tempUploadFile\\" + strAttachments.split(";")[i].split("/")[2]);
+                File file = new File(realPath + strFilePath + "\\" + "tempUploadFile\\" + strAttachments.split(";")[i].split("/")[2]);
                 fileSize = file.length();
+                
                 filePath2 = strFilePath + "\\" + strBoardID + "\\uploadFile\\" + strAttachments.split(";")[i].split("/")[2];
-
-                File fileinfo = new File(filePath2);
+                	
+                File fileinfo = new File(realPath + filePath2);
                 if (!fileinfo.exists())
                 	FileUtils.moveFile(file, fileinfo);
                 file = null;
@@ -4071,7 +4072,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if(mode == null || !mode.equals("temp")){
 			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
 		}else{
-//			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
+			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
 		}
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
@@ -4275,7 +4276,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
 		String boardType = request.getParameter("bType");
-		String realPath = request.getServletContext().getRealPath("");
 		String uploadFilePath = "";
 		String strNow = "";
 		
@@ -4290,7 +4290,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if(boardInfo.getWrite_FG().equals("false")){
 			return "main/warning"; 
 		}
-		uploadFilePath = realPath + config.getProperty("upload_board.ROOT");
+		uploadFilePath = config.getProperty("upload_board.ROOT");
 		uploadFilePath = uploadFilePath.replace("\\", "\\\\");
 		strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		
@@ -4304,7 +4304,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		
-		return "ezBoard/BoardNewItemPhoto";
+		return "ezBoard/boardNewItemPhoto";
 	}
 	
 	@RequestMapping(value = "/ezBoard/boardImageUpload.do", produces = "text/xml; charset=utf-8")
@@ -4522,6 +4522,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+		boardListVO.setRealPath(realPath);
 		
 		if(mode.equals("copy")){
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -4575,7 +4576,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
 		
 		if(!mode.equals("copy")){
-			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO");
+			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath);
 			if(saveMHTResult == false){
 				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
 			}
@@ -4605,7 +4606,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if(boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")){
-			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO")){
+			if(!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath)){
 				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
 			}
 			boardListVO.setHasAttach("1");
@@ -5032,21 +5033,35 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardReservedItemList.do")
 	public String boardReservedItemList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		String useEditor = config.getProperty("config.EDITOR");
-		String orgBoardParameters = request.getParameter("orgBoardParameters");
-		int page = 0;
-		if(request.getParameter("page") != null){
-			page = Integer.parseInt(request.getParameter("page"));
-		}
-		String sortBy = request.getParameter("sortBy");
-		String boardType = request.getParameter("boardType");
-		String adminType = request.getParameter("adminType");
+		String orgBoardParameters = "";
+		int page = 1;
+		String sortBy = "";
+		String boardType = "";
+		String adminType = "";
 		String boardName = egovMessageSource.getMessage("ezBoard.t229");
 		String isVpn = "";
 		int totalCount = 0;
 		int totalPage = 0;
 		
+		if(request.getParameter("page") != null){
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		if(request.getParameter("orgBoardParameters") != null){
+			orgBoardParameters = request.getParameter("orgBoardParameters");
+		}
+		if(request.getParameter("boardType") != null){
+			boardType = request.getParameter("boardType");
+		}
+		if(request.getParameter("adminType") != null){
+			adminType = request.getParameter("adminType");
+		}
+		if(request.getParameter("sortBy") != null){
+			sortBy = request.getParameter("sortBy");
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
+		
 		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
         int endRow = page * boardInfo.getSs_board_maxRows();
         
@@ -5090,5 +5105,25 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("isVpn", isVpn);
 		
 		return "ezBoard/boardReservedItemList";
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemListTemp.do")
+	public String boardItemListTemp(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String useEditor = config.getProperty("config.EDITOR");
+		String useOcs = config.getProperty("config.USE_OCS");
+		int page = 1;
+
+		if(request.getParameter("page") != null){
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useOcs", useOcs);
+		
+		return "ezBoard/boardItemListTemp";
 	}
 } 

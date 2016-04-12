@@ -132,6 +132,8 @@ public class BoardListVO {
 	private String imageID;
 	/** 파일내용*/
 	private String fileContent;
+	/** 실제경로*/
+	private String realPath;
 	
 	public int getrNum() {
 		return rNum;
@@ -522,6 +524,12 @@ public class BoardListVO {
 	}
 	public void setFileContent(String fileContent) {
 		this.fileContent = fileContent;
+	}
+	public String getRealPath() {
+		return realPath;
+	}
+	public void setRealPath(String realPath) {
+		this.realPath = realPath;
 	}
 	
 }

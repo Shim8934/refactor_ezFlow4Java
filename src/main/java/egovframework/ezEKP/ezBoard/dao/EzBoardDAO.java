@@ -167,6 +167,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
 		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
 	}
+	
+	public BoardListVO getBrdGetItemInfoTemp(Map<String, Object> map) throws Exception{
+		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfoTemp", map);
+	}
 
 	public BoardConfigVO getPersonalCount(String userID) throws Exception{
 		return (BoardConfigVO) select("EzBoardDAO.getPersonalCount", userID);

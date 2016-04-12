@@ -615,7 +615,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
 	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
         String filePath = "";
-        String uploadModule = config.getProperty("LocalPath");
+        String uploadModule = config.getProperty("config.LocalPath");
 
         filePath = realPath + uploadModule;
         File file = new File(filePath);
@@ -629,6 +629,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
+        
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         if(strHTML.trim().length() > 0){
@@ -745,7 +746,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	@ResponseBody
 	public String mhtToHTML(HttpServletRequest request) throws Exception{
 		String filePath = "";
-        String uploadModule = config.getProperty("LocalPath");
+        String uploadModule = config.getProperty("config.LocalPath");
         String realPath = request.getServletContext().getRealPath("");
         String strURL = request.getParameter("strURL");
         

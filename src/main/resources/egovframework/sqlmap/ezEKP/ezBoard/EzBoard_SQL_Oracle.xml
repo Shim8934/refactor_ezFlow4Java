@@ -102,6 +102,41 @@
         <result property="boardID" 					column="BOARDID" 				columnIndex="35"/>
 	</resultMap>
 	
+	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
+		<result property="itemID" 					column="ITEMID" 				columnIndex="1"/>
+        <result property="writerID" 				column="WRITERID" 				columnIndex="2"/>
+        <result property="writerName" 				column="WRITERNAME" 			columnIndex="3"/>
+        <result property="writerName2" 				column="WRITERNAME2" 			columnIndex="4"/>
+        <result property="writerDeptName" 			column="WRITERDEPTNAME" 		columnIndex="5"/>
+        <result property="writerDeptName2" 			column="WRITERDEPTNAME2" 		columnIndex="6"/>
+        <result property="writerCompanyName" 		column="WRITERCOMPANYNAME" 		columnIndex="7"/>
+        <result property="writerCompanyName2" 		column="WRITERCOMPANYNAME2" 	columnIndex="8"/>
+        <result property="writeDate" 				column="WRITEDATE" 				columnIndex="9"/>
+        <result property="parentWriteDate" 			column="PARENTWRITEDATE" 		columnIndex="10"/>
+        <result property="importance" 				column="IMPORTANCE" 			columnIndex="11"/>
+        <result property="title" 					column="TITLE" 					columnIndex="12"/>
+        <result property="contentLocation" 			column="CONTENTLOCATION" 		columnIndex="13"/>
+        <result property="startDate" 				column="STARTDATE" 				columnIndex="14"/>
+        <result property="endDate" 					column="ENDDATE" 				columnIndex="15"/>
+        <result property="ABSTRACT" 				column="ABSTRACT" 				columnIndex="16"/>
+        <result property="attachments" 				column="ATTACHMENTS" 			columnIndex="17"/>
+        <result property="upperItemIDTree" 			column="UPPERITEMIDTREE" 		columnIndex="18" 	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="itemLevel" 				column="ITEMLEVEL" 				columnIndex="19"/>
+        <result property="copiedItem" 				column="COPIEDITEM" 			columnIndex="20"/>
+        <result property="extensionAttribute1" 		column="EXTENSIONATTRIBUTE1" 	columnIndex="21"/>
+        <result property="extensionAttribute2" 		column="EXTENSIONATTRIBUTE2" 	columnIndex="22"/>
+        <result property="extensionAttribute3" 		column="EXTENSIONATTRIBUTE3" 	columnIndex="23"/>
+        <result property="extensionAttribute32" 	column="EXTENSIONATTRIBUTE32" 	columnIndex="24"/>
+        <result property="extensionAttribute4" 		column="EXTENSIONATTRIBUTE4" 	columnIndex="25"/>
+        <result property="extensionAttribute5" 		column="EXTENSIONATTRIBUTE5" 	columnIndex="26"/>
+        <result property="mainContent" 				column="MAINCONTENT" 			columnIndex="27"	jdbcType="CLOB" javaType="String" nullValue=""/>
+        <result property="extensionAttribute6" 		column="EXTENSIONATTRIBUTE6" 	columnIndex="28"/>
+        <result property="extensionAttribute7" 		column="EXTENSIONATTRIBUTE7" 	columnIndex="29"/>
+        <result property="extensionAttribute8" 		column="EXTENSIONATTRIBUTE8" 	columnIndex="30"/>
+        <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="31"/>
+        <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="32"/>
+	</resultMap>
+	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -220,6 +255,10 @@
 	
 	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
 		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.getBrdGetItemInfoTemp" parameterClass="Map" resultMap="getBrdGetItemInfoTemp">
+		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO_TEMP(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
@@ -347,7 +386,7 @@
 	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDUPDATEITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
 										    #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
+										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#readFlag#,#topWriterID#,#extensionAttribute6#,
 										    #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
 	

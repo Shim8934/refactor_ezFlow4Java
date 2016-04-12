@@ -82,6 +82,8 @@ public interface EzBoardService {
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception;
 	
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID) throws Exception;
+	
 	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
 	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;

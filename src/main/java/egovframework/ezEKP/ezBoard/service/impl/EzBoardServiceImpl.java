@@ -503,6 +503,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		return ezBoardDAO.getBrdGetItemInfoTemp(map);
+	}
+
+	@Override
 	public BoardListVO getItemInfo(String itemID) throws Exception {
 		return ezBoardDAO.getItemInfo(itemID);
 	}
@@ -812,9 +820,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 		
 		for(int i = 0; i < boardListVO.getImageCount(); i++){
 			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
-			File file = new File(boardListVO.getFilePath() + File.separator + strFilePath);
+			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + File.separator + strFilePath);
 			strFilePath = boardListVO.getBoardID() + "/uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
-			File mvFile = new File(boardListVO.getFilePath() + File.separator + strFilePath);
+			File mvFile = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + File.separator + strFilePath);
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
