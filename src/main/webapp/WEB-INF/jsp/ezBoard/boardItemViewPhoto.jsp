@@ -298,7 +298,7 @@
 						return;
 					}
 		
-					window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
 				}
 		
 				function btn_Copy_Onclick()

@@ -29,7 +29,7 @@
 		
 		    function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID) {
 		        var feature = GetOpenWindowfeature(765, 820);
-	            window.open("/ezBoard/newBoardItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
 		    }
 		
 		    function checkBox_checked(pItemID, evt) {
@@ -71,7 +71,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/DeleteItem.aspx?ItemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -92,13 +92,13 @@
 		    function prevPage_onclick() {
 		        newPage = parseInt(CurPage) - 1;
 		        if (newPage > 0) {
-		            window.location.href = "BoardReservedItemList_Cross.aspx?Page=" + newPage.toString() + "&SortBy=" + pSortBy + "&OrgBoardParameters=" + ReplaceString(pOrgBoardParameters);
+		            window.location.href = "/ezBoard/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		        }
 		    }
 		    function nextPage_onclick() {
 		        newPage = parseInt(CurPage) + 1;
 		        if (newPage <= parseInt(totalPage)) {
-		            window.location.href = "BoardReservedItemList_Cross.aspx?Page=" + newPage.toString() + "&SortBy=" + pSortBy + "&OrgBoardParameters=" + ReplaceString(pOrgBoardParameters);
+		            window.location.href = "/ezBoard/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		        }
 		    }
 		    function moveToPage(evt) {
@@ -106,7 +106,7 @@
 		            if (evt.which == 13) {
 		                var newPage = txt_PageInputNum.value;
 		                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-		                    window.location.href = "BoardReservedItemList_Cross.aspx?Page=" + parseInt(newPage.toString()) + "&SortBy=" + pSortBy + "&OrgBoardParameters=" + ReplaceString(pOrgBoardParameters);
+		                    window.location.href = "/ezBoard/boardReservedItemList.do?page=" + parseInt(newPage.toString()) + "&sortBy=" + pSortBy + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		                }
 		            }
 		        }
@@ -114,13 +114,13 @@
 		            if (window.event.keyCode == 13) {
 		                var newPage = txt_PageInputNum.value;
 		                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-		                    window.location.href = "BoardReservedItemList_Cross.aspx?Page=" + parseInt(newPage.toString()) + "&SortBy=" + pSortBy + "&OrgBoardParameters=" + ReplaceString(pOrgBoardParameters);
+		                    window.location.href = "/ezBoard/boardReservedItemList.do?page=" + parseInt(newPage.toString()) + "&sortBy=" + pSortBy + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		                }
 		            }
 		        }
 		    }
 		    function SortPage(SortBy) {
-		        window.location.href = "BoardReservedItemList_Cross.aspx?Page=" + CurPage + "&SortBy=" + SortBy + "&BoardType=" + "${boardType}" + "&OrgBoardParameters=" + ReplaceString(pOrgBoardParameters);
+		        window.location.href = "/ezBoard/boardReservedItemList.do?page=" + CurPage + "&sortBy=" + SortBy + "&boardType=" + "${boardType}" + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		    }
 		    function BoardItemList() {
 		        if ("${boardType}" == "0" || "${boardType}" == "1" || "${boardType}" == "2")
@@ -150,25 +150,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/ub/btn_p_prev.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -193,26 +193,26 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -294,7 +294,7 @@
 		</c:otherwise>
 	</c:choose>
 	<c:choose>
-		<c:when test="${isVpn}">
+		<c:when test="${isVpn != 1}">
 			<div id="mainmenu">
 			  <ul>
 			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
@@ -381,36 +381,37 @@
 	      	</c:otherwise>
 	      </c:choose>    
 	    </tr>
+	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
-	    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(${reservedList.itemID}, event)'></td>
-	    	<td>${reservedList.boardName}</td>
-	    	<td title="${fn:replace(reservedList.ABSTRACTS, ''', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(${reservedList.boardID}, ${reservedList.boardName}, ${reservedList.itemID})'><nobr>${reservedList.title}</nobr></td>
-	    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
-	    	<c:choose> 
-	    		<c:when test="${fn:substring(reservedList.endDate, 0, 4) == '9999'}">
-	    			<TD><spring:message code='ezBoard.t287'/></TD>
-	    		</c:when>
-	    		<c:otherwise>
-	    			<TD>${fn:split(reservedList.endDate , ' ')[0]}</TD>
-	    		</c:otherwise>
-	    	</c:choose>
-	    	<c:choose>
-	    		<c:when test="${reservedList.attachments != '0'}">
-	    			<TD align=center><img src='/images/i_save01.gif'></TD>
-	    		</c:when>
-	    		<c:otherwise>
-	    			<td></td>
-	    		</c:otherwise>
-	    	</c:choose>
+		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(${reservedList.itemID}, event)'></td>
+		    	<td>${reservedList.boardName}</td>
+		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
+		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
+		    	<c:choose> 
+		    		<c:when test="${fn:substring(reservedList.endDate, 0, 4) == '9999'}">
+		    			<td><spring:message code='ezBoard.t287'/></td>
+		    		</c:when>
+		    		<c:otherwise>
+		    			<td>${fn:split(reservedList.endDate , ' ')[0]}</td>
+		    		</c:otherwise>
+		    	</c:choose>
+		    	<c:choose>
+		    		<c:when test="${reservedList.attachments != '0'}">
+		    			<td align=center><img src='/images/i_save01.gif'></td>
+		    		</c:when>
+		    		<c:otherwise>
+		    			<td></td>
+		    		</c:otherwise>
+		    	</c:choose>
 	    	</tr>
 	    	<tr>
-	    	<c:set var="listInfo" value="${listInfo + reservedList.itemID + ',' + userInfo.id + ';'}"/>
+<%-- 	    	<c:set target="${ListInfo}">${ListInfo} + ${reservedList.itemID} + "," + ${userInfo.id} + ";"}</c:set> --%>
 	    </c:forEach>
 	  </form>
 	</table>
 	<br />
 	<div id="tblPageRayer" style="text-align:center"></div>
-	<div id="ListInfo" style="DISPLAY:none">${listInfo}</div>
+	<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
 	</body>
 </html>

@@ -12,7 +12,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" >
-	        var SSUserID = "${userInfo}";
+	        var SSUserID = "${userInfo.id}";
 	        var SSUserName = "${userInfo.name}";
 	        var SSDeptID = "${userInfo.deptID}";
 	        var SSDeptName = "${userInfo.deptName1}";
@@ -482,7 +482,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListMyList.do";
 		    }
 		    function TempBoard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Temp.aspx";
+		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListTemp.do";
 		    }
 		    function boardConfig() {
 		        window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";

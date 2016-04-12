@@ -595,7 +595,7 @@
 		        }
 		        var feature = GetOpenWindowfeature(765, 820);
 		        
-	            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		    }
 		
 		    function ItemRead_onclick(obj) {

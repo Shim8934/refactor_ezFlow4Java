@@ -299,20 +299,7 @@
 		            alert("<spring:message code='ezBoard.t303' />");
 		            return;
 		        }
-// 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
-// 		        }
-// 		        else {
-// 		            if (pUse_IE11Browser == "CK") {
-// 		                window.location.href = "NewBoardItem_Cross.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
-// 		            }
-// 		            else {
-// 		                if(pUse_Editor == "")
-// 		                    window.location.href = "NewBoardItem.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
-// 		                else
-// 		                    window.location.href = "NewBoardItem_IE.aspx?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
-// 		            }
-// 		        }
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
@@ -343,7 +330,7 @@
 		                }
 		
 // 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+		                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 // 		                }
 // 		                else {
 // 		                    if (pUse_IE11Browser == "CK") {
@@ -361,7 +348,7 @@
 		        }
 		        if (gubun != "2") {
 // 		            if (CrossYN() || pNoneActiveX == "YES") {
-		                window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+		                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 // 		            }
 // 		            else {
 		
@@ -387,7 +374,7 @@
 		        }
 		
 // 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+		            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 // 		        }
 // 		        else {
 		
@@ -827,7 +814,7 @@
 		        pwidth = parseInt(pwidth) / 2;
 		        pheigth = pheigth - 284;
 		        pwidth = pwidth - 359;
-		        window.open("/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no,scrollbars=1, location=no, resizable=1, top=0, left=0", "");
+		        window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no,scrollbars=1, location=no, resizable=1, top=0, left=0", "");
 		    }
 		    function ToKMS() {
 		        var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert.aspx?Mode=new&Flag=board&ItemID=" + pItemID + "&boardid=" + pBoardID + "&url=" + strContentLocation;
@@ -921,37 +908,11 @@
 		    }
 		    function Retrans_boardContent() {
 		        var feature = GetOpenWindowfeature(765, 820);
-// 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
-// 		        }
-// 		        else {
-// 		            if (pUse_IE11Browser == "CK") {
-// 		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-// 		            }
-// 		            else {
-// 		                if(pUse_Editor == "")
-// 		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-// 		                else
-// 		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardContent&ItemID=" + pItemID, "", feature, "");
-// 		            }
-// 		        }
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_boardAttach() {
 		        var feature = GetOpenWindowfeature(765, 820);
-// 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
-// 		        }
-// 		        else {
-// 		            if (pUse_IE11Browser == "CK") {
-// 		                window.open("NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-// 		            }
-// 		            else {
-// 		                if(pUse_Editor == "")
-// 		                    window.open("NewBoardItem.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-// 		                else
-// 		                    window.open("NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mode=boardAttach&ItemID=" + pItemID, "", feature, "");
-// 		            }
-// 		        }
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_mailContent() {
 		        var pheight = window.screen.availHeight;

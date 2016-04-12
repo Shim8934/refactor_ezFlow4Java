@@ -173,8 +173,6 @@
 		            idDatepicker.daynamesLong = "<spring:message code='ezBoard.t217'/>";
 		            idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
 		            idDatepicker.monthnamesLong = "<spring:message code='ezBoard.t218'/>";
-<%-- 		            idDatepicker.isoDateUTF = "<%=DateTime.Parse(GetLocalTime(System.DateTime.UtcNow.ToShortDateString())).ToString("o")%>"; --%>
-<%-- 		            idDatepicker.isoEndDateUTF = "<%=DateTime.Parse(GetLocalTime(System.DateTime.UtcNow.ToShortDateString())).ToString("o")%>"; --%>
 		            idDatepicker.ready();
 		        }
 		        function SortPage(strHeaderName) {
@@ -215,7 +213,7 @@
 								},
 						success: function(xml){
 							getBoardList_after(xml);
-						}        			
+						}     			
 					});
 		        }
 		
@@ -910,7 +908,7 @@
 	                        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                    }
 	                    else {
-                            window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+                            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                    }
 	                }
 	            }
@@ -929,7 +927,7 @@
 	                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                }
 	                else {
-                        window.open("/ezBoard/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                }
 	            }
 	        }

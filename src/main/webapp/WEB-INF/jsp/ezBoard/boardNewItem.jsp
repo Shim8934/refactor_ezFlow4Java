@@ -1275,14 +1275,13 @@
 		    				});	
 		                    var htmlData = message.SetEditorContentURL2(fullPath);
 		                    message.SetEditorContent(htmlData);
-		                }
-		                else {
-		                    if (OpenWin == null)
+		                }else {
+		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
+		                    }
 		                    message.SetEditorContent("<p></p>");
 		                }
-		            }
-		            else {
+		            }else {
 		                if (pUrl == "") {
 		                    var fullPath = strContentLocation;
 		                    if (pMode == "reply") {
@@ -1294,21 +1293,19 @@
 		                        htmlData = ReplaceText(htmlData, "&gt;", ">");
 		                        
 		                        htmlData = "<body free>" + htmlData + "</body>";
-		                        if (gubun != "2")
+		                        if (gubun != "2"){
 		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "${boardListVO.title}" + "<br><br>" + htmlData;
-		                        else
+		                        }else{
 		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterFakeName + "<br><B><spring:message code='ezBoard.t413' /></B>" + "${boardListVO.title}" + "<br><br>" + htmlData;
+		                        }
 		                        message.SetEditorContent(htmlData);
-		                    }
-		                    else {
+		                    }else {
 		                        message.SetEditorContentURL(fullPath);
 		                    }
-		                }
-		                else {
+		                }else {
 		                    if (pDocID == "") {
 		                        if (InsertMailInfo() == -1) window.close();
-		                    }
-		                    else {
+		                    }else {
 		                        if (InsertDocInfo() == -1) window.close();
 		                    }
 		                }
