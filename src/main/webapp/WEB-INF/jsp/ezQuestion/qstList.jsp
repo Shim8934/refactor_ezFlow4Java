@@ -334,13 +334,7 @@
 		    
 		    function menu_Analysis(){
 		       if(menu_Checking()){
-		    	    if(checkUserPollStatus(szSelectedItemNo, "Analysis") == false){
-		            	alert('<spring:message code="ezQuestion.t276" />');
-		            	return;
-					}
-			        var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
-			        window.location.href = szUrl;
-					
+		    	    checkUserPollStatus(szSelectedItemNo, "Analysis");
 		        }
 		    }
 		    
