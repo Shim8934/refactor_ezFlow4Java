@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
-		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
 			.pagetd{padding-top:6px; }
 			.pcol{padding-top:6px; }
@@ -26,8 +26,8 @@
 		    var g_BrdID = "${qstListVO.brdId}";
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
-		    var endPollYN, responseYN, resultOpenYN;
-			var multiResYN, writeYN, adminYN;
+		    var EndPollYN, ResponseYN, ResultOpenYN;
+			var MultiResYN, WriteYN, AdminYN;
 			var TR_Contents_Start = 1;
 			var szSearchParam ="&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
 			var CurPage = "${qstListVO.currPage}";
@@ -53,6 +53,7 @@
 					url: "/ezQuestion/qstCallUsersPollStatus.do",
 					data: {"brdId":g_BrdID ,"itemNo":pItemNo},
 					dataType: "JSON",
+					async:false,
 					success: function(map){
 						EndPollYN = map.endPollYN;
 						ResponseYN = map.responseYN;
@@ -61,7 +62,7 @@
 						WriteYN = map.writeYN;
 						AdminYN = map.adminYN;
 						var rv;
-					  
+
 						switch (pflag) {
 							case "Response":
 								rv = Chk_Response();
@@ -89,7 +90,7 @@
 					},
 					error: function(xhr, status, e){
 // 						alert(e.message);
-					 	
+
 						EndPollYN = "";
 						ResponseYN = "";
 						ResultOpenYN = "";
@@ -98,8 +99,9 @@
 						AdminYN = "N";
 						       
 						return false;
-					}
+					},
 				});
+				
 			}
 			
 			function Chk_Reuse(){
@@ -244,7 +246,7 @@
 	            }
 		    }
 		    
-		    function menu_Result(){
+ 			function menu_Result(){
 		        if(menu_Checking()){
 		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
 		            	return;
@@ -331,14 +333,14 @@
 		    }
 		    
 		    function menu_Analysis(){
-		       if (menu_Checking()) {
-		    	   //권한확인해서 본인 / 관리자만 분석가능하게 
-		            if (checkUserPollStatus(szSelectedItemNo, "Analysis") == false){
+		       if(menu_Checking()){
+		    	    if(checkUserPollStatus(szSelectedItemNo, "Analysis") == false){
 		            	alert('<spring:message code="ezQuestion.t276" />');
 		            	return;
 					}
-		            var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
-		            window.location.href = szUrl;
+			        var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
+			        window.location.href = szUrl;
+					
 		        }
 		    }
 		    
