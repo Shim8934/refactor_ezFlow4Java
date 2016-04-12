@@ -84,8 +84,7 @@
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', NowDate2);
-	    	}
-	    	else {
+	    	} else {
 	        	var NowDate = new Date();
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
@@ -131,10 +130,11 @@
     	});
     	
     	function Date_calcu(Year) {
-	        if ((Year % 4) && Year % 100 || !(Year % 400))
+	        if ((Year % 4) && Year % 100 || !(Year % 400)) {
     	        return true;
-        	else
+	        } else {
             	FixDay[2] = 29;
+        	}
     	}
     	function AddDate(vaddday, vyear, vmonth, vday) {
 	        var vyear = parseInt(vyear);
@@ -146,9 +146,7 @@
 	            if (vmonth < 13) {
     	            ttldate -= FixDay[vmonth];
         	        vmonth += 1;
-            	}
-            	else
-            	{
+            	} else {
                 	vyear += 1;
                 	Date_calcu(vyear);
                 	vmonth -= 1;
@@ -166,8 +164,9 @@
         	szMultiResponse = document.getElementById("set_MultiResponse")[index].value;
         	L_SearchStartDt = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
         	L_SearchEndDt = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-        	if (form_check() == false) return;
-        	else {
+        	if (form_check() == false) {
+        		return;
+        	} else {
             	document.getElementById("hidStartDate").value = L_SearchStartDt + " 00:00:00";
             	document.getElementById("hidEndDate").value = L_SearchEndDt + " 23:59:59";
             	document.frmCreate.submit();
@@ -180,16 +179,16 @@
             if (-1 == num.indexOf(vdata.charAt(i))) {
                 returnValue = false;
                 break;
+            } else {
+            	returnValue = true;
             }
-            else
-                returnValue = true;
+                
         }
         return returnValue;
     }
     function form_check() {
         if (trim_Cross(document.getElementById("txtSubject").value) == "" || trim_Cross(document.getElementById("txtSubject").value) == "[<spring:message code="ezQuestion.t185" />") {
             alert('<spring:message code="ezQuestion.t185" />');
-            
             document.getElementById("txtSubject").focus();
             return false;
         }
@@ -212,8 +211,7 @@
             document.getElementById("hidExpiredate").value = '0';
             document.getElementById("txtExpiredate").value = '0';
 
-        }
-        else {
+        } else {
             var rtnValue = IsNumeric(trim_Cross(document.getElementById("txtExpiredate").value));
             if (!rtnValue) {
             	alert('<spring:message code="ezQuestion.t187" />');
@@ -259,20 +257,24 @@
         }
     }
     function menuQst_List() {
-         if(CrossYN())
-            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
-        else
-            var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
+         if(CrossYN()) {
+        	 var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}" 
+         }
+        else {
+        	var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
+        }
         window.location.href = szUrl; 
     } 
     function menu_SelectRange() {
          if (CrossYN()) {
             var item_no = document.getElementById("item_no").value;
 
-            if (CrossYN())
-                var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
-            else
-                var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            if (CrossYN()) {
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            }
+            else {
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            }
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
             if (useragentstr.indexOf(_MSIE) != -1) {
@@ -283,29 +285,25 @@
                     document.getElementById("hidTarget").value = "1";
                     document.getElementById("select_YN").value = "YES";
                     document.getElementById("RangeXMLStr").value = rv[1];
-                }
-                else if (rv[0] == "NO") {
+                } else if (rv[0] == "NO") {
                     document.getElementById("set_Target").selectedIndex = 0;
                     document.getElementById("hidTarget").value = "0";
                     document.getElementById("select_YN").value = "NO";
                     document.getElementById("RangeXMLStr").value = "";
                 }
-            }
-            else {
+            } else {
                 if ((g_windowReference == null) || (g_windowReference.closed == true)) {
                     if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                         var feature = GetOpenPosition(560, 730);
                         g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
-                    }
-                    else {
+                    } else {
                         var feature = GetOpenPosition(730, 700);
                         g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
                     }
                 }
                 g_windowReference.focus();
             }
-        }
-        else {
+        } else {
             menu_SelectRange_IE();
         } 
     }
@@ -316,8 +314,7 @@
             if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                 var feature = GetOpenPosition(560, 630);
                 g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
-            }
-            else {
+            } else {
                 var feature = GetOpenPosition(560, 700);
                 g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
             }

@@ -31,8 +31,7 @@
 			                pAttachInfo = pAttach;
 			                SetInfoList();
 			            }
-			        }
-			        else {
+			        } else {
 			            pDelAttachList = dialogArguments["m_DelAttach"];
 			            if (dialogArguments["m_AttachInfo"] != null) {
 			                pAttachInfo = dialogArguments["m_AttachInfo"];
@@ -50,8 +49,7 @@
 			            tr_TypeValueM.style.display = "";
 			            tr_TypeValueE.style.display = "none";
 			            tr_AddList.style.display = "";
-			        }
-			        else {
+			        } else {
 			            tr_TypeValueM.style.display = "none";
 			            tr_TypeValueE.style.display = "";
 			            tr_AddList.style.display = "";
@@ -64,22 +62,22 @@
 						    document.all.txt_TitleM.focus();
 						    return;
 						}
-			        }
-			        else {
+			        } else {
 			            if (document.all("txt_TitleE").value == "") {
 			                alert("<spring:message code='ezQuestion.t155' />");
 						    document.all.txt_TitleE.focus();
 						    return;
 						}
 			        }
-			        if (pType == "1")
+			        if (pType == "1") {
 			            document.all("cmuds").accept = "image/*";
-			        else if (pType == "2")
+			        } else if (pType == "2") {
 			            document.all("cmuds").accept = "audio/*";
-			        else if (pType == "5")
+			        } else if (pType == "5") {
 			            document.all("cmuds").accept = "video/*";
-			        else
+			        } else {
 			            document.all("cmuds").accept = "";
+			        }
 			        document.all("cmuds").click();
 			    }
 			    function fun_AddAns() {
@@ -102,8 +100,7 @@
 			            }
 			            pTitle = document.all("txt_TitleM").value;
 			            pPath = document.all("txt_URL").value;
-			        }
-			        else {
+			        } else {
 			            if (document.all("txt_TitleE").value == "") {
 			                alert("<spring:message code='ezQuestion.t155' />");
 			                document.all.txt_TitleE.focus();
@@ -129,8 +126,7 @@
 			        var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
 			        if (lastindex > 0) {
 			            document.all("input_Value").options[lastindex] = newoption;
-			        }
-			        else {
+			        } else {
 			            document.all("input_Value").options[0] = newoption;
 			        }
 			        document.all("txt_TitleM").value = "";
@@ -150,17 +146,14 @@
 			                    document.Delete_Upload.QstPath_delFile.value = arrInfo[2];
 			                    document.Delete_Upload.QstIndex_delFile.value = idx;
 			                    document.Delete_Upload.submit();
-			                }
-			                else {
+			                } else {
 			                    document.all("input_Value").options[idx].removeNode(true);
 			                }
-			            }
-			            else {
+			            } else {
 			                if (CrossYN())
 			                    DeleteAttach_Sel(idx);
 			            }
-			        }
-			        else {
+			        } else {
 			            alert("<spring:message code='ezQuestion.t161' />");
 			         }
 			     }
@@ -180,8 +173,7 @@
 			                var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
 			                document.all("input_Value").options[count] = newoption;
 			            }
-			        }
-			        else {
+			        } else {
 			            var lastindex = pAttachInfo["type"].length;
 
 			            for (var count = 0; count < lastindex; count++) {
@@ -199,19 +191,17 @@
 			        	 
 					     
 			        	
-			            if (CrossYN())
+			            if (CrossYN()) {
 			                window.opener.AttachComplete_NonIE(pAttachType, pAttachMode, GetInfoList(), pAttachModeIndex);
-			            else {
+			            } else {
 			                dialogArguments["m_Return"] = "OK";
 			                dialogArguments["m_DelAttach"] = pDelAttachList;
 			                dialogArguments["m_AttachInfo"] = GetInfoList_IE();
 			            }
-
-			        }
-			        else {
-			            if (CrossYN())
+			        } else {
+			            if (CrossYN()) {
 			                window.opener.AttachComplete_NonIE(pAttachType, pAttachMode, "", pAttachModeIndex);
-			            else {
+			            } else {
 			                dialogArguments["m_Return"] = "OK";
 			                dialogArguments["m_DelAttach"] = pDelAttachList;
 			                dialogArguments["m_AttachInfo"] = null;
@@ -286,9 +276,9 @@
 			        var input = document.getElementById("cmuds");
 			        document.all("txt_AttachPath").value = input.value;
 			        fileup = false;
-			        if (CrossYN()) 
+			        if (CrossYN()) {
 			            Attach_Upload.submit();
-			        else {
+			        } else {
 			            if (document.Attach_Upload.cmuds.value != "") {
 			                var fd = new FormData();
 			                for (var i = 0; i < document.getElementById("Attach_Upload").cmuds.files.length; i++) {
@@ -304,10 +294,11 @@
 			    }
 
 			    function UploadFilePath(FilePath) {
-			        if(CrossYN())
+			        if(CrossYN()) {
 			            document.all.AttachPath.value = FilePath;
-			        else
+			        } else {
 			            document.all.AttachPath.value = FilePath.target.responseText
+			        }
 			        fileup = true;
 			    }
 			    

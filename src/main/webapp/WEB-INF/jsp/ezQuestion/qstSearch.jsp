@@ -112,12 +112,12 @@
         	$.datepicker.setDefaults($.datepicker.regional['en']);
     	});
     	<%-- <%}%> --%>
-    	function Date_calcu(Year)
-    	{   
-	        if((Year%4) && Year%100 || !(Year%400))
+    	function Date_calcu(Year) {   
+	        if((Year%4) && Year%100 || !(Year%400)) {
     	        return true;
-        	else
+	        } else {
 	            FixDay[2]=29;
+        	}
     	}
     	function AddDate(vaddday,vyear,vmonth,vday) {
         	var vyear=parseInt(vyear);	
@@ -129,8 +129,7 @@
             	if (vmonth < 13) {
                 	ttldate-=FixDay[vmonth];
                 	vmonth+=1;
-            	}
-            	else {
+            	} else {
                 	vyear+=1;
                 	Date_calcu(vyear);	
                 	vmonth-=1;
@@ -139,10 +138,11 @@
         	return String(vyear)+String(vmonth)+String(ttldate);
     	}
     	function menuQst_List() {
-        	if(CrossYN())
+        	if(CrossYN()) {
+        		var szUrl = "qstList.do?brd_id='${pBrdID}'"
+        	} else {
             	var szUrl = "qstList.do?brd_id='${pBrdID}'"
-        	else
-            	var szUrl = "qstList.do?brd_id='${pBrdID}'"
+        	}
         	window.location.href = szUrl;	
     	}
     	function form_check() {
@@ -185,27 +185,30 @@
     	function menu_Search() {
         	var pReservationTime;		
         	var pEndReservationTime;
-        	if (form_check() == false) return;
-        	else {
+        	if (form_check() == false) {
+        		return;
+        	} else {
             	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	var strSearch = "title=" + encodeURI((document.getElementById("txtSubject").value), "'", "'");
-            	strSearch += "&responseRange=" + encodeURI(document.getElementById("hidRange").value);
+            	strSearch += "&responseRange=" + encodeURI(document.getElementsByName("hidRange").value);
             	strSearch += "&postDate=" + encodeURI(document.getElementById("hidStartDate").value);
             	strSearch += "&pollEndDate=" + encodeURI(document.getElementById("hidEndDate").value);
+alert(strSearch);
             	var szUrl = "";			    
-            	if(CrossYN())
+            	if(CrossYN()) {
                 	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
-            	else
+            	} else {
                 	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
-
+            	}
             	window.location.href = szUrl;
         	}	
     	}
     	function setRangeValue(idx) {
         	if( document.getElementsByName("setRange")[idx].checked ) {
             	document.getElementsByName("hidRange").value = document.getElementsByName("setRange")[idx].value;
+alert(document.getElementsByName("hidRange").value);
         	}
     	}
 		</script>
@@ -226,14 +229,14 @@
     			<tr>
       				<th><spring:message code='ezQuestion.t422' /></th>
       				<td style="width:100%">
-        				<input type="radio" checked name="setRange" value="2" onclick="setRangeValue(0)" style="vertical-align:-2px;">
+        				<input type="radio" name="setRange" value="2" onclick="setRangeValue(0)" style="vertical-align:-2px;" checked>
         					<spring:message code='ezQuestion.t423' />
         				<input type="radio" name="setRange" value="0" onclick="setRangeValue(1)" style="vertical-align:-2px;">
         					<spring:message code='ezQuestion.t424' />
         				<input type="radio" name="setRange" value="1" onclick="setRangeValue(2)" style="vertical-align:-2px;">
         					<spring:message code='ezQuestion.t252' />
         				<input type="hidden" id="brd_id" name="brd_id" value="${pBrdID}">
-        				<input type="hidden" id="hidRange" name="hidRange" value="2">
+        				<input type="hidden" id="hidRange" name="hidRange">
         				<input type="hidden" id="hidTitle" name="hidTitle">
         				<input type="hidden" id="hidStartDate" name="hidStartDate">
         				<input type="hidden" id="hidEndDate" name="hidEndDate">

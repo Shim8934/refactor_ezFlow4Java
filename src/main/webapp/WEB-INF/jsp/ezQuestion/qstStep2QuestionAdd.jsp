@@ -31,22 +31,22 @@
 	    		if(pMode == "EDIT"){
 	        		if(parseInt(pAnswerType) > 3){
 	            		TypeArray(parseInt(pAnswerType)+2, pDataXml);
-	        		}
-	        		else{
+	        		} else{
 	            		document.Ques_Answer.selView[pAnswerType].checked = true;
-	            		if(pMultiSel == "false")
-	                		document.Ques_Answer.MultiResponse.checked = false;
-	            		else
-	                		document.Ques_Answer.MultiResponse.checked = true;
+	            		if(pMultiSel == "false") {
+	            			document.Ques_Answer.MultiResponse.checked = false;
+	            		} else {
+	            			document.Ques_Answer.MultiResponse.checked = true;
+	            		}
 	            			TypeDetermination(parseInt(pAnswerType) + 1);
 	        		}
 	    		}
 			}
 
 			function AttachSetting() {
-	    		if (CrossYN())
-	        		return;
-	    		else {
+	    		if (CrossYN()) {
+	    			return;
+	    		} else {
 	        		for (var i = 0; i < Ques_Answer.input_Ans.length; i++) {
 	            		if (Ques_Answer.input_Ans[i].getAttribute("ansinfo") != null) {
 	                		var m_AttachInfo = { "type": new Array(), "attachTitle": new Array(), "href": new Array() };
@@ -84,8 +84,7 @@
             		document.getElementById("Objectivity_step4").style.display = "none";
             		document.getElementById("selViewTrTable").style.display = "block";
             		document.getElementById("Objectivity").style.display = "block";   
-        		}
-        		else{
+        		} else{
             		Ques_Answer.selType[1].checked = true;
             		resultDiv.style.display = "block";
             		document.getElementById("Objectivity_step4").style.display = "block";
@@ -116,9 +115,9 @@
             		TypeArray(vdata);
             		return;
         		}
-        		if(pBeforeCheck == vdata)
-            		return;
-        		else{
+        		if(pBeforeCheck == vdata) {
+        			return;
+        		} else {
             		pBeforeCheck = vdata;
 		            if (vdata == 1){ //객관식
         		        if (document.Ques_Answer.selView[0].checked) {
@@ -137,8 +136,7 @@
                     		}
                     		document.Ques_Answer.txtAnswer.value = "";
                 		}
-            		}
-            		else if(vdata == 2){ 
+            		} else if(vdata == 2){ 
                 		var viewcnt= parseInt(document.Ques_Answer.input_Ans.length);
                 		if (viewcnt>0) {
                     		for(ii = viewcnt ; ii > -1 ; ii--) {
@@ -157,8 +155,7 @@
                     		document.Ques_Answer.sNum.disabled =true;
                     		document.Ques_Answer.eNum.disabled =true;
                 		}	
-            		}
-            		else if(vdata == 4) {
+            		} else if(vdata == 4) {
                 		if (document.Ques_Answer.selView[3].checked ) {
                     		Objectivity.style.display = "";
                     		Objectivity_step1.style.display="";
@@ -173,8 +170,7 @@
                     		var TmpOption= new Option("", "",true);
                     		document.Ques_Answer.txtAnswer.value = "";
                 		}
-            		}		
-            		else{
+            		} else {
                 		if (document.Ques_Answer.selView[2].checked) {
                     		Objectivity_step1.style.display="none";
                     		Objectivity_step2.style.display="none";
@@ -281,8 +277,7 @@
                 		Ques_Answer.input_Ans.selectedIndex = index-1;
                 		index --;
             		}
-        		}
-        		else {
+        		} else {
             		if(typeof(g_windowReference) == 'undefined' || g_windowReference == null || g_windowReference.closed) {
                 		if (index > 0) {
                     		var tmpValue = Ques_Answer.input_Ans[index - 1].value;
@@ -296,8 +291,7 @@
                     		Ques_Answer.input_Ans.selectedIndex = index-1;
                     		index --;
                 		}
-            		}
-            		else{
+            		} else{
                 		g_windowReference.focus();
             		}
         		}
@@ -318,8 +312,7 @@
                 		Ques_Answer.input_Ans.selectedIndex = index+1;
                 		index ++;
             		}
-        		}
-        		else{
+        		} else{
             		if(typeof(g_windowReference) == 'undefined' || g_windowReference == null || g_windowReference.closed) {
                 		if (index < (Ques_Answer.input_Ans.length - 1)  && index != -1) {
                     		var tmpValue = Ques_Answer.input_Ans[index + 1].value;
@@ -333,8 +326,7 @@
                     		Ques_Answer.input_Ans.selectedIndex = index+1;
                     		index ++;
                 		}
-            		}
-            		else{
+            		} else{
                 		g_windowReference.focus();
             		}
         		}
@@ -353,10 +345,8 @@
                 		alert("<spring:message code='ezQuestion.t493' />");
                 		return false;
             		}
-        		}
-        		else if (document.Ques_Answer.selView[1].checked) {
-		        }
-        		else if (document.Ques_Answer.selView[2].checked) {
+        		} else if (document.Ques_Answer.selView[1].checked) {
+		        } else if (document.Ques_Answer.selView[2].checked) {
             		if(document.Ques_Answer.sNum.value=="" || document.Ques_Answer.eNum.value=="") {
                 		alert("<spring:message code='ezQuestion.t501' />")
                 		document.Ques_Answer.sNum.focus();
@@ -382,8 +372,7 @@
                 		Ques_Answer.eNum.focus();
                 		return false;
             		}	
-        		}
-        		else if (document.Ques_Answer.selView[3].checked) {
+        		} else if (document.Ques_Answer.selView[3].checked) {
             		if (document.Ques_Answer.input_Ans.length < 1) {	
                 		alert("<spring:message code='ezQuestion.t493' />");
                 		return false;
@@ -392,8 +381,7 @@
                 		alert("<spring:message code='ezQuestion.t493' />");
                 		return false;
             		}
-        		}
-        		else {
+        		} else {
             		alert("<spring:message code='ezQuestion.t504' />")
             		return false;
         		}
@@ -404,8 +392,7 @@
             		if(trim_Cross(objInfo) != "") {
                 		strRet = objInfo;
             		}
-        		}
-        		else{
+        		} else{
             		if(objInfo) {
                 		strRet = objInfo;
             		}
@@ -416,8 +403,7 @@
         		if(Ques_Answer.selType[0].checked){
             		if (Form_Check()==false)
                 		return;
-        		}
-        		else{
+        		} else{
             		if(document.getElementById("ResultTable") == null){
                 		alert("<spring:message code='ezQuestion.t493' />");
                 		return;
@@ -452,8 +438,7 @@
                         		attach += "^";
                     		}
                 		}
-            		}
-            		else{
+            		} else{
                 		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.AnsInfo);
                 		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
             		}
@@ -463,15 +448,12 @@
             		eviewno = trim_Cross(document.Ques_Answer.eNum.value);
             		view = "NO";
             		v_viewtype = "3"
-        		}
-        		else if (document.Ques_Answer.selView[1].checked && Ques_Answer.selType[0].checked) {
+        		} else if (document.Ques_Answer.selView[1].checked && Ques_Answer.selType[0].checked) {
             		view="NO";
             		v_viewtype = "2"
-        		}
-        		else if (document.Ques_Answer.selView[3].checked && Ques_Answer.selType[0].checked) {
+        		} else if (document.Ques_Answer.selView[3].checked && Ques_Answer.selType[0].checked) {
             		v_viewtype = "4"
-        		}
-        		else if(Ques_Answer.selType[1].checked) {
+        		} else if(Ques_Answer.selType[1].checked) {
             		v_viewtype = "5"
         		}
 
@@ -493,7 +475,6 @@
                     		DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
                     		createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "ANSWERTITLE", Ques_Answer.input_Ans[ii].value);
 
-                    //if(Ques_Answer.input_Ans[ii].AnsInfo != null && Ques_Answer.input_Ans[ii].AnsInfo != "" && typeof(Ques_Answer.input_Ans[ii].AnsInfo) != "undefined")
                     	if (Ques_Answer.input_Ans[ii].AnsInfo != null) {
                         		var xmlDom_AnswerAttach;
 		                        if (CrossYN()) {
@@ -502,31 +483,16 @@
                         		        var imported = xmlDoc.importNode(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"), true);
                                 		if (imported) {
                                     		DeptNode.appendChild(imported);
+                                		} else {
                                 		}
-                                		else {
-                                		}
-                            		}
-                            		else {
+                            		} else {
                                 		var importedNode = SelectSingleNode(xmlDom_AnswerAttach, "ATTACH").cloneNode(true);
                                 		DeptNode.appendChild(importedNode);
                             		}
-                        		}
-                        		else {
+                        		} else {
 		                            xmlDom_AnswerAttach = GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo);
         		                    DeptNode.appendChild(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"));
                         		}
-                        //if (document.importNode) {
-                        //    var imported = xmlDoc.importNode(SelectSingleNode(xmlDom_AnswerAttach, "ATTACH"), true);
-                        //    if (imported) {
-                        //        DeptNode.appendChild(imported);
-                        //    }
-                        //    else{
-                        //    }
-                        //}
-                        //else{
-                        //    var importedNode = SelectSingleNode(xmlDom_AnswerAttach, "ATTACH").cloneNode(true);
-                        //    DeptNode.appendChild(importedNode);
-                        //}
                     		}
                 		}
 		            }
@@ -534,8 +500,7 @@
                 		var DeptNode = createNodeAndAppandNode(xmlDoc, RootNode, objNode, "ANSWER");
                 		createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "ANSWERTITLE", "");
             		}
-        		}
-        		else{
+        		} else{
             		var table = document.getElementById("ResultTable");
             		var DeptNode = null;
             		for(var i =1; i<table.childNodes.length;i++){
@@ -553,10 +518,12 @@
 		        var attach = "";
         		var attachQ = "";
         		if (Ques_Answer.txtQuestion.AnsInfo != null) {
-            		if(CrossYN())
-                		attachQ = GetAttachList(Ques_Answer.txtQuestion.AnsInfo);
-            		else
-                		attachQ = GetAttachList_ie(Ques_Answer.txtQuestion.AnsInfo).xml;
+            		if(CrossYN()) {
+            			attachQ = GetAttachList(Ques_Answer.txtQuestion.AnsInfo);
+            		} else {
+            			attachQ = GetAttachList_ie(Ques_Answer.txtQuestion.AnsInfo).xml;
+            		}
+                		
         		}
         		if(Ques_Answer.selType[0].checked){
 		            if (viewcnt > 0) {
@@ -564,29 +531,27 @@
                 		    view += Ques_Answer.input_Ans[ii].text +  ";";
 
                     		if( Ques_Answer.input_Ans[ii].AnsInfo != null ) {
-                        		if(CrossYN())
-                            		attach += GetAttachList(Ques_Answer.input_Ans[ii].AnsInfo);
-                        		else
-                            		attach += GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo).xml;
+                        		if(CrossYN()) {
+                        			attach += GetAttachList(Ques_Answer.input_Ans[ii].AnsInfo);
+                        		} else {
+                        			attach += GetAttachList_ie(Ques_Answer.input_Ans[ii].AnsInfo).xml;
+                        		}
                     		}
                     		attach += "^";
 		                }
             		}
         		}
-
         		var pAttachYN = "";
         		attach = attach.replace(/\^/g, "");
         		if ( trim(attach) != "" &&  trim(attachQ) != "" ) {
             		pAttachYN =  "Y";
-        		}
-        		else {
+        		} else {
             		pAttachYN = "";
         		}
 		
         		if(pEditIndex != "") {
              		window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
-        		}
-        		else {
+        		} else {
             		window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));
         		}
         		window.close();
@@ -604,9 +569,6 @@
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TYPE", objInfo.type[jj]);
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TITLE", objInfo.attachTitle[jj]);
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "HREF", objInfo.href[jj]);
-                    		//strRet += objInfo.type[jj] + ";";
-                    		//strRet += objInfo.attachTitle[jj] + ";";
-                    		//strRet += objInfo.href[jj] + "|";
                 		}
             		}
         		}
@@ -629,9 +591,9 @@
             		if (-1 == num.indexOf(vdata.charAt(i))) {
                 		returnValue = false;
                 		break;
-            		}	
-            		else
-                		returnValue=true; 
+            		} else {
+            			returnValue=true;
+            		}
         		}
         		return returnValue;
     		}
@@ -650,13 +612,13 @@
                 		return;
             		}
             		if( pCmd == "MOD" ) {
-                		if (Ques_Answer.input_Ans.options[index].AnsInfo == undefined)
-                    		rgParams["m_AttachInfo"] = Ques_Answer.input_Ans.options[index].getAttribute("ansinfo")
-                		else
-                    		rgParams["m_AttachInfo"] = Ques_Answer.input_Ans.options[index].AnsInfo;
+                		if (Ques_Answer.input_Ans.options[index].AnsInfo == undefined) {
+                			rgParams["m_AttachInfo"] = Ques_Answer.input_Ans.options[index].getAttribute("ansinfo")
+                		} else {
+                			rgParams["m_AttachInfo"] = Ques_Answer.input_Ans.options[index].AnsInfo;
+                		}
             		}
-        		}
-        		else {
+        		} else {
             		var td_QuestionText = "";
             		if (navigator.userAgent.indexOf("Firefox")>-1) {
                 		var ret = td_Question.innerHTML;
@@ -665,41 +627,37 @@
                 		ret = ret.replace(/<br[^>]+>/ig,"\n");
                 		ret = ret.replace(/<[^>]+>/g,"");
                 		td_QuestionText = ret;
-            		}
-            		else{
+            		} else{
                 		td_QuestionText = td_Question.innerText;
             		}
             		if(td_QuestionText != ""){
-                		if(Ques_Answer.txtQuestion.AnsInfo == undefined)
-                    		rgParams["m_AttachInfo"] = Ques_Answer.txtQuestion.getAttribute("ansinfo");
-                		else
-                    		rgParams["m_AttachInfo"] = Ques_Answer.txtQuestion.AnsInfo;
+                		if(Ques_Answer.txtQuestion.AnsInfo == undefined) {
+                			rgParams["m_AttachInfo"] = Ques_Answer.txtQuestion.getAttribute("ansinfo");
+                		} else {
+                			rgParams["m_AttachInfo"] = Ques_Answer.txtQuestion.AnsInfo;
+                		}
             		}
         		}
         		var _MSIE = 'MSIE';
         		var useragentstr = navigator.userAgent;
         		if (useragentstr.indexOf(_MSIE) != -1) {
             		var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
-            		var szUrl;
-            //if (pNoneActiveX == "YES")
-            		    szUrl = "qstAttachNonActX.do?id_name=" + pID;
-            		//else
-                		//szUrl = "Qst_Attach.aspx?id_name=" + pID;
+            		var szUr = "qstAttachNonActX.do?id_name=" + pID;
             		var rv = window.showModalDialog(szUrl, rgParams, szParam);
             		if (rgParams["m_Return"] == "OK") {
                 		if (pID == "A") {
                     		var tmpIdx;
-                    		if (pCmd == "MOD")
-                        		tmpIdx = index;
-                    		else {
-                        		if (document.Ques_Answer.input_Ans[0].text == "")
-                            		tmpIdx = 0;
-                        		else
-                            		tmpIdx = Ques_Answer.input_Ans.options.length;
+                    		if (pCmd == "MOD") {
+                    			tmpIdx = index;
+                    		} else {
+                        		if (document.Ques_Answer.input_Ans[0].text == "") {
+                        			tmpIdx = 0;
+                        		} else {
+                        			tmpIdx = Ques_Answer.input_Ans.options.length;
+                        		}
                     		}
                     		Ques_Answer.input_Ans.options[tmpIdx].AnsInfo = rgParams["m_AttachInfo"];
-                		}
-                		else {
+                		} else {
                     		td_Question.innerText = "";
 
 		                    if (rgParams["m_AttachInfo"] != null) {
@@ -711,15 +669,13 @@
                         		}
                         		xmlDom = null;
                         		td_Question.innerHTML = tmpText;
-                    		}
-                    		else {
+                    		} else {
                         		//Ques_Answer.txtQuestion.AnsInfo = null;
                     		}
                 		}
                 		g_DelAttachList = rgParams["m_DelAttach"];
             		}
-        		}
-        		else{
+        		} else {
             		if ((g_windowReference == null) || (g_windowReference.closed == true)) {
                 		var szUrl = "qstAttachNonActX.do?id_name=" + pID;
                 		g_windowReference = window.open("","AttachAdd","height=370px,width=500px,resizable=no,center=yes" + GetOpenPosition(500, 370));                
@@ -738,17 +694,17 @@
     		function AttachComplete_NonIE(pID, pCmd, pAttachXml, pAttachModeIndex) {
         		if( pID == "A" ) {
             		var tmpIdx;
-            		if( pCmd == "MOD" )
-                		tmpIdx = parseInt(pAttachModeIndex);
-            		else {
-                		if( document.Ques_Answer.input_Ans[0].text == "" )
-                    		tmpIdx = 0;
-                		else
-                    		tmpIdx = Ques_Answer.input_Ans.options.length;
+            		if( pCmd == "MOD" ) {
+            			tmpIdx = parseInt(pAttachModeIndex);
+            		} else {
+                		if( document.Ques_Answer.input_Ans[0].text == "" ) {
+                			tmpIdx = 0;
+                		} else {
+                			tmpIdx = Ques_Answer.input_Ans.options.length;
+                		}
             		}
             		Ques_Answer.input_Ans.options[tmpIdx].AnsInfo = pAttachXml;
-        		}
-        		else {
+        		} else {
             		td_Question.innerText = "";
             		if(pAttachXml != "" ) {
                 		Ques_Answer.txtQuestion.AnsInfo = pAttachXml;
@@ -763,8 +719,7 @@
                 		}
                 		xmlDom = null;
                 		td_Question.innerHTML = tmpText;
-            		}
-            		else {
+            		} else {
                 		Ques_Answer.txtQuestion.AnsInfo = null;
             		}
         		}
@@ -808,28 +763,28 @@
                 		if (j == 0) {
                     		oTh = document.createElement("TH");
                     		if (i != 0) {
-                        		if (pXmlString != undefined)
-                            		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("ANSWER_TITLE")[i - 1]) + "' style='width:70px;' maxlength='50'/>";
-                        		else
-                            		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910027' /> " + i + "' style='width:70px;' maxlength='50'/>";
+                        		if (pXmlString != undefined) {
+                        			oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("ANSWER_TITLE")[i - 1]) + "' style='width:70px;' maxlength='50'/>";                        			
+                        		} else {
+                        			oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910027' /> " + i + "' style='width:70px;' maxlength='50'/>";                        			
+                        		}
+                    		} else {
+                    			oTh.innerHTML = "";
                     		}
-                    		else
-                        		oTh.innerHTML = "";
                     		oTh.setAttribute("style", "text-align:center;width:150px;");
                     		oTr.appendChild(oTh);
                     		oth = null;
-		                }
-        		        else if (i == 0 && j != 0) {
+		                } else if (i == 0 && j != 0) {
                     		oTh = document.createElement("TH");
-                    		if (pXmlString != undefined)
-                        		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("TITLE")[j - 1]) + "' style='width:70px;' maxlength='50'/>";
-                    		else
+                    		if (pXmlString != undefined) {
+                    			oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("TITLE")[j - 1]) + "' style='width:70px;' maxlength='50'/>";
+                    		} else {
                         		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910026' /> " + j + "' style='width:70px;' maxlength='50'/>";
+                    		}
                     		oTh.setAttribute("style", "text-align:center;");
                     		oTr.appendChild(oTh);
                     		oth = null;
-                		}
-                		else {
+                		} else {
                     		oTd = document.createElement("TD");
                     		radioBtn = document.createElement("input");
                     		radioBtn.setAttribute("type", "radio");
@@ -922,8 +877,7 @@
                 		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910027' />' style='width:70px;' maxlength='50'/>";
                 		oTh.setAttribute("style", "text-align:center;width:150px;");
                 		oTr.appendChild(oTh);
-            		}
-            		else {
+            		} else {
                 		oTd = document.createElement("TD");
                 		oRadioBtn = document.createElement("input");
                 		oRadioBtn.setAttribute("type", "radio");

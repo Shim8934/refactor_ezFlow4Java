@@ -37,10 +37,11 @@
 			var WinRef;
 
 			function Init_QuesAdd(vdata,vquesno) {
-				if(frmCreate.selQues[0].text=="")
+				if(frmCreate.selQues[0].text=="") {
 		    		i=0;
-				else   
+				} else {
 		    		i = frmCreate.selQues.length;
+				}   
 				var TmpOption1= new Option((i+1) + "." + vdata, vquesno,true);
 				frmCreate.selQues.options[i] = TmpOption1;
 			}
@@ -55,28 +56,26 @@
                 		if(selCnt > 1){
                     		if (frmCreate.selQues[frmCreate.selQues.length-1].text=="") {
                         		frmCreate.selQues.remove(frmCreate.selQues[frmCreate.selQues.length-1]);
-		                    }
-        		            else {
+		                    } else {
                 		        break;
                     		}
-                		}
-                		else {
+                		} else {
                     		break;
                 		}
             		}			
         		}
         		var v_ques =  vdata;
         		if (selCnt > 0 ) {
-            		if (frmCreate.selQues[0].text == "")
+            		if (frmCreate.selQues[0].text == "") {
                 		i = 0;
-            		else 
+            		} else {
                 		i = frmCreate.selQues.length;
+            		} 
             		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
 
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
-        		}
-        		else {
+        		} else {
             		var TmpOption= new Option((1) + "." + v_ques, QstXML,true);
             		frmCreate.selQues.options[0] = TmpOption;
             		frmCreate.selQues.options[0].AttachYN = vAttachYN;
@@ -89,32 +88,29 @@
                 		if(selCnt > 1) {
                     		if (frmCreate.selQues[frmCreate.selQues.length-1].text=="") {
                         		frmCreate.selQues.remove(frmCreate.selQues[frmCreate.selQues.length-1]);
-		                    }
-        		            else {
+		                    } else {
                         		break;
                     		}
-                		}
-                		else {
+                		} else {
                     		break;
                 		}
             		}			
         		}
         		var v_ques =  vdata;
 		        if (selCnt > 0 ){
-        		    if (frmCreate.selQues[0].text == "")
+        		    if (frmCreate.selQues[0].text == "") {
                 		i = 0;
-            		else 
+        		    } else {
                 		i = frmCreate.selQues.length;
+            		} 
 		            var TmpOption= new Option((i+1) + "." + v_ques, i+1,true);
         		    frmCreate.selQues.options[i] = TmpOption;
-		        }
-		        else {
+		        } else {
         		    var TmpOption= new Option((1) + "." + v_ques, 1,true);
             		frmCreate.selQues.options[0] = TmpOption;
         		}
     		}
     		function fun_OK() {
-
         		var Qlen = frmCreate.selQues.length;
         		var email = "";
                 var name = "";
@@ -152,9 +148,9 @@
         		xmlDoc.documentElement.appendChild(QuestionNode);
         		xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
         		xmlHttp.send(xmlDoc); 
-        	 	if(getXmlString(xmlHttp.responseXML) == "")
+        	 	if(getXmlString(xmlHttp.responseXML) == "") {
             		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />"); 
-        		else {
+        	 	} else {
             		var resultXML = xmlHttp.responseXML;
             		State = SelectSingleNodeValue(resultXML, "DATA");
             		/* if (State !="OK")
@@ -201,8 +197,7 @@
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
             		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id=${qstStep1VO.itemNo}/>'" , "addques", 700, 440); 
-		        }
-		        else {
+		        } else {
             		WinRef.focus();
             		return;
         		}		    
@@ -215,24 +210,22 @@
                     		alert("<spring:message code='ezQuestion.t461' />");
                     		return;
                 		}
-                		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1)
+                		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                     		WinRef = window.open("", "addques", "width=700,height=430,location=no" + GetOpenPosition(700, 430));
-                		else
+                		} else {
                     		WinRef = window.open("", "addques", "width=700,height=430,location=no" + GetOpenPosition(700, 430));
+                		}
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
                 		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}";
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
-
-            		}
-            		else {
+            		} else {
                 		WinRef.focus();
                 		return;
             		}	
-        		}
-        		else {
+        		} else {
             		alert("<spring:message code='ezQuestion.t461' />");
         		}
     		}
@@ -291,12 +284,12 @@
                 		xmlHttp.send(xmlDoc);
                 		var resultXML = xmlHttp.responseXML;
                 		State = SelectSingleNodeValue(resultXML, "DATA");
-                		if (resultXML.xml=="")
+                		if (resultXML.xml=="") {
                     		alert(desc10 + "\n" + desc2); 
-                		else {
-                    		if (State !="DELETE_OK"	)
+                		} else {
+                    		if (State !="DELETE_OK"	) {
                         		alert(desc10 + "\n" + desc2); 
-                    		else {
+                    		} else {
                         		menuQst_List();
                     		}	
                 		}
@@ -315,12 +308,12 @@
                     		xmlHttp.send(xmlDoc);
                     		var resultXML = xmlHttp.responseXML;
                     		State = SelectSingleNodeValue(resultXML, "DATA");
-                    		if (resultXML.xml=="")
+                    		if (resultXML.xml=="") {
                         		alert(desc10 + "\n" + desc2); 
-                    		else {
-                        		if (State !="DELETE_OK"	)
+                    		} else {
+                        		if (State !="DELETE_OK"	) {
                             		alert(desc10 + "\n" + desc2); 
-                        		else {
+                        		} else {
                             		menuQst_List();
                         		}	
                     		}
@@ -329,10 +322,11 @@
         		}
     		}
     		function menuQst_List() {
-        		if(CrossYN())
+        		if(CrossYN()) {
             		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
-        		else
+        		} else {
             		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
+        		}
         		window.location.href = szUrl;	
     		}
     		function menuQst_FileOpen() {
@@ -345,8 +339,7 @@
             		var strQuestion = ezUtil.LoadTextFromFile(fileName);
             		ezUtil = null;
             		LoadTempQuestionData(strQuestion);
-        		}
-        		else {
+        		} else {
             		document.all("cmuds").click();
         		}
     		}
@@ -383,13 +376,11 @@
                     		}
                     		fileObj = null;
                 		}
-            		}
-            		else {
+            		} else {
                 		document.getElementById("TempSaveData").value = pContent;
                 		form_TempSave.submit();
             		}
-        		}
-        		else {
+        		} else {
             		alert("<spring:message code='ezQuestion.t472' />");
         		}
     		}
@@ -407,8 +398,7 @@
 		            		LoadTempQuestionData(evt.target.result);
 		        		};
 		        		reader.readAsText(thisObj.files[0]);
-		    		}
-		    		else {
+		    		} else {
 		        		ifrm_TempLoad_Safari
 		        		form_TempLoad_Safari.submit();
 		    		}
@@ -436,12 +426,12 @@
 		        		xmlHttp.send(xmlDoc);
 		        		var resultXML = xmlHttp.responseXML;
 		        		State = SelectSingleNodeValue(resultXML, "DATA");
-		        		if (resultXML.xml == "")
+		        		if (resultXML.xml == "") {
 		            		alert(desc10 + "\n" + desc2);
-		        		else {
-		            		if (State != "DELETE_OK")
+		        		} else {
+		            		if (State != "DELETE_OK") {
 		                		alert(desc10 + "\n" + desc2);
-		            		else {
+		            		} else {
 		                		menuQst_List();
 		            		}
 		        		}
@@ -459,12 +449,10 @@
 				                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
 				                if (result != "") {
 				                    return result;
-				                }
-				                else {
+				                } else {
 				                    alert("<spring:message code='ezQuestion.t472' />");
 				                }
-				            }
-				            else {
+				            } else {
 				                alert("<spring:message code='ezQuestion.t473' />");
 				            }
 				        }
@@ -474,8 +462,7 @@
 
 			            if (olditem_data == "") {
 			                alert("현재 작성된 질문이 없습니다.");
-			            }
-			            else {
+			            } else {
 			                olditem_Open(olditem_data);
 			            }
 			        }
@@ -512,10 +499,11 @@
 				        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
 				            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("CONTENT").length > 0) {
 				                strSeq = strResult[j + 1].split(';');
-				                if (CrossYN())
+				                if (CrossYN()) {
 				                    AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
-				                else
+				                } else {
 				                    AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).xml);
+				                }
 				                j++;
 				            }
 				        }

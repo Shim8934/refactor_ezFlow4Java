@@ -110,10 +110,11 @@
 	    	});
 	    	<%-- <%}%> --%>
 	    	function Date_calcu(Year) {
-		        if ((Year % 4) && Year % 100 || !(Year % 400))
+		        if ((Year % 4) && Year % 100 || !(Year % 400)) {
 		            return true;
-	    	    else
+		        } else {
 	        	    FixDay[2] = 29;
+	    	    }
 	    	}
 	    	function AddDate(vaddday, vyear, vmonth, vday) {
 		        var vyear = parseInt(vyear);
@@ -125,8 +126,7 @@
 		            if (vmonth < 13) {
 		                ttldate -= FixDay[vmonth];
 	    	            vmonth += 1;
-	        	    }
-		            else {
+	        	    } else {
 		                vyear += 1;
 	    	            Date_calcu(vyear);
 	        	        vmonth -= 1;
@@ -144,8 +144,9 @@
 	        	szMultiResponse = document.getElementById("set_MultiResponse")[index].value;
 	        	L_SearchStartDt = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	        	L_SearchEndDt = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	        	if (form_check() == false) return;
-	        	else {
+	        	if (form_check() == false) {
+	        		return;
+	        	} else {
 		            document.getElementById("hidStartDate").value = L_SearchStartDt + " 00:00:00";
 		            document.getElementById("hidEndDate").value = L_SearchEndDt + " 23:59:59";
 	    	        document.frmCreate.submit();
@@ -158,9 +159,9 @@
 	        	    if (-1 == num.indexOf(vdata.charAt(i))) {
 	            	    returnValue = false;
 		                break;
-		            }
-	    	        else
+		            } else {
 	        	        returnValue = true;
+	    	        }
 	        	}
 	        	return returnValue;
 	    	}
@@ -188,8 +189,7 @@
 	        	if (trim_Cross(document.getElementById("txtExpiredate").value) == "") {
 		            document.getElementById("hidExpiredate").value = '';
 		            document.getElementById("txtExpiredate").value = '';
-	    	    }
-	        	else {
+	    	    } else {
 	            	var rtnValue = IsNumeric(trim_Cross(document.getElementById("txtExpiredate").value));
 	            	if (!rtnValue) {
 		                alert("<spring:message code='ezQuestion.t187' />");
@@ -234,8 +234,7 @@
 	    	    }
 	        	if (form_check() == false) {
 	            	return;
-	        	}
-	        	else {
+	        	} else {
 	            	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
 	            	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 	            	document.frmCreate.submit();
@@ -278,8 +277,7 @@
 	        	    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
 	            	    var feature = GetOpenPosition(560, 630);
 	                	g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
-	            	}
-	            	else {
+	            	} else {
 		                var feature = GetOpenPosition(560, 700);
 		                g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes " + feature);
 	    	        }
