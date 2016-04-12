@@ -35,51 +35,46 @@
 				window.close();
 			}
 			
-			function btn_CANCEL_onclick()
-			{
+			function btn_CANCEL_onclick(){
 				var EndPollYN, ResponseYN, ResultOpenYN
 				var MultiResYN, WriteYN, AdminYN
 					
 				var g_BrdID =brd_id;
 				var pItemNo =item_no;
-				try
-				{
-				    var xmlHttp = createXMLHttpRequest();
-				    var szUrl = "/ezQuestion/callUserPollStatus.do?brd_id=" + g_BrdID + "&item_no=" + pItemNo;
-				    xmlHttp.open("POST", szUrl, false);
-				    xmlHttp.send();
-				    if (getXmlString(xmlHttp.responseXML) != "") {
-				        var resultXML = createXmlDom();
-				        resultXML = xmlHttp.responseXML;
-				        var xmldomNode = SelectNodes(resultXML, "RESULT");
-				        EndPollYN = SelectSingleNodeValue(xmldomNode[0], "EndPollYN");
-				        ResponseYN = SelectSingleNodeValue(xmldomNode[0], "ResponseYN");
-				        ResultOpenYN = SelectSingleNodeValue(xmldomNode[0], "ResultOpenYN");
-				        MultiResYN = SelectSingleNodeValue(xmldomNode[0], "MultiResYN");
-				        WriteYN = SelectSingleNodeValue(xmldomNode[0], "WriteYN");
-				        AdminYN = SelectSingleNodeValue(xmldomNode[0], "AdminYN");
-					}
-					else
-					{
+				$.ajax({
+					type: "POST",
+					url: "/ezQuestion/qstCallUsersPollStatus.do",
+					data: {"brdId":g_BrdID ,"itemNo":pItemNo},
+					dataType: "JSON",
+					success: function(map){
+						EndPollYN = map.endPollYN;
+						ResponseYN = map.responseYN;
+						ResultOpenYN = map.resultOpenYN;
+						MultiResYN = map.multiResYN;
+						WriteYN = map.writeYN;
+						AdminYN = map.adminYN;
+					},
+					error: function(e){
+						alert(e.message);
+					 	
 						EndPollYN	 = "";
 						ResponseYN	 = "";
 						ResultOpenYN = "";
 						MultiResYN	 = "";
 						WriteYN		 = "N";
 						AdminYN		 = "N";
+						       
+						return false;
+					},
+					complete:function(){
+						if( WriteYN == "Y" || AdminYN == "Y" || (ResultOpenYN=="Y")){
+							window.opener.location.href="/ezQuestion/qstResult.do?"+receve;
+						}
+						window.close();
 					}
-				} catch(e)
-				{
-					alert(e);
-					return false;
-				}
-				if( WriteYN == "Y" || AdminYN == "Y" || (ResultOpenYN=="Y"))
-				{
-					window.opener.location.href="/ezQuestion/qstResult.do?"+receve;
-				}
-				window.close();
+				});
 			}
-			</script>			
+		</script>			
 	</head>
 	<body style="overflow:hidden">
     <div class="popup_noti">
