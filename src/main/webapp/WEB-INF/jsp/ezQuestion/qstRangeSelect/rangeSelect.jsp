@@ -45,10 +45,11 @@
             	listview.SetHeightFree(true);
             	listview.SetSelectFlag(false);
             	listview.SetMulSelectable(true);
-            	if(pListView == "DeptListView")
+            	if(pListView == "DeptListView") {
 	                listview.SetRowOnDblClick("delete_admin");
-    	        else if (pListView == "MemberListView")
+            	} else if (pListView == "MemberListView") {
         	        listview.SetRowOnDblClick("delete_member");
+    	        }
             		listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
             		listview.DataBind(pListView);
             		listview.RowDataBind();
@@ -80,10 +81,11 @@
         		var length = 0;
         		var i;
         		for (i = 0; i < chkstr.length; i++)
-            		if (chkstr.charCodeAt(i) > 256)
+            		if (chkstr.charCodeAt(i) > 256) {
                 		length = length + 2;
-            		else
+            		} else {
                 		length++;
+            		}
         		if (length > maxlength) {
             		alert(fieldname + "<spring:message code='ezQuestion.t14' />" + maxlength + "<spring:message code='ezQuestion.t15' />");
             		return false
@@ -261,8 +263,7 @@
         	if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
             	if (CrossYN()) {
 	                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-    	        }
-        	    else {
+    	        } else {
             	    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
             	}
         	}
@@ -327,9 +328,9 @@
                 	listview.SetRowOnDblClick("ListViewNodeDblClick");
                 	listview.DataSource(xmlHttp_UserList.responseXML.getElementsByTagName("LISTVIEWDATA")[0]);
                 	listview.DataBind("OrganListView");
-            	}
-            	else
+            	} else {
 	                alert("<spring:message code='ezQuestion.t21' />" + xmlHttp_UserList.statusText)
+            	}
     	        xmlHttp_UserList = null;
 	        }
 	    }
@@ -399,8 +400,7 @@
         	if (adCount == 0) {
 	            alert("<spring:message code='ezQuestion.t24' />");
     	        return;
-	        }
-    	    else if (adCount == 1) {
+	        } else if (adCount == 1) {
         	    bSearch = true;
             	var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
             	xmlHttp_Depttree = null;
@@ -408,8 +408,7 @@
             	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
             	xmlHttp_Depttree.send(strQuery);
-        	}
-        	else {
+        	} else {
 	            if (!CrossYN()) {
     	            var rgParams = new Array();
         	        rgParams["addrBook"] = xmlDOM;
@@ -425,8 +424,7 @@
                     	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
                     	xmlHttp_Depttree.send(strQuery);
                 	}
-            	}
-            	else {
+            	} else {
 	                var rgParams = new Array();
     	            rgParams["addrBook"] = xmlDOM;
         	        rgParams["deptid"] = "";
@@ -467,8 +465,7 @@
                 	treeView.SetNodeClick("TreeViewNodeClick");
                 	treeView.DataSource(xmlHttp_Depttree.responseXML);
                 	treeView.DataBind("TreeView");
-            	}
-            	else {
+            	} else {
 	                alert("<spring:message code='ezQuestion.t25' />" + xmlHttp_Depttree.statusText);
     	        }
             	xmlHttp_Depttree = null;
@@ -489,8 +486,7 @@
             	window.opener.updateParent("RangeXMLStr", MakeXml_Range(), "value");
             	window.opener.updateParent("itemNo", L_ITEMNO, "value");
             	window.opener.closeWindow();
-        	}
-        	else {
+        	} else {
             	window.opener.updateParent("setTarget", 0, "selectedIndex");
             	window.opener.updateParent("hidTarget", "0", "value");
             	window.opener.updateParent("selectYN", "NO", "value");
@@ -511,8 +507,7 @@
                 	L_ITEMNO = SelectSingleNodeValueNew(xmlRtn, "RESULT/ITEMNO");
                 	return true;
             	}
-        	}
-        	else {
+        	} else {
             	alert("<spring:message code='ezQuestion.t27' />");
             	return false;
         	}
@@ -575,13 +570,11 @@
                 	window.returnValue = L_ITEMNO;
                 	window.close();
                 	return true;
-            	}
-            	else {
+            	} else {
                 	alert("<spring:message code='ezQuestion.t27' />");
                 	return false;
             	}
-        	}
-        	else {
+        	} else {
             	alert("<spring:message code='ezQuestion.t27' />");
             	return false;
         	}
@@ -688,8 +681,9 @@
                     	}
                 	}
 	                var objTr = listview.AddRow(InitTr.length);
-    	            if (MaxCntNum != 0)
-        	            MaxCntNum = MaxCntNum + 1;
+    	            if (MaxCntNum != 0) {
+    	            	MaxCntNum = MaxCntNum + 1;
+    	            }
             	    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
                 	listview.AddDataRow(objTr, Resultxml);
 
@@ -744,8 +738,10 @@
             	    }
 
                 	var objTr = listview.AddRow(InitTr.length);
-                	if (MaxCntNum != 0)
-                    	MaxCntNum = MaxCntNum + 1;
+                	if (MaxCntNum != 0) {
+                		MaxCntNum = MaxCntNum + 1;
+                	}
+                    	
                 	SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
                 	listview.AddDataRow(objTr, Resultxml);
 
@@ -758,6 +754,7 @@
 	            }
         	}
     	}
+    	
 		</script>
 	</head>
 	<body class="popup"> 
