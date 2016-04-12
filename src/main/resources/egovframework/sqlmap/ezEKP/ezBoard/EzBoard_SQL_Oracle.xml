@@ -402,6 +402,10 @@
 		{CALL EZBOARDSTD.EZSP_PHOTOLISTDEL(#v_ImageID#, #v_BoardID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.deleteTempItem1" parameterClass="String">
+		{CALL EZBOARDSTD.EZSP_DELETETEMPITEM(#strItemID#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 

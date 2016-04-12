@@ -222,7 +222,7 @@
 	                }
 	
 	                if (imagecontent != null && imagecontent != "") {
-	                    var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(pBoardID) + "&FILENAME=" + escape(imgpath);
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
 	                    document.getElementById(imageid).src = imgSrc;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }
@@ -251,7 +251,7 @@
 	                imagecontent.innerHTML += resultHTML;
 	
 	                if (imagecontent != null && imagecontent != "") {
-	                    var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(pBoardID) + "&FILENAME=" + escape(imgpath);
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
 	                    document.getElementById(imageid).src = imgSrc;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }
@@ -300,7 +300,7 @@
 	                }
 	
 	                if (imagecontent != null && imagecontent != "") {
-	                    var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUMTEMP&BOARDID=" + escape(pBoardID) + "&FILENAME=" + escape(imgpath);
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
 	                    document.getElementById(imageid).src = imgSrc;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }
@@ -319,20 +319,12 @@
 	                                 "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
 	                                 "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
 	
-	
-	                //resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                //                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
-	                //                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                //                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                //                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
-	
-	
 	                var imagecontent = document.getElementById("addimagecontent");
 	
 	                imagecontent.innerHTML += resultHTML;
 	
 	                if (imagecontent != null && imagecontent != "") {
-	                    var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUMTEMP&BOARDID=" + escape(pBoardID) + "&FILENAME=" + escape(imgpath);
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
 	                    document.getElementById(imageid).src = imgSrc;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }
@@ -510,8 +502,8 @@
 	                imageid += tmpId + ";";
 	            }
 	
-	            strXML += "<IMGAGE_COUNT>" + filecount + "</IMGAGE_COUNT>";
-	            strXML += "<IMGAGE_ID>" + imageid + "</IMGAGE_ID>";
+	            strXML += "<IMAGE_COUNT>" + filecount + "</IMAGE_COUNT>";
+	            strXML += "<IMAGE_ID>" + imageid + "</IMAGE_ID>";
 	            //20121018_[을지]_포토앨범 : 사진별 앨범 소개 글
 	            strXML += "<CONTENT2>" + MakeXMLString(content) + "</CONTENT2>";
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
@@ -533,15 +525,10 @@
 	                xmlhttp = null;
 	                xmldom = null;
 	                if (pMode != "temp") {
-	                    var xmlDom = createXmlDom();
 	                    var xmlhttp = createXMLHttpRequest();
-	                    var objNode, objSubNode, objDataNode;
-	                    objNode = createNodeInsert(xmlDom, objNode, "NODES");
-	                    objSubNode = createNodeAndAppandNode(xmlDom, objNode, objSubNode, "NODE");
-	                    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 	
-	                    xmlhttp.open("POST", "interASP/deleteTempitem.aspx", false);
-	                    xmlhttp.send(xmlDom);
+	                    xmlhttp.open("POST", "/ezBoard/deleteTempItem.do", false);
+	                    xmlhttp.send(strItemID);
 	                }
 	
 	                if (strItemID == "") {

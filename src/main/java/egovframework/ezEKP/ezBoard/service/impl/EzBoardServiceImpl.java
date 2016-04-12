@@ -757,6 +757,16 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public String deleteTempItem(String strItemID) throws Exception {
+		try {
+			ezBoardDAO.deleteTempItem(strItemID);
+			return "OK";
+		} catch (Exception e) {
+			return "NO";
+		}
+	}
+
+	@Override
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception {
 		if(!(endRow > 0)){
 			endRow = 0;

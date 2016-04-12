@@ -100,6 +100,8 @@ public interface EzBoardService {
 	
 	public String getDocPassWord(String itemID) throws Exception;
 	
+	public String deleteTempItem(String strItemID) throws Exception;
+	
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
 	
 	public int getReservedItemListCount(String userID) throws Exception;
@@ -179,5 +181,6 @@ public interface EzBoardService {
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
 	
 	public void photoListDel(String boardID, String imageID) throws Exception;
+
 
 }

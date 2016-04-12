@@ -397,4 +397,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		delete("EzBoardDAO.photoListDel", map);
 	}
 
+	public void deleteTempItem(String strItemID) throws Exception{
+		delete("EzBoardDAO.deleteTempItem1", strItemID);
+	}
+
 }

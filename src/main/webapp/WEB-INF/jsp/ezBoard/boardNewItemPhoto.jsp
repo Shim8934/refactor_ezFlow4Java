@@ -444,7 +444,7 @@
 	        var attachXml = "<LISTVIEWDATA><ROWS>";
 	        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
 	            attachXml += "<ROW><CELL>";
-	            attachXml += "<DATA1>" + "/upload_BoardSTD/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
 	            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
 	            attachXml += "<DATA3></DATA3>";
 	            attachXml += "<DATA4></DATA4>";
@@ -718,9 +718,6 @@
 	        xmlhttp_boardinfo = null;
 	    }
 	    </script>
-<!-- 	<script FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)"> -->
-<!--  	    Append_AttachAdd(filename); -->
-<!-- 	</script> -->
 	</head>
 	
 	<body class="popup" onload="javascript:window_onload()">
@@ -790,7 +787,7 @@
 	        </tr>
 	        <tr style="display:none;">
 	          <th><spring:message code='ezBoard.t1021'/></th>
-	          <td class="pos1" colspan="3" style="width:100%"><INPUT type="text" id="txtPhotoFile" style="WIDTH:85%" readonly ></td>
+	          <td class="pos1" colspan="3" style="width:100%"><input type="text" id="txtPhotoFile" style="width:85%" readonly ></td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t1008'/></th>
@@ -826,7 +823,7 @@
 	  </tr>
 	  <tr style="display:none">
 	    <th><spring:message code='ezBoard.t209'/></th>
-	    <td style="vertical-align:middle" colspan="2"><INPUT type="text" id="txtAbstract"  style="WIDTH:100%;word-break:break-all" value="" maxlength=100></td>
+	    <td style="vertical-align:middle" colspan="2"><input type="text" id="txtAbstract"  style="width:100%;word-break:break-all" value="" maxlength=100></td>
 	  </tr>
 	    <tr>
 	    <td style="display:none;">

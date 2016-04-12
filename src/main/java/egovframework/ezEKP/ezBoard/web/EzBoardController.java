@@ -5126,4 +5126,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardItemListTemp";
 	}
+	
+	@RequestMapping(value = "/ezBoard/deleteTempItem.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String deleteTempItem(@RequestBody String strItemID) throws Exception{
+		String resultVal = ezBoardService.deleteTempItem(strItemID);
+		
+		return resultVal;
+	}
 } 
