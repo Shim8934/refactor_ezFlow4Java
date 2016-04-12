@@ -189,7 +189,7 @@
 	                    }
 	                }
 	                if(chkflag != true){
-	                    alert("<spring:message code='ezQuestion.t316' />");
+	                    alert("<spring:message code='ezQuestion.t319' />");
 	                    return false;
 	                }
                     if(checkTag[i].checked)

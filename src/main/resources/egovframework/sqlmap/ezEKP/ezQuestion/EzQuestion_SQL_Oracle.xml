@@ -393,7 +393,7 @@
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateResponsePerson" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+		{CALL EZQUESTION.EZSP_UPDATERESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateResCnt" parameterClass="Map">

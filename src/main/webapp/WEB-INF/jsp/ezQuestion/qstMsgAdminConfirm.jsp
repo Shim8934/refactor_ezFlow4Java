@@ -100,7 +100,8 @@
 	            	<input type="submit" value="<spring:message code='ezQuestion.t103' />" id="btn_OpinionOK" onClick="return btn_OK_onclick()">
 	            	<input type="submit" value="<spring:message code='ezQuestion.t104' />" id="btn_CANCEL" onClick="return btn_CANCEL_onclick()">
 		    	</div>
-	    	<span class="bl"> </span> <span class="br"></span>
+	    	<span class="bl"></span>
+	    	<span class="br"></span>
 	    	</div>
     	</div>
 	</body>

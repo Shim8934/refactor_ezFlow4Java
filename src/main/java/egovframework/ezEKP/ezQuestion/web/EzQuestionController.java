@@ -660,7 +660,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         if(qstAttachVOList!=null){
 	        for(QstAttachVO attachVO : qstAttachVOList){
 	        	if (bFirst){
-	        		if (strAnswer == "0"){
+	        		if (strAnswer.equals("0")){
 	        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
 	        			strResult.append("<table><tr>");
 	        		}else{
@@ -761,7 +761,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
-		if (userId == ""){
+		if (userId.equals("")){
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360") + "');\n");
 			response.getWriter().write("	history.back();\n");
@@ -805,9 +805,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(ezQuestionService.getResponsePerson(qstResponsePersonVO)!=null){
 			selUserId = qstResponsePersonVO.getUserId();
 			selResponseDate = qstResponsePersonVO.getResponseDate();
-			
-			if(vResponseRange == "1"){
-				if(selResponseDate==""){
+			if(vResponseRange.equals("1")){
+				if(selResponseDate==null||selResponseDate.equals("")){
 					ezQuestionService.updateResponsePerson(qstResponsePersonVO);
 				}
 			}
@@ -990,7 +989,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		responseRange = qstUserPermissionVO.getResponseRange();
 		
 		boolean bPublic;
-        if (publicFlg == "1"){
+        if (publicFlg.equals("1")){
             bPublic = true;
         }else{
             bPublic = false;
@@ -1092,8 +1091,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         strData += "<table class=\"question\">";
         strData += "<tr>";
         strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
-        if (multiSelect == "1")
-        {
+        if (multiSelect.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
         }
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
@@ -1159,8 +1157,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		strData += "<table class=\"question\">";
         strData += "<tr>";
         strData += "<th colspan=4>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
-        if (strSel == "1")
-        {
+        if (strSel.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
         }
 
@@ -1490,7 +1487,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String callGetItemSeq(String pBrdID) throws Exception {
 		int get_itemNo = -1;
 		
-		if(ezQuestionService.getItemSeq(pBrdID) == "") {
+		if(ezQuestionService.getItemSeq(pBrdID).equals("")) {
 			get_itemNo = 1;
 		} else {
 			get_itemNo = Integer.parseInt(ezQuestionService.getItemSeq(pBrdID).toString());
@@ -2419,7 +2416,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
         	nodeData = resultXML.createElement("VALUE");
 
-        	if (multiSelect == "1")
+        	if (multiSelect.equals("1"))
         		CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55"));
         	else
         		CDATASection = resultXML.createCDATASection(quesContent);
@@ -2909,7 +2906,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         	}
         	qPercent="w";
         	sort="A";
-        	if(responseUserPosition == null || responseUserPosition.toUpperCase() == "NULL"){
+        	if(responseUserPosition == null || responseUserPosition.toUpperCase().equals("NULL")){
         		title = " [" + egovMessageSource.getMessage("ezQuestion.t57") + answer;
         		qPercent = "";
         		sort="Q";
@@ -3070,7 +3067,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         	}
         	qPercent="w";
         	sort="A";
-        	if(responseJikgub == null || responseJikgub.toUpperCase() == "NULL"){
+        	if(responseJikgub == null || responseJikgub.toUpperCase().equals("NULL")){
         		title = " [" + egovMessageSource.getMessage("ezQuestion.t57") + answer;
         		qPercent = "";
         		sort="Q";
