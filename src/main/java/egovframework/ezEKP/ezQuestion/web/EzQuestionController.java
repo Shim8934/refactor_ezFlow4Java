@@ -3289,6 +3289,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         }
     }
 	
+	/**
+	 * 전자설문 설문리스트 특수문자 변환 실행 함수
+	 */
 	public String modifyData(String strData) throws Exception{
 		String strResult = "";
 		strResult = strData.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
