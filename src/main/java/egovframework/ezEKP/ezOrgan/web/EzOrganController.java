@@ -6,8 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,8 +15,19 @@ import org.w3c.dom.Element;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+/** 
+ * @Description [Controller] 조직도 및 부서
+ * @author 오픈솔루션팀 장진혁
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    장진혁    신규작성
+ *
+ * @see
+ */
 
 @Controller
 public class EzOrganController {
@@ -34,18 +44,9 @@ public class EzOrganController {
 	@Autowired
 	private EgovMessageSource messageSource;
 	
-	@RequestMapping(value = "/ezOrgan/getSIPUriList.do")
-	public String getSIPUriList(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request, Model model) throws Exception{
-		loginVO = commonUtil.userInfo(loginCookie);
-		String cnList = request.getParameter("cnList");
-        String emailList = request.getParameter("emailList");
-        String strRet = ezOrganService.getSIPUriList(cnList, emailList);
-        
-        model.addAttribute("strRet",strRet);
-        
-		return "json";
-	}
-	
+	/**
+	 * 조직도 부서 트리 정보 호출 함수
+	 */
 	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -62,6 +63,9 @@ public class EzOrganController {
 		return deptInfo;
 	}
 	
+	/**
+	 * 조직도 부서 서브트리 정보 호출 함수
+	 */
 	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptSubTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -76,6 +80,9 @@ public class EzOrganController {
 		return deptInfo;
 	}
 	
+	/**
+	 * 조직도 부서 FULL PATH 정보 호출 함수
+	 */
 	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String getDeptFullPath(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -86,6 +93,9 @@ public class EzOrganController {
 		return result;
 	}
 	
+	/**
+	 * 조직도 부서 사원목록 호출 함수
+	 */
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptMemberList(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -154,6 +164,9 @@ public class EzOrganController {
 		return result;
 	}
 	
+	/**
+	 * 조직도 부서 및 사원목록 검색 함수
+	 */
 	@RequestMapping(value = "/ezOrgan/getSearchList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSearchList(HttpServletRequest request, HttpServletResponse response) throws Exception{
