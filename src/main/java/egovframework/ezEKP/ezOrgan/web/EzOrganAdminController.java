@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -165,6 +164,30 @@ public class EzOrganAdminController {
 			}
 		}
 		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/selectDept.do")	
+	public String selectDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		String companyID = request.getParameter("companyID");
+		
+		if(companyID == null || companyID.equals("")){
+			companyID = "Top";
+		}
+		
+		model.addAttribute("companyID", companyID);
+		
+		return "admin/ezOrgan/selectDept";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/movDept.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String movDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		String parentCn = request.getParameter("parentCn");
+		String cn = request.getParameter("cn");
+		
+		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group");
+
 		return result;
 	}
 	

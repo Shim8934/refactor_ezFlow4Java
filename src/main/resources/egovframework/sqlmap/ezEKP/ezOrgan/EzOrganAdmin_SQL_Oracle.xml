@@ -19,6 +19,10 @@
 		{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
 	</procedure>
 	
+	<procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
+	</procedure>
+	
 	<procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>

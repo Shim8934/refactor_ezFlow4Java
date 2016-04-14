@@ -76,6 +76,16 @@ public class EzOrganController {
 		return deptInfo;
 	}
 	
+	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String getDeptFullPath(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String cn = request.getParameter("cn");
+		
+		String result = ezOrganService.getDeptFullPath(cn);
+		
+		return result;
+	}
+	
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptMemberList(HttpServletRequest request, HttpServletResponse response) throws Exception{

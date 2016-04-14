@@ -5,9 +5,11 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 
 public interface EzOrganAdminService {
 	
+	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
+	
 	public String getPropertyList(String cn, String proplist, String string) throws Exception;
 	
-	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
+	public String moveEntry(String parentCn, String cn, String type) throws Exception;	
 
 	public int companyCheck(String cn) throws Exception;
 	
@@ -20,6 +22,8 @@ public interface EzOrganAdminService {
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception;
 
 	public void deleteDBData(String cn, String pClass) throws Exception;
+	
+	public void moveDBData(String parentCn, String cn, String type) throws Exception;
 
 	 
 }

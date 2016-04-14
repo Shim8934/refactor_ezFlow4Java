@@ -69,6 +69,30 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
+	public String moveEntry(String parentCn, String cn, String type) throws Exception {
+		String result = "";
+		
+		if(parentCn.equals(cn)){
+			result = "SAME";
+		}else{
+			moveDBData(parentCn, cn, type);
+			result = "OK";
+		}
+		
+		return result;
+	}
+	
+	public void moveDBData(String parentCn, String cn, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PARENTCN", parentCn);
+		map.put("v_CN", cn);
+		map.put("v_CLASS", type);
+		
+		ezOrganAdminDao.moveDBData(map);
+	}
+
+	@Override
 	public int companyCheck(String cn) throws Exception {
 		return ezOrganAdminDao.companyCheck(cn);
 	}

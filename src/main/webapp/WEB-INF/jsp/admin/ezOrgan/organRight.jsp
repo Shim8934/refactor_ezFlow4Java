@@ -16,7 +16,8 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
 			var topid = "${topid}";
-		    var useOCS = "${useOCS}";		    
+		    var useOCS = "${useOCS}";
+		    var g_xmlHTTP = null;			
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -358,9 +359,293 @@
 					}
 				});				
 			}
+		    
+		    function mov_dept(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (treeNode.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.t17' />");
+					return;
+				}
+				if (treeNode.GetNodeData("CN") == treeNode.GetNodeData("EXTENSIONATTRIBUTE2")){
+					alert("<spring:message code='ezOrgan.t18' />");
+					return;
+				}
+			    
+			    //2016-04-12 장진혁과장 -- cross 팝업만 이용하도록 수정 및 소스추가
+			    document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+			    document.getElementById("selectedValue").value = treeNode.GetNodeData("VALUE");
+			    
+		        selectdept_cross_dialogArguments = new Array();
+		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
+		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
+		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
+		        
+		        try { OpenWin.focus(); } catch (e) { }			    
+			}
+		    
+		    function GetDeptFullPath(DeptID, topid){
+		    	var data;
+		    	
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getDeptFullPath.do",
+					async : false,
+					data : {cn : DeptID},
+					success : function(result){
+						data = result						
+					}
+				});
+				
+				return data;				
+			}
+
+		    function mov_dept_Complete(rtnValue) {
+		    	var selectedCN = document.getElementById("selectedCN").value;
+		    	var selectedValue = document.getElementById("selectedValue").value;
+		    	
+		        if (typeof (rtnValue) != "undefined") {
+		        	//2016-04-12 장진혁과장 --동일한 부서로 이동불가
+		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+		                alert("<spring:message code='ezOrgan.t21' />");
+		                return;
+		            }
+					//2016-04-12 장진혁과장 --AD 체크부분 주석
+ 		            /* if (rtnValue.toLowerCase() == GetAdInfos(selectedCN, "EXTENSIONATTRIBUTE1").toLowerCase()) {
+		                alert("<spring:message code='ezOrgan.t20' />");
+		                return;
+		            } */
+
+		            //2016-04-12 장진혁과장 --자신의 하위 부서로 이동불가
+		            var arrDeptPath = GetDeptFullPath(rtnValue, topid).split(",");
+		            for (var iCnt = 0 ; iCnt < arrDeptPath.length ; iCnt++) {
+		                if (arrDeptPath[iCnt] == selectedCN) {
+		                    alert("<spring:message code='ezOrgan.t23' />");
+		                    return;
+		                }
+		            }
+		            if (!confirm("'" + selectedValue + "'<spring:message code='ezOrgan.t24' />")){
+		                return;
+		            }
+		           		            
+		            $.ajax({
+		            	type : "POST",
+		            	dataType : "html",
+		            	url : "/admin/ezOrgan/movDept.do",
+		            	async : false,
+		            	data : {parentCn : rtnValue, cn : selectedCN},
+		            	success : function(result){
+		            		if(result == "SAME"){
+		            			alert("<spring:message code='ezOrgan.t21' />");
+		            		}else{
+		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
+				                getDeptFullTree(selectedCN);
+		            		}
+		            	},
+		            	error : function(){
+		            		alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
+		            	}
+		            });
+		        }
+		    }
+		    
+		    function search_press(){
+				if (window.event.keyCode == "13"){
+					search_click();
+				}
+			}
+
+			function deptsearch_press(){			
+				if (window.event.keyCode == "13"){
+					deptsearch_click();
+				}
+			}
+			
+		    var rgParams = new Array();
+		    var checkname2_cross_dialogArguments = new Array();
+			function deptsearch_click(){
+				if (document.getElementById("deptkeyword").value == ""){
+					alert("<spring:message code='ezOrgan.t56' />");
+				    document.getElementById("deptkeyword").focus();
+					return;
+				}
+				
+			    $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : false,
+		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	success : function(result){	
+		        		xmlDOM = result;
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		        	},
+		        	error : function(error){
+		        		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
+		        		xmlDOM = null;
+		        	}
+		        });		        	
+				
+			    var ModalCheck = false;
+				if (adCount == 0){
+					alert("<spring:message code='ezOrgan.t61' />");
+					return;
+				}else if (adCount == 1){
+				    g_xmlHTTP = createXMLHttpRequest();
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+					g_xmlHTTP.send(strQuery);					 
+				}else{
+					rgParams["addrBook"] = xmlDOM;
+					rgParams["deptid"] = "";
+					
+					if (CrossYN()) {
+					    ModalCheck = true;
+					    checkname2_cross_dialogArguments[0] = rgParams;
+					    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+					    var OpenWin = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 340));					    
+					    try { OpenWin.focus(); } catch (e) { }
+					}else{
+					    window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:340px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 340));
+
+					    if (rgParams["deptid"] != "") {
+					        g_xmlHTTP = createXMLHttpRequest();
+					        // 20110412 사용자 추가시 필요 정보 추가처리.
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+					        g_xmlHTTP.send(strQuery);
+					    }
+					}
+				}
+			    if(!ModalCheck){
+			        document.getElementById("deptkeyword").value = "";
+			    }
+			}
+		    function deptsearch_click_Complete() {
+		        if (rgParams["deptid"] != "") {
+		            g_xmlHTTP = createXMLHttpRequest();
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }
+		        document.getElementById("deptkeyword").value = "";
+		    }
+		    function search_click(){
+				if (keyword.value == ""){
+					alert("<spring:message code='ezOrgan.t56' />");
+					keyword.focus();
+					return;
+				}
+			    document.getElementById("listOpt1").checked = true;
+			    Change_List();
+			    				
+				$.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",		        	
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
+		        	success : function(result){
+		        		var listview = new ListView();
+				        listview.LoadFromID("lvUserList");
+						
+				        var headerData = createXmlDom();
+				        if (listOpt1.checked == true)
+				            headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+				        else
+				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
+
+				        if (CrossYN()) {
+				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            var Node = headerData.importNode(xmlRtn, true);
+				            headerData.documentElement.appendChild(Node);
+				        }else{
+				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            headerData.documentElement.appendChild(xmlRtn);
+				        }
+		                document.getElementById("OrganListView").innerHTML = "";
+
+				        var pUserList = new ListView();
+				        pUserList.SetID("lvUserList");
+				        pUserList.SetRowOnDblClick("info_user");
+				        pUserList.SetSelectFlag(false);
+				        pUserList.SetHeightFree(true);
+				        pUserList.DataSource(headerData);
+				        pUserList.DataBind("OrganListView");		
+					},
+					error : function(error){
+						alert("<spring:message code='ezOrgan.t59' />" + error);
+					}
+		        });				
+				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
+				//keyword.value = "";
+			}
+			
+			function Change_List(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+		        if (listOpt1.checked == true) {
+		            usermenu1.disabled = false;
+		            usermenu2.disabled = false;
+		            usermenu3.disabled = false;
+		            usermenu4.disabled = false;
+		            usermenu5.disabled = false;
+		            usermenu6.disabled = false;
+		            usermenu7.disabled = false;
+		            usermenu8.disabled = false;
+		            try {
+		                usermenu9.disabled = false;
+		            } catch (e) { }
+		            usermenu10.disabled = false;
+		            //usermenu13.disabled = false;
+		            userRetire.disabled = false;
+		            if(useOCS == "YES"){
+		                usermenusipuri.disabled = false;
+		            }
+		        }else{
+		            usermenu1.disabled = true;
+		            usermenu2.disabled = true;
+		            usermenu3.disabled = true;
+		            usermenu4.disabled = true;
+		            usermenu5.disabled = true;
+		            usermenu6.disabled = true;
+		            usermenu7.disabled = true;
+		            usermenu8.disabled = true;
+		            
+		            try {
+		                usermenu9.disabled = false;
+		            } catch (e) { }
+		            usermenu10.disabled = true;
+		            //usermenu13.disabled = true;
+		            userRetire.disabled = true;
+		            
+		            if (useOCS == "YES"){
+		                usermenusipuri.disabled = true;
+		            }
+		        }
+		        if (TreeView.selectedIndex != -1){
+		            displayUserList(treeNode.GetNodeData("CN"));
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
+		<input type="hidden" name="selectedCN" id="selectedCN" />
+		<input type="hidden" name="selectedValue" id="selectedValue" />
+		
 		<xml id="listviewheader1" style="display:none">
 			<LISTVIEWDATA>
 				<HEADERS>

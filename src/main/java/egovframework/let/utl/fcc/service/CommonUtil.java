@@ -194,9 +194,13 @@ public class CommonUtil {
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
 		        field.setAccessible(true);
-		        
+				String data = (String) field.get(vo);
+
+				if(data == null || data.equals(null) || data.equals("null")){
+					data = "";
+				}				
 		        stb.append("<" + field.getName().toUpperCase() + ">");
-		        stb.append(field.get(vo));
+		        stb.append(data);
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
 			stb.append("</ROW>");
