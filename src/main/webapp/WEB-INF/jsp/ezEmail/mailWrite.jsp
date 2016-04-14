@@ -9,6 +9,7 @@
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
     <script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
     <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
@@ -220,7 +221,7 @@
         var g_filelist = "";
         if ((g_bDirty || g_originalHTML != message.GetEditorContent() || g_filelist != "") && g_saveHttp == null) {
             mail_message_cross_dialogArguments[1] = window_close_Complete;
-            var pUrl = "mail_message_cross.aspx?CAPTION=" + escape("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + escape("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + escape("<spring:message code='ezEmail.t671' />");
+            var pUrl = "mail_message_cross.aspx?CAPTION=" + encodeURI("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURI("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURI("<spring:message code='ezEmail.t671' />");
             DivPopUpShow(330, 205, pUrl);
         }
         window_close_Complete("");
@@ -610,13 +611,13 @@
                 big_yn = SelectSingleNodeValue(filelist[i], "BIG");
                 size = SelectSingleNodeValue(filelist[i], "SIZE");
                 attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
                 if (big_yn == "Y") {
                     bigtrue = bigtrue + 1;
-                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + escape(path) + "&filedate=" + escape(attid.split('\\')[0]);
+                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('\\')[0]);
                 }
                 else {
-                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
                 }
                 objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
                 createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);

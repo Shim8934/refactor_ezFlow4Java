@@ -230,7 +230,7 @@
         function folder_manager_after(RtnVal) {
             if (RtnVal) {
                 var href = PostTreeView.getvalue(1, "href");
-                var url = "/myoffice/ezEmail/mail_list_cross.aspx?dispname=" + escape(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
+                var url = "/myoffice/ezEmail/mail_list_cross.aspx?dispname=" + encodeURI(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
                 PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
                 PostTreeView.update();
                 if (PostTreeView.selectedIndex() == -1) {
@@ -312,9 +312,9 @@
             var path = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
             var OpenWin;
             if (!CrossYN())
-                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted.aspx?name=" + escape(name) + "&path=" + escape(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
+                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted.aspx?name=" + encodeURI(name) + "&path=" + encodeURI(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
             else
-                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted_cross.aspx?name=" + escape(name) + "&path=" + escape(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
+                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted_cross.aspx?name=" + encodeURI(name) + "&path=" + encodeURI(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
             try { OpenWin.focus(); } catch (e) { }
         }
         function spam_mail() {
@@ -410,7 +410,7 @@
         }
         function selectnode_address() {
             var nodeIdx = AddressTreeView.selectedIndex();
-            var url = "/myoffice/ezAddress/address_mainlist.aspx?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&ownerid=" + escape(AddressTreeView.getvalue(nodeIdx, "ownerid")) + "&type=" + escape(AddressTreeView.getvalue(nodeIdx, "type"));
+            var url = "/myoffice/ezAddress/address_mainlist.aspx?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&ownerid=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "ownerid")) + "&type=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "type"));
             window.open(url, "right");
         }
         var address_foldermanage_dialogArguments = new Array();

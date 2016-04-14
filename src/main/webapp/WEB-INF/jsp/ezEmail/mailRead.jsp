@@ -159,7 +159,7 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	
 	function deliver()
 	{
-	    var url = document.location.protocol+"//" + document.location.hostname + "/myoffice/ezEmail/remote/delivershow.aspx?Mode=new&messageid="+ escape(messageid) + "&mailsender="+ escape(g_fromEmail);	
+	    var url = document.location.protocol+"//" + document.location.hostname + "/myoffice/ezEmail/remote/delivershow.aspx?Mode=new&messageid="+ encodeURI(messageid) + "&mailsender="+ encodeURI(g_fromEmail);	
 	    var feature = "status:no;dialogWidth:780px;dialogHeight:290px;help:no;scroll:no;edge:sunken";
 	    feature = feature + GetShowModalPosition(780, 290);
 	    window.showModalDialog(url, "", feature);
@@ -201,7 +201,7 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	{
 	    try 
         {                 	 
-            window.open("/myoffice/ezPortal/SSO/SSO_Link.aspx?TYPE=ITSMAPPDOC&DOCTITLE=" + escape(g_itsmtitle) + "&EMAIL=" + escape(ITSMEmail) + "&NAME=" + escape(ITSMName) + "&DEPT=", '', '');
+            window.open("/myoffice/ezPortal/SSO/SSO_Link.aspx?TYPE=ITSMAPPDOC&DOCTITLE=" + encodeURI(g_itsmtitle) + "&EMAIL=" + encodeURI(ITSMEmail) + "&NAME=" + encodeURI(ITSMName) + "&DEPT=", '', '');
         } 
         catch(e) {}
 	}
