@@ -65,25 +65,45 @@
 
 						switch (pflag) {
 							case "Response":
-								rv = Chk_Response();
+								if(Chk_Response() == true){
+										
+								}
 								break;
 							case "Result":
-								rv = Chk_Result();
+								if(Chk_Result()){
+									 var szUrl = "/ezQuestion/qstResult.do?"+receve+"&itemNo=" + szSelectedItemNo;
+							         window.location.href = szUrl	;
+								}
 								break;
 							case "InfoModify":
-								rv = Chk_InfoModify();
+								if(Chk_InfoModify()){
+									var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&itemNo=" + szSelectedItemNo;
+						            window.location.href = szUrl;
+								}
 								break;
 							case "Delete":
-								rv = Chk_Delete();
+								if(Chk_Delete()){
+									var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
+						            try{
+						            	Qst_Delete_ItemMsg.focus(); 
+						            }catch (e){
+						            }
+								}
 								break;
 							case "Analysis":
-								rv = Chk_Analysis();
+								if(Chk_Analysis() == true){
+									var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
+							        window.location.href = szUrl;
+								};
 								break;
 							case "Save":
 								rv = Chk_Save();
 								break;
 							case "Reuse":
-								rv = Chk_Reuse();
+								if(Chk_Reuse() == true){
+									var szUrl = "/ezQuestion/qstStep1ReUse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
+						            window.location.href = szUrl;	
+								}
 								break;
 						}
 						return rv;
@@ -248,19 +268,13 @@
 		    
  			function menu_Result(){
 		        if(menu_Checking()){
-		            if(checkUserPollStatus(szSelectedItemNo, "Result") == false)
-		            	return;
-		            var szUrl = "/ezQuestion/qstResult.do?"+receve+"&itemNo=" + szSelectedItemNo;
-		            window.location.href = szUrl;
+		            checkUserPollStatus(szSelectedItemNo, "Result");
 		        }
 		    }
 		    
 		    function menu_InfoModify(){
 		         if(menu_Checking()){
-		            if(checkUserPollStatus(szSelectedItemNo, "InfoModify") == false)
-		            	return;
-		            var szUrl = "/ezQuestion/qstChangePermission.do?" + receve + "&itemNo=" + szSelectedItemNo;
-		            window.location.href = szUrl;
+		            checkUserPollStatus(szSelectedItemNo, "InfoModify");
 		        } 
 		    }
 		    
@@ -309,19 +323,14 @@
 		            return;
 		        }
 		        if(szCheckCnt == 1){
-		            if(checkUserPollStatus(p_SelectedItemNo, "Delete") == false)
-		            	return;
-		            var rgParams = new Array();
+		        	var rgParams = new Array();
 		            rgParams["TITLE"] = p_SelectedTitle;
 		            rgParams["WRITER"] = p_SelectedWriter;
 		            qst_delete_itemmsg_dialogArguments[0] = rgParams;
 		            qst_delete_itemmsg_dialogArguments[1] = menu_Delete_Complete;
+		            
+		            checkUserPollStatus(p_SelectedItemNo, "Delete");
 
-		            var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
-		            try{
-		            	Qst_Delete_ItemMsg.focus(); 
-		            }catch (e){
-		            }
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
@@ -521,10 +530,7 @@
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
-		            if (checkUserPollStatus(p_SelectedItemNo, "Reuse") == false)
-		            	return;
-		            var szUrl = "/ezQuestion/qstStep1ReUse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
-		            window.location.href = szUrl;
+		            checkUserPollStatus(p_SelectedItemNo, "Reuse")
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
