@@ -910,7 +910,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
-			
+System.out.println("pQstTitle:"+pQstTitle);			
 			//첨부
 			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
@@ -3213,7 +3213,7 @@ System.out.println(xmlDoc);
 System.out.println("strQuestion:"+strQuestion);
 		//char ch = (int)(13);
 		//strQuestion = strQuestion.replace(";;", String.valueOf(ch));
-		arrQuestion = strQuestion.trim().split("\\;");
+		arrQuestion = strQuestion.trim().split("\\;\\;");
 		
 		String[] arrLine;
 		String strResult = "";
@@ -3227,7 +3227,7 @@ System.out.println("strQuestion:"+strQuestion);
 		if(arrQuestion.length > 0) {
 			str.append("<QUESTION>");
 			for(int j=0; j<arrQuestion.length; j++) {
-				arrLine = arrQuestion[j].trim().split("\\|");
+				arrLine = arrQuestion[j].trim().split("\\|\\|");
 				
 				if(arrLine.length < 2) {
 					break;
@@ -3236,15 +3236,15 @@ System.out.println("strQuestion:"+strQuestion);
 					strResult = strResult.replace("| " + arrLine[1], "");
 					strResult = strResult + "| " + arrLine[1] + ";" + arrLine[5];
 					
-
 				}
 			}
-System.out.println("temp:"+temp);
+
 			temp = strResult.trim();
+System.out.println("temp:"+temp);
 			str.append(temp);
 			str.append("</QUESTION>");
 			for(int i=0; i<arrQuestion.length; i++) {
-				arrLine = arrQuestion[i].trim().split("\\|");
+				arrLine = arrQuestion[i].trim().split("\\|\\|");
 
 				if(arrLine.length < 2) {
 					break;
@@ -3341,28 +3341,26 @@ System.out.println("itemId:"+itemId);
 		str.append("<DATA>");
 		for(int i=0; i<qstTempSaveVO.size(); i++) {
 			str.append(qstTempSaveVO.get(i).getQuestionNo());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getQuesContent());
-System.out.println(qstTempSaveVO.get(i).getQuesContent());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getAnswerType());
-			str.append("|");
+			str.append("||");
 			str.append("0");
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getMultiSelect());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getQuesSN());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getQuestionNo());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getAnswerNo());
-			str.append("|");
+			str.append("||");
 			str.append(qstTempSaveVO.get(i).getAnswerContent());
-			str.append(";");
+			str.append(";;");
 		}
 		str.append("</DATA>");
 		
-System.out.println(str.toString());				
 		return str.toString();
 	}
 	
