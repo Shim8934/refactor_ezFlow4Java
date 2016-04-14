@@ -67,6 +67,18 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
+/** 
+ * @Description [Controller] 전자설문
+ * @author 오픈솔루션팀 이효진, 지정석
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    이효진, 지정석    신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzQuestionController extends EgovFileMngUtil {
 	@Autowired
@@ -95,7 +107,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-
+	
+	/**
+	 * 전자설문 설문리스트 메인 화면 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -179,6 +194,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstList";
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문 정보 호출, 그에 따른 화면 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
@@ -304,6 +322,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 	}
 	
+	/**
+	 * 전자설문 설문리스트 유저권한 정보 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/qstCallUsersPollStatus.do", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> qstCallUsersPollStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
@@ -388,7 +409,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return map;
 	}
 	
-
+	/**
+	 * 전자설문 설문리스트 진행중인 설문화면 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
@@ -538,6 +561,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstResponse";
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문내용 HTML Code 생성 실행 함수
+	 */
 	public void dataSubProcess(int brdId, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
 		Node snewRow = doc.createElement("ITEM");
         int iCount = 0;
@@ -643,6 +669,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strResult;
 	}
 	
+	/**
+	 * 전자설문 설문리스트 첨부파일 목록 HTML Code 생성 실행 함수
+	 */
 	@SuppressWarnings("unused")
 	public String getAttachList(String strQuestionNo, String strAnswer,int brdId, int itemNo) throws Exception{
 		StringBuilder strResult = new StringBuilder();
@@ -699,6 +728,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         return strResult.toString();
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문조사 등록 실행 , 설문리스트 메인 화면 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
