@@ -729,7 +729,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자설문 설문리스트 설문조사 등록 실행 , 설문리스트 메인 화면 호출 함수
+	 * 전자설문 설문리스트 설문조사 하나의 글에 대한 등록 실행 , 설문리스트 메인 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
@@ -852,6 +852,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		response.getWriter().flush();
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문조사 하나의 질문에 대한 등록 실행 , 설문리스트 메인 화면 호출 함수
+	 */
 	public void subDataProcess(int questionNo, String quesContent, String multiSelect, int answerType, int brdId, int itemNo,HttpServletRequest request, QstResponseVO qstResponseVO, HttpServletResponse response) throws Exception {
 		String tmp = "", receve ="";
         int ansRCnt = 0, tempTableAnswerCnt = 0;
@@ -889,7 +892,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 						qstResponseVO.setResponseNo(Integer.parseInt(responseNo));
 					}
 				}
-
 			}else{
 				tmp = "rdo" + questionNo;
 				String SingleQ = request.getParameter(tmp);
@@ -937,6 +939,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         response.getWriter().flush();
 	}
 
+	/**
+	 * 전자설문 설문리스트 결과보기 화면 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResult.do")
 	public String qstResult(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
@@ -1039,6 +1044,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("resCnt", resCnt);
 		return "/ezQuestion/qstResult";
 	}
+	
+	/**
+	 * 전자설문 설문리스트 설문에 대한 응답 정도 호출 함수
+	 */
 	public List<QstVO> dataProcessMainData(String brdId, String itemNo) throws Exception{
 		/** EZSP_GETQUESTIONFORRESPONSE*/
 		QstVO qstVO = new QstVO();
@@ -1049,6 +1058,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return qstVOList;
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문 타입별 HTML코드 생성 호출 함수
+	 */
 	public List<QstVO> dataProcess(int brdId, int itemNo, boolean bPublic,List<QstVO> qstVOList, int percent) throws Exception{
 		int iCount=0;
 		String strData = "";
@@ -1113,6 +1125,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return iResult;	
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문 타입1 HTML코드 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	public String dataProcessType1(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		int iAnsCount = 0, responseCnt = 0;
@@ -1165,6 +1180,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData;
 	}
 
+	/**
+	 * 전자설문 설문리스트 설문 타입2 HTML코드 생성 호출 함수
+	 */
 	public String dataProcessType2(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount) throws Exception{
 		String strData = "";
 		strData += "<table class=\"question\"><tr>";
@@ -1180,6 +1198,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData;
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문 타입3 HTML코드 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	public String dataProcessType3(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
@@ -1247,6 +1268,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData;
 	}
 	
+	/**
+	 * 전자설문 설문리스트 설문 타입4 HTML코드 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	public String dataProcessType4(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
@@ -1291,6 +1315,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strData; 
 	}
 
+	/**
+	 * 전자설문 설문리스트 설문 타입5 HTML코드 생성 호출 함수
+	 */
 	public String dataProcessType5(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
 		String strData = "";
 		
@@ -1954,6 +1981,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 	}
 	
+	/**
+	 * 전자설문 설문리스트 첨부파일 출력 화면 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
 	public String attachView(HttpServletRequest request,ModelMap model) throws Exception{
@@ -2052,6 +2082,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         }
 	}
 
+	/**
+	 * 전자설문 설문리스트 결과보기 주관식일 경우 답변보기 화면 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception{
@@ -2249,6 +2282,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstSearch";
 	}
 	
+	/**
+	 * 전자설문 설문리스트 결과보기 응답자목록 화면 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseList.do")
 	public String qstResponseList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -2336,6 +2372,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstResponseList";
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 화면 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/qstAnalysis.do")
 	public String qstAnalysis(HttpServletRequest request, ModelMap model) throws Exception{
 		String pBrdID = "", pItemNo = "", pCurrPage = "", pAnswerType="";
@@ -2380,6 +2419,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return "/ezQuestion/qstAnalysis";
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 분류항목 전체 일때 HTML Code 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisAll.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -2585,6 +2627,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 분류항목 부서 일때 HTML Code 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisDept4.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -2894,7 +2939,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         return strXML;
 	}
 
-	
+	/**
+	 * 전자설문 설문리스트 상세분석 분류항목 직위 일때 HTML Code 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisPos2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -3056,6 +3103,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 분류항목 직급 일때 HTML Code 생성 호출 함수
+	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisJikgub2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -3217,6 +3267,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return commonUtil.convertDocumentToString(resultXML);
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 분석결과 저장 실행 함수
+	 */
 	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do")
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String hidRType2 = "";
@@ -3299,6 +3352,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		workbook.write(response.getOutputStream());
 	}
 	
+	/**
+	 * 전자설문 설문리스트 상세분석 전체결과 저장 실행 함수
+	 */
 	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
 	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -3695,6 +3751,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         return resultStr;
     }
 	
+	/**
+	 * 전자설문 설문리스트 권한없을 시 에러화면 호출 함수
+	 */
 	@RequestMapping(value="/ezQuestion/qstMsgAdminConfirm.do")
 	public String qstMsgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
@@ -3704,7 +3763,6 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&pollEndDate=" + request.getParameter("pollEndDate") +
                 "&currPage=" + request.getParameter("currPage")+
                 "&itemNo=" + request.getParameter("itemNo");
-		
 		
 		model.addAttribute("brdId",request.getParameter("brdId"));
 		model.addAttribute("title",new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8"));
