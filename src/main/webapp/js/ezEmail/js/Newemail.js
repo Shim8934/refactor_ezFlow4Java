@@ -174,13 +174,13 @@ function ReSend(pURL, pEmail) {
     var pLeft = (pwidth - 890) / 2;
     var pURI;
     if (CrossYN() || pNoneActiveX == "YES") {        
-        pURI = "mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + escape(pEmail);
+        pURI = "mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail);
     }
     else {
         if (pUse_Editor == "")
-            pURI = "mail_write.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + escape(pEmail);
+            pURI = "mail_write.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail);
         else
-            pURI = "mail_write_IE.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + escape(pEmail);
+            pURI = "mail_write_IE.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail);
     }    
     var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
     newwin.focus();
@@ -839,7 +839,7 @@ function CCDetail_view(obj) {
 function show_personinfo(email) {
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo.aspx?email=" + escape(email), "", feature);
+    window.open("/myoffice/common/ShowPersonInfo.aspx?email=" + encodeURI(email), "", feature);
 }
 function MailReadOpen() {
     var pItemID;
@@ -1169,7 +1169,7 @@ function PC_Eml_FileDownload() {
     if (PcSaveArrayList[suffix].getAttribute("_href") != null) {
         var pItemID = PcSaveArrayList[suffix].getAttribute("_href");
         var pItemSubject = PcSaveArrayList[suffix].getAttribute("_subject") + ".eml";
-        var fullpath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_readattach.aspx?url=" + encodeURIComponent(pItemID) + "&filename=" + escape(pItemSubject);
+        var fullpath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_readattach.aspx?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURI(pItemSubject);
         location.href = fullpath;
         suffix++;
         PCMultiDownload();
