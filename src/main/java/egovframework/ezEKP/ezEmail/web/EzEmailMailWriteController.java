@@ -5,8 +5,16 @@ import java.net.URLDecoder;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.mail.Address;
+import javax.mail.Message.RecipientType;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +26,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+
+/** 
+ * @Description [Controller] 메일 쓰기
+ * @author 오픈솔루션팀 이효민
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    이효민    신규작성
+ *
+ * @see
+ */
 
 @Controller
 public class EzEmailMailWriteController {
@@ -42,6 +70,12 @@ public class EzEmailMailWriteController {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	/**
+	 * 메일 쓰기화면 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/mailWrite.do")
 	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		String to = "";
@@ -107,6 +141,7 @@ public class EzEmailMailWriteController {
 			userId = userIdnPw.get(0);
 		}
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
+		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		useEditor = config.getProperty("config.EDITOR");
 		System.out.println("getRequestURI : "+request.getRequestURI());
 		System.out.println("getRequestURL : "+request.getRequestURL().substring(0, request.getRequestURI().length()));
@@ -203,16 +238,16 @@ public class EzEmailMailWriteController {
 //		comd.Dispose();
 //		comd = null;
 //
-//		XmlDocument xmldom = new XmlDocument();
-//		xmldom = GetXmlReaderString(infoXML);
-//		if (xmldom.InnerText == "")
+//		XmlDocument xmlDoc = new XmlDocument();
+//		xmlDoc = GetXmlReaderString(infoXML);
+//		if (xmlDoc.InnerText == "")
 		pAutoSaveTime = "0";
 //		else
-//			pAutoSaveTime = xmldom.SelectSingleNode("DATA/KEEPDELETELENGTH").InnerText.Trim();
+//			pAutoSaveTime = xmlDoc.SelectSingleNode("DATA/KEEPDELETELENGTH").InnerText.Trim();
 
-//		string _PmailSenderNM = xmldom.SelectNodes("DATA/MAILSENDERNM").Count > 0 ?
-//				string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ?
-//						userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText : userinfo.DisplayName2;
+//		string _PmailSenderNM = xmlDoc.SelectNodes("DATA/MAILSENDERNM").Count > 0 ?
+//				string.IsNullOrEmpty(xmlDoc.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ?
+//						userinfo.DisplayName2 : xmlDoc.SelectSingleNode("DATA/MAILSENDERNM").InnerText : userinfo.DisplayName2;
 //		string[] DivStrstr = new string[] { "|!-@-!|" };
 //		string[] SenderList = _PmailSenderNM.Split(DivStrstr, StringSplitOptions.RemoveEmptyEntries);
 		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032") + "</option>";
@@ -250,14 +285,14 @@ public class EzEmailMailWriteController {
         	to = msgto;
             String resultXML = "";
 //            resultXML = GetCommentDB(userinfo.UserID, "A");
-//            XmlDocument xmldom = new XmlDocument();
-//            xmldom = GetXmlReaderString(ResultXML);
-//            if (xmldom.SelectSingleNode("DATA").ChildNodes.Count > 0)
+//            XmlDocument xmlDoc = new XmlDocument();
+//            xmlDoc = GetXmlReaderString(ResultXML);
+//            if (xmlDoc.SelectSingleNode("DATA").ChildNodes.Count > 0)
 //            {
-//                mailSign1 = HttpUtility.HtmlDecode(xmldom.SelectSingleNode("DATA/ROW/CONTENT1").InnerXml);
-//                mailSign2 = HttpUtility.HtmlDecode(xmldom.SelectSingleNode("DATA/ROW/CONTENT2").InnerXml);
-//                mailSign3 = HttpUtility.HtmlDecode(xmldom.SelectSingleNode("DATA/ROW/CONTENT3").InnerXml);
-//                mailSignSel = xmldom.SelectSingleNode("DATA/ROW/USEFLAG").InnerText;
+//                mailSign1 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT1").InnerXml);
+//                mailSign2 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT2").InnerXml);
+//                mailSign3 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT3").InnerXml);
+//                mailSignSel = xmlDoc.SelectSingleNode("DATA/ROW/USEFLAG").InnerText;
 //
 //                mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
 //                mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
@@ -433,6 +468,9 @@ public class EzEmailMailWriteController {
 		return "ezEmail/mailWrite";
 	}
 
+	/**
+	 * 메일 CK에디터 화면 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/mailCKEditor.do")
 	public String mailCKEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -440,6 +478,9 @@ public class EzEmailMailWriteController {
 		return "ezEmail/mailCKEditor";
 	}
 
+	/**
+	 * 메일 파일첨부 화면 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/dragAndDrop.do")
 	public String dragAndDropIframe(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -447,6 +488,9 @@ public class EzEmailMailWriteController {
 		return "ezEmail/mailDragAndDrop";
 	}
 
+	/**
+	 * 메일 CK에디터 첨부파일 업로드 실행 함수
+	 */
 	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mailInterUploadXCK(MultipartHttpServletRequest request) throws Exception{
@@ -480,8 +524,7 @@ public class EzEmailMailWriteController {
 
 		if(request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")){
 			tempFolderName = request.getParameter("STATUS");
-		}
-		else{
+		} else{
 			return "NODATA";
 		}
 
@@ -540,7 +583,7 @@ public class EzEmailMailWriteController {
 
 
 
-				//하다가 말았음. mailWrite.do 다하면 여기서부터 수정ㄱㄱ
+				//todo : 수정중...
 				//FileOutputStream fos = new FileOutputStream(file1);
 				//fos.write(Base64.encodeBase64(pFileName[i].getBytes()));
 				//fos.close();
@@ -549,5 +592,605 @@ public class EzEmailMailWriteController {
 
 		return "";
 	}
+	
+	/**
+	 * 메일 전송 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		// todo : MailUserVO 만들어지면 수정(jsp단도 수정)
+		String userId = "";
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		if(userIdnPw !=null && userIdnPw.get(0) != null){
+			userId = userIdnPw.get(0);
+		}
+		//OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
+		//userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
+		
+		String pMessageID = "";
+		String rtnStatus = "";
+		
+		// sendmail_2010변환 시작
+		// request XML값 받기
+		String url = "";
+		String connUrl = "";
+		String orgUrl = "";
+		String author = "";
+		String cmd = "";
+		String mailCmd = "";
+		String eCharSet = "";
+		String eContentTransferEncoding = "";
+		String eSimpleMIME = "";
+		String eSimpleMIMEContentTransferEncoding = "";
+		String eShowDisplayName = "";
+		String from = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String importance = "";
+		String subject = "";
+		String simpleMime = "";
+		String delaySendTime = "";
+		String htmlBody = "";
+		String pSecurityMail = "";
+		String replySendTime = "";
+		String replyReadTime = "";
+		String isEachMail = "";
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Element root = xmlDoc.getDocumentElement();
+		
+		Node tempNode = null;
+		
+		if(root.getElementsByTagName("URL") != null){
+			tempNode = root.getElementsByTagName("URL").item(0);
+			if(tempNode != null){
+				url = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("ORGURL") != null){
+			tempNode = root.getElementsByTagName("ORGURL").item(0);
+			if(tempNode != null){
+				orgUrl = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("CONNURL") != null){
+			tempNode = root.getElementsByTagName("CONNURL").item(0);
+			if(tempNode != null){
+				connUrl = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("CMD") != null){
+			tempNode = root.getElementsByTagName("CMD").item(0);
+			if(tempNode != null){
+				cmd = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("MAILCMD") != null){
+			tempNode = root.getElementsByTagName("MAILCMD").item(0);
+			if(tempNode != null){
+				mailCmd = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("AUTHOR") != null){
+			tempNode = root.getElementsByTagName("AUTHOR").item(0);
+			if(tempNode != null){
+				author = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("SUBJECT") != null){
+			tempNode = root.getElementsByTagName("SUBJECT").item(0);
+			if(tempNode != null){
+				subject = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("TO") != null){
+			tempNode = root.getElementsByTagName("TO").item(0);
+			if(tempNode != null){
+				to = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("CC") != null){
+			tempNode = root.getElementsByTagName("CC").item(0);
+			if(tempNode != null){
+				cc = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("BCC") != null){
+			tempNode = root.getElementsByTagName("BCC").item(0);
+			if(tempNode != null){
+				bcc = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("TEXTBODY") != null){
+			tempNode = root.getElementsByTagName("TEXTBODY").item(0);
+			if(tempNode != null){
+				textBody = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("FROM") != null){
+			tempNode = root.getElementsByTagName("FROM").item(0);
+			if(tempNode != null){
+				from = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("IMPORTANCE") != null){
+			tempNode = root.getElementsByTagName("IMPORTANCE").item(0);
+			if(tempNode != null){
+				importance = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("SIMPLE-MIME") != null){
+			tempNode = root.getElementsByTagName("SIMPLE-MIME").item(0);
+			if(tempNode != null){
+				simpleMime = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("DELAYSENDTIME") != null){
+			tempNode = root.getElementsByTagName("DELAYSENDTIME").item(0);
+			if(tempNode != null){
+				delaySendTime = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("HTMLBODY") != null){
+			tempNode = root.getElementsByTagName("HTMLBODY").item(0);
+			if(tempNode != null){
+				htmlBody = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("SECURITYMAIL") != null){
+			tempNode = root.getElementsByTagName("SECURITYMAIL").item(0);
+			if(tempNode != null){
+				pSecurityMail = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("REPLYSENDTIME") != null){
+			tempNode = root.getElementsByTagName("REPLYSENDTIME").item(0);
+			if(tempNode != null){
+				replySendTime = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("REPLYREADTIME") != null){
+			tempNode = root.getElementsByTagName("REPLYREADTIME").item(0);
+			if(tempNode != null){
+				replyReadTime = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("ISEACHMAIL") != null){
+			tempNode = root.getElementsByTagName("ISEACHMAIL").item(0);
+			if(tempNode != null){
+				isEachMail = tempNode.getTextContent();
+			}
+		}
+		
+//		// 다국어 발송 관련 변수들
+//      string eCharSet = xmlDoc.GetElementsByTagName("CHARSET").Item(0).InnerText;
+//      string eContentTransferEncoding = xmlDoc.GetElementsByTagName("CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
+//      string eSimpleMIME = xmlDoc.GetElementsByTagName("SIMPLE-MIME").Item(0).InnerText;
+//      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
+//      string eShowDisplayName = xmlDoc.GetElementsByTagName("SHOW-DISPLAYNAME").Item(0).InnerText;
+        
+//		string newwindowid = url;
+//      string messageid; 
+//		//messageid로 메시지 있으면 가져오고 없으면 새로운 message객체 생성.
+//      EmailMessage message = apiesb.getemailmessage(esb, newwindowid, out messageid);
+//		if (cmd.Equals("SAVE") && url != "")
+//        {
+//            bool isdraftmsg = message.IsDraft;
+//            if (!isdraftmsg)
+//            {
+//                message = apiesb.getemailmessage(esb, "", out messageid);
+//            }
+//        }
+		
+		
+//		string newwindowid = url;
+//      string messageid; 
+//      EmailMessage message = apiesb.getemailmessage(esb, newwindowid, out messageid);
+//      if (cmd.Equals("SAVE") && url != "")
+//      {
+//          bool isdraftmsg = message.IsDraft;
+//          if (!isdraftmsg)
+//          {
+//              message = apiesb.getemailmessage(esb, "", out messageid);
+//          }
+//      }
+		
+		
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password);
+		MimeMessage message = sa.createMimeMessage();
+		
+		
+		// 메일 From,Recipient,CC,BCC
+		InternetAddress internetAddress = new InternetAddress();
+		String name = "";
+		String address = "";
+		
+		String pattern = "[\"\"]?([^\"\"]+)[\"\"]? <([^<>]+)>";
+		Pattern r = Pattern.compile(pattern);
+		
+		Matcher m = r.matcher(from);
+		if (m.find()) {
+			name = m.group(1);
+			address = m.group(2);
+			internetAddress.setPersonal(name, "UTF-8");
+			internetAddress.setAddress(address);
+			message.setFrom(internetAddress);
+		}
+		
+		m = r.matcher(to);
+		while (m.find()) {
+			name = m.group(1);
+			address = m.group(2);
+			internetAddress.setPersonal(name, "UTF-8");
+			internetAddress.setAddress(address);
+			message.addRecipient(RecipientType.TO, internetAddress);
+		}
+		
+		// todo : 원래의 To remove (원래의 To - 새로운 To) add (새로운 To - 원래의 To)
+//		EmailAddressComparer comparer = new EmailAddressComparer();
+//        IEnumerable<EmailAddress> removeemail = message.ToRecipients.Except<EmailAddress>(emailarr, comparer);
+//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.ToRecipients, comparer);
+//
+//        while (removeemail.Count<EmailAddress>() > 0)
+//        {
+//            message.ToRecipients.Remove(removeemail.First<EmailAddress>());
+//        }
+//        message.ToRecipients.AddRange(addemail);
 
+		m = r.matcher(cc);
+		while (m.find()) {
+			name = m.group(1);
+			address = m.group(2);
+			internetAddress.setPersonal(name, "UTF-8");
+			internetAddress.setAddress(address);
+			message.addRecipient(RecipientType.CC, internetAddress);
+		}
+		
+		// todo : 원래의 CC remove (원래의 CC - 새로운 CC) add (새로운 CC - 원래의 CC)
+//		EmailAddressComparer comparer = new EmailAddressComparer();
+//        IEnumerable<EmailAddress> removeemail = message.CcRecipients.Except<EmailAddress>(emailarr, comparer);
+//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.CcRecipients, comparer);
+//
+//        while (removeemail.Count<EmailAddress>() > 0)
+//        {
+//            message.CcRecipients.Remove(removeemail.First<EmailAddress>());
+//        }
+//        message.CcRecipients.AddRange(addemail);
+
+		m = r.matcher(bcc);
+		while (m.find()) {
+			name = m.group(1);
+			address = m.group(2);
+			internetAddress.setPersonal(name, "UTF-8");
+			internetAddress.setAddress(address);
+			message.addRecipient(RecipientType.BCC, internetAddress);
+		}
+		
+		// todo : 원래의 BCC remove (원래의 BCC - 새로운 BCC) add (새로운 BCC - 원래의 BCC)
+//		EmailAddressComparer comparer = new EmailAddressComparer();
+//        IEnumerable<EmailAddress> removeemail = message.BccRecipients.Except<EmailAddress>(emailarr, comparer);
+//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.BccRecipients, comparer);
+//
+//        while (removeemail.Count<EmailAddress>() > 0)
+//        {
+//            message.BccRecipients.Remove(removeemail.First<EmailAddress>());
+//        }
+//        message.BccRecipients.AddRange(addemail);
+		
+		
+		// 메일 제목
+		message.setSubject(subject, "UTF-8");
+		
+		// 메일 본문 및 타입
+		if (simpleMime.equals("1")) {
+            if (!cmd.toUpperCase().equals("SAVE")) {
+                if (!delaySendTime.equals(""))
+                	message.setContent(textBody, "text/plain; charset=utf-8");
+                else
+                	message.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
+            } else {
+            	message.setContent(textBody, "text/plain; charset=utf-8");
+            }
+        } else {
+            if (!cmd.toUpperCase().equals("SAVE")) {
+                if (!delaySendTime.equals(""))
+                	message.setContent(htmlBody, "text/html; charset=utf-8");
+                else
+                	message.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
+            } else {
+            	message.setContent(htmlBody, "text/html; charset=utf-8");
+            }
+
+        }
+		
+		// 보안메일
+		if (pSecurityMail.equals("3")) {
+			message.setHeader("Sensitivity", "company-confidential");
+        }
+		
+		// 메일 중요도
+		switch (importance) {
+            case "0": message.setHeader("X-Priority", "5");
+                break;
+            case "1": message.setHeader("X-Priority", "3");
+                break;
+            case "2": message.setHeader("X-Priority", "1");
+                break;
+            default: message.setHeader("X-Priority", "3");
+                break;
+        }
+		
+		// 추적(배달되면 알림)
+        if (replySendTime.equals("1"))
+            message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+        else
+            message.removeHeader("Return-Receipt-To");
+
+        // 추적(수신확인)
+        if (replyReadTime.equals("1"))
+        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+        else
+        	message.removeHeader("Disposition-Notification-To");
+
+        
+//        // 첨부및 이미지첨부 처리
+//        Dictionary<int, KeyValuePair<string, string>> images = new Dictionary<int, KeyValuePair<string, string>>();
+//        XmlNodeList imagenamenodes = xmldom.SelectNodes("DATA/IMAGENAME");
+//
+//        if (imagenamenodes != null)
+//        {
+//            for (int i = 0; i < imagenamenodes.Count; i++)
+//            {
+//                if (imagenamenodes.Item(i).InnerText != "")
+//                {
+//                    images.Add(i, new KeyValuePair<string, string>(imagenamenodes.Item(i).InnerText, null));
+//                    allattlist.Add(imagenamenodes.Item(i).InnerText);
+//                }
+//            }
+//        }
+//
+//        XmlNodeList imagecontentnodes = xmldom.SelectNodes("DATA/IMAGECONTENT");
+//        if (imagecontentnodes != null)
+//        {
+//            for (int i = 0; i < imagecontentnodes.Count; i++)
+//            {
+//                if (images.ContainsKey(i))
+//                {
+//                    string key = images[i].Key;
+//                    images[i] = new KeyValuePair<string, string>(key, imagecontentnodes.Item(i).InnerText);
+//                }
+//            }
+//        }
+//
+//        // 20110907 이미 존재하면 추가 생략
+//        foreach (var item in images.Values)
+//        {
+//            string fatmp = item.Key;
+//            // cid가 GUID 라면 //<![CDATA[14DD26F9-E508-40C3-8953-552F741067FA]]>
+//            bool isguid = false;
+//            if (fatmp.Length == 36 && fatmp[8].Equals('-') && fatmp[13].Equals('-') && fatmp[18].Equals('-') && fatmp[23].Equals('-'))
+//            {
+//                isguid = true;
+//            }
+//
+//            bool isadd = true; // 추가할려고 하는데
+//            foreach (var attachment in message.Attachments)
+//            {
+//
+//                //WriteTextLog("attachment.IsInline", "attachment.IsInline", attachment.IsInline.ToString());
+//                //WriteTextLog("attachment.ContentId", "attachment.ContentId", attachment.ContentId.ToString());
+//                //WriteTextLog("fatmp", "fatmp", fatmp.ToString());
+//                // 예전에 존재한 첨부이미지는 생략
+//                if (!isguid && fatmp.IndexOf("@") == -1 && attachment.IsInline && attachment.ContentId.Equals(fatmp.Replace(".tmp", ".png")))
+//                {
+//                    this.attlist.Add(fatmp);
+//                    isadd = false;
+//                    break;
+//                }
+//                if (attachment.IsInline && attachment.ContentId.Equals(fatmp + (isguid || fatmp.IndexOf("@") > -1 ? "" : "@12345678.87654321")))
+//                {
+//                    isadd = false;
+//                    break;
+//                }
+//            }
+//
+//            if (isadd)
+//            {
+//                FileAttachment fa = message.Attachments.AddFileAttachment(fatmp, Convert.FromBase64String(item.Value));
+//                fa.IsInline = true;
+//                fa.ContentId = fatmp + (isguid || fatmp.IndexOf("@") > -1 ? "" : "@12345678.87654321");
+//                //20121017 : 본문이미지 첨부로 빠지는 문제로 주석
+//                //fa.ContentType = "image/unknown"; // 파일명에서 확장자가 없을 때 
+//            }
+//
+//        }
+        
+		String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
+        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+        if (!delaySendTime.equals("")) {
+            //do_delaysend(xmldom, message);
+            rtnStatus = "OK";
+        } else {                        
+            if (!eShowDisplayName.equals("")) {
+            	//eShowDisplayName = Base64Encode(eShowDisplayName);
+                //message.SetExtendedProperty(new ExtendedPropertyDefinition(DefaultExtendedPropertySet.InternetHeaders, "X-NEW-DISPLAYNAME", MapiPropertyType.String), eShowDisplayName);
+            }
+            //message.Update(ConflictResolutionMode.AlwaysOverwrite);
+
+//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
+//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
+//            else
+//            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+            
+            //InnterMailSend 변환 시작
+            isEachMailB = true;
+            if(isEachMailB){
+            	//개별발송에 따른 "X-READCHECK" 값  Update
+            	String strRecvGuid = UUID.randomUUID().toString();
+            	message.setHeader("x-readcheck", strRecvGuid);
+            	message.setHeader("x-eachmail", "true");
+            	
+            	Address[] allRecipients = message.getAllRecipients();
+            	
+            	message.removeHeader("TO");
+        		message.removeHeader("CC");
+        		message.removeHeader("BCC");
+            	for(Address a : allRecipients){
+            		message.setRecipient(RecipientType.TO, a);
+            		
+            		Transport.send(message);
+            	}
+            	
+            } else{
+            	Transport.send(message);
+            }
+            
+        }
+        
+        // sendmail_2010변환 끝
+		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
+        String pResult = null;
+        pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
+        pResult += "<MESSAGEID><![CDATA[" + pMessageID + "]]></MESSAGEID>";
+        
+		return "<DATA>" + pResult + "</DATA>";
+	}
+	
+	/**
+	 * 사원 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailNameCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		String pOrganSearchList = "";
+		String pOrganCellList = "displayname";
+		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
+		String pOrganListType = "all";
+		String pDLSearchList = "";
+		String pDLCellList = "displayname";
+		String pDLPropList = "mail";
+		String pDLListType = "group";
+		String pAddressFilter = "";
+		
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Element root = xmlDoc.getDocumentElement();
+		
+		Node tempNode = null;
+		if(root.getElementsByTagName("ORGSEARCH") != null){
+			tempNode = root.getElementsByTagName("ORGSEARCH").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pOrganSearchList = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("DLGSEARCH") != null){
+			tempNode = root.getElementsByTagName("DLGSEARCH").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pDLSearchList = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("CELL") != null){
+			tempNode = root.getElementsByTagName("CELL").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pOrganCellList = tempNode.getTextContent();
+				pDLCellList = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("ORGPROP") != null){
+			tempNode = root.getElementsByTagName("ORGPROP").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pOrganPropList = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("DLPROP") != null){
+			tempNode = root.getElementsByTagName("DLPROP").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pDLPropList = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("ORGTYPE") != null){
+			tempNode = root.getElementsByTagName("ORGTYPE").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pOrganListType = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("DLTYPE") != null){
+			tempNode = root.getElementsByTagName("DLTYPE").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pDLListType = tempNode.getTextContent();
+			}
+		}
+		if(root.getElementsByTagName("ADDFILTER") != null){
+			tempNode = root.getElementsByTagName("ADDFILTER").item(0);
+			if(tempNode != null && !tempNode.getTextContent().equals("")){
+				pAddressFilter = tempNode.getTextContent();
+			}
+		}
+        
+        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType);
+        String dlXML = getOrganDLSearch(pDLSearchList, pDLCellList, pDLPropList, pDLListType);
+        String addressXML = getAddressSearch(pAddressFilter);
+        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
+	}
+	
+	/**
+	 * 사원 Organ 정보 호출 함수
+	 */
+	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
+		String pResult = "";
+        try {
+            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, config.getProperty("config.primary"));
+        } catch (Exception Ex) {
+            pResult = "EXCEPTION";
+        }
+        return pResult;
+    }
+	
+	/**
+	 * 사원 DL 정보 호출 함수
+	 */
+	private String getOrganDLSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
+        String pResult = "";
+        try {
+        	//todo : ezOrganService에 getSearchListDL만들어지면 연결
+            //pResult = ezOrganService.getSearchListDL(pSearchList, pCellList, pPropList, pListType, 100, "");
+        	pResult = "<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>";
+        } catch (Exception Ex) {
+            pResult = "EXCEPTION";
+        }
+        return pResult;
+    }
+	
+	/**
+	 * 사원 Address 정보 호출 함수
+	 */
+	private String getAddressSearch(String pFilter) {
+        String pResult = "";
+        try {
+        	//todo : ezAddress 만들어지면 연결
+//            XmlDocument xmldom = new XmlDocument();
+//            StringBuilder Rvalue = new StringBuilder("");
+//            GetSearcAddressInfo(pFilter, "P", ref Rvalue);
+//            string _field = "STYPE,AddressID, SNAME,'DB' AS FLODERTYPE , SEMAIL, SCOMPANY, SDEPT, STITLE";
+//            //ezAddress.AddressInfo _ezAddress = new ezAddress.AddressInfo();
+//            string DBSearchList = _ezAddress.GetSearchList(userinfo.CompanyID + "," + userinfo.DeptID, "", "SNAME LIKE '%" + pFilter + "%'", _field, 0, 100, 0, "");
+//            xmldom = GetXmlReaderString(DBSearchList);
+//            if (xmldom.SelectNodes("DATA/ROW").Count > 0) {
+//                foreach (XmlNode Node in xmldom.SelectNodes("DATA/ROW")) {
+//                    Rvalue.Append(Node.OuterXml);
+//                }
+//            }
+//            pResult = Rvalue.ToString();
+        	pResult = "";
+        } catch (Exception Ex) {
+            pResult = "EXCEPTION";
+        }
+        return pResult;
+    }
 }

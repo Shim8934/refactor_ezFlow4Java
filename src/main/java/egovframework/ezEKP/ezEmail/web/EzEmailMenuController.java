@@ -21,6 +21,18 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+/** 
+ * @Description [Controller] 메일 메뉴
+ * @author 오픈솔루션팀 이효민
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    이효민    신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzEmailMenuController {
 
@@ -32,7 +44,10 @@ public class EzEmailMenuController {
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;  
-
+	
+	/**
+	 * 메일 왼쪽화면 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/mailLeft.do")
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
@@ -114,7 +129,10 @@ public class EzEmailMenuController {
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		return "ezEmail/mailLeft";
 	}
-
+	
+	/**
+	 * 메일 폴더 리스트 정보 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/getFolderList.do")
 	public void getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
@@ -167,7 +185,10 @@ public class EzEmailMenuController {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 읽지않은 메시지 개수 정보 호출 함수
+	 */
 	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do")
 	public void getFolderUnreadCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
