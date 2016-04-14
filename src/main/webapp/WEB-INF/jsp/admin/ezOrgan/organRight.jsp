@@ -476,6 +476,8 @@
 					return;
 				}
 				
+				var xmlDOM = createXmlDom();
+				
 			    $.ajax({
 		        	type : "POST",
 		        	dataType : "xml",
@@ -491,7 +493,6 @@
 		        		xmlDOM = null;
 		        	}
 		        });		        	
-				
 			    var ModalCheck = false;
 				if (adCount == 0){
 					alert("<spring:message code='ezOrgan.t61' />");
@@ -501,7 +502,7 @@
 				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					g_xmlHTTP.send(strQuery);					 
+					g_xmlHTTP.send(strQuery);
 				}else{
 					rgParams["addrBook"] = xmlDOM;
 					rgParams["deptid"] = "";
@@ -510,10 +511,10 @@
 					    ModalCheck = true;
 					    checkname2_cross_dialogArguments[0] = rgParams;
 					    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-					    var OpenWin = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 340));					    
+					    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(609, 340));					    
 					    try { OpenWin.focus(); } catch (e) { }
 					}else{
-					    window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:340px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 340));
+					    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 340));
 
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
@@ -546,12 +547,14 @@
 					return;
 				}
 			    document.getElementById("listOpt1").checked = true;
-			    Change_List();
+			    //2016-04-14 장진혁과장 -- Change_List 실행시 검색 결과값 불일치로 인한 주석처리
+			    //Change_List();
 			    				
 				$.ajax({
 		        	type : "POST",
 		        	dataType : "xml",
-		        	url : "/ezOrgan/getSearchList.do",		        	
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : false,
 		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
 		        	success : function(result){
 		        		var listview = new ListView();
@@ -579,7 +582,7 @@
 				        pUserList.SetSelectFlag(false);
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
-				        pUserList.DataBind("OrganListView");		
+				        pUserList.DataBind("OrganListView");
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -587,8 +590,7 @@
 		        });				
 				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
 				//keyword.value = "";
-			}
-			
+			}			
 			function Change_List(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -640,6 +642,61 @@
 		            displayUserList(treeNode.GetNodeData("CN"));
 		        }
 		    }
+			function MoveUp_onclick(){
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+			    listview.RowMoveUp();
+			}
+			function MoveDown_onclick(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+			    listview.RowMoveDown();
+			}
+			function MoveConfirm_onclick(){
+				var objNode = "";
+			    var treeView = new TreeView();
+			    treeView.LoadFromID("FromTreeView");
+			    var nodeIdx = treeView.GetSelectNode();			    
+			    var treeNode = new TreeNode();
+			    treeNode.LoadFromID(nodeIdx.NodeID);
+
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+				if (listview.GetDataRows().length == 0){
+					return;
+				}
+
+				for (var i = 0 ; i < listview.GetDataRows().length ; i++){
+					objNode += listview.GetDataRows()[i].getAttribute("DATA2");
+					if(i != listview.GetDataRows().length){
+						objNode += ",";
+					}
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/saveOrderList.do",
+					async : false,
+					data : {cn : objNode},
+					success : function(result){
+						alert("<spring:message code='ezOrgan.t49' />");
+						getDeptFullTree(treeNode.GetNodeData("CN"));
+					},
+					error : function(){
+						alert("<spring:message code='ezOrgan.t48' />");
+					}
+				});
+			}
 	    </script>
 	</head>
 	<body class="mainbody">

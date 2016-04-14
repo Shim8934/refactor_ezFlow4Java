@@ -82,6 +82,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return result;
 	}
 	
+	@Override
+	public void updateProperty(String cn, String column, String number, String pClass) throws Exception{
+		String strFlag = "N";
+		
+		if(!pClass.equals("user")){
+			if(column.toLowerCase().indexOf("displayname") != -1){
+				strFlag = "Y";
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", cn);
+		map.put("v_CLASS", pClass);
+		map.put("v_PROPNAME", column);
+		map.put("v_PROPVALUE", number);
+		map.put("v_FLAG", strFlag);
+		
+		ezOrganAdminDao.updateProperty(map);
+	}
+
 	public void moveDBData(String parentCn, String cn, String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		

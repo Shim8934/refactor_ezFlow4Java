@@ -9,7 +9,9 @@ public interface EzOrganAdminService {
 	
 	public String getPropertyList(String cn, String proplist, String string) throws Exception;
 	
-	public String moveEntry(String parentCn, String cn, String type) throws Exception;	
+	public String moveEntry(String parentCn, String cn, String type) throws Exception;
+	
+	public void updateProperty(String cn, String column, String number, String pClass) throws Exception;
 
 	public int companyCheck(String cn) throws Exception;
 	

@@ -36,6 +36,18 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+/** 
+ * @Description [Controller] 관리자 - 게시판관리 
+ * @author 오픈솔루션팀 장진혁
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    장진혁    신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzBoardAdminController extends EgovFileMngUtil {
 
@@ -54,11 +66,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 
+	/**
+	 * 게시판관리 메인화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMain.do")
 	public String boardMain() throws Exception {
 		return "admin/ezBoard/boardMain";
 	}
-
+	
+	/**
+	 * 게시판관리 왼쪽화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardLeft.do")
 	public String boardLeft(@CookieValue("loginCookie") String loginCookie,	HttpServletRequest request, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -87,11 +105,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardLeft";
 	}
 
+	/**
+	 * 게시판관리 오른쪽화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardRight.do")
 	public String boardRight() throws Exception {
 		return "admin/ezBoard/boardRight";
 	}
-
+	
+	/**
+	 * 게시판관리 상단메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/get_Admin_TopBoardList.do")
 	public String get_Admin_TopBoardList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		String parentBoardID = request.getParameter("boardType");
@@ -101,6 +125,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 
+	/**
+	 * 게시판관리 게시판그룹생성 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardGroupCreate.do")
 	public String boardGroupCreate(Model model) throws Exception {
 		String lang = config.getProperty("config.primary");
@@ -115,6 +142,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardGroupCreate";
 	}
 
+	/**
+	 * 게시판관리 게시판그룹생성 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/createBoardGroup.do")
 	public void createBoardGroup(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, BoardPropertyVO boardPropertyVO)	throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -133,6 +163,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		ezBoardAdminService.createBoardGroup(boardPropertyVO);
 	}
 
+	/**
+	 * 게시판관리 하위게시판등록 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardCreate.do")
 	public String boardCreate(HttpServletRequest request, Model model) throws Exception {
 		String lang = config.getProperty("config.primary");
@@ -161,6 +194,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardCreate";
 	}
 
+	/**
+	 * 게시판관리 하위게시판등록 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/createBoard.do")
 	public void createBoard(@CookieValue("loginCookie") String loginCookie,	HttpServletResponse response, BoardPropertyVO boardPropertyVO) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -180,6 +216,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		ezBoardAdminService.createBoard(boardPropertyVO);
 	}
 
+	/**
+	 * 게시판관리 게시판순서조정 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardOrder.do")
 	public String boardOrder(HttpServletRequest request, Model model) throws Exception {
 		String parentBoardID = request.getParameter("parentBoardID");
@@ -193,6 +232,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardOrder";
 	}
 
+	/**
+	 * 게시판관리 게시판순서조정 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardOrder.do")
 	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String pBoardIDList = request.getParameter("boardList");
@@ -201,7 +243,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		// board_treechache 테이블 trunk
 		ezBoardAdminService.trunkBoard();
 	}
-
+	
+	/**
+	 * 게시판관리 게시판 서브트리 표출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/getSubBoards.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -213,6 +258,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return boardTree;
 	}
 
+	/**
+	 * 게시판관리 그룹 및 게시판삭제 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardDelete.do")
 	public String boardDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -236,6 +284,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardDelete";
 	}
 
+	/**
+	 * 게시판관리 그룹 및 게시판삭제 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/deleteBoard.do")
 	public void deleteBoard(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String boardID = request.getParameter("boardID");
@@ -245,11 +296,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		ezBoardAdminService.trunkBoard();
 	}
 
+	/**
+	 * 게시판관리 배경이미지 관리 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardBackGround.do")
 	public String boardBackGround() throws Exception {
 		return "admin/ezBoard/boardBackGround";
 	}
 
+	/**
+	 * 게시판관리 현재 배경이미지 정보 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/getBackGroundImage.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getBackGroundImage(HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception {
@@ -280,6 +337,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return xmlStr.toString();
 	}
 
+	/**
+	 * 게시판관리 배경이미지 상태값 변경 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/statusChangeBackGroundImage.do")
 	public void statusChangeBackGroundImage(HttpServletRequest request,	HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		String mode = request.getParameter("mode");
@@ -300,6 +360,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 	}
 
+	/**
+	 * 게시판관리 선택한 배경이미지 정보 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/selectBackGroundImage.do")
 	public String selectBackGroundImage(BoardBackgroundVO boardBackgroundVO, Model model) throws Exception {
 		String type = boardBackgroundVO.getType();
@@ -327,6 +390,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/selectBackGroundImage";
 	}
 
+	/**
+	 * 게시판관리 배경이미지 파일 업로드 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/uploadBackGroundImage.do")
 	public void uploadBackGroundImage(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartFile file = request.getFile("file1");
@@ -357,6 +423,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 	}
 
+	/**
+	 * 게시판관리 배경이미지 정보 저장 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBackGroundImage.do")
 	public void saveBackGroundImage(@CookieValue("loginCookie") String loginCookie,	HttpServletResponse response, MultipartHttpServletRequest request, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -389,6 +458,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		ezBoardAdminService.saveBackGroundImage(boardBackgroundVO);
 	}
 
+	/**
+	 * 게시판관리 배경이미지 삭제 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/deleteBackGroundImage.do")
 	public void deleteBackGroundImage(HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		String fileName = boardBackgroundVO.getSaveFileName();
@@ -408,6 +480,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 	}
 
+	/**
+	 * 게시판관리 게시판이동 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMove.do")
 	public String boardMove(HttpServletRequest request, Model model) throws Exception {
 		String boardID = request.getParameter("boardID");
@@ -430,6 +505,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardMove";
 	}
 
+	/**
+	 * 게시판관리 이동할 게시판 선택화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMoveSelect.do")
 	public String boardMoveSelect(Model model) throws Exception {
 		String serverName = config.getProperty("config.ServerName");
@@ -438,6 +516,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardMoveSelect";
 	}
 
+	/**
+	 * 게시판관리 게시판 이동 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/moveBoard.do")
 	public void moveBoard(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orgBoardID = request.getParameter("orgBoardID");
@@ -449,6 +530,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		ezBoardAdminService.trunkBoard();
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardProperty.do")
 	public String boardProperty(HttpServletRequest request,	HttpServletResponse response, Model model) throws Exception {
 		String lang = config.getProperty("config.primary");
@@ -490,6 +574,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardProperty";
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do")
 	public void saveBoardProperty(HttpServletResponse response,	BoardPropertyVO boardPropertyVO) throws Exception {
 		String boardID = boardPropertyVO.getBoardID();
@@ -535,7 +622,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		// board_treechache 테이블 trunk
 		ezBoardAdminService.trunkBoard();
 	}
-
+	
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 설정화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardExtensionAttribute.do")
 	public String boardExtensionAttribute() throws Exception {
 		return "admin/ezBoard/boardExtensionAttribute";
@@ -566,6 +656,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 헤더 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/getBoardHeader.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getBoardHeader(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception {
@@ -589,6 +682,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 저장 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveAttribute.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveAttribute(@RequestBody String data, HttpServletRequest request, HttpServletResponse response,	BoardAttributeVO boardAttributeVO) throws Exception {
@@ -624,6 +720,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "OK";
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴의 확장컬럼헤더 저장 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveHeader.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveHeader(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, BoardListHeaderVO boardListHeaderVO) throws Exception {
@@ -651,6 +750,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "OK";
 	}
 
+	/**
+	 * 게시판관리 게시판 권한설정 메뉴화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardACL.do")
 	public String boardACL(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		String boardID = request.getParameter("boardID");
@@ -715,6 +817,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardACL";
 	}
 
+	/**
+	 * 게시판관리 게시판 권한 정보 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/getACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getACL(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -744,6 +849,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 게시판관리 게시판 권한 저장 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveACL(@RequestBody String data, HttpServletRequest request,	HttpServletResponse response) throws Exception {
@@ -787,6 +895,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "OK";
 	}
 
+	/**
+	 * 게시판관리 게시판 권한 삭제 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/deleteACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String deleteACL(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)	throws Exception {
@@ -801,6 +912,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "OK";
 	}
 
+	/**
+	 * 게시판관리 조직도 선택화면 호출 함수 1
+	 */
 	@RequestMapping(value = "/admin/ezBoard/selectTarget.do")
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -821,6 +935,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/selectTarget";
 	}
 	
+	/**
+	 * 게시판관리 조직도 선택화면 호출 함수 2
+	 */
 	@RequestMapping(value = "/admin/ezBoard/selectTarget2.do")
 	public String selectTarget2(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -841,11 +958,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/selectTarget2";
 	}	
 
+	/**
+	 * 게시판관리 조직도에 검색 시 중복된 이름이 있을 경우 선택화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/checkName.do")
 	public String checkName() throws Exception {
 		return "admin/ezBoard/checkName";
 	}
 
+	/**
+	 * 게시판관리 게시판 권한설정 권한전파 팝업 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardUnderGroupCopy.do")	
 	public String boardUnderGroupCopy(HttpServletRequest request, Model model) throws Exception{
 		String boardID = request.getParameter("boardID");		
@@ -854,6 +977,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardUnderGroupCopy";
 	}
 	
+	/**
+	 * 게시판관리 게시판 권한설정 권한전파 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/setUnderBoardAcl.do")	
 	public void setUnderBoardAcl(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		String boardID = request.getParameter("boardID");
@@ -882,6 +1008,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}		
 	}
 	
+	/**
+	 * 게시판관리 게시판 권한설정 권한복사 팝업 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardAclList.do")	
 	public String boardAclList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO, Model model) throws Exception{				
 		String parentBoardID = request.getParameter("parentBoardID");
@@ -923,6 +1052,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardAclList";
 	}
 	
+	/**
+	 * 게시판관리 게시판 권한설정 권한복사 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/copyBoardAcl.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String copyBoardAcl(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -939,6 +1071,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "OK";
 	}
 	
+	/**
+	 * 게시판관리 선택한 게시판 게시물 표출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardConfig.do")
 	public String boardConfig(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		String boardID = request.getParameter("boardID");
@@ -958,6 +1093,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardConfig";
 	}
 	
+	/**
+	 * 게시판관리 게시판 양식설정 화면[TAB] 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/boardFormSave.do")
 	public String boardFormSave(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		String boardID = request.getParameter("boardID");
@@ -977,6 +1115,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardFormSave";
 	}
 	
+	/**
+	 * 게시판관리 게시판 양식설정 저장 실행 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/saveForm.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String saveForm(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		

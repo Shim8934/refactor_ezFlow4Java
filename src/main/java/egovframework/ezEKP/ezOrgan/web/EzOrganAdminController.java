@@ -191,5 +191,23 @@ public class EzOrganAdminController {
 		return result;
 	}
 	
-
+	@RequestMapping(value = "/admin/ezOrgan/checkName2.do")	
+	public String checkName2() throws Exception{	
+		return "admin/ezOrgan/checkName2";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String saveOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String cn = request.getParameter("cn");		
+		String[] cnDatas = cn.split(",");
+		String result = "";
+		
+		for(int i=0; i<cnDatas.length; i++){
+			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", "dept");	
+		}
+		
+		return result;
+	}
+	
 }

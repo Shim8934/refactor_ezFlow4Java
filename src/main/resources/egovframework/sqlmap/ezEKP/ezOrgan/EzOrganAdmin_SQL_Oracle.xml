@@ -26,6 +26,10 @@
 	<procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+	</procedure>
 
 	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
 		<![CDATA[

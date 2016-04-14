@@ -35,6 +35,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateDBData_dept", vo);
 	}
 	
+	public void updateProperty(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.updateProperty", map);
+	}	
+	
 	public void deleteDBData(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.deleteDBData", map);
 	}
@@ -42,5 +46,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void moveDBData(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.moveDBData", map);
 	}
-	
+
+
 }
