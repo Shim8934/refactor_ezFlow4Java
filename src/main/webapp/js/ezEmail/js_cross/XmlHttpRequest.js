@@ -685,7 +685,7 @@ function ConvertHTMLtoMHT(pContent)
 	    createNodeInsert(xmlpara, objNode, "PARAMETER"); 	
         createNodeAndInsertText(xmlpara, objNode, "strHTML",  pContent);
 
-	    xmlhttp.open("POST","/myoffice/CKEditor/HTMLtoMHT.aspx",false);
+	    xmlhttp.open("POST","/ezCommon/htmlToMHT.do",false);
 	    xmlhttp.send(xmlpara);
 
 	    if (xmlhttp.status == "200") rtnVal = xmlhttp.responseText;
@@ -783,7 +783,7 @@ function GetNamedItem(iframePage, id, index)
 function GetMhtContentHTML(pfilepath) {
     var Result = "";
     try {
-        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pfilepath);
+        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(pfilepath);
         var xmlhttp = createXMLHttpRequest();
         xmlhttp.open("POST", "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath, false);
         xmlhttp.send();

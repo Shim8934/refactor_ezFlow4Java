@@ -394,14 +394,14 @@ function download_mail() {
 
         form1.iptURL.value = g_paramURL;
         var newwin = window.open("", "download", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(escape(fileName), "\\+", "%2B") + "&regData=" + regData;
+        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(encodeURI(fileName), "\\+", "%2B") + "&regData=" + regData;
         form1.target = "download";
         form1.submit();
     }
     else {
         var regData = navigator.systemLanguage
         form1.iptURL.value = g_paramURL;
-        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(escape(fileName), "\\+", "%2B") + "&regData=" + regData;
+        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(encodeURI(fileName), "\\+", "%2B") + "&regData=" + regData;
         form1.target = "_self";
         form1.submit();
     }
@@ -617,7 +617,7 @@ function show_personinfo(email) {
 
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo_Cross.aspx?email=" + escape(email), "", feature);
+    window.open("/myoffice/common/ShowPersonInfo_Cross.aspx?email=" + encodeURI(email), "", feature);
 }
 function attach_SelectAll() {
     if (CrossYN()) {
@@ -919,15 +919,15 @@ function Item_View_New_Community(pBoardID, pItemID, pCommunityID) {
 // 결재 보기
 function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc) {
     if (typeof (pWhat) == "undefined" || podoc == "") {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
         openwindow(openLocation, "", 880, 550);
     }
     else if (pWhat == "1") {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL) + "&OpinionFlag=" + escape(pOpinionFlag) + "&docState=" + escape(pdocState) + "&ListSusin=" + escape(pListSusin) + "&odoc=" + escape(podoc);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&OpinionFlag=" + encodeURI(pOpinionFlag) + "&docState=" + encodeURI(pdocState) + "&ListSusin=" + encodeURI(pListSusin) + "&odoc=" + encodeURI(podoc);
         openwindow(openLocation, "", 880, 550);
     }
     else {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
         openwindow(openLocation, "", 880, 550);
     }
 }
