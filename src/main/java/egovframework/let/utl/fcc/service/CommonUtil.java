@@ -186,15 +186,14 @@ public class CommonUtil {
 		}
 	}
 	
-	public String getQueryResult(Object vo){
+	public String getQueryResult(Object vo) throws Exception{
 		StringBuilder stb = new StringBuilder();		
 		
-		try{
 			stb.append("<ROW>");
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
 		        field.setAccessible(true);
-				String data = (String) field.get(vo);
+				String data = String.valueOf(field.get(vo));
 
 				if(data == null || data.equals(null) || data.equals("null")){
 					data = "";
@@ -206,9 +205,6 @@ public class CommonUtil {
 			stb.append("</ROW>");
 			
 			return stb.toString();
-		}catch(Exception e){
-			return null;
-		}		
 	}
 	
 	public String convertLangCode(String pLangCode){   
