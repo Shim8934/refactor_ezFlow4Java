@@ -319,7 +319,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String get_favoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-        String mode = request.getParameter("MODE");
+        String mode = request.getParameter("mode");
         String userID = userInfo.getId();
 
         List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID,mode);
@@ -327,13 +327,11 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer sb = new StringBuffer();
         
         sb.append("<DATA>");
-System.out.println(resultList.size());
 
 		for(int i = 0; i < resultList.size(); i++){
 			sb.append(commonUtil.getQueryResult(resultList.get(i)));
 		}
 		sb.append("</DATA>");
-System.out.println(sb.toString());
 		return "<ROOT>" + sb.toString() + parentName + "</ROOT>";
 	}
 	
