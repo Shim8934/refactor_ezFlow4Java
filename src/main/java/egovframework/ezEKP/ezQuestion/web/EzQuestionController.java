@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -198,7 +199,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 정보 호출, 그에 따른 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
-	public void pollOpen(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{
+	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
                 "&itemNo=" + request.getParameter("itemNo") +
                 "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
@@ -287,7 +288,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 						response.getWriter().flush();
 					}else{
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
+						response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t112", locale) + "');");
 						response.getWriter().write(" window.location.href = '/ezQuestion/qstList.do?brdId=5'");						
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
@@ -313,7 +314,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					response.getWriter().flush();
 				}else{
 					response.getWriter().write("<script language='javascript'>");
-					response.getWriter().write("alert('" + egovMessageSource.getMessage("ezQuestion.t112") + "');");
+					response.getWriter().write("alert('" + egovMessageSource.getMessage("ezQuestion.t112", locale) + "');");
 					response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdId=5';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -413,7 +414,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 진행중인 설문화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
-	public String qstResponse(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest request) throws Exception{
+	public String qstResponse(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model,HttpServletRequest request) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
                 "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
                 "&responseRange=" + request.getParameter("responseRange") +
@@ -498,7 +499,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333") + (iQueCount) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333", locale) + (iQueCount) + ":" + modifyData(question.getQuesContent()) + getAttachList(Integer.toString(question.getQuestionNo()), "0", question.getBrdId(), question.getItemNo())));
 				brdId.appendChild(doc.createTextNode(Integer.toString(question.getBrdId())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
 				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
@@ -566,7 +567,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
-	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,HttpServletResponse response) throws Exception{        
+	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request,HttpServletResponse response) throws Exception{        
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String brdId = "5", itemNo = "", responseUserIp = "", vPermission = "", vResponseRange = "", receve = "";
 		String userId = "", userName = "", email = "", deptId = "", depart = "", position = "", jikGub = "", gender = "1", age = "29";
@@ -629,7 +630,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		response.setContentType("text/html; charset=UTF-8");
 		if (userId.equals("")){
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360") + "');\n");
+			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360",locale) + "');\n");
 			response.getWriter().write("	history.back();\n");
 			response.getWriter().write("</script>\n");
 			response.getWriter().flush();
@@ -690,7 +691,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResult.do")
-	public String qstResult(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
+	public String qstResult(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model, HttpServletRequest request) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		String brdId="5", brdNm="", itemNo="", title="", responseRange="", postDate="", pollEndDate="", currPage="";
@@ -781,7 +782,7 @@ public class EzQuestionController extends EgovFileMngUtil {
          
         /** ans*/
         List<QstVO> qstVOList = dataProcessMainData(brdId, itemNo);
-        qstVOList = dataProcess(Integer.parseInt(brdId), Integer.parseInt(itemNo), bPublic, qstVOList, percent);
+        qstVOList = dataProcess(Integer.parseInt(brdId), Integer.parseInt(itemNo), bPublic, qstVOList, percent, locale);
         
         model.addAttribute("qstVOList",qstVOList);
         model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
@@ -1429,7 +1430,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
-	public String attachView(HttpServletRequest request,ModelMap model) throws Exception{
+	public String attachView(Locale locale, HttpServletRequest request,ModelMap model) throws Exception{
 		String href = "", type = "", title = "", filename = "";
 		String vBrdId = "5";
 		String vItemNo = "";
@@ -1468,16 +1469,16 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         switch(type){
         case "1":
-        	title = egovMessageSource.getMessage("ezQuestion.t178");
+        	title = egovMessageSource.getMessage("ezQuestion.t178", locale);
         	break;
         case "2":
-        	title = egovMessageSource.getMessage("ezQuestion.t179");
+        	title = egovMessageSource.getMessage("ezQuestion.t179", locale);
         	break;
         case "3":
-        	title = egovMessageSource.getMessage("ezQuestion.t180");
+        	title = egovMessageSource.getMessage("ezQuestion.t180", locale);
         	break;
         case "4":
-        	title = "URL " + egovMessageSource.getMessage("ezQuestion.t171");
+        	title = "URL " + egovMessageSource.getMessage("ezQuestion.t171", locale);
         	break;
         }
         
@@ -1880,7 +1881,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisAll.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String qstCallAnalysisAll(HttpServletRequest request) throws Exception{
+	public String qstCallAnalysisAll(Locale locale, HttpServletRequest request) throws Exception{
 		String vBrdId="", vItemNo="", vQuesNo="";
 		String questionNo = "", quesContent = "", multiSelect = "", answerType = "";
 		int resCnt = 0, responseCnt = 0;
@@ -1908,7 +1909,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         rNode.appendChild(node);
         
         Node nodeData = resultXML.createElement("VALUE");
-        nodeData.setTextContent(egovMessageSource.getMessage("ezQuestion.t54"));
+        nodeData.setTextContent(egovMessageSource.getMessage("ezQuestion.t54", locale));
         node.appendChild(nodeData);
 
         nodeData = resultXML.createElement("DATA1");
@@ -1919,7 +1920,8 @@ System.out.println("pQstTitle:"+pQstTitle);
         rNode.appendChild(node);
 
         nodeData = resultXML.createElement("VALUE");
-        nodeData.setTextContent(resCnt + " " + egovMessageSource.getMessage("ezQuestion.t53"));
+        nodeData.setTextContent(resCnt + " " + egovMessageSource.getMessage("ezQuestion.t53", locale));
+System.out.println(egovMessageSource.getMessage("ezQuestion.t53", locale));
         node.appendChild(nodeData);
 
         node = resultXML.createElement("CELL");
@@ -1947,7 +1949,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         	nodeData = resultXML.createElement("VALUE");
 
         	if (multiSelect.equals("1"))
-        		CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55"));
+        		CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55", locale));
         	else
         		CDATASection = resultXML.createCDATASection(quesContent);
 
@@ -1995,7 +1997,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         			node = resultXML.createElement("CELL");
 
         			nodeData = resultXML.createElement("VALUE");
-        			CDATASection = resultXML.createCDATASection(" [" + egovMessageSource.getMessage("ezQuestion.t57")+qstAnswer.getAnswerContent());
+        			CDATASection = resultXML.createCDATASection(" [" + egovMessageSource.getMessage("ezQuestion.t57", locale)+qstAnswer.getAnswerContent());
         			nodeData.appendChild(CDATASection);
         			node.appendChild(nodeData);
 
@@ -2008,7 +2010,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         			node = resultXML.createElement("CELL");
 
         			nodeData = resultXML.createElement("VALUE");
-        			nodeData.setTextContent(rCnt + " " + egovMessageSource.getMessage("ezQuestion.t53"));
+        			nodeData.setTextContent(rCnt + " " + egovMessageSource.getMessage("ezQuestion.t53", locale));
         			node.appendChild(nodeData);
 
         			rNode.appendChild(node);
@@ -2037,7 +2039,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46", locale));
         nodeData.appendChild(node);
 
 
@@ -2053,7 +2055,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2069,7 +2071,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2088,7 +2090,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisDept4.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String qstCallAnalysisDept4(HttpServletRequest request) throws Exception{
+	public String qstCallAnalysisDept4(Locale locale, HttpServletRequest request) throws Exception{
 		String vBrdId="", vItemNo="", vQuesNo="", sort="", sTotal = "0";
 		String questionNo = "", quesContent = "", answerObjecivity ="", responseUserDeptName="", qCount="";
 		int responseCnt = 0, iDataCount=0;
@@ -2124,12 +2126,12 @@ System.out.println("pQstTitle:"+pQstTitle);
         	
         	title = qstResponseVO.getResponseUserDeptName();
         	if(responseUserDeptName == null){
-        		title = egovMessageSource.getMessage("ezQuestion.t56");
+        		title = egovMessageSource.getMessage("ezQuestion.t56", locale);
         	}
         	qPercent="w";
         	sort="A";
         	if(responseUserDeptName == null || responseUserDeptName.toUpperCase() == "NULL"){
-        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57") + answer;
+        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57", locale) + answer;
         		qPercent = "";
         		sort="Q";
         	}
@@ -2141,7 +2143,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         		qPercent = "";
         	}
         	if(questionNo.equals("0")){
-        		title = egovMessageSource.getMessage("ezQuestion.t54");
+        		title = egovMessageSource.getMessage("ezQuestion.t54", locale);
         		qPercent = "";
         	}
         	fRCnt = Integer.parseInt(qCount);
@@ -2174,9 +2176,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         	nodeData = resultXML.createElement("VALUE");
         	if(questionNo.equals("0"))
-        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	else
-        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	node.appendChild(nodeData);
 
         	node = resultXML.createElement("CELL");
@@ -2200,7 +2202,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46", locale));
         nodeData.appendChild(node);
 
 
@@ -2216,7 +2218,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2232,7 +2234,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2251,7 +2253,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisPos2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String qstCallAnalysisPos2(HttpServletRequest request) throws Exception{
+	public String qstCallAnalysisPos2(Locale locale, HttpServletRequest request) throws Exception{
 		String vBrdId="", vItemNo="", vQuesNo="", sort="", sTotal = "0";
 		String questionNo = "", quesContent = "", answerObjecivity ="", responseUserPosition="", qCount="";
 		int responseCnt = 0, iDataCount=0;
@@ -2288,12 +2290,12 @@ System.out.println("pQstTitle:"+pQstTitle);
         	
         	title = qstResponseVO.getResponseUserPosition();
         	if(responseUserPosition == null){
-        		title = egovMessageSource.getMessage("ezQuestion.t56");
+        		title = egovMessageSource.getMessage("ezQuestion.t56", locale);
         	}
         	qPercent="w";
         	sort="A";
         	if(responseUserPosition == null || responseUserPosition.toUpperCase().equals("NULL")){
-        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57") + answer;
+        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57", locale) + answer;
         		qPercent = "";
         		sort="Q";
         	}
@@ -2305,7 +2307,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         		qPercent = "";
         	}
         	if(questionNo.equals("0")){
-        		title = egovMessageSource.getMessage("ezQuestion.t54");
+        		title = egovMessageSource.getMessage("ezQuestion.t54", locale);
         		qPercent = "";
         	}
         	fRCnt = Integer.parseInt(qCount);
@@ -2338,9 +2340,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         	nodeData = resultXML.createElement("VALUE");
         	if(questionNo.equals("0"))
-        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	else
-        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	node.appendChild(nodeData);
 
         	node = resultXML.createElement("CELL");
@@ -2364,7 +2366,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46", locale));
         nodeData.appendChild(node);
 
 
@@ -2380,7 +2382,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2396,7 +2398,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2415,7 +2417,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstCallAnalysisJikgub2.do" , method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String qstCallAnalysisJikgub2(HttpServletRequest request) throws Exception{
+	public String qstCallAnalysisJikgub2(Locale locale, HttpServletRequest request) throws Exception{
 		String vBrdId="", vItemNo="", vQuesNo="", sort="", sTotal = "0";
 		String questionNo = "", quesContent = "", answerObjecivity ="", responseJikgub="", qCount="";
 		int responseCnt = 0, iDataCount=0;
@@ -2452,12 +2454,12 @@ System.out.println("pQstTitle:"+pQstTitle);
         	
         	title = qstResponseVO.getResponseUserJikgub();
         	if(responseJikgub == null){
-        		title = egovMessageSource.getMessage("ezQuestion.t56");
+        		title = egovMessageSource.getMessage("ezQuestion.t56", locale);
         	}
         	qPercent="w";
         	sort="A";
         	if(responseJikgub == null || responseJikgub.toUpperCase().equals("NULL")){
-        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57") + answer;
+        		title = " [" + egovMessageSource.getMessage("ezQuestion.t57", locale) + answer;
         		qPercent = "";
         		sort="Q";
         	}
@@ -2469,7 +2471,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         		qPercent = "";
         	}
         	if(questionNo.equals("0")){
-        		title = egovMessageSource.getMessage("ezQuestion.t54");
+        		title = egovMessageSource.getMessage("ezQuestion.t54", locale);
         		qPercent = "";
         	}
         	fRCnt = Integer.parseInt(qCount);
@@ -2502,9 +2504,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         	nodeData = resultXML.createElement("VALUE");
         	if(questionNo.equals("0"))
-        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	else
-        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53"));
+        		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53", locale));
         	node.appendChild(nodeData);
 
         	node = resultXML.createElement("CELL");
@@ -2528,7 +2530,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t46", locale));
         nodeData.appendChild(node);
 
 
@@ -2544,7 +2546,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t47", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2560,7 +2562,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         nodeData.appendChild(node);
 
         node = resultXML.createElement("NAME");
-        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48"));
+        node.setTextContent(egovMessageSource.getMessage("ezQuestion.t48", locale));
         nodeData.appendChild(node);
 
         node = resultXML.createElement("WIDTH");
@@ -2663,7 +2665,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	 */
 	@SuppressWarnings({ "unused", "resource" })
 	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
-	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String brforeQuestionNo="", questionNo = "", qUser="", comma="";
 		String answer="", answerStr="";
@@ -2684,10 +2686,10 @@ System.out.println("pQstTitle:"+pQstTitle);
 		
 		if(itemNo != ""){
 			row = sheet.createRow(0);
-			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552") + "\r\n";
+			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552", locale) + "\r\n";
 			cell = row.createCell(0);
 			cell.setCellValue(headerInfo);
-            headerInfo = egovMessageSource.getMessage("ezQuestion.t553");
+            headerInfo = egovMessageSource.getMessage("ezQuestion.t553", locale);
             
 			/** EZSP_GETQUESTIONNOCNT*/
             String strMaxNum = ezQuestionService.getQuestionNoCnt(itemNo);
@@ -3687,7 +3689,7 @@ System.out.println("itemId:"+itemId);
 	/**
 	 * 전자설문 설문리스트 설문 타입별 HTML코드 생성 실행 함수
 	 */
-	public List<QstVO> dataProcess(int brdId, int itemNo, boolean bPublic,List<QstVO> qstVOList, int percent) throws Exception{
+	public List<QstVO> dataProcess(int brdId, int itemNo, boolean bPublic,List<QstVO> qstVOList, int percent, Locale locale) throws Exception{
 		int iCount=0;
 		String strData = "";
 		
@@ -3700,17 +3702,17 @@ System.out.println("itemId:"+itemId);
 			strData = "";
 			
 			if(answerType == 2){
-				strData = dataProcessType2(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount);
+				strData = dataProcessType2(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, locale);
 			}else{
 				List<QstAnswerVO> qstAnswerVOList = dataProcessAns(brdId, itemNo, questionNo);
 				if(answerType == 1){
-					strData = dataProcessType1(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstAnswerVOList);
+					strData = dataProcessType1(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstAnswerVOList, locale);
 				}else if(answerType == 3){
-					strData = dataProcessType3(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstAnswerVOList);
+					strData = dataProcessType3(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstAnswerVOList, locale);
 				}else if(answerType == 4){
-					strData = dataProcessType4(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList);
+					strData = dataProcessType4(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
 				}else if(answerType == 5){
-					strData = dataProcessType5(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList);
+					strData = dataProcessType5(brdId, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
 				}
 			}
 			qstVO.setStrData(strData);
@@ -3767,7 +3769,7 @@ System.out.println("itemId:"+itemId);
 	 * 전자설문 설문리스트 설문 타입1 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType1(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList) throws Exception{
+	public String dataProcessType1(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
         float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
@@ -3776,9 +3778,9 @@ System.out.println("itemId:"+itemId);
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
+        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + strContent + "";
         if (multiSelect.equals("1")){
-            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
+            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
         strData += "</th>";
@@ -3803,7 +3805,7 @@ System.out.println("itemId:"+itemId);
             strData += getAttachList(Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdId, itemNo) + "</td>";
             strData += "<td width=\"80\" valign=\"top\" align=\"right\" nowrap>";
             strData += "" + rCnt + " ";
-            strData += " " + egovMessageSource.getMessage("ezQuestion.t399") + " ";
+            strData += " " + egovMessageSource.getMessage("ezQuestion.t399", locale) + " ";
             strData += "</th>";
             strData += "<td width=\"70\" valign=\"top\" align=\"right\" nowrap>[" + Integer.toString(percent) + "%]</td>";
             strData += "<td width=\"150\" valign=\"top\">";
@@ -3821,12 +3823,12 @@ System.out.println("itemId:"+itemId);
 	/**
 	 * 전자설문 설문리스트 설문 타입2 HTML코드 생성 실행 함수
 	 */
-	public String dataProcessType2(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount) throws Exception{
+	public String dataProcessType2(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, Locale locale) throws Exception{
 		String strData = "";
 		strData += "<table class=\"question\"><tr>";
-		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "</th>";
+		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + strContent + "</th>";
 		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
-		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
+		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
 		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
 		strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo) + "</td>";
 		strData += "</tr>";
@@ -3840,7 +3842,7 @@ System.out.println("itemId:"+itemId);
 	 * 전자설문 설문리스트 설문 타입3 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType3(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList) throws Exception{
+	public String dataProcessType3(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 		int rCnt = 0, jCnt =0, responseCnt =0;;
 		float fRCnt =0, fResponseCnt = 0, fPercent =0;
@@ -3848,9 +3850,9 @@ System.out.println("itemId:"+itemId);
 
 		strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th colspan=4>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
+        strData += "<th colspan=4>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + strContent + "";
         if (strSel.equals("1")){
-            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
+            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
 
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
@@ -3885,12 +3887,12 @@ System.out.println("itemId:"+itemId);
             {
                 strData += "<a href=\"#\" onclick=\"User_info(\"" + questionNo + "','" + i + "\",\"3\");\"";
                 strData += "" + rCnt + "";
-                strData += "" + egovMessageSource.getMessage("ezQuestion.t53") + "</a> " + egovMessageSource.getMessage("ezQuestion.t306");
+                strData += "" + egovMessageSource.getMessage("ezQuestion.t53", locale) + "</a> " + egovMessageSource.getMessage("ezQuestion.t306", locale);
             }
             else
             {
                 strData += "" + rCnt + "";
-                strData += "" + egovMessageSource.getMessage("ezQuestion.t399");
+                strData += "" + egovMessageSource.getMessage("ezQuestion.t399", locale);
             }
             strData += "</td>";
             strData += "<td width=\"70\" align=\"right\">[" + percent + "%]</td>";
@@ -3910,7 +3912,7 @@ System.out.println("itemId:"+itemId);
 	 * 전자설문 설문리스트 설문 타입4 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType4(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
+	public String dataProcessType4(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
@@ -3919,11 +3921,11 @@ System.out.println("itemId:"+itemId);
         
         strData += "<table class=\"question\">";
         strData += "<tr>\n";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
-        strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t400") + "</span>";
+        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + strContent + "";
+        strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t400", locale) + "</span>";
         strData += "</th>\n";
         strData += "<th style=\"text-align:right;width:150px;padding:0 10px\">";
-        strData += "<A class=\"imgbtn\" onclick=\"fun_ResponseView('" + questionNo + "');\" style=\"cursor:pointer\"><span>" + egovMessageSource.getMessage("ezQuestion.t396") + "</span></A>";
+        strData += "<A class=\"imgbtn\" onclick=\"fun_ResponseView('" + questionNo + "');\" style=\"cursor:pointer\"><span>" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
         strData += "</th></tr></table>\n";
 
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
@@ -3957,7 +3959,7 @@ System.out.println("itemId:"+itemId);
 	/**
 	 * 전자설문 설문리스트 설문 타입5 HTML코드 생성 실행 함수
 	 */
-	public String dataProcessType5(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList) throws Exception{
+	public String dataProcessType5(int brdId, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 
 		/** EZSP_GETTABLEANSWER*/
@@ -3973,9 +3975,9 @@ System.out.println("itemId:"+itemId);
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333") + iDataCount + " : " + strContent + "";
+        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + strContent + "";
         if (strSel.equals("1")){
-            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55") + "</span>";
+            strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
         strData += getAttachList(Integer.toString(questionNo), "0", brdId, itemNo);
         strData += "</th>";
@@ -4004,7 +4006,7 @@ System.out.println("itemId:"+itemId);
                     percent = (rCnt * 100) / responseCnt;
                 strData += "<td width=\"80' valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #b6b6b6; border-right:0px;\">";
                 strData += "" + rCnt + "";
-                strData += "" + egovMessageSource.getMessage("ezQuestion.t399") + "";
+                strData += "" + egovMessageSource.getMessage("ezQuestion.t399", locale) + "";
                 strData += "</th>";
                 strData += "<td width=\"70\" valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #b6b6b6; border-right:0px; border-left:0px;\">[" + percent + "%]</td>";
                 strData += "<td width=\"150\" valign=\"top\" style=\"border:1px solid #b6b6b6; padding-right:10px; border-left:0px;\">";
