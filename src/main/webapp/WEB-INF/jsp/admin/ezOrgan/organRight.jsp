@@ -697,6 +697,65 @@
 					}
 				});
 			}
+			function info_user(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+		              
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+				if (document.getElementById("listOpt2").checked == true){
+					return;
+				}
+				if (listview.GetSelectedRows().length == 0){
+					alert("<spring:message code='ezOrgan.t9' />");
+					return;
+				}
+			    if (listview.GetSelectedRows().length > 1){
+					alert("<spring:message code='ezOrgan.t10' />");
+					return;
+				}				
+				var args = new Array();
+				args[0] = treeNode.GetNodeData("CN");
+				
+				// 수정(2007.06.26) : 사용자 추가 시 부서명(P/S)이 제대로 보이지 않는 문제 수정
+				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
+				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
+				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				
+				if (CrossYN()) {
+				    userinfo_dialogArguments = new Array();
+				    userinfo_dialogArguments[0] = args;
+				    userinfo_dialogArguments[1] = info_user_Complete;
+				    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+				    try { OpenWin.focus(); } catch (e) { }
+				}else{
+				    var rtnValue;
+				    rtnValue = window.showModalDialog("/admin/ezOrgan/userInfo.do", args, "dialogHeight:500px; dialogWidth:830px; scroll:no;status:no; help:no; edge:sunken; resize:no" + GetShowModalPosition(830, 520));
+
+				    if (typeof (rtnValue) != "undefined") {
+				        alert("<spring:message code='ezOrgan.t11' />");
+				        displayUserList(treeNode.GetNodeData("CN"));
+
+				        if (trim(document.getElementById("keyword").value) != "") {
+				            search_click();
+				        }
+				    }
+				}
+			}
+		    function info_user_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		            alert("<spring:message code='ezOrgan.t11' />");
+		            displayUserList(treeNode.GetNodeData("CN"));
+
+		            if (trim(document.getElementById("keyword").value) != "") {
+		                search_click();
+		            }
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">

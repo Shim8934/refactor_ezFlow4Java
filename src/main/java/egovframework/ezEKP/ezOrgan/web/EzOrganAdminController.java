@@ -262,4 +262,29 @@ public class EzOrganAdminController {
 		return result;
 	}
 	
+	/**
+	 * 조직도관리 사원정보 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/userInfo.do")	
+	public String userInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if(!auth){
+			return "cmm/error/adminDenied";
+		}
+		
+		String lang = config.getProperty("config.primary");		
+		String primary = config.getProperty("config.lang_Primary" + lang);
+		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		String checkID = config.getProperty("config.USE_CHECKUPSTR");
+		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("checkID", checkID);
+		model.addAttribute("lang", lang);
+		model.addAttribute("birthDay", "");
+		
+		return "admin/ezOrgan/userInfo";
+	}
+	
 }
