@@ -3,6 +3,7 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 import egovframework.let.user.login.service.LoginService;
@@ -89,7 +90,7 @@ public class LoginController {
 	 * @exception Exception
 	 */
     @RequestMapping(value="/user/login/actionLogin.do")
-    public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	
     	logger.debug("=========================================== 로그인 ============================================");
     	
@@ -118,7 +119,7 @@ public class LoginController {
 			int diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
 			//0보다 작아지면 패스워드 변경기한 Expired
 			if(diff <= 0){
-				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired"));
+				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
 			}else{				
 				String ip = ClientUtil.getClientIP(request);		
@@ -147,7 +148,7 @@ public class LoginController {
 	        	return "redirect:/cmm/main/mainPage.do";
 			}
         }else{
-        	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
         }        
     }

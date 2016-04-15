@@ -26,6 +26,7 @@
 			<div id="main_container">
 				<div class="lefttitle_image">
 				    ${cookie.loginCookie.value}				    
+				    <spring:message code='info.nodata.msg' />
 				</div>		
 			</div>
 			<!-- footer 시작 -->
