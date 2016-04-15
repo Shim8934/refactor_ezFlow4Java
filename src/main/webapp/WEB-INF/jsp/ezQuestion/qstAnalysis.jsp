@@ -160,7 +160,6 @@
 		        document.getElementById("message").innerHTML = "";
 		        if (xmlHttp.responseText != "") {
 		            xmlTemp = loadXMLString(xmlHttp.responseText);
-// alert(xmlHttp.responseText);
 		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
 		            var rows = SelectNodes(xmlRtn, "ROW");
 		            var Rlength = rows.length;
