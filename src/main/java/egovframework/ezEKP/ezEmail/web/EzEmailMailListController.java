@@ -75,6 +75,7 @@ public class EzEmailMailListController {
 	 */
 	@RequestMapping("/ezEmail/mailList.do")
 	public String showMailList(@CookieValue("loginCookie") String loginCookie, 
+			Locale locale,
 			HttpServletRequest request,
 			Model model) throws Exception {
 		logger.debug("showMailList started");
@@ -87,7 +88,7 @@ public class EzEmailMailListController {
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
-		String folderName = egovMessageSource.getMessage("ezEmail.t644");
+		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
 		String userLang ="1";
 		
@@ -95,13 +96,13 @@ public class EzEmailMailListController {
 			folderName = dispname;
 		}
 		
-		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645"))) {
+		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
 			folderType = "sent";
 		}
-		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t646"))) {
+		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
 			folderType = "draft";
 		}
-		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t647"))) {
+		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
 			folderType = "delete";
 		}
 		
@@ -132,7 +133,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {
+	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("getMailList started");
 		
 		logger.debug("bodyData=" + bodyData);
@@ -141,7 +142,7 @@ public class EzEmailMailListController {
 		String password = userIdAndPassword.get(1);		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
-		String inboxName = egovMessageSource.getMessage("ezEmail.t644");
+		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
 		String sortType = doc.getElementsByTagName("SORTTYPE").item(0).getTextContent();
 		String start = doc.getElementsByTagName("START").item(0).getTextContent();
@@ -152,7 +153,7 @@ public class EzEmailMailListController {
 						+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		
 		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource);
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 				
 		Folder folder = imapAccess.getFolder(folderId);		
 		folder.open(Folder.READ_ONLY);
@@ -324,7 +325,8 @@ public class EzEmailMailListController {
 	@ResponseBody
 	public String mailDelete(@CookieValue("loginCookie") String loginCookie, 
 			@RequestParam("cmd") String cmd,
-			@RequestBody String bodyData, Model model) throws Exception {
+			@RequestBody String bodyData,
+			Locale locale, Model model) throws Exception {
 		logger.debug("mailDelete started");
 		logger.debug("cmd=" + cmd);
 		logger.debug("bodyData=" + bodyData);
@@ -353,7 +355,7 @@ public class EzEmailMailListController {
 		logger.debug("folderId=" + folderId);		
 		
 		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource);
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 				
 		IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
 		sourceFolder.open(Folder.READ_WRITE);		
@@ -367,7 +369,7 @@ public class EzEmailMailListController {
 		}
 		
 		if (cmd.equalsIgnoreCase("BMOVE")) {
-			IMAPFolder deletedFolder = (IMAPFolder)imapAccess.getFolder(egovMessageSource.getMessage("ezEmail.t647"));			
+			IMAPFolder deletedFolder = (IMAPFolder)imapAccess.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
 			sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 		}
 		sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);

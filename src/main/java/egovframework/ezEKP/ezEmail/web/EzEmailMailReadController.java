@@ -74,7 +74,7 @@ public class EzEmailMailReadController {
 	 * 메일 읽기화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailRead.do")
-	public String readMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -94,7 +94,7 @@ public class EzEmailMailReadController {
 		String contentClass = request.getParameter("CONTENTCLASS");
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
@@ -156,7 +156,7 @@ public class EzEmailMailReadController {
 						if(toListme){
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
 								if(arrRecipientsTo.length > 1){
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000") + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001") + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 								} else {
 									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
@@ -169,7 +169,7 @@ public class EzEmailMailReadController {
 						} else {
 							if(i == 0){
 								if(arrRecipientsTo.length > 1){
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000") + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001") + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 								} else {
 									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
@@ -203,7 +203,7 @@ public class EzEmailMailReadController {
 						if(ccListme){
 							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
 								if(arrRecipientsCC.length > 1){
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000") + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001") + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 								} else {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
@@ -216,7 +216,7 @@ public class EzEmailMailReadController {
 						} else {
 							if(i == 0){
 								if(arrRecipientsCC.length > 1){
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000") + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001") + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 								} else {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
@@ -253,7 +253,7 @@ public class EzEmailMailReadController {
 
 				subject = message.getSubject();
 				if(subject != null){
-					title = egovMessageSource.getMessage("ezEmail.t565") + subject;
+					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 				}
 
 				message.setFlag(Flag.SEEN, true);
@@ -280,7 +280,7 @@ public class EzEmailMailReadController {
 	 * 메일 본문 내용 화면 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailReadContent.do")
-	public String readMailContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -290,7 +290,7 @@ public class EzEmailMailReadController {
 
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 
 		List<String> bodyInfoList = null;
@@ -314,7 +314,7 @@ public class EzEmailMailReadController {
 				} else {
 					strSize = size + "B";
 				}
-				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180") + "</b>(" + strSize + ")";
+				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 
 			}
 		}
@@ -330,7 +330,7 @@ public class EzEmailMailReadController {
 	 * 메일 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttach.do")
-	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -351,7 +351,7 @@ public class EzEmailMailReadController {
 			index = Integer.parseInt(strIndex);
 		}
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 
 		Folder f = ia.getFolder(folderPath);
 		if(f != null){
@@ -399,7 +399,7 @@ public class EzEmailMailReadController {
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadInline.do")
-	public void downloadInline(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void downloadInline(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -417,7 +417,7 @@ public class EzEmailMailReadController {
 		}	
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 
 		Folder f = ia.getFolder(folderPath);
 		if(f != null){
@@ -459,7 +459,7 @@ public class EzEmailMailReadController {
 	 * 미리보기 메일 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailPrevShow.do")
-	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -484,7 +484,7 @@ public class EzEmailMailReadController {
 		logger.debug(folderPath);
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
@@ -634,7 +634,7 @@ public class EzEmailMailReadController {
 	 * 미리보기 메일 본문 내용 화면 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
-	public String previewContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String previewContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -650,7 +650,7 @@ public class EzEmailMailReadController {
 		}
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource);
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 
 		List<String> bodyInfoList = null;
@@ -674,7 +674,7 @@ public class EzEmailMailReadController {
 				} else {
 					strSize = size + "B";
 				}
-				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180") + "</b>(" + strSize + ")";
+				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 
 			}
 		}

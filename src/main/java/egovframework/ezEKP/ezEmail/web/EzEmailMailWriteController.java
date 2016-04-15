@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -77,7 +79,7 @@ public class EzEmailMailWriteController {
 	 * 메일 쓰기화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailWrite.do")
-	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String to = "";
 		String cc = "";
 		String bcc = "";
@@ -143,8 +145,6 @@ public class EzEmailMailWriteController {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		useEditor = config.getProperty("config.EDITOR");
-		System.out.println("getRequestURI : "+request.getRequestURI());
-		System.out.println("getRequestURL : "+request.getRequestURL().substring(0, request.getRequestURI().length()));
 
 		//hostURL = request.getRequestURL().substring(0, request.getRequestURI().length()) + "/ezEmail/"; - 지금은 필요없는데 나중에 필요할지도?
 		folderDate = EgovDateUtil.getToday();
@@ -250,7 +250,7 @@ public class EzEmailMailWriteController {
 //						userinfo.DisplayName2 : xmlDoc.SelectSingleNode("DATA/MAILSENDERNM").InnerText : userinfo.DisplayName2;
 //		string[] DivStrstr = new string[] { "|!-@-!|" };
 //		string[] SenderList = _PmailSenderNM.Split(DivStrstr, StringSplitOptions.RemoveEmptyEntries);
-		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032") + "</option>";
+		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
 //		foreach (string pSenderNM in SenderList)
 //		{
 //			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
@@ -1012,9 +1012,79 @@ public class EzEmailMailWriteController {
 //
 //        }
         
+        
+//        //발송전 처리 부분- 내용 , 첨부,본문, 임시저장
+//        String htmlbody = null;
+//        switch (message.Body.BodyType)
+//        {
+//            case BodyType.HTML:
+//                if (message.ExtendedProperties != null && message.ExtendedProperties.Count > 1)
+//                {
+//                    htmlbody = Encoding.GetEncoding((int)(message.ExtendedProperties[1].Value)).GetString((byte[])(message.ExtendedProperties[0].Value));
+//                }
+//                else
+//                    htmlbody = message.Body.Text;
+//                break;
+//            case BodyType.Text:
+//                htmlbody = message.Body.Text == null ? string.Empty : message.Body.Text;
+//                    //.Replace("\r\n", "<br />")
+//                    //.Replace("\r", "<br />")
+//                    //.Replace("\n", "<br />");
+//                break;
+//            default:
+//                break;
+//        }
+//        string tmpbody0 = this.MailItemRead_0(htmlbody);
+//        //string tmpbody1 = this.MailItemRead_1(tmpbody0);
+//        string tmpbody2 = this.MailItemRead_2(tmpbody0);
+//
+//
+//
+//        //tmpbody2 = Regex.Replace(tmpbody2, "<!--.*?-->", String.Empty, RegexOptions.Singleline);
+//        message.Body.Text = tmpbody2;
+//        //////////////////////////
+//        removeInline(ref message); // 20110907 주석, 일단은 삭제하지 않는다.
+//
+//        if (cmd.Equals("SAVE"))
+//        {
+//            if (string.IsNullOrEmpty(messageid))
+//            {
+//                message.Save(WellKnownFolderName.Drafts); // 임시보관함에 저장
+//                pMessageID = message.Id.UniqueId;
+//            }
+//            else
+//            {
+//                message.Update(ConflictResolutionMode.AlwaysOverwrite);
+//                pMessageID = message.Id.UniqueId;
+//            }
+//
+//            //저장시 내용은?
+//            {
+//                message.Load(new PropertySet(ItemSchema.MimeContent));
+//            }
+//
+//            return "OK";
+//        }
+//        else if (cmd.Equals("SEND"))
+//        {
+//            // 20110809_SSG
+//            // 편지함 용량 초과 메세지 확인을 위해 임시저장
+//            if (string.IsNullOrEmpty(messageid))
+//            {
+//                message.Save(WellKnownFolderName.Drafts);
+//                pMessageID = message.Id.UniqueId;
+//            }
+//        }
+        
+        
+        
+        
+        
+        
 		String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
         Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
         if (!delaySendTime.equals("")) {
+        	//예약발송
             //do_delaysend(xmldom, message);
             rtnStatus = "OK";
         } else {                        
@@ -1051,16 +1121,29 @@ public class EzEmailMailWriteController {
             } else{
             	Transport.send(message);
             }
-            
+            rtnStatus = "OK";
         }
         
         // sendmail_2010변환 끝
 		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
         String pResult = null;
         pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
-        pResult += "<MESSAGEID><![CDATA[" + pMessageID + "]]></MESSAGEID>";
+        //todo : MESSAGEID 수정 : 임시보관함에서 지울때 쓰임
+        pResult += "<MESSAGEID><![CDATA[" + message.getMessageID() + "]]></MESSAGEID>";
         
 		return "<DATA>" + pResult + "</DATA>";
+	}
+	
+	/**
+	 * 보낸편지함에 메일 저장 실행 함수
+	 */
+	private void copyIntoSent(Message messag){
+		
+	}
+	
+	@RequestMapping(value="/ezEmail/delDrafts.do")
+	public void delDrafts(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request){
+		
 	}
 	
 	/**
