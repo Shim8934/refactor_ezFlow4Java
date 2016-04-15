@@ -16,7 +16,7 @@
         
         	function window_onload() {
  				xmlhttp = createXMLHttpRequest();
-        		xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=ALL", true);
+        		xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?mode=ALL", true);
             	xmlhttp.onreadystatechange = get_listComplete_after;
             	xmlhttp.send();
         	}
@@ -27,7 +27,7 @@
             	checkArr = new Array();
             	document.getElementById("contentlist").innerHTML = "<table id='favorite_list' class='mainlist' style='width:100%;'><tr><td style='text-align:center;'><img src='/images/email/progress_img.gif' /></td></tr></table>";
             	xmlhttp = createXMLHttpRequest();
-            	xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?MODE=ALL", true);
+            	xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?mode=ALL", true);
             	xmlhttp.onreadystatechange = get_listComplete_after;
             	xmlhttp.send();
         	}
