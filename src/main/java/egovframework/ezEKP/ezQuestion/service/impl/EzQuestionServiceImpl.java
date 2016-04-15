@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -346,6 +347,15 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pAnswerNo", qstAttachVO.getAnswerNo());
 		return ezQuestionDAO.getAttachInfo(map);
 	}
+	
+	@Override
+	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO)	throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", qstAttachVO.getBrdId());
+		map.put("v_pItemNo", qstAttachVO.getItemNo());
+		map.put("v_pQuesNo", qstAttachVO.getQuestionNo());
+		return ezQuestionDAO.getAttachInfo03(map);
+	}
 
 	@Override
 	public List<QstAnswerVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception {
@@ -515,6 +525,15 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 			sb.append("</DATA>");
 		}	
 		return sb.toString();
+	}
+	
+	@Override
+	public List<String> tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object> ();
+		map.put("v_PSTRBRDID", brdId);
+		map.put("v_PITEMNO", itemNo);
+		map.put("v_PQUESNO", questionNo);
+		return ezQuestionDAO.tableAnswerValue(map);
 	}
 
 	@Override
@@ -753,5 +772,31 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	@Override
 	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo) throws Exception {
 		return ezQuestionDAO.getResponsePersonForResultTotalSave(itemNo);
-	}	
+	}
+
+	@Override
+	public List<QstTempSaveVO> tempSave(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		return ezQuestionDAO.tempSave(map);
+	}
+
+	@Override
+	public void questionDelete2(int brdId, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.questionDelete2(map);
+	}
+
+	@Override
+	public void questionDelete1(int brdId, int itemNo, int quesNo)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdId);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", quesNo);
+		ezQuestionDAO.questionDelete2(map);
+	}
 }
