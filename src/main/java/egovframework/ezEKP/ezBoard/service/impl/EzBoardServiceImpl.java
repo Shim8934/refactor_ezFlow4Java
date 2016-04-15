@@ -249,6 +249,17 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PLISTCNT", listCount);
+		map.put("v_PREVIEWMODE", previewMode);
+		map.put("v_LIST", list);
+		map.put("v_CONTENT", content);
+		ezBoardDAO.setBoardList_Config2(map);
+	}
+
+	@Override
 	public void photoListAlbumEdit(String boardID, String itemID, String title, String content) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BOARDID", boardID);

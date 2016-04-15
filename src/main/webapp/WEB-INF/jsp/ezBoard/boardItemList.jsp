@@ -156,35 +156,43 @@
 		    var Save_unloadSave = false;
 		    function Window_onunload() {
 		        if (window_onunload_Event && !Save_unloadSave) {
-		            var xmlhttp2 = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		            var objNode, divStyle, ifrmStyle;
-		            objNode = createNodeInsert(xmlpara, objNode, "DATA");
-		            createNodeAndInsertText(xmlpara, objNode, "USERID", SSUserID);
-		            if (document.getElementById("listcount") != null)
-		                createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("listcount").value);
-		            else
-		                createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", "20");
-		
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", pPreviewShow_HOW);
+		            var divStyle;
+		            var listCount = 0;
+		            
+		            if (document.getElementById("listcount") != null){
+		            	listCount = document.getElementById("listcount").value;
+		            }else{
+		            	listCount = 20;
+		            }
 		            
 		            if (pPreviewShow_HOW == "W"){
 		                divStyle = Math.round(pMailListDiv);
-		            }
-		            else if (pPreviewShow_HOW == "H") {
+		            }else if (pPreviewShow_HOW == "H") {
 		                divStyle = Math.round(pMailListDiv_H);
-		            }
-		            else {
+		            }else {
 		                divStyle = 0;
 		            }
-		            if (divStyle < 24)
+		            
+		            if (divStyle < 24){
 		                divStyle = 24;
-		            createNodeAndInsertText(xmlpara, objNode, "LIST", divStyle);
-		            createNodeAndInsertText(xmlpara, objNode, "CONTENT", (100 - divStyle));
+		            }
 		
-		            xmlhttp2.open("POST", "aspx/board_generallist_save2.aspx", false);
-		            xmlhttp2.send(xmlpara);
-		            Save_unloadSave = true;
+		            $.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezBoard/boardGeneralListSave2.do",
+						data : { userID 	 : SSUserID, 
+								 listCount 	 : listCount, 
+								 previewMode : pPreviewShow_HOW,
+								 list 		 : divStyle,
+								 content 	 : (100 - divStyle)
+								},
+						success: function(){
+						}        			
+					});
+		            
+				    Save_unloadSave = true;
 		        }
 		    }
 		    $(function () {

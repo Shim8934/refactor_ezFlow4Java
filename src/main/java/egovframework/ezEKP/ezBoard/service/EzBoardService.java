@@ -178,6 +178,8 @@ public interface EzBoardService {
 	
 	public void updateMoveItem(String destItemID, String orgItemID) throws Exception;
 	
+	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content) throws Exception;
+	
 	public void photoListAlbumEdit(String boardID, String itemID, String title, String content) throws Exception;
 	
 	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content) throws Exception;

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -88,6 +90,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private Properties globals;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -620,10 +625,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
 		if(pBoardID == null || pBoardID.equals("")){
-			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229", new Locale(globals.getProperty("Globals.language"))));	
 			return boardInfo;
 		}
-
+		
 		String deptPath = userInfo.getDeptPathCode();
 	    String deptPathOrgan="";
 	    for(int ch = 0; ch < deptPath.split(",").length; ch++){
@@ -711,7 +716,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setSs_searchBoard_maxRows(10);             
 
 		if(pBoardID.equals("")){
-			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229"));		
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.t229", new Locale(globals.getProperty("Globals.language"))));		
 			return null;
 		}
 
@@ -2513,7 +2518,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 
         if(boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")){
-        	boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287"));
+        	boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", new Locale(globals.getProperty("Globals.language"))));
         }
         
         BoardVO adjacentItem = new BoardVO();
@@ -2529,10 +2534,10 @@ public class EzBoardController extends EgovFileMngUtil{
             }
 
             if(adjacentItem.getPreviousTitle().equals("")){
-            	adjacentItem.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330"));
+            	adjacentItem.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330", new Locale(globals.getProperty("Globals.language"))));
             }
             if(adjacentItem.getNextTitle().equals("")){
-            	adjacentItem.setNextTitle(egovMessageSource.getMessage("ezBoard.t331"));
+            	adjacentItem.setNextTitle(egovMessageSource.getMessage("ezBoard.t331", new Locale(globals.getProperty("Globals.language"))));
             }
         }
         
@@ -3992,7 +3997,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(resultXml);
 		NodeList nList = doc.getElementsByTagName("ROW");
 		
-		String result = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezBoard.t208") + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS><ROWS>";
+		String result = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezBoard.t208", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS><ROWS>";
 		
         for (int i = nList.getLength() - 1; i >= 0; i--){
             result += "<ROW><CELL><VALUE><![CDATA[" + makeXMLString(doc.getElementsByTagName("TITLE").item(i).getTextContent()) + "]]></VALUE>";
@@ -4170,7 +4175,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if(boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")){
-			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287"));
+			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", new Locale(globals.getProperty("Globals.language"))));
 		}
 		
 		model.addAttribute("boardItem", boardItem);
@@ -4286,7 +4291,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setWriteDate(boardItem.getParentWriteDate());
 		}
 		if(boardItem.getEndDate().substring(0, 4).equals("9999")){
-			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287"));
+			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", new Locale(globals.getProperty("Globals.language"))));
 		}
 		
 		if(adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")){
@@ -4300,11 +4305,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			if(boardAdjacent.getPreviousTitle().equals("")){
-				boardAdjacent.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330"));
+				boardAdjacent.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330", new Locale(globals.getProperty("Globals.language"))));
 			}
 			
 			if(boardAdjacent.getNextTitle().equals("")){
-				boardAdjacent.setNextTitle(egovMessageSource.getMessage("ezBoard.t331"));
+				boardAdjacent.setNextTitle(egovMessageSource.getMessage("ezBoard.t331", new Locale(globals.getProperty("Globals.language"))));
 			}
 		}
 		
@@ -5288,7 +5293,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String sortBy = "";
 		String boardType = "";
 		String adminType = "";
-		String boardName = egovMessageSource.getMessage("ezBoard.t229");
+		String boardName = egovMessageSource.getMessage("ezBoard.t229", new Locale(globals.getProperty("Globals.language")));
 		String isVpn = "";
 		int totalCount = 0;
 		int totalPage = 0;
@@ -5464,5 +5469,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		if(filePath != null && !filePath.equals("")){
 			ezCommonService.responseAttach(filePath, fileName, true, request, response);
 		}
+	}
+	
+	/**
+	 * 게시판 리스트설정셋팅 실행 Method
+	 */
+	@RequestMapping(value = "/ezBoard/boardGeneralListSave2.do")
+	public String boardGeneralListSave2(HttpServletRequest request) throws Exception{
+		String userID = request.getParameter("userID");
+		String listCount = request.getParameter("listCount");
+		String previewMode = request.getParameter("previewMode");
+		String list = request.getParameter("list");
+		String content = request.getParameter("content");
+		
+		ezBoardService.setBoardList_Config2(userID, listCount, previewMode, list, content);
+		
+		return "json";
 	}
 } 

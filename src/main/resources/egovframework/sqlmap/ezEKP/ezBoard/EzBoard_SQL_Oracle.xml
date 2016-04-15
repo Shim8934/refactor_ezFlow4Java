@@ -359,6 +359,10 @@
 		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.setBoardList_Config2" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG2(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_LIST#, #v_CONTENT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
 	</procedure>

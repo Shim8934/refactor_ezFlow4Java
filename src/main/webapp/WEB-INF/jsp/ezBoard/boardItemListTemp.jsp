@@ -116,13 +116,8 @@
 		        var Save_unloadSave = false;
 		        function Window_onunload() {
 		            if (window_onunload_Event && !Save_unloadSave) {
-		                var xmlhttp2 = createXMLHttpRequest();
-		                var xmlpara = createXmlDom();
-		                var objNode, divStyle, ifrmStyle;
-		                objNode = createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "USERID", SSUserID);
-		                createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("listcount").value);
-		                createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", pPreviewShow_HOW);
+		                var divStyle, ifrmStyle;
+		                var listCount = document.getElementById("listcount").value;
 		
 		                if (pPreviewShow_HOW == "W") {
 		                    divStyle = parseInt(document.getElementById("divList").style.height);
@@ -139,11 +134,21 @@
 		                }
 		                if (divStyle < 24)
 		                    divStyle = 24;
-		                createNodeAndInsertText(xmlpara, objNode, "LIST", divStyle);
-		                createNodeAndInsertText(xmlpara, objNode, "CONTENT", (100 - divStyle));
-		
-		                xmlhttp2.open("POST", "aspx/board_generallist_save2.aspx", false);
-		                xmlhttp2.send(xmlpara);
+		                
+		                $.ajax({
+							type : "POST",
+							dataType : "json",
+							async : false,
+							url : "/ezBoard/boardGeneralListSave2.do",
+							data : { userID 	 : SSUserID, 
+									 listCount 	 : listCount, 
+									 previewMode : pPreviewShow_HOW,
+									 list 		 : divStyle,
+									 content 	 : (100 - divStyle)
+									},
+							success: function(){
+							}        			
+						});
 		                Save_unloadSave = true;
 		            }
 		        }

@@ -389,6 +389,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.setBoardConfig", map);
 	}
 	
+	public void setBoardList_Config2(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.setBoardList_Config2", map);
+	}
+	
 	public void deleteItem(Map<String, Object> map) throws Exception{
 		delete("EzBoardDAO.deleteItem", map);
 	}

@@ -75,6 +75,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
         String strHTML = "";
+        String realPath = request.getServletContext().getRealPath("");
         if(request.getParameter("strHTML") != null){
         	strHTML = request.getParameter("strHTML");
         }
@@ -137,15 +138,119 @@ public class EzCommonController extends EgovFileMngUtil{
 //        }
         // reform - end
 
-        String mhtData = startHtml2Mht(strHTML);
+        String mhtData = startHtml2Mht(strHTML, realPath);
         
         return mhtData;
 	}
 	
 	/**
+	 * 게시판 mht -> html 변환 표출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mhtToHTMLContent(HttpServletRequest request) throws Exception{
+		String itemID = "";
+		String type = "";
+		String realPath = request.getServletContext().getRealPath("");
+		String strResult = "";
+		
+		itemID = request.getParameter("itemID");
+		type = request.getParameter("type");
+		strResult = getMHTtoHTML(type, itemID, realPath);
+
+		return strResult;
+	}
+	
+	/**
+	 * 게시판 html -> mht 변환 표출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mhtToHTML(HttpServletRequest request) throws Exception{
+		String filePath = "";
+        String uploadModule = config.getProperty("config.LocalPath");
+        String realPath = request.getServletContext().getRealPath("");
+        String strURL = request.getParameter("strURL");
+        
+        strURL = strURL.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+        filePath = realPath + uploadModule;
+        
+        File file = new File(filePath);
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        String m_strMHT = "";
+        
+        try {
+        	m_strMHT = loadMHTFile(realPath + strURL);
+        	m_strMHT = m_strMHT.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+		} catch (Exception e) {
+			m_strMHT= "";
+		}
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+        strHTML = makeXMLString(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
+        
+		return "<BODYDATA>" + strHTML + "</BODYDATA>";
+	}
+	
+	/**
+	 * 게시판 ck에디터 이미지 업로드 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
+	public String ckImageUpload(){
+		return "ezCommon/ckImageUpload";
+	}
+	
+	/**
+	 * 게시판 ck에디터 업로드 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/ckUpload.do")
+	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		MultipartFile multiFile = request.getFile("file1");
+		
+		String fileType = multiFile.getContentType().split("/")[1];
+		String filePath = config.getProperty("upload_common.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		String today = EgovDateUtil.getToday();
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + "/" + today;
+		File file = new File(realPath + filePath);
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        
+        int width = 0;
+		int height = 0;
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		File imageFile = new File(realPath + filePath + "/" + fileName);			
+	
+		if(imageFile.exists()){			
+			BufferedImage bi = ImageIO.read(new File(realPath + filePath + "/" + fileName));			    
+			width = bi.getWidth();
+			height = bi.getHeight();
+		}
+		
+		model.addAttribute("imgPath", (filePath).replace("\\", "/") + "/" + fileName +  "|!|" + width + "|!|" + height);
+		
+		return "ezCommon/ckUpload";
+	}
+
+	/**
+	 * 게시판 ck에디터 심플업로드화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public void ckSimpleUpload(HttpServletRequest request){
+//		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + "" + "', '')</script>";
+	}
+	
+	/**
 	 * 게시판 html -> mht 변환 실행 Method
 	 */
-	public String startHtml2Mht(String m_strHTML) throws Exception{
+	public String startHtml2Mht(String m_strHTML, String realPath) throws Exception{
 		StringBuilder m_strMHT = new StringBuilder();
 		String m_strBoundary = "";
 		String[] m_ImageList = null;
@@ -160,13 +265,13 @@ public class EzCommonController extends EgovFileMngUtil{
             //본문 인코딩
         	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
             //이미지 인코딩
-            if (m_ImageList != null)
-                doImageEncoding(m_ImageList, m_strMHT, m_strBoundary);
+            if (m_ImageList != null){
+            	doImageEncoding(m_ImageList, m_strMHT, m_strBoundary, realPath);
+            }
             //백그라운드 인코딩
-            if (m_BackImageList != null)
+            if (m_BackImageList != null){
             	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
-            //스크립트 인코딩 - 생략 ex) <script src="http://....test.aspx">
-            //CSS 인코딩 - 생략 ex) <link href="http://....test.css">
+            }
 
             m_strMHT.append("--\n");
             
@@ -566,8 +671,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	/**
 	 * 게시판 html -> mht 변환 이미지인코딩 실행 Method
+	 * @param realPath 
 	 */
-	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
+	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
         for (int i = 0; i < m_ImageList.length; i++){
             m_strMHT.append("\nContent-Type: Image/gif\n");
             m_strMHT.append("Content-Transfer-Encoding: base64\n");
@@ -584,7 +690,7 @@ public class EzCommonController extends EgovFileMngUtil{
             	imageSample = ImageIO.read(url);
             	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
             }else{
-            	File file = new File(m_ImageList[i].replace("&amp;", "&"));
+            	File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
             	imageSample = ImageIO.read(file);
             	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
             }
@@ -636,24 +742,6 @@ public class EzCommonController extends EgovFileMngUtil{
         }
     }
 	
-	/**
-	 * 게시판 mht -> html 변환 표출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
-	@ResponseBody
-	public String mhtToHTMLContent(HttpServletRequest request) throws Exception{
-		String itemID = "";
-		String type = "";
-		String realPath = request.getServletContext().getRealPath("");
-		String strResult = "";
-		
-		itemID = request.getParameter("itemID");
-		type = request.getParameter("type");
-		strResult = getMHTtoHTML(type, itemID, realPath);
-
-		return strResult;
-	}
-
 	/**
 	 * 게시판 html -> mht 변환 표출 Method
 	 */
@@ -802,38 +890,6 @@ public class EzCommonController extends EgovFileMngUtil{
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 표출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
-	@ResponseBody
-	public String mhtToHTML(HttpServletRequest request) throws Exception{
-		String filePath = "";
-        String uploadModule = config.getProperty("config.LocalPath");
-        String realPath = request.getServletContext().getRealPath("");
-        String strURL = request.getParameter("strURL");
-        
-        strURL = strURL.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-        filePath = realPath + uploadModule;
-        
-        File file = new File(filePath);
-        if (!file.exists()){
-        	file.mkdir();
-        }
-        String m_strMHT = "";
-        
-        try {
-        	m_strMHT = loadMHTFile(realPath + strURL);
-        	m_strMHT = m_strMHT.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-		} catch (Exception e) {
-			m_strMHT= "";
-		}
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-        strHTML = makeXMLString(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
-        
-		return "<BODYDATA>" + strHTML + "</BODYDATA>";
-	}
-	
-	/**
 	 * 게시판 특문 인코딩 표출 Method
 	 */
 	public String makeXMLString(String orgString){
@@ -844,57 +900,4 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 	}
 	
-	/**
-	 * 게시판 ck에디터 이미지 업로드 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
-	public String ckImageUpload(){
-		return "ezCommon/ckImageUpload";
-	}
-	
-	/**
-	 * 게시판 ck에디터 업로드 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckUpload.do")
-	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		MultipartFile multiFile = request.getFile("file1");
-		
-		String fileType = multiFile.getContentType().split("/")[1];
-		String filePath = config.getProperty("upload_common.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
-		String today = EgovDateUtil.getToday();
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + "/" + today;
-		File file = new File(realPath + filePath);
-        if (!file.exists()){
-        	file.mkdir();
-        }
-        
-        int width = 0;
-		int height = 0;
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		File imageFile = new File(realPath + filePath + "/" + fileName);			
-	
-		if(imageFile.exists()){			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + "/" + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
-		model.addAttribute("imgPath", (realPath + filePath).replace("\\", "/") + "/" + fileName +  "|!|" + width + "|!|" + height);
-		
-		return "ezCommon/ckUpload";
-	}
-
-	/**
-	 * 게시판 ck에디터 심플업로드화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
-	@ResponseBody
-	public void ckSimpleUpload(HttpServletRequest request){
-//		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + "" + "', '')</script>";
-	}
 }

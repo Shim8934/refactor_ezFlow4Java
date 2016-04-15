@@ -27,4 +27,6 @@
     
     <util:properties id="config" location="classpath:/egovframework/egovProps/config.properties" />
     
+    <util:properties id="globals" location="classpath:/egovframework/egovProps/globals.properties" />
+    
 </beans>	
