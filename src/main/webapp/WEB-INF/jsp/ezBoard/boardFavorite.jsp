@@ -34,6 +34,7 @@
         	function get_listComplete_after() {
             	if (xmlhttp.readyState != 4) return;
             	var listdom = xmlhttp.responseXML;         
+            	alert(xmlhttp.responseText);
             	var parentXmlhttp = null;
             	parentXmlhttp = createXMLHttpRequest();
             	xmlpara = createXmlDom();
@@ -42,6 +43,7 @@
             	if (listdom.getElementsByTagName("ROW").length > 0) {
                 	var strHTML = "<table id='favorite_list'  class='mainlist' style='width:100%;'>";
                 	var parentBoardName = getNodeText(listdom.getElementsByTagName("TOPBOARDLIST")[0]).split(';');
+                	alert(listdom.getElementsByTagName("ROW").length);
                 	for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
                     	strHTML += "<tr BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' BoardOrder='" + i + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);'>";
                     	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y")
