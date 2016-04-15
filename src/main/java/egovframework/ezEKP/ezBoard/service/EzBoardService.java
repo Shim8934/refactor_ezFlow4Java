@@ -44,6 +44,8 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID) throws Exception;
 	
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
@@ -102,7 +104,11 @@ public interface EzBoardService {
 	
 	public String deleteTempItem(String strItemID) throws Exception;
 	
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
+	public String getItemXML(String boardID, String itemID, String lang) throws Exception;
+
+	public String getItemTempXML(String boardID, String itemID, String lang) throws Exception;
+	
+	public String setBoardConfig(String userID, String listCount, String preView) throws Exception;
 	
 	public int getReservedItemListCount(String userID) throws Exception;
 	

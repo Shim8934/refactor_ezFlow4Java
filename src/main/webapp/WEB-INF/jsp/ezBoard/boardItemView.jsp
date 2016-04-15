@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
@@ -61,7 +61,7 @@
 			var pNoneActiveX = "YES";
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";
-		    var AtttributeCount = 0; 
+		    var AtttributeCount = "${boardAttrCount}"; 
 		    window.onload = function () {
 		        try {
 					var html = "";
@@ -87,8 +87,9 @@
 		            
 		            //추가항목 창 사이즈 조절
 		            var addheight = 0;
-		            //아직 추가 안함
-// 					addheight = AtttributeCount * 40;
+		            if("${boardAttrCount}" > 0){
+						addheight = AtttributeCount * 40;
+		            }
 		
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
@@ -329,39 +330,12 @@
 		                    return;
 		                }
 		
-// 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
-// 		                }
-// 		                else {
-// 		                    if (pUse_IE11Browser == "CK") {
-// 		                        window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                    }
-// 		                    else {
-// 		                        if (pUse_Editor == "")
-// 		                            window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                        else
-// 		                            window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                    }
-// 		                }
+	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		                window.resizeTo(785, 780);
 		            }
 		        }
 		        if (gubun != "2") {
-// 		            if (CrossYN() || pNoneActiveX == "YES") {
-		                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
-// 		            }
-// 		            else {
-		
-// 		                if (pUse_IE11Browser == "CK") {
-// 		                    window.location.href = "NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                }
-// 		                else {
-// 		                    if(pUse_Editor == "")
-// 		                        window.location.href = "NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                    else
-// 		                        window.location.href = "NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                }
-// 		            }
+	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		            window.resizeTo(785, 780);
 		        }
 		    }
@@ -373,21 +347,7 @@
 		            return;
 		        }
 		
-// 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
-// 		        }
-// 		        else {
-		
-// 		            if (pUse_IE11Browser == "CK") {
-// 		                window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		            }
-// 		            else {
-// 		                if(pUse_Editor == "")
-// 		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		                else
-// 		                    window.location.href = "/myOffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID + "&Mode=modify" + "&ReservedItem=" + pReservedItem;
-// 		            }
-// 		        }
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Copy_Onclick() {
@@ -549,36 +509,6 @@
 		        var feature = "height=490px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 490);
 		        window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", feature);
-		    }
-		    function btn_SaveToPC_Onclick() {
-		        var fPath;
-		        var objMHT = new ActiveXObject("MhtFormat.Convert");
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(strContentLocation);
-		        objMHT.sync = true;
-		        var strMht = objMHT.DownloadURL(fullPath);
-		        if (strMht.length > 200000) {
-		            g_progresswin = window.showModelessDialog("show_progress.aspx?fileinfo=" + encodeURI("<spring:message code='ezBoard.t297' />"), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
-				}
-		        objMHT.mhtData = strMht;
-		        objMHT.filterIn();
-		        var objSave = new ActiveXObject("EzUtil.MiscFunc");
-		        objSave.UseUTF8 = true;
-		        var strFilter;
-		        strFilter = objSave.OpenSaveDlg("MHT", "", strTitle.replace("\\", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "")
-		                .replace("\"", "").replace("<", "").replace(">", "").replace("|", "")
-		                .replace("#", "").replace("!", "").replace(".", ""));
-				if (strFilter != "") {
-				    var arryFileNM = strFilter.split(".");
-				    var cnt = arryFileNM.length;
-				    var FileExtensionNM = arryFileNM[cnt - 1].toLowerCase();
-				    if (FileExtensionNM == "mht") {
-				        objSave.SaveTextToFile(strFilter, objMHT.mhtData);
-				    }
-				    else {
-				        objSave.SaveTextToFile(strFilter, objMHT.htmlData);
-				    }
-				    alert("<spring:message code='ezBoard.t79' />");
-		        }
 		    }
 		    function mail_boarditem() {
 		        var pheight = window.screen.availHeight;
@@ -1125,6 +1055,40 @@
 							</tr>
 						</c:when>
 					</c:choose>
+					<c:if test="${boardAttrCount > 0}">
+						<c:forEach var="boardAttr" items="${boardAttr}">
+							<tr>
+								<c:choose>
+									<c:when test="${extenLang == '1'}">
+						                <th>${boardAttr.colName1}</th>
+									</c:when>
+									<c:otherwise>
+						                <th>${boardAttr.colName2}</th>
+									</c:otherwise>
+								</c:choose>
+				                <td colspan="5">
+				                	<c:choose>
+				                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
+				                			${boardItem.extensionAttribute6}
+				                		</c:when>
+				                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
+				                			${boardItem.extensionAttribute7}
+				                		</c:when>
+				                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
+				                			${boardItem.extensionAttribute8}
+				                		</c:when>
+				                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
+				                			${boardItem.extensionAttribute9}
+				                		</c:when>
+				                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
+				                			${boardItem.extensionAttribute10}
+				                		</c:when>
+				                		<c:otherwise></c:otherwise>
+				                	</c:choose>
+				                </td>
+				            </tr>
+						</c:forEach>
+					</c:if>
 		        <tr>
 		          <th><spring:message code='ezBoard.t323' /></th>
 		             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5><div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div></td>
@@ -1289,36 +1253,40 @@
 			</c:choose>
 		  </c:otherwise>
 	  </c:choose>
-<%-- 	  <c:when test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}"> --%>
-<!-- 	  <tr> -->
-<!-- 	    <td style="vertical-align: top;"> -->
-<!-- 	        <table class="content"> -->
-<!-- 	        <tr> -->
-<%-- 	          <th><spring:message code='ezBoard.t327' /></th> --%>
-<%-- 	          <% if (PreviousItemID == "") { %> --%>
-<%-- 	          <td width="100%"><% } else { %> --%>
-<%-- 	          <td style="cursor:pointer" width="100%"><% } %> --%>
-<%-- 	              <% if(Request.UserAgent.IndexOf("Firefox") > -1 ) { %> --%>
-<%-- 	            <div align="left" style="overflow:-moz-scrollbars-vertical; WIDTH: 100%; height:inherit" onClick="OpenItem('<%=PreviousItemID%>')"><%=PreviousTitle%></div></td> --%>
-<%-- 	            <%}else{ %> --%>
-<%-- 	            <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('<%=PreviousItemID%>')"><%=PreviousTitle%></div></td> --%>
-<%-- 	            <%} %> --%>
-<!-- 	        </tr> -->
-<!-- 	        <tr> -->
-<%-- 	          <th><spring:message code='ezBoard.t328' /></th> --%>
-<%-- 	          <% if (NextItemID == "") { %> --%>
-<%-- 	          <td><% } else { %> --%>
-<%-- 	          <td style="cursor:pointer"><% } %> --%>
-<%-- 	              <% if(Request.UserAgent.IndexOf("Firefox") > -1 ) { %> --%>
-<%-- 	            <div align="left" style="overflow:-moz-scrollbars-vertical;WIDTH: 100%; height:inherit" onClick="OpenItem('<%=NextItemID%>')"><%=NextTitle%></div></td> --%>
-<%-- 	            <%}else{ %> --%>
-<%-- 	            <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('<%=NextItemID%>')"><%=NextTitle%></div></td> --%>
-<%-- 	            <%} %> --%>
-<!-- 	        </tr> -->
-<!-- 	      </table> -->
-<!-- 	    </td> -->
-<!-- 	  </tr> -->
-<%-- 	  </c:when> --%>
+	  <c:when test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
+	  <tr>
+	    <td style="vertical-align: top;">
+	        <table class="content">
+	        <tr>
+	          <th><spring:message code='ezBoard.t327' /></th>
+	          <c:choose>
+		          <c:when test="${adjacentItem.previousItemID == ''}">
+			          <td width="100%">
+		          </c:when>
+		          <c:otherwise>
+			          <td style="cursor:pointer" width="100%">
+		          </c:otherwise>
+	          </c:choose>
+	          <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
+	          </td>
+	        </tr>
+	        <tr>
+	          <th><spring:message code='ezBoard.t328' /></th>
+	          <c:choose>
+	          	<c:when test="${adjacentItem.nextItemID == ''}">
+		          <td>
+	          	</c:when>
+	          	<c:otherwise>
+		          <td style="cursor:pointer">
+	          	</c:otherwise>
+	          </c:choose>
+	            <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
+	            </td>
+	        </tr>
+	      </table>
+	    </td>
+	  </tr>
+	  </c:when>
 	</table>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

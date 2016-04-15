@@ -767,6 +767,136 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public String getItemXML(String boardID, String itemID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfo(map);
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<NODES>");
+		sb.append("<NODE>");
+		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
+		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
+		if(lang.equals("")){
+			sb.append("<WriterName>" + makeXMLString(itemInfo.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + makeXMLString(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + makeXMLString(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
+		}else{
+			sb.append("<WriterName>" + makeXMLString(itemInfo.getWriterName2()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + makeXMLString(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + makeXMLString(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
+		}
+		sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
+		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
+		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
+		sb.append("<Title>" + makeXMLString(itemInfo.getTitle()) + "</Title>");
+		sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
+		sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
+		sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
+		sb.append("<Abstract>" + makeXMLString(itemInfo.getABSTRACT()) + "</Abstract>");
+		sb.append("<Attachments>" + makeXMLString(itemInfo.getAttachments()) + "</Attachments>");
+		sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
+		sb.append("<ItemLevel>" + itemInfo.getItemLevel() + "</ItemLevel>");
+		sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
+		sb.append("<ExtensionAttribute1>" + makeXMLString(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
+		sb.append("<ExtensionAttribute2>" + makeXMLString(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
+        if(lang.equals("")){
+        	sb.append("<ExtensionAttribute3>" + makeXMLString(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
+        }else{
+        	sb.append("<ExtensionAttribute3>" + makeXMLString(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
+        }
+        sb.append("<ExtensionAttribute4>" + makeXMLString(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
+		sb.append("<ExtensionAttribute5>" + makeXMLString(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
+        sb.append("<MainContent>" + makeXMLString(itemInfo.getMainContent()) + "</MainContent>");   
+        sb.append("<APPRFLAG>" + makeXMLString(itemInfo.getApprFlag()) + "</APPRFLAG>");
+        sb.append("<GUBUN>" + makeXMLString(itemInfo.getGuBun()) + "</GUBUN>");
+        //확장값 추가
+        sb.append("<ExtensionAttribute6>" + makeXMLString(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
+        sb.append("<ExtensionAttribute7>" + makeXMLString(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
+        sb.append("<ExtensionAttribute8>" + makeXMLString(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
+        sb.append("<ExtensionAttribute9>" + makeXMLString(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
+        sb.append("<ExtensionAttribute10>" + makeXMLString(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
+        sb.append("<BoardID>" + makeXMLString(itemInfo.getBoardID()) + "</BoardID>");
+		sb.append("</NODE>");
+		sb.append("</NODES>");
+
+		return sb.toString();
+	}
+
+	@Override
+	public String getItemTempXML(String boardID, String itemID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfoTemp(map);
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("<NODES>");
+		sb.append("<NODE>");
+		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
+		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
+		if(lang.equals("")){
+			sb.append("<WriterName>" + makeXMLString(itemInfo.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + makeXMLString(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + makeXMLString(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
+		}else{
+			sb.append("<WriterName>" + makeXMLString(itemInfo.getWriterName2()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + makeXMLString(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + makeXMLString(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
+		}
+		sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
+		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
+		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
+		sb.append("<Title>" + makeXMLString(itemInfo.getTitle()) + "</Title>");
+		sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
+		sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
+		sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
+		sb.append("<Abstract>" + makeXMLString(itemInfo.getABSTRACT()) + "</Abstract>");
+		sb.append("<Attachments>" + makeXMLString(itemInfo.getAttachments()) + "</Attachments>");
+		sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
+		sb.append("<ItemLevel>" + itemInfo.getItemLevel() + "</ItemLevel>");
+		sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
+		sb.append("<ExtensionAttribute1>" + makeXMLString(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
+		sb.append("<ExtensionAttribute2>" + makeXMLString(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
+        if(lang.equals("")){
+        	sb.append("<ExtensionAttribute3>" + makeXMLString(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
+        }else{
+        	sb.append("<ExtensionAttribute3>" + makeXMLString(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
+        }
+        sb.append("<ExtensionAttribute4>" + makeXMLString(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
+		sb.append("<ExtensionAttribute5>" + makeXMLString(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
+        sb.append("<MainContent>" + makeXMLString(itemInfo.getMainContent()) + "</MainContent>");   
+        //확장값 추가
+        sb.append("<ExtensionAttribute6>" + makeXMLString(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
+        sb.append("<ExtensionAttribute7>" + makeXMLString(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
+        sb.append("<ExtensionAttribute8>" + makeXMLString(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
+        sb.append("<ExtensionAttribute9>" + makeXMLString(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
+        sb.append("<ExtensionAttribute10>" + makeXMLString(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
+        sb.append("<BoardID>" + makeXMLString(itemInfo.getBoardID()) + "</BoardID>");
+		sb.append("</NODE>");
+		sb.append("</NODES>");
+
+		return sb.toString();
+	}
+
+	@Override
+	public String setBoardConfig(String userID, String listCount, String preView) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PLISTCOUNT", listCount);
+		map.put("v_PPREVIEW", preView);
+		try {
+			ezBoardDAO.setBoardConfig(map);
+			return "OK";
+		} catch (Exception e) {
+			return "NO";
+		}
+	}
+
+	@Override
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception {
 		if(!(endRow > 0)){
 			endRow = 0;
@@ -866,6 +996,14 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_FILESIZE", fileSize);
 		map.put("v_FILENAME", fileName);
 		ezBoardDAO.saveAttachInfo(map);
+	}
+	
+	public String makeXMLString(String orgString){
+		if(orgString != null){
+			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		}else{
+			return orgString;
+		}
 	}
 	
 }

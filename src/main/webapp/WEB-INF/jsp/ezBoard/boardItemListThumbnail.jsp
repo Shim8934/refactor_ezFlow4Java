@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_thumbnail.js"></script>
@@ -1198,7 +1199,7 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="blank.html" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
 	    </span>
@@ -1224,7 +1225,7 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="blank.html" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>
 	    </span>

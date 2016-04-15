@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="/css/default_kr.css"  rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
@@ -254,8 +255,9 @@
 		            CurPage = 1;
 		        }
 		        starttime = new Date().getTime();
-		        if(document.getElementById("viewtype") != null)
+		        if(document.getElementById("viewtype") != null){
 		        	type = document.getElementById("viewtype").value;
+		        }
 		        if (SQLPARADATA != ""){
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
@@ -284,7 +286,6 @@
 		    var firstFlag = false;
 		    function getBoardList_after(xml) {
 		        try {
-// 		            if (xmlhttp.responseText == "") return;
 		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
 		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
@@ -349,20 +350,20 @@
 		            }
 		            if (!firstFlag) {
 		                PreviewRayerChange(pPreviewShow_HOW);
-		                //if (pAdminType != "y")
-		                //    PreviewRayerChange(pPreviewShow_HOW);
-		                //else
-		                //    PreviewRayerChange("NONE");
 		                if (CrossYN()) {
-		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
-		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+		                    }
+		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
 		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
+		                    }
 		                } else {
-		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
 		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+		                    }
+		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
 		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+		                    }
 		                }
 		                firstFlag = true;
 		            }
@@ -810,7 +811,7 @@
 		        return true;
 		    }
 		    function refresh_onclick() {
-		        window.location.href = window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -966,8 +967,7 @@
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
-		        //window.location.href = "BoardReservedItemList_Cross.aspx?OrgBoardParameters=" + encodeURI(OrgBoardParameters) + "&BoardType=" + pBoardType;
-		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType + "&AaminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		    function search_onclick() {
 		        var OrgBoardParameters = "Page=" + CurPage + "&SortBy=" + "&BoardID=" + pBoardID + "&BoardType=" + pBoardType;
@@ -1252,7 +1252,7 @@
 	                    </div>
 	                </span>
 	                
-	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="blank.html" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
 	    </span>
@@ -1279,7 +1279,7 @@
 	                    </div>
 	                </span>
 	                
-	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="blank.html" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>
 	    </span>

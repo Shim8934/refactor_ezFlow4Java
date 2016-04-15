@@ -332,39 +332,6 @@
 						checks.item(i).checked = true;
 				}
 		
-		        //사진다운로드
-				function attach_Download()
-				{
-					var param = {"href":new Array(), "name":new Array(), "folderpath":new String()};
-					var count = 0;
-		
-					var checks = lstAttachLink.all.tags("input");
-		
-					for (var i=0; i<checks.length; i++)
-					{
-						if (checks.item(i).checked == true)
-						{
-							param["href"][count] = checks.item(i).filehref;
-							param["name"][count] = checks.item(i).value;
-							count++;
-						}
-					}
-					if (count == 0)
-					{
-						alert("<spring:message code='ezBoard.t306'/>");
-						return;
-					}
-		
-					var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-		            ezUtil.UseUTF8 = true;
-					var folderpath = ezUtil.BrowseFolder();
-					if (folderpath != "")
-					{
-						param["folderpath"] = folderpath;
-						window.showModalDialog("/ezBoard/boardAttachDown.do", param, "dialogWidth:430px; dialogHeight:170px; scroll:no; status:no; help:no; scroll:no; edge:sunken");
-					}
-				}
-		
 				function MemberInfo_onclick(pUserID)
 				{
 		            var swidth = 420;
@@ -480,9 +447,6 @@
 					}
 					
 					var pReplyID = "";
-					//var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-					//pReplyID = ezUtil.GetGUID();
-				    //ezUtil = null;
 					pReplyID = generateGuid();
 					
 					var strXML = "";
@@ -1388,7 +1352,7 @@
 		</table>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="//blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

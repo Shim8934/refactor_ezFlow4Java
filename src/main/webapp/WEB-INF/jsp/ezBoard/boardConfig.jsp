@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
     <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-    <script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
+    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script type="text/javascript">
         var pUse_Editor = "";
         var pNoneActiveX = "";

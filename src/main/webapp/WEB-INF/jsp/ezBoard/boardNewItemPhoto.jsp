@@ -467,45 +467,8 @@
 	            document.form.file1.click();
 	        }
 	        else {
-	            if (isdad || pNoneActiveX == "YES") {
-	                document.getElementById('mode').value = "PHOTO";
-	                document.form.file1.click();
-	            } else {
-	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-	                ezUtil.UseUTF8 = true;
-	
-	                var file = ezUtil.OpenLoadDlgMultiNew("", "");
-	                if (!file)
-	                    return;
-	
-	                g_fileList = file.split("|");
-	
-	                var fileSize = 0;
-	                for (var i = 0; i < g_fileList.length - 1; i++) {
-	                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
-	                        alert("" + strLang6 + "");
-	                        return;
-	                    }
-	                    //[2006.06.20] 파일명의 길이가 111byte를 초과할 경우 오류메시지 처리.
-	                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
-	                    if (temp.length > 111) {
-	                        alert("" + strLang7 + "");
-	                        return;
-	                    }
-	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
-	                    //게시판별로 설정되어 있는 첨부용량 제한
-	                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
-	                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
-	                        return;
-	                    }
-	                }
-	                ezUtil = null;
-	
-	                var fileNamelist = "";
-	                var fileName = "";
-	                saveItemBoardId = pBoardID;
-	                show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
-	            }
+                document.getElementById('mode').value = "PHOTO";
+                document.form.file1.click();
 	        }
 	    }
 	

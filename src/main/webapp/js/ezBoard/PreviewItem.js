@@ -75,9 +75,6 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
             pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
             pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
-            //alert(" CurrentHeight : " + CurrentHeight);
-            //alert(" pMailPreVDiv : " + pMailPreVDiv);
-            //alert(" pMailPreHeightW : " + pMailPreHeightW);
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
@@ -87,7 +84,7 @@ function PreviewRayerChange(pGubun) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 45) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("BoardItemList_Favorite.aspx") > -1)
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
             else
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -280,7 +277,6 @@ function ItemPreviewRead(obj) {
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
         document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
     }
-
     if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
         clickPreviweType = "PHOTO";
         if (document.getElementById("previewmail_bar_h") != null)
@@ -288,9 +284,9 @@ function ItemPreviewRead(obj) {
 
         xmlhttp = createXMLHttpRequest();
         if (location.href.toLowerCase().indexOf('temp') > -1)
-            xmlhttp.open("POST", "interASP/GetPreviewItem.aspx?BoardID=" + pboardid + "&ItemID=" + pitemid + "&Mode=" + pMode + "&location=TEMP", true);
+            xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=TEMP", true);
         else
-            xmlhttp.open("POST", "interASP/GetPreviewItem.aspx?BoardID=" + pboardid + "&ItemID=" + pitemid + "&Mode=" + pMode + "&location=GENERAL", true);
+            xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=GENERAL", true);
 
         xmlhttp.onreadystatechange = event_ItemPreviewRead_photo;
         xmlhttp.send();
@@ -299,17 +295,15 @@ function ItemPreviewRead(obj) {
         clickPreviweType = "TEXT";
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
-
         xmlhttp = createXMLHttpRequest();
         if (location.href.toLowerCase().indexOf('temp') > -1)
-            xmlhttp.open("POST", "interASP/GetPreviewItem.aspx?BoardID=" + pboardid + "&ItemID=" + pitemid + "&Mode=" + pMode + "&location=TEMP", true);
+            xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=TEMP", true);
         else
-            xmlhttp.open("POST", "interASP/GetPreviewItem.aspx?BoardID=" + pboardid + "&ItemID=" + pitemid + "&Mode=" + pMode + "&location=GENERAL", true);
+            xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=GENERAL", true);
         xmlhttp.onreadystatechange = event_ItemPreviewRead;
         xmlhttp.send();
-
         xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "interASP/GetItemAttachments.aspx?ItemID=" + pitemid, true);
+        xmlhttp2.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pitemid, true);
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
     }
@@ -317,9 +311,12 @@ function ItemPreviewRead(obj) {
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
         if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-            if (document.getElementById("PreViewBottom") != null)
-                document.getElementById("PreViewBottom").style.display = "none";
-            if (SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA") == "NO") {
+            if (document.getElementById("PreViewBottom") != null){
+            	document.getElementById("PreViewBottom").style.display = "none";
+            }
+            var result = xmlhttp.responseXML;
+            
+            if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
                 alert("권한이 없습니다");
                 return;
             }
@@ -330,7 +327,6 @@ function event_ItemPreviewRead_photo() {
             var WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             var Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
-
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -347,10 +343,6 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             var pOCS = "";
-            var pSIPUri = getSIPUri(selobj.getAttribute("DATA3"));
-            if (USE_OCS == "YES") {
-                pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pSIPUri + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
-            }
             pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
 
             if (document.getElementById('ifrmPreViewH') != null) {
@@ -364,11 +356,11 @@ function event_ItemPreviewRead_photo() {
             document.getElementById("PreH_sub_subject").textContent = Title;
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             document.getElementById("PreH_date").textContent = WriteDate;
-            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ContentLocation);
+            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURI(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "BoardItemPreView_PhotoContent.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + selobj.getAttribute("DATA2") + "&BoardID=" + selobj.getAttribute("DATA1") + "&Mode=" + pMode + "&location=TEMP";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
             else
-                document.getElementById('ifrmPreViewH_photo').src = "BoardItemPreView_PhotoContent.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + selobj.getAttribute("DATA2") + "&BoardID=" + selobj.getAttribute("DATA1") + "&Mode=" + pMode + "&location=GENERAL";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
             
 
         }
@@ -381,16 +373,17 @@ var interValue;
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
         if ((xmlhttp.status >= 200 && xmlhttp.status < 300) && (xmlhttp2.status >= 200 && xmlhttp2.status < 300)) {
-            if (document.getElementById("PreViewBottom") != null)
-                document.getElementById("PreViewBottom").style.display = "";
-
-            if (SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA") == "NO") {
+            if (document.getElementById("PreViewBottom") != null){
+            	document.getElementById("PreViewBottom").style.display = "";
+            }
+            var result = xmlhttp.responseXML;
+            
+            if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
                 alert("권한이 없습니다");
                 return;
             }
-
             var ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
-            var WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/writerID");
+            var WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
             var WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
             var WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
             var WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
@@ -401,22 +394,19 @@ function event_ItemPreviewRead() {
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "BoardItemPreView_Content.aspx";
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do";
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "BoardItemPreView_Content.aspx";
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do";
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
+            
             pOCS = "";
-            var pSIPUri = getSIPUri(selobj.getAttribute("DATA3"));
-            if (USE_OCS == "YES") {
-                pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pSIPUri + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
-            }
             pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
 
 
@@ -426,28 +416,32 @@ function event_ItemPreviewRead() {
                 document.getElementById('ifrmPreViewH').style.display = "";
                 document.getElementById('ifrmPreViewW').style.display = "";
             }
-
-
             if (CrossYN() || pNoneActiveX == "YES") {
-                var fullPath;
-                if(pMode == "temp")
-                    fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=BOARDCONTENTTEMP&DOCID=" + escape(ItemID);
-                else
-                    fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=BOARDCONTENT&DOCID=" + escape(ItemID);
-                xmlhttp = createXMLHttpRequest();
-                xmlhttp.open("POST", "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath, true);
-                xmlhttp.onreadystatechange = event_downContent;
-                xmlhttp.send();
-
-                
-            }
-            else {
-                
+            	var boardType = "";
+            	
+            	if(pMode == "temp"){
+            		boardType = "BOARDCONTENTTEMP";
+            	}else{
+            		boardType = "BOARDCONTENT";
+            	}
+            	
+            	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommon/mhtToHTMLContent.do",
+					data : { type   	 : boardType, 
+							 itemID 	 : ItemID
+						   },
+					success: function(result){
+						event_downContent(result);
+					}        			
+				});	
+            }else {
                 document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
                 document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
                 document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
                 var readHTML = WriteContent(ContentLocation, ItemID);
-                //interValue = setInterval(function () { loadsetInterval(readHTML, xmlhttp2.responseText) }, 100);
                 var tempText = xmlhttp2.responseText;
                 if (xmlhttp2.readyState == 4) {
                     setTimeout(function () {
@@ -489,15 +483,14 @@ function loadsetInterval(readHTML, responseText) {
 
     }
 }
-function event_downContent() {
-    if ((xmlhttp != null && xmlhttp.readyState == 4)) {
-        if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-            document.getElementById("Pre"+pPreviewShow_HOW.trim() +"_sub_subject").textContent = Title;
-            document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
-            document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
-            document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(xmlhttp.responseText, xmlhttp2.responseText);
-        }
-    }
+function event_downContent(result) {
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
+        var doc = document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.document;
+    	doc.open();
+    	doc.write(result);
+    	doc.close();
 }
 
 function PreviewH_onMouserDown(e) {
@@ -505,7 +498,7 @@ function PreviewH_onMouserDown(e) {
         return;
     }
 
-    curevent = (typeof event == 'undefined' ? e : event)
+    curevent = (typeof event == 'undefined' ? e : event);
 
     var newPos_H = curevent.clientX;
 
@@ -526,7 +519,7 @@ function PreviewW_onMouserDown(e) {
         return;
     }
 
-    curevent = (typeof event == 'undefined' ? e : event)
+    curevent = (typeof event == 'undefined' ? e : event);
 
     var newPos_W = curevent.clientY;
 
@@ -588,7 +581,7 @@ function MailPreviewEnd(e) {
             document.getElementById("divList").style.height = (pMailListHeightW - 45) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("BoardItemList_Favorite.aspx") > -1)
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
             else
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -604,7 +597,7 @@ function MailPreviewResize(e) {
         return;
 
     if (PreviewH_Move) {
-        curevent = (typeof event == 'undefined' ? e : event)
+        curevent = (typeof event == 'undefined' ? e : event);
         var minSize = parseInt(200);
         var maxSize = parseInt(document.documentElement.clientWidth - 200);
         if (curevent.clientX < minSize || curevent.clientX > maxSize) {
@@ -628,7 +621,7 @@ function MailPreviewResize(e) {
         }
     }
     else if (PreviewW_Move) {
-        curevent = (typeof event == 'undefined' ? e : event)
+        curevent = (typeof event == 'undefined' ? e : event);
         var minSize = parseInt(100);
         var maxSize = parseInt(document.documentElement.clientHeight - 100);
 
@@ -655,13 +648,10 @@ function MailReadOpen() {
 
     if (previewType == "PHOTO" || (selobj.getAttribute("DATA10") == "3" || selobj.getAttribute("DATA10") == "4")) {
         pTop = (pheight - 780) / 2;
-        window.open("BoardItemView_Photo.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + selobj.getAttribute("DATA2") + "&BoardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
     }
     else {
-        if (CrossYN() || pNoneActiveX == "YES")
-            window.open("BoardItemView_Cross.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + selobj.getAttribute("DATA2") + "&BoardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-        else
-            window.open("BoardItemView.aspx?ShowAdjacent=" + ShowAdjacent + "&ItemID=" + selobj.getAttribute("DATA2") + "&BoardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+        window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
     }
 }
 function WriteContent(strContentLocation, ItemID) {
@@ -676,10 +666,9 @@ function WriteContent(strContentLocation, ItemID) {
 function MhtConvert(strContentLocation, ItemID) {
     var fullPath;
     if (pMode == "temp")
-        fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDCONTENTTEMP&DOCID=" + escape(ItemID);
+        fullPath = "/ezBoard/getContentInfo.do?type=BOARDCONTENTTEMP&docID=" + encodeURI(ItemID);
     else
-        fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDCONTENT&DOCID=" + escape(ItemID);
-    //var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+        fullPath = "/ezBoard/getContentInfo.do?type=BOARDCONTENT&docID=" + encodeURI(ItemID);
     objMHT.sync = true;
     var strMht = objMHT.DownloadURL(fullPath);
     objMHT.mhtData = strMht;
@@ -745,7 +734,7 @@ function Window_resize() {
                     document.getElementById("divList").style.height = (pMailListHeightW - 45) + "px";
                 document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-                if (window.parent.location.href.indexOf("BoardItemList_Favorite.aspx") > -1)
+                if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
                 else
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -854,13 +843,16 @@ function ListCount(pCount) {
 
 function Set_BoardConfig()
 {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", SSUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pListCount", perCnt);
-    createNodeAndInsertText(xmlpara, objNode, "pPreView", pPreviewShow_HOW);
-    xmlhttp.open("POST", "aspx/Set_BoardConfig.aspx", true);
-    xmlhttp.send(xmlpara);
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezBoard/setBoardConfig.do",
+		data : { pUserID   : SSUserID, 
+				 pListCount: perCnt, 
+				 pPreView  : pPreviewShow_HOW 
+				},
+		success: function(result){
+		}     			
+	});
 }

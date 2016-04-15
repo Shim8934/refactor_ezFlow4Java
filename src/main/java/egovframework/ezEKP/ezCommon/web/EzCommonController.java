@@ -39,8 +39,16 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
-/**
- * 공통적으로 사용되는 메소드 집합 Controller
+/** 
+ * @Description [Controller] 공통
+ * @author 오픈솔루션팀 황윤진
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.14    황윤진    신규작성
+ *
+ * @see
  */
 @Controller
 public class EzCommonController extends EgovFileMngUtil{
@@ -59,6 +67,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return "ezCommon/manyColor";
 	}
 	
+	/**
+	 * 게시판 html -> mht 변환 표출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/htmlToMHT.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -131,6 +142,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return mhtData;
 	}
 	
+	/**
+	 * 게시판 html -> mht 변환 실행 Method
+	 */
 	public String startHtml2Mht(String m_strHTML) throws Exception{
 		StringBuilder m_strMHT = new StringBuilder();
 		String m_strBoundary = "";
@@ -164,6 +178,9 @@ public class EzCommonController extends EgovFileMngUtil{
 
     }
 
+	/**
+	 * 게시판 html -> mht 변환 헤더설정 표출 Method
+	 */
 	private String makeHeader(StringBuilder m_strMHT) throws Exception{
 		String m_strBoundary = createBoundary();
         m_strMHT.append("MIME-Version: 1.0\n");
@@ -177,6 +194,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return m_strBoundary;
     }
 	
+	/**
+	 * 게시판 boundary 생성 표출 Method
+	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
         Random Rnd = new Random();
@@ -194,6 +214,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return strBoundary;
     }
 	
+	/**
+	 * 게시판 날짜반환 표출 Method
+	 */
 	private String getDate() throws Exception{
         Calendar calendar = Calendar.getInstance();
         
@@ -280,6 +303,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return strDate;
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 이미지추출 표출 Method
+	 */
 	private String[] extractImageSource(String strHtml) throws Exception{
 		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
         String strTempHtml = strHtml.toLowerCase();
@@ -390,6 +416,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return m_ImageList;
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 배경화면추출 표출 Method
+	 */
 	private String[] extractBackgroundSource(String strHtml, String[] m_ImageList) throws Exception{
         String strTempHtml = strHtml.toLowerCase();
         int npos = 0, nposStart = 0, nposEnd = 0;
@@ -519,6 +548,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return m_BackImageList;
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 html 인코딩 실행 Method
+	 */
 	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         m_strMHT.append("--" + m_strBoundary + "\n");
         m_strMHT.append("Content-Type: Text/HTML\n");
@@ -532,6 +564,9 @@ public class EzCommonController extends EgovFileMngUtil{
         
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 이미지인코딩 실행 Method
+	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_ImageList.length; i++){
             m_strMHT.append("\nContent-Type: Image/gif\n");
@@ -564,6 +599,9 @@ public class EzCommonController extends EgovFileMngUtil{
         }
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 배경화면인코딩 실행 Method
+	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++){
             m_strMHT.append("\nContent-Type: Image/gif\n");
@@ -598,6 +636,9 @@ public class EzCommonController extends EgovFileMngUtil{
         }
     }
 	
+	/**
+	 * 게시판 mht -> html 변환 표출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTMLContent(HttpServletRequest request) throws Exception{
@@ -613,6 +654,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return strResult;
 	}
 
+	/**
+	 * 게시판 html -> mht 변환 표출 Method
+	 */
 	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
         String filePath = "";
         String uploadModule = config.getProperty("config.LocalPath");
@@ -640,6 +684,9 @@ public class EzCommonController extends EgovFileMngUtil{
 
 	}
 	
+	/**
+	 * 게시판 html -> mht 변환 실행 표출 Method
+	 */
 	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath) throws Exception{
 		String m_strHTML = "";
 		String strBoundary = "";
@@ -685,6 +732,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 	}
 
+	/**
+	 * 게시판 html -> mht 변환 이미지디코딩 표출 Method
+	 */
 	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
 		byte[] imageBytes = Base64.decodeBase64(strImageMht);
 		
@@ -705,6 +755,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return SfilePath;
 	}
 
+	/**
+	 * 게시판 html -> mht 변환 mht디코딩 표출 Method
+	 */
 	private String doMHTDecoding(String strMht, String m_strHTML) {
 		byte[] arr = Base64.decodeBase64(strMht);
 		m_strHTML = new String(arr);
@@ -712,6 +765,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return m_strHTML;
 	}
 
+	/**
+	 * 게시판 html -> mht 변환boundary 반환 표출 Method
+	 */
 	private String getBoundaryText(String m_strMHT) {
 		String strTemp = m_strMHT;
         int nPos = strTemp.indexOf("boundary=");
@@ -723,6 +779,9 @@ public class EzCommonController extends EgovFileMngUtil{
         }
 	}
 
+	/**
+	 * 게시판 mht 로드 표출 Method
+	 */
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
 		BufferedReader br = new BufferedReader(new FileReader(strMHTpath));
@@ -742,6 +801,9 @@ public class EzCommonController extends EgovFileMngUtil{
         return strMhtData;
     }
 	
+	/**
+	 * 게시판 html -> mht 변환 표출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTML(HttpServletRequest request) throws Exception{
@@ -771,6 +833,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
 	}
 	
+	/**
+	 * 게시판 특문 인코딩 표출 Method
+	 */
 	public String makeXMLString(String orgString){
 		if(orgString != null){
 			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
@@ -779,11 +844,17 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 	}
 	
+	/**
+	 * 게시판 ck에디터 이미지 업로드 호출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
 	public String ckImageUpload(){
 		return "ezCommon/ckImageUpload";
 	}
 	
+	/**
+	 * 게시판 ck에디터 업로드 화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/ckUpload.do")
 	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		MultipartFile multiFile = request.getFile("file1");
@@ -818,6 +889,9 @@ public class EzCommonController extends EgovFileMngUtil{
 		return "ezCommon/ckUpload";
 	}
 
+	/**
+	 * 게시판 ck에디터 심플업로드화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public void ckSimpleUpload(HttpServletRequest request){

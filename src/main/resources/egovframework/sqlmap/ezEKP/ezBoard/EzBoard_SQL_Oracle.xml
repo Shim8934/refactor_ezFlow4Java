@@ -375,6 +375,10 @@
 		{CALL EZBOARDSTD.EZSP_SETMAINIMAGEID(#v_IMAGEID#, #v_ITEMID#, #v_TYPE#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.setBoardConfig" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_SETBOARDCONFIG(#v_PUSERID#, #v_PLISTCOUNT#, #v_PPREVIEW#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.updateMoveItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)}
 	</procedure>

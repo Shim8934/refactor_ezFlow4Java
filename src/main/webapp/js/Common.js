@@ -43,7 +43,7 @@ function OpenWeb(_url, _name, _height, _width, _scrollbars, _resizable, _status,
             _tarurl = document.location.protocol + "//" + document.location.hostname + _tarurl;
         }
 
-        openWindowbyezUtil(_tarurl);
+//        openWindowbyezUtil(_tarurl);
     }
 
     try {
@@ -106,7 +106,7 @@ function OpenWeb2(_url, _name, _scrollbars, _resizable, _status, _toolbar, _Menu
             _tarurl = document.location.protocol + "//" + document.location.hostname + _tarurl;
         }
 
-        openWindowbyezUtil(_tarurl);
+//        openWindowbyezUtil(_tarurl);
     }
 
     try {

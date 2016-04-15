@@ -2,7 +2,15 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezCommon">
+
+	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
+
+	<procedure id="EzCommonDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO">
+		{CALL ezCommon.EZSP_GETATTACHFILEINFO(#v_PTYPE#, #v_PID#, #v_PMODE#, #v_PATTACHFILESN#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommonDAO.getContentInfo" parameterClass="Map" resultClass="String">
 		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
 </sqlMap>

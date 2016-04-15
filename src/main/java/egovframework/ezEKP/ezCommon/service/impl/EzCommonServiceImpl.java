@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 
@@ -29,6 +30,17 @@ public class EzCommonServiceImpl implements EzCommonService {
 		map.put("v_PTYPE", type);
 		map.put("v_PID", itemID);
 		return ezCommonDAO.getContentInfo(map);
+	}
+
+	@Override
+	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PTYPE", type);
+		map.put("v_PID", attID);
+		map.put("v_PMODE", mode);
+		map.put("v_PATTACHFILESN", sn);
+		map.put("v_PCOMPANYID", companyID);
+		return ezCommonDAO.getAttachInfo(map);
 	}
 
 	@Override

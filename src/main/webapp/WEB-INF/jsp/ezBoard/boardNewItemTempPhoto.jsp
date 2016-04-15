@@ -693,63 +693,6 @@
 	            xmlHTTP = null;
 	        }
 	
-	        function beginAttachAdd_Photo2() {
-	            document.all.EzHTTPTrans.AddUploadFile("", "");
-	
-	            for (var i = 0; i < g_fileList.length - 1; i++) {
-	                try {
-	
-	                    document.all.EzHTTPTrans.AddFilename(encodeURIComponent(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\") + 1)));
-	                    document.all.EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
-	                }
-	                catch (e) {
-	                    if (e.number == -2147352567)
-	                        alert("" + strLang12 + "");
-	                    else
-	                        alert(g_fileList[i] + " " + strLang13 + "" + "\n\n" + e.number + " - " + e.description);
-	
-	                    return;
-	                }
-	            }
-	
-	            var RemotePath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezBoardSTD/interASP/Item_AttachFile_Photo.aspx";
-	            var nCount = document.all.EzHTTPTrans.StartUpload(RemotePath, "/upload_board", pBoardID, "", "");
-	
-	            for (var i = 0; i < nCount; i++) {
-	                var attachFileResult = document.all.EzHTTPTrans.GetReturn(i);
-	                var attachFilePath = attachFileResult.substr(0, attachFileResult.indexOf("/"));
-	                var attachFilename = attachFileResult.substr(attachFileResult.indexOf("/") + 1);
-	                attachFilename = attachFilename.substr(0, attachFilename.lastIndexOf("/"));
-	
-	                if (attachFilename.substr(0, 2) != "OK") {
-	                    try {
-	                        txtPhotoFile.value = "";
-	                    }
-	                    catch (e) {
-	                    }
-	
-	                    alert(g_fileList[i] + " " + strLang24 + "");
-	                    txtPhotoFile.value = "";
-	                    return;
-	                }
-	                else {
-	                    var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-	                    ezUtil.UseUTF8 = true;
-	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
-	                    txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);
-	                    ezUtil = null;
-	
-	                    var Result = attachFilename.substr(3, attachFilename.length - 3);
-	
-	
-	
-	                    //addimageline("/Upload_BoardSTD/" + pBoardID + "/UploadFile/" + imgFileName.replace('s_', ''), localFileName, imgUniqueID, imgFileSize);
-	                    addimageline(Result.split("/")[3], g_fileList[i].substr(g_fileList[i].lastIndexOf("\\") + 1), Result.substr(Result.lastIndexOf("/") + 1), fileSize);
-	                    //addimageline();
-	                    //AttachFileInfo(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1), Result.substr(Result.lastIndexOf("/")+1), fileSize + "Bytes", Result, fileSize, attachFilePath)		    
-	                }
-	            }
-	        }
 	        function imagecheckAll(checkeds) {
 	            if (document.getElementsByName('checkmenu')[0].checked) {
 	                for (var i = 0 ; i < document.getElementsByName('checkmenuSub').length ; i++)
