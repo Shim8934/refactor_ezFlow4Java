@@ -251,7 +251,7 @@
     var isDelted = false;
     function delDrafts() {
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("GET", "remote/mail_del_drafts.aspx?itemid=" + encodeURIComponent(g_url), false);
+        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url), false);
         xmlhttp.send();
         xmlhttp = null;
         isDelted = true;
