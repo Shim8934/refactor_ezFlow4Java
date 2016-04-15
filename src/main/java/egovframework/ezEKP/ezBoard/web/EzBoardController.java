@@ -319,21 +319,21 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String get_favoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-		List<BoardMyFavoriteVO> resultList = new ArrayList<BoardMyFavoriteVO>();
-        String mode = request.getParameter("mode");
+        String mode = request.getParameter("MODE");
         String userID = userInfo.getId();
-        
-        resultList = ezBoardService.get_favoriteList(userID,mode);
+
+        List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID,mode);
         String parentName = parentBoardName(resultList);
         StringBuffer sb = new StringBuffer();
         
         sb.append("<DATA>");
-		
+System.out.println(resultList.size());
+
 		for(int i = 0; i < resultList.size(); i++){
 			sb.append(commonUtil.getQueryResult(resultList.get(i)));
 		}
 		sb.append("</DATA>");
-		
+System.out.println(sb.toString());
 		return "<ROOT>" + sb.toString() + parentName + "</ROOT>";
 	}
 	
@@ -415,7 +415,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount);
         
-        return "<DATA><ROW><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></ROW></DATA>";
+        return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
     }
 	
 	/**
@@ -433,7 +433,7 @@ public class EzBoardController extends EgovFileMngUtil{
        pCountFlag = req.getParameter("countFlag");
 
        String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang));
-       
+
        if(config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").equals("YES") && pCountFlag != null && pCountFlag.equals("YES")){
     	   Document doc = commonUtil.convertStringToDocument(resultXML);
     	   NodeList nList = doc.getElementsByTagName("NODE");
