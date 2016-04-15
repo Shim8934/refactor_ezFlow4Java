@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -22,6 +23,8 @@ public interface EzQuestionService {
 	public List<QstVO> getQuestionForResponse(QstVO questionVO) throws Exception;
 	
 	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO) throws Exception;
+	
+	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO) throws Exception;
 
 	public String getUserIdAdmin(int brd) throws Exception;
 	
@@ -45,6 +48,10 @@ public interface EzQuestionService {
 	
 	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo) throws Exception;
 	
+	public List<QstTempSaveVO> tempSave(int brdId, int itemNo) throws Exception;
+	
+	public List<String> tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception;
+	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
 	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO qstUserPollItemVO) throws Exception;
@@ -56,7 +63,7 @@ public interface EzQuestionService {
 	public QstAttachVO getAttachInfo2(String vBrdId, String vItemNo, String strQuestionNo, String strAnswer, String strAttID) throws Exception;
 	
 	public QstReuseQuestionVO reUseQuestionData (int brdId, int itemNo) throws Exception; 
-
+	
 	public QstVO getQuestionForSubjective(String brdId, String itemNo, String questionNo) throws Exception;
 	
 	public String getTableAnswer(int brdId, int itemNo, int questionNo) throws Exception;
@@ -154,5 +161,9 @@ public interface EzQuestionService {
 	public void deletePermission(int brdId, int itemNo) throws Exception;
 	
 	public void callDeletePollResponseper(int brdId, int itemNo) throws Exception;
+	
+	public void questionDelete2(int brdId, int itemNo) throws Exception;
+	
+	public void questionDelete1(int brdId, int itemNo, int quesNo) throws Exception;
 	
 }
