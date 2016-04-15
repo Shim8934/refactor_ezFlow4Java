@@ -9,8 +9,9 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
-import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
+import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
+import egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
@@ -30,6 +31,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<QstAttachVO> getAttachInfo(Map<String, Object> map) {
 		return (List<QstAttachVO>) list("EzQuestionDAO.getAttachInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstAttachVO> getAttachInfo03(Map<String, Object> map) {
+		return (List<QstAttachVO>) list("EzQuestionDAO.getAttachInfo3", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -56,7 +62,12 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public List<String> getTableAnswer(Map<String, Object> map) {
 		return (List<String>) list("EzQuestionDAO.getTableAnswer", map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<String> tableAnswerValue(Map<String, Object> map) {
+		return (List<String>) list("EzQuestionDAO.tableAnswerValue", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<String> getResponseAnswer(Map<String, Object> map) {
 		return (List<String>) list("EzQuestionDAO.getResponseAnswer", map);
@@ -95,6 +106,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<QstResponseVO> getResponsePersonForResultTotalSave(int v_pItemNo) {
 		return (List<QstResponseVO>) list("EzQuestionDAO.getResponsePersonForResultTotalSave",v_pItemNo);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstTempSaveVO> tempSave(Map<String, Object> map) {
+		return (List<QstTempSaveVO>) list("EzQuestionDAO.tempSave",map);
 	}
 	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
@@ -311,5 +327,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	public void callDeletePollResponseper(Map<String,Object> map) {
 		delete("EzQuestionDAO.callDeletePollResponseper", map);
+	}
+	public void questionDelete2(Map<String,Object> map) {
+		delete("EzQuestionDAO.questionDelete2", map);
+	}
+	public void questionDelete1(Map<String,Object> map) {
+		delete("EzQuestionDAO.questionDelete1", map);
 	}
 }
