@@ -803,7 +803,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("brdId", brdId);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
-
 		return "/ezQuestion/qstStep1";
 	}
 	
@@ -828,9 +827,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""));
 		}
 		pStep1DataXML.append("</PARAMETER>");
-		/*if(req.getParameter("RangeXMLStr") != "") {
-			Document doc = commonUtil.convertStringToDocument(req.getParameter("RangeXMLStr"));
-		}*/
 		
 		model.addAttribute("ezQuestionVO", ezQuestionVO);
 		model.addAttribute("questionAddVO", questionAddVO);
@@ -1236,8 +1232,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 					
 				}
 			}
-			/////////////////////
-			//try {
+			
 				NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
 				if(nodes.getLength() > 0) {
 					int ansCnt = nodes.getLength();
@@ -1277,10 +1272,6 @@ System.out.println("pQstTitle:"+pQstTitle);
 						}
 					}
 				}
-			//} catch (Exception e) {
-				
-			//}
-			
 		}
 		
 		QstCompleteVO qstCompleteVO = new QstCompleteVO();
@@ -3207,13 +3198,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 			itemNo = Integer.parseInt(itemId);
 		}
 
-		//ezQuestionService.questionDelete2(5, Integer.parseInt(itemId));
+		ezQuestionService.questionDelete2(5, Integer.parseInt(itemId));
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
-System.out.println(xmlDoc);
-System.out.println("strQuestion:"+strQuestion);
-		//char ch = (int)(13);
-		//strQuestion = strQuestion.replace(";;", String.valueOf(ch));
 		arrQuestion = strQuestion.trim().split("\\;\\;");
 		
 		String[] arrLine;
@@ -3240,7 +3227,7 @@ System.out.println("strQuestion:"+strQuestion);
 				}
 			}
 
-			temp = strResult.trim();
+			temp = strResult;
 System.out.println("temp:"+temp);
 			str.append(temp);
 			str.append("</QUESTION>");
@@ -3282,7 +3269,7 @@ System.out.println("temp:"+temp);
 						}
 					}
 					
-					if(qstTempSaveVO.get(i).getAnswerType() == 5) {
+					if(arrLine[2] == "5") {
 						List<String> tableAnswerValue = ezQuestionService.tableAnswerValue(5, Integer.parseInt(itemId), qstTempSaveVO.get(i).getQuestionNo());
 						for(String tableAnswer : tableAnswerValue) {
 							str.append("<ANSWER_ANSWER>");
@@ -3290,7 +3277,7 @@ System.out.println("temp:"+temp);
 							str.append("</ANSWER_ANSWER>");
 						}
 					}
-					ezQuestionService.questionDelete1(5, Integer.parseInt(itemId), qstTempSaveVO.get(i).getQuestionNo());
+					ezQuestionService.questionDelete1(5, Integer.parseInt(itemId), Integer.parseInt(arrLine[0]));
 					QstCompleteVO qstCompleteVO = new QstCompleteVO();
 					qstCompleteVO.setQuesContent(arrLine[1]);
 					qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
@@ -3298,7 +3285,6 @@ System.out.println("temp:"+temp);
 					qstCompleteVO.setStrBrdID(5);
 					qstCompleteVO.setItemNo(Integer.parseInt(itemId));
 					qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
-System.out.println("qsesNo["+i+"]:"+qstTempSaveVO.get(i).getQuestionNo());
 					qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
 					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 					
