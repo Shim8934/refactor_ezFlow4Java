@@ -37,7 +37,7 @@
     </bean>
     
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" >	    
-	    <property name="defaultLocale" value="ko" />
+	    <property name="defaultLocale" value="${Globals.language}" />
 	</bean>
 	
 	<!-- Exception 발생시 후처리용 별도작업을 위해 실행환경의 LeveaTrace를 활용하도록 설정 -->
