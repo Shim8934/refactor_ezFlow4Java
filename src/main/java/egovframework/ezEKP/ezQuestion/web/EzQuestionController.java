@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -1253,24 +1252,26 @@ System.out.println("pQstTitle:"+pQstTitle);
 						if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
 							nList = doc.getElementsByTagName("ANSWER");	
 							
-							if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
-								int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
-								for(int aa=0; aa<ansAttachCnt; aa++) {
-									String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
-									String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-									if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
+							if(nList.item(iAns).getChildNodes().item(1) != null){
+								if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
+									int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+									for(int aa=0; aa<ansAttachCnt; aa++) {
+										String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
+										String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
+										if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
+										}
+										QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+										qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+										qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+										qstCompleteVO2.setQuesNo(v_quesNo);
+										qstCompleteVO2.setAnswerNo(iAns+1);
+										qstCompleteVO2.setAttachNo(aa+1);
+										qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+										qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
+										qstCompleteVO2.setAttachURL(ansAttachUrl);
+										qstCompleteVO2.setAttachType(ansAttachType);
+										ezQuestionService.pollSaveAttach(qstCompleteVO2);
 									}
-									QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-									qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-									qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-									qstCompleteVO2.setQuesNo(v_quesNo);
-									qstCompleteVO2.setAnswerNo(iAns+1);
-									qstCompleteVO2.setAttachNo(aa+1);
-									qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
-									qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
-									qstCompleteVO2.setAttachURL(ansAttachUrl);
-									qstCompleteVO2.setAttachType(ansAttachType);
-									ezQuestionService.pollSaveAttach(qstCompleteVO2);
 								}
 							}
 						}
