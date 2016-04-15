@@ -34,7 +34,6 @@
         	function get_listComplete_after() {
             	if (xmlhttp.readyState != 4) return;
             	var listdom = xmlhttp.responseXML;         
-            	alert(xmlhttp.responseText);
             	var parentXmlhttp = null;
             	parentXmlhttp = createXMLHttpRequest();
             	xmlpara = createXmlDom();
