@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,13 +40,15 @@ public class IMAPAccess {
 	private String userName;
 	private String password;
 	private EgovMessageSource egovMessageSource;
+	private Locale locale;
 	
-	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource){
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale){
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
 		this.egovMessageSource = egovMessageSource;
+		this.locale = locale;
 	}
 
 	private Store getStore(){
@@ -90,72 +93,72 @@ public class IMAPAccess {
 		
 		try{
 			Store store = getStore();
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000026") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000027") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000027", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000028") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000028", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000085") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000085", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000085", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029")).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029") + " created");
+			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale)).exists()){
+				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}
 			
 			Folder[] f = getStore().getDefaultFolder().list();
 			
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
+				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))){
 					topLevelFolders.add(fd);
 					break;
 				}
 			}
 			for(Folder fd : f){
-				if(!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027"))&&
-						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085"))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029"))){
+				if(!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027", locale))&&
+						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000085", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))){
 					topLevelFolders.add(fd);
 				}
 			}
@@ -238,8 +241,8 @@ public class IMAPAccess {
 		return isAttached;
 	}
 	
-	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource){
-		return new IMAPAccess(host, port, username, password, egovMessageSource);
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, Locale locale){
+		return new IMAPAccess(host, port, username, password, egovMessageSource, locale);
 	}
 	
 	public static class MessageSubjectComparator implements Comparator<Message> {
