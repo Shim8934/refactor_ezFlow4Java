@@ -711,7 +711,8 @@ function event_SaveonClick() {
             pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
         }
         else if (navigator.userAgent.indexOf("MSIE") == -1) {
-            pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(1).textContent;
+        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+//        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(1).textContent;
         }
         if (pRtnMessage != "FULL") {
             if (g_saveHttp.status < 200 || g_saveHttp.status > 300 || pRtnMessage.substr(0, 5) == "ERROR") {
@@ -777,15 +778,12 @@ function event_SaveonClick() {
 
                 if (result != "OK") {
                     if (event_SaveonClick.savemode == "tempsave") {
-
                         if (navigator.userAgent.indexOf("MSIE") != -1) {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
-
                         }
                         else if (navigator.userAgent.indexOf("MSIE") == -1) {
-
-                            g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
-
+                        	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
+//                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
                         g_orgurl = g_url;
                         g_saveHttp = null;
@@ -796,7 +794,7 @@ function event_SaveonClick() {
                         }
 
                         try {
-                            window.opener.MailListRefresh();
+                        	window.opener.MailListRefreshByTimeout();
                         } catch (e) { }
                     }
                     else {
@@ -831,7 +829,8 @@ function event_SaveonClick() {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }
                         else if (navigator.userAgent.indexOf("MSIE") == -1) {
-                            g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
+                        	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
+//                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
 
                         g_orgurl = g_url;
@@ -843,17 +842,17 @@ function event_SaveonClick() {
                         }
                         g_saveHttp = null;
                         try {
-                            window.opener.MailListRefresh();
+                        	window.opener.MailListRefreshByTimeout();
                         } catch (e) { }
                     }
                     else {
                         var tempUrl = "";
                         if (navigator.userAgent.indexOf("MSIE") != -1) {
                             tempUrl = xmlID.childNodes.item(0).childNodes.item(1).text;
-
                         }
                         else if (navigator.userAgent.indexOf("MSIE") == -1) {
-                            tempUrl = xmlID.childNodes.item(0).childNodes.item(3).textContent;
+                        	tempUrl = xmlID.childNodes.item(0).childNodes.item(1).textContent;
+//                          tempUrl = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
 
                         if (g_url = tempUrl) {
@@ -862,8 +861,7 @@ function event_SaveonClick() {
                         }
                         g_saveHttp = null;
                         try {
-                            window.opener.MailListRefresh();
-
+                        	window.opener.MailListRefreshByTimeout();
                         } catch (e) { }
                         window.close();
                     }

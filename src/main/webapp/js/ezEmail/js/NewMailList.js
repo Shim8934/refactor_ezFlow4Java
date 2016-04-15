@@ -725,6 +725,13 @@ function mf_updatePageInfoGroupList(szRangeHeader) {
     document.getElementById("MailList").setAttribute("MaxPage", "1");
     document.getElementById("MailList").setAttribute("curPage", "1");
 }
+
+function MailListRefreshByTimeout() {
+	setTimeout(function() {
+		MailListRefresh();
+	}, 500);
+}
+
 function MailListRefresh() {
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
