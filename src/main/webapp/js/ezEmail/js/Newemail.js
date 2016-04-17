@@ -296,9 +296,9 @@ function Read_StatusChange(pGubun) {
 
     var isRead;
     if (pGubun == "R")
-        isRead = "FALSE";
-    else
         isRead = "TRUE";
+    else
+        isRead = "FALSE";
     var xmlpara = createXmlDom();
     var xmlHTTP = createXMLHttpRequest();
     var objNode;
@@ -314,7 +314,7 @@ function Read_StatusChange(pGubun) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listSubContentArry[i]).getAttribute("_href"));
         }
     }
-    xmlHTTP.open("POST", "/myoffice/ezEmail/remote/Mail_SetReadChange.aspx", false);
+    xmlHTTP.open("POST", "/ezEmail/mailSetReadChange.do", false);
     xmlHTTP.send(xmlpara);
     MailListRefresh();
 }
@@ -1340,7 +1340,7 @@ function toggle_flag() {
 
 
     try {
-        flagXmlHttp.open("POST", "/myoffice/ezEmail/remote/mail_set_flag.aspx", true);
+        flagXmlHttp.open("POST", "/ezEmail/mailSetFlag.do", true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }

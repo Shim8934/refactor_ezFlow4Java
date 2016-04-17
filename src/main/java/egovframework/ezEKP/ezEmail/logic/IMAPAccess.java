@@ -438,6 +438,35 @@ public class IMAPAccess {
 		
 	}	
 	
+	public static class MessageFlaggedComparator implements Comparator<Message> {
+		
+		@Override
+		public int compare(Message m1, Message m2) {
+			int flagged1 = 0;
+			int flagged2 = 0;
+			try {
+				flagged1 = m1.isSet(Flags.Flag.FLAGGED) ? 1 : 0;
+				flagged2 = m2.isSet(Flags.Flag.FLAGGED) ? 1 : 0;
+			} catch (MessagingException e1) {
+			}
+						
+			int rc = flagged1 - flagged2;
+			if (rc == 0) {
+				try {
+					Date d1 = m1.getReceivedDate();
+					Date d2 = m2.getReceivedDate();
+					if (d1 != null && d2 != null) {
+						rc = d1.compareTo(d2);
+					}
+				} catch (MessagingException e) {
+				}
+			}
+			
+			return rc;
+		}
+		
+	}	
+	
 	public static class MessagePriorityComparator implements Comparator<Message> {
 		
 		private int getPriority(Message msg) {
