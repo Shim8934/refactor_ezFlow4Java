@@ -21,9 +21,13 @@ public interface EzOrganService {
 	public String getDeptSubTreeInfo(String deptID, String propList, String lang) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
+	
+	public String getPropertyList(String id, String proplist, String primary) throws Exception;
 
+	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception;	
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
-	public boolean checkSearchField(String pFieldName) throws Exception;	
+	public boolean checkSearchField(String pFieldName) throws Exception;
  
 }

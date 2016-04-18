@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganService")
@@ -706,5 +707,75 @@ public class EzOrganServiceImpl implements EzOrganService {
         }     
         return bRet;
     }
+
+	@Override
+	public String getPropertyList(String id, String pPropList, String primary) throws Exception {
+		String propValue = "";
+		StringBuilder propInfo = new StringBuilder("<DATA>");
+		primary = commonUtil.convertLangCode(primary);
+		
+		String dataType = "user";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", id);
+		map.put("v_LANGDATA", primary);
+		String strXML = commonUtil.getQueryResult(ezOrganDAO.getUserInfo(map));
+		Document xmldom = commonUtil.convertStringToDocument(strXML);
+		
+		if(xmldom.getElementsByTagName("ROW").getLength() == 0){
+			map = new HashMap<String, Object>();
+			map.put("userID", id);
+			map.put("primary", primary);
+			strXML = commonUtil.getQueryResult(ezOrganDAO.getDeptInfo(map));
+			xmldom = commonUtil.convertStringToDocument(strXML); 
+			dataType = "group";
+		}
+		
+		pPropList = convertAddandConvert(dataType, pPropList);
+        String[] propList = pPropList.split(";");
+		
+        for(String propname : propList){
+        	if (checkDBColum(propname.toUpperCase()) == false){
+                propValue = getPropertyValue(id, propname);
+                propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.makeXMLString(propValue) + "</" + propname.toUpperCase() + ">");
+            }else if (propname.toUpperCase() != ""){
+            	
+                if (xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0){
+                    propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.makeXMLString(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
+                }else{
+                    propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");
+                }
+            }
+        }
+        propInfo.append("</DATA>");
+        
+        return propInfo.toString();
+	}
+
+	@Override
+	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception {
+		String strXML = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("PCN", id);
+		map.put("PDEPT", pDeptID);
+		map.put("LANGDATA", primary);
+		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
+		if(userVO!=null){
+			StringBuilder stb = new StringBuilder();		
+			
+			stb.append("<ROW>");
+	        stb.append("<TITLE>");
+	        stb.append(userVO.getTitle());
+	        stb.append("</TITLE>");
+	        stb.append("<DISPLAYNAME>");
+	        stb.append(userVO.getDisplayName());
+	        stb.append("</DISPLAYNAME>");		           
+			stb.append("</ROW>");
+			strXML = stb.toString();
+		}
+		
+		return strXML;
+	}
 	
+	
+
 }

@@ -44,6 +44,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (OrganDeptVO) select("EzOrganDAO.getDeptInfo", map);
 	}
 	
+	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
+		return (OrganUserVO) select("EzOrganDAO.getUserInfo", map);
+	}
+	
 	public String getPropertyValue(Map<String, Object> map) throws Exception{
 		return (String) select("EzOrganDAO.getPropertyValue", map);
 	}
@@ -61,5 +65,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganDAO.deptSubDeptCnt", deptID);
 	}
 
-	
+	public OrganUserVO getUserAddjobInfo(Map<String, Object> map) throws Exception{
+		return (OrganUserVO) select("EzOrganDAO.getUserAddjobInfo", map);
+	}
+
 }

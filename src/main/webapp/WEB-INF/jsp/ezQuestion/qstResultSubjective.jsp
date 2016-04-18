@@ -67,9 +67,9 @@
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERPOSITION');
 						tableXml += "</td>";
 						tableXml += "<td style='width:90px'>";
-						tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(";
+						tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(\"";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
-						tableXml += ")'>";
+						tableXml += "\")'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
 						tableXml += "</td>";
 						tableXml += "<td style='text-align:center'>";
@@ -98,7 +98,7 @@
 			
 			function Detail_UserInfo(pUserID) {
 			    var feature = GetOpenPosition(420, 450);
-			    window.open("/myoffice/common/ShowPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 			
 			function menuQst_ResultView() {

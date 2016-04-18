@@ -58,20 +58,20 @@
 
 		    var pUserID = "${userId}";
 		    
-			<%-- function openUserInfo(strEmail) {
-			    var compemail = strEmail
+			function openUserInfo(strEmail) {
+			    var compemail = strEmail;
 			    compemail = compemail.toUpperCase();
-			    var sDomain = <%=request.getServerName() %>;
-			    sDomain = sDomain.toUpperCase();
+<%-- 			    var sDomain = <%=request.getServerName() %>; --%>
+// 			    sDomain = sDomain.toUpperCase();
 	
-			    var s_pos = compemail.indexOf("@")
+			    var s_pos = compemail.indexOf("@");
 			    var parameter = compemail.slice(0, s_pos);  //보낸 사람 ID
 			    var heigth = window.screen.availHeight;
 			    var width = window.screen.availWidth;
 			    var left = (width - 500) / 2;
 			    var top = (heigth - 400) / 2;
-			    window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		    } --%>
+			    window.open("/ezCommon/showPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		    }
 
 		    function menuQstList(){
 	            var szUrl = "/ezQuestion/qstList.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;

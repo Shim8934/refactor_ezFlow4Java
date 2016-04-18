@@ -63,9 +63,9 @@
 						tableXml += "</td>";
 						if("${public_flg}"==0){
 							tableXml += "<td style='width:150px'>";
-							tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(";
+							tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(\"";
 							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
-							tableXml += ")'>";
+							tableXml += "\")'>";
 							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
 							tableXml += "</td>";
 						}
@@ -96,7 +96,7 @@
 			
 			function Detail_UserInfo(pUserID) {
 			    var feature = GetOpenPosition(420, 450);
-			    window.open("/ezCommon/ShowPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 			
 			function menuQst_ResultView() {

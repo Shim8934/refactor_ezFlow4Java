@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommon.web;
 
 import java.awt.image.BufferedImage;
+import java.beans.Encoder;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,9 +9,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
@@ -32,9 +35,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -59,8 +65,14 @@ public class EzCommonController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/ezCommon/manyColor.do")
 	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
@@ -900,4 +912,122 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 	}
 	
+	
+	/**
+	 * ID크릭시 사용자 정보화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/showPersonInfo.do")
+	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception{
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String id = "", email = "", pDeptID = "";
+		
+		String literalEmail = "";
+		String literalDisplayName = "";
+		String literalPhoto = "";
+		String literalDept = "";
+		String literalTitle = "";
+		String literalCompany = "";
+		String literalMobile = "";
+		String literalHomePhone = "";
+		String literalFax = "";
+		String literalPostal = "";
+		String literalAddress = "";
+		String literalPhone = "";
+		String literalInfo = "";
+        
+        String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+        
+        if(request.getParameter("id") != null){
+        	id = request.getParameter("id");
+        }
+        
+        if(request.getParameter("email") != null){
+        	id = request.getParameter("email");
+        }
+        
+        if(request.getParameter("dept") != null){
+        	id = request.getParameter("dept");
+        }
+        
+        /*if(id.equals("")){
+        	
+        	if(!email.equals("")){
+        		id = ezOrganService.getCNByEmail(email);
+        		
+        	}
+        }*/
+        
+        if(!id.equals("")){
+        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary());
+        	
+        	Document xmldom = commonUtil.convertStringToDocument(infoXML);
+        	if(xmldom.getElementsByTagName(email) == null){
+        		literalEmail = email;
+        		literalDisplayName = email;
+        		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        	}else{
+        		
+//        		if(xmldom.getElementsByTagName(email) == null){
+//        			infoXML = ezOrganService.getSearchLikeByEmail(id);
+//        			xmldom = commonUtil.convertStringToDocument(infoXML);
+//        		}
+        		
+        		if(!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)){
+        			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary());
+        			
+        			if(!infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")){
+        				Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
+        				
+        				literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+        				literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+        			}else{
+        				literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+        				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+        			}
+        			
+        		}else{
+        			literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+    				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+        		}
+        		
+        		if(xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") || xmldom.getElementsByTagName("TITLE").item(0).getTextContent().equals("")){
+        			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        		}else{
+        			literalPhoto = "<IMG SRC='/ezCommon/ezCommonInterFace.do?TYPE=PERSONAL&FILENAME=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+        		}
+        		
+        		literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+        		literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+        		literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
+        		literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
+        		literalMobile = xmldom.getElementsByTagName("MOBILE").item(0).getTextContent();
+        		literalHomePhone = xmldom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
+        		literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
+        		literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
+        		literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
+        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace("\n", "<BR>");
+        	}
+        }else{
+        	literalEmail = email;
+        	literalDisplayName = email;
+        	literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        }
+        
+        
+        model.addAttribute("LiteralEmail", literalEmail);
+        model.addAttribute("LiteralDisplayName", literalDisplayName);
+        model.addAttribute("LiteralPhoto", literalPhoto);
+        model.addAttribute("LiteralDept", literalDept);
+        model.addAttribute("LiteralTitle", literalTitle);
+        model.addAttribute("LiteralCompany", literalCompany);
+        model.addAttribute("LiteralMobile", literalMobile);
+        model.addAttribute("LiteralHomePhone", literalHomePhone);
+        model.addAttribute("LiteralFax", literalFax);
+        model.addAttribute("LiteralPostal", literalPostal);
+        model.addAttribute("LiteralAddress", literalAddress);
+        model.addAttribute("LiteralPhone", literalPhone);
+        model.addAttribute("LiteralInfo", literalInfo);
+       
+        return "/ezCommon/showPersonInfo";
+	}
 }

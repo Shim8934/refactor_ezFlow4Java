@@ -91,6 +91,10 @@
 	<procedure id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
 		{CALL EZHRMASTER.EZSP_GETTBLUSERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
