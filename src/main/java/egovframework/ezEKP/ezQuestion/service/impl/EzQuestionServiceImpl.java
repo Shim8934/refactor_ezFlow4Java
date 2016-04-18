@@ -86,9 +86,9 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pstrBrdID", map.get("brdId"));
 		map.put("v_pItemNo", map.get("itemNo"));
 		map.put("v_pUserID", pUserID);
-		map.put("v_pUserNM", pUserID);
-		map.put("v_pUserNM2", pUserID);
-		map.put("v_pUserEmail", pUserID);
+		map.put("v_pUserNM", map.get("userNm"));
+		map.put("v_pUserNM2", map.get("userNm2"));
+		map.put("v_pUserEmail", map.get("userEmail"));
 		map.put("v_pTitle", map.get("subject"));
 		map.put("v_pContent", map.get("content"));
 		map.put("v_pPostDate", dateFormat.format(calendar.getTime()));
@@ -528,12 +528,26 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 	
 	@Override
-	public List<String> tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception {
+	public String tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_PSTRBRDID", brdId);
 		map.put("v_PITEMNO", itemNo);
 		map.put("v_PQUESNO", questionNo);
-		return ezQuestionDAO.tableAnswerValue(map);
+		List<String> list = ezQuestionDAO.tableAnswerValue(map);
+		
+		StringBuilder sb = new StringBuilder();
+		if(list != null){
+			sb.append("<DATA>");
+			for(String answerAnswerContent : list){
+				sb.append("<ROW>");
+				sb.append("<ANSWER_ANSWERCONTENT>");
+				sb.append(answerAnswerContent);
+				sb.append("</ANSWER_ANSWERCONTENT>");
+				sb.append("</ROW>");
+			}
+			sb.append("</DATA>");
+		}	
+		return sb.toString();
 	}
 
 	@Override
