@@ -1921,7 +1921,6 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         nodeData = resultXML.createElement("VALUE");
         nodeData.setTextContent(resCnt + " " + egovMessageSource.getMessage("ezQuestion.t53", locale));
-System.out.println(egovMessageSource.getMessage("ezQuestion.t53", locale));
         node.appendChild(nodeData);
 
         node = resultXML.createElement("CELL");
