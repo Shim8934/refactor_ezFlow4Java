@@ -13,7 +13,10 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.dao.LoginDAO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzOrganAdminService")
 public class EzOrganAdminServiceImpl implements EzOrganAdminService {
@@ -26,6 +29,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
+	
+	@Autowired
+	private LoginDAO loginDAO;
 	
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -111,6 +117,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CLASS", type);
 		
 		ezOrganAdminDao.moveDBData(map);
+	}
+
+	@Override
+	public void setPassword(String cn, String password) throws Exception {
+		String pwd = EgovFileScrty.encryptPassword(password, cn);
+		
+		LoginVO loginVO = new LoginVO();		
+		loginVO.setId(cn);
+		loginVO.setPassword(pwd);
+		
+		loginDAO.updatePassword(loginVO);
+	}
+	
+	@Override
+	public void retireEntry(String cn) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", cn);
+		
+		ezOrganAdminDao.retireDBData(map);
 	}
 
 	@Override

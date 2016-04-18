@@ -105,10 +105,9 @@ public class LoginController {
 		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
-
     	// 1. 일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
-
+        
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
         	Calendar cal = Calendar.getInstance();
         	cal.add(Calendar.MONTH, -6);
@@ -121,7 +120,7 @@ public class LoginController {
 			if(diff <= 0){
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
-			}else{				
+			}else{
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				//IP Address,  마지막 login시간 저장
@@ -131,12 +130,15 @@ public class LoginController {
 				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
 				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-				
-				loginService.insertLog(resultVO);								
+
+				if(resultVO.getTitle2() == null){
+					resultVO.setTitle2("");
+				}
+				loginService.insertLog(resultVO);
 				
 				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
-
+				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
 	        	cookieID.setPath("/");
 	        	response.addCookie(cookieID);
@@ -144,7 +146,7 @@ public class LoginController {
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
-
+	        	
 	        	return "redirect:/cmm/main/mainPage.do";
 			}
         }else{

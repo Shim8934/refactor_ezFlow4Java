@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -40,6 +41,9 @@ public class EzOrganAdminController {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	
 	/**
@@ -285,6 +289,124 @@ public class EzOrganAdminController {
 		model.addAttribute("birthDay", "");
 		
 		return "admin/ezOrgan/userInfo";
+	}
+	
+	/**
+	 * 조직도관리 서명등록 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/configSignImage.do")	
+	public String configSignImage(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		String userID = request.getParameter("id");
+		String userInfo_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		String signImageSize = config.getProperty("config.SignImageSizeLimit");
+		String sign = "APPROVALSIGN";
+		
+		if(userInfo_approvalG.equals("YES")){
+			sign = "APPROVALGSIGN";
+		}
+		
+		model.addAttribute("userID", userID);
+		model.addAttribute("userInfo_approvalG", userInfo_approvalG);
+		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("signPath", sign);
+		
+		return "admin/ezOrgan/configSignImage";
+	}
+	
+	/**
+	 * 조직도관리 전자결재 서명 이미지 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getSignImage")
+	public void getSignImage(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String type = request.getParameter("type");
+		String fileName = request.getParameter("fileName");
+		
+		if(type.equals("APPROVALSIGN")){
+			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
+		}else{			
+			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + "/" + fileName.split("_")[0] + "/" + fileName;
+			
+			if(fileName != null && !fileName.equals("")){
+				ezCommonService.responseAttach(filePath, "", true, request, response);
+			}
+		}	
+	}
+	
+	/**
+	 * 조직도관리 암호관리 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do")
+	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		return "admin/ezOrgan/inputPassword";
+	}
+	
+	/**
+	 * 조직도관리 새로운 비밀번호 설정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/changePassword.do")
+	public void changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String pw = request.getParameter("password");
+		String cn[] = request.getParameter("cn").split(",");
+		
+		for(int i=0; i < cn.length; i++){			
+			ezOrganAdminService.setPassword(cn[i], pw);
+		}
+	}
+	
+	/**
+	 * 조직도관리 사원퇴직 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/retireUser.do")
+	public void retireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+		String cn[] = request.getParameter("cn").split(",");
+		
+		for(int i=0; i < cn.length; i++){			
+			ezOrganAdminService.retireEntry(cn[i]);
+		}
+	}
+	
+	/**
+	 * 조직도관리 사원이동 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/movUser.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String movUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String parentCn = request.getParameter("parentCn");
+		String cn[] = request.getParameter("cn").split(",");
+		String result = "OK";
+		
+		for(int i=0; i < cn.length; i++){			
+			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user");
+		
+			if(!result.equals("OK")){
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 조직도관리 사원이동 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
+	public void delUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String cn[] = request.getParameter("cn").split(",");
+				
+		for(int i=0; i < cn.length; i++){			
+			ezOrganAdminService.deleteDBData(cn[i], "user");
+		}		
+	}	
+	/**
+	 * 조직도관리 사원정보 수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String saveUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String result = "OK";
+		
+		
+		
+		return result;
 	}
 	
 }

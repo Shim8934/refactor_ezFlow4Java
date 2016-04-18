@@ -12,4 +12,5 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommon/EzCommon_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResource_SQL_Oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAddress/EzAddress_SQL_Oracle.xml"/>
 </sqlMapConfig>

@@ -47,5 +47,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		delete("EzOrganAdminDAO.moveDBData", map);
 	}
 
+	public void retireDBData(Map<String, Object> map) throws Exception{
+		delete("EzOrganAdminDAO.retireDBData", map);
+	}
+
+
 
 }

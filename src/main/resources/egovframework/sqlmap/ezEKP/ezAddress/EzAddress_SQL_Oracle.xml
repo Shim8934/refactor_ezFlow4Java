@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezAddress">
+	
+	<typeAlias  alias="AddressVO"					type="egovframework.ezEKP.ezAddress.vo.AddressVO"/>
+		
+	<resultMap id="addressList" class="AddressVO">
+		<result property="zipcode" 					column="zipcode" 				columnIndex="1"/>
+		<result property="sido" 					column="sido" 					columnIndex="2"/>
+		<result property="gugun" 					column="gugun" 					columnIndex="3"/>
+		<result property="dong" 					column="dong" 					columnIndex="4"/>
+		<result property="bunji" 					column="bunji" 					columnIndex="5"/>
+	</resultMap>	
+	
+	<select id="EzAddressDAO.getAddressInfo" resultMap="addressList">
+		<![CDATA[
+			SELECT 
+				NVL(zipcode,'') as zipcode,
+				NVL(sido,'') as sido,
+				NVL(gugun,'') as gugun,
+				NVL(dong,'') as dong,
+				NVL(bunji,'') as bunji
+			FROM 
+				ezAddress.tb_ZipCode
+			WHERE
+				dong LIKE '%$dong$%'
+			ORDER BY dong
+		]]>
+	</select>	
+	
+</sqlMap>

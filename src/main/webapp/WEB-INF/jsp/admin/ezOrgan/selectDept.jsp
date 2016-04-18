@@ -118,11 +118,11 @@
 		        treeNode.LoadFromID(nodeIdx.NodeID);
 
 				if (treeNode.selectedIndex != -1){					
-				    //if(ReturnFunction != null){				    	
+				    if(ReturnFunction != null){				    	
 		                ReturnFunction(treeNode.GetNodeData("CN"));
-				    //}else{
-		            //    window.returnValue = treeNode.GetNodeData("CN");
-				    //}
+				    }else{
+		                window.returnValue = treeNode.GetNodeData("CN");
+				    }
 					window.close();
 				}else{
 					alert("<spring:message code='ezOrgan.t249' />");

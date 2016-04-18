@@ -254,6 +254,190 @@
 		            }
 		        }
 		    }
+		    function Check_ID(pValue) {
+		        for (var iCnt = 0 ; iCnt < pValue.length ; iCnt++) {
+		            if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
+		                // A-Z
+		            }
+		            else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
+		                // a-z
+		            }
+		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
+		                // 0-9
+		            }
+		            else if (pValue.charCodeAt(iCnt) == 46) {
+		                // .
+		            }
+		            else {
+		                return false;
+		            }
+		        }
+		        return true;
+		    }
+		    function OK_Click() {
+alert(1);		    	
+		        if (document.getElementById("UserID").value == "") {
+		            alert("<spring:message code='ezOrgan.t253' />");
+		            return;
+		        }
+		        // 2009.11.10 - 아이디 대문자 체크
+		        if ("${checkID}" == "YES") {
+		            for (i = 0; i < document.getElementById("UserID").value.length; i++) {
+		                if (document.getElementById("UserID").value.charCodeAt(i) >= 65 && document.getElementById("UserID").value.charCodeAt(i) <= 90) {
+		                    alert("<spring:message code='ezOrgan.t308' />");
+		                    return;
+		                }
+		            }
+		        }
+alert(2);	
+		        if (document.getElementById("UserID").value.length < 3) {
+		            alert("<spring:message code='ezOrgan.t254' />");
+		            return;
+		        }
+
+		        if (!Check_ID(document.getElementById("UserID").value)) {
+		            alert("<spring:message code='ezOrgan.t255' />");
+		            return;
+		        }
+
+		        if (UserName.value == "") {
+		            alert("<spring:message code='ezOrgan.t256' />");
+		            return;
+		        }
+
+		        if (DeptID != "" && Password.value == "") {
+		            alert("<spring:message code='ezOrgan.t257' />");
+		            return;
+		        }
+
+		        if (UserName.value.indexOf("(") != -1 || UserName.value.indexOf(")") != -1) {
+		            alert("<spring:message code='ezOrgan.t258' />");
+		            return;
+		        }
+
+		        if (UserName.value.indexOf("&") != -1 || UserName.value.indexOf("<") != -1 || UserName.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (UserName2.value.indexOf("&") != -1 || UserName2.value.indexOf("<") != -1 || UserName2.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (document.getElementById("UserID").value.indexOf("&") != -1 || document.getElementById("UserID").value.indexOf("<") != -1 || document.getElementById("UserID").value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t261' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (JobTitle2.value.indexOf("&") != -1 || JobTitle2.value.indexOf("<") != -1 || JobTitle2.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (JobPosition.value.indexOf("&") != -1 || JobPosition.value.indexOf("<") != -1 || JobPosition.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (JobPosition2.value.indexOf("&") != -1 || JobPosition2.value.indexOf("<") != -1 || JobPosition2.value.indexOf(">") != -1) {
+		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
+		            return;
+		        }
+
+		        if (trim(SecurityLevel.value) != "" && parseInt(SecurityLevel.value) != SecurityLevel.value) {
+		            alert("<spring:message code='ezOrgan.t265' />");
+		            return;
+		        }
+alert(3);			        
+		        // 표준모듈 (2007.02.21) 수정 : 사용자 추가일 경우만, 체크한다.
+		        if (RetValue[2] == "") {
+		            if (MailAlias.value != "" && MailAlias.value.indexOf("@") != -1) {
+		                alert("<spring:message code='ezOrgan.t267' />");
+		                return;
+		            }
+		        }
+alert(4);	
+				var mailNickName = "";
+				var birthtype = "";
+				
+				if (MailAlias.value == ""){
+					mailNickName =  document.getElementById("UserID").value;
+				}else{
+					mailNickName = MailAlias.value;
+				}				
+				if (eval("birth_S").checked == true){
+					birthtype = "Y";
+				}else{
+					birthtype = "N";
+				}
+
+				$.ajax({
+					type : "POST",
+					dataType : "xml",
+					url : "/admin/ezOrgan/saveUserInfo.do",
+					async : false,
+					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
+						    mailNickName : mailNickName, title : JobTitle.value, title2 : JobTitle2.value, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
+						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : JobPosition.value, extensionAttribute102 : JobPosition2.value, telephoneNumber : PhoneNumber.value,
+						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
+						    birthtype : birthtype, birth : document.getElementById("txtBirth").value
+					},
+					success : function(result){
+						if(result == "PRE"){
+							alert("<spring:message code='ezOrgan.t119' />");
+						}else{
+							if (ReturnFunction != null){
+				                ReturnFunction(DeptID);
+							}else{
+				                window.returnValue = DeptID;
+							}
+				            window.close();
+						}
+					},
+					error : function(){
+						alert("<spring:message code='ezOrgan.t269' />");
+					}
+				});		        
+		    }
+		    function trim(str) {
+		        while (str && str.indexOf(" ") == 0)
+		            str = str.substring(1);
+
+		        while (str && str.lastIndexOf(" ") == str.length - 1)
+		            str = str.substring(0, str.length - 1);
+
+		        return str;
+		    }
+		    var address_zip_select_dialogArguments = new Array();
+		    function GetPostCode() {
+		    	//2016-04-18 장진혁과장 -- Cross 선택으로 인한 주석처리
+		        //if (CrossYN()) {
+	            address_zip_select_dialogArguments[0] = "";
+	            address_zip_select_dialogArguments[1] = GetPostCode_Complete;
+	            //DivPopUpShow(655, 420, "/myoffice/ezAddress/address_zip_select.aspx");
+	            DivPopUpShow(655, 420, "/ezAddress/address_zip_select.do");
+		        /* }else {
+		            var Para = window.showModalDialog("/myoffice/ezAddress/address_zip_select.aspx", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 420));
+		            if (typeof (Para) != "undefined" || Para == "") {
+		                ZipCode.value = Para[0];
+		                HomeAddr.value = Para[1] + " " + Para[2] + " " + Para[3];
+		            }
+		        } */
+		    }
+		    function GetPostCode_Complete(Para) {
+		        DivPopUpHidden();
+
+		        if (typeof (Para) != "undefined" || Para == "") {
+		            ZipCode.value = Para[0];
+		            HomeAddr.value = Para[1] + " " + Para[2] + " " + Para[3];
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="popup">

@@ -384,8 +384,7 @@
 		        selectdept_cross_dialogArguments = new Array();
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
 		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-		        
+		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));		        
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
 		    
@@ -700,6 +699,7 @@
 			function info_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
+		        
 		        var nodeIdx = treeView.GetSelectNode();
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(nodeIdx.NodeID);
@@ -726,13 +726,14 @@
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
 				
-				if (CrossYN()) {
-				    userinfo_dialogArguments = new Array();
-				    userinfo_dialogArguments[0] = args;
-				    userinfo_dialogArguments[1] = info_user_Complete;
-				    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
-				    try { OpenWin.focus(); } catch (e) { }
-				}else{
+				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
+				//if (CrossYN()) {
+			    userinfo_dialogArguments = new Array();
+			    userinfo_dialogArguments[0] = args;
+			    userinfo_dialogArguments[1] = info_user_Complete;
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    try { OpenWin.focus(); } catch (e) { }
+				/* }else{
 				    var rtnValue;
 				    rtnValue = window.showModalDialog("/admin/ezOrgan/userInfo.do", args, "dialogHeight:500px; dialogWidth:830px; scroll:no;status:no; help:no; edge:sunken; resize:no" + GetShowModalPosition(830, 520));
 
@@ -744,7 +745,7 @@
 				            search_click();
 				        }
 				    }
-				}
+				} */
 			}
 		    function info_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
@@ -756,6 +757,291 @@
 		            }
 		        }
 		    }
+		    function mod_sign() {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0) {
+		            alert("<spring:message code='ezOrgan.t45' />");
+		            return;
+		        }
+		        if (listview.GetSelectedRows().length > 1) {
+		            alert("<spring:message code='ezOrgan.t46' />");
+		            return;
+		        }
+		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
+		        //if (CrossYN()){
+		            window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		        /* }else{
+		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
+		        } */
+		    }
+		    var inputpassword_dialogArguments = new Array();
+			function mod_password(){
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0){
+					alert("<spring:message code='ezOrgan.t39' />");
+					return;
+				}
+		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
+			    //if (CrossYN()){
+		        inputpassword_dialogArguments[1] = mod_password_Complete;
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        try { OpenWin.focus(); } catch (e) { }
+			    <%-- }else{
+			        var rtnValue = window.showModalDialog("InputPassword.aspx", "", "dialogHeight:185px; dialogWidth:330px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(330, 185));
+
+			        if (typeof (rtnValue) != "undefined") {
+			            var length = listview.GetSelectedRows().length;
+			            if (!confirm(length + "<%=RM.GetString("t40")%>")){
+			                return;
+			            }
+			            var xmlDom = createXmlDom();
+			            var xmlHTTP = createXMLHttpRequest();
+
+			            var objNode = "";
+			            createNodeInsert(xmlDom, objNode, "DATA");
+			            createNodeAndInsertText(xmlDom, objNode, "PASSWORD", rtnValue);
+			            
+			            for (var i = 0; i < length; i++) {
+			                createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[i].getAttribute("DATA2"));
+			            }
+			            xmlHTTP.open("POST", "ChangePassword.aspx", false);
+			            xmlHTTP.send(xmlDom);
+
+			            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK"){
+			                alert("<%=RM.GetString("t41")%>");
+			            }else{
+			                alert(length + "<%=RM.GetString("t42")%>");
+			            }
+			        }
+			    } --%>
+			}
+		    function mod_password_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		            var listview = new ListView();
+		            listview.LoadFromID("lvUserList");
+
+		            var length = listview.GetSelectedRows().length;
+		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
+			        	return;
+		            }		            
+         			var data = "";
+		            for (var i = 0; i < length; i++) {
+		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
+		            	
+		            	if(i != length-1){
+		            		data = data + ",";
+		            	}		                
+		            }
+		            
+		            $.ajax({
+		            	type : "POST",
+		            	dataType : "xml",
+		            	url : "/admin/ezOrgan/changePassword.do",
+		            	async : false,
+		            	data : {password : rtnValue, cn : data},
+		            	success : function(result){
+		            		alert(length + "<spring:message code='ezOrgan.t42' />");
+		            	},
+		            	error : function(){
+		            		alert("<spring:message code='ezOrgan.t41' />");		            		
+		            	}
+		            });
+	            }		        
+		    }		    
+		    function Retire_user(){
+	            var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            var nodeIdx = treeView.GetSelectNode();
+	            
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(nodeIdx.NodeID);
+
+	            var listview = new ListView();
+	            listview.LoadFromID("lvUserList");
+
+	            if (listview.GetSelectedRows().length == 0){
+	        		alert(strLang2);
+	        		return;
+	        	}
+	            var length = listview.GetSelectedRows().length;		            
+	        	
+	        	if (!confirm(length + strLang1)){
+					return;
+	        	}
+	        	
+	        	var data = "";
+	            for (var i = 0; i < length; i++) {
+	            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
+	            	
+	            	if(i != length-1){
+	            		data = data + ",";
+	            	}		                
+	            }
+
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "xml",
+	            	url : "/admin/ezOrgan/retireUser.do",
+	            	async : false,
+	            	data : {cn : data},
+	            	success : function(result){
+	            		alert(strLang3);
+	            	},
+	            	error : function(){
+	            		alert(strLang4);            		
+	            	}
+	            });
+	            
+	            if (treeNode.selectedIndex != -1){
+	        		displayUserList(treeNode.GetNodeData("CN"));
+	            }		            
+	        }
+		    var selectdept_cross_dialogArguments = new Array();
+			function mov_user(){
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0){
+					alert("<spring:message code='ezOrgan.t12' />");
+					return;
+				}
+		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
+			    //if (CrossYN()) {
+		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
+		        selectdept_cross_dialogArguments[1] = mov_user_Complete;
+		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
+		        try { OpenWin.focus(); } catch (e) { }
+			    <%-- }else {
+			        var rtnValue = '';
+			        rtnValue = window.showModalDialog("SelectDept_Cross.aspx", "<%=RM.GetString("t13")%>", "dialogHeight:390px; dialogWidth:302px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(302, 390));
+
+			        if (typeof (rtnValue) != "undefined") {
+			            var length = listview.GetSelectedRows().length;
+			            if (!confirm(length + "<%=RM.GetString("t14")%>"))
+			                return;
+
+			            var xmlDom = createXmlDom();
+			            var xmlHTTP = createXMLHttpRequest();
+
+			            var objNode = "";
+			            createNodeInsert(xmlDom, objNode, "DATA");
+			            createNodeAndInsertText(xmlDom, objNode, "PARENTCN", rtnValue);
+			            for (var i = 0; i < length; i++) {
+			                createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[i].getAttribute("DATA2"));
+			            }
+
+			            xmlHTTP.open("POST", "MovUser.aspx", false);
+			            xmlHTTP.send(xmlDom);
+
+			            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+			                alert("<%=RM.GetString("t15")%>");
+			            else
+			                alert(length + "<%=RM.GetString("t16")%>");
+
+			            var treeView = new TreeView();
+			            treeView.LoadFromID("FromTreeView");
+			            var nodeIdx = treeView.GetSelectNode();
+			            var treeNode = new TreeNode();
+			            treeNode.LoadFromID(nodeIdx.NodeID);
+			            displayUserList(treeNode.GetNodeData("CN"));
+			        }
+			    } --%>
+			}
+		    function mov_user_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		        	var listview = new ListView();
+			        listview.LoadFromID("lvUserList");
+			        
+		            var length = listview.GetSelectedRows().length;
+		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
+		                return;
+		            }
+		            var data = "";
+		            for (var i = 0; i < length; i++) {
+		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
+		            	
+		            	if(i != length-1){
+		            		data = data + ",";
+		            	}		                
+		            }
+
+		            $.ajax({
+		            	type : "POST",
+		            	dataType : "html",
+		            	url : "/admin/ezOrgan/movUser.do",
+		            	async : false,
+		            	data : {parentCn : rtnValue, cn : data},
+		            	success : function(result){
+		            		if(result != "OK"){
+		            			alert("<spring:message code='ezOrgan.t15' />");
+		            		}else{
+		            			alert(length + "<spring:message code='ezOrgan.t16' />");
+		            		}
+		            	},
+		            	error : function(){
+		            		alert("<spring:message code='ezOrgan.t15' />");
+		            	}
+		            });
+
+		            var treeView = new TreeView();
+		            treeView.LoadFromID("FromTreeView");
+		            var nodeIdx = treeView.GetSelectNode();
+		            var treeNode = new TreeNode();
+		            treeNode.LoadFromID(nodeIdx.NodeID);
+		            displayUserList(treeNode.GetNodeData("CN"));
+		        }
+		    }
+		    function del_user(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();		        
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0){
+					alert("<spring:message code='ezOrgan.t28' />");
+					return;
+				}
+			    var length = listview.GetSelectedRows().length;
+				if (!confirm(length + "<spring:message code='ezOrgan.t29' />")){
+					return;
+				}
+				
+				var data = "";
+	            for (var i = 0; i < length; i++) {
+	            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
+	            	
+	            	if(i != length-1){
+	            		data = data + ",";
+	            	}		                
+	            }
+
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "html",
+	            	url : "/admin/ezOrgan/delUser.do",
+	            	async : false,
+	            	data : {cn : data},
+	            	success : function(result){
+	            		alert(length + "<spring:message code='ezOrgan.t31' />");
+	            	},
+	            	error : function(){
+	            		alert("<spring:message code='ezOrgan.t30' />");
+	            	}
+	            });
+				
+				if (TreeView.selectedIndex != -1){
+					displayUserList(treeNode.GetNodeData("CN"));
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">

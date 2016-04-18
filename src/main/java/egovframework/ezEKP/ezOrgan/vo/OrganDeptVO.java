@@ -210,30 +210,5 @@ public class OrganDeptVO {
 	public void setParentCn(String parentCn) {
 		this.parentCn = parentCn;
 	}
-	@Override
-	public String toString() {
-		return "OrganDeptVO [parentCn=" + parentCn + ", cn=" + cn + ", deptID="
-				+ deptID + ", displayName=" + displayName + ", displayName1="
-				+ displayName1 + ", displayName2=" + displayName2 + ", deptNM="
-				+ deptNM + ", mail=" + mail + ", extensionAttribute1="
-				+ extensionAttribute1 + ", extensionAttribute2="
-				+ extensionAttribute2 + ", extensionAttribute3="
-				+ extensionAttribute3 + ", extensionAttribute4="
-				+ extensionAttribute4 + ", extensionAttribute5="
-				+ extensionAttribute5 + ", extensionAttribute6="
-				+ extensionAttribute6 + ", extensionAttribute7="
-				+ extensionAttribute7 + ", extensionAttribute8="
-				+ extensionAttribute8 + ", extensionAttribute9="
-				+ extensionAttribute9 + ", extensionAttribute10="
-				+ extensionAttribute10 + ", extensionAttribute11="
-				+ extensionAttribute11 + ", extensionAttribute12="
-				+ extensionAttribute12 + ", extensionAttribute13="
-				+ extensionAttribute13 + ", extensionAttribute14="
-				+ extensionAttribute14 + ", extensionAttribute15="
-				+ extensionAttribute15 + ", adsPath=" + adsPath + ", updateDT="
-				+ updateDT + ", type=" + type + "]";
-	}
-	
-	
 	
 }

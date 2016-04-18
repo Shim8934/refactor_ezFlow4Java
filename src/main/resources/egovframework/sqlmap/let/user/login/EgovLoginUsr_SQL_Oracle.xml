@@ -83,4 +83,14 @@
 				cn = #id#									
 		]]>
 	</update>
+	
+	<update id="loginDAO.updatePassword" parameterClass="loginVO">
+		<![CDATA[
+			UPDATE ezHrMaster.TBLUSERMASTER
+			SET
+				password = #password#				
+			WHERE
+				cn = #id#									
+		]]>
+	</update>
 </sqlMap>
