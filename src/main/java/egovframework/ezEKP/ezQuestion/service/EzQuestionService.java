@@ -50,7 +50,7 @@ public interface EzQuestionService {
 	
 	public List<QstTempSaveVO> tempSave(int brdId, int itemNo) throws Exception;
 	
-	public List<String> tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception;
+	public String tableAnswerValue(int brdId, int itemNo, int questionNo) throws Exception;
 	
 	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception;
 	
