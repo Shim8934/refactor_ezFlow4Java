@@ -141,7 +141,7 @@
 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO">
+	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true">
 		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
