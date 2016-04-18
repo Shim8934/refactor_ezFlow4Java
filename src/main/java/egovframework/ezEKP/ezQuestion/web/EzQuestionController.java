@@ -16,7 +16,9 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -1003,7 +1005,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 			vItemID = callGetItemSeq(pBrdID);
 		}
 		
-		String pRtn = SaveQuestion(pBrdID, vItemID, doc, pUserID);
+		String pRtn = SaveQuestion(pBrdID, vItemID, doc, pUserID, loginVO);
 		
 		if(!pRtn.equals("OK")) {
 			DeleteQuestion(pBrdID, vItemID);
@@ -1019,7 +1021,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	}
 
 
-	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID) throws Exception {
+	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception {
 		NodeList nList = null;
 		int dataCount = 0;
 		dataCount = ezQuestionService.getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID));
@@ -1038,6 +1040,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 		map.put("brdId", pBrdID);
 		map.put("itemNo", Integer.parseInt(vItemID));
 		map.put("dataCount", dataCount);
+		map.put("userNm", loginVO.getDisplayName1());
+		map.put("userNm2", loginVO.getDisplayName2());
+		map.put("userEmail", loginVO.getEmail());
 		
 		ezQuestionService.stepSave(pUserID, map);
 		
@@ -3183,10 +3188,11 @@ System.out.println("pQstTitle:"+pQstTitle);
 	/**
 	 * 전자설문 설문리스트 재사용 정보 불러오기 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/callTempLoad.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+/*	@RequestMapping(value="/ezQuestion/callTempLoad.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callTempLoad(@RequestBody String xmlDoc,HttpServletRequest req,Model model) throws Exception {
 		Document objXML = commonUtil.convertStringToDocument(xmlDoc);
+System.out.println("xmlDoc:"+xmlDoc);
 		String itemId = "";
 		int itemNo = 0;
 		String strQstNo = "";
@@ -3293,11 +3299,12 @@ System.out.println("temp:"+temp);
 					ezQuestionService.insertAnswerContent(qstCompleteVO);
 				}
 				
-				str.append("<ANSWER>");
-				str.append("<ANSWERTITLE>"+arrLine[8]+"</ANSWERTITLE>");
-				str.append("</ANSWER>");
+				for(int j=0; j<arrQuestion.length; i++) {
+					str.append("<ANSWER>");
+					str.append("<ANSWERTITLE>"+arrLine[8]+"</ANSWERTITLE>");
+					str.append("</ANSWER>");
+				}
 				str.append("</ROW>");
-				
 			}
 			str.append("</DATA>");
 			
@@ -3305,7 +3312,164 @@ System.out.println("temp:"+temp);
 System.out.println(str.toString());
 		
 		return str.toString();
+	}*/
+	
+	@RequestMapping(value="/ezQuestion/callTempLoad.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callTempLoad(@RequestBody String xmlDoc,HttpServletRequest req,Model model) throws Exception {
+		Document objXML = commonUtil.convertStringToDocument(xmlDoc);
+		String itemId = "";
+		int itemNo = 0;
+		String strQstNo = "";
+		String lastItemNo = "0";
+		String[] arrQuestion;
+		String strQuestion = "";
+		String temp = "";
+		if(req.getParameter("item_id") != null && req.getParameter("item_id").length() != 0) {
+			itemId = req.getParameter("item_id");
+			itemNo = Integer.parseInt(itemId);
+		}
+
+		ezQuestionService.questionDelete2(5, Integer.parseInt(itemId));
+		
+		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
+		arrQuestion = strQuestion.trim().split("\\;\\;");
+		
+		String[] arrLine;
+		String strResult = "";
+		boolean chkType = false;
+
+		List<QstTempSaveVO> qstTempSaveVO = ezQuestionService.tempSave(5, itemNo);
+		
+		Document resultXML = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Node rNodes = resultXML.createElement("DATA");
+		Node node = resultXML.createElement("QUESTION");
+		Node nodeData;
+		rNodes.appendChild(node);
+		
+		if(arrQuestion.length > 0) {
+			for(int i=0; i<arrQuestion.length; i++) {
+				arrLine = arrQuestion[i].trim().split("\\|\\|");
+
+				if(arrLine.length < 2) {
+					break;
+				}
+				strQstNo = arrLine[0];
+				
+				if(strQstNo.trim() != lastItemNo.trim()) {
+					strResult = strResult.replace("| "+arrLine[1], "");
+					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
+					
+					node = resultXML.createElement("ROW");
+					rNodes.appendChild(node);
+					
+					nodeData = resultXML.createElement("CONTENT");
+					node.appendChild(resultXML.createTextNode(arrLine[1]));
+					
+					nodeData = resultXML.createElement("ANSWERTYPE");
+					node.appendChild(resultXML.createTextNode(arrLine[2]));
+					
+					nodeData = resultXML.createElement("MULTISELECT");
+					node.appendChild(resultXML.createTextNode(arrLine[4]));
+					
+					nodeData = resultXML.createElement("SELVIEWSTART");
+					node.appendChild(resultXML.createTextNode("0"));
+					
+					nodeData = resultXML.createElement("SELVIEWEND");
+					node.appendChild(resultXML.createTextNode("0"));
+					
+					QstAttachVO qstAttachVO = new QstAttachVO();
+					qstAttachVO.setBrdId(5);
+					qstAttachVO.setItemNo(Integer.parseInt(itemId));
+					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
+					
+					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo3(qstAttachVO);
+					
+					
+					
+					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+					
+					if(qstAttach.size() > 0) {
+						for(int k=0; k<qstAttach.size(); k++) {
+							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
+							xmlTemp = commonUtil.convertStringToDocument(rtv);		
+						}
+					}
+					
+					if(xmlTemp.getElementsByTagName("ATTACHNO").getLength() > 0) {
+						nodeData = resultXML.createElement("ATTACH");
+						node.appendChild(nodeData);
+						for(int j = 0; j < xmlTemp.getElementsByTagName("ATTACHNO").getLength(); j++) {
+							Node nodeData2 = resultXML.createElement("ROW");
+							nodeData.appendChild(nodeData2);
+							Node nodeData3 = resultXML.createElement("TYPE");
+							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent()));
+							
+							nodeData3 = resultXML.createElement("TITLE");
+							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent()));
+							
+							nodeData3 = resultXML.createElement("HREF");
+							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent()));
+						}
+					}
+					
+					if(arrLine[2] == "5") {
+						String tableAnswerValue = ezQuestionService.tableAnswerValue(5, Integer.parseInt(itemId), qstTempSaveVO.get(i).getQuestionNo());
+						xmlTemp = null;
+						xmlTemp = commonUtil.convertStringToDocument(tableAnswerValue);
+						
+						for(int j = 0; j < xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").getLength(); j++) {
+							Node nodeData2 = resultXML.createElement("ANSWER_ANSWER");
+							node.appendChild(nodeData2);
+							
+							Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
+							nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							nodeData2.appendChild(nodeTitle2);
+							
+						}
+					}
+					ezQuestionService.questionDelete1(5, Integer.parseInt(itemId), Integer.parseInt(arrLine[0]));
+					QstCompleteVO qstCompleteVO = new QstCompleteVO();
+					qstCompleteVO.setQuesContent(arrLine[1]);
+					qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
+					qstCompleteVO.setMultiSelect(arrLine[4]);
+					qstCompleteVO.setStrBrdID(5);
+					qstCompleteVO.setItemNo(Integer.parseInt(itemId));
+					qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
+					qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
+					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+					
+					ezQuestionService.insertQuestion(qstCompleteVO);
+				}	
+				QstCompleteVO qstCompleteVO = new QstCompleteVO();
+				qstCompleteVO.setQuesContent(arrLine[1]);
+				qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
+				qstCompleteVO.setMultiSelect(arrLine[4]);
+				qstCompleteVO.setStrBrdID(5);
+				qstCompleteVO.setItemNo(Integer.parseInt(itemId));
+				qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
+				qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
+				qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+				ezQuestionService.insertAnswerContent(qstCompleteVO);
+					
+				nodeData = resultXML.createElement("ANSWER");
+				node.appendChild(nodeData);
+					
+				Node nodeTitle = resultXML.createElement("TITLE");
+				nodeTitle.setTextContent(arrLine[8]);
+				nodeData.appendChild(nodeTitle);
+					
+				lastItemNo = strQstNo;
+
+			}
+		}
+		rNodes.getFirstChild().setTextContent(strResult);
+
+		String returnXML = commonUtil.convertDocumentToString(resultXML);
+System.out.println(returnXML);
+		return returnXML;
 	}
+		
 	
 	/**
 	 * 전자설문 설문생성 재사용 정보 저장 실행 함수
