@@ -258,10 +258,10 @@
     }
     function menuQst_List() {
          if(CrossYN()) {
-        	 var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}" 
+        	 var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brdNm=${brdNm}&brdPostterm=${qstReuseQuestionVO.postTerm}" 
          }
         else {
-        	var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdId}&brd_postterm=${qstReuseQuestionVO.postTerm}"
+        	var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brdNm=${brdNm}&brdPostterm=${qstReuseQuestionVO.postTerm}"
         }
         window.location.href = szUrl; 
     } 
@@ -270,10 +270,10 @@
             var item_no = document.getElementById("item_no").value;
 
             if (CrossYN()) {
-            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&item_no=" + item_no;
             }
             else {
-            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&item_no=" + item_no;
             }
             var _MSIE = 'MSIE';
             var useragentstr = navigator.userAgent;
@@ -309,7 +309,7 @@
     }
     function menu_SelectRange_IE() {
         var item_no = document.all("item_no").value;
-         var szUrl = "/ezQuestion/qstRangeSelect/rangeSelect.do?brd_id='${brdId}'&item_no=" + item_no; 
+         var szUrl = "/ezQuestion/qstRangeSelect.do?brdID='${brdId}'&itemNo=" + item_no; 
         if ((g_windowReference == null) || (g_windowReference.closed == true)) {
             if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
                 var feature = GetOpenPosition(560, 630);
@@ -423,7 +423,7 @@
                         <input type="text" name="brdId" id="brd_id" value="${brdId}" style="display:none"> 
                         <input type="text" name="brdNm" id="brd_nm" value="${ezQuestionVO.brdNm}" style="display:none"> 
                         <input type="text" name="brdPostterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" style="display:none"> 
-                        <input type="text" name="itemNo" id="item_no" style="display:none"> 
+                        <input type="text" name="itemNo" id="item_no" value="${itemId}" style="display:none"> 
                         <input type="text" name="old_item_num" id="old_item_num" value="${itemId}" style="display:none">
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
