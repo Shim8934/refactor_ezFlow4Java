@@ -87,8 +87,10 @@ public class EzEmailMailListController {
 		}
 		logger.debug("dispname=" + dispname + ",url=" + url);
 		
+		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
+		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
 		String userLang ="1";
@@ -135,12 +137,14 @@ public class EzEmailMailListController {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("getMailList started");
-		
+		logger.debug("getMailList started");		
 		logger.debug("bodyData=" + bodyData);
+		
+		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -164,6 +168,7 @@ public class EzEmailMailListController {
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		Message[] messages = folder.getMessages();
 		
+		// sort the messages
 		sortMessages(imapAccess, folder, messages, sortType);
 				
 		int startNo = messages.length - 1 - Integer.parseInt(start);
@@ -173,6 +178,7 @@ public class EzEmailMailListController {
 			Message[] fetchMessages = Arrays.copyOfRange(messages, endNo, startNo + 1);
 			FetchProfile fp = new FetchProfile();
 			
+			// subject or sender or recipient
 			if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")
 					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")
 					|| sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
@@ -182,6 +188,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
+			// attachment
 			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
@@ -190,6 +197,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.SIZE);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
+			// read/unread
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
@@ -198,6 +206,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);				
 			}
+			// bookmark
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
@@ -206,6 +215,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);				
 			}
+			// importance
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
@@ -215,6 +225,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.SIZE);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
+			// size
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
@@ -223,6 +234,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
+			// received date or received date in sent mailbox
 			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
 					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
@@ -252,6 +264,8 @@ public class EzEmailMailListController {
 			sb.append("<response>");
 			sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
 			sb.append("<fromemail><![CDATA[]]></fromemail>");
+			
+			// importance
 			String[] headers = message.getHeader("importance");
 			String header = headers != null ? headers[0] : "normal";
 			int importance = 1;
@@ -262,11 +276,15 @@ public class EzEmailMailListController {
 				importance = 0;
 			}
 			sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));	
+			
+			// Flagged is used for bookmark
 			int flagged = 0;
 			if (message.isSet(Flags.Flag.FLAGGED)) {
 				flagged = 1;
 			}
 			sb.append(String.format("<flag><![CDATA[%d]]></flag>", flagged));
+			
+			// attachment
 			boolean isAttached = imapAccess.hasAttachment(message);
 //			logger.debug("msgno=" + i + ",isAttached=" + isAttached);
 			int attached = isAttached ? 1 : 0;
@@ -277,14 +295,19 @@ public class EzEmailMailListController {
 			if (!viewSelectIndex.equals("3")) {
 				addresses = message.getFrom();
 				if (addresses != null) {
-					addressStr = ((InternetAddress)addresses[0]).getPersonal();
+					addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
 					if (addressStr == null) {
-						addressStr = ((InternetAddress)addresses[0]).getAddress();
+						addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
 					}
 					else {
+						// decoding is needed for the name part
+						// ex) =?UTF-8?B?44WC44WC?=
+						//     =?utf-8?B?Z2lzYTE=?=
+						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
 						addressStr = MimeUtility.decodeText(addressStr);
 					}
 				}			
+				// in case there is only a name with no email address
 				else {
 					String[] fromHeaders = message.getHeader("From");
 					if (fromHeaders != null) {
@@ -292,16 +315,18 @@ public class EzEmailMailListController {
 					}
 				}
 			}
+			// in case of Sent mailbox
 			else {
 				addresses = message.getRecipients(Message.RecipientType.TO);
 				if (addresses != null) {
 					StringBuilder addressBuilder = new StringBuilder();
 					for (Address address : addresses) {
-						addressStr = ((InternetAddress)address).getPersonal();
+						addressStr = ((InternetAddress)address).getPersonal(); // name part
 						if (addressStr == null) {
-							addressStr = ((InternetAddress)address).getAddress();
+							addressStr = ((InternetAddress)address).getAddress(); // email address part
 						}
 						else {
+							// decoding is needed for the name part
 							addressStr = MimeUtility.decodeText(addressStr);
 						}						
 						addressBuilder.append(addressStr);
@@ -312,13 +337,21 @@ public class EzEmailMailListController {
 				}								
 			}			
 			sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
+			
+			// subject
 			String subject = message.getSubject();
 			subject = (subject != null) ? subject : "";
 			sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+			
+			// received date
 			Date receivedDate = message.getReceivedDate();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
 			sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", sdf.format(receivedDate)));
+			
+			// size
 			sb.append(String.format("<size><![CDATA[%d]]></size>", message.getSize()));
+			
+			// read/unread
 			int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 			sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
 			sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
@@ -351,9 +384,12 @@ public class EzEmailMailListController {
 		logger.debug("mailDelete started");
 		logger.debug("cmd=" + cmd);
 		logger.debug("bodyData=" + bodyData);
+		
+		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
-		String password = userIdAndPassword.get(1);		
+		String password = userIdAndPassword.get(1);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
 		
@@ -432,6 +468,7 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}
+		// sender
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageAddressComparator(true);
 			
@@ -454,6 +491,7 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}		
+		// recipient
 		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageAddressComparator(false);
 			
@@ -476,6 +514,7 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}				
+		// attachment
 		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageAttachmentComparator(imapAccess);
 			
@@ -496,6 +535,7 @@ public class EzEmailMailListController {
 						
 			Arrays.sort(messages, comparator);
 		}				
+		// read/unread
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageUnreadComparator();
 			
@@ -516,6 +556,7 @@ public class EzEmailMailListController {
 						
 			Arrays.sort(messages, comparator);
 		}		
+		// bookmark
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageFlaggedComparator();
 			
@@ -536,6 +577,7 @@ public class EzEmailMailListController {
 						
 			Arrays.sort(messages, comparator);
 		}								
+		// importance
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessagePriorityComparator();
 			
@@ -556,6 +598,7 @@ public class EzEmailMailListController {
 			
 			Arrays.sort(messages, comparator);
 		}								
+		// size
 		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageSizeComparator();
 			
@@ -576,6 +619,7 @@ public class EzEmailMailListController {
 						
 			Arrays.sort(messages, comparator);
 		}			
+		// received date
 		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
 				|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
 			Comparator<Message> comparator = new IMAPAccess.MessageReceivedDateComparator();
@@ -611,9 +655,12 @@ public class EzEmailMailListController {
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailSetFlag started");
 		logger.debug("bodyData=" + bodyData);
+		
+		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
-		String password = userIdAndPassword.get(1);		
+		String password = userIdAndPassword.get(1);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
 		
@@ -671,9 +718,11 @@ public class EzEmailMailListController {
 		logger.debug("mailSetReadChange started");
 		logger.debug("bodyData=" + bodyData);
 
+		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
-		String password = userIdAndPassword.get(1);		
+		String password = userIdAndPassword.get(1);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String isRead = doc.getElementsByTagName("ISREAD").item(0).getTextContent();
 		NodeList messageIdList = doc.getElementsByTagName("MESSAGEID");	

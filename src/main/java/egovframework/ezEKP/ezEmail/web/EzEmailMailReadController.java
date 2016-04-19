@@ -75,6 +75,7 @@ public class EzEmailMailReadController {
 	 */
 	@RequestMapping(value="/ezEmail/mailRead.do")
 	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -96,6 +97,7 @@ public class EzEmailMailReadController {
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
+		
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
@@ -111,13 +113,16 @@ public class EzEmailMailReadController {
 		String subject = null;
 		String dateStr = null;
 		String title = null;
+		
 		if(f != null){
 			f.open(Folder.READ_WRITE);
+			
 			Message message = null;
 			if(f.isOpen() && f instanceof IMAPFolder){
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
 			if(message != null){
+				// From
 				arrFroms = message.getFrom();
 				if(arrFroms != null){
 					fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
@@ -135,6 +140,8 @@ public class EzEmailMailReadController {
 						fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
 					}
 				}
+				
+				// TO
 				arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 				if(arrRecipientsTo != null){
 					boolean toListme = false;
@@ -152,6 +159,7 @@ public class EzEmailMailReadController {
 						}
 						else{
 							name = MimeUtility.decodeText(name);
+							name = commonUtil.trimDoubleQuotes(name);
 						}
 						if(toListme){
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
@@ -183,6 +191,7 @@ public class EzEmailMailReadController {
 					}
 				}
 
+				// CC
 				arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
 				if(arrRecipientsCC != null){
 					boolean ccListme = false;
@@ -199,6 +208,7 @@ public class EzEmailMailReadController {
 							name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
 						} else {
 							name = MimeUtility.decodeText(name);
+							name = commonUtil.trimDoubleQuotes(name);
 						}
 						if(ccListme){
 							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
@@ -230,6 +240,7 @@ public class EzEmailMailReadController {
 					}
 				}
 
+				// BCC
 				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
 				if(arrRecipientsBCC != null){
 					String name = null;
@@ -237,6 +248,7 @@ public class EzEmailMailReadController {
 						name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
 						if(name != null){
 							name = MimeUtility.decodeText(name);
+							name = commonUtil.trimDoubleQuotes(name);
 						}
 						if(i != 0){
 							bccStr += ", ";
@@ -246,11 +258,13 @@ public class EzEmailMailReadController {
 					}
 				}
 
+				// received date
 				date = message.getReceivedDate();
 				if(date != null){
 					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
 				}
 
+				// subject
 				subject = message.getSubject();
 				if(subject != null){
 					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
@@ -261,6 +275,7 @@ public class EzEmailMailReadController {
 			f.close(true);
 		}
 		ia.close();
+		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("toStr", toStr);
@@ -273,6 +288,7 @@ public class EzEmailMailReadController {
 		model.addAttribute("title", title);
 		model.addAttribute("folderPath", folderPath);
 		model.addAttribute("uid", uid);
+		
 		return "ezEmail/mailRead";
 	}
 	
@@ -287,7 +303,6 @@ public class EzEmailMailReadController {
 
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
-
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
@@ -319,10 +334,12 @@ public class EzEmailMailReadController {
 			}
 		}
 		ia.close();
+		
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
+		
 		return "ezEmail/mailReadContent";
 	}
 	
@@ -697,7 +714,9 @@ public class EzEmailMailReadController {
 			String filesize = "0";
 			String filecnt = "0";
 			String isAttach = "";
-			System.out.println("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
+			
+			logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
+			
 			if(part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
 				System.out.println(part.getContentType());
 				String strSize = "";
