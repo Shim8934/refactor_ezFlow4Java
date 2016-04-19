@@ -15,8 +15,8 @@
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
-			var L_BRDID = "${qstRangeSelectVO.brdId}"; 
-			var L_ITEMNO = "${qstRangeSelectVO.itemId}";
+			var L_BRDID = "${qstRangeSelectVO.brdID}"; 
+			var L_ITEMNO = "${qstRangeSelectVO.itemID}";
 			var pCompanyID = "${pCompanyID}";
 			var g_aChanged = false;
 			var g_bChanged = false;
