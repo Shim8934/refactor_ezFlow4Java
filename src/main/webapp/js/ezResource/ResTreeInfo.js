@@ -16,7 +16,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID)
 	createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 
-	xmlhttp.open("POST", "/Myoffice/ezResource/Call_NodeTreeData.aspx?flag=" + selectNo, false);
+	xmlhttp.open("POST", "/ezResource/callNodeTreeData.do?flag=" + selectNo, true);
 	xmlhttp.send(xmlpara);
 	
 	var XMLstring = xmlhttp.responseXML;
@@ -109,7 +109,7 @@ function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx)
 	    createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	    createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 
-	    xmlhttp.open("POST", "/Myoffice/ezResource/Call_NodeTreeData.aspx", false);
+	    xmlhttp.open("POST", "/ezResource/callNodeTreeData.do", true);
 		xmlhttp.send(xmlpara);
 		
 		xmlRtn = xmlhttp.responseXML;
