@@ -271,7 +271,7 @@
 		            }
 		
 		        }
-		        strHTML += "</table>"
+		        strHTML += "</table>";
 		        Graph.innerHTML = strHTML;
 		    }
 		    

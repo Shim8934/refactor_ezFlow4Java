@@ -16,9 +16,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -123,20 +121,28 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int pageSize=15;
 		qstListVO.setUserId(loginVO.getId());
 		
-		if(request.getParameter("brdId")!=null)
+		if(request.getParameter("brdId")!=null){
 			brdId = request.getParameter("brdId");
-		if(request.getParameter("title")!=null)
+		}
+		if(request.getParameter("title")!=null){
 			title = request.getParameter("title");
-		if(request.getParameter("responseRange")!=null)
+		}
+		if(request.getParameter("responseRange")!=null){
 			responseRange = request.getParameter("responseRange");
-		if(request.getParameter("postDate")!=null)
+		}
+		if(request.getParameter("postDate")!=null){
 			postDate = request.getParameter("postDate");
-		if(request.getParameter("pollEndDate")!=null)
+		}
+		if(request.getParameter("pollEndDate")!=null){
 			pollEndDate = request.getParameter("pollEndDate");
-		if(request.getParameter("lang")!=null)
+		}
+		if(request.getParameter("lang")!=null){
 			lang = request.getParameter("lang");
-		if(request.getParameter("currPage")!=null)
+		}
+		if(request.getParameter("currPage")!=null){
 			currPage = request.getParameter("currPage");
+		}
+			
 		qstListVO.setBrdId(Integer.parseInt(brdId));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
@@ -147,17 +153,21 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setPageSize(pageSize);
 		
 		String receve = "brdId=" + qstListVO.getBrdId() +
-                "&title=" + new String(qstListVO.getTitle()) +
-                "&responseRange=" + qstListVO.getResponseRange() +
-                "&postDate=" + qstListVO.getPostDate() +
-                "&pollEndDate=" + qstListVO.getPollEndDate() +
-                "&currPage=" + qstListVO.getCurrPage();
+						"&title=" + new String(qstListVO.getTitle()) +
+		                "&responseRange=" + qstListVO.getResponseRange() +
+		                "&postDate=" + qstListVO.getPostDate() +
+		                "&pollEndDate=" + qstListVO.getPollEndDate() +
+		                "&currPage=" + qstListVO.getCurrPage();
 		
 		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO));
-		if(qstListVO.getTotalPage()==0)
+		
+		if(qstListVO.getTotalPage()==0){
 			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());
+		}
+		
 		List<QstListVO> list = ezQuestionService.getQstList(qstListVO);		
 		StringBuilder strbuilder;
+		
 		for(QstListVO qst : list){
 			if(qst.getReceve()==null){
 				strbuilder = new StringBuilder();
@@ -166,7 +176,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				qst.setReceve(strbuilder.toString());
 			}
 		}
-		/** 설문기간에 따른 Title 처리*/
+		
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date startDate;
 		Date endDate;
@@ -180,6 +190,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
 			strbuilder = new StringBuilder();
+			
 			if(compareStart <= 0 && compareEnd >= 0){
 				strbuilder.append("[진행중] ");
 				strbuilder.append(qst.getTitle()); 
@@ -203,12 +214,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/pollOpen.do")
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
-                "&itemNo=" + request.getParameter("itemNo") +
-                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
-                "&responseRange=" + request.getParameter("responseRange") +
-                "&postDate=" + request.getParameter("postDate") +
-                "&pollEndDate=" + request.getParameter("pollEndDate") +
-                "&currPage=" + request.getParameter("currPage");
+						"&itemNo=" + request.getParameter("itemNo") +
+		                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+		                "&responseRange=" + request.getParameter("responseRange") +
+		                "&postDate=" + request.getParameter("postDate") +
+		                "&pollEndDate=" + request.getParameter("pollEndDate") +
+		                "&currPage=" + request.getParameter("currPage");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userId = loginVO.getId();
 		/**UserPollItem*/
@@ -217,8 +228,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO);
 		/** 결과값없으면 Error처리*/
-		if(qstUserPollItemVO.getTitle().equals(null))
+		if(qstUserPollItemVO.getTitle().equals(null)){
 			response.sendRedirect("/error.do"); //나중에 에러처리찾아서 주소만바꾸면됨
+		}
 		/**UserPermission*/
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -230,25 +242,28 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean endPoll = false;
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0)
+		
+		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0){
 			endPoll = true;
-		if(qstUserPermissionVO.getEndFlg().equals('1'))
+		}
+		if(qstUserPermissionVO.getEndFlg().equals('1')){
 			endPoll = true;
+		}
 		/**UserIdAdmin*/
 		boolean adminYN = false;
 		String rsUserId = qstUserPollItemVO.getUserId();
 		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=UTF-8");
+		response.setContentType("text/html; charset=UTF-8");		
+		
 		if(endPoll == false){
 			if(responseCnt <= 0){
 				response.getWriter().write("<script language='javascript'>");
 				response.getWriter().write("window.location.href='/ezQuestion/qstResponse.do?" + receve + "';");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
-			}
-			else if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
+			}else if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
 				if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
@@ -263,10 +278,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}else{
 				adminYN = false;
+				
 				if(userIdAdmin != null){
-					if(userId == userIdAdmin)
+					if(userId == userIdAdmin){
 						adminYN = true;
+					}
 				}
+				
 				if(userId.equals(rsUserId) || adminYN == true){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript'>");
@@ -305,9 +323,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 				response.getWriter().flush();
 			}else{
 				adminYN = false;
+				
 				if(userIdAdmin != null){
-					if(userId == userIdAdmin)
+					if(userId == userIdAdmin){
 						adminYN = true;
+					}
 				}
 				if (rsUserId.equals(userId) || adminYN == true){
 					response.getWriter().write("<script language='javascript'>");
@@ -353,11 +373,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		adminYN = "N";
 		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(brdId));
+		
 		if(userIdAdmin != null){
 			if(loginVO.getId().equals(userIdAdmin)){
 				adminYN = "Y";
 			}
 		}
+		
 		if(loginVO.getRollInfo().toUpperCase().indexOf("C=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("K=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("I=1") > -1){ 
 			adminYN = "Y";
 		}
@@ -376,30 +398,37 @@ public class EzQuestionController extends EgovFileMngUtil {
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate) < 0)
+		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate) < 0){
 			endPoll = true;
-		if(qstUserPermissionVO.getEndFlg().equals("1"))
+		}
+		if(qstUserPermissionVO.getEndFlg().equals("1")){
 			endPoll = true;
-		if(loginVO.getId().equals(qstUserPollItemVO.getUserId()))
+		}
+		if(loginVO.getId().equals(qstUserPollItemVO.getUserId())){
 			writeYN = "Y";
-		else
+		}else{
 			writeYN = "N";
-		if(endPoll == false)
+		}
+		if(endPoll == false){
 			endPollYN ="N";
-		else
+		}else{
 			endPollYN = "Y";
-		if(responseCnt <=0)
+		}
+		if(responseCnt <=0){
 			responseYN = "N";
-		else
+		}else{
 			responseYN ="Y";
-		if(qstUserPermissionVO.getPublicResultFlg().equals("1"))
+		}
+		if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
 			resultOpenYN = "Y";
-		else
+		}else{
 			resultOpenYN = "N";
-		if(qstUserPermissionVO.getMultiResponseFlg().equals("1"))
+		}
+		if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 			multiResYN = "Y";
-		else
+		}else{
 			multiResYN = "N";
+		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("endPollYN", endPollYN);
@@ -418,11 +447,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model,HttpServletRequest request) throws Exception{
 		String receve = "brdId=" + request.getParameter("brdId") +
-                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
-                "&responseRange=" + request.getParameter("responseRange") +
-                "&postDate=" + request.getParameter("postDate") +
-                "&pollEndDate=" + request.getParameter("pollEndDate") +
-                "&currPage=" + request.getParameter("currPage");
+		                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+		                "&responseRange=" + request.getParameter("responseRange") +
+		                "&postDate=" + request.getParameter("postDate") +
+		                "&pollEndDate=" + request.getParameter("pollEndDate") +
+		                "&currPage=" + request.getParameter("currPage");
 
 		QstVO qstVO = new QstVO();
 		qstVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
@@ -438,48 +467,47 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO);
+		
 		if(qstUserPermissionVO.getMultiResponseFlg().equals('1')){
 			multiResponseOK = true;
 		}else{
-		/** ResponseDateCnt*/
-//			qstUserPermissionVO 대신 나중에 view 로 던질 VO 삽입
 			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO,userId)!=0){
 				multiResponseOK = false;
 			}else{
 				multiResponseOK = true;
 			}
 		}
-		/** UserIdAdmin*/
+		
 		String userIdAdmin = ezQuestionService.getUserIdAdmin(Integer.parseInt(request.getParameter("brdId")));
 		boolean adminYN = false;
+		
 		if(userIdAdmin != null){
 			if(userId == userIdAdmin)
 				adminYN = true;
 		}
-		/** ResCount*/
+		
 		responseCnt = ezQuestionService.resCount(request.getParameter("brdId"),request.getParameter("itemNo"));
-		/** UserPollItem*/
+		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdId(Integer.parseInt(request.getParameter("brdId")));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO);
-		/** updateReadCnt*/
+		
 		if(qstUserPollItemVO.getUserId() != userId){
 			qstUserPollItemVO.setReadCnt(qstUserPollItemVO.getReadCnt() + 1);
 			ezQuestionService.updateReadCnt(qstUserPollItemVO);
 		}
-		/** ReadDateItem*/
+		
 		int readDateCnt = ezQuestionService.getReadDateItem(qstUserPollItemVO,userId);
-		/** updateReadDate*/
+		
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		if(readDateCnt > 0){
 			ezQuestionService.updateReadDate(qstUserPollItemVO, formatter.format(sysDate), userId);
-		/** insertItemRead*/
 		}else{
 			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, formatter.format(sysDate));
 		}
-		/** QuestionForResponse*/
+		
 		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO);
 
 		String strResult = "<SUBDATA>";
@@ -577,17 +605,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String tableAnswer = "";
         int eleCnt = 0;
         
-        if(request.getParameter("hidEleCnt")!=null);
-        	eleCnt = Integer.parseInt(request.getParameter("hidEleCnt"));
-		if(request.getParameter("brdId")!=null)
-			brdId = request.getParameter("brdId");
-		if(request.getParameter("itemNo")!=null)
-			itemNo = request.getParameter("itemNo");
-		if(request.getParameter("tableAnswer")!=null)
-			tableAnswer = request.getParameter("tableAnswer");
+        
+    	eleCnt = Integer.parseInt(request.getParameter("hidEleCnt"));		
+		brdId = request.getParameter("brdId");
+		itemNo = request.getParameter("itemNo");
+		tableAnswer = request.getParameter("tableAnswer");
 		responseUserIp = request.getRemoteAddr();
-		if(request.getParameter("receve")!=null)
-			receve = request.getParameter("receve").replace("&amp;", "&");
+		receve = request.getParameter("receve").replace("&amp;", "&");
 		
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdId(Integer.parseInt(brdId));
@@ -630,6 +654,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
+		
 		if (userId.equals("")){
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360",locale) + "');\n");
@@ -1436,7 +1461,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstAttachView.do")
 	public String attachView(Locale locale, HttpServletRequest request,ModelMap model) throws Exception{
-		String href = "", type = "", title = "", filename = "";
+		String href = "", type = "", title = "";
 		String vBrdId = "5";
 		String vItemNo = "";
 		String strQuestionNo = "";
@@ -1445,26 +1470,24 @@ System.out.println("pQstTitle:"+pQstTitle);
 		 
 		if (request.getParameter("type") != null)
             type = request.getParameter("type");
-        if (request.getParameter("BOARDID") != null)
-            vBrdId = request.getParameter("BOARDID");
-        if (request.getParameter("ITEMID") != null)
-            vItemNo = request.getParameter("ITEMID");
-        if (request.getParameter("QSTNO") != null)
-            strQuestionNo = request.getParameter("QSTNO");
-        if (request.getParameter("ANSNO") != null)
-            strAnswer = request.getParameter("ANSNO");
-        if (request.getParameter("ATTID") != null)
-            strAttID = request.getParameter("ATTID");
+        if (request.getParameter("boardId") != null)
+            vBrdId = request.getParameter("boardId");
+        if (request.getParameter("itemNo") != null)
+            vItemNo = request.getParameter("itemNo");
+        if (request.getParameter("qstNo") != null)
+            strQuestionNo = request.getParameter("qstNo");
+        if (request.getParameter("ansNo") != null)
+            strAnswer = request.getParameter("ansNo");
+        if (request.getParameter("attId") != null)
+            strAttID = request.getParameter("attId");
         if (request.getParameter("href") != null){
         	href=request.getParameter("href");
         }
 
         QstAttachVO qstAttachVO = ezQuestionService.getAttachInfo2(vBrdId, vItemNo, strQuestionNo, strAnswer, strAttID);
         href=qstAttachVO.getAttachUrl();
-        filename = qstAttachVO.getAttachName();
         
         String fileExt = href.substring(href.lastIndexOf("."));
-        filename += fileExt;
 
         qstAttachVO.setBrdId(Integer.parseInt(vBrdId));
         qstAttachVO.setItemNo(Integer.parseInt(vItemNo));
@@ -1496,9 +1519,9 @@ System.out.println("pQstTitle:"+pQstTitle);
 	/**
 	 * 전자설문 설문리스트 첨부파일 호출 실행함수(다른모듈에서도 공통이라 Common 으로 수정필요)
 	 */
-	@RequestMapping(value="/ezQuestion/GetPollAttachInfo.do")
-	public void getPollAttachInfo(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception{
-		String pType = "5";
+	@RequestMapping(value="/ezQuestion/getPollAttachInfo.do")
+	public void getPollAttachInfo(HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
+		String pType = "";
 		String pBoardID = "";
 		String pItemID = "";
 		String pQstNo = "";
@@ -1507,30 +1530,28 @@ System.out.println("pQstTitle:"+pQstTitle);
         String pFileName = "";
         String pFilePath = "";
 		 
-		if (request.getParameter("TYPE") != null)
-            pType = request.getParameter("TYPE");
-		if (request.getParameter("FILENAME") != null)
-			pFileName = request.getParameter("FILENAME");
-        if (request.getParameter("BOARDID") != null)
-        	pBoardID = request.getParameter("BOARDID");
-        if (request.getParameter("ITEMID") != null)
-        	pItemID = request.getParameter("ITEMID");
-        if (request.getParameter("QSTNO") != null)
-        	pQstNo = request.getParameter("QSTNO");
-        if (request.getParameter("ANSNO") != null)
-        	pAnsNo = request.getParameter("ANSNO");
-        if (request.getParameter("ATTID") != null)
-        	pAttID = request.getParameter("ATTID");
+        pType = request.getParameter("type");
+        pBoardID = request.getParameter("boardId");
+        pItemID = request.getParameter("itemId");
+        pQstNo = request.getParameter("qstNo");
+        pAnsNo = request.getParameter("ansNo");
+        pAttID = request.getParameter("attId");
+        
+        if(request.getParameter("fileName") != null){
+        	pFileName = request.getParameter("fileName");
+        }
         
         if(pType.equals("QUESTION")){
-                if (pFileName != "")
-                    pFilePath = File.separator+"Upload_BoardSTD"+File.separator+"Upload_Question"+File.separator+pFileName;
-                else{
-                    pFilePath = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachUrl();
-                    pFileName = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
+                if (!pFileName.equals("")){
+                    pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+File.separator+pFileName;
+                }else{
+                	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID);
+                    pFilePath = qstAttachVO.getAttachUrl();
+                    pFileName = qstAttachVO.getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
                 }
-                if (pFilePath != null && pFilePath != "")
+                if (pFilePath != null && pFilePath != ""){
                     ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+                }
         }
 	}
 
@@ -1891,12 +1912,15 @@ System.out.println("pQstTitle:"+pQstTitle);
 		String questionNo = "", quesContent = "", multiSelect = "", answerType = "";
 		int resCnt = 0, responseCnt = 0;
 		
-		if (request.getParameter("brd_id") != null)
+		if (request.getParameter("brd_id") != null){
 			vBrdId = request.getParameter("brd_id");
-        if (request.getParameter("item_no") != null)
+		}
+        if (request.getParameter("item_no") != null){
         	vItemNo = request.getParameter("item_no");
-        if (request.getParameter("ques_no") != null)
+        }
+        if (request.getParameter("ques_no") != null){
         	vQuesNo = request.getParameter("ques_no");
+        }
         
         Document resultXML =  commonUtil.convertStringToDocument("<ROWS></ROWS>");
         Node rNodes = resultXML.getFirstChild();
@@ -1936,6 +1960,7 @@ System.out.println("pQstTitle:"+pQstTitle);
         
         /** EZSP_GETQUESTION*/
         List<QstVO> qstVOList = ezQuestionService.getQuestion(vBrdId, vItemNo, vQuesNo);        
+        
         for(QstVO qstVO : qstVOList){
         	questionNo = Integer.toString(qstVO.getQuestionNo());
         	quesContent = qstVO.getQuesContent();
@@ -1952,10 +1977,11 @@ System.out.println("pQstTitle:"+pQstTitle);
 
         	nodeData = resultXML.createElement("VALUE");
 
-        	if (multiSelect.equals("1"))
+        	if (multiSelect.equals("1")){
         		CDATASection = resultXML.createCDATASection(quesContent + "[" + egovMessageSource.getMessage("ezQuestion.t55", locale));
-        	else
+        	}else{
         		CDATASection = resultXML.createCDATASection(quesContent);
+        	}
 
         	nodeData.appendChild(CDATASection);
         	node.appendChild(nodeData);
@@ -1980,22 +2006,26 @@ System.out.println("pQstTitle:"+pQstTitle);
         	/** EZSP_GETANSCNT*/
         	List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo));
         	int ansRCnt = qstAnswerVOList.size();
+        	
         	if(ansRCnt > 0){
         		/** dataAnswerProcessSP*/
         		int rCnt = 0, percent = 0, iCount = 0;
         		float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
+        		
         		for(QstAnswerVO qstAnswer : qstAnswerVOList){
         			iCount ++;
         			rCnt = ezQuestionService.pollRespCnt(Integer.parseInt(vBrdId), Integer.parseInt(vItemNo), Integer.parseInt(questionNo), iCount);
 
         			fRCnt = rCnt;
         			fResponseCnt = responseCnt;
+        			
         			if(responseCnt <= 0){
         				percent=0;
         			}else{
         				fPercent = fRCnt / responseCnt;
         				percent = Math.round(fPercent*100);
         			}
+        			
         			rNode = resultXML.createElement("ROW");
 
         			node = resultXML.createElement("CELL");
@@ -2660,7 +2690,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 			}
 		}
 		
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + pFileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 	}
 	
@@ -2800,7 +2830,7 @@ System.out.println("pQstTitle:"+pQstTitle);
 				tbl = null;
 			}
 		}
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + "report" + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + "report" + ".xls\"");
 		workbook.write(response.getOutputStream());
 	}
 	/**
@@ -3725,7 +3755,7 @@ System.out.println("itemId:"+itemId);
 	
 	            switch (attachVO.getAttachType()){
 	            case "1":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(1," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(1," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId=" + brdId + "&itemId=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attId=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
 	            	break;
 	            case "2":
 	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(2," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
@@ -3738,7 +3768,7 @@ System.out.println("itemId:"+itemId);
 	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(3," + brdId + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
 	            default:
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID=" + brdId + "&ITEMID=" + itemNo + "&QSTNO=" + strQuestionNo + "&ANSNO=" + strAnswer + "&ATTID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId=" + brdId + "&itemId=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attId=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
 	            	break;
 	            }
 	        }

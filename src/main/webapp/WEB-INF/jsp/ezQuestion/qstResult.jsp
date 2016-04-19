@@ -84,7 +84,7 @@
 			}
 
 			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID) {
-			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&BOARDID=" + pBrdID + "&ITEMID=" + pItemID + "&QSTNO=" + pQstNo + "&ANSNO=" + pAnsNo + "&ATTID=" + pAttID;
+			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardId=" + pBrdID + "&itemNo=" + pItemID + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attId=" + pAttID;
 
 			    if (pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");

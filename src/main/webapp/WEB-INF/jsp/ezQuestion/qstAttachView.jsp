@@ -17,7 +17,7 @@
 				}
 			}
 			function download_attach2() {
-				document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+				document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
 			}
 		</script>
 		<script type="text/javascript">
@@ -44,11 +44,11 @@
 							download_attach();
 						}
 						function download_attach() {
-							document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+							document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
 						}
 				</script>
 				<body onclick="window.close()" style="cursor:pointer">
-					<img id="imgView" src="/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID=${qstAttachVO.brdId}&ITEMID=${qstAttachVO.itemNo}&QSTNO=${qstAttachVO.questionNo}&ANSNO=${qstAttachVO.answerNo}&ATTID=${qstAttachVO.attachNo}" border="0">
+					<img id="imgView" src="/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId=${qstAttachVO.brdId}&itemId=${qstAttachVO.itemNo}&qstNo=${qstAttachVO.questionNo}&ansNo=${qstAttachVO.answerNo}&attId=${qstAttachVO.attachNo}" border="0">
 					
 			</c:when>
 			<c:otherwise>
@@ -85,7 +85,7 @@
 	        document.getElementById("download_att").style.display = "none";
 	    }
 	    function download_attach() {
-	        document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+	        document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
 	    }
 </script>
 </html>
