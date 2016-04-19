@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstRangeSelectVO {
-	private String brdId;
-	private String itemId;
+	private String brdID;
+	private String itemID;
 	private String strGenderACL0;
 	private String strGenderACL1;
 	private String strGenderACL2;
@@ -10,18 +10,18 @@ public class QstRangeSelectVO {
 	private String pCompanyID;
 	private String serverName;
 	
-	public String getBrdId() {
-		return brdId;
+	public String getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(String brdId) {
-		this.brdId = brdId;
+	public void setBrdID(String brdID) {
+		this.brdID = brdID;
 	}
 
-	public String getItemId() {
-		return itemId;
+	public String getItemID() {
+		return itemID;
 	}
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setItemID(String itemID) {
+		this.itemID = itemID;
 	}
 	public String getStrGenderACL0() {
 		return strGenderACL0;
