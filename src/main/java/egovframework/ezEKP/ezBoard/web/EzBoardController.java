@@ -357,7 +357,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pUserID = loginVO.getId();
 		
 		BoardConfigVO boardListConfig = ezBoardService.getBoardList_Config(pUserID);
+		
 		if(boardListConfig == null) {
+			boardListConfig = new BoardConfigVO();
 			boardListConfig.setListCount(20);
 			boardListConfig.setPreview("OFF");
 			boardListConfig.setPreviewHList(50);
@@ -366,7 +368,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardListConfig.setPreviewWContent(50);
 		}
 		model.addAttribute("boardListConfig", boardListConfig);
-			
 		return "ezBoard/boardGeneral";
 	}
 	/**
