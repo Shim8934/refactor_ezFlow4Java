@@ -828,11 +828,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/qstStep1.do")
 	public String qstStep1(HttpServletRequest req,Model model)  {
-		String brdId = req.getParameter("brd_ID");
-		String brdNm = req.getParameter("brd_nm");
-		String brdPostterm = req.getParameter("brd_postterm");
+		String brdID = req.getParameter("brdID");
+		String brdNm = req.getParameter("brdNm");
+		String brdPostterm = req.getParameter("brdPostterm");
 
-		model.addAttribute("brdId", brdId);
+		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
 		return "/ezQuestion/qstStep1";
@@ -842,7 +842,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 STEP2화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstStep2.do", method = RequestMethod.POST)
-	public String qstStep2(HttpServletRequest req, QstStep1VO ezQuestionVO, QstAddVO questionAddVO, ModelMap model) {
+	public String qstStep2(HttpServletRequest req, QstStep1VO qstStep1VO, QstAddVO questionAddVO, ModelMap model) {
 		StringBuilder pStep1DataXML = new StringBuilder();
 		pStep1DataXML.append("<PARAMETER>");
 		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
@@ -860,7 +860,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		pStep1DataXML.append("</PARAMETER>");
 		
-		model.addAttribute("ezQuestionVO", ezQuestionVO);
+		model.addAttribute("qstStep1VO", qstStep1VO);
 		model.addAttribute("questionAddVO", questionAddVO);
 		model.addAttribute("pStep1DataXML", pStep1DataXML);
 		return "/ezQuestion/qstStep2";
@@ -1111,7 +1111,7 @@ public class EzQuestionController extends EgovFileMngUtil {
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
              			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
              				if(xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent() != "") {
-             					String userId = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+             					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
              					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
              					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
              					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
@@ -1123,7 +1123,7 @@ public class EzQuestionController extends EgovFileMngUtil {
              					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
                              	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
                              	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-                             	qstCompleteVO2.setUserID(userId);
+                             	qstCompleteVO2.setUserID(userID);
                              	qstCompleteVO2.setUserNm(userNm);
                              	qstCompleteVO2.setUserNm2(userNm2);
                              	qstCompleteVO2.setUserEmail(userEmail);
@@ -1342,20 +1342,20 @@ public class EzQuestionController extends EgovFileMngUtil {
 			idName = String.valueOf(req.getParameter("idName"));
 		}
 		
-		if(req.getParameter("mAttachInfo") != null) {
-			attachInfo = String.valueOf(req.getParameter("mAttachInfo"));
+		if(req.getParameter("m_AttachInfo") != null) {
+			attachInfo = String.valueOf(req.getParameter("m_AttachInfo"));
 		}
 		
-		if(req.getParameter("mAttachType") != null) {
-			attachType = String.valueOf(req.getParameter("mAttachType"));
+		if(req.getParameter("m_AttachType") != null) {
+			attachType = String.valueOf(req.getParameter("m_AttachType"));
 		}
 		
-		if(req.getParameter("mAttachMode") != null) {
-			attachMode = String.valueOf(req.getParameter("mAttachMode"));
+		if(req.getParameter("m_AttachMode") != null) {
+			attachMode = String.valueOf(req.getParameter("m_AttachMode"));
 		}
 		
-		if(req.getParameter("mAttachModIndex") != null) {
-			attachModeIndex = String.valueOf(req.getParameter("mAttachModIndex"));
+		if(req.getParameter("m_AttachModIndex") != null) {
+			attachModeIndex = String.valueOf(req.getParameter("m_AttachModIndex"));
 		}
 		
 		model.addAttribute("idName", idName);
@@ -1402,7 +1402,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 			}
 			
-			pFilePath = File.separator+"files"+File.separator+"upload_board"+File.separator+"uploadQuestion"+File.separator+newFileName;
+			//pFilePath = "files"+File.separator+"upload_board"+File.separator+"uploadQuestion"+File.separator+newFileName;
+			//pFilePath = "/files/upload_board/uploadQuestion/"+newFileName;
+			pFilePath = pDirPath+File.separator+newFileName;
 			
 			writeUploadedFile(file, newFileName, qDirPath+pDirPath);
 			
@@ -3218,7 +3220,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String brdID = "";
 		String itemID = "";
 		if(req.getParameter("brdID") != null) 
-			brdID = req.getParameter("brd_id");
+			brdID = req.getParameter("brdID");
 		if(req.getParameter("itemID") != null)
 			itemID = req.getParameter("itemID");
 		String brdNm = req.getParameter("brdNm");
@@ -3238,8 +3240,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemID));
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
 
-		model.addAttribute("brdId", brdID);
-		model.addAttribute("itemId", itemID);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("itemID", itemID);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdPostterm", brdPostterm);
 		model.addAttribute("uploadSDate", startDateTime);
