@@ -131,6 +131,7 @@ public class EzEmailMailReadController {
 					}
 					else{
 						fromStr = MimeUtility.decodeText(fromStr);
+						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 					}
 					fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
 				}
@@ -244,17 +245,18 @@ public class EzEmailMailReadController {
 				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
 				if(arrRecipientsBCC != null){
 					String name = null;
-					for(int i=0; i<arrRecipientsBCC.length; i++){
+					for (int i=0; i<arrRecipientsBCC.length; i++){
 						name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
-						if(name != null){
+						if (name == null) {
+							name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
+						} else {
 							name = MimeUtility.decodeText(name);
 							name = commonUtil.trimDoubleQuotes(name);
-						}
-						if(i != 0){
+						}						
+						if (i != 0){
 							bccStr += ", ";
 						}
-						bccStr += "<span style='cursor:pointer' title='" + name + "' onclick='show_personinfo(\"" +
-								((InternetAddress)arrRecipientsBCC[i]).getAddress() + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+						bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
 					}
 				}
 
