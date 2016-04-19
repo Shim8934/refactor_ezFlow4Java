@@ -642,7 +642,7 @@
         		var useragentstr = navigator.userAgent;
         		if (useragentstr.indexOf(_MSIE) != -1) {
             		var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
-            		var szUr = "qstAttachNonActX.do?id_name=" + pID;
+            		var szUr = "qstAttachNonActX.do?idName=" + pID;
             		var rv = window.showModalDialog(szUrl, rgParams, szParam);
             		if (rgParams["m_Return"] == "OK") {
                 		if (pID == "A") {
