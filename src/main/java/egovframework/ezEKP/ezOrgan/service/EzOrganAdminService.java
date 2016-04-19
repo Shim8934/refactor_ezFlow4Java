@@ -16,6 +16,8 @@ public interface EzOrganAdminService {
 	public int companyCheck(String cn) throws Exception;
 	
 	public int companyChildCheck(String cn) throws Exception;
+	
+	public int userCheck(String cn) throws Exception;
 
 	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn,	String ldapPath) throws Exception;
 	
@@ -30,6 +32,10 @@ public interface EzOrganAdminService {
 	public void setPassword(String cn, String password) throws Exception;
 
 	public void retireEntry(String cn) throws Exception;
+
+	public void updateDBData_user(OrganUserVO vo) throws Exception;
+
+	public void insertDBData_user(OrganUserVO vo) throws Exception;
 
 	 
 }

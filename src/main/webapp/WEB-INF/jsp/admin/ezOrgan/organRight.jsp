@@ -17,7 +17,8 @@
 		<script type="text/javascript" language="javascript">
 			var topid = "${topid}";
 		    var useOCS = "${useOCS}";
-		    var g_xmlHTTP = null;			
+		    var g_xmlHTTP = null;
+		    var userinfo_dialogArguments = new Array();
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -696,6 +697,45 @@
 					}
 				});
 			}
+			function add_user(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (treeNode.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.t8' />");
+					return;
+				}
+				var args = new Array();
+				args[0] = treeNode.GetNodeData("CN");
+				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
+				args[2] = "";
+				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				
+				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
+				//if (CrossYN()) {
+			    userinfo_dialogArguments[0] = args;
+			    userinfo_dialogArguments[1] = add_user_Complete;
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    try { OpenWin.focus(); } catch (e) { }
+				/* }else{
+				    var rtnValue;
+				    rtnValue = window.showModalDialog("UserInfo.aspx", args,
+		                "dialogHeight:500px; dialogWidth:830px; scroll:yes;status:no; help:no; edge:sunken" + GetShowModalPosition(830, 520));
+
+				    if (typeof (rtnValue) != "undefined") {
+				        displayUserList(rtnValue);
+				    }
+				} */
+			}
+		    function add_user_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		            displayUserList(rtnValue);
+		        }
+		    }
 			function info_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -749,8 +789,10 @@
 			}
 		    function info_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
+		        	var cn = userinfo_dialogArguments[0][0];
+		        	
 		            alert("<spring:message code='ezOrgan.t11' />");
-		            displayUserList(treeNode.GetNodeData("CN"));
+		            displayUserList(cn);
 
 		            if (trim(document.getElementById("keyword").value) != "") {
 		                search_click();

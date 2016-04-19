@@ -1,9 +1,13 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
 public class OrganUserVO {
-	
+	/** 사용자 부모 ID*/
+	private String parentCn;
+	/** 사용자 ID*/
 	private String cn;
-	/** 회사/부서명*/
+	/** 사용자 Pass*/
+	private String password;
+	/** 회사 부서명*/
 	private String department;
 	/** 부서명*/
 	private String displayName;
@@ -403,6 +407,18 @@ public class OrganUserVO {
 	}
 	public void setBirthType(String birthType) {
 		this.birthType = birthType;
+	}
+	public String getParentCn() {
+		return parentCn;
+	}
+	public void setParentCn(String parentCn) {
+		this.parentCn = parentCn;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}	
 	
 	

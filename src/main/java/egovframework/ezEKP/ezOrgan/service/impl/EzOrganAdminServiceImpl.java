@@ -137,7 +137,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		
 		ezOrganAdminDao.retireDBData(map);
-	}
+	}	
+
+	@Override
+	public void updateDBData_user(OrganUserVO vo) throws Exception {
+		ezOrganAdminDao.updateDBData_user(vo);
+	}	
 
 	@Override
 	public int companyCheck(String cn) throws Exception {
@@ -147,6 +152,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int companyChildCheck(String cn) throws Exception {
 		return ezOrganAdminDao.companyChildCheck(cn);
+	}
+
+	@Override
+	public int userCheck(String cn) throws Exception {
+		return ezOrganAdminDao.userCheck(cn);
 	}
 
 	@Override
@@ -182,6 +192,38 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_LDAPPATH", "");
 		
 		ezOrganAdminDao.insertDBData_dept(map);
+	}
+	
+	@Override
+	public void insertDBData_user(OrganUserVO vo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", vo.getCn());
+		map.put("v_DISPLAYNAME", vo.getDisplayName());
+		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
+		map.put("v_MAIL", vo.getMail());
+		map.put("v_MAILNICKNAME", vo.getMailNickName());
+		map.put("v_UPNNAME", vo.getUpnName());
+		map.put("v_PARENTCN", vo.getParentCn());
+		map.put("v_TITLE", vo.getTitle());
+		map.put("v_TITLE2", vo.getTitle2());
+		map.put("v_TELEPHONE", vo.getTelephoneNumber());
+		map.put("v_HOMEPHONE", vo.getHomePhone());
+		map.put("v_FAX", vo.getFacsimileTelephoneNumber());
+		map.put("v_MOBILE", vo.getMobile());
+		map.put("v_POSTALCODE", vo.getPostalCode());
+		map.put("v_ADDRESS", vo.getStreetAddress());		
+		map.put("v_EXTATTR6", vo.getExtensionAttribute6());
+		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
+		map.put("v_EXTATTR102", vo.getExtensionAttribute102());
+		map.put("v_EXTATTR14", vo.getExtensionAttribute14());
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+		map.put("v_LDAPPATH", "");
+		map.put("v_BIRTH", vo.getBirth());		
+		map.put("v_BIRTHTYPE", vo.getBirthType());
+		map.put("v_PASS", vo.getPassword());
+		
+		ezOrganAdminDao.insertDBData_user(map);
 	}
 
 	@Override

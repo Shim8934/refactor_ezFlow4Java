@@ -275,7 +275,6 @@
 		        return true;
 		    }
 		    function OK_Click() {
-alert(1);		    	
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
@@ -289,72 +288,58 @@ alert(1);
 		                }
 		            }
 		        }
-alert(2);	
 		        if (document.getElementById("UserID").value.length < 3) {
 		            alert("<spring:message code='ezOrgan.t254' />");
 		            return;
 		        }
-
 		        if (!Check_ID(document.getElementById("UserID").value)) {
 		            alert("<spring:message code='ezOrgan.t255' />");
 		            return;
 		        }
-
 		        if (UserName.value == "") {
 		            alert("<spring:message code='ezOrgan.t256' />");
 		            return;
 		        }
-
 		        if (DeptID != "" && Password.value == "") {
 		            alert("<spring:message code='ezOrgan.t257' />");
 		            return;
 		        }
-
 		        if (UserName.value.indexOf("(") != -1 || UserName.value.indexOf(")") != -1) {
 		            alert("<spring:message code='ezOrgan.t258' />");
 		            return;
 		        }
-
 		        if (UserName.value.indexOf("&") != -1 || UserName.value.indexOf("<") != -1 || UserName.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (UserName2.value.indexOf("&") != -1 || UserName2.value.indexOf("<") != -1 || UserName2.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (document.getElementById("UserID").value.indexOf("&") != -1 || document.getElementById("UserID").value.indexOf("<") != -1 || document.getElementById("UserID").value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t261' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (JobTitle2.value.indexOf("&") != -1 || JobTitle2.value.indexOf("<") != -1 || JobTitle2.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (JobPosition.value.indexOf("&") != -1 || JobPosition.value.indexOf("<") != -1 || JobPosition.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (JobPosition2.value.indexOf("&") != -1 || JobPosition2.value.indexOf("<") != -1 || JobPosition2.value.indexOf(">") != -1) {
 		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-
 		        if (trim(SecurityLevel.value) != "" && parseInt(SecurityLevel.value) != SecurityLevel.value) {
 		            alert("<spring:message code='ezOrgan.t265' />");
 		            return;
 		        }
-alert(3);			        
 		        // 표준모듈 (2007.02.21) 수정 : 사용자 추가일 경우만, 체크한다.
 		        if (RetValue[2] == "") {
 		            if (MailAlias.value != "" && MailAlias.value.indexOf("@") != -1) {
@@ -362,7 +347,6 @@ alert(3);
 		                return;
 		            }
 		        }
-alert(4);	
 				var mailNickName = "";
 				var birthtype = "";
 				
@@ -379,14 +363,14 @@ alert(4);
 
 				$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "html",
 					url : "/admin/ezOrgan/saveUserInfo.do",
 					async : false,
 					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
 						    mailNickName : mailNickName, title : JobTitle.value, title2 : JobTitle2.value, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
 						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : JobPosition.value, extensionAttribute102 : JobPosition2.value, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
-						    birthtype : birthtype, birth : document.getElementById("txtBirth").value
+						    birthType : birthtype, birth : document.getElementById("txtBirth").value
 					},
 					success : function(result){
 						if(result == "PRE"){

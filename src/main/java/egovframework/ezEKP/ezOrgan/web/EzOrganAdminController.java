@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 관리자 - 조직도관리
@@ -397,14 +399,36 @@ public class EzOrganAdminController {
 		}		
 	}	
 	/**
-	 * 조직도관리 사원정보 수정 실행 함수
+	 * 조직도관리 사원정보 추가/수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String result = "OK";
+	public String saveUserInfo(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String result = "";
 		
-		
+		if(vo.getParentCn().equals("")){
+			ezOrganAdminService.updateDBData_user(vo);
+			result = "OK";
+		}else{
+			String domain = config.getProperty("config.DomainName");
+			String cn = vo.getCn();
+			
+			int cnt = ezOrganAdminService.userCheck(cn);
+			
+			if(cnt > 0){
+				result = "PRE";
+			}else{
+				String mailAddr = cn + "@" + domain;
+				vo.setMail(mailAddr);				
+				String userPrincipalName = cn + "@" + domain;
+				vo.setUpnName(userPrincipalName);
+				String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+				vo.setPassword(pass);
+				
+				ezOrganAdminService.insertDBData_user(vo);
+				result = "OK";
+			}
+		}
 		
 		return result;
 	}

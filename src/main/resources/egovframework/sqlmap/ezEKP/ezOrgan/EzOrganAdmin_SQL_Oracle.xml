@@ -15,6 +15,12 @@
 											    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
 	</procedure>
 	
+	<procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
+												#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
+												#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
+	</procedure>
+	
 	<procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
 	</procedure>
@@ -56,6 +62,17 @@
       			extensionattribute1 = #cn#
 	     ]]> 
 	</select>
+
+	<select id="EzOrganAdminDAO.userCheck" parameterClass="String" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(cn)
+     		FROM 
+     			ezHrmaster.TBLUSERMASTER 
+      		WHERE  
+      			cn = #cn#
+	     ]]>
+	</select>
 	
 	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">		
 			UPDATE 
@@ -84,6 +101,33 @@
      			, updatedt = sysdate
       		WHERE  
       			cn = #cn#
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
+		<![CDATA[
+			UPDATE
+				ezHrmaster.TBLUSERMASTER
+     		SET
+	     		displayName = #displayName#,
+	     		displayName2 = #displayName2#,
+	     		title= #title#,
+	     		title2 = #title2#,
+	     		extensionAttribute15 = #extensionAttribute15#,
+	     		extensionAttribute6 = #extensionAttribute6#,
+	     		extensionAttribute14 = #extensionAttribute14#,
+	     		extensionAttribute10 = #extensionAttribute10#,
+	     		extensionAttribute102 = #extensionAttribute102#,
+	     		telephoneNumber = #telephoneNumber#,
+	     		homePhone = #homePhone#,
+	     		facsimileTelephoneNumber = #facsimileTelephoneNumber#,
+	     		mobile = #mobile#,
+	     		postalCode = #postalCode#,
+	     		streetAddress = #streetAddress#,
+	     		birthType = #birthType#,
+	     		birth = #birth#	     		
+      		WHERE
+      			cn = #cn#
+		]]>      			
 	</update>
 	
 </sqlMap>

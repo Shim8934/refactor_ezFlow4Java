@@ -23,6 +23,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
 	}
 
+	public int userCheck(String cn) throws Exception{
+		return (int) select("EzOrganAdminDAO.userCheck", cn);
+	}
+
 	public void insertDBData_company(Map<String, Object> map) throws Exception{
 		insert("EzOrganAdminDAO.insertDBData_company", map);
 	}
@@ -30,14 +34,22 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertDBData_dept(Map<String, Object> map) throws Exception{
 		insert("EzOrganAdminDAO.insertDBData_dept", map);
 	}
+
+	public void insertDBData_user(Map<String, Object> map) throws Exception{
+		insert("EzOrganAdminDAO.insertDBData_user", map);
+	}
 	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception{
 		update("EzOrganAdminDAO.updateDBData_dept", vo);
 	}
 	
+	public void updateDBData_user(OrganUserVO vo) throws Exception{
+		update("EzOrganAdminDAO.updateDBData_user", vo);
+	}
+	
 	public void updateProperty(Map<String, Object> map) throws Exception{
 		update("EzOrganAdminDAO.updateProperty", map);
-	}	
+	}
 	
 	public void deleteDBData(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.deleteDBData", map);
