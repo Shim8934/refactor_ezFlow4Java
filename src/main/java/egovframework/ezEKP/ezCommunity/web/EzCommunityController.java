@@ -1,15 +1,25 @@
 package egovframework.ezEKP.ezCommunity.web;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -31,17 +41,19 @@ public class EzCommunityController {
 	}
 	
 	@RequestMapping(value ="/ezCommunity/communityLeftCommunity.do")
-	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request){
+	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception{
 		String userId = "", companyID = "";
-		String communityCD = "", UserInfo_UserID = "";
-		String code = "", codeName = "", UserLevel = "";
-		int permit = 0, confirmtype = 0, newmember_confirmtype = 0;
+		String communityCD = "", userInfoUserID = "";
+		String code = "", codeName = "", userLevel = "";
+		int permit = 0, confirmType = 0, newMemberConfirmtype = 0;
 		String pRootBoardID = "top";
 		String pSubFlag = "0";
 		int pSelectBy = 0;
 		String pExcludeBoardID = "";
-        boolean CheckSysop = false;
-        boolean JoinFlag = false;
+        boolean checkSysop = false;
+        boolean joinFlag = false;
+        Document xmlret;
+        Document xmlcop;
         
         LoginVO loginVO = commonUtil.userInfo(loginCookie);
         
@@ -56,24 +68,106 @@ public class EzCommunityController {
             codeName = "";
         }
         if (request.getParameter("UserLevel") != null){
-            UserLevel = request.getParameter("UserLevel");
+            userLevel = request.getParameter("UserLevel");
         }else{
-            UserLevel = "";
+            userLevel = "";
         }
-        UserInfo_UserID = loginVO.getId();
+        userInfoUserID = loginVO.getId();
         userId = loginVO.getId();
         companyID = loginVO.getCompanyID();
         
         if(code.equals("")){
-        	/*EZSP_LEFT_COMMUNITY_GET1*/
+        	String vPermit = ezCommunityService.leftCommunityGet1(code, userInfoUserID);
         	
-        }
+        	if(vPermit==null){
+        		userLevel = "0";
+        	}else{
+        		userLevel = vPermit;
+        		joinFlag = true;
+        	}
+        	
+        	String clubConfirmType = ezCommunityService.leftCommunityGet2(code);
+        	if(clubConfirmType != null){
+        		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
+        	}
+        	
+        	//쓰는데 없는거같음
+        	/*//dll
+        	String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID());
+        	
+        	int pMode = 0;
+        	
+        	if(boardGroupAdminFG.equals("OK") || loginVO.getRollInfo().toLowerCase().indexOf("c=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("k=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("t=1") > -1){
+        		pMode = 0;
+        	}else{
+        		pMode = 1;
+        	}
+        	//dll
+        	String retXML = ezCommunityService.getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(loginVO.getLang()));
+        	
+        	if(retXML.substring(0, 5).toUpperCase().equals("ERROR")){
+        		xmlret = commonUtil.convertStringToDocument(retXML);
+        	}else{
+        		xmlret = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
+        	}*/
+        	
+
+        	if(userInfoUserID.equals(ezCommunityService.leftCommunityGet4(code))){
+        		checkSysop = true;
+        	}
+        	
+        }        
+
+        /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userId));
+		xmlcop = commonUtil.convertStringToDocument(rtnVal);*/
+		
+		
+		model.addAttribute("code",code);
+		model.addAttribute("codeName",codeName);
+		model.addAttribute("UserLevel",userLevel);
+		model.addAttribute("newmember_confirmtype",newMemberConfirmtype);
+		model.addAttribute("ch_CommunityAdmin",loginVO.getRollInfo().indexOf("t=1"));
+		model.addAttribute("CheckSysop",checkSysop);
+		model.addAttribute("lang",loginVO.getLang());
+		model.addAttribute("userId", userId);
+		model.addAttribute("UserInfo_UserID",userInfoUserID);
 		
 		return "/ezCommunity/communityLeftCommunity";
 	}
+
+	@RequestMapping(value ="/ezCommunity/GetLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	@ResponseBody
+	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie) throws Exception{
+		String userId = "";
+        StringBuilder sb = new StringBuilder();
+        
+        LoginVO loginVO = commonUtil.userInfo(loginCookie);
+        
+        userId = loginVO.getId();
+        
+        List<CommunityLeftCommunityVO> leftCommunityList =ezCommunityService.leftCommunityGet3(userId);
+        
+        sb.append("<DATA>");
+        for(CommunityLeftCommunityVO leftCommunity : leftCommunityList){
+        	sb.append(commonUtil.getQueryResult(leftCommunity));
+        }
+        sb.append("</DATA>");
+        
+        return sb.toString();
+	}
 	
-	@RequestMapping(value ="/ezCommunity/GetLeftCommunity.do")
-	public void getLeftCommunity(){
+	@RequestMapping(value ="/ezCommunity/GetLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	@ResponseBody
+	public String getLeftBoardList(@CookieValue("loginCookie")String loginCookie) throws Exception{
+		StringBuilder sb = new StringBuilder();
 		
+		List<CommunityCBoardVO> leftBoardList= ezCommunityService.getLeftBoardList();
+		sb.append("<DATA>");
+		for(CommunityCBoardVO leftBoard : leftBoardList){
+			sb.append(commonUtil.getQueryResult(leftBoard));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 }
