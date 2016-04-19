@@ -139,9 +139,9 @@
     	}
     	function menuQst_List() {
         	if(CrossYN()) {
-        		var szUrl = "qstList.do?brdId='${pBrdID}'"
+        		var szUrl = "qstList.do?brdID='${pBrdID}'"
         	} else {
-            	var szUrl = "qstList.do?brdId='${pBrdID}'"
+            	var szUrl = "qstList.do?brdID='${pBrdID}'"
         	}
         	window.location.href = szUrl;	
     	}
@@ -198,9 +198,9 @@
 
             	var szUrl = "";			    
             	if(CrossYN()) {
-                	szUrl = "qstList.do?brdId=${pBrdID}&" + strSearch
+                	szUrl = "qstList.do?brdID=${pBrdID}&" + strSearch
             	} else {
-                	szUrl = "qstList.do?brdId=${pBrdID}&" + strSearch
+                	szUrl = "qstList.do?brdID=${pBrdID}&" + strSearch
             	}
             	window.location.href = szUrl;
         	}	
@@ -234,7 +234,7 @@
         					<spring:message code='ezQuestion.t424' />
         				<input type="radio" name="setRange" value="1" onclick="setRangeValue(2)" style="vertical-align:-2px;">
         					<spring:message code='ezQuestion.t252' />
-        				<input type="hidden" id="brd_id" name="brd_id" value="${pBrdID}">
+        				<input type="hidden" id="brd_id" name="brdID" value="${pBrdID}">
         				<input type="hidden" id="hidRange" name="hidRange" value="2">
         				<input type="hidden" id="hidTitle" name="hidTitle">
         				<input type="hidden" id="hidStartDate" name="hidStartDate">
