@@ -197,7 +197,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=" + '<c:out value='${ezQuestionVO.brdId}'/>' + "&itemID=" + '<c:out value='${ezQuestionVO.itemId}'/>';
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=" + '${qstStep1VO.brdID}' + "&itemID=" + '${qstStep1VO.itemID}';
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		} else {
@@ -261,8 +261,8 @@
                 		var xmlDoc = createXmlDom();
                 		var objNode;
                 		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>'); 
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>'); 
+                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}"); 
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemID}"); 
                 		xmlHttp.open("POST","qstCancel.do",false);
                 		xmlHttp.send(xmlDoc);
                 		var resultXML = xmlHttp.responseXML;
@@ -285,9 +285,9 @@
                     		var xmlDoc = createXmlDom();
                     		var objNode;
                     		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>');
-                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>'); 
-                    		xmlHttp.open("POST","Qst_Cancel.aspx",false);
+                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}");
+                    		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemID}"); 
+                    		xmlHttp.open("POST","qstCancel.do",false);
                     		xmlHttp.send(xmlDoc);
                     		var resultXML = xmlHttp.responseXML;
                     		State = SelectSingleNodeValue(resultXML, "DATA");
@@ -306,9 +306,9 @@
     		}
     		function menuQst_List() {
         		if(CrossYN()) {
-        			var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
+        			var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		} else {
-        			var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
+        			var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		}
         		window.location.href = szUrl;	
     		}
@@ -404,8 +404,8 @@
 		        		var xmlDoc = createXmlDom();
 		        		var objNode;
 		        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", '<c:out value='${ezQuestionVO.brdId}'/>');
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", '<c:out value='${ezQuestionVO.itemId}'/>');
+		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}");
+                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemID}");
 		        		xmlHttp.open("POST", "qstCancel.do", false);
 		        		xmlHttp.send(xmlDoc);
 		        		var resultXML = xmlHttp.responseXML;
