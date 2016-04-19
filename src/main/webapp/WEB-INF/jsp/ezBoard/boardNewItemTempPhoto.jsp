@@ -576,16 +576,6 @@
 	
 	        function imgtemp_onclick() {
 	            if (document.form.file1.value != "") {
-	
-	                //if (document.getElementById("form").file1.files.length < 2) {
-	                //}
-	                //else
-	                //    alert("한개의 파일만 업로드 가능합니다.");
-	
-	                //var frm = document.getElementById('form');
-	                //frm.action = "/myoffice/ezBoardSTD/interASP/Image_upload_Cross.aspx?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit;   //업로드
-	                //frm.submit();
-	
 	                var fd = new FormData();
 	                for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
 	                    fd.append("file1", document.getElementById("form").file1.files[i]);
@@ -596,7 +586,7 @@
 	                xhr = new XMLHttpRequest();
 	                xhr.upload.addEventListener("progress", uploadProgress, false);
 	                xhr.addEventListener("load", uploadComplete, false);
-	                xhr.open("POST", "/ezBoard/boardImageupload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
 	                xhr.send(fd);
 	                document.getElementById("progdiv").style.display = "";
 	            }
@@ -841,7 +831,7 @@
 	    <td>
 	        <table style="width:100%; border:1px solid #b6b6b6; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
 	        <tr>
-	            <th width="60" style="text-align:left;padding-left:3px;border:0;"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></a></th>
+	            <th width="60" style="text-align:left;padding-left:3px;border:0;"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></th>
 	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t1012'/></th>
 	            <th width="72" style="text-align:center;padding-left:2px;border:0;"><spring:message code='ezBoard.t1022'/></th>
 	        </tr>
@@ -850,13 +840,13 @@
 	  </tr>
 	  <tr>
 	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:542px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
 	    </td>
 	  </tr>
 	  <tr>
 	    <td>
 	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezOrgan/admin/signImange_upload_Cross.aspx?mode=PICTURE" target="ifrm">
+	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
 	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple />
 	        <input type="hidden" name="mode" id="mode" />
 	        </form>

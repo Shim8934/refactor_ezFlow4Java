@@ -283,7 +283,7 @@ public class EzCommonController extends EgovFileMngUtil{
             	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
             }
 
-            m_strMHT.append("--\n");
+            m_strMHT.append("--" + System.lineSeparator());
             
             return m_strMHT.toString();
         }
@@ -298,13 +298,13 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	private String makeHeader(StringBuilder m_strMHT) throws Exception{
 		String m_strBoundary = createBoundary();
-        m_strMHT.append("MIME-Version: 1.0\n");
-        m_strMHT.append("Content-Type: Multipart/related;\n");
-        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"\n");
-        m_strMHT.append("From: Kaoni MHT Component(UTF-8)\n");
-        m_strMHT.append("Subject:  HTML to Mime-HTML\n");
-        m_strMHT.append("Date: " + getDate() + "\n");
-        m_strMHT.append("\n\n");
+        m_strMHT.append("MIME-Version: 1.0" + System.lineSeparator());
+        m_strMHT.append("Content-Type: Multipart/related;" + System.lineSeparator());
+        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"" + System.lineSeparator());
+        m_strMHT.append("From: Kaoni MHT Component(UTF-8)" + System.lineSeparator());
+        m_strMHT.append("Subject:  HTML to Mime-HTML" + System.lineSeparator());
+        m_strMHT.append("Date: " + getDate() + System.lineSeparator());
+        m_strMHT.append(System.lineSeparator() + System.lineSeparator());
         
         return m_strBoundary;
     }
@@ -667,14 +667,14 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * 게시판 html -> mht 변환 html 인코딩 실행 Method
 	 */
 	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
-        m_strMHT.append("--" + m_strBoundary + "\n");
-        m_strMHT.append("Content-Type: Text/HTML\n");
-        m_strMHT.append("Content-Transfer-Encoding: base64\n");
-        m_strMHT.append("Content-Location: file://c:" + File.separator + "test.html\n");
-        m_strMHT.append("\n");
+        m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
+        m_strMHT.append("Content-Type: Text/HTML" + System.lineSeparator());
+        m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
+        m_strMHT.append("Content-Location: file://c:" + File.separator + "test.html" + System.lineSeparator());
+        m_strMHT.append(System.lineSeparator());
         byte[] arr = strHtml.getBytes("UTF-8");
         String strMhtBase64 = Base64.encodeBase64String(arr);
-        m_strMHT.append(strMhtBase64 + "\n");
+        m_strMHT.append(strMhtBase64 + System.lineSeparator());
         m_strMHT.append("--" + m_strBoundary);
         
     }
@@ -685,10 +685,10 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
         for (int i = 0; i < m_ImageList.length; i++){
-            m_strMHT.append("\nContent-Type: Image/gif\n");
-            m_strMHT.append("Content-Transfer-Encoding: base64\n");
-            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif\n");
-            m_strMHT.append("\n");
+            m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
+            m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
+            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif" + System.lineSeparator());
+            m_strMHT.append(System.lineSeparator());
             //이미지 본문 영역
 
             String strTemp = m_ImageList[i].substring(0, 4);
@@ -710,7 +710,7 @@ public class EzCommonController extends EgovFileMngUtil{
             
             imageSample.flush();
 
-            m_strMHT.append(strImageData + "\n");
+            m_strMHT.append(strImageData + System.lineSeparator());
             m_strMHT.append("--" + m_strBoundary);
         }
     }
@@ -720,10 +720,10 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++){
-            m_strMHT.append("\nContent-Type: Image/gif\n");
-            m_strMHT.append("Content-Transfer-Encoding: base64\n");
-            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif\n");
-            m_strMHT.append("\n");
+            m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
+            m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
+            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif" + System.lineSeparator());
+            m_strMHT.append(System.lineSeparator());
             //이미지 본문 영역
             
             BufferedImage imageSample = null;
@@ -747,7 +747,7 @@ public class EzCommonController extends EgovFileMngUtil{
             outputStream.close();
             imageSample.flush();
 
-            m_strMHT.append(strImageData + "\n");
+            m_strMHT.append(strImageData + System.lineSeparator());
             m_strMHT.append("--" + m_strBoundary);
         }
     }
@@ -800,8 +800,8 @@ public class EzCommonController extends EgovFileMngUtil{
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				
 				for(int i = 1; i < m_Mimechunk.length; i++){
-					String[] strMimeChunk = m_Mimechunk[i].split("\n\n");
-					String[] strMime_info_p = strMimeChunk[0].trim().split("\n");
+					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator()+System.lineSeparator());
+					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
 					
 					if(strMime_info_tupe[0].equals("Content-Type")){
@@ -889,7 +889,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
 	        while (line != null) {
 	            sb.append(line);
-	            sb.append("\n");
+	            sb.append(System.lineSeparator());
 	            line = br.readLine();
 	        }
 	        strMhtData = sb.toString();
@@ -1003,7 +1003,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
         		literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
         		literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace("\n", "<BR>");
+        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(System.lineSeparator(), "<BR>");
         	}
         }else{
         	literalEmail = email;
