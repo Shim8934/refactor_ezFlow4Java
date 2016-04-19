@@ -37,7 +37,7 @@
 		    }
 		    function btn_Delete() {
 		        var xmlHttp = createXMLHttpRequest();
-		        var szUrl = "callDeleteItem.do?brd_id=" + pBrdID + "&item_no=" + pItemNo;
+		        var szUrl = "callDeleteItem.do?brdID=" + pBrdID + "&itemNo=" + pItemNo;
 		        xmlHttp.open("POST", szUrl, false);
 		        xmlHttp.send();
 		        var resultXML = xmlHttp.responseXML;
