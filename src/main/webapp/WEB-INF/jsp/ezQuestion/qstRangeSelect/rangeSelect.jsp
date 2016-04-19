@@ -498,7 +498,7 @@
     	function GetItemNo() {
 	        var xmldom = createXmlDom();
     	    var xmlHttp = createXMLHttpRequest();
-        	var szUrl = "/ezQuestion/callGetItemSeqXML.do?brd_id=" + L_BRDID;
+        	var szUrl = "/ezQuestion/callGetItemSeqXML.do?brdID=" + L_BRDID;
         	xmlHttp.open("POST", szUrl, false);
         	xmlHttp.send(xmldom)
         	if (getXmlString(xmlHttp.responseXML) != "") {
