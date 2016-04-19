@@ -31,7 +31,7 @@
 		    var usertitle = "UserTitle";
 		    var userdept = "UserDepteName";
 		    var g_senderinfo = "UserCompanyName"+" UserDepteName "+"UserTitle";
-		    var v_brdid = "${qstStep1VO.brdId}";
+		    var v_brdid = "${qstStep1VO.brdID}";
 		    var v_itemid = "${qstStep1VO.itemNo}";
 			var surveyState = "";
 			var WinRef;
@@ -50,7 +50,7 @@
 	    		history.back();
 			}
     		function AddQuesList_DATA(vdata, vAttachYN, QstXML) {
-alert("QstXML:"+QstXML);
+
         		var selCnt=frmCreate.selQues.length;
         		if (selCnt > 0) {
             		while(1) {
@@ -289,7 +289,7 @@ alert("QstXML:"+QstXML);
                 		var xmlDoc = createXmlDom();
                 		var objNode;
                 		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdId}"); 
+                		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdID}"); 
                 		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}"); 
                 		xmlHttp.open("POST","qstCancel.do",false);
                 		xmlHttp.send(xmlDoc);
@@ -313,7 +313,7 @@ alert("QstXML:"+QstXML);
                     		var xmlDoc = createXmlDom();
                     		var objNode;
                     		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdId}");
+                    		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${brdID}");
                     		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}"); 
                     		xmlHttp.open("POST","qstCancel.do",false);
                     		xmlHttp.send(xmlDoc);
@@ -451,13 +451,13 @@ alert("QstXML:"+QstXML);
 				
 				  function menuQst_tempSave_old() {
 				        var xmlHttp = createXMLHttpRequest();
-				        xmlHttp.open("POST", "callTempSave.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}", false);
+				        xmlHttp.open("POST", "callTempSave.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}", false);
 				            xmlHttp.send();
 				        //alert(xmlHttp.responseText);
 				            var tempxml = loadXMLString(xmlHttp.responseText);
 				            if (xmlHttp.responseText != "") {
 				                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
-alert("result:"+result);
+
 				                if (result != "") {
 				                    return result;
 				                } else {
@@ -492,7 +492,7 @@ alert("result:"+result);
 				
 				        xmlDom2 = loadXMLString(strQuestion);
 				
-				        xmlHttp2.open("POST","callTempLoad.do?brdID=${brdId}&itemID=${qstStep1VO.itemNo}" ,false);
+				        xmlHttp2.open("POST","callTempLoad.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}" ,false);
 				        xmlHttp2.send(xmlDom2)	
 				
 				        if ( xmlHttp2.responseText == "" ) return;
