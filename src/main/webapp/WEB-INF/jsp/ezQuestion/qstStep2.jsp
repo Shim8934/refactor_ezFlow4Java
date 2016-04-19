@@ -175,7 +175,7 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id='<c:out value='${ezQuestionVO.itemId}'/>'" , "addques", 700, 440); 
+            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brdID=5" + "&itemID='<c:out value='${qstStep1VO.itemID}'/>'" , "addques", 700, 440); 
 		        } else {
             		WinRef.focus();
             		return;
@@ -197,7 +197,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=" + '${qstStep1VO.brdID}' + "&itemID=" + '${qstStep1VO.itemID}';
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=${qstStep1VO.brdID}&itemID=${qstStep1VO.itemID}";
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		} else {
@@ -635,7 +635,7 @@
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${ezQuestionVO.txtSubject}'/>"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="${qstStep1VO.txtSubject}"/></td>
            			</tr>
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
@@ -665,7 +665,7 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<c:out value='${requestScope.pStep1DataXML}'/>" />
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value='${pStep1DataXML}'/>
 			</div>
 		</form>
 	    	<div id="Privew_List" style="display: none;">
