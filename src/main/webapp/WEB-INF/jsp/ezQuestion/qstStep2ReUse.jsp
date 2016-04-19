@@ -35,7 +35,7 @@
 		    var v_itemid = "${qstStep1VO.itemNo}";
 			var surveyState = "";
 			var WinRef;
-
+			
 			function Init_QuesAdd(vdata,vquesno) {
 				if(frmCreate.selQues[0].text=="") {
 		    		i=0;
@@ -50,6 +50,7 @@
 	    		history.back();
 			}
     		function AddQuesList_DATA(vdata, vAttachYN, QstXML) {
+alert("QstXML:"+QstXML);
         		var selCnt=frmCreate.selQues.length;
         		if (selCnt > 0) {
             		while(1) {
@@ -196,7 +197,7 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brd_id=5" + "&item_id=${qstStep1VO.itemNo}/>'" , "addques", 700, 440); 
+            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brdID=5" + "&itemID=${qstStep1VO.itemNo}/>'" , "addques", 700, 440); 
 		        } else {
             		WinRef.focus();
             		return;
@@ -218,7 +219,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}";
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=${brdId}&itemID=${qstStep1VO.itemNo}";
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		} else {
@@ -264,6 +265,16 @@
         		}
     		}
     		document.onselectstart = function () { return false; };
+    		window.onload = function () {
+    	        if (navigator.userAgent.indexOf('Firefox') != -1) {
+    	            document.body.style.MozUserSelect = 'none';
+    	            document.body.style.WebkitUserSelect = 'none';
+    	            document.body.style.khtmlUserSelect = 'none';
+    	            document.body.style.oUserSelect = 'none';
+    	            document.body.style.UserSelect = 'none';
+    	        }
+    	        insert_item();  
+    	    }
     		function window_onunload() {
         		if (navigator.userAgent.indexOf('Firefox') != -1) {
             		document.body.style.MozUserSelect = 'none';
@@ -440,13 +451,13 @@
 				
 				  function menuQst_tempSave_old() {
 				        var xmlHttp = createXMLHttpRequest();
-
 				        xmlHttp.open("POST", "callTempSave.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}", false);
 				            xmlHttp.send();
 				        //alert(xmlHttp.responseText);
 				            var tempxml = loadXMLString(xmlHttp.responseText);
 				            if (xmlHttp.responseText != "") {
 				                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
+alert("result:"+result);
 				                if (result != "") {
 				                    return result;
 				                } else {
@@ -473,6 +484,7 @@
 				        //var strQuestion = "<DATA>" + item_data + "</DATA>";
 				        // 설문 불러 왔을때 thml 테그 dom 로드시 오류 있어 수정 (2008.09.02 최주관)
 				        var strQuestion = "<DATA><![CDATA[" + item_data + " ]]></DATA>";
+
 				        //alert("strQuestion : "+strQuestion);
 				        
 				        var xmlHttp2 = createXMLHttpRequest();
@@ -480,30 +492,29 @@
 				
 				        xmlDom2 = loadXMLString(strQuestion);
 				
-				        xmlHttp2.open("POST","callTempLoad.do?brd_id=${brdId}&item_id=${qstStep1VO.itemNo}" ,false);
+				        xmlHttp2.open("POST","callTempLoad.do?brdID=${brdId}&itemID=${qstStep1VO.itemNo}" ,false);
 				        xmlHttp2.send(xmlDom2)	
 				
 				        if ( xmlHttp2.responseText == "" ) return;
 
-				        //alert("xmlHttp2.responseXML.xml : "+xmlHttp2.responseText);
-
 				        var strResult = getNodeText(loadXMLString(xmlHttp2.responseText).getElementsByTagName("QUESTION").item(0)).split("| ");
-			            //alert("strResult : "+strResult);
-				
+
 				        removeQue()
-				        
 				        var cnt;
 				        var cnt2;
-
 				        var j = 0;
+
+
 				        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
-				            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("CONTENT").length > 0) {
-				                strSeq = strResult[j + 1].split(';');
-				                if (CrossYN()) {
+				            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
+				                strSeq = strResult[j+1].split(';');
+
+//alert("outerHTML:"+loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
+				                //if (CrossYN()) {
 				                    AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
-				                } else {
-				                    AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).xml);
-				                }
+				                //} else {
+				                    //AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).xml);
+				                //}
 				                j++;
 				            }
 				        }
@@ -570,7 +581,7 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="<c:out value='${pStep1DataXML}'/>" />
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="${pStep1DataXML}" />
 			</div>
 		</form>
 	    	<div id="Privew_List" style="display: none;">
