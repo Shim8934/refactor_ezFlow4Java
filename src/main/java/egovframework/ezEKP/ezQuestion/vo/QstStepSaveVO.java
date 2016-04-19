@@ -2,11 +2,11 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstStepSaveVO {
 	/** 게시판아이디*/
-	private int brdId;
+	private int brdID;
 	/** 아이템번호*/
 	private int itemNo;
 	/** 유저아이디*/
-	private String userId;
+	private String userID;
 	/** 유저이름*/
 	private String userNm;
 	/** 유저이름2*/
@@ -40,11 +40,11 @@ public class QstStepSaveVO {
 	/** */
 	private String resRange;
 	
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -52,11 +52,11 @@ public class QstStepSaveVO {
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	public String getUserNm() {
 		return userNm;
