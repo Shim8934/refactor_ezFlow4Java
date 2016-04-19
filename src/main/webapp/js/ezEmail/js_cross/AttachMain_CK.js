@@ -1,5 +1,5 @@
-﻿﻿var g_progresswin;
-var g_fileList;
+﻿var g_fileList;
+var g_progresswin;
 var pAttachListXml="";
 function replace(str,s,d)
 {
