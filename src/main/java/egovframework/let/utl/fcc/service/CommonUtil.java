@@ -227,6 +227,14 @@ public class CommonUtil {
 		return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 	
+	public String trimDoubleQuotes(String src) {
+		if (src.startsWith("\"") && src.endsWith("\"")) {
+			src = src.substring(1, src.length() - 1);
+		}		
+		
+		return src;
+	}
+	
 }
 
 
