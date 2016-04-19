@@ -24,7 +24,7 @@ public class CommunityClubVO {
 	/** */
 	String cMaker;
 	/** */
-	String cSysopId;
+	String cSysopID;
 	/** */
 	int cMemberCnt;
 	/** */
@@ -110,7 +110,7 @@ public class CommunityClubVO {
 	/** */
 	int isIn;
 	/** */
-	String companyId;
+	String companyID;
 	/** */
 	int usingDiskSize;
 	/** */
@@ -187,11 +187,11 @@ public class CommunityClubVO {
 	public void setcMaker(String cMaker) {
 		this.cMaker = cMaker;
 	}
-	public String getcSysopId() {
-		return cSysopId;
+	public String getcSysopID() {
+		return cSysopID;
 	}
-	public void setcSysopId(String cSysopId) {
-		this.cSysopId = cSysopId;
+	public void setcSysopID(String cSysopID) {
+		this.cSysopID = cSysopID;
 	}
 	public int getcMemberCnt() {
 		return cMemberCnt;
@@ -445,11 +445,11 @@ public class CommunityClubVO {
 	public void setIsIn(int isIn) {
 		this.isIn = isIn;
 	}
-	public String getCompanyId() {
-		return companyId;
+	public String getCompanyID() {
+		return companyID;
 	}
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	public int getUsingDiskSize() {
 		return usingDiskSize;

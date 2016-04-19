@@ -14,7 +14,7 @@ public class CommunityLeftCommunityVO {
 	/** */
 	int cMemberCnt;
 	/** */
-	String cSysopId;
+	String cSysopID;
 	/** */
 	String cClubGubun;
 	/** */
@@ -57,11 +57,11 @@ public class CommunityLeftCommunityVO {
 	public void setcMemberCnt(int cMemberCnt) {
 		this.cMemberCnt = cMemberCnt;
 	}
-	public String getcSysopId() {
-		return cSysopId;
+	public String getcSysopID() {
+		return cSysopID;
 	}
-	public void setcSysopId(String cSysopId) {
-		this.cSysopId = cSysopId;
+	public void setcSysopID(String cSysopID) {
+		this.cSysopID = cSysopID;
 	}
 	public String getcClubGubun() {
 		return cClubGubun;

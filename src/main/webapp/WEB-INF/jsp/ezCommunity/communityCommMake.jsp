@@ -167,30 +167,30 @@
 	
 	    <table class="content">
 	        <form method="post" name="make" action="commMakeOk.do" enctype="multipart/form-data">
-	            <input type="hidden" name="makeid" value="${UserInfo_UserID }">
-	            <input type="hidden" name="hidden_clubname">
-	            <input type="hidden" name="hidden_clubname2">
-	            <input type="hidden" name="hidden_intro">
+	            <input type="hidden" name="makeID" value="${userInfoUserID }">
+	            <input type="hidden" name="hiddenClubName">
+	            <input type="hidden" name="hiddenClubName2">
+	            <input type="hidden" name="hiddenIntro">
 	            <input type="hidden" name="sNewID">
-	            <input type="hidden" name="sNew_subID">
+	            <input type="hidden" name="sNewSubID">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
-	                    <input type="text" name="userName" value="${UserInfo_DisplayName }" readonly="true" size="40"></td>
+	                    <input type="text" name="userName" value="${userInfoDisplayName }" readonly="true" size="40"></td>
 	            </tr>
 	            <tr>
 	                <th>Community <spring:message code='ezCommunity.t10' /></th>
 	                <td colspan="2" style="padding: 0">
 	                    <table style="width:100%">
 	                        <tr class="primary">
-	                            <th>${lang_Primary }</th>
+	                            <th>${langPrimary }</th>
 	                            <td>
-	                                <input type="text" name="clubname" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                                <input type="text" name="clubName" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 	                        </tr>
 	                        <tr class="secondary">
-	                            <th>${lang_Secondary }</th>
+	                            <th>${langSecondary }</th>
 	                            <td>
-	                                <input type="text" name="clubname2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+	                                <input type="text" name="clubName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 	                        </tr>
 	                    </table>
 	                </td>
@@ -208,8 +208,8 @@
 	            <tr>
 	                <th style="height:40px;"><spring:message code='ezCommunity.t12' /></th>
 	                <td style="white-space:nowrap">
-	                    <input type="radio" name="clubConfirmtype" value="2" checked><spring:message code='ezCommunity.t13' />
-	                    <input type="radio" name="clubConfirmtype" value="3"><spring:message code='ezCommunity.t1015' />
+	                    <input type="radio" name="clubConfirmType" value="2" checked><spring:message code='ezCommunity.t13' />
+	                    <input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t1015' />
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap">
 	                	<spring:message code='ezCommunity.t452' /><br>
@@ -219,8 +219,8 @@
 	            <tr>
 	                <th style="height:40px;"><spring:message code='ezCommunity.t15' /></th>
 	                <td style="white-space:nowrap">
-	                    <input type="radio" name="clubtype" value="2" checked><spring:message code='ezCommunity.t16' />
-	                    <input type="radio" name="clubtype" value="3"><spring:message code='ezCommunity.t17' />
+	                    <input type="radio" name="clubType" value="2" checked><spring:message code='ezCommunity.t16' />
+	                    <input type="radio" name="clubType" value="3"><spring:message code='ezCommunity.t17' />
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap">
 	                	<spring:message code='ezCommunity.t1017' /><br>
@@ -230,8 +230,8 @@
 	            <tr style="display: none">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t1019' /></th>
 	                <td style="white-space:nowrap">
-	                    <input type="radio" name="isIN" value="1"><spring:message code='ezCommunity.t1020' />
-	                    <input type="radio" name="isIN" value="2" checked><spring:message code='ezCommunity.t1021' />
+	                    <input type="radio" name="isIn" value="1"><spring:message code='ezCommunity.t1020' />
+	                    <input type="radio" name="isIn" value="2" checked><spring:message code='ezCommunity.t1021' />
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap">
 	                	<spring:message code='ezCommunity.t459' /><br>

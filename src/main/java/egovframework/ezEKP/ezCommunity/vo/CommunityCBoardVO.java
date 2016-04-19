@@ -6,7 +6,7 @@ public class CommunityCBoardVO {
 	/** 작성자아이디*/
 	String id;
 	/** 작성자회사아이디*/
-	String companyId;
+	String companyID;
 	/** 작성자이름*/
 	String userName;
 	/** 작성자이름(다국어)*/
@@ -49,11 +49,11 @@ public class CommunityCBoardVO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getCompanyId() {
-		return companyId;
+	public String getCompanyID() {
+		return companyID;
 	}
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	public String getUserName() {
 		return userName;

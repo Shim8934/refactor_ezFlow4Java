@@ -13,8 +13,8 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzCommunityDAO")
 public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
-	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userId) throws Exception{
-		return (List<CommunityLeftCommunityVO>) list("EzCommunityDAO.leftCommunityGet3", userId);
+	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception{
+		return (List<CommunityLeftCommunityVO>) list("EzCommunityDAO.leftCommunityGet3", userID);
 	}
 	
 	@SuppressWarnings("unchecked")

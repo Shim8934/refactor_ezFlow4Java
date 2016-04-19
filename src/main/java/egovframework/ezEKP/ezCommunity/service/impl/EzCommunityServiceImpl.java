@@ -39,8 +39,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userId) throws Exception {
-		return ezCommunityDAO.leftCommunityGet3(userId);
+	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception {
+		return ezCommunityDAO.leftCommunityGet3(userID);
 	}
 
 	@Override

@@ -23,6 +23,18 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+/** 
+ * @Description [Controller] 커뮤니티
+ * @author 오픈솔루션팀 이효진
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.04.19    이효진    신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzCommunityController {
 	@Autowired
@@ -43,9 +55,10 @@ public class EzCommunityController {
 		return "/ezCommunity/communityMain";
 	}
 	
+	/** 왼쪽 메뉴화면 호출 함수*/
 	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do")
 	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception{
-		String userId = "", companyID = "";
+		String userID = "", companyID = "";
 		String communityCD = "", userInfoUserID = "";
 		String code = "", codeName = "", userLevel = "";
 		int permit = 0, confirmType = 0, newMemberConfirmtype = 0;
@@ -65,18 +78,21 @@ public class EzCommunityController {
         }else{
             code = "";
         }
+        
         if (request.getParameter("communityName") != null){
             codeName = request.getParameter("communityName");
         }else{
             codeName = "";
         }
-        if (request.getParameter("UserLevel") != null){
-            userLevel = request.getParameter("UserLevel");
+        
+        if (request.getParameter("userLevel") != null){
+            userLevel = request.getParameter("userLevel");
         }else{
             userLevel = "";
         }
+        
         userInfoUserID = loginVO.getId();
-        userId = loginVO.getId();
+        userID = loginVO.getId();
         companyID = loginVO.getCompanyID();
         
         if(code.equals("")){
@@ -121,59 +137,104 @@ public class EzCommunityController {
         	
         }        
 
-        /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userId));
+        /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userID));
 		xmlcop = commonUtil.convertStringToDocument(rtnVal);*/
 		
 		
 		model.addAttribute("code",code);
 		model.addAttribute("codeName",codeName);
-		model.addAttribute("UserLevel",userLevel);
-		model.addAttribute("newmember_confirmtype",newMemberConfirmtype);
-		model.addAttribute("ch_CommunityAdmin",loginVO.getRollInfo().indexOf("t=1"));
-		model.addAttribute("CheckSysop",checkSysop);
+		model.addAttribute("userLevel",userLevel);
+		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
+		model.addAttribute("chCommunityAdmin",loginVO.getRollInfo().indexOf("t=1"));
+		model.addAttribute("checkSysop",checkSysop);
 		model.addAttribute("lang",loginVO.getLang());
-		model.addAttribute("userId", userId);
-		model.addAttribute("UserInfo_UserID",userInfoUserID);
+		model.addAttribute("userID", userID);
+		model.addAttribute("userInfoUserID",userInfoUserID);
 		
 		return "/ezCommunity/communityLeftCommunity";
 	}
 
-	@RequestMapping(value = "/ezCommunity/GetLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	/** 커뮤니티목록 호출 함수*/
+	@RequestMapping(value = "/ezCommunity/getLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
 	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie) throws Exception{
-		String userId = "";
+		String userID = "";
         StringBuilder sb = new StringBuilder();
         
         LoginVO loginVO = commonUtil.userInfo(loginCookie);
         
-        userId = loginVO.getId();
+        userID = loginVO.getId();
         
-        List<CommunityLeftCommunityVO> leftCommunityList =ezCommunityService.leftCommunityGet3(userId);
+        List<CommunityLeftCommunityVO> leftCommunityList =ezCommunityService.leftCommunityGet3(userID);
         
         sb.append("<DATA>");
+        
         for(CommunityLeftCommunityVO leftCommunity : leftCommunityList){
         	sb.append(commonUtil.getQueryResult(leftCommunity));
         }
+        
         sb.append("</DATA>");
         
         return sb.toString();
 	}
 	
-	@RequestMapping(value = "/ezCommunity/GetLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	/** 알림마당목록 호출 함수*/
+	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
 	public String getLeftBoardList(@CookieValue("loginCookie")String loginCookie) throws Exception{
 		StringBuilder sb = new StringBuilder();
 		
 		List<CommunityCBoardVO> leftBoardList= ezCommunityService.getLeftBoardList();
 		sb.append("<DATA>");
+		
 		for(CommunityCBoardVO leftBoard : leftBoardList){
 			sb.append(commonUtil.getQueryResult(leftBoard));
 		}
+		
 		sb.append("</DATA>");
 		
 		return sb.toString();
 	}
 	
+/*	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do")
+	public void getCommunityThumInfo(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception{
+		String pType = "5";
+		String pBoardID = "";
+		String pItemID = "";
+		String pQstNo = "";
+        String pAnsNo = "";
+        String pAttID = "";
+        String pFileName = "";
+        String pFilePath = "";
+		 
+		if (request.getParameter("TYPE") != null)
+            pType = request.getParameter("TYPE");
+		if (request.getParameter("FILENAME") != null)
+			pFileName = request.getParameter("FILENAME");
+        if (request.getParameter("BOARDID") != null)
+        	pBoardID = request.getParameter("BOARDID");
+        if (request.getParameter("ITEMID") != null)
+        	pItemID = request.getParameter("ITEMID");
+        if (request.getParameter("QSTNO") != null)
+        	pQstNo = request.getParameter("QSTNO");
+        if (request.getParameter("ANSNO") != null)
+        	pAnsNo = request.getParameter("ANSNO");
+        if (request.getParameter("ATTID") != null)
+        	pAttID = request.getParameter("ATTID");
+        
+        if(pType.equals("QUESTION")){
+                if (pFileName != "")
+                    pFilePath = File.separator+"Upload_BoardSTD"+File.separator+"Upload_Question"+File.separator+pFileName;
+                else{
+                    pFilePath = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachUrl();
+                    pFileName = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID).getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
+                }
+                if (pFilePath != null && pFilePath != "")
+                    ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+        }
+	}*/
+	
+	/** 커뮤니티만들기 화면 호출 함수*/
 	@RequestMapping(value = "/ezCommunity/commMake.do")
 	public String commMake(@CookieValue("loginCookie")String loginCookie, Locale locale, ModelMap model, HttpServletRequest request) throws Exception{
 		String userInfoUserID = "", userInfoDisplayName = "";
@@ -195,18 +256,17 @@ public class EzCommunityController {
 		}else{
 			userInfoDisplayName = loginVO.getDisplayName1();
 		}
-		
-System.out.println(getCategory("", "", "", locale));
 
-		model.addAttribute("lang_Primary", langPrimary);
-		model.addAttribute("lang_Secondary", langSecondary);
-		model.addAttribute("UserInfo_UserID", userInfoUserID);
-		model.addAttribute("UserInfo_DisplayName", userInfoDisplayName);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("userInfoUserID", userInfoUserID);
+		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
 		model.addAttribute("flag", flag);		
 		model.addAttribute("idSpanValue", getCategory("", "", "", locale));
 		return "/ezCommunity/communityCommMake";
 	}
 	
+	/** 카테고리목록 호출 함수*/
 	private String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, Locale locale) throws Exception{
 		StringBuilder strHTML = new StringBuilder();
 		

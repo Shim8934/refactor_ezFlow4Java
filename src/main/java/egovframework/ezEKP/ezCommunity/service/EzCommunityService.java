@@ -8,7 +8,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 
 public interface EzCommunityService {
 	
-	List<CommunityLeftCommunityVO> leftCommunityGet3(String userId) throws Exception;
+	List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception;
 	
 	List<CommunityCBoardVO> getLeftBoardList() throws Exception;
 
