@@ -677,7 +677,7 @@
             		}
         		} else {
             		if ((g_windowReference == null) || (g_windowReference.closed == true)) {
-                		var szUrl = "qstAttachNonActX.do?id_name=" + pID;
+                		var szUrl = "qstAttachNonActX.do?idName=" + pID;
                 		g_windowReference = window.open("","AttachAdd","height=370px,width=500px,resizable=no,center=yes" + GetOpenPosition(500, 370));                
                 		document.AttachAdd.m_AttachInfo.value = rgParams["m_AttachInfo"];
                 		document.AttachAdd.m_AttachType.value = pID;
@@ -997,10 +997,10 @@
         	<div id="ResultDiv" style="margin-top: 10px; width: 100%; height: 220px; overflow: auto; display:none;"></div>
     	</form>
     	<form method="post" action="" name="AttachAdd" id="AttachAdd">
-	        <input type="hidden" name="m_AttachInfo" id="m_AttachInfo" />
-    	    <input type="hidden" name="m_AttachType" id="m_AttachType" />
-        	<input type="hidden" name="m_AttachMode" id="m_AttachMode" />
-        	<input type="hidden" name="m_AttachModIndex" id="m_AttachModIndex" />
+	        <input type="hidden" name="mAttachInfo" id="m_AttachInfo" />
+    	    <input type="hidden" name="mAttachType" id="m_AttachType" />
+        	<input type="hidden" name="mAttachMode" id="m_AttachMode" />
+        	<input type="hidden" name="mAttachModIndex" id="m_AttachModIndex" />
     	</form>
 	</body>
 </html>
