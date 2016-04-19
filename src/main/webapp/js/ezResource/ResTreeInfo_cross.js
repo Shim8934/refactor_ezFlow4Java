@@ -16,7 +16,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID)
 	createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 	
-	xmlhttp.open("POST","/Myoffice/ezResource/Call_NodeTreeData.aspx?flag=" + selectNo, false);
+	xmlhttp.open("POST","/ezResource/callNodeTreeData.do?flag=" + selectNo, true);
 	xmlhttp.send(xmlpara);
 	
 	var XMLstring = xmlhttp.responseXML;
@@ -62,7 +62,7 @@ function GetTreeBrdsInfo()
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
 			var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			
-			var strUrl = "ViewResList2_cross.aspx?brd_id=" + brd_id + "&AccessCode=" + g_AccessCode; 
+			var strUrl = "viewResList2.do?brd_id=" + brd_id + "&AccessCode=" + g_AccessCode; 
 			strUrl = strUrl + "&brdnm=" + escape(brd_nm);
 			
 			Navigate( strUrl );
@@ -70,7 +70,7 @@ function GetTreeBrdsInfo()
 		}
 	} else {
 
-	        strUrl = "ResSch/schedule_main_cross.aspx?ResID=" + brd_id + "&AccessCode=" + g_AccessCode;
+	        strUrl = "ResSch/scheduleMain.do?ResID=" + brd_id + "&AccessCode=" + g_AccessCode;
 	    
 		Navigate( strUrl );
 	}	
@@ -110,7 +110,7 @@ function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx)
 	    createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	    createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 	
-		xmlhttp.open("POST","/Myoffice/ezResource/Call_NodeTreeData.aspx",false);
+		xmlhttp.open("POST","/ezResource/callNodeTreeData.do",true);
 		xmlhttp.send(xmlpara);
 		
 		xmlRtn = xmlhttp.responseXML;
