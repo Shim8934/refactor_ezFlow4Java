@@ -248,9 +248,9 @@
     }
     function menuQst_List() {
          if(CrossYN()) {
-			var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}"; 
+			var szUrl = "/ezQuestion/qstList.do?brdID=${brdID}&brdNm=${brdNm}&brdPostterm=${brdPostterm}"; 
          } else {
-        	var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}";
+        	var szUrl = "/ezQuestion/qstList.do?brdID=${brdID}&brdNm=${brdNm}&brdPostterm=${brdPostterm}";
         }
         window.location.href = szUrl; 
     } 
@@ -401,9 +401,9 @@
                         <input type="text" name="hidOpenResult" id="hidopenResult" value="1" style="display:none"> 
                         <input type="text" name="hidMultiResponse" id="hidMultiResponse" value="0" style="display:none"> 
                         <input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
-                        <input type="text" name="brdId" id="brd_id" value="${ezQuestionVO.brdId}" style="display:none"> 
-                        <input type="text" name="brdNm" id="brd_nm" value="${ezQuestionVO.brdNm}" style="display:none"> 
-                        <input type="text" name="brdPostterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" style="display:none"> 
+                        <input type="text" name="brdID" id="brd_id" value="${qstStep1VO.brdID}" style="display:none"> 
+                        <input type="text" name="brdNm" id="brd_nm" value="${qstStep1VO.brdNm}" style="display:none"> 
+                        <input type="text" name="brdPostterm" id="brd_postterm" value="${qstStep1VO.brdPostterm}" style="display:none"> 
                         <input type="text" name="itemNo" id="item_no" style="display:none"> 
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
