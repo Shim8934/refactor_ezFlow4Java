@@ -248,9 +248,9 @@
     }
     function menuQst_List() {
          if(CrossYN()) {
-			var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}"; 
+			var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}"; 
          } else {
-        	var szUrl = "/ezQuestion/qstList.do?brd_id=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}";
+        	var szUrl = "/ezQuestion/qstList.do?brdId=${brdId}&brd_nm=${brdNm}&brd_postterm=${brdPostterm}";
         }
         window.location.href = szUrl; 
     } 
@@ -259,9 +259,9 @@
             var item_no = document.getElementById("item_no").value;
 
             if (CrossYN()) {
-            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
             } else {
-            	var szUrl = "/ezQuestion/qstRangeSelect.do?brd_id=5&item_no=" + item_no;
+            	var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
             }
                 
             var _MSIE = 'MSIE';
