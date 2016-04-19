@@ -422,6 +422,32 @@
 		            HomeAddr.value = Para[1] + " " + Para[2] + " " + Para[3];
 		        }
 		    }
+		    var personpicture_cross_dialogArguments = new Array();
+		    function btnPhoto_onclick() {
+		    	//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
+		        //if (CrossYN()) {
+	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
+	            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
+	            DivPopUpShow(405, 390, "/admin/ezOrgan/personPicture.do");
+		        <%-- }else {
+		            if (navigator.appName.indexOf("Microsoft") > -1)
+		                ret = window.showModalDialog("PersonPicture.aspx", document.getElementById("UserID").value, "status:no;dialogWidth:405px;dialogHeight:330px;scroll:no;edge:sunken");
+		            else
+		                ret = window.showModalDialog("PersonPicture_Cross.aspx", document.getElementById("UserID").value, "status:no;dialogWidth:405px;dialogHeight:330px;scroll:no;edge:sunken" + GetShowModalPosition(405, 390));
+		            if (ret != undefined) {
+		                alert("<%=RM.GetString("t273")%>");
+		                UserPhotoDiv.innerHTML = "<IMG style='width:120px; height:130px;' SRC='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + ret + "' >";
+		            }
+		        } --%>
+		    }
+		    function btnPhoto_onclick_Complete(ret) {
+		        DivPopUpHidden();
+
+		        if (ret != undefined) {
+		            alert("<spring:message code='ezOrgan.t273' />");
+		            UserPhotoDiv.innerHTML = "<IMG style='width:120px; height:130px;' SRC='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + ret + "' >";
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="popup">

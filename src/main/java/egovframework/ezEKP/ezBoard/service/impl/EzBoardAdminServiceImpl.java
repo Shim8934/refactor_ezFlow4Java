@@ -8,8 +8,11 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ibm.icu.text.SimpleDateFormat;
@@ -30,6 +33,9 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
+	
+	@Autowired
+	private Properties config;
 
 	@Override
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{
@@ -85,8 +91,8 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		String mhtFilePath = "";
 		String dbPath = "";
 		
-		try{
-			String docPath = "/files/upload_board/form/";
+		try{			
+			String docPath = config.getProperty("upload_board.FORM") + File.separator;	
 			String fullPath = realPath + docPath;
 			File doc = new File(fullPath);		
 		
@@ -121,7 +127,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 			}
 		}
 		
-		return dbPath.replace("\\", "/");
+		return dbPath;
 	}
 
 	@Override

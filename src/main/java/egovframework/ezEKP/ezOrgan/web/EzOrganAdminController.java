@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.io.File;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -326,7 +327,7 @@ public class EzOrganAdminController {
 		if(type.equals("APPROVALSIGN")){
 			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
 		}else{			
-			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + "/" + fileName.split("_")[0] + "/" + fileName;
+			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + File.separator + fileName.split("_")[0] + File.separator + fileName;
 			
 			if(fileName != null && !fileName.equals("")){
 				ezCommonService.responseAttach(filePath, "", true, request, response);
@@ -404,6 +405,40 @@ public class EzOrganAdminController {
 	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveUserInfo(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String result = "";
+		
+		if(vo.getParentCn().equals("")){
+			ezOrganAdminService.updateDBData_user(vo);
+			result = "OK";
+		}else{
+			String domain = config.getProperty("config.DomainName");
+			String cn = vo.getCn();
+			
+			int cnt = ezOrganAdminService.userCheck(cn);
+			
+			if(cnt > 0){
+				result = "PRE";
+			}else{
+				String mailAddr = cn + "@" + domain;
+				vo.setMail(mailAddr);				
+				String userPrincipalName = cn + "@" + domain;
+				vo.setUpnName(userPrincipalName);
+				String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+				vo.setPassword(pass);
+				
+				ezOrganAdminService.insertDBData_user(vo);
+				result = "OK";
+			}
+		}
+		
+		return result;
+	}
+	/**
+	 * 조직도관리 사원정보 사진등록/변경 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/personPicture.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String personPicture(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = "";
 		
 		if(vo.getParentCn().equals("")){
