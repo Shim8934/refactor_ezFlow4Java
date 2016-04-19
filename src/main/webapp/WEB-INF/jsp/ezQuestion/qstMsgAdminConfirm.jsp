@@ -13,7 +13,7 @@
 		
 		<script language="JavaScript" type="text/javascript">
 		
-			var brd_id = "${brdId}";
+			var brd_id = "${brdID}";
 			var item_no = "${itemNo}";
 			var receve = "${receve}";
 			
@@ -44,7 +44,7 @@
 				$.ajax({
 					type: "POST",
 					url: "/ezQuestion/qstCallUsersPollStatus.do",
-					data: {"brdId":g_BrdID ,"itemNo":pItemNo},
+					data: {"brdID":g_BrdID ,"itemNo":pItemNo},
 					dataType: "JSON",
 					success: function(map){
 						EndPollYN = map.endPollYN;

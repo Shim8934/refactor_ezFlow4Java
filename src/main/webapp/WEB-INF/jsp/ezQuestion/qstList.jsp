@@ -23,7 +23,7 @@
 		</style>
 		<script language="JavaScript" type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
-		    var g_BrdID = "${qstListVO.brdId}";
+		    var g_BrdID = "${qstListVO.brdID}";
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
 		    var EndPollYN, ResponseYN, ResultOpenYN;
@@ -51,7 +51,7 @@
 				$.ajax({
 					type: "POST",
 					url: "/ezQuestion/qstCallUsersPollStatus.do",
-					data: {"brdId":g_BrdID ,"itemNo":pItemNo},
+					data: {"brdID":g_BrdID ,"itemNo":pItemNo},
 					dataType: "JSON",
 					async:false,
 					success: function(map){
@@ -83,7 +83,7 @@
 								break;
 							case "Delete":
 								if(Chk_Delete()){
-									var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brd_id=" + g_BrdID + "&item_no=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
+									var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brdID=" + g_BrdID + "&itemNo=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
 						            try{
 						            	Qst_Delete_ItemMsg.focus(); 
 						            }catch (e){
@@ -92,7 +92,7 @@
 								break;
 							case "Analysis":
 								if(Chk_Analysis() == true){
-									var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&item_no=" + szSelectedItemNo + "&pubflag=" + szPubFlag;
+									var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&itemNo=" + szSelectedItemNo + "&pubFlag=" + szPubFlag;
 							        window.location.href = szUrl;
 								};
 								break;
@@ -101,7 +101,7 @@
 								break;
 							case "Reuse":
 								if(Chk_Reuse() == true){
-									var szUrl = "/ezQuestion/qstStep1ReUse.do?brd_id=" + g_BrdID + "&item_id=" + p_SelectedItemNo;
+									var szUrl = "/ezQuestion/qstStep1ReUse.do?brdID=" + g_BrdID + "&itemID=" + p_SelectedItemNo;
 						            window.location.href = szUrl;	
 								}
 								break;
@@ -215,7 +215,7 @@
 		    }
 		    
 		    function menu_NewQuestion(){
-		        var szUrl = g_ezBoard + "/ezQuestion/qstStep1.do?brd_id=" + g_BrdID + "&brd_postterm=" + szPostterm;
+		        var szUrl = g_ezBoard + "/ezQuestion/qstStep1.do?brdID=" + g_BrdID + "&brdPostterm=" + szPostterm;
 		        window.location.href = szUrl;
 		    }
 		
@@ -348,7 +348,7 @@
 		    }
 		    
 		    function menu_Search(){
-		        var szUrl = "/ezQuestion/qstSearch.do?brd_id=" + g_BrdID;
+		        var szUrl = "/ezQuestion/qstSearch.do?brdID=" + g_BrdID;
 		        window.location.href = szUrl;
 		    }
 		
@@ -359,7 +359,7 @@
 		    
 		    function search_Set(pPage){
 				if(pPage != "" && pPage != "0" && parseInt(pPage) > 0 && parseInt(pPage) <= parseInt('${qstListVO.totalPage}')){
-					var szUrl = "/ezQuestion/qstList.do?brdId=" + g_BrdID + "&currPage=" + pPage + szSearchParam;
+					var szUrl = "/ezQuestion/qstList.do?brdID=" + g_BrdID + "&currPage=" + pPage + szSearchParam;
 					window.location.href = szUrl;
 				}
 			}
@@ -583,7 +583,7 @@
 			          	<c:if test="${list.responseRange == 1}">
 			          		<td> 선정 </td>	
 			          	</c:if>
-			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userId}')"> ${list.userNm} </a> </td> 
+			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userID}')"> ${list.userNm} </a> </td> 
 			          	<c:if test="${list.publicResultFlg == 0}">
 			          		<td> 비공개 </td>	
 			          	</c:if>

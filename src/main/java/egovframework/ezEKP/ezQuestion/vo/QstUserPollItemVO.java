@@ -2,11 +2,11 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstUserPollItemVO {
 	/** 게시판ID*/
-	int brdId;
+	int brdID;
 	/** 글 번호*/
 	int itemNo;
 	/** 작성자아이디*/
-	String userId;
+	String userID;
 	/** 작성자이름*/
 	String userNm;
 	/** 다국어*/
@@ -14,7 +14,7 @@ public class QstUserPollItemVO {
 	/** 작성자이메일*/
 	String userEmail;
 	/** 작성자부서ID*/
-	String userDeptId;
+	String userDeptID;
 	/** 작성자부서이름*/
 	String userDeptNm;
 	/** 설문제목*/
@@ -40,7 +40,7 @@ public class QstUserPollItemVO {
 	/** 첨부파일여부(사용안함)*/
 	int HasAttach;
 	/** 원본게시자아이디(사용안함)*/
-	String SrCuserId;
+	String SrCuserID;
 	/** 원본게시자이름(사용안함)*/
 	String SrCuserNm;
 	/** 원본게시자이메일(사용안함)*/
@@ -58,11 +58,11 @@ public class QstUserPollItemVO {
 	/** 종료여부*/
 	String completeFlag;
 	
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -70,11 +70,11 @@ public class QstUserPollItemVO {
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	public String getUserNm() {
 		return userNm;
@@ -94,11 +94,11 @@ public class QstUserPollItemVO {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	public String getUserDeptId() {
-		return userDeptId;
+	public String getUserDeptID() {
+		return userDeptID;
 	}
-	public void setUserDeptId(String userDeptId) {
-		this.userDeptId = userDeptId;
+	public void setUserDeptID(String userDeptID) {
+		this.userDeptID = userDeptID;
 	}
 	public String getUserDeptNm() {
 		return userDeptNm;
@@ -172,11 +172,11 @@ public class QstUserPollItemVO {
 	public void setHasAttach(int hasAttach) {
 		HasAttach = hasAttach;
 	}
-	public String getSrCuserId() {
-		return SrCuserId;
+	public String getSrCuserID() {
+		return SrCuserID;
 	}
-	public void setSrCuserId(String srCuserId) {
-		SrCuserId = srCuserId;
+	public void setSrCuserID(String srCuserID) {
+		SrCuserID = srCuserID;
 	}
 	public String getSrCuserNm() {
 		return SrCuserNm;

@@ -70,7 +70,7 @@
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
-			var brdId = "${qstUserPermissionVO.brdId}";
+			var brdID = "${qstUserPermissionVO.brdID}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;
 		    function fun_Save(){
@@ -216,17 +216,17 @@
 				result = confirm("<spring:message code='ezQuestion.t321' />");
 	
 				if(result){
-				    document.location.href = "/ezQuestion/qstDeleteItem.do?brdId=" + brdId + "&itemNo=" + itemNo;
+				    document.location.href = "/ezQuestion/qstDeleteItem.do?brdID=" + brdID + "&itemNo=" + itemNo;
 				}
 		    }
 			
 		    /* function Setting_Change(vdata){
 		        var feature = GetOpenPosition(380, 340);
-		        window.open("changeSetting.do?brdId=" + brdId + "&itemNo=" + itemNo, "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
+		        window.open("changeSetting.do?brdID=" + brdID + "&itemNo=" + itemNo, "setting", "width=380px,height=340px,toolbar=no,location=no,help=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" + feature);
 			} */
 			
 			function menuQst_List(){
-			    var szUrl = "/ezQuestion/qstList.do?"+"${receve}"+"&brd_postterm='' ";
+			    var szUrl = "/ezQuestion/qstList.do?"+"${receve}"+"&brdPostterm='' ";
 			    window.location.href = szUrl;
 			}
 	
@@ -250,8 +250,8 @@
 			    }
 			}
 			
-			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID){
-			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardId=" + pBrdID + "&itemId=" + pItemID + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attId=" + pAttID;
+			function file_open(pType, pBrdID, pItemNo, pQstNo, pAnsNo, pAttID){
+			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardID=" + pBrdID + "&itemNo=" + pItemNo + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attID=" + pAttID;
 	
 			    if(pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
@@ -340,7 +340,7 @@
 			<table id="xmlTable" class="poll" style="margin-top:10px">
 			</table>
 			<input type="hidden" name="hidEleCnt">
-		  	<input type=hidden value="${qstUserPermissionVO.brdId}" name=brdId >
+		  	<input type=hidden value="${qstUserPermissionVO.brdID}" name=brdID >
 			<input type=hidden value="${qstUserPermissionVO.itemNo}" name=itemNo>
 			<input type="hidden" name="tableAnswer" />
 		</form>

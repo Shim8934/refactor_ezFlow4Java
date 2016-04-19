@@ -33,11 +33,11 @@
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
 			var receve = tempReceve.replace(/amp;/g,'');
-			var brdId = "${qstUserPermissionVO.brdId}";
+			var brdId = "${qstUserPermissionVO.brdID}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
 			function fun_ResponseView(question_no) {
-				var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + brdId + "&item_no=" + itemNo + "&question_no=" + question_no;
+				var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + brdId + "&itemNo=" + itemNo + "&questionNo=" + question_no;
 			    window.location.href = szUrl;
 			}
 			
@@ -56,7 +56,7 @@
 				}
 		    } */
 
-		    var pUserID = "${userId}";
+		    var pUserID = "${userID}";
 		    
 			function openUserInfo(strEmail) {
 			    var compemail = strEmail;
@@ -79,12 +79,12 @@
 			}
 
 			function menuQst_ResponseList(pflag){
-			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&response_YN=" + pflag;
+			    var szUrl = "/ezQuestion/qstResponseList.do?" + receve + "&responseYN=" + pflag;
 			    window.location.href = szUrl;
 			}
 
 			function file_open(pType, pBrdID, pItemID, pQstNo, pAnsNo, pAttID) {
-			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardId=" + pBrdID + "&itemNo=" + pItemID + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attId=" + pAttID;
+			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardID=" + pBrdID + "&itemNo=" + pItemID + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attID=" + pAttID;
 
 			    if (pType == "1")
 			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");

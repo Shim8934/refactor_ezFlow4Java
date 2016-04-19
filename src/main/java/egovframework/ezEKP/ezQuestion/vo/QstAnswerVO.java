@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstAnswerVO {
 	/** 게시판ID*/
-	int brdId;
+	int brdID;
 	/** 설문번호*/
 	int itemNo;
 	/** 설문질문번호*/
@@ -12,11 +12,11 @@ public class QstAnswerVO {
 	/** 설문질문별보기내용*/
 	String answerContent;
 	
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;

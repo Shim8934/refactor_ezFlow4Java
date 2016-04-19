@@ -15,9 +15,9 @@
 	<typeAlias  alias="QstTempSaveVO"				type="egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO"/>
 	
 	<resultMap class="QstListVO" id="qstListVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
-		<result property="userId"					column="USER_ID"					columnIndex="3"/>
+		<result property="userID"					column="USER_ID"					columnIndex="3"/>
 		<result property="userNm"					column="USER_NM"					columnIndex="4"/>
 		<result property="userEmail"				column="USER_EMAIL"					columnIndex="5"/>
 		<result property="title"					column="TITLE"						columnIndex="6"/>
@@ -31,13 +31,13 @@
 	</resultMap>
 	
 	<resultMap class="QstUserPollItemVO" id="qstUserPollItemVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
-		<result property="userId"					column="USER_ID"					columnIndex="3"/>
+		<result property="userID"					column="USER_ID"					columnIndex="3"/>
 		<result property="userNm"					column="USER_NM"					columnIndex="4"/>
 		<result property="userNm2"					column="USER_NM2"					columnIndex="5"/>
 		<result property="userEmail"				column="USER_EMAIL"					columnIndex="6"/>
-		<result property="userDeptId"				column="USER_DEPTID"				columnIndex="7"/>
+		<result property="userDeptID"				column="USER_DEPTID"				columnIndex="7"/>
 		<result property="userDeptNm"				column="USER_DEPTNM"				columnIndex="8"/>
 		<result property="title"					column="TITLE"						columnIndex="9"/>
 		<result property="content"					column="CONTENT"					columnIndex="10"/>
@@ -50,7 +50,7 @@
 		<result property="itemStep"					column="ITEM_STEP"					columnIndex="17"/>
 		<result property="itemImp"					column="ITEM_IMP"					columnIndex="18"/>
 		<result property="HasAttach"				column="HASATTACH"					columnIndex="19"/>
-		<result property="SrCuserId"				column="SRCUSER_ID"					columnIndex="20"/>
+		<result property="SrCuserID"				column="SRCUSER_ID"					columnIndex="20"/>
 		<result property="SrCuserNm"				column="SRCUSER_NM"					columnIndex="21"/>
 		<result property="SrCuserEmail"				column="SRCUSER_EMAIL"				columnIndex="22"/>
 		<result property="itemGb"					column="ITEM_GB"					columnIndex="23"/>
@@ -62,7 +62,7 @@
 	</resultMap>
 	
 	<resultMap class="QstUserPermissionVO" id="qstUserPermissionVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="3"/>
 		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="4"/>
@@ -84,7 +84,7 @@
 	</resultMap>
 	
 	<resultMap class="QstVO" id="qstVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
 		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
@@ -95,7 +95,7 @@
 	</resultMap>
 	
 	<resultMap class="QstAnswerVO" id="qstAnswerVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
 		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
@@ -103,7 +103,7 @@
 	</resultMap>
 	
 	<resultMap class="QstAnswerVO" id="qstAnswerAnswerVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
 		<result property="answerNo"					column="ANSWERNO"					columnIndex="4"/>
@@ -111,7 +111,7 @@
 	</resultMap>
 	
 	<resultMap class="QstResponsePersonVO" id="qstResponsePersonVO">
-		<result property="userId"					column="USER_ID"					columnIndex="1"/>
+		<result property="userID"					column="USER_ID"					columnIndex="1"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="2"/>
 	</resultMap>
 
@@ -126,17 +126,17 @@
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseVO">
-		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
 		<result property="responseNo"				column="RESPONSENO"					columnIndex="4"/>
 		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="5" 	nullValue="0"/>
 		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="6"		javaType="String" jdbcType="CLOB"/>
 		<result property="answerViewSelect"			column="ANSWER_VIEWSELECT"			columnIndex="7"		nullValue="0"/>
-		<result property="responseUserId"			column="RESPONSEUSER_ID"			columnIndex="8"/>
+		<result property="responseUserID"			column="RESPONSEUSER_ID"			columnIndex="8"/>
 		<result property="responseUserName"			column="RESPONSEUSER_NAME"			columnIndex="9"/>
 		<result property="responseUserEmail"		column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
-		<result property="responseUserDeptId"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
+		<result property="responseUserDeptID"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
 		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="12"/>
 		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"/>
 		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
@@ -174,10 +174,10 @@
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseList">
-		<result property="responseUserId"			column="USER_ID"					columnIndex="1"/>
+		<result property="responseUserID"			column="USER_ID"					columnIndex="1"/>
 		<result property="responseUserName"			column="USER_NAME"					columnIndex="2"/>
 		<result property="responseUserEmail"		column="USER_EMAIL"					columnIndex="3"/>
-		<result property="responseUserDeptId"		column="USER_DEPT_ID"				columnIndex="4"/>
+		<result property="responseUserDeptID"		column="USER_DEPT_ID"				columnIndex="4"/>
 		<result property="responseUserDeptName"		column="USER_DEPT_NAME"				columnIndex="5"/>
 		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"/>
 		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
@@ -303,7 +303,7 @@
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdId#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdID#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.tableAnswerValue" parameterClass="Map" resultClass="String">
@@ -485,7 +485,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzQuestionDAO.getUserIdAdmin" parameterClass="Integer" resultClass="String">
+	<select id="EzQuestionDAO.getUserIDAdmin" parameterClass="Integer" resultClass="String">
 		<![CDATA[
 			SELECT
 				USER_ID 

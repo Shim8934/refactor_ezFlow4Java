@@ -26,7 +26,7 @@ public interface EzQuestionService {
 	
 	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO) throws Exception;
 
-	public String getUserIdAdmin(int brd) throws Exception;
+	public String getUserIDAdmin(int brd) throws Exception;
 	
 	public List<QstAnswerVO> getAnswerAnswerCnt(int brdId, int itemNo, int qstNo) throws Exception;
 	

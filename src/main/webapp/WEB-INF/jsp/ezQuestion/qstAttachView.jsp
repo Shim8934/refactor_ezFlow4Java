@@ -17,14 +17,14 @@
 				}
 			}
 			function download_attach2() {
-				document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
+				document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
 			}
 		</script>
 		<script type="text/javascript">
 			var type = "${qstAttachVO.attachType}";
 			var href = "${qstAttachVO.attachUrl}";
 			var title = "${title}";
-			var v_brd_id = "${qstAttachVO.brdId}";
+			var v_brd_id = "${qstAttachVO.brdID}";
 			var v_item_no = "${qstAttachVO.itemNo}";
 			var strQuestionNo ="${qstAttachVO.questionNo}";
 			var strAnswer ="${qstAttachVO.answerNo}";
@@ -44,11 +44,11 @@
 							download_attach();
 						}
 						function download_attach() {
-							document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
+							document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
 						}
 				</script>
 				<body onclick="window.close()" style="cursor:pointer">
-					<img id="imgView" src="/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId=${qstAttachVO.brdId}&itemId=${qstAttachVO.itemNo}&qstNo=${qstAttachVO.questionNo}&ansNo=${qstAttachVO.answerNo}&attId=${qstAttachVO.attachNo}" border="0">
+					<img id="imgView" src="/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID=${qstAttachVO.brdID}&itemID=${qstAttachVO.itemNo}&qstNo=${qstAttachVO.questionNo}&ansNo=${qstAttachVO.answerNo}&attID=${qstAttachVO.attachNo}" border="0">
 					
 			</c:when>
 			<c:otherwise>
@@ -85,7 +85,7 @@
 	        document.getElementById("download_att").style.display = "none";
 	    }
 	    function download_attach() {
-	        document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardId="+v_brd_id+"&itemId="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attId="+strAttID+"";
+	        document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
 	    }
 </script>
 </html>

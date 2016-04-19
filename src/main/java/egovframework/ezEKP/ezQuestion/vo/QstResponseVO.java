@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstResponseVO {
 	/** 게시판아이디*/
-	int brdId;
+	int brdID;
 	/** 설문아이디*/
 	int itemNo;
 	/** 질문번호(아이디)*/
@@ -17,7 +17,7 @@ public class QstResponseVO {
 	/** (사용안함)*/
 	int answerViewSelect;
 	/** 응답자아이디(무기명,기명)*/
-	String responseUserId;
+	String responseUserID;
 	/** 응답자이름(기명일때만)*/
 	String responseUserName;
 	/** 응답자이름(기명일때만)(다국어)*/
@@ -25,7 +25,7 @@ public class QstResponseVO {
 	/** 응답자이메일(기명일때만)*/
 	String responseUserEmail;
 	/** 응답자부서아이디(기명일때만)*/
-	String responseUserDeptId;
+	String responseUserDeptID;
 	/** 응답자부서이름(기명일때만)*/
 	String responseUserDeptName;
 	/** 응답자부서이름(기명일때만)(다국어)*/
@@ -52,11 +52,11 @@ public class QstResponseVO {
 	String answer="";
 	/** 상세분석시 필요한 Count*/
 	int qCount=0;
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -94,11 +94,11 @@ public class QstResponseVO {
 	public void setAnswerViewSelect(int answerViewSelect) {
 		this.answerViewSelect = answerViewSelect;
 	}
-	public String getResponseUserId() {
-		return responseUserId;
+	public String getResponseUserID() {
+		return responseUserID;
 	}
-	public void setResponseUserId(String responseUserId) {
-		this.responseUserId = responseUserId;
+	public void setResponseUserID(String responseUserID) {
+		this.responseUserID = responseUserID;
 	}
 	public String getResponseUserName() {
 		return responseUserName;
@@ -118,11 +118,11 @@ public class QstResponseVO {
 	public void setResponseUserEmail(String responseUserEmail) {
 		this.responseUserEmail = responseUserEmail;
 	}
-	public String getResponseUserDeptId() {
-		return responseUserDeptId;
+	public String getResponseUserDeptID() {
+		return responseUserDeptID;
 	}
-	public void setResponseUserDeptId(String responseUserDeptId) {
-		this.responseUserDeptId = responseUserDeptId;
+	public void setResponseUserDeptID(String responseUserDeptID) {
+		this.responseUserDeptID = responseUserDeptID;
 	}
 	public String getResponseUserDeptName() {
 		return responseUserDeptName;

@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<c:choose>
-			<c:when test="${Response_YN==Y }">
+			<c:when test="${ResponseYN==Y }">
 				<title><spring:message code='ezQuestion.t335' /></title>
 			</c:when>
 			<c:otherwise>
@@ -27,10 +27,10 @@
 			}
 		</STYLE>
 		<script type="text/javascript">
-			var szBrdID = "${brd_id}";
-			var szItemNo = "${item_no}";
-			var szQuestionNo = "${question_no}";
-			var pResponse_YN = "${Response_YN}";
+			var szBrdID = "${brdID}";
+			var szItemNo = "${itemNo}";
+			var szQuestionNo = "${questionNo}";
+			var pResponse_YN = "${ResponseYN}";
 			var pTotalPage = "${pTotalPage}";
 			var CurPage = "${pCurrPage}";
 			var totalCount = "${pTotalCnt}";
@@ -61,7 +61,7 @@
 						tableXml += "<td style='width:50px;text-align:center'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'NO');
 						tableXml += "</td>";
-						if("${public_flg}"==0){
+						if("${publicflg}"==0){
 							tableXml += "<td style='width:150px'>";
 							tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(\"";
 							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
@@ -91,7 +91,7 @@
 
 			
 			function fun_UserView(responseno) {
-			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brd_id=" + '${brd_id}' + "&item_no=" + '${item_no}' + "&question_no=" + '${question_no}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
+			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brdID=" + '${brdID}' + "&itemNo=" + '${itemNo}' + "&questionNo=" + '${questionNo}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
 			}
 			
 			function Detail_UserInfo(pUserID) {
@@ -100,12 +100,12 @@
 			}
 			
 			function menuQst_ResultView() {
-			    history.go("${page_count}");
+			    history.go("${pageCount}");
 			}
 			
  			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
-			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + szBrdID + "&item_no=" + szItemNo + "&page=" + pPage + "&page_count=" + "${page_count}" + "&question_no=" + szQuestionNo;
+			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
 				window.location.href = szUrl;
 				}
 			}
@@ -234,7 +234,7 @@
 	</head>
 	<body class="mainbody">
 		<c:choose>
-			<c:when test="${Response_YN == Y}">
+			<c:when test="${ResponseYN == Y}">
 				 <h1><spring:message code='ezQuestion.t340' /><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
@@ -260,7 +260,7 @@
 	    <table id="xmlTable" class="mainlist" style="width: 100%">
 	        <tr>
 	            <th style="width:50px"><spring:message code='ezQuestion.t344' /></th>
-	            <c:if test="${public_flg == 0 }">	            	
+	            <c:if test="${publicFlg == 0 }">	            	
 		            <th style="width:150px"><spring:message code='ezQuestion.t8' /></th>
 	            </c:if>
 	            <th><spring:message code='ezQuestion.t5' /></th>

@@ -2,11 +2,11 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstUserPermissionVO {
 	/** 게시판ID*/
-	int brdId;
+	int brdID;
 	/** 글 번호*/
 	int itemNo;
 	/** 유저ID*/
-	String userId;
+	String userID;
 	/** 기명여부(무기명:0, 기명:1)*/
 	String publicFlg;
 	/** 조사결과공개여부(공걔:1, 비공개:0)*/
@@ -18,11 +18,11 @@ public class QstUserPermissionVO {
 	/** 대상자설정여부(선정:1, 전체:0)*/
 	String responseRange;
 	
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -30,11 +30,11 @@ public class QstUserPermissionVO {
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	public String getPublicFlg() {
 		return publicFlg;

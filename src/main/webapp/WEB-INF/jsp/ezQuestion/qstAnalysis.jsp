@@ -38,7 +38,7 @@
 				   
 				if(pAnswerType!=1){
 					alert("<spring:message code='ezQuestion.lhj1' />");
-				 	window.location.href = "/ezQuestion/qstList.do?brd_id="+pBrdID+"&currPage="+pCurrPage;
+				 	window.location.href = "/ezQuestion/qstList.do?brdID="+pBrdID+"&currPage="+pCurrPage;
 				}
 				
 			    var listview = new ListView();
@@ -96,7 +96,7 @@
 			}
 			
 			function menuQst_List() {
-	            var szUrl = "/ezQuestion/qstList.do?brd_id="+pBrdID+"&currPage="+pCurrPage;
+	            var szUrl = "/ezQuestion/qstList.do?brdID="+pBrdID+"&currPage="+pCurrPage;
 			    window.location.href = szUrl;
 			}
 		    function menu_AnalyStart() {
@@ -128,15 +128,15 @@
 		                szUrl = "/ezQuestion/qstCallAnalysisGender2.do";
 		                break;
 		        }
-	        	var szParam = "?brd_id="+pBrdID+"&item_no="+pItemNo;
+	        	var szParam = "?brdID="+pBrdID+"&itemNo="+pItemNo;
 		        if (szQst == "ALL") {
-		            szParam += "&ques_no=0";
+		            szParam += "&quesNo=0";
 		        }else {
 		            if (SelectedQuesNo == "") {
 		                alert("<spring:message code='ezQuestion.t119' />");
 		                return;
 		            }
-	           		szParam += "&ques_no=" + SelectedQuesNo;
+	           		szParam += "&quesNo=" + SelectedQuesNo;
 				}
 	        	szUrl += szParam;
 				try {
@@ -354,7 +354,7 @@
 		        var _MSIE = 'MSIE';
 		        var useragentstr = navigator.userAgent;
 		        
-		        document.getElementById("iframe").src = "resultTotalSave.do?item_no=" + pItemNo;
+		        document.getElementById("iframe").src = "resultTotalSave.do?itemNo=" + pItemNo;
 		        document.getElementById("message").innerHTML = "";
 		    }
 		</script>

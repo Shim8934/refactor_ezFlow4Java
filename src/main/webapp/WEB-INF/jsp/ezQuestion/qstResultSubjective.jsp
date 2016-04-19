@@ -27,9 +27,9 @@
 			}
 		</STYLE>
 		<script type="text/javascript">
-			var szBrdID = "${brd_id}";
-			var szItemNo = "${item_no}";
-			var szQuestionNo = "${question_no}";
+			var szBrdID = "${brdID}";
+			var szItemNo = "${itemNo}";
+			var szQuestionNo = "${questionNo}";
 			var pTotalPage = "${pTotalPage}";
 			var pCurrPage = "${pCurrPage}";
 			var totalCount = "${pTotalCnt}";
@@ -93,7 +93,7 @@
 			}
 			
 			function fun_UserView(responseno) {
-			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brd_id=" + '${brd_id}' + "&item_no=" + '${item_no}' + "&question_no=" + '${question_no}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
+			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brdID=" + '${brdID}' + "&itemNo=" + '${itemNo}' + "&questionNo=" + '${questionNo}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
 			}
 			
 			function Detail_UserInfo(pUserID) {
@@ -107,7 +107,7 @@
 			
 			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
-			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brd_id=" + szBrdID + "&item_no=" + szItemNo + "&page=" + pPage + "&page_count=" + "${page_count}" + "&question_no=" + szQuestionNo;
+			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
 				window.location.href = szUrl;
 				}
 			}

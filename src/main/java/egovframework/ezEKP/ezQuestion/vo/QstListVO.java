@@ -3,11 +3,11 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstListVO {
 	/** 게시판아이디*/
-	private int brdId;
+	private int brdID;
 	/** 설문번호*/
 	private int itemNo;
 	/** 사용자아이디*/
-	private String userId;
+	private String userID;
 	/** 유저이름*/
 	private String userNm;
 	/** 유저이름(다국어)*/
@@ -50,11 +50,12 @@ public class QstListVO {
 	private String lang;
 	/** jsp Onclick 시 주소*/
 	private String receve;
-	public int getBrdId() {
-		return brdId;
+	
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -62,11 +63,11 @@ public class QstListVO {
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	public String getUserNm() {
 		return userNm;

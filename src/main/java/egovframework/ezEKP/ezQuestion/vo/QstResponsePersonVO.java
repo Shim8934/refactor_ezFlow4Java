@@ -2,11 +2,11 @@ package egovframework.ezEKP.ezQuestion.vo;
 
 public class QstResponsePersonVO {
 	/** 게시판아이디(설문:5)*/
-	int brdId;
+	int brdID;
 	/** 설문아이디*/
 	int itemNo;
 	/** 대상자아이디*/
-	String userId;
+	String userID;
 	/** 응답일시*/
 	String responseDate; 
 	/** 대상자이름*/
@@ -16,7 +16,7 @@ public class QstResponsePersonVO {
 	/** 대상자이메일*/
 	String userEmail;
 	/** 대상자부서아이디*/
-	String userDeptId;
+	String userDeptID;
 	/** 대상자부서이름*/
 	String userDeptNm;
 	/** 대상자부서이름(다국어)*/
@@ -34,15 +34,15 @@ public class QstResponsePersonVO {
 	/** 대상자나이*/
 	int userAge;
 	/** (사용안함)*/
-	String groupId;
+	String groupID;
 	/** (사용안함)*/
 	String groupName;
 	
-	public int getBrdId() {
-		return brdId;
+	public int getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
 	}
 	public int getItemNo() {
 		return itemNo;
@@ -50,11 +50,11 @@ public class QstResponsePersonVO {
 	public void setItemNo(int itemNo) {
 		this.itemNo = itemNo;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	public String getResponseDate() {
 		return responseDate;
@@ -80,11 +80,11 @@ public class QstResponsePersonVO {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	public String getUserDeptId() {
-		return userDeptId;
+	public String getUserDeptID() {
+		return userDeptID;
 	}
-	public void setUserDeptId(String userDeptId) {
-		this.userDeptId = userDeptId;
+	public void setUserDeptID(String userDeptID) {
+		this.userDeptID = userDeptID;
 	}
 	public String getUserDeptNm() {
 		return userDeptNm;
@@ -134,11 +134,11 @@ public class QstResponsePersonVO {
 	public void setUserAge(int userAge) {
 		this.userAge = userAge;
 	}
-	public String getGroupId() {
-		return groupId;
+	public String getGroupID() {
+		return groupID;
 	}
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
+	public void setGroupID(String groupID) {
+		this.groupID = groupID;
 	}
 	public String getGroupName() {
 		return groupName;
