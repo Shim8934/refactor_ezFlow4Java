@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -12,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -22,7 +23,6 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
@@ -800,7 +800,10 @@ public class EzEmailMailReadController {
 				htmlBody += strContent;
 			} else if(part.isMimeType("text/plain")){
 				String strContent = part.getContent().toString();
-				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");
+				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");				
+				htmlBody = changeURLsToAnchorTags(htmlBody);	
+				htmlBody = stripScriptTags(htmlBody);
+				htmlBody = addTargetBlank(htmlBody);
 			} else if(part.isMimeType("multipart/alternative")){
 				Multipart mp = (Multipart)part.getContent();
 				int count = mp.getCount();
@@ -962,4 +965,51 @@ public class EzEmailMailReadController {
 		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
 
+	/**
+	 * change an http or https URL to an anchor tag in a text/plain message 
+	 * so that the user can click on it
+	 */	
+	private String changeURLsToAnchorTags(String src) {
+		Pattern p = Pattern.compile("(https?://[^ <$]+)");
+		Matcher m = p.matcher(src);
+		
+		StringBuffer result = new StringBuffer();
+		while (m.find()) {
+			m.appendReplacement(result, String.format("<a href=\"%s\">%s</a>", m.group(1), m.group(1)));
+		}
+		m.appendTail(result);
+		
+		return result.toString();		
+	}
+
+	/** 
+	 * strip <object>,<applet>,<script> tags
+	 */	
+	private String stripScriptTags(String src) {
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		src = m.replaceAll("");
+				
+		return src;		
+	}
+	
+	/** 
+	 * add target="_blank" to an anchor tag
+	 */	
+	private String addTargetBlank(String src) {
+		Pattern p = Pattern.compile("<a (.*?)>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+				
+		StringBuffer result = new StringBuffer();
+		while (m.find()) {
+			String att = m.group(1);
+			if (att.toLowerCase().indexOf("target=") < 0) {
+				m.appendReplacement(result, "<a " + att + " target=\"_blank\">");
+			}
+		}
+		m.appendTail(result);
+		
+		return result.toString();		
+	}	
+	
 }
