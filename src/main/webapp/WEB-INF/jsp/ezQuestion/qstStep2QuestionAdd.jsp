@@ -997,10 +997,10 @@
         	<div id="ResultDiv" style="margin-top: 10px; width: 100%; height: 220px; overflow: auto; display:none;"></div>
     	</form>
     	<form method="post" action="" name="AttachAdd" id="AttachAdd">
-	        <input type="hidden" name="mAttachInfo" id="m_AttachInfo" />
-    	    <input type="hidden" name="mAttachType" id="m_AttachType" />
-        	<input type="hidden" name="mAttachMode" id="m_AttachMode" />
-        	<input type="hidden" name="mAttachModIndex" id="m_AttachModIndex" />
+	        <input type="hidden" name="m_AttachInfo" id="m_AttachInfo" />
+    	    <input type="hidden" name="m_AttachType" id="m_AttachType" />
+        	<input type="hidden" name="m_AttachMode" id="m_AttachMode" />
+        	<input type="hidden" name="m_AttachModIndex" id="m_AttachModIndex" />
     	</form>
 	</body>
 </html>
