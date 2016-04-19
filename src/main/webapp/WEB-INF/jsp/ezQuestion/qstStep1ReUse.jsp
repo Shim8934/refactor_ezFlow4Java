@@ -421,10 +421,10 @@
                         <input type="text" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" style="display:none"> 
                         <input type="text" name="hidTarget" id="hidTarget" value="0" style="display:none"> 
                         <input type="text" name="brdID" id="brd_id" value="${brdID}" style="display:none"> 
-                        <input type="text" name="brdNm" id="brd_nm" value="${ezQuestionVO.brdNm}" style="display:none"> 
-                        <input type="text" name="brdPostterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" style="display:none"> 
+                        <input type="text" name="brdNm" id="brd_nm" value="${qstStep1VO.brdNm}" style="display:none"> 
+                        <input type="text" name="brdPostterm" id="brd_postterm" value="${qstStep1VO.brdPostterm}" style="display:none"> 
                         <input type="text" name="itemNo" id="item_no" value="${itemID}" style="display:none"> 
-                        <input type="text" name="old_item_num" id="old_item_num" value="${itemID}" style="display:none">
+                        <input type="text" name="oldItemNum" id="old_item_num" value="${itemID}" style="display:none">
                         <input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
                         <input type="text" name="hidEndDate" id="hidEndDate" style="display:none">
                         <input type="text" name="selectYN" id="select_YN" style="display:none">
