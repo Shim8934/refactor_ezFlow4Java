@@ -1,7 +1,15 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -9,16 +17,24 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.BodyPart;
+import javax.mail.Flags;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
+import javax.mail.Multipart;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,9 +49,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -58,7 +77,7 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
  */
 
 @Controller
-public class EzEmailMailWriteController {
+public class EzEmailMailWriteController extends EgovFileMngUtil{
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -139,7 +158,7 @@ public class EzEmailMailWriteController {
 		
 		String userId = "";
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		if(userIdnPw !=null && userIdnPw.get(0) != null){
+		if (userIdnPw !=null && userIdnPw.get(0) != null) {
 			userId = userIdnPw.get(0);
 		}
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
@@ -150,34 +169,34 @@ public class EzEmailMailWriteController {
 		folderDate = EgovDateUtil.getToday();
 		stateName = UUID.randomUUID().toString();
 
-		if(config.getProperty("config.MailInnerDomain") != null){
+		if (config.getProperty("config.MailInnerDomain") != null) {
 			mailInnerDomain = config.getProperty("config.MailInnerDomain").trim();
 		}
 		
-		if(config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")){
+		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
 			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
 		}
 
 		String tempStr = "";
-		if (request.getParameter("cmd") != null)
+		if (request.getParameter("cmd") != null) {
 			tempStr = request.getParameter("cmd").toUpperCase().trim();
-		else
+		} else {
 			tempStr = "NEW";
+		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
-				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") || tempStr.equals("RESEND")))
-		{
+				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") || tempStr.equals("RESEND"))) {
 			return "정상적인 값을 전달 받지 못했습니다.";
 		}
 
-		if (request.getParameter("msgto") != null)
+		if (request.getParameter("msgto") != null) {
 			tempStr = request.getParameter("msgto").toUpperCase().trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
-		else
+		} else {
 			tempStr = "";
+		}
 
-		if (tempStr.indexOf("<") >= 0 && tempStr.indexOf(">") >= 0 && tempStr.indexOf("SCRIPT") >= 0)
-		{
+		if (tempStr.indexOf("<") >= 0 && tempStr.indexOf(">") >= 0 && tempStr.indexOf("SCRIPT") >= 0) {
 			return "정상적인 값을 전달 받지 못했습니다.";
 		}
 
@@ -206,7 +225,7 @@ public class EzEmailMailWriteController {
 		bigSizeMailAttachLimit = config.getProperty("config.BigSizeMailAttachLimit");
 		totBigSizeMailAttachLimit = config.getProperty("config.totBigSizeMailAttachLimit");
 		int day = 20;
-		if(config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")){
+		if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
 			day = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
 		}
 		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday(), day);
@@ -214,17 +233,17 @@ public class EzEmailMailWriteController {
 
 		displayNamePrintable = userInfo.getDisplayName();
 
-		if(request.getParameter("sendfrom") != null){
+		if (request.getParameter("sendfrom") != null) {
 			sendFrom = request.getParameter("sendfrom");
 		}
 		useMultiLangMail = "1";
-		if(request.getParameter("cmd") != null){
+		if (request.getParameter("cmd") != null) {
 			cmdOwn = request.getParameter("cmd");
 		}
-		if(request.getParameter("url") != null){
+		if (request.getParameter("url") != null) {
 			urlOwn = URLDecoder.decode(request.getParameter("url").replaceAll(" ", "+"),"UTF-8"); // url decode 해야하나?
 		}
-		if(request.getParameter("cmd") != null){
+		if (request.getParameter("cmd") != null) {
 			cmd = request.getParameter("cmd");
 		}
 		
@@ -257,31 +276,30 @@ public class EzEmailMailWriteController {
 //		}
 		
 		String _cmd = "";
-		if(request.getParameter("cmd") != null){
+		if (request.getParameter("cmd") != null) {
 			_cmd = request.getParameter("cmd");
 		}
 		String msgto = "";
-		if (request.getParameter("msgto") != null){
+		if (request.getParameter("msgto") != null) {
 			msgto = request.getParameter("msgto").toUpperCase().trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
 		}
         String _attach = "";
-        if(request.getParameter("attach") != null){
+        if (request.getParameter("attach") != null) {
         	_attach = request.getParameter("attach");
 		}
         String includeContent = "";
-        if(request.getParameter("include") != null){
+        if (request.getParameter("include") != null) {
         	includeContent = request.getParameter("include");
 		}
         String _url = "";
-        if(request.getParameter("iptURL") != null){
+        if (request.getParameter("iptURL") != null) {
         	_url = request.getParameter("iptURL");
 		}
-        if(request.getParameter("URL") != null){
+        if (request.getParameter("URL") != null) {
         	_url = request.getParameter("URL");
         }
         
-        if (_url.equals("") && _cmd.equals("NEW"))
-        {
+        if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
             String resultXML = "";
 //            resultXML = GetCommentDB(userinfo.UserID, "A");
@@ -390,21 +408,22 @@ public class EzEmailMailWriteController {
 //        }
         
         int pBigAttachDownloadDaynum = 0;
-        if(config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")){
+        if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
         	pBigAttachDownloadDay = config.getProperty("config.BigSizeMailAttachDelDay");
         	pBigAttachDownloadDaynum = Integer.parseInt(pBigAttachDownloadDay);
         }
         
         pBigAttachDownloadPeriod = EgovDateUtil.formatDate(EgovDateUtil.getToday(), "/") + " ~ " + EgovDateUtil.formatDate(EgovDateUtil.addDay(EgovDateUtil.getToday(), pBigAttachDownloadDaynum), "/");
 
-		if (userLang.equals("1"))
+		if (userLang.equals("1")) {
 			pAttachWarning = "일반첨부파일은 총 " + mailAttachLimit + "MB까지 가능하며, 대용량첨부는 " + totBigSizeMailAttachLimit + "MB까지 가능(" + pBigAttachDownloadDay + "일후 자동삭제) ";
-		else if (userLang.equals("2"))
+		} else if (userLang.equals("2")) {
 			pAttachWarning = "Normal attachments and large attachments up to " + mailAttachLimit + "MB up to " + totBigSizeMailAttachLimit + "MB (after " + pBigAttachDownloadDay + " days automatically deleted) ";
-		else if (userLang.equals("3"))
+		} else if (userLang.equals("3")) {
 			pAttachWarning = "一般的な添付ファイルは合計" + mailAttachLimit + "MBまで可能で、大容量の添付ファイルは" + totBigSizeMailAttachLimit + "MBまで可能（" + pBigAttachDownloadDay + "日後に自動削除）";
-		else if (userLang.equals("4"))
+		} else if (userLang.equals("4")) {
 			pAttachWarning = "普通附件和大型附件" + mailAttachLimit + "MB高达" + totBigSizeMailAttachLimit + "MB（" + pBigAttachDownloadDay + " 天之后自动删除）";
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("to", to);
@@ -489,9 +508,9 @@ public class EzEmailMailWriteController {
 	}
 
 	/**
-	 * 메일 CK에디터 첨부파일 업로드 실행 함수
+	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String mailInterUploadXCK(MultipartHttpServletRequest request) throws Exception{
 		String strXML = "";
@@ -499,11 +518,10 @@ public class EzEmailMailWriteController {
 		String folderDate = "";
 		String tempFolderName = "";
 		String xmlList = "";
-		String endDay = "";
 		String isBigYN = "N";
-		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		int cnt = 0;
-		if(request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")){
+		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
 			cnt = Integer.parseInt(request.getParameter("cnt"));
 		}
 		String realPath = request.getServletContext().getRealPath("");
@@ -511,10 +529,7 @@ public class EzEmailMailWriteController {
 		Long[] fileSize = new Long[cnt];
 		String[] fileLocation = new String[cnt];
 		String[] resultUpload = new String[cnt];
-		String[] newId = new String[cnt];
 		String[] sGUID = new String[cnt];
-		String[] pUploadSN = new String[cnt];
-		String fileName = "";
 		String pBigFileUpload = "";
 		String[] sFileTitle = new String[cnt];
 		String[] sExt = new String[cnt];
@@ -522,83 +537,214 @@ public class EzEmailMailWriteController {
 		long bigMaxSize = 0;
 		long changeSize = 0;
 
-		if(request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")){
+		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
 			tempFolderName = request.getParameter("STATUS");
-		} else{
+		} else {
 			return "NODATA";
 		}
-
-		isBigYN = request.getParameter("isbigyn");
-		String useExtension = config.getProperty("config.USE_FileExtension");
-
-		if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) || StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
+		
+		if(request.getParameter("isbigyn") != null){
+			isBigYN = request.getParameter("isbigyn");
+		}
+		
+		String useExtension = "";
+		if(config.getProperty("config.USE_FileExtension") != null){
+			useExtension = config.getProperty("config.USE_FileExtension");
+		}
+		
+		if (multiFile == null){
+			return "NOFILE";
+		}
+		
+		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
 			boolean isEmpty = false;
-			for (int i=0; i<cnt; i++){
-				String _pFileName = multiFile.get(i).getOriginalFilename();
-				if (_pFileName.indexOf(File.separator) > 0){
+			String _pFileName = "";
+			for (int i=0; i<cnt; i++) {
+				_pFileName = multiFile.get(i).getOriginalFilename();
+				if (_pFileName.indexOf(File.separator) > 0) {
 					_pFileName = _pFileName.split(File.separator)[_pFileName.split(File.separator).length - 1];
 				}
 				pFileName[i] = _pFileName;
 				sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
 				sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-				if (multiFile.get(i).getSize() == 0)
+				if (multiFile.get(i).getSize() == 0) {
 					isEmpty = true;
+				}
 			}
-			if (isEmpty)
-			{
+			if (isEmpty) {
 				return "OVERFLOW";
 			}
 		}
 
-		for(int i=0; i<cnt; i++){
+		for (int i=0; i<cnt; i++) {
 			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
 		}
 
-		if(request.getParameter("bigmaxsize") != null){
+		if (request.getParameter("bigmaxsize") != null) {
 			bigMaxSize = Long.parseLong(request.getParameter("bigmaxsize"));
 		}
-		if(request.getParameter("changesize") != null){
+		if (request.getParameter("changesize") != null) {
 			changeSize = Long.parseLong(request.getParameter("changesize"));
-		}
-		if(request.getParameter("endDay") != null){
-			endDay = request.getParameter("endDay");
 		}
 
 		strXML = "<ROOT><NODES>";
-
-		String pDirPath = config.getProperty("upload_board.ROOT");
+		String pDirPath = config.getProperty("upload_mail.ROOT");
 		pDirPath = realPath + pDirPath;
-		folderDate = EgovDateUtil.getToday();
-		pDirTempPath = pDirPath + File.separator + folderDate;
-		File file = new File(pDirTempPath);
-		if (!file.exists()){
-			file.mkdir();
-		}
-
-		for (int i=0; i<cnt; i++){
+		
+		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
-			if(fileSize[i] > changeSize || isBigYN.equals("Y")){
-				File file1 = new File(pDirTempPath+sGUID[i]+"__.txt");
-				pBigFileUpload = "Y";
-
-
-
-				//todo : 수정중...
-				//FileOutputStream fos = new FileOutputStream(file1);
-				//fos.write(Base64.encodeBase64(pFileName[i].getBytes()));
-				//fos.close();
-			}
+			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
+                String pDate = EgovDateUtil.getToday();
+                folderDate = pDate;
+                pDirTempPath = pDirPath + File.separator + pDate;
+                File file = new File(pDirTempPath);
+                if (!file.exists()) {
+                	file.mkdir();
+                }
+                pBigFileUpload = "Y";
+                
+                //todo : 잘 변환되어 들어갔는지 검사
+                String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes()); //pFileName[i]을 UTF8로 인코딩해야하는것인가?
+//                String base64OrgFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(pFileName[i]));
+                FileOutputStream fos = null;
+                try {
+                	File f = new File(pDirTempPath + File.separator + sGUID[i] + "__.txt");
+                	fos = new FileOutputStream(f);
+                    fos.write(base64OrgFileName.getBytes());
+                } catch(Exception e) {
+                	throw e;
+                } finally {
+                	if (fos != null) {
+                		fos.close();
+                	}
+                }
+            } else {
+                pDirTempPath = pDirPath + File.separator + "tempFileUpload";
+                pBigFileUpload = "N";
+            }
+			
+			File f = new File(pDirTempPath);
+			if (!f.exists()) {
+				f.mkdir();
+            }
+			
+			if (fileSize[i] > bigMaxSize) {
+                resultUpload[i] = "overflow";
+            } else {
+                if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+                    resultUpload[i] = "denied";
+                } else {
+                    writeUploadedFile(multiFile.get(i), sGUID[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.')), pDirTempPath);
+                    fileLocation[i] = pDirTempPath + File.separator + sGUID[i];
+                    resultUpload[i] = "true";
+                }
+                
+                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+                if (pBigFileUpload == "Y") {
+                	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
+                } else {
+                	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+                }
+                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+                strXML2 += "</NODE>";
+            }
+            pDirTempPath = "";
 		}
+		strXML += strXML2 + "</NODES></ROOT>";
 
+        String xmlPath = pDirPath + File.separator + "templist";
+        File f = new File(xmlPath);
+        if (!f.exists()) {
+			f.mkdir();
+        }
+
+        xmlPath += File.separator + tempFolderName + ".txt";
+        f = new File(xmlPath);
+        if (f.exists()) {
+        	String tempXmlList = "";
+        	InputStreamReader isr = null;
+        	BufferedReader br = null;
+        	OutputStreamWriter osw = null;
+        	try {
+	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	br = new BufferedReader(isr);
+	        	int read = 0;
+	        	char[] b = new char[BUFF_SIZE];
+				while ((read = br.read(b)) != -1) {
+					tempXmlList += read;
+				}
+				
+				Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
+				Document xmldom2 = commonUtil.convertStringToDocument(strXML);
+				
+	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
+	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(0), true));
+            	
+            	osw = new OutputStreamWriter(new FileOutputStream(f));
+            	osw.write(commonUtil.convertDocumentToString(xmldom));
+            	String crlf = System.getProperty("line.separator");
+        		osw.append(crlf+crlf);
+	            
+	            xmlList = strXML;
+	            
+        	} catch(Exception e) {
+        		throw e;
+        	} finally {
+        		if (br != null) {
+        			br.close();
+        		}
+        		if (isr != null) {
+        			isr.close();
+        		}
+        		if (osw != null) {
+        			osw.close();
+        		}
+        	}
+        	
+        	return xmlList;
+        	
+        } else {
+        	OutputStreamWriter osw = null;
+        	try {
+        		osw = new OutputStreamWriter(new FileOutputStream(f));
+        		osw.write(strXML);
+        		String crlf = System.getProperty("line.separator");
+        		osw.append(crlf+crlf);
+        		xmlList = strXML;
+        		
+        	} catch(Exception e) {
+        		throw e;
+        	} finally {
+        		if (osw != null) {
+        			osw.close();
+        		}
+        	}
+            
+            return xmlList;
+        }
+	}
+	
+	/**
+	 * 메일 DragAndDrop 첨부파일 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mailInterAttachCK(MultipartHttpServletRequest request) throws Exception{
+		
 		return "";
 	}
+	
 	
 	/**
 	 * 메일 전송 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -606,7 +752,7 @@ public class EzEmailMailWriteController {
 		// todo : MailUserVO 만들어지면 수정(jsp단도 수정)
 		String userId = "";
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		if(userIdnPw !=null && userIdnPw.get(0) != null){
+		if (userIdnPw !=null && userIdnPw.get(0) != null) {
 			userId = userIdnPw.get(0);
 		}
 		//OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
@@ -647,123 +793,123 @@ public class EzEmailMailWriteController {
 		
 		Node tempNode = null;
 		
-		if(root.getElementsByTagName("URL") != null){
+		if (root.getElementsByTagName("URL") != null) {
 			tempNode = root.getElementsByTagName("URL").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				url = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("ORGURL") != null){
+		if (root.getElementsByTagName("ORGURL") != null) {
 			tempNode = root.getElementsByTagName("ORGURL").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				orgUrl = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("CONNURL") != null){
+		if (root.getElementsByTagName("CONNURL") != null) {
 			tempNode = root.getElementsByTagName("CONNURL").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				connUrl = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("CMD") != null){
+		if (root.getElementsByTagName("CMD") != null) {
 			tempNode = root.getElementsByTagName("CMD").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				cmd = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("MAILCMD") != null){
+		if (root.getElementsByTagName("MAILCMD") != null) {
 			tempNode = root.getElementsByTagName("MAILCMD").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				mailCmd = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("AUTHOR") != null){
+		if (root.getElementsByTagName("AUTHOR") != null) {
 			tempNode = root.getElementsByTagName("AUTHOR").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				author = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("SUBJECT") != null){
+		if (root.getElementsByTagName("SUBJECT") != null) {
 			tempNode = root.getElementsByTagName("SUBJECT").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				subject = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("TO") != null){
+		if (root.getElementsByTagName("TO") != null) {
 			tempNode = root.getElementsByTagName("TO").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				to = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("CC") != null){
+		if (root.getElementsByTagName("CC") != null) {
 			tempNode = root.getElementsByTagName("CC").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				cc = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("BCC") != null){
+		if (root.getElementsByTagName("BCC") != null) {
 			tempNode = root.getElementsByTagName("BCC").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				bcc = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("TEXTBODY") != null){
+		if (root.getElementsByTagName("TEXTBODY") != null) {
 			tempNode = root.getElementsByTagName("TEXTBODY").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				textBody = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("FROM") != null){
+		if (root.getElementsByTagName("FROM") != null) {
 			tempNode = root.getElementsByTagName("FROM").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				from = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("IMPORTANCE") != null){
+		if (root.getElementsByTagName("IMPORTANCE") != null) {
 			tempNode = root.getElementsByTagName("IMPORTANCE").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				importance = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("SIMPLE-MIME") != null){
+		if (root.getElementsByTagName("SIMPLE-MIME") != null) {
 			tempNode = root.getElementsByTagName("SIMPLE-MIME").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				simpleMime = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("DELAYSENDTIME") != null){
+		if (root.getElementsByTagName("DELAYSENDTIME") != null) {
 			tempNode = root.getElementsByTagName("DELAYSENDTIME").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				delaySendTime = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("HTMLBODY") != null){
+		if (root.getElementsByTagName("HTMLBODY") != null) {
 			tempNode = root.getElementsByTagName("HTMLBODY").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				htmlBody = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("SECURITYMAIL") != null){
+		if (root.getElementsByTagName("SECURITYMAIL") != null) {
 			tempNode = root.getElementsByTagName("SECURITYMAIL").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				pSecurityMail = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("REPLYSENDTIME") != null){
+		if (root.getElementsByTagName("REPLYSENDTIME") != null) {
 			tempNode = root.getElementsByTagName("REPLYSENDTIME").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				replySendTime = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("REPLYREADTIME") != null){
+		if (root.getElementsByTagName("REPLYREADTIME") != null) {
 			tempNode = root.getElementsByTagName("REPLYREADTIME").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				replyReadTime = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("ISEACHMAIL") != null){
+		if (root.getElementsByTagName("ISEACHMAIL") != null) {
 			tempNode = root.getElementsByTagName("ISEACHMAIL").item(0);
-			if(tempNode != null){
+			if (tempNode != null) {
 				isEachMail = tempNode.getTextContent();
 			}
 		}
@@ -806,6 +952,8 @@ public class EzEmailMailWriteController {
 				id+"@"+config.getProperty("config.DomainName"), password);
 		MimeMessage message = sa.createMimeMessage();
 		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		
 		// 메일 From,Recipient,CC,BCC
 		InternetAddress internetAddress = new InternetAddress();
@@ -891,19 +1039,21 @@ public class EzEmailMailWriteController {
 		// 메일 본문 및 타입
 		if (simpleMime.equals("1")) {
             if (!cmd.toUpperCase().equals("SAVE")) {
-                if (!delaySendTime.equals(""))
+                if (!delaySendTime.equals("")) {
                 	message.setContent(textBody, "text/plain; charset=utf-8");
-                else
+                } else {
                 	message.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
+                }
             } else {
             	message.setContent(textBody, "text/plain; charset=utf-8");
             }
         } else {
             if (!cmd.toUpperCase().equals("SAVE")) {
-                if (!delaySendTime.equals(""))
+                if (!delaySendTime.equals("")) {
                 	message.setContent(htmlBody, "text/html; charset=utf-8");
-                else
+                } else {
                 	message.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
+                }
             } else {
             	message.setContent(htmlBody, "text/html; charset=utf-8");
             }
@@ -928,16 +1078,18 @@ public class EzEmailMailWriteController {
         }
 		
 		// 추적(배달되면 알림)
-        if (replySendTime.equals("1"))
-            message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-        else
-            message.removeHeader("Return-Receipt-To");
+        if (replySendTime.equals("1")) {
+        	message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+        } else {
+        	message.removeHeader("Return-Receipt-To");
+        }
 
         // 추적(수신확인)
-        if (replyReadTime.equals("1"))
+        if (replyReadTime.equals("1")) {
         	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-        else
+        } else {
         	message.removeHeader("Disposition-Notification-To");
+        }
 
         
 //        // 첨부및 이미지첨부 처리
@@ -1013,6 +1165,22 @@ public class EzEmailMailWriteController {
 //        }
         
         
+          //todo : 첨부파일 작업중
+//        Multipart multipart = new MimeMultipart();
+//        
+//        BodyPart messageBodyPart = new MimeBodyPart();
+//        String filePath = "C:\\FileData\\Upload_Mail\\TempFileUpload\\";
+//        String filename = "3af3672e-c46c-40f0-abb4-969016e4309e.jpg";
+//        
+//        File f = new File(filePath + filename);
+//        FileDataSource source = new FileDataSource(f);
+//        messageBodyPart.setDataHandler(new DataHandler(source));
+//        messageBodyPart.setFileName(source.getName());
+//        messageBodyPart.setHeader("Content-Type", Files.probeContentType(f.toPath()));
+//        multipart.addBodyPart(messageBodyPart);
+//        message.setContent(multipart);
+        
+        
 //        //발송전 처리 부분- 내용 , 첨부,본문, 임시저장
 //        String htmlbody = null;
 //        switch (message.Body.BodyType)
@@ -1075,8 +1243,19 @@ public class EzEmailMailWriteController {
 //                pMessageID = message.Id.UniqueId;
 //            }
 //        }
-        
-        
+        long draftUID = 0;
+        if (cmd.equalsIgnoreCase("SEND")) {
+        	// 편지함 용량 초과 메세지 확인을 위해 임시저장
+        	Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    		folder.open(Folder.READ_WRITE);
+    		message.setFlag(Flags.Flag.SEEN, true);
+    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
+    		if(uids != null && uids[0] != null) {
+    			draftUID = uids[0].uid;
+    		}
+    		folder.close(true);
+            
+        }
         
         
         
@@ -1100,8 +1279,7 @@ public class EzEmailMailWriteController {
 //            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
             
             //InnterMailSend 변환 시작
-            isEachMailB = true;
-            if(isEachMailB){
+            if (isEachMailB) {
             	//개별발송에 따른 "X-READCHECK" 값  Update
             	String strRecvGuid = UUID.randomUUID().toString();
             	message.setHeader("x-readcheck", strRecvGuid);
@@ -1109,6 +1287,7 @@ public class EzEmailMailWriteController {
             	
             	Address[] allRecipients = message.getAllRecipients();
             	
+            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
             	message.removeHeader("TO");
         		message.removeHeader("CC");
         		message.removeHeader("BCC");
@@ -1118,32 +1297,57 @@ public class EzEmailMailWriteController {
             		Transport.send(message);
             	}
             	
-            } else{
+            } else {
             	Transport.send(message);
+            	
+            	//보낸편지함에 저장
+        		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+        		folder.open(Folder.READ_WRITE);
+        		message.setFlag(Flags.Flag.SEEN, true);
+                folder.appendMessages(new Message[]{message});
+                folder.close(true);
             }
             rtnStatus = "OK";
         }
+        
+        ia.close();
         
         // sendmail_2010변환 끝
 		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
         String pResult = null;
         pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
-        //todo : MESSAGEID 수정 : 임시보관함에서 지울때 쓰임
-        pResult += "<MESSAGEID><![CDATA[" + message.getMessageID() + "]]></MESSAGEID>";
+        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
         
 		return "<DATA>" + pResult + "</DATA>";
 	}
 	
 	/**
-	 * 보낸편지함에 메일 저장 실행 함수
+	 * 임시저장메일 삭제 실행 함수
 	 */
-	private void copyIntoSent(Message messag){
-		
-	}
-	
 	@RequestMapping(value="/ezEmail/delDrafts.do")
-	public void delDrafts(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request){
+	public void delDrafts(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
 		
+		String uidStr = request.getParameter("itemid");
+		long uid = 0;
+		if (uidStr != null && !uidStr.equals("")) {
+			uid = Long.parseLong(uidStr);
+		}
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+		folder.open(Folder.READ_WRITE);
+		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+		if(message != null){
+			message.setFlag(Flags.Flag.DELETED, true);
+		}
+        folder.close(true);
+		
+		ia.close();
 	}
 	
 	/**
@@ -1166,52 +1370,52 @@ public class EzEmailMailWriteController {
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
-		if(root.getElementsByTagName("ORGSEARCH") != null){
+		if (root.getElementsByTagName("ORGSEARCH") != null) {
 			tempNode = root.getElementsByTagName("ORGSEARCH").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganSearchList = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("DLGSEARCH") != null){
+		if (root.getElementsByTagName("DLGSEARCH") != null) {
 			tempNode = root.getElementsByTagName("DLGSEARCH").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLSearchList = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("CELL") != null){
+		if (root.getElementsByTagName("CELL") != null) {
 			tempNode = root.getElementsByTagName("CELL").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganCellList = tempNode.getTextContent();
 				pDLCellList = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("ORGPROP") != null){
+		if (root.getElementsByTagName("ORGPROP") != null) {
 			tempNode = root.getElementsByTagName("ORGPROP").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganPropList = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("DLPROP") != null){
+		if (root.getElementsByTagName("DLPROP") != null) {
 			tempNode = root.getElementsByTagName("DLPROP").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLPropList = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("ORGTYPE") != null){
+		if (root.getElementsByTagName("ORGTYPE") != null) {
 			tempNode = root.getElementsByTagName("ORGTYPE").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganListType = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("DLTYPE") != null){
+		if (root.getElementsByTagName("DLTYPE") != null) {
 			tempNode = root.getElementsByTagName("DLTYPE").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLListType = tempNode.getTextContent();
 			}
 		}
-		if(root.getElementsByTagName("ADDFILTER") != null){
+		if (root.getElementsByTagName("ADDFILTER") != null) {
 			tempNode = root.getElementsByTagName("ADDFILTER").item(0);
-			if(tempNode != null && !tempNode.getTextContent().equals("")){
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pAddressFilter = tempNode.getTextContent();
 			}
 		}
