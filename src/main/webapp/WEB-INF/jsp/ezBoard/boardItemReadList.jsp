@@ -23,7 +23,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 400) / 2;
-		        window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 		    function close_onclick() {
 		        if (ReturnFunction != null)

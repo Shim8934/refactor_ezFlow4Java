@@ -471,7 +471,7 @@
 			}
 			function MemberInfo_onclick(pUserID) {
 				if (gubun == "2") return;
-				window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
 			function ReservationItem_onclick() {
 			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;	

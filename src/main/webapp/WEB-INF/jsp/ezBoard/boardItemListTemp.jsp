@@ -559,7 +559,7 @@
 		    function MemberInfo_onclick(pUserID) {
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + pUserID, "", feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;

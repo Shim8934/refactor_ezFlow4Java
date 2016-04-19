@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCommon.web;
 
 import java.awt.image.BufferedImage;
-import java.beans.Encoder;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,7 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -220,13 +218,13 @@ public class EzCommonController extends EgovFileMngUtil{
 	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		MultipartFile multiFile = request.getFile("file1");
 		
-		String fileType = multiFile.getContentType().split("/")[1];
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
 		String realPath = request.getServletContext().getRealPath("");
 		String today = EgovDateUtil.getToday();
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
-		filePath = filePath + "/" + today;
+		filePath = filePath + File.separator + today;
 		File file = new File(realPath + filePath);
         if (!file.exists()){
         	file.mkdir();
@@ -237,15 +235,15 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
-		File imageFile = new File(realPath + filePath + "/" + fileName);			
+		File imageFile = new File(realPath + filePath + File.separator + fileName);			
 	
 		if(imageFile.exists()){			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + "/" + fileName));			    
+			BufferedImage bi = ImageIO.read(new File(realPath + filePath + File.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
 		
-		model.addAttribute("imgPath", (filePath).replace("\\", "/") + "/" + fileName +  "|!|" + width + "|!|" + height);
+		model.addAttribute("imgPath", (filePath) + File.separator + fileName +  "|!|" + width + "|!|" + height);
 		
 		return "ezCommon/ckUpload";
 	}
@@ -839,8 +837,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		byte[] imageBytes = Base64.decodeBase64(strImageMht);
 		
 		String strImageName = UUID.randomUUID() + ".tmp";
-        String SfilePath = m_strSPath + "\\" + strImageName;
-        String LfilePath = m_strLPath + "\\" + strImageName;
+        String SfilePath = m_strSPath + File.separator + strImageName;
+        String LfilePath = m_strLPath + File.separator + strImageName;
         
         File file = new File(m_strLPath);
         if(!file.exists()){

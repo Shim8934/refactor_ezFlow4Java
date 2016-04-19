@@ -627,15 +627,16 @@
 						reloadOneline();
 					}
 				});
-		
-				function reloadOneline(){
-				    if (OneLineReplyFlag == "1")
-				        document.getElementById('onelinereply').value = "";
-				    if (gubun == "2")
-				        document.getElementById('txtPassWord').value = "";
-				    getOneLineReply();
-				}
 		    }
+		    
+			function reloadOneline(){
+			    if (OneLineReplyFlag == "1")
+			        document.getElementById('onelinereply').value = "";
+			    if (gubun == "2")
+			        document.getElementById('txtPassWord').value = "";
+			    getOneLineReply();
+			}
+			
 		    var delpReplyID = "";
 		    function delete_onelinereply(pReplyID) {
 		        delpReplyID = pReplyID;

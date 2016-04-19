@@ -1545,7 +1545,7 @@ function show_personinfo_Lync(email)
     if (email != "")
     {
         if(bGroupwarePresence) {
-            window.open("/myoffice/common/showpersoninfo.aspx?email=" + escape(email) + "&displaylang=" + displaylang, "", "height=" + height + ",width=" + width + ", top=" + top + ", left=" + left + ",  status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezCommon/showPersonInfo.do?email=" + encodeURI(email) + "&displaylang=" + displaylang, "", "height=" + height + ",width=" + width + ", top=" + top + ", left=" + left + ",  status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
         else {
             window.open("/myoffice/ezOCS/Organinfo/ShowPersonInfo.aspx?email=" + escape(email) + "&displaylang=" + displaylang, "", "height=" + height + ",width=" + width + ", top=" + top + ", left=" + left + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");

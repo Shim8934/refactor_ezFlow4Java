@@ -126,11 +126,11 @@
 		    function OpenUserInfo(pUserID) {
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "", feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/ReadOneLineReply.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);

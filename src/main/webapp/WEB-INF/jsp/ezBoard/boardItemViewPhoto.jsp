@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/Common.js" ></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<style title="ezform_style_1">
 		P {
 				MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
@@ -60,10 +61,13 @@
 		        var imagetotalcount = "";
 		        var imgWidth = "55px";
 		        var imgHeight = "37px";
+		        var rsa = new RSAKey();
 		
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
+		            
+		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
@@ -402,7 +406,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
 		
 				function OneLineReply_onkeydown(e)
@@ -449,48 +453,45 @@
 					var pReplyID = "";
 					pReplyID = generateGuid();
 					
-					var strXML = "";
-					
-					strXML += "<DATA>";
-					strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
-					strXML += "<ITEMID>" + pItemID + "</ITEMID>";
-					strXML += "<REPLYID>" + pReplyID + "</REPLYID>";
-					
-					//2011-04 : 한줄 답변 옵션 처리
-					if(OneLineReplyFlag == "1")
-		            {
-					    strXML += "<CONTENT>" + MakeXMLString(document.getElementById("onelinereply").value) + "</CONTENT>";
-		                //strXML += "<IMGEMOTI>" + setEmoti + "</IMGEMOTI>";  //이모티콘 제외
-		            }
-					else
-		            {
-					    strXML += "<CONTENT></CONTENT>";
+					var content,password;
+					if (OneLineReplyFlag == "1"){
+						content = MakeXMLString(document.getElementById('onelinereply').value);
+					}else{
+						content = "";
 					}
-		
-					//2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가
-					strXML += "<PASSWORD></PASSWORD>";
-					strXML += "</DATA>";
-					var xmlhttp = createXMLHttpRequest();
-					
-					xmlhttp.open("POST", "interASP/SaveOneLineReply.aspx", false);
-					xmlhttp.send(strXML);
-					
-					if (xmlhttp.status == 200) 
-					{
-						xmlhttp = null;
-						// 표준모듈 (2007.02.23) 수정: 불필요한 메세지 삭제
-						//alert("<spring:message code='ezBoard.t309'/>");
-						
-						//2011-04 : 한줄 답변 옵션 처리
-						if(OneLineReplyFlag == "1")
-						    document.getElementById("onelinereply").value = "";
-						    
-						getOneLineReply();
+					if (gubun != "2") {
+					    password = "";
+					}
+					else {
+					    password = rsa.encrypt(document.getElementById("txtPassWord").value);
 					}
 					
-					xmlhttp = null;
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/saveOneLineReply.do",
+						data : { boardID    : pBoardID, 
+								 itemID 	: pItemID,
+								 replyID	: pReplyID,
+								 content	: content,
+								 password	: password
+									 
+							   },
+						success: function(){
+							reloadOneline();
+						}
+					});
 				}
 		
+				function reloadOneline(){
+				    if (OneLineReplyFlag == "1")
+				        document.getElementById('onelinereply').value = "";
+				    if (gubun == "2")
+				        document.getElementById('txtPassWord').value = "";
+				    getOneLineReply();
+				}
+				
 				function delete_onelinereply(pReplyID)
 				{
 				     var xmlhttp = createXMLHttpRequest();
@@ -499,7 +500,7 @@
 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
 					{
 					
-					    xmlhttp.open("POST", "interASP/CheckOneLineOwner.aspx?ReplyID=" + pReplyID, false);
+					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
 					    xmlhttp.send();
 		        			
 					    if (xmlhttp.responseText.substr(0,2) != "OK")
@@ -515,7 +516,7 @@
 						    if(!confirm("<spring:message code='ezBoard.t311'/>")) return;
 						}
 					
-					xmlhttp.open("POST", "interASP/DeleteOneLineReply.aspx?ReplyID=" + pReplyID+"&gubun="+gubun, false);
+					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);
 					xmlhttp.send();
 					getOneLineReply();			
 					xmlhttp = null;
@@ -524,7 +525,7 @@
 			    function getOneLineReply()
 			    {
 			        var xmlhttp = createXMLHttpRequest();
-			        xmlhttp.open("POST", "interASP/ReadOneLineReply.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+			        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
 			        xmlhttp.send();
 			        var xmldom = createXmlDom();
 			        //xmldom.loadXML(xmlhttp.responseText);
@@ -1350,9 +1351,11 @@
 			  </tr>
 		  </c:if>
 		</table>
+		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="//blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

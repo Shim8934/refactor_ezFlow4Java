@@ -62,7 +62,7 @@
 		    }
 		    function getOneLineReplyCount() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/ReadOneLineReply.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);
