@@ -16,7 +16,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID)
 	createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 	
-	xmlhttp.open("POST","/ezResource/callNodeTreeData.do?flag=" + selectNo, true);
+	xmlhttp.open("POST","/ezResource/callNodeTreeData.do?flag=" + selectNo);
 	xmlhttp.send(xmlpara);
 	
 	var XMLstring = xmlhttp.responseXML;
