@@ -141,8 +141,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (QstReuseQuestionVO) select("EzQuestionDAO.reUseQuestionData", map);
 	}
 	
-	public String getItemSeq(String brdId) {
-		return (String)select("EzQuestionDAO.getItemSeq", brdId);
+	public String getItemSeq(String brdID) {
+		return (String)select("EzQuestionDAO.getItemSeq", brdID);
 	}
 	
 	public String getReadDateItemForResult(Map<String, Object> map) {
