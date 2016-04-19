@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezCommunity.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +28,9 @@ public class EzCommunityController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties config;
+	
 	@Resource(name="EzCommunityService")
 	private EzCommunityService ezCommunityService;
 
@@ -40,7 +43,7 @@ public class EzCommunityController {
 		return "/ezCommunity/communityMain";
 	}
 	
-	@RequestMapping(value ="/ezCommunity/communityLeftCommunity.do")
+	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do")
 	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception{
 		String userId = "", companyID = "";
 		String communityCD = "", userInfoUserID = "";
@@ -135,7 +138,7 @@ public class EzCommunityController {
 		return "/ezCommunity/communityLeftCommunity";
 	}
 
-	@RequestMapping(value ="/ezCommunity/GetLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	@RequestMapping(value = "/ezCommunity/GetLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
 	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie) throws Exception{
 		String userId = "";
@@ -156,7 +159,7 @@ public class EzCommunityController {
         return sb.toString();
 	}
 	
-	@RequestMapping(value ="/ezCommunity/GetLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
+	@RequestMapping(value = "/ezCommunity/GetLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
 	public String getLeftBoardList(@CookieValue("loginCookie")String loginCookie) throws Exception{
 		StringBuilder sb = new StringBuilder();
@@ -169,5 +172,57 @@ public class EzCommunityController {
 		sb.append("</DATA>");
 		
 		return sb.toString();
+	}
+	
+	@RequestMapping(value = "/ezCommunity/commMake.do")
+	public String commMake(@CookieValue("loginCookie")String loginCookie, Locale locale, ModelMap model, HttpServletRequest request) throws Exception{
+		String userInfoUserID = "", userInfoDisplayName = "";
+		String langPrimary="", langSecondary="";
+		String flag = "";
+		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		if(request.getParameter("flag") != null){
+			flag = request.getParameter("flag");
+		}
+		
+		userInfoUserID = loginVO.getId();
+		langPrimary = config.getProperty("config.lang_Primary"+loginVO.getLang());
+		langSecondary = config.getProperty("config.lang_Secondary"+loginVO.getLang());
+
+		if(loginVO.getLang().equals("2")){
+			userInfoDisplayName = loginVO.getDisplayName2();
+		}else{
+			userInfoDisplayName = loginVO.getDisplayName1();
+		}
+		
+System.out.println(getCategory("", "", "", locale));
+
+		model.addAttribute("lang_Primary", langPrimary);
+		model.addAttribute("lang_Secondary", langSecondary);
+		model.addAttribute("UserInfo_UserID", userInfoUserID);
+		model.addAttribute("UserInfo_DisplayName", userInfoDisplayName);
+		model.addAttribute("flag", flag);		
+		model.addAttribute("idSpanValue", getCategory("", "", "", locale));
+		return "/ezCommunity/communityCommMake";
+	}
+	
+	private String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, Locale locale) throws Exception{
+		StringBuilder strHTML = new StringBuilder();
+		
+		strHTML.append("<Select name=\"c_cate_a\">");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", locale) + "</Option>");
+		strHTML.append(ezCommunityService.getCategoryValueA(strSelCateA, locale));
+		strHTML.append("</Select>");
+		strHTML.append("<Select name=\"c_cate_b\" class=\"text\">");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", locale) + "</Option>");
+		strHTML.append(ezCommunityService.getCategoryValueB(strSelCateB, locale));
+		strHTML.append("</Select>");
+		strHTML.append("<Select name=\"c_cate_c\" class=\"text\" style='display:none'>");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", locale) + "</Option>");
+		strHTML.append(ezCommunityService.getCategoryValueC(strSelCateC, locale));
+		strHTML.append("</Select>");
+		
+		return strHTML.toString();
 	}
 }

@@ -5,6 +5,8 @@
 	<typeAlias alias="CommunityClubVO" 				type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
 	<typeAlias alias="CommunityLeftCommunityVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
 	<typeAlias alias="CommunityCBoardVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
+	<typeAlias alias="CommunityCCategoryVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO"/>
+	
 	
 	
 	<resultMap class="CommunityLeftCommunityVO" id="CommunityLeftCommunity">
@@ -24,6 +26,13 @@
 		<result property="no"						column="NO"							columnIndex="1"/>
 		<result property="title"					column="TITLE"						columnIndex="2"/>
 	</resultMap>
+	
+	<resultMap class="CommunityCCategoryVO" id="CategoryValue">
+		<result property="cCode"					column="C_CODE"						columnIndex="1"/>
+		<result property="cCat"						column="C_CAT"						columnIndex="2"/>
+		<result property="cName"					column="C_NAME"						columnIndex="3"/>
+		<result property="cOrder"					column="C_ORDER"					columnIndex="4"/>
+	</resultMap>
 		
 		
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 	parameterClass="Map"		resultClass="String">
@@ -41,6 +50,48 @@
 	<procedure id="EzCommunityDAO.getLeftBoardList"	resultMap="LeftBBSList">
 		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<select id="EzCommunityDAO.getCategoryValueA"	resultMap="CategoryValue">
+		<![CDATA[
+			SELECT 
+				*
+			FROM
+				EZCOMMUNITY.C_CATEGORY
+			WHERE
+				C_CAT=N'a'
+			ORDER BY
+				C_CODE,
+				C_ORDER
+		]]>		
+	</select>
+	
+	<select id="EzCommunityDAO.getCategoryValueB"	resultMap="CategoryValue">
+		<![CDATA[
+			SELECT 
+				*
+			FROM
+				EZCOMMUNITY.C_CATEGORY
+			WHERE
+				C_CAT=N'b'
+			ORDER BY
+				C_CODE,
+				C_ORDER
+		]]>		
+	</select>
+	
+	<select id="EzCommunityDAO.getCategoryValueC"	resultMap="CategoryValue">
+		<![CDATA[
+			SELECT 
+				*
+			FROM
+				EZCOMMUNITY.C_CATEGORY
+			WHERE
+				C_CAT=N'c'
+			ORDER BY
+				C_CODE,
+				C_ORDER
+		]]>		
+	</select>
 	
 	<select id="EzCommunityDAO.leftCommunityGet4"		parameterClass="String"		resultClass="String">
 		<![CDATA[

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -21,6 +22,21 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getLeftBoardList");
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityCCategoryVO> getCategoryValueA() {
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueA");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCCategoryVO> getCategoryValueB() {
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueB");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityCCategoryVO> getCategoryValueC() {
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueC");
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception{
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
@@ -32,7 +48,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public String leftCommunityGet4(String code) throws Exception{
 		return (String) select("EzCommunityDAO.leftCommunityGet4", code);
 	}
-
 
 
 

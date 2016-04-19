@@ -17,7 +17,7 @@
 				}
 			}
 			function download_attach2() {
-				document.location.href = "/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+				document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
 			}
 		</script>
 		<script type="text/javascript">
@@ -44,11 +44,11 @@
 							download_attach();
 						}
 						function download_attach() {
-							document.location.href = "/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+							document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
 						}
 				</script>
 				<body onclick="window.close()" style="cursor:pointer">
-					<img id="imgView" src="/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID=${qstAttachVO.brdId}&ITEMID=${qstAttachVO.itemNo}&QSTNO=${qstAttachVO.questionNo}&ANSNO=${qstAttachVO.answerNo}&ATTID=${qstAttachVO.attachNo}" border="0">
+					<img id="imgView" src="/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID=${qstAttachVO.brdId}&ITEMID=${qstAttachVO.itemNo}&QSTNO=${qstAttachVO.questionNo}&ANSNO=${qstAttachVO.answerNo}&ATTID=${qstAttachVO.attachNo}" border="0">
 					
 			</c:when>
 			<c:otherwise>
@@ -85,7 +85,7 @@
 	        document.getElementById("download_att").style.display = "none";
 	    }
 	    function download_attach() {
-	        document.location.href = "/ezQuestion/qstInterFace.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
+	        document.location.href = "/ezQuestion/GetPollAttachInfo.do?TYPE=QUESTION&BOARDID="+v_brd_id+"&ITEMID="+v_item_no+"&QSTNO="+strQuestionNo+"&ANSNO="+strAnswer+"&ATTID="+strAttID+"";
 	    }
 </script>
 </html>
