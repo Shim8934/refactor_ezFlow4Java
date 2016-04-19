@@ -43,7 +43,7 @@ public class EzAddressController{
 		
 		model.addAttribute("lang", lang);
 		
-		return "ezAddress/ezAddrZipSelect";
+		return "ezAddress/addressZipSelect";
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class EzAddressController{
 			}			
 		}		
 		
-		return "ezAddress/ezAddrZipIframe";
+		return "ezAddress/addressZipIframe";
 	}
 	
 } 

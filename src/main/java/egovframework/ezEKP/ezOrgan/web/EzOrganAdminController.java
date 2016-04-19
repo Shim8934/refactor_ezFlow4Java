@@ -398,7 +398,8 @@ public class EzOrganAdminController {
 		for(int i=0; i < cn.length; i++){			
 			ezOrganAdminService.deleteDBData(cn[i], "user");
 		}		
-	}	
+	}
+	
 	/**
 	 * 조직도관리 사원정보 추가/수정 실행 함수
 	 */
@@ -433,39 +434,13 @@ public class EzOrganAdminController {
 		
 		return result;
 	}
+	
 	/**
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/personPicture.do", produces = "text/html;charset=utf-8")
-	@ResponseBody
-	public String personPicture(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String result = "";
-		
-		if(vo.getParentCn().equals("")){
-			ezOrganAdminService.updateDBData_user(vo);
-			result = "OK";
-		}else{
-			String domain = config.getProperty("config.DomainName");
-			String cn = vo.getCn();
-			
-			int cnt = ezOrganAdminService.userCheck(cn);
-			
-			if(cnt > 0){
-				result = "PRE";
-			}else{
-				String mailAddr = cn + "@" + domain;
-				vo.setMail(mailAddr);				
-				String userPrincipalName = cn + "@" + domain;
-				vo.setUpnName(userPrincipalName);
-				String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
-				vo.setPassword(pass);
-				
-				ezOrganAdminService.insertDBData_user(vo);
-				result = "OK";
-			}
-		}
-		
-		return result;
+	@RequestMapping(value = "/admin/ezOrgan/personPicture.do")
+	public String personPicture(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+		return "admin/ezOrgan/personPicture";
 	}
 	
 }
