@@ -193,7 +193,7 @@
 	</resultMap>
 	
 	<resultMap class="QstTempSaveVO" id="qstTempSaveVO">
-		<result property="brdId"				column="BRD_ID"				columnIndex="1"/>
+		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
 		<result property="itemNo"				column="ITEM_NO"				columnIndex="2"/>
 		<result property="questionNo"				column="QUESTION_NO"					columnIndex="3"/>
 		<result property="quesContent"				column="QUESCONTENT"					columnIndex="4"/>
@@ -451,7 +451,7 @@
 			FROM 
 				ezQuestion.TBLITEMSEQ 
 			WHERE  
-				brd_id = #brdId#
+				brd_id = #brdID#
 		]]>		
 	</select>
 	
