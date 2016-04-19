@@ -86,11 +86,11 @@ public class QstStep1VO {
 	public void setHidTarget(String hidTarget) {
 		this.hidTarget = hidTarget;
 	}
-	public String getBrdId() {
-		return brdId;
+	public String getBrdID() {
+		return brdID;
 	}
-	public void setBrdId(String brdId) {
-		this.brdId = brdId;
+	public void setBrdID(String brdID) {
+		this.brdID = brdID;
 	}
 	public String getBrdNm() {
 		return brdNm;
