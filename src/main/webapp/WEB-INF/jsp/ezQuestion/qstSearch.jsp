@@ -139,9 +139,9 @@
     	}
     	function menuQst_List() {
         	if(CrossYN()) {
-        		var szUrl = "qstList.do?brd_id='${pBrdID}'"
+        		var szUrl = "qstList.do?brdId='${pBrdID}'"
         	} else {
-            	var szUrl = "qstList.do?brd_id='${pBrdID}'"
+            	var szUrl = "qstList.do?brdId='${pBrdID}'"
         	}
         	window.location.href = szUrl;	
     	}
@@ -198,9 +198,9 @@
 
             	var szUrl = "";			    
             	if(CrossYN()) {
-                	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
+                	szUrl = "qstList.do?brdId=${pBrdID}&" + strSearch
             	} else {
-                	szUrl = "qstList.do?brd_id=${pBrdID}&" + strSearch
+                	szUrl = "qstList.do?brdId=${pBrdID}&" + strSearch
             	}
             	window.location.href = szUrl;
         	}	
