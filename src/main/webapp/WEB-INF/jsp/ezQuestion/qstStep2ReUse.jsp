@@ -431,7 +431,7 @@
 		        		var xmlDoc = createXmlDom();
 		        		var objNode;
 		        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdId}");
+		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}");
                 		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}");
 		        		xmlHttp.open("POST", "/ezQuestion/qstCancel.do", false);
 		        		xmlHttp.send(xmlDoc);
