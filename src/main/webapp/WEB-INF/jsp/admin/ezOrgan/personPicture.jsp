@@ -4,146 +4,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code="ezOrgan.t105" /></title>
+		<title><spring:message code="ezOrgan.t238" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-			var ReturnFunction;
-	    	var RetValue;
-	    	var openerFlag = false;
+			var fileName = "";
+		    var ReturnFunction;
+		    var RetValue;
 	    	
 			$(document).ready(function(){
 				try {
-					RetValue = parent.checkname2_cross_dialogArguments[0];
-	    	        ReturnFunction = parent.checkname2_cross_dialogArguments[1];        
-		        } catch (e) {
+		            RetValue = parent.personpicture_cross_dialogArguments[0];
+		            ReturnFunction = parent.personpicture_cross_dialogArguments[1];
+		        }catch(e){
 		            try {
-		            	RetValue = opener.checkname2_cross_dialogArguments[0];
-	    	            ReturnFunction = opener.checkname2_cross_dialogArguments[1];
-		                openerFlag = true;
+		                RetValue = opener.personpicture_cross_dialogArguments[0];
+		                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
 		            } catch (e) {
-		                openerFlag = false;
+		                RetValue = window.dialogArguments;
 		            }
 		        }
-				initializeReceiverList();
 			});			
 			
-			function initializeReceiverList(){
-	            var xmlpara = loadXMLString(listviewheader.innerHTML.toUpperCase());
-	            document.getElementById("OrganListView").innerHTML = "";
-	            var listView = new ListView();
-	            listView.SetID("lvDeptrList");
-	    		listView.DataSource(xmlpara);
-	    		listView.DataBind("OrganListView");
-	    		listView = null;
-	    		
-	    		SetDataSource();
-	    	}
-	    	
-	    	function SetDataSource() {
-	    	    var tempXML;
-	    	    tempXML = SelectSingleNodeNew(RetValue["addrBook"], "LISTVIEWDATA/ROWS");
-	    	    
-	    	    if (tempXML == null) {
-	    	        return;
-	    		}
-	    		
-	    		var DocList = new ListView();                          
-	    	    DocList.LoadFromID("lvDeptrList"); 
-	    	    DocList.SetRowOnDblClick("change_onClick");			
-	    	    var tempRow;
-	    	    var currentRowNumber = 0;
-	    	    
-	    	    for (var i=0; i<tempXML.childNodes.length; ++i){	    	    
-	    	        if(tempXML.childNodes[i].nodeType == 1){
-    	                tempRow = tempXML.childNodes[i];
-    	                var objTr = DocList.AddRow(currentRowNumber);
-    	                DocList.AddDataRow(objTr,tempRow); 
-    	                currentRowNumber++;
-					}
-				}            
-	    	    DocList = null;	
-			}
 			
-			function change_onClick(){
-				var listview = new ListView();
-			    listview.LoadFromID("lvDeptrList");
-
-				var count1;
-				var selectedItemCount;
-				var selRow;
-			
-				selectedItemCount = listview.GetSelectedIndexes().length;
-				
-				if (selectedItemCount == 0){
-					alert("<spring:message code='ezOrgan.t106' />");
-					return;
-				}else if (selectedItemCount > 1){
-					alert("<spring:message code='ezOrgan.t107' />");
-					return;
-				}
-			
-			    if (ReturnFunction != null) {
-			        RetValue["deptid"] = listview.GetSelectedRows()[0].getAttribute("DATA2");
-			        ReturnFunction(RetValue);			        
-			        if (openerFlag){
-			            window.close();
-			        }
-			    }else{
-			        dialogArguments["deptid"] = listview.GetSelectedRows()[0].getAttribute("DATA2");
-			        window.close();
-			    }
-			}			
-
-			function cancel_onClick(){
-			    if (ReturnFunction != null) {
-			        RetValue["recipientTDData"] = "dontprocess";
-			        ReturnFunction(RetValue);
-			        if (openerFlag){
-			            window.close();
-			        }
-			    }else {
-			        dialogArguments["recipientTDData"] = "dontprocess";
-			        window.close();
-			    }
-			}
 	    </script>
 	</head>
 	<body class="popup">
-	    <xml id="listviewheader" style="display:none">
-			<LISTVIEWDATA>
-		    	<HEADERS>
-		      		<HEADER>
-		        		<NAME><spring:message code='ezOrgan.t108' /></NAME>
-		        		<WIDTH>100</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code='ezOrgan.t67' /></NAME>
-		        		<WIDTH>100</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code='ezOrgan.t71' /></NAME>
-		        		<WIDTH>100</WIDTH>
-		      		</HEADER>
-		    	</HEADERS>
-		  	</LISTVIEWDATA>
-		</xml>
-	
-	    <object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT></object>
-	
-	    <h1><spring:message code='ezOrgan.t105' /></h1>
-	    <h2><spring:message code='ezOrgan.t109' /></h2>
-	    <div class="listview" style="width: 570px;">
-	        <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
-	    </div>
-	    <div class="btnposition">
-	        <a class="imgbtn"><span onClick="change_onClick()"><spring:message code='ezOrgan.t110' /></span></a>
-	        <a class="imgbtn"><span onClick="cancel_onClick()"><spring:message code='ezOrgan.t111' /></span></a>
-	    </div>
+		<h1><spring:message code='ezOrgan.t240' /></h1>		
+		<table class="content"> 
+			<tr>
+		    	<th width="119" height="128"><img <spring:message code='ezOrgan.i6' />></th>
+		    	<td>
+		    		<spring:message code='ezOrgan.t241' /><br/>
+		      		119*128px<spring:message code='ezOrgan.t10000' />
+		      		<br/>
+			  		<a class="imgbtn"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a>
+			  	</td>
+		  	</tr>
+		</table>
+		<table class="content" style="margin-top:5px" > 
+			<tr>
+		    	<th><spring:message code='ezOrgan.t245' /></th>
+		    	<td width="100%">
+		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" />
+		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+		    		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezOrgan/admin/signImange_upload_Cross.aspx?mode=PICTURE" target="ifrm">
+		  				<input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="true" />
+		    			<input type="hidden" name="mode" id="mode" />
+		    		</form>
+					<a class="imgbtn"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px"><spring:message code='ezOrgan.t101' /></span></a>
+				</td>
+		  	</tr>
+		</table>
+		<div class="btnposition">
+		    <a class="imgbtn"><span onClick="imgConfirm_onclick()"><spring:message code='ezOrgan.t246' /></span></a>
+		    <a class="imgbtn"><span onClick="close_Click()"><spring:message code='ezOrgan.t111' /></span></a>
+		</div>
+		<IFRAME id=iframe style="DISPLAY:none" src="Uploadform.aspx"></IFRAME>
 	</body>
 </html>

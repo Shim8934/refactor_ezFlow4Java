@@ -428,7 +428,7 @@
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
 	            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-	            DivPopUpShow(405, 390, "/admin/ezOrgan/personPicture.do");
+	            DivPopUpShow(415, 390, "/admin/ezOrgan/personPicture.do");
 		        <%-- }else {
 		            if (navigator.appName.indexOf("Microsoft") > -1)
 		                ret = window.showModalDialog("PersonPicture.aspx", document.getElementById("UserID").value, "status:no;dialogWidth:405px;dialogHeight:330px;scroll:no;edge:sunken");
@@ -445,7 +445,7 @@
 
 		        if (ret != undefined) {
 		            alert("<spring:message code='ezOrgan.t273' />");
-		            UserPhotoDiv.innerHTML = "<IMG style='width:120px; height:130px;' SRC='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + ret + "' >";
+		            UserPhotoDiv.innerHTML = "<img style='width:120px; height:130px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";
 		        }
 		    }
 	    </script>

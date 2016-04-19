@@ -319,7 +319,7 @@ public class EzOrganAdminController {
 	/**
 	 * 조직도관리 전자결재 서명 이미지 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getSignImage")
+	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do")
 	public void getSignImage(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String type = request.getParameter("type");
 		String fileName = request.getParameter("fileName");
@@ -439,8 +439,21 @@ public class EzOrganAdminController {
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/personPicture.do")
-	public String personPicture(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+	public String personPicture(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		return "admin/ezOrgan/personPicture";
+	}
+	
+	/**
+	 * 조직도관리 사원정보 사진이미지 파일 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do")
+	public void getPersonalInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String fileName = request.getParameter("fileName");
+		String filePath = config.getProperty("upload_personal.PHOTO") + File.separator + fileName;
+		
+		if(fileName != null && !fileName.equals("")){
+			ezCommonService.responseAttach(filePath, fileName, false, request, response);
+		}
 	}
 	
 }

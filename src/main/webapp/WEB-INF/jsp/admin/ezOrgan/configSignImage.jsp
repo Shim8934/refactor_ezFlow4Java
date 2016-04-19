@@ -64,7 +64,7 @@
 					signimage.innerHTML = "<img src=" + window.document.location.protocol + "//" + window.document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=" + SignPath + "&FILENAME=" + signlist.value + " width=50 height=50>";
 				} */
 				
-				var imgSrc = "/admin/ezOrgan/getSignImage.do?type="+SignPath+"&fileName="+encodeURI(signlist.value);
+				var imgSrc = "/admin/ezOrgan/getApprovalSignInfo.do?type="+SignPath+"&fileName="+encodeURI(signlist.value);
 				signimage.innerHTML = "<img src="+imgSrc+" width=50 height=50 />";
 		    }
 			function btn_AttachAdd_onclick(obj) {
