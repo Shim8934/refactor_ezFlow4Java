@@ -42,13 +42,13 @@ public class QstStep1VO {
 	/** 설문목적*/
 	private String txtContent;
 	/** */
-	private String itemId;
+	private String itemID;
 	
-	public String getItemId() {
-		return itemId;
+	public String getItemID() {
+		return itemID;
 	}
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setItemID(String itemID) {
+		this.itemID = itemID;
 	}
 	public String getTxtExpiredate() {
 		return txtExpiredate;
