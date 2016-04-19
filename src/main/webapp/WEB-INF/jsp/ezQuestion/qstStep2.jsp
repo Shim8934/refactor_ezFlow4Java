@@ -197,7 +197,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brd_id=" + '<c:out value='${ezQuestionVO.brdId}'/>' + "&item_id=" + '<c:out value='${ezQuestionVO.itemId}'/>';
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=" + '<c:out value='${ezQuestionVO.brdId}'/>' + "&itemID=" + '<c:out value='${ezQuestionVO.itemId}'/>';
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		} else {
