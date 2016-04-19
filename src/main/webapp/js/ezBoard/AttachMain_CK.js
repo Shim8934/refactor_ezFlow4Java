@@ -284,7 +284,6 @@ function AppendFileAttachInfo(ret) {
             pAttachListXml = loadXMLString(getXmlString(ret));
 
         var objAttachNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-
         var strAttach = "";
         strPreViewAttach = "";
         rep = /'/g;
@@ -328,7 +327,7 @@ function AppendFileAttachInfo(ret) {
         dadiframe.document.getElementById("lstAttachLink").appendChild(oTable);
 
         for (var i = 0; i < objAttachNodes.length; i++) {
-            var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]);
+            var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
             var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
@@ -386,7 +385,7 @@ function AttachFileList() {
 
         var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA2");
 
-        for (i = 0; i < xmldomNodes.length; i++) {
+        for (var i = 0; i < xmldomNodes.length; i++) {
             filepath = getNodeText(xmldomNodes[i]);
             if (filepath.indexOf(pBoardID) != -1) {
                 strRet += filepath + ";";
@@ -556,7 +555,7 @@ function AttachFileList_Photo()
 
 	var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA2");
 	
-	for(i=0;i<xmldomNodes.length;i++)
+	for(var i=0;i<xmldomNodes.length;i++)
 	{
 	    filepath = getNodeText(xmldomNodes[i]);
 		if(filepath.indexOf(pBoardID) != -1) {

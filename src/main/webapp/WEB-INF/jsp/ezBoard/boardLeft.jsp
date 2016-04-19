@@ -435,7 +435,6 @@
 		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brd_ID=5";
 		            else
 						window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brd_ID=5";
-		                //window.parent.frames["right"].location.href = "/myoffice/ezQuestion/poll/Qst_Step1.aspx?brd_ID=5"
 		            SetTreeviewUnSelect("");
 		        }
 		    }
@@ -491,7 +490,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardReservedItemList.do";
 		    }
 		    function Apprboard() {
-		        window.parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Appr.aspx";
+		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
 		    }
 	    </script>
 	</head>

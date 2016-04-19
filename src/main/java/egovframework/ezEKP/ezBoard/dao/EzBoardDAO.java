@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -100,6 +101,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardLineReplyVO> readOneLineReply(Map<String, Object> map) throws Exception{
+		return (List<BoardLineReplyVO>) list("EzBoardDAO.readOneLineReply", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getNoticePostItem(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getNoticePostItem", map);
 	}
@@ -160,6 +166,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getApprBoardListItem(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getApprBoardListItem", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<String> getCopyItemAttach(String orgItemID) throws Exception{
 		return (List<String>) list("EzBoardDAO.getCopyItemAttach", orgItemID);
 	}
@@ -202,6 +213,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public String getDocPassWord(String itemID) throws Exception{
 		return (String) select("EzBoardDAO.getDocPassWord", itemID);
+	}
+	
+	public String deleteOneLineReply(Map<String, Object> map) {
+		return (String) select("EzBoardDAO.deleteOneLineReply", map);
 	}
 	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
@@ -297,8 +312,17 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int checkOneLineOwner(Map<String, Object> map) throws Exception{
+		select("EzBoardDAO.checkOneLineOwner", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public int getReservedItemListCount(String userID) throws Exception{
 		return (int) select("EzBoardDAO.getReservedItemListCount", userID);
+	}
+	
+	public int getApprBoardTotalItemCount(String userID) throws Exception{
+		return (int) select("EzBoardDAO.getApprBoardTotalItemCount", userID);
 	}
 	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{
@@ -335,6 +359,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void saveAttachInfo(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.saveAttachInfo", map);
+	}
+	
+	public void saveOneLineReply(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.saveOneLineReply", map);
 	}
 	
 	public void photoListInsert(BoardListVO boardListVO) throws Exception{
@@ -391,6 +419,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void setBoardList_Config2(Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.setBoardList_Config2", map);
+	}
+	
+	public void apprItem(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.apprItem", map);
 	}
 	
 	public void deleteItem(Map<String, Object> map) throws Exception{

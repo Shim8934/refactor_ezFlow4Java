@@ -2,7 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<c:choose>
@@ -139,12 +139,13 @@
 			                pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
 			
 			            var objAttachNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-			
+
 			            for (var i = 0; i < objAttachNodes.length; i++) {
-			                if (pMode == "boardContent" || pMode == "boardAttach")
-			                    attachxml += "tempUploadFile/" + getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
-			                else
+			                if (pMode == "boardContent" || pMode == "boardAttach"){
 			                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+			                }else{
+			                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+			                }
 			            }
 			        }
 			        else {
@@ -369,15 +370,12 @@
 		        str += "<LISTVIEWDATA><HEADERS><HEADER><NAME>"+"<spring:message code='ezBoard.t375' />"+"</NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME>"+"<spring:message code='ezBoard.t376' />"+"</NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
 		        for (i = 0; i < xmldomNodes.length; i++) {
 		            filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
-		
-		            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-		            filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+		            filename = MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName"));
 		            
-		            filepath = MakeXMLString("/upload_BoardSTD/" + filepath);
 		            str += "<ROW><CELL>";
 		            str += "<VALUE>" + filename + "</VALUE>";
 		            str += "<DATA1>" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "</DATA1>";
-		            str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath").replace("tempUploadFile/", "")) + "</DATA2>";
+		            str += "<DATA2>" + MakeXMLString(filepath) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";
 		            str += "<DATA5>Y</DATA5>";
@@ -523,26 +521,7 @@
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 		            }
 		        }
-		        //안쓰임
-// 		        else {
-// 		            var xmldom_attachlist = createXmlDom();
-// 		            xmldom_attachlist = loadXMLString(pAttachListXml);
-// 		            var itemid = "";
-// 		            if (typeof (pAttachListXml) == "string")
-// 		                pAttachListXml = loadXMLString(pAttachListXml);
-// 		            var xmldomNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-// 		            var xmlhttp2 = createXMLHttpRequest();
-// 		            xmlhttp2.open("POST", "interASP/GetGuid.aspx?count=" + xmldomNodes.length, false);
-// 		            xmlhttp2.send();
-// 		            itemid = xmlhttp2.responseText;
-// 		            itemid = itemid.substring('8', itemid.lastIndexOf("</RESULT>"));
-// 		            if (pMode != "modify") {
-// 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
-// 		            } else {
-// 		                itemid = strItemID + ";";
-// 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", itemid);
-// 		            }
-// 		        }
+		        
 		        var importance = "";
 		        if (document.getElementById('chkEmergent').checked) {
 		            importance = "1";
@@ -551,42 +530,6 @@
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
-		        	//ad 가져오는 부분이라 안쓰임
-// 		            if (SSUserName == "" || SSUserName2 == "" ||
-// 				        SSDeptName == "" || SSDeptName2 == "" ||
-// 				        SSCompanyName == "" || SSCompanyName2 == "") {
-// 		                var tmpXmlDom = createXmlDom();
-// 		                var tmpXmlHttp = createXMLHttpRequest();
-
-// 		                var objNode;
-// 		                createNodeInsert(tmpXmlDom, objNode, "DATA");
-// 		                createNodeAndInsertText(tmpXmlDom, objNode, "CN", SSUserID);
-// 		                createNodeAndInsertText(tmpXmlDom, objNode, "PROP", "DisplayName;Description;Company");
-// 		                createNodeAndInsertText(tmpXmlDom, objNode, "CATE", "user");
-// 		                tmpXmlHttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-// 		                tmpXmlHttp.send(tmpXmlDom);
-// 		                var tmpRetXml = loadXMLString(tmpXmlHttp.responseText);
-// 		                if (getXmlString(tmpRetXml) != "") {
-// 		                    var tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME1"));
-// 		                    if (tmpVal != "")
-// 		                        SSUserName = tmpVal;
-// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DISPLAYNAME2"));
-// 		                    if (tmpVal != "")
-// 		                        SSUserName2 = tmpVal;
-// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION1"));
-// 		                    if (tmpVal != "")
-// 		                        SSDeptName = tmpVal;
-// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/DESCRIPTION2"));
-// 		                    if (tmpVal != "")
-// 		                        SSDeptName2 = tmpVal;
-// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY1"));
-// 		                    if (tmpVal != "")
-// 		                        SSCompanyName = tmpVal;
-// 		                    tmpVal = getNodeText(SelectSingleNodeNew(tmpRetXml, "DATA/COMPANY2"));
-// 		                    if (tmpVal != "")
-// 		                        SSCompanyName2 = tmpVal;
-// 		                }
-// 		            }
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
@@ -738,7 +681,7 @@
 		                objSubNode = createNodeAndAppandNode(xmlDom, objNode, objSubNode, "NODE");
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 		
-		                xmlhttp.open("POST", "interASP/deleteTempitem.aspx", false);
+		                xmlhttp.open("POST", "/ezBoard/deleteTempItem.do", false);
 		                xmlhttp.send(xmlDom);
 		            }
 		
@@ -1172,7 +1115,7 @@
 		    }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "interASP/GetBoardInfo.aspx?BoardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
@@ -1447,7 +1390,7 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -1459,7 +1402,7 @@
 		
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
-		            var ret = window.showModalDialog("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "",
+		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
 		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		
@@ -1470,7 +1413,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "NewBoardItem_Photo.aspx?BoardID=" + ret[0] + "&Mode=new&BTYPE=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1478,7 +1421,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "NewBoardItem_Cross.aspx?BoardID=" + ret[0] + "&Mode=new&BoardNM=" + ret[1] + "&BTYPE=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + ret[0] + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1780,9 +1723,9 @@
 	                </script>
 	            </td>
 	        </tr>
-	        <tr style="height: 20px">
         	<c:choose>
         		<c:when test="${boardInfo.guBun != '3'}">
+	        <tr style="height: 20px">
 	            <td>
 	                <div class="portlet_tabpart03">
 	                    <div class="portlet_tabpart03_top" id="tab1">
@@ -1858,7 +1801,7 @@
 								<c:if test="${mode != 'new' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && reservedItem == '' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
-	                        </td>
+		                        </td>
 	                    </tr>
              <!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">

@@ -16,7 +16,7 @@ CKEDITOR.editorConfig = function( config ) {
         config.toolbar = [['Bold', 'Italic', 'Underline', 'Strike', '-', 'TextColor', 'BGColor'], ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'ShowBlocks', '-', 'Table', 'Tabletools'], ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '_Insert_Image', 'addImage'], '/', ['Styles', 'Format', 'Font', 'FontSize'], ['lineheight'], ['SpecialChar'], ['Undo', 'Redo', 'Link'], ['Source']];
 
 
-    config.filebrowserUploadUrl = "/ezCommon/ckSimpleUpload.do";
+    config.filebrowserUploadUrl = "/ezCommon/ckUpload.do";
     config.extraPlugins = "_Insert_Image,tableresize,imagepaste,simpleuploads";
     config.removePlugins = 'contextmenu,liststyle';
     config.allowedContent = true;

@@ -10,6 +10,7 @@
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
 	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
+	<typeAlias  alias="BoardLineReplyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
@@ -221,6 +222,10 @@
 		{CALL EZBOARDSTD.EZSP_GETMYBOARDLISTITEMXMLTEMP(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap">
+		{CALL EZBOARDSTD.EZSP_GETAPPRBOARDLISTITEMXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList">
 		{CALL EZBOARDSTD.EZSP_GETAPPRUSERLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -251,6 +256,10 @@
 	
 	<procedure id="EzBoardDAO.getCopyItemAttach" parameterClass="String" resultClass="String">
 		{CALL EZBOARDSTD.EZSP_COPYITEM_GET2(#v_PORGITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzBoardDAO.deleteOneLineReply" parameterClass="Map" resultClass="String">
+		{CALL EZBOARDSTD.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
@@ -387,6 +396,10 @@
 		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.apprItem" parameterClass="Map">
+		{CALL EZBOARDSTD.EZSP_APPRITEM(#v_ITEMID#, #v_MODE#, #v_USERID#)}
+	</procedure>
+	
 	<procedure id="EzBoardDAO.photoListUpdate" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_PHOTOLISTUPDATE(#v_ImageID#, #v_BoardID#, #v_FilePath#, #v_FileContent#)}
 	</procedure>
@@ -397,6 +410,8 @@
 										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#readFlag#,#topWriterID#,#extensionAttribute6#,
 										    #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
 	</procedure>
+	
+	
 	
 	<procedure id="EzBoardDAO.deleteItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_DELETEITEM(#v_STRITEMLIST#, #v_BOARDID#)}
@@ -607,6 +622,34 @@
 		]]>                
 	</select>
 	
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
+		<![CDATA[
+			SELECT 
+				replyid, $v_UserName$ as username, userid, content, writedate
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ONELINEREPLY 
+	        WHERE  
+	       		boardid = #v_BoardID#
+			AND 
+				itemid = #v_ItemID#
+			ORDER BY 
+				writedate ASC
+		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.checkOneLineOwner" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(replyid)
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_ONELINEREPLY 
+	        WHERE  
+	       		replyid = #v_ReplyID#
+			AND 
+				userid = #v_UserID#
+		]]>                
+	</select>
+	
 	<select id="EzBoardDAO.checkApprUserList" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -659,6 +702,27 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getApprBoardTotalItemCount" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+	        FROM 
+	        	ezBoardSTD.TBL_BOARD_APPRLIST A
+			JOIN
+				ezBoardSTD.TBL_BOARD_ITEM B
+			ON 
+				A.boardid = B.boardid	
+	        WHERE 
+	        	A.appruserid = #userID# 
+	        AND 
+	        	B.apprflag = 'N'
+	        AND
+	        	B.startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+	        AND	
+   				B.enddate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+		]]>
+	</select>
+	
 	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">
 		<![CDATA[
 			INSERT INTO ezBoardSTD.TBL_PHOTO_IMAGEITEM(
@@ -666,6 +730,17 @@
 			)
         	VALUES(
         	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N' 
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
+		<![CDATA[
+			INSERT INTO ezBoardSTD.TBL_BOARD_ONELINEREPLY(
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password
+			)
+        	VALUES(
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, SYSDATE,	  #PCONTENT#,	#PPASSWORD# 
         	)
 		]]>
 	</insert>

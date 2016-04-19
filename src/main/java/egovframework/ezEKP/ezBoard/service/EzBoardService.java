@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
@@ -46,6 +47,8 @@ public interface EzBoardService {
 	
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
 	
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
@@ -65,6 +68,8 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getMyBoardListItem(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
 
 	public List<HashMap<String, Object>> getMyBoardListItemTemp(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	
+	public List<HashMap<String, Object>> getApprBoardListItem(String id, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
@@ -110,6 +115,12 @@ public interface EzBoardService {
 	
 	public String setBoardConfig(String userID, String listCount, String preView) throws Exception;
 	
+	public String apprItem(String userID, String itemList, String pMod) throws Exception;
+	
+	public String deleteOneLineReply(String id, String replyID, String guBun) throws Exception;
+	
+	public String checkOneLineOwner(String replyID, String userID) throws Exception;
+	
 	public int getReservedItemListCount(String userID) throws Exception;
 	
 	public int getNewItemListCount(String userID) throws Exception;
@@ -144,6 +155,8 @@ public interface EzBoardService {
 
 	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
 	
+	public int getApprBoardTotalItemCount(String userID) throws Exception;
+	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 	
 	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception;
@@ -157,6 +170,8 @@ public interface EzBoardService {
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
 	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
+	
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
 	
 	public void setBoardList_Config(String pUserID, Map<String, Object> map) throws Exception;
 
@@ -189,6 +204,5 @@ public interface EzBoardService {
 	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
 	
 	public void photoListDel(String boardID, String imageID) throws Exception;
-
 
 }

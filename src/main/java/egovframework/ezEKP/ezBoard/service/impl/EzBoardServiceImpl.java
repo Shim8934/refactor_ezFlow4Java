@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
@@ -469,6 +470,18 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public List<HashMap<String, Object>> getApprBoardListItem(String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("v_PORDERBYMAIN", orderOption2);
+		return ezBoardDAO.getApprBoardListItem(map);
+	}
+
+	@Override
 	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", boardListVO.getUserID());
@@ -680,6 +693,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
+	}
+
+	@Override
+	public int getApprBoardTotalItemCount(String userID) throws Exception {
+		return ezBoardDAO.getApprBoardTotalItemCount(userID);
 	}
 
 	@Override
@@ -908,6 +926,47 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
+	public String apprItem(String userID, String itemList, String pMod) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemList);
+		map.put("v_MODE", pMod);
+		map.put("v_USERID", userID);
+		try {
+			ezBoardDAO.apprItem(map);
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+	}
+
+	@Override
+	public String deleteOneLineReply(String userID, String replyID, String guBun) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_USERID", userID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_GUBUN", guBun);
+		return ezBoardDAO.deleteOneLineReply(map);
+	}
+
+	@Override
+	public String checkOneLineOwner(String replyID, String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ReplyID", replyID);
+		map.put("v_UserID", userID);
+		
+		String resultMessage = "";
+		int result = ezBoardDAO.checkOneLineOwner(map);
+		
+		if(result > 0){
+			resultMessage = "OK_MINE";
+		}else{
+			resultMessage = "FAIL";
+		}
+		
+		return resultMessage;
+	}
+
+	@Override
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception {
 		if(!(endRow > 0)){
 			endRow = 0;
@@ -918,6 +977,15 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("v_PUSERID", userID);
 		map.put("v_PSORTBY", sortBy);
 		return ezBoardDAO.getReservedItemList(map);
+	}
+
+	@Override
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BoardID", boardID);
+		map.put("v_ItemID", itemID);
+		map.put("v_UserName", userName);
+		return ezBoardDAO.readOneLineReply(map);
 	}
 
 	@Override
@@ -1009,6 +1077,20 @@ public class EzBoardServiceImpl implements EzBoardService {
 		ezBoardDAO.saveAttachInfo(map);
 	}
 	
+	@Override
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("PITEMID", itemID);
+		map.put("PREPLYID", replyID);
+		map.put("PBOARDID", boardID);
+		map.put("USERID", userInfo.getId());
+		map.put("USERNAME", userInfo.getDeptName1());
+		map.put("USERNAME2", userInfo.getDeptName2());
+		map.put("PCONTENT", content);
+		map.put("PPASSWORD", password);
+		ezBoardDAO.saveOneLineReply(map);
+	}
+
 	public String makeXMLString(String orgString){
 		if(orgString != null){
 			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");

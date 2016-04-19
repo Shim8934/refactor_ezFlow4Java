@@ -62,6 +62,7 @@
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";
 		    var AtttributeCount = "${boardAttrCount}"; 
+		    var rsa = new RSAKey();
 		    window.onload = function () {
 		        try {
 					var html = "";
@@ -76,11 +77,13 @@
 						success: function(result){
 							html = result;
 						}        			
-					});	
+					});
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 					
 		            AddLinkTarget();
 		            SetAttachmentInfo();
@@ -571,7 +574,7 @@
 		        }
 		    }
 		    function OpenUserInfo(pUserID) {
-		        var result = GetOpenWindow("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "UserInfo", 420, 450, "NO");
+		        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
 		    function OneLineReply_onkeydown() {
 		        if (event.keyCode == 13) Save_OneLineReply();
@@ -595,36 +598,43 @@
 		        var pReplyID = "";
 		        pReplyID = "{" + GetGUID().toUpperCase() + "}";
 		
-		
-				var strXML = "";
-				strXML += "<DATA>";
-				strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
-				strXML += "<ITEMID>" + pItemID + "</ITEMID>";
-				strXML += "<REPLYID>" + pReplyID + "</REPLYID>";
-				if (OneLineReplyFlag == "1")
-				    strXML += "<CONTENT>" + MakeXMLString(document.getElementById('onelinereply').value) + "</CONTENT>";
-				else
-				    strXML += "<CONTENT></CONTENT>";
+				var content,password;
+				if (OneLineReplyFlag == "1"){
+					content = MakeXMLString(document.getElementById('onelinereply').value);
+				}else{
+					content = "";
+				}
 				if (gubun != "2") {
-				    strXML += "<PASSWORD></PASSWORD>";
+				    password = "";
 				}
 				else {
-				    strXML += "<PASSWORD>" + Crypt_Encrytion(document.getElementById("txtPassWord").value) + "</PASSWORD>";
+				    password = rsa.encrypt(document.getElementById("txtPassWord").value);
 				}
-				strXML += "</DATA>";
-				var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "interASP/SaveOneLineReply.aspx", false);
-				xmlhttp.send(strXML);
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/saveOneLineReply.do",
+					data : { boardID    : pBoardID, 
+							 itemID 	: pItemID,
+							 replyID	: pReplyID,
+							 content	: content,
+							 password	: password
+								 
+						   },
+					success: function(){
+						reloadOneline();
+					}
+				});
 		
-				if (xmlhttp.status == 200) {
-				    xmlhttp = null;
+				function reloadOneline(){
 				    if (OneLineReplyFlag == "1")
 				        document.getElementById('onelinereply').value = "";
 				    if (gubun == "2")
 				        document.getElementById('txtPassWord').value = "";
 				    getOneLineReply();
 				}
-				xmlhttp = null;
 		    }
 		    var delpReplyID = "";
 		    function delete_onelinereply(pReplyID) {
@@ -636,14 +646,14 @@
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments = new Array();
 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
-		                    var OpenWin = window.open("interASP/CheckPassWord.aspx?ItemID=" + pItemID + "&ReplyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                }
 		                else {
 		
 		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("interASP/CheckPassWord.aspx?ItemID=" + pItemID + "&ReplyID=" + pReplyID, "", feature);
+		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
 		
 		                    if (ret == "NO") {
 		                        alert("<spring:message code='ezBoard.t267' />");
@@ -654,7 +664,7 @@
 		                        return;
 		                    }
 		
-		                    xmlhttp.open("POST", "interASP/DeleteOneLineReply.aspx?ReplyID=" + pReplyID + "&gubun=" + gubun, false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		                    xmlhttp.send();
 		                    if (xmlhttp.responseText == "FAILFAIL") {
 		                        alert("<spring:message code='ezBoard.t310' />");
@@ -665,7 +675,7 @@
 		                }
 		            }
 		            else {
-		                xmlhttp.open("POST", "interASP/CheckOneLineOwner.aspx?ReplyID=" + pReplyID, false);
+		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
 		                xmlhttp.send();
 		                if (xmlhttp.responseText.substr(0, 2) != "OK") {
 		                    alert("<spring:message code='ezBoard.t310' />");
@@ -676,7 +686,7 @@
 		        } else {
 		            if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		        }
-		        xmlhttp.open("POST", "interASP/DeleteOneLineReply.aspx?ReplyID=" + pReplyID + "&gubun=" + gubun, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FAILFAIL") {
 		            alert("<spring:message code='ezBoard.t310' />");
@@ -695,14 +705,14 @@
 		            return;
 		        }
 		
-		        xmlhttp.open("POST", "interASP/DeleteOneLineReply.aspx?ReplyID=" + delpReplyID + "&gubun=" + gubun, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + delpReplyID + "&guBun=" + gubun, false);
 		        xmlhttp.send();
 		        getOneLineReply();
 		        xmlhttp = null;
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "interASP/ReadOneLineReply.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);
@@ -1253,7 +1263,7 @@
 			</c:choose>
 		  </c:otherwise>
 	  </c:choose>
-	  <c:when test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
+	  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 	  <tr>
 	    <td style="vertical-align: top;">
 	        <table class="content">
@@ -1267,8 +1277,7 @@
 			          <td style="cursor:pointer" width="100%">
 		          </c:otherwise>
 	          </c:choose>
-	          <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
-	          </td>
+	          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
 	        </tr>
 	        <tr>
 	          <th><spring:message code='ezBoard.t328' /></th>
@@ -1280,14 +1289,15 @@
 		          <td style="cursor:pointer">
 	          	</c:otherwise>
 	          </c:choose>
-	            <div align="left" style="overflow-y:auto;WIDTH: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
-	            </td>
+	            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
 	        </tr>
 	      </table>
 	    </td>
 	  </tr>
-	  </c:when>
+	  </c:if>
 	</table>
+		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>

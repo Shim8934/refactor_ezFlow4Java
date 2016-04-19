@@ -97,9 +97,9 @@
 		        var objTh = document.createElement("TH");
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 		            objTh.style.width = "24px";
-		        }
-		        else
+		        }else{
 		            objTh.style.width = "15px";
+		        }
 		        var input = document.createElement("input");
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
@@ -136,6 +136,7 @@
 		        var strRet = "";
 		        var pBoardID = window.parent.pBoardID;
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        
 		        for (var i = 0; i < filecnt - 1; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i + 1].getAttribute("DATA2");
 		            if (filepath.indexOf(pBoardID) != -1) {
@@ -236,6 +237,7 @@
 		        xhr.addEventListener("abort", uploadCanceled, false);
 		        xhr.open("POST", "/ezBoard/uploadItemAttach.do");
 		        xhr.send(fd);
+		        file = new Array;
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
 		
