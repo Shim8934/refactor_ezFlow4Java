@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezCommunity">
+	<typeAlias alias="CommunityClubVO" 				type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
+	<typeAlias alias="CommunityLeftCommunityVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
+	<typeAlias alias="CommunityCBoardVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
+	
+	
+	<resultMap class="CommunityLeftCommunityVO" id="CommunityLeftCommunity">
+		<result property="cClubNo"					column="C_ClubNo"					columnIndex="1"/>
+		<result property="permit"					column="permit"						columnIndex="2"/>
+		<result property="cVisited"					column="C_Visited"					columnIndex="3"/>
+		<result property="cClubName"				column="C_ClubName"					columnIndex="4"/>
+		<result property="cClubName2"				column="C_ClubName2"				columnIndex="5"/>
+		<result property="cMemberCnt"				column="C_memberCnt"				columnIndex="6"/>
+		<result property="cSysopId"					column="C_SysopID"					columnIndex="7"/>
+		<result property="cClubGubun"				column="C_ClubGubun"				columnIndex="8"/>
+		<result property="cClubConfirmType"			column="C_clubConfirmtype"			columnIndex="9"/>
+		<result property="cLogoThumbnail"			column="C_Logo_Thumbnail"			columnIndex="10"/>
+	</resultMap>
+	
+	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
+		<result property="no"						column="NO"							columnIndex="1"/>
+		<result property="title"					column="TITLE"						columnIndex="2"/>
+	</resultMap>
+		
+		
+	<procedure id="EzCommunityDAO.leftCommunityGet1" 	parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzCommunityDAO.leftCommunityGet2"	parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#code#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.leftCommunityGet3"	parameterClass="String"		resultMap="CommunityLeftCommunity">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#userId#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getLeftBoardList"	resultMap="LeftBBSList">
+		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<select id="EzCommunityDAO.leftCommunityGet4"		parameterClass="String"		resultClass="String">
+		<![CDATA[
+			SELECT 
+				C_SYSOPID
+        	FROM 
+        		ezCommunity.C_Club 
+       		WHERE 
+       			C_CLUBNO = #code#
+		]]>		
+	</select>
+	
+	
+</sqlMap>
