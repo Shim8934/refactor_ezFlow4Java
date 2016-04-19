@@ -14,7 +14,7 @@ public class QstStep1VO {
 	/** 대상자설정*/
 	private String hidTarget;
 	/** 게시판아이디*/
-	private String brdId;
+	private String brdID;
 	/** 게시판번호*/
 	private String brdNm;
 	/** */
