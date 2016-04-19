@@ -92,7 +92,7 @@
 				for(i=0; i<nodes.length ;i++){
 					tableXml += "<option value='" + SelectSingleNodeValue(nodes[i], "QUESTION_NO") +"' anstype='"+SelectSingleNodeValue(nodes[i], "ANSWERTYPE")+"'>"+SelectSingleNodeValue(nodes[i], "QUESCONTENT")+"</option>"
 				}
-				$("#listQst").html(tableXml);
+				$("#listQst").html($("#listQst").html()+tableXml);
 			}
 			
 			function menuQst_List() {
