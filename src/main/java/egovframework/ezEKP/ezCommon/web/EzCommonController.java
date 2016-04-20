@@ -21,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,9 +214,8 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * 게시판 ck에디터 업로드 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/ckUpload.do")
-	public String ckUpload(MultipartHttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
 		MultipartFile multiFile = request.getFile("file1");
-		
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
 		String realPath = request.getServletContext().getRealPath("");
@@ -243,7 +241,7 @@ public class EzCommonController extends EgovFileMngUtil{
 			height = bi.getHeight();
 		}
 		
-		model.addAttribute("imgPath", (filePath) + File.separator + fileName +  "|!|" + width + "|!|" + height);
+		model.addAttribute("imgPath", (filePath + File.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
 		
 		return "ezCommon/ckUpload";
 	}
@@ -253,8 +251,24 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public void ckSimpleUpload(HttpServletRequest request){
-//		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + "" + "', '')</script>";
+	public String ckSimpleUpload(MultipartHttpServletRequest request, Model model) throws Exception{
+		MultipartFile multiFile = request.getFile("upload");
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+		String filePath = config.getProperty("upload_common.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		String today = EgovDateUtil.getToday();
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + File.separator + today;
+		File file = new File(realPath + filePath);
+		
+        if (!file.exists()){
+        	file.mkdir();
+        }
+        
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + File.separator + fileName).replace("\\", "/") + "', '')</script>";
 	}
 	
 	/**

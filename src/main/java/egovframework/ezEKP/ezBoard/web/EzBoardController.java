@@ -735,6 +735,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int i=0; i<userDeptPath.split(",").length; i++)
 		{
 			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim());
+			
 			if(boardInfoTemp == null){
 				break;
 			}else{
