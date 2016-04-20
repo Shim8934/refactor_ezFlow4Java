@@ -548,16 +548,17 @@ public class EzEmailMailReadController {
 					for(int i=0; i<arrRecipientsTo.length; i++){
 						iAddress = ((InternetAddress)arrRecipientsTo[i]);
 						name = iAddress.getPersonal();
+						if (name == null) {
+							name = iAddress.getAddress();
+						}
+						else {
+							name = MimeUtility.decodeText(name);
+						}
+						
 						if (i != 0) {
 							toStr += ";";
-                        }
-						
-						if(name == null){
-							toStr += "<"+iAddress.getAddress()+">";
-						} else {
-							name = MimeUtility.decodeText(name);
-							toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-						}
+                        }												
+						toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
 					}
 				}
 
@@ -568,16 +569,17 @@ public class EzEmailMailReadController {
 					for(int i=0; i<arrRecipientsCC.length; i++){
 						iAddress = ((InternetAddress)arrRecipientsCC[i]);
 						name = iAddress.getPersonal();
+						if (name == null) {
+							name = iAddress.getAddress();
+						}
+						else {
+							name = MimeUtility.decodeText(name);
+						}
+						
 						if (i != 0) {
 							ccStr += ";";
                         }
-						
-						if(name == null) {
-							ccStr += "<"+iAddress.getAddress()+">";
-						} else {
-							name = MimeUtility.decodeText(name);
-							ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-						}
+						ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
 					}
 				}
 
@@ -588,16 +590,17 @@ public class EzEmailMailReadController {
 					for(int i=0; i<arrRecipientsBCC.length; i++){
 						iAddress = ((InternetAddress)arrRecipientsBCC[i]);
 						name = iAddress.getPersonal();
+						if (name == null) {
+							name = iAddress.getAddress();
+						}
+						else {
+							name = MimeUtility.decodeText(name);
+						}
+						
 						if (i != 0) {
 							bccStr += ";";
-                        }
-						
-						if(name == null) {
-							bccStr += "<"+iAddress.getAddress()+">";
-						} else {
-							name = MimeUtility.decodeText(name);
-							bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-						}
+                        }						
+						bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
 					}
 				}
 
