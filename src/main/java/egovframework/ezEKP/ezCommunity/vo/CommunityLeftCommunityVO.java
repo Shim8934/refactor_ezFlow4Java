@@ -1,25 +1,25 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityLeftCommunityVO {
-	/** */
+	/** 커뮤니티ID*/
 	String cClubNo;
-	/** */
+	/** 권한*/
 	String permit;
-	/** */
+	/** 접속횟수(1일1회)*/
 	int cVisited;
-	/** */
+	/** 커뮤니티 이름*/
 	String cClubName;
-	/** */
+	/** 커뮤니티 이름(다국어)*/
 	String cClubName2;
-	/** */
+	/** 커뮤니티 회원 수 */
 	int cMemberCnt;
-	/** */
+	/** 커뮤니티 마스터 ID*/
 	String cSysopID;
-	/** */
+	/** 커뮤니티 공개 여부*/
 	String cClubGubun;
-	/** */
+	/** 마스터 커뮤니티 승인여부*/
 	String cClubConfirmType;
-	/** */
+	/** 커뮤니티 홈 로고 (썸네일용)*/
 	String cLogoThumbnail;
 	public String getcClubNo() {
 		return cClubNo;

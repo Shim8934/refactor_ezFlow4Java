@@ -6,8 +6,7 @@
 	<typeAlias alias="CommunityLeftCommunityVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
 	<typeAlias alias="CommunityCBoardVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
 	<typeAlias alias="CommunityCCategoryVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO"/>
-	
-	
+	<typeAlias alias="CommunityBoardTreeVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO"/>	
 	
 	<resultMap class="CommunityLeftCommunityVO" id="CommunityLeftCommunity">
 		<result property="cClubNo"					column="C_ClubNo"					columnIndex="1"/>
@@ -33,23 +32,70 @@
 		<result property="cName"					column="C_NAME"						columnIndex="3"/>
 		<result property="cOrder"					column="C_ORDER"					columnIndex="4"/>
 	</resultMap>
-		
-		
-	<procedure id="EzCommunityDAO.leftCommunityGet1" 	parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-
-	<procedure id="EzCommunityDAO.leftCommunityGet2"	parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#code#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
 	
-	<procedure id="EzCommunityDAO.leftCommunityGet3"	parameterClass="String"		resultMap="CommunityLeftCommunity">
+	<resultMap class="CommunityBoardTreeVO" id="BoardTreeList">
+		<result property="boardID"					column="BoardID"					columnIndex="1"/>
+		<result property="boardName"				column="BoardName"					columnIndex="2"/>
+		<result property="boardName2"				column="BoardName2"					columnIndex="3"/>
+		<result property="treeViewOrder"			column="TreeViewOrder"				columnIndex="4"/>
+		<result property="boardColor"				column="BoardColor"					columnIndex="5"/>
+		<result property="cClubNo"					column="C_ClubNo"					columnIndex="6"/>
+		<result property="gubun"					column="Gubun"						columnIndex="7"/>
+	</resultMap>
+		
+	
+	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultMap="CommunityLeftCommunity">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#userID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getLeftBoardList"	resultMap="LeftBBSList">
+	<procedure id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList">
+		{CALL EZCOMMUNITY.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, #v_pExcludeBoardID#, #v_pClubNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getLeftBoardList"											resultMap="LeftBBSList">
 		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+		
+	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getBoardTreeGet1"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_GET1(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSubFlag#, #v_pSelectBy#, #v_pExcludeBoardID#, #v_pClubNo#, #v_strLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#code#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Integer"	resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_CHECKIFLEAFBOARD_GET(#v_pBoardID#, #v_pUserID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_SET(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSubFlag#, #v_pSelectBy#, #v_pExcludeBoardID#, #v_pClubNo#, #v_strLang#, #v_result#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.goAdminOkGet1"				resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<select id="EzCommunityDAO.getBoardTreeGet2"	resultMap="CategoryValue">
+		<![CDATA[
+			SELECT 
+				BoardID || N';' as BoardID 
+			FROM 
+				EZCOMMUNITY.TBL_Board_BoardManage 
+			WHERE 
+				Access_ = 0 
+			AND 
+				AccessID = N'#pUserID#'
+		]]>		
+	</select>
 	
 	<select id="EzCommunityDAO.getCategoryValueA"	resultMap="CategoryValue">
 		<![CDATA[

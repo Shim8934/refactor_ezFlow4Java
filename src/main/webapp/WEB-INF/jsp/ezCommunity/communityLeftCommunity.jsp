@@ -65,11 +65,11 @@
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/Board/bbsList.do?mode=list&bName=cNotice&type=notice&userLevel=" + UserLevel;
+		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=cNotice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/Board/bbsList.do?mode=list&amp;bName=cBoard&amp;type=board&userLevel=" + UserLevel;
+				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&amp;bName=cBoard&amp;type=board&userLevel=" + UserLevel;
 				            document.getElementById('Map520').click();
 				        }else if (funCode == "3") {
 				            GoTopNavigate("<spring:message code='ezCommunity.t1117' />");
@@ -454,21 +454,13 @@
                 createNodeInsert(xmlDoc, objRoot, "PARAMETER");
 
                 createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-                xmlHttp.open("POST", "/ezCommunity/goaAminOk.do", false);
+                xmlHttp.open("POST", "/ezCommunity/goAdminOk.do", false);
                 xmlHttp.send(xmlDoc);
 
                 resultXML = xmlHttp.responseXML;
-
-                if (CrossYN()) {
-                    master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent
-                }
-                else {
-                    var commNodes = new ActiveXObject("Microsoft.XMLDOM");
-                    commNodes = resultXML.documentElement.childNodes;
-
-                    master = commNodes.item(2).childNodes.item(0).text;
-                }
-
+                
+                master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
+                
                 master = master.toLowerCase();
                 UserID = "${userInfoUserID}";
 			    UserID = UserID.toLowerCase();
@@ -512,14 +504,8 @@
 
                 resultXML = xmlHttp.responseXML;
 
-                if (CrossYN()) {
-                    master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent
-                    isin = SelectNodes(resultXML, "/COMMUNITY/ISIN/VALUE").item(0).textContent
-                }
-                else {
-                    master = commNodes.item(2).childNodes.item(0).text;
-                    isin = commNodes.item(3).childNodes.item(0).text;
-                }
+                master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
+                isin = SelectNodes(resultXML, "/COMMUNITY/ISIN/VALUE").item(0).textContent;
 
                 master = master.toLowerCase();
 

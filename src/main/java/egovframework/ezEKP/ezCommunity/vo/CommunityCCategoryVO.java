@@ -1,13 +1,13 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityCCategoryVO {
-	/** */
+	/** 카테고리코드*/
 	String cCode;
-	/** */
+	/** 카테고리종류*/
 	String cCat;
-	/** */
+	/** 카테고리이름(코드화 함)*/
 	String cName;
-	/** */
+	/** 표시정렬순서*/
 	int cOrder;
 	public String getcCode() {
 		return cCode;

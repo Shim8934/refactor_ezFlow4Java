@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 
 @Service("EzCommunityService")
@@ -47,18 +49,18 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String leftCommunityGet4(String code) throws Exception {
 		return ezCommunityDAO.leftCommunityGet4(code);
 	}
-
-	@Override
-	public String checkIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
-		return "";
-	}
-
-	/** 나중에도안쓰면 삭제*/
-	@Override
-	public String getBoardTree(String pRootBoardID, String id, String deptID, String companyID, int pMode, int parseInt, int pSelectBy, String pExcludeBoardID, String code, String multiData) throws Exception {
-		return "";
-	}
 	
+	@Override
+	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", pRootBoardID);
+		map.put("v_pUserID", id);
+		map.put("v_pDeptID", deptID);
+		map.put("v_pCompanyID", companyID);
+
+		return ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
+	}
+	////////////////
 	/** 나중에도안쓰면 삭제*/
 	@Override
 	public List<CommunityCBoardVO> getLeftBoardList() throws Exception {
@@ -127,10 +129,126 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		return sb.toString();
 	}
-	
-	
-	
-	
+
+	@Override
+	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pRootBoardID", pRootBoardID);
+		map.put("v_pUserID", pUserID);
+		map.put("v_pDeptID", pDeptID);
+		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_pMode", pMode);
+		map.put("v_pSubFlag", pSubFlag);
+		map.put("v_pSelectBy", pSelectBy);
+		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		map.put("v_pClubNo", pClubNo);
+		map.put("v_strLang", strLang);
+		
+		return ezCommunityDAO.getBoardTreeGet1(map);
+	}
+
+	@Override
+	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pRootBoardID", pRootBoardID);
+		map.put("v_pUserID", pUserID);
+		map.put("v_pDeptID", pDeptID);
+		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_pMode", pMode);
+		map.put("v_pSelectBy", pSelectBy);
+		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		map.put("v_pClubNo", pClubNo);
+		
+		return ezCommunityDAO.brdBoardTree(map);
+	}
+
+	@Override
+	public List<CommunityBoardTreeVO> getBoardTreeGet2(String pUserID) throws Exception {
+		return ezCommunityDAO.getBoardTreeGet2(pUserID);
+	}
+
+	@Override
+	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pRootBoardID", pRootBoardID);
+		map.put("v_pUserID", pUserID);
+		map.put("v_pDeptID", pDeptID);
+		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_pMode", pMode);
+		map.put("v_pSubFlag", pSubFlag);
+		map.put("v_pSelectBy", pSelectBy);
+		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		map.put("v_pClubNo", pClubNo);
+		map.put("v_strLang", strLang);
+		map.put("v_result", result);
+		
+		ezCommunityDAO.getBoardTreeSet(map);
+	}
+
+	@Override
+	public int checkIfLeafBoardGet(String pBoardID) throws Exception {
+		return ezCommunityDAO.checkIfLeafBoardGet(pBoardID);
+	}
+
+	@Override
+	public List<String> goAdminOkGet1() throws Exception {
+		return ezCommunityDAO.goAdminOkGet1();
+	}
+
+	@Override
+	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception {
+		return null;
+	}
+/*	@Override
+	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
+		int pos1 = pSource.indexOf(pStarts);
+		int pos2 = pSource.indexOf(pEnds, pos1 + pStarts.length());
+		
+		if(pos1 == -1){
+			return "";
+		}
+		if(pos2 == -1){
+			return "";
+		}
+		
+		return pSource.substring(pos1, pos2 - pos1 + pEnds.length());
+	}
+
+	@Override
+	public String sortXML(String pXML, String pSortBy) throws Exception{
+		String temp = "1";
+		String[] sortInfo = new String[1000];
+		int iCount = 0;
+		
+		while(iCount < 1000){
+			temp = extractString(pXML, "<ROW>", "</ROW>");
+			
+			if(!temp.equals("")){
+				String sortNum = extractString(temp, "<" + pSortBy + ">", "</" + pSortBy + ">").replace("<" + pSortBy + ">", "").replace("</" + pSortBy + ">", "").trim();
+				
+				while(sortNum.length() < 4){
+					sortNum = "0" + sortNum;
+				}
+				
+				sortInfo[iCount] = sortNum + temp;
+				pXML = pXML.replace(temp, "");
+			}
+			
+			iCount++;
+		}
+		
+		Arrays.sort(sortInfo);
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		
+		for(String info : sortInfo){
+			sb.append(info.substring(4));
+		}
+		
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}*/
 	
 	
 }

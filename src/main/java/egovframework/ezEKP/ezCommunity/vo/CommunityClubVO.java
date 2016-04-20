@@ -1,125 +1,125 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityClubVO {
-	/** */
+	/** 커뮤니티ID*/
 	String cClubNo;
-	/** */
+	/** 커뮤니티 등록 시각*/
 	String cRegDate;
-	/** */
+	/** 커뮤니티 이름*/
 	String cClubName;
-	/** */
+	/** 커뮤니티 이름(다국어)*/
 	String cClubName2;
-	/** */
+	/** 커뮤니티 카테고리1*/
 	String cCateA;
-	/** */
+	/** 커뮤니티 카테고리2*/
 	String cCateB;
-	/** */
+	/** 커뮤니티 카테고리3*/
 	String cCateC;
-	/** */
+	/** 커뮤니티 공개 여부*/
 	String cClubGubun;
-	/** */
+	/** 마스터 커뮤니티 승인여부*/
 	String cClubConfirmType;
-	/** */
+	/** 관리자 커뮤니티 승인여부*/
 	String cAdminConfirm;
-	/** */
+	/** 커뮤니티 개설자 ID*/
 	String cMaker;
-	/** */
+	/** 커뮤니티 마스터 ID*/
 	String cSysopID;
-	/** */
+	/** 커뮤니티 회원 수 */
 	int cMemberCnt;
-	/** */
+	/** 커뮤니티 홈 로고  실제 파일 이름*/
 	String cLogo;
-	/** */
+	/** 커뮤니티 홈 로고 (썸네일용)*/
 	String cLogoThumbnail;
-	/** */
+	/** 커뮤니티 백그라운드  실제 파일 이름*/
 	String cBgImage;
-	/** */
+	/** 커뮤니티 글씨 색*/
 	String cFontColor;
-	/** */
+	/** 커뮤니티 백그라운드 색*/
 	String cBgColor;
-	/** */
+	/** 커뮤니티 타이틀  글씨 색*/
 	String cTitleFontColor;
-	/** clob*/
+	/** clob커뮤니티 소개 */
 	String cClubDesc;
-	/** */
+	/** 커뮤니티 배너  실제 파일 이름*/
 	String cClubBanner;
-	/** */
+	/** 커뮤니티 오픈 시각*/
 	String cOpenDate;
-	/** */
+	/** <공지사항> 게시판명*/
 	String cClubNoticeTitle;
-	/** */
+	/** <공지사항> 게시판  제목 색*/
 	String cNoticeTitleColor;
-	/** */
+	/** <공지사항> 게시판  글씨 색*/
 	String cNoticeFontColor;
-	/** */
+	/** 커뮤니티 왼쪽 메뉴 <공지사항> 게시판 순서*/
 	int cClubNoticeOrderBy;
-	/** */
+	/** <공지사항> 게시판 사용유무*/
 	String cClubNoticeExist;
-	/** */
+	/** <게시판> 게시판명*/
 	String cClubBoardTitle;
-	/** */
+	/** <게시판> 게시판  제목 색*/
 	String cBoardTitleColor;
-	/** */
+	/** <게시판> 게시판  글씨 색*/
 	String cBoardFontColor;
-	/** */
+	/** <게시판> 왼쪽 메뉴 공시사항 게시판 순서*/
 	int cClubBoardOrderBy;
-	/** */
+	/** <게시판> 게시판 사용유무*/
 	String cClubBoardExist;
-	/** */
+	/** <자료실> 게시판명*/
 	String cClubPdsTitle;
-	/** */
+	/** <자료실> 게시판  제목 색*/
 	String cPdsTitleColor;
-	/** */
+	/** <자료실> 게시판  글씨 색*/
 	String cPdsFontColor;
-	/** */
+	/** <자료실> 왼쪽 메뉴 공시사항 게시판 순서*/
 	int cClubPdsOrderBy;
-	/** */
+	/** <자료실> 게시판 사용유무*/
 	String cClubPdsExist;
-	/** */
+	/** <게시판1> 게시판명*/
 	String cClubBoard1Title;
-	/** */
+	/** <게시판1> 게시판  제목 색*/
 	String cBoard1TitleColor;
-	/** */
+	/** <게시판1> 게시판 글씨 색*/
 	String cBoard1FontColor;
-	/** */
+	/** <게시판1 > 왼쪽 메뉴 공시사항 게시판 순서*/
 	String cClubBoard1Exist;
-	/** */
+	/** <게시판1 > 게시판 사용유무*/
 	int cClubBoard1OrderBy;
-	/** */
+	/** <게시판2 > 게시판명*/
 	String cClubBoard2Title;
-	/** */
+	/** <게시판2 > 게시판  제목 색*/
 	String cBoard2TitleColor;
-	/** */
+	/** <게시판2 > 게시판  글씨 색*/
 	String cBoard2FontColor;
-	/** */
+	/** <게시판2 > 게시판 사용유무*/
 	String cClubBoard2Exist;
-	/** */
+	/** <게시판2 > 왼쪽 메뉴 공시사항 게시판 순서*/
 	int cClubBoard2OrderBy;
-	/** */
+	/** <자료실> 게시판명*/
 	String cClubPds1Title;
-	/** */
+	/** <자료실> 게시판  제목 색*/
 	String cPds1TitleColor;
-	/** */
+	/** <자료실> 게시판  글씨 색*/
 	String cPds1FontColor;
-	/** */
+	/** <자료실> 게시판 사용유무*/
 	String cClubPds1Exist;
-	/** */
+	/** <자료실> 왼쪽 메뉴 공시사항 게시판 순서*/
 	int cClubPds1OrderBy;
-	/** */
+	/** 커뮤니티 점수*/
 	int score;
-	/** */
+	/** 회사내외여부*/
 	int isIn;
-	/** */
+	/** 회사ID*/
 	String companyID;
-	/** */
+	/** 사용Disk용량*/
 	int usingDiskSize;
-	/** */
+	/** 메일 발송 여부*/
 	String sendMail;
-	/** */
+	/** 메일 발송 횟수 */
 	String sendMailCnt;
-	/** */
+	/** 할당Disk용량*/
 	String assignDiskSize;
-	/** */
+	/** 커뮤니티 타입*/
 	String cType;
 	public String getcClubNo() {
 		return cClubNo;
