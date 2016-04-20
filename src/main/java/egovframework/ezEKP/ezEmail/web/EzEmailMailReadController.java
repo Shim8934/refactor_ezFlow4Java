@@ -801,6 +801,8 @@ public class EzEmailMailReadController {
 					}
 				}
 				htmlBody += strContent;
+				htmlBody = stripScriptTags(htmlBody);
+				htmlBody = addTargetBlank(htmlBody);				
 			} else if(part.isMimeType("text/plain")){
 				String strContent = part.getContent().toString();
 				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");				
