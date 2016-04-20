@@ -751,61 +751,50 @@ public class EzEmailMailReadController {
 				filecnt = (Integer.parseInt(filecnt) + 1) + "";
 			} else if(part.isMimeType("text/html")){
 				String strContent = part.getContent().toString();
-				while(strContent.contains("src=\"cid:") || strContent.contains("src='cid:")){
-					if(strContent.contains("src=\"cid:")){
-						int index = strContent.indexOf("src=\"cid:");
-						if(index == -1){
-							break;
-						}
-						int lastindex = index+9;
-						while(true){
-							char c = strContent.charAt(lastindex);
-							if(c == '"'){
-								break;
-							}
-							if(lastindex>=strContent.length()){
-								lastindex = -1;
-								break;
-							}
-							++lastindex;
-						}
-						if(lastindex == -1){
-							break;
-						}
-						String cid = strContent.substring(index+9, lastindex);
-						String contentId = "<"+cid+">";
-						strContent = strContent.replace("src=\"cid:" + cid + "\"", "src=/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8"));
-					} else if(strContent.contains("src='cid:")){
-						int index = strContent.indexOf("src='cid:");
-						if(index == -1){
-							break;
-						}
-						int lastindex = index+9;
-						while(true){
-							char c = strContent.charAt(lastindex);
-							if(c == '\''){
-								break;
-							}
-							if(lastindex>=strContent.length()){
-								lastindex = -1;
-								break;
-							}
-							++lastindex;
-						}
-						if(lastindex == -1){
-							break;
-						}
-						String cid = strContent.substring(index+9, lastindex);
-						String contentId = "<"+cid+">";
-						strContent = strContent.replace("src='cid:" + cid + "'", "src=/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8"));
+				
+				// process in-line images
+				int index1 = -1;
+				int index2 = -1;
+				while((index1 = strContent.indexOf("src=\"cid:")) > -1 || (index2 = strContent.indexOf("src='cid:")) > -1){
+					char quoteChar;
+					int index;
+					if (index1 > -1) {
+						quoteChar = '"';
+						index = index1;
 					}
+					else {
+						quoteChar = '\'';
+						index = index2;
+					}
+					
+					int lastindex = index+9;
+					while(true){
+						if(lastindex>=strContent.length()){
+							lastindex = -1;
+							break;
+						}						
+						char c = strContent.charAt(lastindex);
+						if(c == quoteChar){
+							break;
+						}
+						++lastindex;
+					}
+					if(lastindex == -1){
+						break;
+					}
+					String cid = strContent.substring(index+9, lastindex);
+					String contentId = "<"+cid+">";
+					String orgSrc = "src=" + quoteChar + "cid:" + cid + quoteChar;
+					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8") + "\"");						
 				}
 				htmlBody += strContent;
+				
 				htmlBody = stripScriptTags(htmlBody);
 				htmlBody = addTargetBlank(htmlBody);				
 			} else if(part.isMimeType("text/plain")){
 				String strContent = part.getContent().toString();
-				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");				
+				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+				
 				htmlBody = changeURLsToAnchorTags(htmlBody);	
 				htmlBody = stripScriptTags(htmlBody);
 				htmlBody = addTargetBlank(htmlBody);
