@@ -228,9 +228,7 @@ public class IMAPAccess {
 				String disp = part.getDisposition();
 				String filename = part.getFileName();
 //				logger.debug("disp=" + disp + ",filename=" + filename);
-				// many mailers don't include a Content-Disposition
-				if ((disp != null && disp.equalsIgnoreCase(Part.ATTACHMENT))
-						|| (filename != null)) {
+				if (disp != null && disp.equalsIgnoreCase(Part.ATTACHMENT)) {
 					isAttached = true;
 				}
 			}			
