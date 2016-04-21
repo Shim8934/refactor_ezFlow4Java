@@ -567,8 +567,9 @@
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.itemNo}" class="white"> 
-			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+${list.itemNo}+" value="${list.itemNo}"></td> 
-			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="${list.title}" onClick="title_OnClick('${list.receve}&itemNo=${list.itemNo}')" ><nobr>${list.title}</nobr></td> 
+			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+<c:out value ="${list.itemNo}"/>+" value=<c:out value="${list.itemNo}"/>></td> 
+			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.receve}"/>&itemNo=<c:out value ="${list.itemNo}"/>')" ><nobr><c:out value ="${list.title}"/></nobr></td>
+			          	
 			          	<c:if test="${list.publicFlg == 0}">
 			          		<td> 기명 </td>	
 			          	</c:if>
