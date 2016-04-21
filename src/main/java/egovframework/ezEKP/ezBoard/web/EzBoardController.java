@@ -705,13 +705,11 @@ public class EzBoardController extends EgovFileMngUtil{
 	    if(strProp != null){
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
-	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
-	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
-		    if(userInfo.getPrimary() != null && boardInfo.getBoardName2() != null && userInfo.getPrimary().equals("2") && !boardInfo.getBoardName2().equals("")){
-		    	boardInfo.setBoardName(boardInfo.getBoardName2());
+		    if(userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")){
+		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
 		    }else{
-		    	boardInfo.setBoardName(boardInfo.getBoardName1());
+		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
 		    }
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
@@ -800,13 +798,11 @@ public class EzBoardController extends EgovFileMngUtil{
 	    if(strProp != null){
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
-	    	boardInfo.setBoardName1(strProp.getBoardName().replace("\"\"", "&quot"));
-	    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"\"", "&quot"));
 	    	 
-	    	if(userInfo.getPrimary() != null && boardInfo.getBoardName2() != null && userInfo.getPrimary().equals("2") && !boardInfo.getBoardName2().equals("")){
-		    	boardInfo.setBoardName(boardInfo.getBoardName2());
+	    	if(userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")){
+		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
 		    }else{
-		    	boardInfo.setBoardName(boardInfo.getBoardName1());
+		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
 		    }
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
@@ -2820,8 +2816,17 @@ public class EzBoardController extends EgovFileMngUtil{
             }
         }
         
-        boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-        boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        if(boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")){
+        	boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+        }
+        
+        if(boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")){
+        	boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
+        }
+        
+        if(boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")){
+        	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
         
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
@@ -3010,9 +3015,18 @@ public class EzBoardController extends EgovFileMngUtil{
         
         checkForm = ezBoardService.checkForm(boardID, "Y");
         useBackGround = ezBoardService.checkBackGroundImage(boardID);
-        boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-        boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
-        boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        
+        if(boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")){
+        	boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+        }
+        
+        if(boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")){
+        	boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
+        }
+        
+        if(boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")){
+        	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
         
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardListVO", boardListVO);
@@ -4445,8 +4459,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", new Locale(globals.getProperty("Globals.language"))));
 		}
 		
-        boardItem.setBoardName(commonUtil.cleanValue(boardItem.getBoardName()));
-        boardItem.setBoardName2(commonUtil.cleanValue(boardItem.getBoardName2()));
+		if(boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")){
+        	boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+        }
+        
+        if(boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")){
+        	boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
+        }
+        
+        if(boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")){
+        	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
 		
 		model.addAttribute("boardItem", boardItem);
 		model.addAttribute("boardInfo", boardInfo);
@@ -4586,8 +4609,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-        boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
-        boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		if(boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")){
+        	boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+        }
+        
+        if(boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")){
+        	boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
+        }
+        
+        if(boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")){
+        	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
 		
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -5131,7 +5163,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			result.append("<NODE>");
 			result.append("<BOARDID>" + vo.getBoardId() + "</BOARDID>");
 			result.append("<APPRUSERID>" + vo.getApprUserId() + "</APPRUSERID>");
-			result.append("<DISPLAYNAME>" + vo.getBoardName() + "</DISPLAYNAME>");
+			result.append("<DISPLAYNAME>" + commonUtil.cleanValue(vo.getBoardName()) + "</DISPLAYNAME>");
 			result.append("<DISPLAYNAME2>" + vo.getBoardType() + "</DISPLAYNAME2>");
 			result.append("<DESCRIPTION>" + vo.getOrderCell() + "</DESCRIPTION>");
 			result.append("<DESCRIPTION2>" + vo.getOrderOption() + "</DESCRIPTION2>");

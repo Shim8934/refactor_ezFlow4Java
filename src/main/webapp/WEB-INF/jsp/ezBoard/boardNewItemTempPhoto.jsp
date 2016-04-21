@@ -804,7 +804,7 @@
 	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
 	        <tr>
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
-	          <td style="width:70%" id="tdBoardName"><c:out value="${boardInfo.boardName}"/></td>
+	          <td style="width:70%" id="tdBoardName">${boardInfo.boardName}</td>
 	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
 	          <td style="width:120px; text-align:center">${userInfo.id}</td>
 	        </tr>
