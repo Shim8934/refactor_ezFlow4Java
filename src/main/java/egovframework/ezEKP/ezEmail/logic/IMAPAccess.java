@@ -224,13 +224,8 @@ public class IMAPAccess {
 			else if (part.isMimeType("message/rfc822")) {
 				hasAttachment((Part)part.getContent());
 			}
-			else if (part instanceof MimeBodyPart) {
-				String disp = part.getDisposition();
-				String filename = part.getFileName();
-//				logger.debug("disp=" + disp + ",filename=" + filename);
-				if (disp != null && disp.equalsIgnoreCase(Part.ATTACHMENT)) {
-					isAttached = true;
-				}
+			else if (part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+				isAttached = true;
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
