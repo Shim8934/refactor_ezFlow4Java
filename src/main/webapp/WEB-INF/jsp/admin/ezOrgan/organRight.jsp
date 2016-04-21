@@ -58,7 +58,6 @@
 					if (g_xmlHTTP.statusText == "OK"){
 					    Tree_setconfig();
 		                document.getElementById("TreeView").innerHTML = "";
-
 					    var treeView = new TreeView();
 					    treeView.SetID("FromTreeView");
 					    treeView.SetUseAgency(true);

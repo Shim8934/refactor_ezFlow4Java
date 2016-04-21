@@ -1,18 +1,25 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Properties;
+import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -34,7 +41,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzOrganAdminController {
+public class EzOrganAdminController extends EgovFileMngUtil{
 	
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -455,5 +462,95 @@ public class EzOrganAdminController {
 			ezCommonService.responseAttach(filePath, fileName, false, request, response);
 		}
 	}
+	
+	/**
+	 * 조직도관리 사원정보 사진이미지 정보 DB 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/signImageSave.do")
+	public void signImageSave(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String fileName = request.getParameter("fileName");
+		String filePath = config.getProperty("upload_personal.PHOTO") + File.separator + fileName;
+		
+		if(fileName != null && !fileName.equals("")){
+			ezCommonService.responseAttach(filePath, fileName, false, request, response);
+		}
+	}
+	
+	/**
+	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수
+	*/
+	@RequestMapping(value = "/admin/ezOrgan/signImageUpload.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String signImangeUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String mode = request.getParameter("mode");
+		String userID = request.getParameter("userID");		
+		//String guid = UUID.randomUUID().toString();
+		MultipartFile multiFile = request.getFile("file1");
+		String realPath = request.getServletContext().getRealPath("");		
+		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + File.separator;
+		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + File.separator;
+		String serverPath = "";
+		String fileName = "";		
+		String extension = "";
+		
+		if(userID.equals("")){
+			userID = userInfo.getId();
+		}
+		
+		try{
+			fileName = multiFile.getOriginalFilename();
+			fileName = fileName.replace("+", "%2b");
+			fileName = fileName.replace(";", "%3b");
+			extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			
+			if(mode.equals("PICTURE")){
+				serverPath = thumbPath;
+				fileName = userID + "." + extension;
+			}else if(mode.equals("TEMP")){
+				serverPath = tempPath;
+				fileName = userID + "." + extension;
+			}
+			//2016-04-20 장진혁과장 -- 전자결재 서명 업로드 구현 시 수정
+			/*else if(mode.equals("GLOGO")){
+				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + File.separator + userID + File.separator;
+				fileName = userID + "_" + guid + "." + extension;
+			}else{
+				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + File.separator + userID + File.separator;
+				fileName = userID + "_" + guid + "." + extension;
+			}*/
+			
+			File file = new File(serverPath);
+			
+			if(!file.exists()){
+				file.mkdirs();
+			}	
+			
+			if(!mode.equals("TEMP")){
+				File file1 = new File(tempPath);
+				
+				if(!file1.exists()){
+					file1.mkdirs();
+				}
+			}
+			
+			writeUploadedFile(multiFile, fileName, tempPath);
+			File imageFile = new File(tempPath + File.separator + fileName);			
+			
+			BufferedImage bi = ImageIO.read(imageFile);
+            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+            ImageIO.write(bufferedImage, "png", new File(thumbPath + File.separator + fileName));
+            
+            FileUtils.deleteQuietly(imageFile);
+            //2016-04-20 장진혁과장 --만약 전자결재에서 이미지 파일 원본을 필요로 한다면 주석을 제거 후 구현필요
+            //writeUploadedFile(multiFile, fileName, serverPath);
+            return thumbPath + fileName;            
+			
+		}catch(Exception e){
+			return "UPLOAD_ERROR";
+		}		
+	}
+	
 	
 }

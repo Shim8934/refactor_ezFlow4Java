@@ -736,11 +736,11 @@ public class EzOrganServiceImpl implements EzOrganService {
         for(String propname : propList){
         	if (checkDBColum(propname.toUpperCase()) == false){
                 propValue = getPropertyValue(id, propname);
-                propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.makeXMLString(propValue) + "</" + propname.toUpperCase() + ">");
+                propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
             }else if (propname.toUpperCase() != ""){
             	
                 if (xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0){
-                    propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.makeXMLString(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
+                    propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
                 }else{
                     propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");
                 }

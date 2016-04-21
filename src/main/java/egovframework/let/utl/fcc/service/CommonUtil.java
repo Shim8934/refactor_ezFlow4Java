@@ -199,7 +199,7 @@ public class CommonUtil {
 					data = "";
 				}				
 		        stb.append("<" + field.getName().toUpperCase() + ">");
-		        stb.append(data);
+		        stb.append(cleanValue(data));
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
 			stb.append("</ROW>");
@@ -223,8 +223,15 @@ public class CommonUtil {
 		}
 	}	
 	
-	public String makeXMLString(String pOrgString) {
-		return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	public String cleanValue(String pOrgString) {
+		String value = pOrgString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+        value = value.replaceAll("'", "&#39;");
+        value = value.replaceAll("eval\\((.*)\\)", "");
+        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
+        value = value.replaceAll("script", "");
+
+		return value;
 	}
 	
 	public String trimDoubleQuotes(String src) {

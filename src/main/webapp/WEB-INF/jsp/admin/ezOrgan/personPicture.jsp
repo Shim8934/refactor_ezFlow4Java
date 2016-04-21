@@ -27,9 +27,79 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-			});			
+			});
 			
+			function btnimagefile_onclick(){
+			    try {
+			        document.form.file1.click();
+				}catch(e){
+					alert(e.discription);
+				}
+			}
 			
+			function imgtemp_onclick() {
+	            if (document.form.file1.value != "") {
+	            	if (document.getElementById("form").file1.files.length > 1) {
+			            alert("<spring:message code='ezOrgan.t9902' />");
+			        }
+	            	
+		            var fd = new FormData();		            
+		            fd.append("file1", document.getElementById("form").file1.files[0]);
+		            
+		            xhr = new XMLHttpRequest();
+		            xhr.addEventListener("load", uploadComplete, false);
+		            
+		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=TEMP&userID=" + RetValue);
+		            xhr.send(fd);
+		        }
+	        }
+			
+			function uploadComplete() {
+		        document.getElementById("file1").value = "";
+		        
+		        if(xhr.responseText == "UPLOAD_ERROR"){
+		        	alert("<spring:message code='fail.common.msg' />");
+		        	
+		        	document.getElementById("file1").value = "";
+		        	document.getElementById("tempFilePath").value = "";
+		        }else{		        
+		        	document.getElementById("tempFilePath").value = xhr.responseText;
+		        }
+		        //returnvalue(xhr.responseText);
+		    }
+			
+			function imgConfirm_onclick(obj) {
+				if (document.getElementById("form").file1.files.length == 0) {
+		            alert("<spring:message code='ezOrgan.t9903' />");
+		            return;
+		        }
+				
+				var fileName = document.getElementById("tempFilePath").value;
+				
+				$.ajax({
+					type : "POST",
+					dataType : "xml",
+					url : "/admin/ezOrgan/signImageSave.do",
+					data : {mode : "PICTURE", userID : RetValue, extensionAttribute2 : fileName},
+					success : function(result){
+						
+					}	
+				});
+								
+			    if (document.form.file1.value != "") {
+			        var frm = document.getElementById('form');
+			        frm.action = "/admin/ezOrgan/signImageSave.do?mode=PICTURE&userID=" + RetValue;
+			        frm.submit();
+			    }
+			}
+			
+			function close_Click() {
+			    //if(CrossYN()){
+			    parent.DivPopUpHidden();
+			    /* }else{
+			        window.close();
+			    } */
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -51,9 +121,10 @@
 		    	<td width="100%">
 		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-		    		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezOrgan/admin/signImange_upload_Cross.aspx?mode=PICTURE" target="ifrm">
+		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
 		  				<input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="true" />
 		    			<input type="hidden" name="mode" id="mode" />
+		    			<input type="text" name="tempFilePath" id="tempFilePath" />
 		    		</form>
 					<a class="imgbtn"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px"><spring:message code='ezOrgan.t101' /></span></a>
 				</td>

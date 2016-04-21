@@ -500,16 +500,16 @@
 	            	<c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
 		                    <tr class="primary">
-		                        <th>${lang_primary}</th>
-		                        <td style="border-bottom:1px solid #b6b6b6;">${model.boardName}</td>
+		                        <th><c:out value='${lang_primary}' /></th>
+		                        <td style="border-bottom:1px solid #b6b6b6;"><c:out value='${model.boardName}' /></td>
 		                    </tr>
 		                    <tr class="secondary">
-		                        <th>${lang_secondary}</th>
-		                        <td>${model.boardName2}</td>
+		                        <th><c:out value='${lang_secondary}' /></th>
+		                        <td><c:out value='${model.boardName2}' /></td>
 		                    </tr>
 		                </table>
 		            </c:if>
-		            <c:if test="${use_multiData != 'YES'}">${model.boardName}</c:if>
+		            <c:if test="${use_multiData != 'YES'}"><c:out value='${model.boardName}' /></c:if>
 	            </td>
 	        </tr>
 	    </table>
@@ -523,32 +523,32 @@
 	                <c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
 		                    <tr class="primary">
-		                        <th>${lang_primary}</th>
+		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #b6b6b6;">
-		                            <input type="text" id="txtBoardName" style="width: 99%" value="${model.boardName}" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 99%" value="<c:out value='${model.boardName}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
-		                        <th>${lang_secondary}</th>
+		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 99%" value="${model.boardName2}" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 99%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">
-	                	<input type="text" id="txtBoardName" style="width: 100%" value="${model.boardName}" maxlength="25" />
+	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
 	                </c:if>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code="ezBoard.t154"/></th>
-	            <td>${model.boardNo}</td>
+	            <td><c:out value='${model.boardNo}' /></td>
 	        </tr>
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t155"/></th>
 	            <td>
-	                <input type="text" id="txtBoardDescription" style="width: 99%" value="${model.boardDescription}" maxlength="99" />
+	                <input type="text" id="txtBoardDescription" style="width: 99%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -565,7 +565,7 @@
 		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" />
 		                <spring:message code="ezBoard.t157"/>
 		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" checked />
-		                <input type="text" id="txtExpires" style="width: 35px" value="${model.itemExpires}" />
+		                <input type="text" id="txtExpires" style="width: 35px" value="<c:out value='${model.itemExpires}' />" />
 		                <spring:message code="ezBoard.t158"/>
 	                </c:if> 
 				</td>
@@ -585,7 +585,7 @@
 	            	<th><spring:message code="ezBoard.t159"/></th>
 	            	<td>
 	            		<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px" value="${model.deleteAfter}"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter" checked />
 	                	<spring:message code="ezBoard.t162"/>
@@ -690,13 +690,13 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 25px" value="${model.attachSizeLimit}" />&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: 25px" value="<c:out value='${model.attachSizeLimit}' />" />&nbsp;MB
 	            </td>
 	        </tr>
 	        <tr style="${style}">
 	            <th>URL</th>
 	            <td>
-	                <input type="text" id="txtURL" style="width: 99%" value="${model.url}" />
+	                <input type="text" id="txtURL" style="width: 99%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -738,10 +738,10 @@
 	                <table style="width: 300px">
 	                    <tr>
 	                        <td style="width: 100px;">
-	                            <div id="selColor" style="width: 100px; height: 100%; background-color: ${model.boardColor}; border: 1px solid #686868;"></div>
+	                            <div id="selColor" style="width: 100px; height: 100%; background-color: <c:out value='${model.boardColor}' />; border: 1px solid #686868;"></div>
 	                        </td>
 	                        <td style="width: 100px;">
-	                            <span id="colorID" style="width: 80px;">${model.boardColor}</span>
+	                            <span id="colorID" style="width: 80px;"><c:out value='${model.boardColor}' /></span>
 	                        </td>
 	                        <td style="text-align: right; width: 100px">
 	                            <a class="imgbtn"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>

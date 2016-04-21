@@ -820,7 +820,7 @@
 		<table class="content">
 			<tr>
 		    	<th><spring:message code='ezBoard.t92'/></th>
-		        <td class="point">${boardName}</td>
+		        <td class="point"><c:out value='${boardName}' /></td>
 			</tr>
 		</table>
 		<br/>
