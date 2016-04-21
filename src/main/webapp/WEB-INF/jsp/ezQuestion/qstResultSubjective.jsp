@@ -59,7 +59,7 @@
 					tableXml += "<td style='width:40px;text-align:center'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'NO');
 					tableXml += "</td>";
-					if("${public_flg}"==0){
+					if("${publicFlg}"==0){
 						tableXml += "<td style='width:140px'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERDEPTNAME');
 						tableXml += "</td>";
@@ -102,7 +102,7 @@
 			}
 			
 			function menuQst_ResultView() {
-			    history.go("${page_count}");
+			    history.go("${pageCount}");
 			}
 			
 			function search_Set(pPage) {
@@ -295,7 +295,7 @@
 		    <table id="xmlTable" class="mainlist" style="width: 100%">
 		        <tr>
 		            <th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
-		            <c:if test="${public_flg == 0 }">
+		            <c:if test="${publicFlg == 0 }">
 		            	<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
 			            <th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
 			            <th style="width:130px"><spring:message code='ezQuestion.t8' /></th>

@@ -88,11 +88,11 @@
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
-				var tableXml=$("#listQst").innerHTML;
+				var tableXml=document.getElementById("listQst").innerHTML;
 				for(i=0; i<nodes.length ;i++){
 					tableXml += "<option value='" + SelectSingleNodeValue(nodes[i], "QUESTION_NO") +"' anstype='"+SelectSingleNodeValue(nodes[i], "ANSWERTYPE")+"'>"+SelectSingleNodeValue(nodes[i], "QUESCONTENT")+"</option>"
 				}
-				$("#listQst").html($("#listQst").html()+tableXml);
+				document.getElementById("listQst").innerHTML = document.getElementById("listQst").innerHTML + tableXml;
 			}
 			
 			function menuQst_List() {
@@ -168,6 +168,7 @@
 		                document.getElementById("AnalysisData").value = "";
 		                if (szRType == "T") {
 		                    document.getElementById("AnalysisData").value = getXmlString(xmlRtn);
+alert(xmlHttp.responseText);
 		                    document.getElementById("AnalysisListView").innerHTML = "";
 		                    var listview = new ListView();
 		                    listview.SetID("AnalysisList");

@@ -129,7 +129,7 @@
 			<table class="content">
 				<tr>
 					<th><spring:message code='ezQuestion.t255' /></th>
-					<td>${qstUserPollItemVO.title}</td>
+					<td><c:out value="${qstUserPollItemVO.title}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t265' /></th>
@@ -137,7 +137,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t216' /></th>
-					<td>${qstUserPollItemVO.pollStartDate}  ~  ${qstUserPollItemVO.pollEndDate}</td>
+					<td><c:out value="${qstUserPollItemVO.pollStartDate}"/>  ~  <c:out value="${qstUserPollItemVO.pollEndDate}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t231' /></th>
@@ -148,18 +148,18 @@
 								<spring:message code='ezQuestion.t322' />
 							</c:when>
 							<c:otherwise>
-								${qstUserPollItemVO.pollEndDate} <spring:message code='ezQuestion.t323' /> ${qstUserPollItemVO.postTerm} <spring:message code='ezQuestion.t233' />
+								<c:out value="${qstUserPollItemVO.pollEndDate}"/> <spring:message code='ezQuestion.t323' /> <c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code='ezQuestion.t233' />
 							</c:otherwise>
 						</c:choose>
 					</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t325' /></th>
-					<td>${resCnt} <spring:message code='ezQuestion.t391' />${qstUserPollItemVO.readCnt} ] </td>
+					<td><c:out value="${resCnt}"/> <spring:message code='ezQuestion.t391' /><c:out value="${qstUserPollItemVO.readCnt}"/> ] </td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t327' /></th>
-					<td>${qstUserPollItemVO.content}</td>
+					<td><c:out value="${qstUserPollItemVO.content}"/></td>
 				</tr>
 			</table>
 			<br>

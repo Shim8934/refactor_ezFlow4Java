@@ -302,15 +302,15 @@
 		<table class="content">
 		  <tr>
 		    <th><spring:message code="ezQuestion.t255" /></th>
-		    <td>${qstUserPollItemVO.title}</td>
+		    <td><c:out value="${qstUserPollItemVO.title}"/></td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t265" /></th>
-		    <td><a style="cursor:pointer" onclick='openUserInfo("${qstUserPollItemVO.userEmail}")' >${qstUserPollItemVO.userNm} (${qstUserPollItemVO.userEmail} )</a></td>
+		    <td><a style="cursor:pointer" onclick='openUserInfo(<c:out value="${qstUserPollItemVO.userEmail}"/>)' ><c:out value="${qstUserPollItemVO.userNm}"/> (<c:out value="${qstUserPollItemVO.userEmail}"/> )</a></td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t216" /></th>
-		    <td>${qstUserPollItemVO.pollStartDate} ~ ${qstUserPollItemVO.pollEndDate} </td>
+		    <td><c:out value="${qstUserPollItemVO.pollStartDate}"/> ~ <c:out value="${qstUserPollItemVO.pollEndDate}"/> </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t231" /></th>
@@ -320,28 +320,28 @@
 		    			<spring:message code="ezQuestion.t322" />
 		    		</c:when>
 		    		<c:otherwise>
-		    			${qstUserPollItemVO.pollEndDate} <spring:message code="ezQuestion.t323" />${qstUserPollItemVO.postTerm} <spring:message code="ezQuestion.t324" />
+		    			<c:out value="${qstUserPollItemVO.pollEndDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
 		    		</c:otherwise>
 		    	</c:choose>
 			</td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t325" /></th>
-		    <td>${qstUserPollItemVO.responseCnt} <spring:message code="ezQuestion.t326" />${qstUserPollItemVO.readCnt} ] </td>
+		    <td><c:out value="${qstUserPollItemVO.responseCnt}"/> <spring:message code="ezQuestion.t326" /><c:out value="${qstUserPollItemVO.readCnt}"/> ] </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t327" /></th>
-		    <td>${qstUserPollItemVO.content} </td>
+		    <td><c:out value="${qstUserPollItemVO.content}"/> </td>
 		  </tr>
 		</table>
 		
 		<form name="frmResponse" method="post" onSubmit="fun_Save()">
-			<input type=hidden value="${receve}" name="receve">
+			<input type=hidden value=<c:out value="${receve}"/> name="receve">
 			<table id="xmlTable" class="poll" style="margin-top:10px">
 			</table>
 			<input type="hidden" name="hidEleCnt">
-		  	<input type=hidden value="${qstUserPermissionVO.brdID}" name=brdID >
-			<input type=hidden value="${qstUserPermissionVO.itemNo}" name=itemNo>
+		  	<input type=hidden value=<c:out value="${qstUserPermissionVO.brdID}"/> name=brdID >
+			<input type=hidden value=<c:out value="${qstUserPermissionVO.itemNo}"/> name=itemNo>
 			<input type="hidden" name="tableAnswer" />
 		</form>
 		
