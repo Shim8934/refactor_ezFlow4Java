@@ -587,7 +587,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", commonUtil.convertDocumentToString(doc));
-		model.addAttribute("receve", commonUtil.cleanValue(receve));
+		model.addAttribute("receve", receve);
 		
 		return "/ezQuestion/qstResponse";
 	}

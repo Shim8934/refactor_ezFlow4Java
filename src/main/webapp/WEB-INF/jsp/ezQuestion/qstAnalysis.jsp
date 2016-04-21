@@ -167,8 +167,7 @@
 		                document.getElementById("hidRType2").value = szRType;
 		                document.getElementById("AnalysisData").value = "";
 		                if (szRType == "T") {
-		                    document.getElementById("AnalysisData").value = getXmlString(xmlRtn);
-alert(xmlHttp.responseText);
+		                    document.getElementById("AnalysisData").value = getXmlString(xmlRtn).replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&amp;/gi, "&");
 		                    document.getElementById("AnalysisListView").innerHTML = "";
 		                    var listview = new ListView();
 		                    listview.SetID("AnalysisList");
@@ -196,7 +195,7 @@ alert(xmlHttp.responseText);
 		                            var txt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "VALUE");
 		                            strHTML += "<tr>";
 		                            strHTML += "<td colspan=5>" + txt;
-		                            strHTML += "</td></tr>"
+		                            strHTML += "</td></tr>";
 		                        }
 		                        else if (gubun == "A") {
 		                            var txt = SelectSingleNodeValue(rows.item(i).getElementsByTagName("CELL")[0], "VALUE");

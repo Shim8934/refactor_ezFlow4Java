@@ -69,7 +69,6 @@
 		</script>
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
-			var receve = tempReceve.replace(/amp;/g,'');
 			var brdID = "${qstUserPermissionVO.brdID}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			var btnSaveChk = false;

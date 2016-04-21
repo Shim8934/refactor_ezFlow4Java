@@ -32,7 +32,6 @@
 		</script>
 		<script type="text/javascript">
 			var tempReceve= "${receve}";
-			var receve = tempReceve.replace(/amp;/g,'');
 			var brdId = "${qstUserPermissionVO.brdID}";
 			var itemNo = "${qstUserPermissionVO.itemNo}";
 			
