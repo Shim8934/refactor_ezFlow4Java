@@ -404,7 +404,7 @@ public class EzEmailMailListController {
 			folderId = folderAndMsgIdArray[0].split("/")[0];			
 			uids = new long[folderAndMsgIdArray.length];
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-				String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
+				String folderAndMsgId = folderAndMsgIdArray[i];
 				String msgId = folderAndMsgId.split("/")[1];
 				uids[i] = Long.parseLong(msgId);
 			}	
@@ -631,8 +631,6 @@ public class EzEmailMailListController {
 			}
 			else {
 				logger.debug("DESC");
-				 // the natural order is used in this case, that is, no sorting is needed.
-				return;
 			}
 			
 			// pre-fetch fields needed for sorting
