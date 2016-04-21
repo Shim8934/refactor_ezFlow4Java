@@ -182,7 +182,6 @@ public class EzCommonController extends EgovFileMngUtil{
         String realPath = request.getServletContext().getRealPath("");
         String strURL = request.getParameter("strURL");
         
-        strURL = strURL.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
         filePath = realPath + uploadModule;
         
         File file = new File(filePath);
@@ -191,13 +190,14 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         String m_strMHT = "";
         
-        try {
+//        try {
         	m_strMHT = loadMHTFile(realPath + strURL);
         	m_strMHT = m_strMHT.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-		} catch (Exception e) {
-			m_strMHT= "";
-		}
+//		} catch (Exception e) {
+//			m_strMHT= "";
+//		}
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+System.out.println(strHTML);
         strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
         
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
@@ -790,7 +790,6 @@ public class EzCommonController extends EgovFileMngUtil{
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         if(strHTML.trim().length() > 0){
-//        	return strHTML.replace("&amp;", "&").replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
         	return strHTML;
         }else{
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";

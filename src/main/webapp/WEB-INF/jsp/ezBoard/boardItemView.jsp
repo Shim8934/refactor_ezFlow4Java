@@ -1103,7 +1103,7 @@
 		        <tr>
 		          <th><spring:message code='ezBoard.t323' /></th>
 		             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
-		             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
+		             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div>
 		             </td>
 		        </tr>
 		      </table>
@@ -1122,7 +1122,7 @@
 			        </tr>
 			        <tr>
 			          <th><spring:message code='ezBoard.t291' /></th>
-			          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;"><c:out value="${boardItem.title}"/></div></td>
+			          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;">${boardItem.title}</div></td>
 			        </tr>
 			      </table>
 			    </td>
@@ -1280,7 +1280,7 @@
 			          <td style="cursor:pointer" width="100%">
 		          </c:otherwise>
 	          </c:choose>
-	          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')"><c:out value="${adjacentItem.previousTitle}"/></div>
+	          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
 	        </tr>
 	        <tr>
 	          <th><spring:message code='ezBoard.t328' /></th>
@@ -1292,7 +1292,7 @@
 		          <td style="cursor:pointer">
 	          	</c:otherwise>
 	          </c:choose>
-	            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')"><c:out value="${adjacentItem.nextTitle}"/></div>
+	            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
 	        </tr>
 	      </table>
 	    </td>

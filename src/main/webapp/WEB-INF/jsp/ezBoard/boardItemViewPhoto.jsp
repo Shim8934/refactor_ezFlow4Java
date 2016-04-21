@@ -1198,12 +1198,12 @@
 		            </tr>
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
+		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666">${boardItem.title}</div></td>
 		            </tr>
 		            <tr>
 		                <th ><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="7">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; height:30px;" ><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; height:30px;" >${boardItem.mainContent}</div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1340,7 +1340,7 @@
 				          	<td style="cursor:pointer; width:100%">
 				          </c:otherwise>
 			          </c:choose>
-			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.previousItemID}')"><c:out value="${boardAdjacent.previousTitle}"/></div></td>
+			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.previousItemID}')">${boardAdjacent.previousTitle}</div></td>
 			        </tr>
 			        <tr>
 			          <th><spring:message code='ezBoard.t328'/></th>
@@ -1352,7 +1352,7 @@
 			          		<td style="cursor:pointer">
 			          	</c:otherwise>
 			          </c:choose>
-			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.nextItemID}')"><c:out value="${boardAdjacent.nextTitle}"/></div></td>
+			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.nextItemID}')">${boardAdjacent.nextTitle}</div></td>
 			        </tr>
 			      </table>
 			    </td>

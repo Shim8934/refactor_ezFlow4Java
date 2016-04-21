@@ -182,7 +182,7 @@
 		            </tr>
 		            <tr>
 	                  <th style="text-align:center"><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/> </td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>
 		            </tr>
 		      </table>
 		    </td>

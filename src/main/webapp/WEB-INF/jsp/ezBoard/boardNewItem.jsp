@@ -1461,7 +1461,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "NewBoardItem_Photo.aspx?BoardID=" + ret[0] + "&Mode=new&BTYPE=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1469,7 +1469,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "NewBoardItem_Cross.aspx?BoardID=" + ret[0] + "&Mode=new&BoardNM=" + ret[1] + "&BTYPE=SELECT";
+		                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 		                        return;
 		                    }
 		                }

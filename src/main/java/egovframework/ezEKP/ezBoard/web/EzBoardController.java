@@ -2771,6 +2771,10 @@ public class EzBoardController extends EgovFileMngUtil{
             }
         }
         BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        
+        if (boardItem == null){
+        	return "main/warning";
+        }
         ezBoardService.setAsRead(userInfo, boardID, itemID);
         
         if (boardItem.getApprFlag() != null && boardItem.getApprFlag().equals("N")){
@@ -3026,6 +3030,10 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if(boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")){
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+        }
+        
+        if(boardListVO.getContentLocation() != null && !boardListVO.getContentLocation().equals("")){
+        	boardListVO.setContentLocation(boardListVO.getContentLocation().replace("\\", "/"));
         }
         
         model.addAttribute("boardInfo", boardInfo);

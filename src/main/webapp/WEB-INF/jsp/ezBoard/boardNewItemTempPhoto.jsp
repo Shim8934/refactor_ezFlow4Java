@@ -822,7 +822,7 @@
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t1008'/></th>
-	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #b6b6b6;" id="photocontent" wrap="hard"><c:out value="${boardListVO.mainContent}"/></textarea></td>
+	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #b6b6b6;" id="photocontent" wrap="hard">${boardListVO.mainContent}</textarea></td>
 	        </tr>
 	      </table>
 	      </td>
