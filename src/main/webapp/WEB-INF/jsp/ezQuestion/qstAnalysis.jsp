@@ -160,21 +160,23 @@
 		        document.getElementById("message").innerHTML = "";
 		        if (xmlHttp.responseText != "") {
 		            xmlTemp = loadXMLString(xmlHttp.responseText);
+		            xmlTempT = loadXMLString(xmlHttp.responseText.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)"));
 		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
+		            xmlRtnT = SelectSingleNode(xmlTempT, "LISTVIEWDATA");
 		            var rows = SelectNodes(xmlRtn, "ROW");
 		            var Rlength = rows.length;
 		            if (Rlength != 0) {
 		                document.getElementById("hidRType2").value = szRType;
 		                document.getElementById("AnalysisData").value = "";
 		                if (szRType == "T") {
-		                    document.getElementById("AnalysisData").value = getXmlString(xmlRtn).replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&amp;/gi, "&");
+		                    document.getElementById("AnalysisData").value = getXmlString(xmlRtnT);
 		                    document.getElementById("AnalysisListView").innerHTML = "";
 		                    var listview = new ListView();
 		                    listview.SetID("AnalysisList");
 		                    listview.SetSelectFlag(false);
 		                    listview.SetMulSelectable(true);
 		                    listview.SetRowOnDblClick("ListViewNodeDblClick");
-		                    listview.DataSource(xmlRtn);
+		                    listview.DataSource(xmlRtnT);
 		                    listview.DataBind("AnalysisListView");
 		                } else {
 		                    var strHTML = "<table width=100% border=0 cellspacing=0 cellpadding=1 border=0>";
