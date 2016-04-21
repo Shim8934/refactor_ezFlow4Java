@@ -121,10 +121,10 @@
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
 					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px" onchange="btn_AttachAdd_onclick()" multiple="false" />
-					<input type="hidden" name="backgroundID" id="backgroundID" value="${backgroundID}"/>
+					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
-					<input type="hidden" name="type" value="${type}" /> 
+					<input type="hidden" name="type" value="<c:out value='${type}'/>" /> 
 				</td>
 			</tr>
 	        <tr>

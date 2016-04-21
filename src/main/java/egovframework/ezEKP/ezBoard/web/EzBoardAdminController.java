@@ -631,6 +631,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return "admin/ezBoard/boardExtensionAttribute";
 	}
 
+	/**
+	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 정보 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezBoard/getAttribute.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception {

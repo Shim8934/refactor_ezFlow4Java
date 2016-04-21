@@ -24,14 +24,14 @@
 			    parameter[0] = OrgBoardID;
 			    parameter[1] = OrgBoardGroupID;
 
-			    if (CrossYN()) {
-			        boardmoveselect_cross_dialogArguments[0] = parameter;
-			        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
-			        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(340, 656));
-			        try { 
-			        	BoardMoveSelect_Cross.focus(); 
-			        }catch (e) {}
-			    }else{
+			    //if (CrossYN()) {
+		        boardmoveselect_cross_dialogArguments[0] = parameter;
+		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
+		        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        try { 
+		        	BoardMoveSelect_Cross.focus(); 
+		        }catch (e) {}
+			    /* }else{
 			        var url = "/admin/ezBoard/boardMoveSelect.do";
 			        var feature = "status:no;dialogWidth:340px;dialogHeight:656px;help:no;scroll:no;edge:sunken";
 			        feature = feature + GetShowModalPosition(340, 656);
@@ -48,7 +48,7 @@
 				        pSelectBoardName.innerHTML = ret[2];
 				        MoveCheck.style.display = "";
 				    }
-			    }		   
+			    } */		   
 			}
 			
 			function Move(){
@@ -86,7 +86,7 @@
 		        else {
 		            SelectedBoardID = ret[0];
 		            selectedBoardGroupID = ret[1];
-		            pSelectBoardName.innerHTML = ret[2];
+		            pSelectBoardName.innerText = ret[2];
 		            MoveCheck.style.display = "";
 		        }
 		    }
@@ -98,7 +98,7 @@
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t114" /></th>
-			    	<td class="point">${boardName}</td>
+			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table>
 			<br/>
@@ -109,7 +109,7 @@
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t114" /></th>
-			    	<td class="point">${boardName}</td>
+			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table>
 			<br/>
@@ -117,7 +117,7 @@
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t131" /></th>
-			    	<td>${boardName}</td>
+			    	<td><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table>
 			<br/>

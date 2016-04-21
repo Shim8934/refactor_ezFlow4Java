@@ -59,7 +59,7 @@
 							SortNum.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
 							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
 							DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
-							
+					
 							if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
 								InsDept.checked = true;			
 							}
@@ -182,11 +182,11 @@
 		    	<td style="padding:0">
 		    		<table style="width:100%">
 		        		<tr class="primary">
-		          			<th>${primary}</th>
+		          			<th><c:out value='${primary}'/></th>
 		          			<td><input name="text" type="text" id=DeptName style="width:97%"></td>
 		        		</tr>
 		        		<tr class="secondary">
-		          			<th>${secondary}</th>
+		          			<th><c:out value='${secondary}'/></th>
 		          			<td><input name="text" type="text" id=DeptName2 style="width:97%"></td>
 		        		</tr>
 		      		</table>

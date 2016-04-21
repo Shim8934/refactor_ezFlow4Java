@@ -689,7 +689,7 @@
 		        if (pGubun == "0" || pGubun == "1" || pGubun == "2" || pGubun == "5") {
 		            if (ChangedHeader) {
 		                if (SaveHeader() == "OK") {
-alert("good");		                	
+
 		                } else {
 		                    alert("Error : " + xmlhttp.responseText);
 		                    return;

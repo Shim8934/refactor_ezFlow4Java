@@ -67,7 +67,7 @@
 		<table class="content">
 			<tr>
 		    	<th><spring:message code="ezBoard.t110" /></th>
-		    	<td><b class="point">${parentBoardName}</b></td>
+		    	<td><b class="point"><c:out value='${parentBoardName}' /></b></td>
 		    </tr>
 		    <tr>		
 		    	<th><spring:message code="ezBoard.t111" /></th>
@@ -75,11 +75,11 @@
 		    		<c:if test="${use_multiData == 'YES'}">				    
 				    	<table style="width:100%">
 				        	<tr class="primary">
-				        		<th>${lang_primary}</th>
+				        		<th><c:out value='${lang_primary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName" style="WIDTH:200px" maxlength="30"></td>
 				        	</tr>
 				        	<tr class="secondary">
-				          		<th>${lang_secondary}</th>
+				          		<th><c:out value='${lang_secondary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName2" style="WIDTH:200px" maxlength="30"></td>
 				        	</tr>
 				      	</table>

@@ -38,11 +38,11 @@
 			<table id="TBAddressList" class="" width="590px" cellspacing=1 style="cursor:pointer;table-layout:fixed;text-align:center">
 				<c:forEach var="item" items="${list}">
 					<tr style="height:22px" onmouseover="onmouseOver(this)" onmouseout="onmouseOut(this)" onclick="Row_onClick(this)">
-						<td style="width:61px">${item.zipcode}</td>
-						<td style="width:83px">${item.sido}</td>
-						<td style="width:108px">${item.gugun}</td>
-						<td style="width:80px">${item.dong}</td>
-						<td style="width:132px">${item.bunji}</td>
+						<td style="width:61px"><c:out value='${item.zipcode}'/></td>
+						<td style="width:83px"><c:out value='${item.sido}'/></td>
+						<td style="width:108px"><c:out value='${item.gugun}'/></td>
+						<td style="width:80px"><c:out value='${item.dong}'/></td>
+						<td style="width:132px"><c:out value='${item.bunji}'/></td>
 					</tr>
 				</c:forEach>
 			</table>

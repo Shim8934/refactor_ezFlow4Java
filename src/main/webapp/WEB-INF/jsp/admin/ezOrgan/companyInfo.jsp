@@ -138,11 +138,11 @@
 			    <td style="padding:0;">
 			    	<table style="width:100%;-moz-box-sizing:border-box;box-sizing:border-box;">
 			    		<tr class="primary">
-		        			<th>${primary }</th>
+		        			<th><c:out value='${primary}'/></th>
 		        			<td><input name="Input" id=CompanyName style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" ></td>
 		      			</tr>
 		      			<tr class="secondary">
-		        			<th>${secondary}</th>
+		        			<th><c:out value='${secondary}'/></th>
 		        			<td><input id=CompanyName2 type="text" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"></td> 
 		      			</tr>
 		    		</table>

@@ -165,7 +165,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		StringBuilder nodeInfo = new StringBuilder();
 		
 		nodeInfo.append("<NODE>");
-		nodeInfo.append("<VALUE>" + vo.getDeptNM() + "</VALUE>");
+		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
 		nodeInfo.append("<CN>" + vo.getDeptID() + "</CN>");
 	
 		if (!pPropList.equals("")){					
@@ -176,8 +176,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 			for(String propname : proplist){
 				Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);					
-																
-				nodeInfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? field.get(vo) : "") + "</" + propname.toUpperCase() + ">");						
+             	
+				nodeInfo.append("<" + propname.toUpperCase() + ">"
+				                    + (field.get(vo) != null ? commonUtil.cleanValue(String.valueOf(field.get(vo))) : "") 
+				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDeptID());

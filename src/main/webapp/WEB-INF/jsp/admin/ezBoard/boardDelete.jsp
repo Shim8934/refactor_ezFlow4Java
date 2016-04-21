@@ -54,7 +54,7 @@
 			<table  class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t114"/></th>
-			    	<td class="point">${boardName}</td>
+			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>
 			<h2><spring:message code="ezBoard.t115"/></h2>
@@ -63,11 +63,11 @@
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t114"/></th>
-			    	<td class="point">${boardName}</td>
+			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>			
 			<div class="box" style="padding:10px" >
-				<spring:message code="ezBoard.t116"/><b>'${boardName}'</b>
+				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
 				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
 			</div><br/>			

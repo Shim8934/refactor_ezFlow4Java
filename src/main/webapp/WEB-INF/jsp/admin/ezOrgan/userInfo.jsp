@@ -488,13 +488,13 @@
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
-	                        <th>${primary}</th>
+	                        <th><c:out value='${primary}'/></th>
 	                        <td>
 	                            <input name="Input" id="UserName" style="width: 98%" />
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
-	                        <th>${secondary}</th>
+	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
 	                            <input id="UserName2" type="text" style="width: 98%" />
 	                        </td>
@@ -505,13 +505,13 @@
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
-	                        <th>${primary}</th>
+	                        <th><c:out value='${primary}'/></th>
 	                        <td>
 	                            <input name="Input3" id="DeptName" style="width: 98%" readonly="readonly" />
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
-	                        <th>${secondary}</th>
+	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
 	                            <input id="DeptName2" type="text" style="width: 98%" readonly="readonly" />
 	                        </td>
@@ -524,13 +524,13 @@
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
-	                        <th>${primary}</th>
+	                        <th><c:out value='${primary}'/></th>
 	                        <td>
 	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 98%" />
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
-	                        <th>${secondary}</th>
+	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
 	                            <input id="JobTitle2" type="text" style="width: 98%" />
 	                        </td>
@@ -541,13 +541,13 @@
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
-	                        <th>${primary}</th>
+	                        <th><c:out value='${primary}'/></th>
 	                        <td>
 	                            <input name="Input2" id="JobPosition" style="width: 98%" />
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
-	                        <th>${secondary}</th>
+	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
 	                            <input id="JobPosition2" type="text" style="width: 98%" />
 	                        </td>

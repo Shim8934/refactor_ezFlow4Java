@@ -58,8 +58,8 @@ public class EzOrganController {
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
         String lang = config.getProperty("config.primary");
         
-        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, lang);        
-		
+        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, lang);
+        
 		return deptInfo;
 	}
 	

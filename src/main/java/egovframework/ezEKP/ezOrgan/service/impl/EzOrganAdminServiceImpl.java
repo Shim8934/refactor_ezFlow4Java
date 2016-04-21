@@ -61,12 +61,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		for(String propname : proplist){
             if (ezOrganService.checkDBColum(propname.toUpperCase()) == false){
                 propvalue = ezOrganService.getPropertyValue(pCN, propname);
-                propinfo.append("<" + propname.toUpperCase() + ">" + propvalue + "</" + propname.toUpperCase() + ">");
+                propinfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propvalue) + "</" + propname.toUpperCase() + ">");
             }else if (!propname.toUpperCase().equals("")){
             	Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);          	            		
             	
-            	propinfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? field.get(vo) : "") + "</" + propname.toUpperCase() + ">");            	            	            	                
+            	propinfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? commonUtil.cleanValue(String.valueOf(field.get(vo))) : "") + "</" + propname.toUpperCase() + ">");            	            	            	                
             }
         }
         propinfo.append("</DATA>");
