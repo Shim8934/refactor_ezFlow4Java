@@ -153,7 +153,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setPageSize(pageSize);
 		
 		String receve = "brdID=" + qstListVO.getBrdID() +
-						"&title=" + new String(qstListVO.getTitle()) +
+						"&title=" + modifyData(qstListVO.getTitle()) +
 		                "&responseRange=" + qstListVO.getResponseRange() +
 		                "&postDate=" + qstListVO.getPostDate() +
 		                "&pollEndDate=" + qstListVO.getPollEndDate() +
@@ -193,11 +193,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 			
 			if(compareStart <= 0 && compareEnd >= 0){
 				strbuilder.append("[진행중] ");
-				strbuilder.append(qst.getTitle()); 
+				strbuilder.append(modifyData(qst.getTitle())); 
 				qst.setTitle(strbuilder.toString());
 			}else{
 				strbuilder.append("[완료] ");
-				strbuilder.append(qst.getTitle());
+				strbuilder.append(modifyData(qst.getTitle()));
 				qst.setTitle(strbuilder.toString());
 			}				
 		}
@@ -211,11 +211,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문 정보 호출, 그에 따른 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/pollOpen.do")
+	@RequestMapping(value="/ezQuestion/pollOpen.do", produces="text/xml; charset=utf-8")
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		String receve = "brdID=" + request.getParameter("brdID") +
 						"&itemNo=" + request.getParameter("itemNo") +
-		                "&title=" + new String(request.getParameter("title").getBytes("ISO-8859-1"),"UTF-8") +
+		                "&title=" + modifyData(request.getParameter("title")) +
 		                "&responseRange=" + request.getParameter("responseRange") +
 		                "&postDate=" + request.getParameter("postDate") +
 		                "&pollEndDate=" + request.getParameter("pollEndDate") +
