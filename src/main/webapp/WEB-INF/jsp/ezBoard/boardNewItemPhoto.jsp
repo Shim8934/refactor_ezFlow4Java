@@ -723,7 +723,7 @@
 	          <td style="width:70%" id="tdBoardName">
 	          	<c:choose>
 	          		<c:when test="${boardType != 'SELECT'}">
-	          			${boardInfo.boardName}
+	          			<c:out value="${boardInfo.boardName}"/> 
 	          		</c:when>
 	          		<c:otherwise>
 	          			<c:choose>
@@ -731,7 +731,7 @@
 			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
 	          				</c:when>
 	          				<c:otherwise>
-			                    <span id="BoardSpan">${boardInfo.boardName}</span>
+			                    <span id="BoardSpan"><c:out value="${boardInfo.boardName}"/></span>
 	          				</c:otherwise>
 	          			</c:choose>
 	          		</c:otherwise>

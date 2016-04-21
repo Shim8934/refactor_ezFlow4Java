@@ -4586,8 +4586,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-        boardInfo.setBoardName(commonUtil.cleanValue(boardItem.getBoardName()));
-        boardInfo.setBoardName2(commonUtil.cleanValue(boardItem.getBoardName2()));
+        boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+        boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);

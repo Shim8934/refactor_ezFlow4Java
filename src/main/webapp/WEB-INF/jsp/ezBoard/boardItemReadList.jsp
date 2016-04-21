@@ -52,7 +52,7 @@
 				        <td style="white-space:nowrap">[ ${list.readDate} ]</td>
 				        <td style="cursor:pointer; white-space:nowrap" onClick="show_info('${list.userID}');"><b style="color:black"> ${list.userName} </b>( ${list.userID} )</td>
 				        <td style="white-space:nowrap; color:#168501">${list.userDeptName}</td>
-				        <td style="width:100%; white-space:nowrap; color:#737373">${list.userTitle}</td>
+				        <td style="width:100%; white-space:nowrap; color:#737373"><c:out value="${list.userTitle}"/></td>
 		      		</tr>
 		    	</c:forEach>
 		    </table>

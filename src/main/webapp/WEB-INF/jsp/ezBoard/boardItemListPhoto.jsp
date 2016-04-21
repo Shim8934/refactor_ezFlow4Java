@@ -1092,7 +1092,7 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${boardInfo.adminType != 'y'}">
-			<h1>${boardName}<span id="mailBoxInfo"></span>
+			<h1><c:out value="${boardName}"/><span id="mailBoxInfo"></span>
 			      <span style="float:right;font-weight:normal;color:black;">
 			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208'/>
 					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223'/>
@@ -1250,7 +1250,7 @@
 	        <table class="content">  
 	            <tr>
 	    <th  style="text-align:center"><spring:message code='ezBoard.t185'/></th>
-	    <td>${boardName}
+	    <td><c:out value="${boardName}"/> 
 	      <input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498'/>
 	    </td>
 	  </tr>

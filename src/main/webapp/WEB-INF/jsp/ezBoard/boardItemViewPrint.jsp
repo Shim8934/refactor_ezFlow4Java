@@ -158,7 +158,7 @@
 		        <table class="content" style="width:100%;">
 		            <tr>
 	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t223'/></th>
-	                  <td id="WriteUserNM" style="width:20%; white-space:nowrap">&nbsp;${boardItem.writerName}</td>
+	                  <td id="WriteUserNM" style="width:20%; white-space:nowrap">&nbsp;<c:out value="${boardItem.writerName}"/></td>
 	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t224'/></th>
 	                  <td id="PostDate" style="width:25%; white-space:nowrap">&nbsp;${boardItem.writeDate}</td>
 	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t288'/></th>
@@ -182,7 +182,7 @@
 		            </tr>
 		            <tr>
 	                  <th style="text-align:center"><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title}</td>
+	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;<c:out value="${boardItem.title}"/> </td>
 		            </tr>
 		      </table>
 		    </td>

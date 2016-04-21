@@ -1014,10 +1014,10 @@
 					<th><spring:message code='ezBoard.t223' /></th>
 					<c:choose>
 						<c:when test="${guBun != '2'}">
-							<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'>${boardItem.writerName}</div></td>
+							<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></div></td>
 						</c:when>
 						<c:otherwise>
-							<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writerName}</div></td>
+							<td id="WriteUserNM" style="width:190px; white-space:nowrap"><div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"><c:out value="${boardItem.writerName}"/></div></td>
 						</c:otherwise>
 					</c:choose>
 					<th><spring:message code='ezBoard.t224' /></th>
@@ -1114,7 +1114,7 @@
 			        <table style="width:100%" class="content">
 			        <tr>
 			          <th><spring:message code='ezBoard.t223' /></th>
-			          <td id="WriteUserNM" style="white-space:nowrap; width:100%;"><div style="OVERFLOW-Y:auto;WIDTH:100%;cursor:pointer;HEIGHT:16px; vertical-align:middle;" onclick='OpenUserInfo("${boardItem.writerID}")'>${boardItem.writerName}</div>
+			          <td id="WriteUserNM" style="white-space:nowrap; width:100%;"><div style="OVERFLOW-Y:auto;WIDTH:100%;cursor:pointer;HEIGHT:16px; vertical-align:middle;" onclick='OpenUserInfo("${boardItem.writerID}")'><c:out value="${boardItem.writerName}"/></div>
 			          <th><spring:message code='ezBoard.t289' /></th>
 			          <td id="User_DeptNM" style="padding-right:10px; white-space:nowrap; width:100px;">${boardItem.writerDeptName}</td>
 			          <th><spring:message code='ezBoard.t290' /></th>

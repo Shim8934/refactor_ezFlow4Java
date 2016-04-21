@@ -284,11 +284,11 @@
 	<c:choose>
 		<c:when test="${adminType != 'y'}">
 			<body class="mainbody">
-			<h1>${boardName}<span id="mailBoxInfo"></span></h1>
+			<h1><c:out value="${boardName}"/><span id="mailBoxInfo"></span></h1>
 		</c:when>
 		<c:otherwise>
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${}" + "<span id='mailBoxInfo'></span></h1>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span></h1>";
 		    </script>
 		    <br />
 		</c:otherwise>
@@ -385,8 +385,8 @@
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
 		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(${reservedList.itemID}, event)'></td>
-		    	<td>${reservedList.boardName}</td>
-		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
+		    	<td><c:out value="${reservedList.boardName}"/></td>
+		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '<c:out value="${reservedList.boardName}"/>', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
 		    	<c:choose> 
 		    		<c:when test="${fn:substring(reservedList.endDate, 0, 4) == '9999'}">

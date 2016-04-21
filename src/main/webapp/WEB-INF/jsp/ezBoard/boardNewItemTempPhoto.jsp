@@ -804,7 +804,7 @@
 	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
 	        <tr>
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
-	          <td style="width:70%" id="tdBoardName">${boardInfo.boardName}</td>
+	          <td style="width:70%" id="tdBoardName"><c:out value="${boardInfo.boardName}"/></td>
 	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
 	          <td style="width:120px; text-align:center">${userInfo.id}</td>
 	        </tr>
@@ -822,7 +822,7 @@
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t1008'/></th>
-	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #b6b6b6;" id="photocontent" wrap="hard">${boardListVO.mainContent}</textarea></td>
+	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #b6b6b6;" id="photocontent" wrap="hard"><c:out value="${boardListVO.mainContent}"/></textarea></td>
 	        </tr>
 	      </table>
 	      </td>
