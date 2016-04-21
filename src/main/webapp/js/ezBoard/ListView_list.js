@@ -764,15 +764,15 @@ function ListView() {
                 else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
                         if (getNodeText(oDatas[10]) != "0")
-                            objTd.innerHTML += strValue + " " + titleOneLineCnt;
+                            objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         else
-                            objTd.innerHTML += strValue;
+                            objTd.innerHTML += MakeXMLString(strValue);
                     }
                     else {
                         if (getNodeText(oDatas[10]) != "0"){
-                            objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
+                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
                         }else{
-                        	objTd.innerHTML = titleImage + strValue;
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }
                     }
                 }
