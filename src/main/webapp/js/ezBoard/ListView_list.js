@@ -704,6 +704,7 @@ function ListView() {
 
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
                         titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
+                    
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
                     objTd.style.textAlign = "left";
@@ -763,15 +764,16 @@ function ListView() {
                 else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
                         if (getNodeText(oDatas[10]) != "0")
-                            objTd.innerHTML += strValue + " " + titleOneLineCnt;
+                            objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         else
-                            objTd.innerHTML += strValue;
+                            objTd.innerHTML += MakeXMLString(strValue);
                     }
                     else {
-                        if (getNodeText(oDatas[10]) != "0")
-                            objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
-                        else
-                            objTd.innerHTML = titleImage + strValue;
+                        if (getNodeText(oDatas[10]) != "0"){
+                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                        }else{
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        }
                     }
                 }
 

@@ -463,11 +463,11 @@
 	    function btn_PhotoAttachAdd() {
 	        pAttachListXml = "";
 	        if (pNoneActiveX == "YES") {
-	            document.getElementById('mode').value = "PHOTO";
+	            document.getElementById('mode').value = "PICTURE";
 	            document.form.file1.click();
 	        }
 	        else {
-                document.getElementById('mode').value = "PHOTO";
+                document.getElementById('mode').value = "PICTURE";
                 document.form.file1.click();
 	        }
 	    }

@@ -133,17 +133,11 @@
 		            makePageSelPage();
 
 		            var xmlDoc;
-// 		            if (CrossYN()) {
 	                var xmlLIST = createXmlDom();
 	                var nodeToImport = xmlLIST.importNode(listNode, true);
 	                xmlLIST.appendChild(nodeToImport);
 
 	                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-// 		            }
-// 		            else {
-// 		                xmlDoc = createXmlDom();
-// 		                xmlDoc.appendChild(listNode);
-// 		            }
 		            if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
 
 		            var DocList = new ListView();

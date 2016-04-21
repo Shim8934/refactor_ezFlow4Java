@@ -298,7 +298,7 @@
 		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-		            
+
 		            pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
 		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
 		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
@@ -330,6 +330,7 @@
 		            }
 		            if (document.getElementById("lvBoardList").innerHTML != "")
 		                document.getElementById("lvBoardList").innerHTML = "";
+		            
 		            var DocList = new ListView();
 		            DocList.SetID("BoardList");
 		            DocList.SetMulSelectable(false);
@@ -1133,7 +1134,7 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${boardInfo.adminType != 'y'}">
-			<h1>${boardInfo.boardName }<span id="mailBoxInfo"></span>
+			<h1><c:out value="${boardInfo.boardName}"/><span id="mailBoxInfo"></span>
 			<span style="float:right;font-weight:normal;color:black;">
 			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208' />
 					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t223' />
@@ -1145,7 +1146,7 @@
 		</c:when>
 		<c:otherwise>
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>${boardInfo.boardName }<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardInfo.boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		    <span style="display:none; float:right;font-weight:normal;color:black;">
 		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; "><spring:message code='ezBoard.t208' />
@@ -1298,7 +1299,7 @@
 	        <table class="content">  
 	            <tr>
 	    <th  style="text-align:center"><spring:message code='ezBoard.t185' /></th>
-	    <td>${boardName}
+	    <td><c:out value="${boardName}"/> 
 	      <input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
 	    </td>
 	  </tr>

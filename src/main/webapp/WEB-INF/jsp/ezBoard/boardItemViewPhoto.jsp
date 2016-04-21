@@ -12,6 +12,12 @@
 		<script type="text/javascript" src="/js/Common.js" ></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<style title="ezform_style_1">
 		P {
@@ -67,15 +73,17 @@
 		            imageViewInit();
 		            pageimageout();
 		            
-		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-		
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
-		                if(CrossYN())
+		                if(CrossYN()){
 		                    self.resizeTo(770, 1000);
-		                else
+		                }else{
 		                    self.resizeTo(770, 1010);
+		                }
 		            }
+		            
+		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		
 		
 		            // GS 수정(2006.02.10) : 게시알림메일을 다시 게시하는 경우 url link와 게시물 link 기능이 겹치는 문제 수정
 		            AddLinkTarget();
@@ -1087,12 +1095,12 @@
 		        }
 		        function Appr_onclick(pFlag) {
 		            if (pFlag == "C") {
-		                var OpenWin = window.open("/myoffice/ezBoardSTD/admin/BoardApprOpinion.aspx?ItemList=" + pItemID + ";&Mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "interASP/ApprBoardItem.aspx?ItemList=" + pItemID + ";&Mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
@@ -1180,9 +1188,9 @@
 		         <table class="content" style="border:0px">
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap" id="WriteUserNM">${boardItem.writerName}</td>
+		              <td style="width:100px; text-overflow:ellipsis; white-space:nowrap" id="WriteUserNM"><c:out value="${boardItem.writerName}"/></td>
 		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t289'/></th>
-		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM">${boardItem.writerDeptName}</td>
+		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
 		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t290'/></th>
 		              <td style="width:120px; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
 		              <th style="width:60px; text-align:center"><spring:message code='ezBoard.t224'/></th>
@@ -1190,12 +1198,12 @@
 		            </tr>
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666">${boardItem.title}</div></td>
+		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
 		            </tr>
 		            <tr>
 		                <th ><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="7">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; height:30px;" >${boardItem.mainContent}</div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; height:30px;" ><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1332,7 +1340,7 @@
 				          	<td style="cursor:pointer; width:100%">
 				          </c:otherwise>
 			          </c:choose>
-			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.previousItemID}')">${boardAdjacent.previousTitle}</div></td>
+			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.previousItemID}')"><c:out value="${boardAdjacent.previousTitle}"/></div></td>
 			        </tr>
 			        <tr>
 			          <th><spring:message code='ezBoard.t328'/></th>
@@ -1344,7 +1352,7 @@
 			          		<td style="cursor:pointer">
 			          	</c:otherwise>
 			          </c:choose>
-			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.nextItemID}')">${boardAdjacent.nextTitle}</div></td>
+			          <div style="word-break:break-all;HEIGHT: 18px; padding-top:2px; background-color:white; text-align:left" onClick="OpenItem('${boardAdjacent.nextItemID}')"><c:out value="${boardAdjacent.nextTitle}"/></div></td>
 			        </tr>
 			      </table>
 			    </td>

@@ -39,6 +39,7 @@
 </form>
 <ul>
 	<li><a href="#LINK" onclick="javascript:fn_main_headPageMove('11','ezBoard/boardMain')" >게시판</a></li>
+	<li><a href="#LINK" onclick="javascript:fn_main_headPageAction('16','ezApprovalG/approvalGMain')" >전자결재</a></li>
 	<li><a href="#LINK" onclick="javascript:fn_main_headPageAction('13','ezEmail/mailMain.do')" >메일</a></li>
 	<li><a href="#LINK" onclick="javascript:fn_main_headPageAction('14','ezResource/resMain.do')" >자원관리</a></li>
 	<li><a href="#LINK" onclick="javascript:fn_main_headPageAction('15','ezCommunity/communityMain.do')" >커뮤니티</a></li>

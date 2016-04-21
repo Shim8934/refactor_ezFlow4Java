@@ -715,9 +715,9 @@ function ListView() {
                     else
                         TextCell1.setAttribute("style", "font-size:12px; padding-left:5px;");
 
-                    var Text1 = document.createTextNode(strValue);
+                    //var Text1 = document.createTextNode(strValue);
                     //TextCell1.appendChild(Text1);
-                    TextCell1.innerHTML += strValue;
+                    TextCell1.innerHTML += MakeXMLString(strValue);
 
                     var TitleImage = document.createElement("IMG");
                     TitleImage.setAttribute("style", "padding-bottom:3px;");
@@ -771,7 +771,7 @@ function ListView() {
                         objTd.style.textAlign = "center";
                     }
 
-                    objTd.innerHTML = strValue;
+                    objTd.innerHTML = MakeXMLString(strValue);
                     objTr.appendChild(objTd);
                 }                                             
 

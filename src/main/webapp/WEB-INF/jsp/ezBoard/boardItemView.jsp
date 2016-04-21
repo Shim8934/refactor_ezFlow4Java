@@ -875,12 +875,12 @@
 		    }
 		    function Appr_onclick(pFlag) {
 		        if (pFlag == "C") {
-		            var OpenWin = window.open("/myoffice/ezBoardSTD/admin/BoardApprOpinion.aspx?ItemList=" + pItemID + ";&Mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "interASP/ApprBoardItem.aspx?ItemList=" + pItemID + ";&Mode=" + pFlag, false);
+		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "OK") {
@@ -1102,7 +1102,9 @@
 					</c:if>
 		        <tr>
 		          <th><spring:message code='ezBoard.t323' /></th>
-		             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5><div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div></td>
+		             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
+		             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
+		             </td>
 		        </tr>
 		      </table>
 		    </td>
@@ -1120,7 +1122,7 @@
 			        </tr>
 			        <tr>
 			          <th><spring:message code='ezBoard.t291' /></th>
-			          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;">${boardItem.title}</div></td>
+			          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;"><c:out value="${boardItem.title}"/></div></td>
 			        </tr>
 			      </table>
 			    </td>
@@ -1278,7 +1280,7 @@
 			          <td style="cursor:pointer" width="100%">
 		          </c:otherwise>
 	          </c:choose>
-	          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
+	          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')"><c:out value="${adjacentItem.previousTitle}"/></div>
 	        </tr>
 	        <tr>
 	          <th><spring:message code='ezBoard.t328' /></th>
@@ -1290,7 +1292,7 @@
 		          <td style="cursor:pointer">
 	          	</c:otherwise>
 	          </c:choose>
-	            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
+	            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')"><c:out value="${adjacentItem.nextTitle}"/></div>
 	        </tr>
 	      </table>
 	    </td>

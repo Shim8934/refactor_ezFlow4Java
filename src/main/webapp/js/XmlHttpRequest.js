@@ -696,11 +696,12 @@ function ConvertHTMLtoMHT(pContent) {
 		dataType : "text",
 		async : false,
 		url : "/ezCommon/htmlToMHT.do",
-		data : { strHTML   : pContent },
+		data : { strHTML   : encodeURIComponent(pContent) },
 		success: function(result){
 			rtnVal = result;
 		}        			
 	});
+    
     return rtnVal;
 }
 
@@ -1410,7 +1411,7 @@ function MakeXMLString(pOrgString) {
     if (pOrgString == "undefined" || pOrgString == undefined) {
         return "";
     }
-    return ReplaceText(ReplaceText(ReplaceText(pOrgString, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+    return ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(pOrgString, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), "'", "&apos;"), "\"", "&quot;");
 }
 
 function CompareDate(sdate, edate) {

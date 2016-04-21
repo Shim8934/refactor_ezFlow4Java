@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -85,10 +86,11 @@ public class EzCommonController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
         String strHTML = "";
         String realPath = request.getServletContext().getRealPath("");
+        
         if(request.getParameter("strHTML") != null){
         	strHTML = request.getParameter("strHTML");
+        	strHTML = URLDecoder.decode(strHTML, "utf-8");
         }
-        strHTML = strHTML.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
         
         String scheme = "http://";
     	if(request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")){
@@ -146,7 +148,6 @@ public class EzCommonController extends EgovFileMngUtil{
 //            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
 //        }
         // reform - end
-
         String mhtData = startHtml2Mht(strHTML, realPath);
         
         return mhtData;
@@ -166,7 +167,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
 		strResult = getMHTtoHTML(type, itemID, realPath);
-
+		
 		return strResult;
 	}
 	
@@ -197,7 +198,7 @@ public class EzCommonController extends EgovFileMngUtil{
 			m_strMHT= "";
 		}
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-        strHTML = makeXMLString(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
+        strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
         
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
 	}
@@ -789,7 +790,8 @@ public class EzCommonController extends EgovFileMngUtil{
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         if(strHTML.trim().length() > 0){
-        	return strHTML.replace("&amp;", "&").replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+//        	return strHTML.replace("&amp;", "&").replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+        	return strHTML;
         }else{
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
@@ -912,18 +914,6 @@ public class EzCommonController extends EgovFileMngUtil{
 	    }
         return strMhtData;
     }
-	
-	/**
-	 * 게시판 특문 인코딩 표출 Method
-	 */
-	public String makeXMLString(String orgString){
-		if(orgString != null){
-			return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-		}else{
-			return orgString;
-		}
-	}
-	
 	
 	/**
 	 * ID크릭시 사용자 정보화면 호출 Method

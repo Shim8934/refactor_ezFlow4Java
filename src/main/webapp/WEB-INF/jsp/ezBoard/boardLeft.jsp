@@ -8,8 +8,8 @@
 	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" >
 	        var SSUserID = "${userInfo.id}";
@@ -403,7 +403,7 @@
 		        var ret = confirm(treeNode.GetNodeData("DATA2") + "<spring:message code='ezBoard.t363' />");
 		        if (ret) {
 		            var xmlhttp5 = createXMLHttpRequest();
-		            xmlhttp5.open("POST", "/myoffice/ezBoardSTD/interASP/DeleteMyBoard.aspx?BoardID=" + treeNode.GetNodeData("DATA1"), false);
+		            xmlhttp5.open("POST", "/ezBoard/deleteMyBoard.do?boardID=" + treeNode.GetNodeData("DATA1"), false);
 		            xmlhttp5.send();
 		            xmlhttp5 = null;
 		            document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
