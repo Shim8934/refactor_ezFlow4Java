@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tree>
+	<config>
+	    <iconsize width="16" height="16" />
+		<baseimage>
+			<dot_normal path="/images/OrganTree/dot_normal.gif" />
+			<dot_continue path="/images/OrganTree/dot_continue.gif" />
+			<dot_end path="/images/OrganTree/dot_end.gif" />
+			<node_plus path="/images/OrganTree_cross/plus.gif" />
+			<node_minus path="/images/OrganTree_cross/minus.gif" />
+			<node_end path="/images/OrganTree_cross/dot_end.gif" />
+			<node_space path="/images/OrganTree_cross/space.gif" />
+			<minus_end path="/images/OrganTree/minus_end.gif" />
+			<minus_norma path="/images/OrganTree/minus_normal.gif" />
+			<plus_end path="/images/OrganTree/plus_end.gif" />
+		</baseimage>
+		<baseclass>
+			<normal name="node_normal" />
+			<selected name="node_selected" />
+			<hover name="" />
+		</baseclass>
+		<images>
+	    	<base path="/images/OrganTree_cross/fldr.gif" />
+	    	<iconcomp path="/images/OrganTree/ic-company.gif" />
+		</images>
+	</config>
+</tree>

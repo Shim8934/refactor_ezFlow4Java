@@ -46,7 +46,7 @@
 			    }
 			    try {
 	                if (code != "") {
-	                    window.open("/ezCommunity/commhome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel);
+	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel);
 
 	                    var dropdown = document.goMyCommForm.MyCommunityList;
 	                    var inx = document.goMyCommForm.MyCommunityList.length;
@@ -58,7 +58,7 @@
 	                    }
 
 	                    xmlDom_treeview.async = false;
-	                    xmlDom_treeview.load("/myoffice/common/organtree_config2.xml");
+	                    xmlDom_treeview.load("/xml/common/organtree_config2.xml");
 	                    DisplayTopBoard(code);
 	                }else {
 <%-- 	                    var funCode = "<%=Request.QueryString["funCode"]%>"; --%>
@@ -246,7 +246,7 @@
 
 	        function SetTreeConfig() {
 	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/ezCommunity/controls/organtree_config2.xml", false);
+	            xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
 	            xmlHTTP.send();
 
 	            if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200){
@@ -428,7 +428,7 @@
                     window.frames.location.href = window.frames.location.href;
                 }
                 else {
-                    var url = "/ezCommunity/checkCommhome.do?communityCD=" + code + "&userLevel=1";
+                    var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&userLevel=1";
                     var wWeight = "1300";
                     var wHeight = "900";
 

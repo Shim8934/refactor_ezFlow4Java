@@ -19,6 +19,8 @@ public interface EzCommunityService {
 	public List<CommunityBoardTreeVO> getBoardTreeGet2(String pUserID) throws Exception;
 	
 	public List<String> goAdminOkGet1() throws Exception;
+	
+	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception;
 
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
 
@@ -36,11 +38,11 @@ public interface EzCommunityService {
 
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
 
+	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception;
+
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception;
 
 	public int checkIfLeafBoardGet(String pBoardID) throws Exception;
-
-	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

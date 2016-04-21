@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -53,6 +54,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<String>) list("EzCommunityDAO.goAdminOkGet1");
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> goAdminOkGet2(String v_PCLUBID) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.goAdminOkGet2", v_PCLUBID);
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
@@ -80,5 +86,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.getBoardTreeSet", map);
 	}
+
 
 }

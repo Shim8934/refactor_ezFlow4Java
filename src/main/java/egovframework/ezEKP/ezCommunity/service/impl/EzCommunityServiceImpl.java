@@ -1,12 +1,15 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -25,6 +28,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private Properties config;
 	
 	@Override
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception {
@@ -197,8 +203,25 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 	@Override
 	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception {
-		return null;
+		return ezCommunityDAO.goAdminOkGet2(pClubID);
 	}
+
+	@Override
+	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception {
+		String pResult = "", pSignatureDir = ""; 
+		
+		if (pType.equals("COMMUNITYTHUM")) {
+			pSignatureDir = config.getProperty("upload_community.ROOT") + File.separator + pBoardID + File.separator + "uploadFile";
+		} else {
+			pSignatureDir = config.getProperty("upload_community.LOGO");
+		}
+		
+		pResult = pSignatureDir + File.separator + pFileName;
+		
+		return pResult;
+	}
+	
+	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);
