@@ -15,8 +15,8 @@
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-			var topid = "${topid}";
-		    var useOCS = "${useOCS}";
+			var topid = "<c:out value='${topid}'/>";
+		    var useOCS = "<c:out value='${useOCS}'/>";
 		    var g_xmlHTTP = null;
 		    var userinfo_dialogArguments = new Array();
 		    

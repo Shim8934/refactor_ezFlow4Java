@@ -121,6 +121,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String parentBoardID = request.getParameter("boardType");
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID);
 
+		for (int i = 0; i < list.size(); i++) {
+			BoardTreeVO vo = list.get(i);
+			String creanValue = commonUtil.cleanValue(vo.getBoardName());
+			vo.setBoardName(creanValue);
+		}
+		
 		model.addAttribute("topBoardList", list);
 		return "json";
 	}
@@ -1084,7 +1090,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardType = request.getParameter("boardType");
 		String parentBoardID = request.getParameter("parentBoardID");
 		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
-
+System.out.println(boardName);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("boardType", boardType);

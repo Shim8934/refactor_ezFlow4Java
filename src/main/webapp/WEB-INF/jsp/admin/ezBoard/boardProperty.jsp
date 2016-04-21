@@ -12,15 +12,15 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/ezPersonal/ListView_list.js"></script>
 		<script type="text/javascript" language="javascript">
-			var BoardID = "${model.boardID}";
-	        var brd_color = "${model.boardColor}";
-	        var portlet =  $.trim("${model.portlet}");
-	        var background = $.trim("${model.backGround}");
-	        var pAdminType = $.trim("${adminType}");
-	        var FormFlag =  $.trim("${model.formFlag}");
-	        var APPRFLAG = $.trim("${model.apprFlag}");
-	        var APPRMAILFLAG = $.trim("${model.apprMailFlag}");
-	        var orgAPPRFLAG = $.trim("${model.apprFlag}");
+			var BoardID = "<c:out value='${model.boardID}'/>";
+	        var brd_color = "<c:out value='${model.boardColor}'/>";
+	        var portlet =  $.trim("<c:out value='${model.portlet}'/>");
+	        var background = $.trim("<c:out value='${model.backGround}'/>");
+	        var pAdminType = $.trim("<c:out value='${adminType}'/>");
+	        var FormFlag =  $.trim("<c:out value='${model.formFlag}'/>");
+	        var APPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
+	        var APPRMAILFLAG = $.trim("<c:out value='${model.apprMailFlag}'/>");
+	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";

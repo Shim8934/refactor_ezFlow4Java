@@ -22,7 +22,7 @@
 			var DeptID = "";
 			var OrgUserID = "";
 			var Tab1_flag = true;
-			var getBirthDay = "${birthDay}";
+			var getBirthDay = "<c:out value='${birthDay}'/>";
 		    var ReturnFunction;
 		    var RetValue;
 	    	
@@ -44,7 +44,7 @@
 			        $("#txtBirth").datepicker('setDate', getBirthDay);
 			    }
 			    
-			    if("${lang}" == "1"){
+			    if("<c:out value='${lang}'/>" == "1"){
 			    	$.datepicker.regional['ko'] = {
 		                closeText: '닫기',
 		                prevText: '이전달',
@@ -280,7 +280,7 @@
 		            return;
 		        }
 		        // 2009.11.10 - 아이디 대문자 체크
-		        if ("${checkID}" == "YES") {
+		        if ("<c:out value='${checkID}'/>" == "YES") {
 		            for (i = 0; i < document.getElementById("UserID").value.length; i++) {
 		                if (document.getElementById("UserID").value.charCodeAt(i) >= 65 && document.getElementById("UserID").value.charCodeAt(i) <= 90) {
 		                    alert("<spring:message code='ezOrgan.t308' />");

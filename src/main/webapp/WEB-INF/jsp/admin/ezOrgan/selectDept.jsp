@@ -15,7 +15,7 @@
 		<script type="text/javascript" language="javascript">
 			var g_xmlHTTP = null;
 			var ReturnFunction;
-		    var topid = "${companyID}";
+		    var topid = "<c:out value='${companyID}'/>";
 		    
 		    $(document).ready(function(){
 		    	try {

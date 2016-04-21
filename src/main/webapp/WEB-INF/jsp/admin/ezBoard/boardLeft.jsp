@@ -13,24 +13,24 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 		<script type="text/javascript" language="javascript">
-	        var SSUserID = "${user.id}";
-	        var SSUserName = "${user.displayName1}";
-	        var SSDeptID = "${user.deptID}";
-	        var SSDeptName = "${user.deptName1}";
-	        var SSCompanyID = "${user.companyID}";
-	        var SSCompanyName = "${user.companyName1}";
+	        var SSUserID = "<c:out value='${user.id}'/>";
+	        var SSUserName = "<c:out value='${user.displayName1}'/>";
+	        var SSDeptID = "<c:out value='${user.deptID}'/>";
+	        var SSDeptName = "<c:out value='${user.deptName1}'/>";
+	        var SSCompanyID = "<c:out value='${user.companyID}'/>";
+	        var SSCompanyName = "<c:out value='${user.companyName1}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
 	        var SelectedBoardGroupID = "";
-	        var SS_ServerName = "${serverName}";
+	        var SS_ServerName = "<c:out value='${serverName}'/>";
 	        var xmlDom_treeview = createXmlDom();
 	        var curMenuIndex = 1;
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
     
-	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
-	        var RedirectBoardID = "${redirectBoardID}";	   
+	        var RedirectBoardGroupID = "<c:out value='${redirectBoardGroupID}'/>";
+	        var RedirectBoardID = "<c:out value='${redirectBoardID}'/>";	   
  
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");

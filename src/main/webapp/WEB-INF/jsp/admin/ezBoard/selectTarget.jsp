@@ -28,10 +28,9 @@
 		    var m_selectedTree = null;
 		    var g_fnaddReceiver;
 		    var g_xmlHTTP = null;
-		    var bSearch = false;
-		    var strInitList = "${strXML}";
-		    var topid = "${topid}";
-		    var userLang = "${userLang}";
+		    var bSearch = false;		    
+		    var topid = "<c:out value='${topid}'/>";
+		    var userLang = "<c:out value='${userLang}'/>";
 		    var ReturnFunction;
 		    var RetValue;
 		    
@@ -80,7 +79,7 @@
 		        applyCurrentData();
 
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID>${deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;

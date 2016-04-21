@@ -10,13 +10,13 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">			
-			var pUse_Editor = "${use_Editor}";	        
-	        var p_Use_IE11Browser = "${use_IE11Browser}";
-	        var pBoardID = "${boardID}";
-	        var pBoardName = "${boardName}";
-	        var pBoardType = "${boardType}";
-	        var pParentBoardID = "${parentBoardID}";
-	        var TabId = "${tabID}";
+			var pUse_Editor = "<c:out value='${use_Editor}'/>";	        
+	        var p_Use_IE11Browser = "<c:out value='${use_IE11Browser}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
+	        var pBoardName = "<c:out value='${boardName}'/>";
+	        var pBoardType = "<c:out value='${boardType}'/>";
+	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
+	        var TabId = "<c:out value='${tabID}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
@@ -48,7 +48,7 @@
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }else if (pBoardType == 4){
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
-	                    }else{                  	
+	                    }else{	                    	
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
 	                    break;

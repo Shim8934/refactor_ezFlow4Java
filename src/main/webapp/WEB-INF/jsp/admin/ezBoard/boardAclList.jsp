@@ -19,15 +19,15 @@
 		    var ItemIDList = "";
 		    var BoardID = " ";
 		    var BoardGroupID = "";	
-		    var pBoardID = "${boardID}";
-		    var pParentBoardID = "${parentBoardID}";	
+		    var pBoardID = "<c:out value='${boardID}'/>";
+		    var pParentBoardID = "<c:out value='${parentBoardID}'/>";	
 		    var SelectedBoardID = "";
 		    var selectedBoardGroupID = "";
 		    var SelectedBoardName = "";	
 		    var SelectedTopBoardID = "";
 		    var SelectedTopBoardName = "";	
 		    var ret = new Array();	
-		    var SS_ServerName = "${serverName}";
+		    var SS_ServerName = "<c:out value='${serverName}'/>";
 		    var xmlDom_treeview = createXmlDom();
 		    
 		    $(document).ready(function(){

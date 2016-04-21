@@ -11,8 +11,8 @@
 	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">			
-			var pBoardId = "${boardID}";
-	        var pcheckForm = "${checkForm}";
+			var pBoardId = "<c:out value='${boardID}'/>";
+	        var pcheckForm = "<c:out value='${checkForm}'/>";
 	        
 	        function DocumentComplete() {	        	
                 if (pcheckForm.toUpperCase() == "TRUE") {

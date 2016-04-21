@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    	    
 		<script type="text/javascript" language="javascript">
-			var pBoardID = "${boardID}";
+			var pBoardID = "<c:out value='${boardID}'/>";
 	    	
 	    	$(document).ready(function(){
 	    		if (navigator.userAgent.indexOf('Firefox') != -1) {

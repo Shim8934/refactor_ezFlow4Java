@@ -15,8 +15,8 @@
 			var SelectedBoardName = "";
 			var SelectedBoardParentBoardID = "";
 			var selectedBoardGroupID = "";			
-			var OrgBoardID = "${boardID}";	
-			var OrgBoardGroupID = "${boardGroupID}";
+			var OrgBoardID = "<c:out value='${boardID}'/>";	
+			var OrgBoardGroupID = "<c:out value='${boardGroupID}'/>";
 			
 			var boardmoveselect_cross_dialogArguments = new Array();
 			function MoveSelect(){

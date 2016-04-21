@@ -25,7 +25,7 @@
 			var SelectedBoardName = "";
 			var ret = new Array();
 	
-			var SS_ServerName = "${serverName}";
+			var SS_ServerName = "<c:out value='${serverName}'/>";
 			var xmlDom_treeview = createXmlDom();
 			var tmpSelectedBoardGroupID = "";
 			var tmpSelectedBoardGroupName = "";

@@ -11,8 +11,8 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">
-			var SelectedBoardID = "${boardID}";
-	    	var BoardGroupID = "${boardGroupID}";
+			var SelectedBoardID = "<c:out value='${boardID}'/>";
+	    	var BoardGroupID = "<c:out value='${boardGroupID}'/>";
 	    	
 	    	function Delete(){
 	    		var ret = confirm("<spring:message code='ezBoard.t112'/>");

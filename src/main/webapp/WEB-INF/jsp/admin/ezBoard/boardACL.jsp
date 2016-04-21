@@ -12,13 +12,13 @@
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">
-			var pBoardID = "${boardID}";
-	        var pParentBoardID = "${parentBoardID}";
+			var pBoardID = "<c:out value='${boardID}'/>";
+	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var strList = "${strList}";
-	        var userLang = "${strUserLang}";
-	        var pBoardName = "${pBoardName}";
-	        var pType = "${pType}";
-	        var pParentNeed = "${pParentNeed}";
+	        var userLang = "<c:out value='${strUserLang}'/>";
+	        var pBoardName = "<c:out value='${pBoardName}'/>";
+	        var pType = "<c:out value='${pType}'/>";
+	        var pParentNeed = "<c:out value='${pParentNeed}'/>";
 	        var selectedTargetID = "";
 	        var selectedTargetName = "";
 	        var selectedTargetName2 = "";
@@ -564,7 +564,7 @@
 	                strXML += "<PARENTBOARDID>" + pParentBoardID + "</PARENTBOARDID>";
 	                strXML += "<INHERIT>" + inherit_OK.checked + "</INHERIT>";
 	                strXML += "<ADMIN>" + admin_OK.checked + "</ADMIN>";
-	                strXML += "<ACCESSLEVEL>" + "${pAccessLevel}" + "</ACCESSLEVEL>";
+	                strXML += "<ACCESSLEVEL>" + "<c:out value='${pAccessLevel}'/>" + "</ACCESSLEVEL>";
 	                strXML += "<ACCESS>" + access_OK.checked + "</ACCESS>";
 	                strXML += "<LIST>" + list_OK.checked + "</LIST>";
 	                strXML += "<READ>" + read_OK.checked + "</READ>";

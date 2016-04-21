@@ -13,11 +13,11 @@
 	    <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
 		<script type="text/javascript" language="javascript">
 			$(document).ready(function(){				
-				if("${fileName}" != ""){		
-					var path = "${filePath}" + "/S_" + "${fileName}";
+				if("<c:out value='${fileName}'/>" != ""){		
+					var path = "<c:out value='${filePath}'/>" + "/S_" + "<c:out value='${fileName}'/>";
 
-					document.getElementById("imagewidth").value = "${width}";
-		            document.getElementById("imageheight").value = "${height}";
+					document.getElementById("imagewidth").value = "<c:out value='${width}'/>";
+		            document.getElementById("imageheight").value = "<c:out value='${height}'/>";
 					document.getElementById("UploadSliderImage").style.display = "";
 					document.getElementById("UploadSliderImage").src = path;
 				}

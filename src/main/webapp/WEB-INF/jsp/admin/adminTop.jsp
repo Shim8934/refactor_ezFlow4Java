@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){				
-				if("${use_portal}" != 'YES'){
+				if("<c:out value='${use_portal}'/>" != 'YES'){
 					window.open("index_personal.aspx","bottom")
 				}else{
 					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁

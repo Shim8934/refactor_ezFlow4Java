@@ -11,8 +11,8 @@
 	    <script type="text/javascript" src="/js/ezBoard/common.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-			var ParentBoardID = "${parentBoardID}";
-	    	var BoardGroupID = "${boardGroupID}";
+			var ParentBoardID = "<c:out value='${parentBoardID}'/>";
+	    	var BoardGroupID = "<c:out value='${boardGroupID}'/>";
 	    	
 	    	function hasSpecialCharacters(str){
 				for(var i=0; i<str.length; i++){

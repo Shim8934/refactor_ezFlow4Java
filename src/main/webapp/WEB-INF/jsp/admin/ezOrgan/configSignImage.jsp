@@ -12,9 +12,9 @@
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-			var userid = "${userID}";
-		    var SignImageSize = "${signImageSize}";
-		    var SignPath = "${signPath}";
+			var userid = "<c:out value='${userID}'/>";
+		    var SignImageSize = "<c:out value='${signImageSize}'/>";
+		    var SignPath = "<c:out value='${signPath}'/>";
 			
 			$(document).ready(function(){
 				GetSignInfo();
