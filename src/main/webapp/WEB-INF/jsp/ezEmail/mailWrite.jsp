@@ -589,7 +589,7 @@
             }
         }
         xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_interattach_CK.aspx", false);
+        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
         xmlhttp.send(xmlDoc);
         var aitem;
         var xmlReturnValue = createXmlDom();
