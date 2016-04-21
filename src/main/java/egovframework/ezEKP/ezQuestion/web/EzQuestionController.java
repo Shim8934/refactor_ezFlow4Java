@@ -972,7 +972,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 						}
 						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "</option>";
 					}
-					
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
