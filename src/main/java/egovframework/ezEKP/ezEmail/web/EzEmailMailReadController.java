@@ -41,6 +41,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -67,6 +68,9 @@ public class EzEmailMailReadController {
 	@Autowired
 	private Properties config;
 
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 	
@@ -322,9 +326,10 @@ public class EzEmailMailReadController {
 	 */
 	@RequestMapping(value="/ezEmail/mailReadContent.do")
 	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
-		String password  = userInfo.get(1);
+		String password = userInfo.get(1);
 
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
@@ -343,19 +348,9 @@ public class EzEmailMailReadController {
 			}
 			if(message != null){
 				bodyInfoList = getBodyInfo(message, folderPath, uid);
-				int size = Integer.parseInt(bodyInfoList.get(2));
-				String strSize = "";
-				if (size > 1024 * 1024) {
-					size = size / 1024 / 1024;
-					strSize = size + "MB";
-				} else if (size > 1024) {
-					size = size / 1024;
-					strSize = size + "KB";
-				} else {
-					strSize = size + "B";
-				}
+				double size = Double.parseDouble(bodyInfoList.get(2));
+				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
-
 			}
 		}
 		ia.close();
@@ -708,17 +703,8 @@ public class EzEmailMailReadController {
 			}
 			if(message != null){
 				bodyInfoList = getBodyInfo(message, folderPath, uid);
-				int size = Integer.parseInt(bodyInfoList.get(2));
-				String strSize = "";
-				if (size > 1024 * 1024) {
-					size = size / 1024 / 1024;
-					strSize = size + "MB";
-				} else if (size > 1024) {
-					size = size / 1024;
-					strSize = size + "KB";
-				} else {
-					strSize = size + "B";
-				}
+				double size = Double.parseDouble(bodyInfoList.get(2));
+				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 
 			}
@@ -745,20 +731,22 @@ public class EzEmailMailReadController {
 			
 			logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
 			
-			if(part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
-				System.out.println(part.getContentType());
-				String strSize = "";
+			// process for the case where the message only consists of a single attachment (not multi-part).
+			if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
+				logger.debug("contentType=" + part.getContentType());
+				
 				String filename = part.getFileName();
-				int size = part.getSize();
-				if (size > 1024 * 1024) {
-					size = size / 1024 / 1024;
-					strSize = size + "MB";
-				} else if (size > 1024) {
-					size = size / 1024;
-					strSize = size + "KB";
-				} else {
-					strSize = size + "B";
-				}
+				double size = part.getSize();
+				String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
+				if (encodingHeaders != null && encodingHeaders.length > 0) {
+					String encodingName = encodingHeaders[0];
+					logger.debug("Content-Transfer-Encoding=" + encodingName);
+					if (encodingName.equalsIgnoreCase("base64")) {
+						// decrease the size because base64 increases the size to 4/3 times.
+						size = (int)(size*0.75); 
+					}
+				}										
+				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				
 				if (filename == null) {
 					filename = "";
@@ -766,11 +754,11 @@ public class EzEmailMailReadController {
 					filename = MimeUtility.decodeText(filename);
 				}
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8");
-				pAttachListHtml += " <li><span onclick=\"DownloadPC(this);\" _filehref='" + aitem + "' _filesize='" + part.getSize() + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadPC(this);\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 				isAttach = "OK";
-				filesize = (Integer.parseInt(filesize) + part.getSize()) + "";
+				filesize = (Double.parseDouble(filesize) + size) + "";
 				filecnt = (Integer.parseInt(filecnt) + 1) + "";
 			} else if(part.isMimeType("text/html")){
 				String strContent = part.getContent().toString();
@@ -827,12 +815,12 @@ public class EzEmailMailReadController {
 				Part p = null;
 				for (int i = 0; i < count; i++) {
 					p = mp.getBodyPart(i);
-					System.out.println(p.getContentType());
-					if(!mp.getBodyPart(i).isMimeType("text/plain")){
-						List<String> tempList = getBodyInfo(mp.getBodyPart(i), folderPath, uid);
+					logger.debug("contentType=" + p.getContentType());
+					if(!p.isMimeType("text/plain")){
+						List<String> tempList = getBodyInfo(p, folderPath, uid);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
-						filesize = (Integer.parseInt(filesize) + Integer.parseInt(tempList.get(2))) + "";
+						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 						if(tempList.get(4).equals("OK")){
 							isAttach = "OK";
@@ -842,7 +830,7 @@ public class EzEmailMailReadController {
 				if(htmlBody.equals("")){
 					for (int i = 0; i < count; i++) {
 						p = mp.getBodyPart(i);
-						if(mp.getBodyPart(i).isMimeType("text/plain")){
+						if(p.isMimeType("text/plain")){
 							htmlBody += p.getContent().toString();
 						}
 					}
@@ -850,21 +838,24 @@ public class EzEmailMailReadController {
 			} else if (part.isMimeType("multipart/mixed")) { //재귀
 				Multipart mp = (Multipart)part.getContent();
 				int count = mp.getCount();
+				Part p = null;
 				for (int i = 0; i < count; i++) {
-					if(mp.getBodyPart(i).getDisposition()!=null && mp.getBodyPart(i).getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
-						System.out.println(mp.getBodyPart(i).getContentType());
-						String strSize = "";
-						String filename = mp.getBodyPart(i).getFileName();
-						int size = mp.getBodyPart(i).getSize();
-						if (size > 1024 * 1024) {
-							size = size / 1024 / 1024;
-							strSize = size + "MB";
-						} else if (size > 1024) {
-							size = size / 1024;
-							strSize = size + "KB";
-						} else {
-							strSize = size + "B";
-						}
+					p = mp.getBodyPart(i);
+					if(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
+						logger.debug("contentType=" + p.getContentType());
+
+						String filename = p.getFileName();
+						double size = p.getSize();
+						String[] encodingHeaders = p.getHeader("Content-Transfer-Encoding");
+						if (encodingHeaders != null && encodingHeaders.length > 0) {
+							String encodingName = encodingHeaders[0];
+							logger.debug("Content-Transfer-Encoding=" + encodingName);
+							if (encodingName.equalsIgnoreCase("base64")) {
+								// decrease the size because base64 increases the size to 4/3 times.
+								size = (int)(size*0.75); 
+							}
+						}						
+						String strSize = ezEmailUtil.getSizeWithUnit(size);
 						
 						if (filename == null){
 							filename = "";
@@ -872,17 +863,17 @@ public class EzEmailMailReadController {
 							filename = MimeUtility.decodeText(filename);
 						}
 						String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+i;
-						pAttachListHtml += " <li><span onclick=\"DownloadPC(this);\" _filehref='" + aitem + "' _filesize='" + mp.getBodyPart(i).getSize() + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+						pAttachListHtml += " <li><span onclick=\"DownloadPC(this);\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 						pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
 						pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 						isAttach = "OK";
-						filesize = (Integer.parseInt(filesize) + mp.getBodyPart(i).getSize()) + "";
+						filesize = (Double.parseDouble(filesize) + size) + "";
 						filecnt = (Integer.parseInt(filecnt) + 1) + "";
 					} else {
-						List<String> tempList = getBodyInfo(mp.getBodyPart(i), folderPath, uid);
+						List<String> tempList = getBodyInfo(p, folderPath, uid);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
-						filesize = (Integer.parseInt(filesize) + Integer.parseInt(tempList.get(2))) + "";
+						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 						if(tempList.get(4).equals("OK")){
 							isAttach = "OK";
@@ -898,7 +889,7 @@ public class EzEmailMailReadController {
 						List<String> tempList = getBodyInfo(p, folderPath, uid);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
-						filesize = (Integer.parseInt(filesize) + Integer.parseInt(tempList.get(2))) + "";
+						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 						if(tempList.get(4).equals("OK")){
 							isAttach = "OK";
@@ -909,15 +900,18 @@ public class EzEmailMailReadController {
 				Multipart mp = (Multipart)part.getContent();
 				int count = mp.getCount();
 				for(int i = 0; i < count; i++) {
-					List<String> tempList = getBodyInfo(mp.getBodyPart(i), folderPath, uid);
+					Part p = mp.getBodyPart(i);
+					List<String> tempList = getBodyInfo(p, folderPath, uid);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
-					filesize = (Integer.parseInt(filesize) + Integer.parseInt(tempList.get(2))) + "";
+					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 					if(tempList.get(4).equals("OK")){
 						isAttach = "OK";
 					}
 				}
+			} else if(part.isMimeType("message/rfc822")){
+				
 			}
 			
 			resultList.add(htmlBody);
