@@ -361,7 +361,7 @@ function tableListControl_Week()
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img src='/myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             else
                 _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
@@ -1316,14 +1316,14 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     var _img = document.createElement("IMG");
     if (obj.getAttribute("approveFlag") == "1") {
-        _img.src = "/myoffice/ezResource/ResSch/calendar/images/calendar/icon_resource_ok.png"
+        _img.src = "/images/calendar/icon_resource_ok.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     }
     else {
-        _img.src = "/myoffice/ezResource/ResSch/calendar/images/calendar/icon_resource_no.png"
+        _img.src = "/images/calendar/icon_resource_no.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
