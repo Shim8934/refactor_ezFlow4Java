@@ -87,13 +87,13 @@ public class EzCommonController extends EgovFileMngUtil{
         String strHTML = "";
         String realPath = request.getServletContext().getRealPath("");
         
-        if(request.getParameter("strHTML") != null){
+        if (request.getParameter("strHTML") != null) {
         	strHTML = request.getParameter("strHTML");
         	strHTML = URLDecoder.decode(strHTML, "utf-8");
         }
         
         String scheme = "http://";
-    	if(request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")){
+    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
     		scheme = "https://";
     	}
         
@@ -103,7 +103,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //            int pos1 = strHTML.indexOf("src=\"http") + 5;
 //            int pos2 = strHTML.substring(pos1).indexOf("\"");
 //            String imgurlOrg = strHTML.substring(pos1, pos2);
-//            if (imgurlOrg.indexOf("ezEmail") > 0){
+//            if (imgurlOrg.indexOf("ezEmail") > 0) {
 //                string Imgurl = ImgurlOrg.Replace(@"&amp;", @"&");
 //                string ConverImgurl = MailContentDownload(Imgurl);
 //                ConverImgurl = "replace_"+scheme + HttpContext.Current.Request.Url.Host + ConverImgurl;
@@ -117,7 +117,7 @@ public class EzCommonController extends EgovFileMngUtil{
         strHTML = strHTML.replace("replace_" + scheme, scheme);
 
         // reform 리폼관련 
-//        if (strHTML.IndexOf("__reform_data_bind_list") > -1){
+//        if (strHTML.IndexOf("__reform_data_bind_list") > -1) {
 //            HTMLDocument iDoc = new HTMLDocument();
 //            iDoc.designMode = "on";
 //            object[] oPageText = { strHTML };
@@ -185,7 +185,7 @@ public class EzCommonController extends EgovFileMngUtil{
         filePath = realPath + uploadModule;
         
         File file = new File(filePath);
-        if (!file.exists()){
+        if (!file.exists()) {
         	file.mkdir();
         }
         String m_strMHT = "";
@@ -197,7 +197,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //			m_strMHT= "";
 //		}
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-System.out.println(strHTML);
+        
         strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
         
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
@@ -207,7 +207,7 @@ System.out.println(strHTML);
 	 * 게시판 ck에디터 이미지 업로드 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
-	public String ckImageUpload(){
+	public String ckImageUpload() {
 		return "ezCommon/ckImageUpload";
 	}
 	
@@ -225,7 +225,7 @@ System.out.println(strHTML);
 		
 		filePath = filePath + File.separator + today;
 		File file = new File(realPath + filePath);
-        if (!file.exists()){
+        if (!file.exists()) {
         	file.mkdir();
         }
         
@@ -236,7 +236,7 @@ System.out.println(strHTML);
 		
 		File imageFile = new File(realPath + filePath + File.separator + fileName);			
 	
-		if(imageFile.exists()){			
+		if (imageFile.exists()) {			
 			BufferedImage bi = ImageIO.read(new File(realPath + filePath + File.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
@@ -263,7 +263,7 @@ System.out.println(strHTML);
 		filePath = filePath + File.separator + today;
 		File file = new File(realPath + filePath);
 		
-        if (!file.exists()){
+        if (!file.exists()) {
         	file.mkdir();
         }
         
@@ -280,7 +280,7 @@ System.out.println(strHTML);
 		String m_strBoundary = "";
 		String[] m_ImageList = null;
 		String[] m_BackImageList = null;
-        if (m_strHTML != ""){
+        if (m_strHTML != "") {
             //MHT 헤더 생성.
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
@@ -290,11 +290,11 @@ System.out.println(strHTML);
             //본문 인코딩
         	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
             //이미지 인코딩
-            if (m_ImageList != null){
+            if (m_ImageList != null) {
             	doImageEncoding(m_ImageList, m_strMHT, m_strBoundary, realPath);
             }
             //백그라운드 인코딩
-            if (m_BackImageList != null){
+            if (m_BackImageList != null) {
             	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
             }
 
@@ -331,10 +331,10 @@ System.out.println(strHTML);
         String strBoundary = "Boundary-=_";
         Random Rnd = new Random();
 
-        while (strBoundary.length() < 39){
+        while (strBoundary.length() < 39) {
             int nch = Rnd.nextInt(9)+1; 
 
-            if (nch < 26){
+            if (nch < 26) {
                 strBoundary += (char)(65 + nch);
             }
             else{
@@ -357,7 +357,7 @@ System.out.println(strHTML);
         
         int week = calendar.get(Calendar.DAY_OF_WEEK);
         
-        switch (week){
+        switch (week) {
             case 1:
                 strweek = "Sun";
                 break;
@@ -422,9 +422,9 @@ System.out.println(strHTML);
                 strMonth = "Dec";
                 break;
         }
-        if(calendar.get(Calendar.AM_PM) == 1){
+        if (calendar.get(Calendar.AM_PM) == 1) {
         	amPm = "PM";
-        }else{
+        } else {
         	amPm = "AM";
         }
 	
@@ -444,50 +444,50 @@ System.out.println(strHTML);
         String m_ImageList[] = null;
         
         //Img 태그의 갯수를 알아낸다.
-        while (true){
+        while (true) {
             npos = strTempHtml.indexOf("<img", npos);
-            if (npos > 0){
+            if (npos > 0) {
                 nposStart = strTempHtml.indexOf(" src=", npos + 4);
-                if (nposStart > 0){
+                if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
-                    if ((nposEnd - nposStart - 6) > 0){
+                    if ((nposEnd - nposStart - 6) > 0) {
                         npos = nposEnd;
                         nImgCount++;
-                    }else{
+                    } else {
                         npos = npos + 4;
                     }
-                }else{
+                } else {
                     npos = npos + 4;
                 }
-            }else{
+            } else {
             	break;
             }
         }
 
         //소스에서 image src를 추출
-        if (nImgCount > 0){
+        if (nImgCount > 0) {
             //m_ImageList = new string[nImgCount];
             strTempList = new String[nImgCount];
             int i = 0;
             npos = 0;
-            while (true){
+            while (true) {
                 npos = strTempHtml.indexOf("<img", npos);
-                if (npos > 0){
+                if (npos > 0) {
                     nposStart = strTempHtml.indexOf(" src=", npos + 4);
-                    if (nposStart > 0){
+                    if (nposStart > 0) {
                         nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
-                        if ((nposEnd - nposStart - 6) > 0){
+                        if ((nposEnd - nposStart - 6) > 0) {
                             strImgsrc = strHtml.substring(nposStart + 6, nposEnd);
                             npos = nposEnd;
                             strTempList[i] = strImgsrc;
                             i++;
-                        }else{
+                        } else {
                             npos = npos + 4;
                         }
-                    }else{
+                    } else {
                         npos = npos + 4;
                     }
-                }else{
+                } else {
                 	break;
                 }
             }
@@ -499,15 +499,15 @@ System.out.println(strHTML);
             //if (strTempList != null)
             //{
 
-            for (int j = 0; j < strTempList.length; j++){
+            for (int j = 0; j < strTempList.length; j++) {
                 strtempResource = strTempList[j];
-                for (int k = 0; k < j; k++){
-                    if (j != k && strTempList[k].equals(strtempResource)){
+                for (int k = 0; k < j; k++) {
+                    if (j != k && strTempList[k].equals(strtempResource)) {
                         isSameUrl = true;
                     }
                 }
 
-                if (isSameUrl == false){
+                if (isSameUrl == false) {
                     nImgCount++;
                 }
                 else{
@@ -515,19 +515,19 @@ System.out.println(strHTML);
                 }
             }
 
-            if (nImgCount > 0){
+            if (nImgCount > 0) {
                 m_ImageList = new String[nImgCount];
                 strtempResource = "";
                 nImgCount = 0;
-                for (int j = 0; j < strTempList.length; j++){
+                for (int j = 0; j < strTempList.length; j++) {
                     strtempResource = strTempList[j];
-                    for (int k = 0; k < j; k++){
-                        if (j != k && strTempList[k].equals(strtempResource)){
+                    for (int k = 0; k < j; k++) {
+                        if (j != k && strTempList[k].equals(strtempResource)) {
                             isSameUrl = true;
                         }
                     }
 
-                    if (isSameUrl == false){
+                    if (isSameUrl == false) {
                         m_ImageList[nImgCount] = strtempResource;
                         nImgCount++;
                     }
@@ -537,7 +537,7 @@ System.out.println(strHTML);
                 }
 
                 int index = 1;
-                for(String strResource : m_ImageList){
+                for (String strResource : m_ImageList) {
                     strHtml = strHtml.replace(strResource, "file:///C:/IMAGE" + index + ".gif");
                     index++;
                 }
@@ -558,43 +558,43 @@ System.out.println(strHTML);
         List<String> L_BackImage = new ArrayList<String>();
 
         //<body 태그의 Background갯수를 알아낸다.
-        while (true){
+        while (true) {
             npos = strTempHtml.indexOf("<body", npos);
-            if (npos > 0){
+            if (npos > 0) {
                 nposStart = strTempHtml.indexOf(" background=", npos + 5);
-                if (nposStart > 0){
+                if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0){
+                    if ((nposEnd - nposStart - 13) > 0) {
                         strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
-                    }else{
+                    } else {
                         npos = npos + 5;
                     }
-                }else{
+                } else {
                     npos = npos + 5;
                 }
-            }else{
+            } else {
             	break;
             }
         }
 
         //<table 태그의 Background갯수를 알아낸다.
         npos = 0;
-        while (true){
+        while (true) {
             npos = strTempHtml.indexOf("<table", npos);
-            if (npos > 0){
+            if (npos > 0) {
                 nposStart = strTempHtml.indexOf(" background=", npos + 6);
-                if (nposStart > 0){
+                if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0){
+                    if ((nposEnd - nposStart - 13) > 0) {
                         strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
-                    }else{
+                    } else {
                         npos = npos + 6;
                     }
-                }else{
+                } else {
                     npos = npos + 6;
                 }
             }
@@ -605,59 +605,59 @@ System.out.println(strHTML);
 
         //<td 태그의 Background갯수를 알아낸다.
         npos = 0;
-        while (true){
+        while (true) {
             npos = strTempHtml.indexOf("<td", npos);
-            if (npos > 0){
+            if (npos > 0) {
                 nposStart = strTempHtml.indexOf(" background=", npos + 3);
-                if (nposStart > 0){
+                if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0){
+                    if ((nposEnd - nposStart - 13) > 0) {
                         strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
-                    }else{
+                    } else {
                         npos = npos + 3;
                     }
-                }else{
+                } else {
                     npos = npos + 3;
                 }
-            }else{
+            } else {
             	break;
             }
         }
 
-        if (L_BackImage.size() > 1){
+        if (L_BackImage.size() > 1) {
             nImgCount = 0;
             boolean isSameUrl = false;
             String strtempResource = "";
-            for (int j = 0; j < L_BackImage.size(); j++){
+            for (int j = 0; j < L_BackImage.size(); j++) {
                 strtempResource = L_BackImage.get(j);
-                for (int k = 0; k < j; k++){
-                    if (j != k && L_BackImage.get(k).equals(strtempResource)){
+                for (int k = 0; k < j; k++) {
+                    if (j != k && L_BackImage.get(k).equals(strtempResource)) {
                         isSameUrl = true;
                     }
                 }
 
-                if (isSameUrl == false){
+                if (isSameUrl == false) {
                     nImgCount++;
-                }else{
+                } else {
                 	isSameUrl = false;
                 }
             }
 
-            if (nImgCount > 0){
+            if (nImgCount > 0) {
                 m_BackImageList = new String[nImgCount];
                 strtempResource = "";
                 nImgCount = 0;
-                for (int j = 0; j < L_BackImage.size(); j++){
+                for (int j = 0; j < L_BackImage.size(); j++) {
                     strtempResource = L_BackImage.get(j);
-                    for (int k = 0; k < j; k++){
-                        if (j != k && L_BackImage.get(k).equals(strtempResource)){
+                    for (int k = 0; k < j; k++) {
+                        if (j != k && L_BackImage.get(k).equals(strtempResource)) {
                             isSameUrl = true;
                         }
                     }
 
-                    if (isSameUrl == false){
+                    if (isSameUrl == false) {
                         m_BackImageList[nImgCount] = strtempResource;
                         nImgCount++;
                     }
@@ -669,7 +669,7 @@ System.out.println(strHTML);
         
             L_BackImage = null;
             int index = 1;
-            for(String strResource : m_ImageList){
+            for (String strResource : m_ImageList) {
                 strHtml = strHtml.replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + ".gif");
                 index++;
             }
@@ -699,7 +699,7 @@ System.out.println(strHTML);
 	 * @param realPath 
 	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
-        for (int i = 0; i < m_ImageList.length; i++){
+        for (int i = 0; i < m_ImageList.length; i++) {
             m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
             m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
             m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif" + System.lineSeparator());
@@ -710,11 +710,11 @@ System.out.println(strHTML);
             BufferedImage imageSample = null;
             BufferedImage newImage = null;
             
-            if (strTemp.equals("http")){
+            if (strTemp.equals("http")) {
             	URL url = new URL(m_ImageList[i].replace("&amp;", "&"));
             	imageSample = ImageIO.read(url);
             	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            }else{
+            } else {
             	File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
             	imageSample = ImageIO.read(file);
             	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -734,7 +734,7 @@ System.out.println(strHTML);
 	 * 게시판 html -> mht 변환 배경화면인코딩 실행 Method
 	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
-        for (int i = 0; i < m_BackImageList.length; i++){
+        for (int i = 0; i < m_BackImageList.length; i++) {
             m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
             m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
             m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif" + System.lineSeparator());
@@ -745,12 +745,12 @@ System.out.println(strHTML);
 
             String strExt = m_ImageList[i].substring(m_ImageList[i].lastIndexOf(".") + 1);
             String strTemp = m_BackImageList[i].substring(0, 4);
-            if (strTemp.equals("http")){
+            if (strTemp.equals("http")) {
             	URL url = new URL(m_BackImageList[i].replace("&amp;", "&"));
                 InputStream inputStream = url.openStream();
                 ImageInputStream Imgstream = ImageIO.createImageInputStream(inputStream);
                 imageSample = ImageIO.read(Imgstream);
-            }else{
+            } else {
             	File file = new File(m_BackImageList[i].replace("&amp;", "&"));
             	imageSample = ImageIO.read(file);
             }
@@ -776,7 +776,7 @@ System.out.println(strHTML);
 
         filePath = realPath + uploadModule;
         File file = new File(filePath);
-        if (!file.exists()){
+        if (!file.exists()) {
         	file.mkdir();
         }
         String url = ezCommonService.getContentInfo(type, itemID);
@@ -789,9 +789,9 @@ System.out.println(strHTML);
         
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
-        if(strHTML.trim().length() > 0){
+        if (strHTML.trim().length() > 0) {
         	return strHTML;
-        }else{
+        } else {
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
 
@@ -808,39 +808,39 @@ System.out.println(strHTML);
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		
 		strBoundary = getBoundaryText(m_strMHT);
-		if(m_strMHT != null && !m_strMHT.equals("")){
-			if(strBoundary.equals("error")){
+		if (m_strMHT != null && !m_strMHT.equals("")) {
+			if (strBoundary.equals("error")) {
 				return "error : boundary 를 찾을 수 없습니다.";
-			}else{
+			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				
-				for(int i = 1; i < m_Mimechunk.length; i++){
+				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator()+System.lineSeparator());
 					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
 					
-					if(strMime_info_tupe[0].equals("Content-Type")){
-						if(strMime_info_tupe[1].equals("Text/HTML")){
+					if (strMime_info_tupe[0].equals("Content-Type")) {
+						if (strMime_info_tupe[1].equals("Text/HTML")) {
 							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
-						}else if(strMime_info_tupe[0].equals("Image/gif")){
+						}else if (strMime_info_tupe[0].equals("Image/gif")) {
 							String[] strMime_info_location = strMime_info_p[2].split(": ");
-							if(strMime_info_location[0].equals("Content-Location")){
+							if (strMime_info_location[0].equals("Content-Location")) {
 								m_ListImageLocation.add(strMime_info_location[1]);
 							}
 							m_ListImageLocalLocation.add(doImageDecoding(strMimeChunk[1].trim(), m_strSPath, m_strLPath));
 						}
 					}
 				}
-				if(m_ListImageLocation.size() == m_ListImageLocalLocation.size()){
-					for(int i = 0; i < m_ListImageLocation.size(); i++){
+				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
+					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i)); 
 					}
-				}else{
+				} else {
 					return "error : 파싱오류.";
 				}
 				return m_strHTML;
 			}
-		}else{
+		} else {
 			return "error : MHT 데이터가 존재하지 않습니다.";
 		}
 	}
@@ -856,7 +856,7 @@ System.out.println(strHTML);
         String LfilePath = m_strLPath + File.separator + strImageName;
         
         File file = new File(m_strLPath);
-        if(!file.exists()){
+        if (!file.exists()) {
         	file.mkdir();
         }
         BufferedWriter fw = new BufferedWriter(new FileWriter(LfilePath, true));
@@ -884,10 +884,10 @@ System.out.println(strHTML);
 	private String getBoundaryText(String m_strMHT) {
 		String strTemp = m_strMHT;
         int nPos = strTemp.indexOf("boundary=");
-        if (nPos > 0){
+        if (nPos > 0) {
             int nEndPos = strTemp.indexOf("\"", nPos + 10);
             return "--" + strTemp.substring(nPos + 10, nEndPos);
-        }else{
+        } else {
             return "error";
         }
 	}
@@ -938,62 +938,62 @@ System.out.println(strHTML);
         
         String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
         
-        if(request.getParameter("id") != null){
+        if (request.getParameter("id") != null) {
         	id = request.getParameter("id");
         }
         
-        if(request.getParameter("email") != null){
+        if (request.getParameter("email") != null) {
         	id = request.getParameter("email");
         }
         
-        if(request.getParameter("dept") != null){
+        if (request.getParameter("dept") != null) {
         	id = request.getParameter("dept");
         }
         
-        /*if(id.equals("")){
+        /*if (id.equals("")) {
         	
-        	if(!email.equals("")){
+        	if (!email.equals("")) {
         		id = ezOrganService.getCNByEmail(email);
         		
         	}
         }*/
         
-        if(!id.equals("")){
+        if (!id.equals("")) {
         	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary());
         	
         	Document xmldom = commonUtil.convertStringToDocument(infoXML);
-        	if(xmldom.getElementsByTagName(email) == null){
+        	if (xmldom.getElementsByTagName(email) == null) {
         		literalEmail = email;
         		literalDisplayName = email;
         		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
-        	}else{
+        	} else {
         		
-//        		if(xmldom.getElementsByTagName(email) == null){
+//        		if (xmldom.getElementsByTagName(email) == null) {
 //        			infoXML = ezOrganService.getSearchLikeByEmail(id);
 //        			xmldom = commonUtil.convertStringToDocument(infoXML);
 //        		}
         		
-        		if(!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)){
+        		if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
         			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary());
         			
-        			if(!infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")){
+        			if (!infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
         				Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
         				
         				literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
         				literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
-        			}else{
+        			} else {
         				literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
         				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
         			}
         			
-        		}else{
+        		} else {
         			literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
     				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
         		}
         		
-        		if(xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") || xmldom.getElementsByTagName("TITLE").item(0).getTextContent().equals("")){
+        		if (xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") || xmldom.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
         			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
-        		}else{
+        		} else {
         			literalPhoto = "<IMG SRC='/ezCommon/ezCommonInterFace.do?TYPE=PERSONAL&FILENAME=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
         		}
         		
@@ -1008,7 +1008,7 @@ System.out.println(strHTML);
         		literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
         		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(System.lineSeparator(), "<BR>");
         	}
-        }else{
+        } else {
         	literalEmail = email;
         	literalDisplayName = email;
         	literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
