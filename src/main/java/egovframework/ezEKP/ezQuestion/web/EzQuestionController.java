@@ -1295,7 +1295,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 										qstCompleteVO2.setQuesNo(v_quesNo);
 										qstCompleteVO2.setAnswerNo(iAns+1);
 										qstCompleteVO2.setAttachNo(aa+1);
-										qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+										//qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
 										qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
 										qstCompleteVO2.setAttachURL(ansAttachUrl);
 										qstCompleteVO2.setAttachType(ansAttachType);
@@ -1401,9 +1401,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 			}
 			
-			//pFilePath = "files"+File.separator+"upload_board"+File.separator+"uploadQuestion"+File.separator+newFileName;
-			//pFilePath = "/files/upload_board/uploadQuestion/"+newFileName;
-			pFilePath = pDirPath+File.separator+newFileName;
+			pFilePath = pDirPath+commonUtil.separator+newFileName;
 			
 			writeUploadedFile(file, newFileName, qDirPath+pDirPath);
 			
