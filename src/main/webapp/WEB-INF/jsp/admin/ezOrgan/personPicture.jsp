@@ -49,7 +49,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
 		            
-		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=TEMP&userID=" + RetValue);
+		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=PICTURE&userID=" + RetValue);
 		            xhr.send(fd);
 		        }
 	        }

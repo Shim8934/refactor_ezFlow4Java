@@ -62,8 +62,7 @@
 		        	signimage.innerHTML = "<img src=" + window.document.location.protocol + "//" + window.document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=" + SignPath + "&FILENAME=" + signlist.value + " width=50 height=50>";
 				}else{
 					signimage.innerHTML = "<img src=" + window.document.location.protocol + "//" + window.document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=" + SignPath + "&FILENAME=" + signlist.value + " width=50 height=50>";
-				} */
-				
+				} */				
 				var imgSrc = "/admin/ezOrgan/getApprovalSignInfo.do?type="+SignPath+"&fileName="+encodeURI(signlist.value);
 				signimage.innerHTML = "<img src="+imgSrc+" width=50 height=50 />";
 		    }			
@@ -71,58 +70,45 @@
 		        document.getElementById('mode').value = "PHOTO";
 		        document.form.file1.click();
 		    }
-			function del_sign()
-			{
-				if (signlist.selectedIndex == -1)
-				{
+			function del_sign()	{
+				if (signlist.selectedIndex == -1) {
 					alert("<spring:message code='ezOrgan.t188' />");
 					return;
 				}
-
-				if (!confirm("'" + signlist.options[signlist.selectedIndex].innerText + "'<spring:message code='ezOrgan.t130' />"))
+				
+				if (!confirm("'" + signlist.options[signlist.selectedIndex].innerText + "'<spring:message code='ezOrgan.t130' />")) {
 					return;
-
-			    var xmlHTTP = createXMLHttpRequest();
-			    var xmlDom = createXmlDom();
-		        var xmlPara = createXmlDom();
-		        var objRoot, objNode, subNode;
-
-			    var objNode;
-			    createNodeInsert(xmlDom, objNode, "DATA");
-			    createNodeAndInsertText(xmlDom, objNode, "PARENTCN", "");
-			    createNodeAndInsertText(xmlDom, objNode, "CN", userid);
-		        objRoot =createNodeAndInsertText(xmlDom, objNode, "PROP", "");
-
+				}
+				
 				var imagelist = "";
-				for (var i=0; i<signlist.length; i++)
-				{
-					if (i != signlist.selectedIndex)
-					{
-						if (imagelist != "")
+				for (var i=0; i<signlist.length; i++) {
+					if (i != signlist.selectedIndex) {
+						if (imagelist != "") {
 							imagelist += ";" + signlist.options[i].value;
-						else
+						} else {
 							imagelist = signlist.options[i].value;
+						}
 					}
 				}
-
-		        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "extensionAttribute3", imagelist);
-
-				xmlHTTP.open("POST", "SaveUserInfo.aspx", false);
-				xmlHTTP.send(xmlDom);
-						
-				if (xmlHTTP.status == 200 )
-				{
-					if ( SelectSingleNodeValueNew(xmlHTTP.responseXML,"DATA") != "OK")
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/saveUserInfo.do",
+					data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : imagelist},
+					success : function(result){
+						if(result != "OK"){
+							alert("<spring:message code='ezOrgan.t189' />");
+						}else{
+							alert("<spring:message code='ezOrgan.t190' />");
+							signimage.innerHTML ="<B><spring:message code='ezOrgan.t191' /></B>";
+							GetSignInfo();
+						}
+					},
+					error : function(){
 						alert("<spring:message code='ezOrgan.t189' />");
-					else
-					{
-						alert("<spring:message code='ezOrgan.t190' />");
-						signimage.innerHTML ="<B><spring:message code='ezOrgan.t191' /></B>";
-						GetSignInfo();
 					}
-				}
-				else
-					alert("<spring:message code='ezOrgan.t189' />");
+				});			   
 			}			
 			function btn_AttachAdd_onclick(obj) {
 		        if (document.form.file1.value != "") {
@@ -141,7 +127,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
 		            
-		            if (signPath == "APPROVALGSIGN") {
+		            if (SignPath == "APPROVALGSIGN") {
 		            	mode = "GLOGO";
 		            } else {
 		            	mode = "LOGO";
@@ -159,13 +145,13 @@
 		        	document.getElementById("tempFilePath").value = "";
 		        }else{
 		        	document.getElementById("tempFilePath").value = xhr.responseText;		        			        	
-		        	var fileName = xhr.responseText;
+		        	var fileName = encodeURI(xhr.responseText);
 					
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						url : "/admin/ezOrgan/saveUserInfo.do",
-						data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : fileName},
+						data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : encodeURI(fileName)},
 						success : function(result){
 							if(result != "OK"){
 								alert("<spring:message code='ezOrgan.t119' />");
@@ -199,7 +185,7 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
 			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" />
 			<input type="hidden" name="mode" id="mode" />
-			<input type="text" name="tempFilePath" id="tempFilePath" />
+			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		</form>		
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezOrgan.t141' /></span></a>

@@ -490,7 +490,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			fileName = userID + "_" + guid + ".";
 			
 			if(mode.equals("PICTURE")){
-				serverPath = thumbPath;				
+				serverPath = thumbPath;
 			}else if(mode.equals("TEMP")){
 				serverPath = tempPath;
 			}else if(mode.equals("GLOGO")){
@@ -503,7 +503,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			if(!file.exists()){
 				file.mkdirs();
-			}	
+			}
 			
 			if(!mode.equals("TEMP")){
 				File file1 = new File(tempPath);
@@ -519,11 +519,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			BufferedImage bi = ImageIO.read(imageFile);
             BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
-            ImageIO.write(bufferedImage, "png", new File(thumbPath + fileName + "png"));
+            ImageIO.write(bufferedImage, "png", new File(serverPath + fileName + "png"));
             
             FileUtils.deleteQuietly(imageFile);
             //2016-04-20 장진혁과장 --만약 전자결재에서 이미지 파일 원본을 필요로 한다면 주석을 제거 후 구현필요
-            //writeUploadedFile(multiFile, fileName, serverPath);
+            //writeUploadedFile(multiFile, fileName + extension, serverPath);
             return fileName + "png";            
 			
 		}catch(Exception e){
