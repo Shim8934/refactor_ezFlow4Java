@@ -512,7 +512,7 @@ public class EzEmailMailReadController {
 		long uid = 0;
 		String folderPath = null;
 		if(url != null){
-			int index = url.lastIndexOf("/");
+			int index = url.lastIndexOf(commonUtil.separator);
 			if(index != -1){
 				folderPath = url.substring(0, index);
 				uid = Long.parseLong(url.substring(index+1));
@@ -657,11 +657,11 @@ public class EzEmailMailReadController {
 		sb.append("<CC><![CDATA["+ccStr+"]]></CC>");
 		sb.append("<BCC><![CDATA["+bccStr+"]]></BCC>");
 		sb.append("<SUBJECT><![CDATA["+subject+"]]></SUBJECT>");
-		sb.append("<HTMLDESCRIPTION><![CDATA["+"]]></HTMLDESCRIPTION>"); //?
-		sb.append("<COMMENT><![CDATA["+"]]></COMMENT>"); //?
+		sb.append("<HTMLDESCRIPTION><![CDATA["+"]]></HTMLDESCRIPTION>");
+		sb.append("<COMMENT><![CDATA["+"]]></COMMENT>");
 		sb.append("<IMPORTANCE><![CDATA["+importance+"]]></IMPORTANCE>");
-		sb.append("<SENSITIVITY><![CDATA["+"Normal"+"]]></SENSITIVITY>"); //?
-		sb.append("<HASEMBEDED><![CDATA["+0+"]]></HASEMBEDED>"); //?
+		sb.append("<SENSITIVITY><![CDATA["+"Normal"+"]]></SENSITIVITY>");
+		sb.append("<HASEMBEDED><![CDATA["+0+"]]></HASEMBEDED>");
 		sb.append("<ITEMID><![CDATA["+url+"]]></ITEMID>");
 		sb.append("<CONTENTCLASS><![CDATA["+"]]></CONTENTCLASS>");
 		sb.append("</DATA>");
@@ -682,7 +682,7 @@ public class EzEmailMailReadController {
 		long uid = 0;
 		String folderPath = null;
 		if(url != null){
-			int index = url.lastIndexOf("/");
+			int index = url.lastIndexOf(commonUtil.separator);
 			if(index != -1){
 				folderPath = url.substring(0, index);
 				uid = Long.parseLong(url.substring(index+1));

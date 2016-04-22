@@ -1,17 +1,14 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
 import java.nio.file.Files;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +26,6 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Message.RecipientType;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -57,7 +53,6 @@ import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -568,8 +563,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			String _pFileName = "";
 			for (int i=0; i<cnt; i++) {
 				_pFileName = multiFile.get(i).getOriginalFilename();
-				if (_pFileName.indexOf(File.separator) > 0) {
-					_pFileName = _pFileName.split(File.separator)[_pFileName.split(File.separator).length - 1];
+				if (_pFileName.indexOf(commonUtil.separator) > 0) {
+					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
 				}
 				pFileName[i] = _pFileName;
 				sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
@@ -603,7 +598,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
                 String pDate = EgovDateUtil.getToday();
                 folderDate = pDate;
-                pDirTempPath = pDirPath + File.separator + pDate;
+                pDirTempPath = pDirPath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
                 if (!file.exists()) {
                 	file.mkdir();
@@ -615,7 +610,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //                String base64OrgFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(pFileName[i]));
                 FileOutputStream fos = null;
                 try {
-                	File f = new File(pDirTempPath + File.separator + sGUID[i] + "__.txt");
+                	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
                 	fos = new FileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes());
                 } catch(Exception e) {
@@ -626,7 +621,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                 	}
                 }
             } else {
-                pDirTempPath = pDirPath + File.separator + "tempFileUpload";
+                pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
                 pBigFileUpload = "N";
             }
 			
@@ -642,7 +637,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                     resultUpload[i] = "denied";
                 } else {
                     writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
-                    fileLocation[i] = pDirTempPath + File.separator + sGUID[i];
+                    fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
                 }
                 
@@ -662,13 +657,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
 		strXML += strXML2 + "</NODES></ROOT>";
 
-        String xmlPath = pDirPath + File.separator + "templist";
+        String xmlPath = pDirPath + commonUtil.separator + "templist";
         File f = new File(xmlPath);
         if (!f.exists()) {
 			f.mkdir();
         }
 
-        xmlPath += File.separator + tempFolderName + ".txt";
+        xmlPath += commonUtil.separator + tempFolderName + ".txt";
         f = new File(xmlPath);
         if (f.exists()) {
         	String tempXmlList = "";
@@ -755,7 +750,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
 		
 		String realPath = request.getServletContext().getRealPath("");
-		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + File.separator + "tempFileUpload";
+		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password);
@@ -802,8 +797,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				if (bigBool.equals("N")) {
 					
 					BodyPart messageBodyPart = new MimeBodyPart();
-			        File f = new File(pDirTempPath + File.separator + path);
-			        FileDataSource source = new FileDataSource(pDirTempPath + File.separator + path);
+			        File f = new File(pDirTempPath + commonUtil.separator + path);
+			        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 			        messageBodyPart.setDataHandler(new DataHandler(source));
 			        messageBodyPart.setFileName(fileName);
 			        String contentType = "application/octet-stream";
@@ -827,7 +822,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					if (!path.equals("")) {
 						String[] newPath = path.split("|!|"); //string[] Newpath = path.Split(new string[] { "|!|" }, StringSplitOptions.None);
 						childNodes.item(1).setTextContent(newPath[1]);
-						childNodes.item(4).setTextContent(newPath[0] + File.separator + newPath[1]);
+						childNodes.item(4).setTextContent(newPath[0] + commonUtil.separator + newPath[1]);
 					}
 				}
 			}
@@ -842,7 +837,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				NodeList childNodes = subNode.getChildNodes();
 				
                 if (childNodes.item(2).getTextContent().equals("N")) {
-                	File file = new File(pDirTempPath + File.separator + childNodes.item(1).getTextContent());
+                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
                     if (file.exists()) {
                     	file.delete();
                     }
@@ -1314,6 +1309,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			
 			
         }
+        
+        message.setSentDate(Calendar.getInstance().getTime());
         
 //        //발송전 처리 부분- 내용 , 첨부,본문, 임시저장
 //        String htmlbody = null;
