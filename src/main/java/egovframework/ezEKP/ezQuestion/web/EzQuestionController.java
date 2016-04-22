@@ -1553,7 +1553,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         
         if(pType.equals("QUESTION")){
                 if (!pFileName.equals("")){
-                    pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+File.separator+pFileName;
+                    pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+commonUtil.separator+pFileName;
                 }else{
                 	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID);
                     pFilePath = qstAttachVO.getAttachUrl();
