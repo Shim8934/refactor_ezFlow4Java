@@ -80,6 +80,7 @@ public class CommonUtil {
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
+	/* File separator 공통 함수 */
 	public String separator = "/";
 	
 	public LoginVO userInfo(String loginCookie){
