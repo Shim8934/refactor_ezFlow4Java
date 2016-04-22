@@ -16,7 +16,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID)
 	createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 
-	xmlhttp.open("POST", "/ezResource/callNodeTreeData.do?flag=" + selectNo, true);
+	xmlhttp.open("POST", "/ezResource/callNodeTreeData.do?flag=" + selectNo, false);
 	xmlhttp.send(xmlpara);
 	
 	var XMLstring = xmlhttp.responseXML;
@@ -58,19 +58,20 @@ function GetTreeBrdsInfo()
 			}
 			
 		}else{
+alert("!!");
 			var rep = new RegExp( "&", "gi" );				// 정규식을 쓴이유는 ??????
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
 			var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			
-			var strUrl = "ViewResList2.aspx?brd_id=" + brd_id + "&AccessCode=" + g_AccessCode; 
-			strUrl = strUrl + "&brdnm=" + escape(brd_nm);
+			var strUrl = "/ezReousrce/viewResList2.do?brdID=" + brd_id + "&accessCode=" + g_AccessCode; 
+			strUrl = strUrl + "&brdNm=" + escape(brd_nm);
 			
 			Navigate( strUrl );
 			
 		}
 	} else {
 	    
-		strUrl = "ResSch/schedule_main.aspx?ResID=" + brd_id + "&AccessCode=" + g_AccessCode;
+		strUrl = "ResSch/scheduleMain.do?resID=" + brd_id + "&accessCode=" + g_AccessCode;
 		Navigate( strUrl );
 	}	
 }
@@ -109,7 +110,7 @@ function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx)
 	    createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
 	    createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
 
-	    xmlhttp.open("POST", "/ezResource/callNodeTreeData.do", true);
+	    xmlhttp.open("POST", "/ezResource/callNodeTreeData.do", false);
 		xmlhttp.send(xmlpara);
 		
 		xmlRtn = xmlhttp.responseXML;
