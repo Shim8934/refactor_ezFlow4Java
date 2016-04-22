@@ -1100,7 +1100,7 @@ function organtreeview(thisobjid, elobjid) {
 					    nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
-				            nodeHtml += ("<img src='/myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
 				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>&nbsp;");
 				}
@@ -1224,7 +1224,7 @@ function organtreeview(thisobjid, elobjid) {
 				        nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
 				    else
 				        if (childNode.selectSingleNode("DATA15").text == 1)
-				            nodeHtml += ("<img src='/myoffice/ezResource/ResSch/calendar/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
 				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>&nbsp;");
 				}
