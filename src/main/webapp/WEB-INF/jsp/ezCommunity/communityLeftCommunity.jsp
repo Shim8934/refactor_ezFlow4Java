@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -13,13 +14,13 @@
 		
 		<script type="text/javascript">
 			var ResultString;
-	        var code = '${code}';
-	        var codeName = '${codeName}';
-	        var UserLevel = '${userLevel}';
-	        var ch_CommunityAdmin = "${chCommunityAdmin}";
-	        var newmember_confirmtype = "${newmemberConfirmType}";
-	        var ch_CheckSysop = "${checkSysop}";
-	        var lang = "${lang}";
+	        var code = "<c:out value='${code}'/>";
+	        var codeName = "<c:out value='${codeName}'/>";
+	        var UserLevel = "<c:out value='${userLevel}'/>";
+	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}'/>";
+	        var newmember_confirmtype = "<c:out value='${newmemberConfirmType}'/>";
+	        var ch_CheckSysop = "<c:out value='${checkSysop}'/>";
+	        var lang = "<c:out value='${lang}'/>";
 	        var xmlDom_treeview = createXmlDom();
 	        var xmlhttp = createXMLHttpRequest();
 	        var ch_selected = false;
@@ -61,19 +62,19 @@
 	                    xmlDom_treeview.load("/xml/common/organtree_config2.xml");
 	                    DisplayTopBoard(code);
 	                }else {
-<%-- 	                    var funCode = "<%=Request.QueryString["funCode"]%>"; --%>
+	                    var funCode = "${funCode}";
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=cNotice&type=notice&userLevel=" + UserLevel;
+		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Notice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&amp;bName=cBoard&amp;type=board&userLevel=" + UserLevel;
+				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board&userLevel=" + UserLevel;
 				            document.getElementById('Map520').click();
 				        }else if (funCode == "3") {
 				            GoTopNavigate("<spring:message code='ezCommunity.t1117' />");
-					        window.parent.frames.right.document.location.href = "/ezcommunity/searchKey.do?sRadio=cClubName&amp;keyword=&amp;key";
+					        window.parent.frames.right.document.location.href = "/ezcommunity/searchKey.do?sRadio=c_ClubName&keyword=&amp;key";
 					        document.getElementById('Map530').click();
 					    }else if (funCode == "4") {
 					        GoTopNavigate("<spring:message code='ezCommunity.t1011' />");
@@ -108,14 +109,14 @@
 
 			    if (totalCnt > 0) {
 			        for (var i = 0; i < totalCnt; i++) {
-			            var confirmtype1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CCLUBCONFIRMTYPE");
-			            var sysopID1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CSYSOPID");
-			            var memberCnt1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CMEMBERCNT");
-			            var code2 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CCLUBNO");
-			            var copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CCLUBNAME");
+			            var confirmtype1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE");
+			            var sysopID1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_SYSOPID");
+			            var memberCnt1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_MEMBERCNT");
+			            var code2 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNO");
+			            var copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME");
 			            if (lang != "1")
-			                copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CCLUBNAME2");
-			            var copLogo = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "CLOGOTHUMBNAIL");
+			                copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME2");
+			            var copLogo = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
 
 			            if (sysopID1 == "${userInfoUserID}" || memberCnt1 >= 0) {
 	                        if (confirmtype1 == 3 && confirmtype1 == 0) {
@@ -189,7 +190,7 @@
 	        }
 
 	        function DisplayTopBoard(code) {
-	            return;
+	            return; 
 	            xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=top&subFlag=0&classID=" + code, false);
 	            xmlhttp.send();
 
@@ -403,13 +404,13 @@
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
 	                    case "<spring:message code='ezCommunity.t73' />":
-                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=cNotice&type=notice", "right");
+                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Notice&type=notice", "right");
                             break;
                         case "<spring:message code='ezCommunity.t74' />":
-                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=cBoard&type=board", "right");
+                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board", "right");
                             break;
                         case "<spring:message code='ezCommunity.t1117' />":
-                            window.open("/ezCommunity/searchKey.do?sRadio=cClubName&keyword=&amp;key", "right");
+                            window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&amp;key", "right");
                             break;
                         case "<spring:message code='ezCommunity.t1011' />":
                             window.open("/ezCommunity/commMake.do", "right");
@@ -528,7 +529,7 @@
                 var url = "";
                 switch (idx) {
                     case 1:
-                        url = "/ezCommunity/Board/bbsList.do?mode=list&amp;bName=cNotice&amp;type=notice";
+                        url = "/ezCommunity/Board/bbsList.do?mode=list&amp;bName=c_Notice&amp;type=notice";
                         break;
 
                     case 2:
@@ -539,7 +540,7 @@
             }
             
             function List_more() {
-                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&amp;bName=cBoard&amp;type=board&userLevel=" + UserLevel;
+                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board&userLevel=" + UserLevel;
             }
             
             function make_Cop() {
