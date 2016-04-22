@@ -26,9 +26,9 @@
 	    				success : function(result){
 	    					alert("<spring:message code='ezBoard.t54'/>");
 	    					
-	    					if(SelectedBoardID == BoardGroupID)
+	    					if (SelectedBoardID == BoardGroupID) {
 		    			        window.parent.frames[0].location.reload();
-		    			    else{
+	    					} else {
 		    			    	var pDiv, pId, pValue;
 		    			        var h2 = window.parent.frames[0].document.getElementsByTagName("h2");
 

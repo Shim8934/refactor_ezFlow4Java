@@ -273,21 +273,25 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
-
+		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		
 		String boardTree = ezBoardController.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
-
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {
 			model.addAttribute("hasSubBoard", 1);
 		}
 
-		model.addAttribute("boardID", boardID);
-		model.addAttribute("boardGroupID", boardGroupID);
-		model.addAttribute("boardName", boardPropertyVO.getBoardName());
-
-		return "admin/ezBoard/boardDelete";
+		if (boardPropertyVO == null) {
+			return "admin/ezBoard/boardRight";
+		} else {
+			model.addAttribute("boardID", boardID);
+			model.addAttribute("boardGroupID", boardGroupID);
+			model.addAttribute("boardName", boardPropertyVO.getBoardName());
+			
+			return "admin/ezBoard/boardDelete";
+		}
 	}
 
 	/**
