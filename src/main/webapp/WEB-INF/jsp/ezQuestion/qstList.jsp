@@ -23,17 +23,17 @@
 		</style>
 		<script language="JavaScript" type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
-		    var g_BrdID = "${qstListVO.brdID}";
+		    var g_BrdID = "<c:out value='${qstListVO.brdID}'/>";
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
 		    var EndPollYN, ResponseYN, ResultOpenYN;
 			var MultiResYN, WriteYN, AdminYN;
 			var TR_Contents_Start = 1;
-			var szSearchParam ="&title=" + "${qstListVO.title}" + "&responseRange=" + "${qstListVO.responseRange}" + "&postDate=" + "${qstListVO.postDate}" + "&pollEndDate=" + "${qstListVO.pollEndDate}";
-			var CurPage = "${qstListVO.currPage}";
-			var totalPage = "${qstListVO.totalPage}";
-		    var totalCount = "${qstListVO.totalCnt}";
-		    var receve = "${receve}";
+			var szSearchParam ="&title=" + "<c:out value='${qstListVO.title}'/>" + "&responseRange=" + "<c:out value='${qstListVO.responseRange}'/>" + "&postDate=" + "<c:out value='${qstListVO.postDate}'/>" + "&pollEndDate=" + "<c:out value='${qstListVO.pollEndDate}'/>";
+			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
+			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
+		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
+		    var receve = "<c:out value='${receve}'/>";
 		    
 			document.onselectstart = function(){ return false; };
 			window.onload = function(){
@@ -392,10 +392,10 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if(totalPage > 1 && pageNum != 1){
-		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }else{
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if(totalPage > BlockSize){
@@ -530,7 +530,7 @@
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
-		            checkUserPollStatus(p_SelectedItemNo, "Reuse")
+		            checkUserPollStatus(p_SelectedItemNo, "Reuse");
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;

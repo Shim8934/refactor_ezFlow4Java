@@ -27,12 +27,12 @@
 			}
 		</STYLE>
 		<script type="text/javascript">
-			var szBrdID = "${brdID}";
-			var szItemNo = "${itemNo}";
-			var szQuestionNo = "${questionNo}";
-			var pTotalPage = "${pTotalPage}";
-			var pCurrPage = "${pCurrPage}";
-			var totalCount = "${pTotalCnt}";
+			var szBrdID = "<c:out value='${brdID}'/>";
+			var szItemNo = "<c:out value='${itemNo}'/>";
+			var szQuestionNo = "<c:out value='${questionNo}'/>";
+			var pTotalPage = "<c:out value='${pTotalPage}'/>";
+			var pCurrPage = "<c:out value='${pCurrPage}'/>";
+			var totalCount = "<c:out value='${pTotalCnt}'/>";
 			var xmlHTTP = createXMLHttpRequest();
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
@@ -83,17 +83,17 @@
 					if("${pTotalCnt}" ==0){
 						tableXml += "<tr>";
 						tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
-						tableXml += "<spring:message code='ezQuestion.t413' />"
+						tableXml += "<spring:message code='ezQuestion.t413' />";
 						tableXml += "</td>";
 						tableXml += "</tr>";
 					}
 				}
-
-				$("#xmlTable").html($("#xmlTable").html()+tableXml);
+				
+				document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
 			}
 			
 			function fun_UserView(responseno) {
-			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brdID=" + '${brdID}' + "&itemNo=" + '${itemNo}' + "&questionNo=" + '${questionNo}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
+			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brdID=" + "<c:out value='${brdID}'/>" + "&itemNo=" + "<c:out value='${itemNo}'/>" + "&questionNo=" + "<c:out value='${questionNo}'/>" + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
 			}
 			
 			function Detail_UserInfo(pUserID) {
@@ -107,7 +107,7 @@
 			
 			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
-			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
+			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" +  "<c:out value='${pageCount}'/>" + "&questionNo=" + szQuestionNo;
 				window.location.href = szUrl;
 				}
 			}
@@ -157,11 +157,11 @@
 			    PagingHTML += strtext;
 			    var pageNum = pCurrPage;
 			    if (pTotalPage > 1 && pageNum != 1) {
-			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 			        PagingHTML += strtext;
 			    }
 			    if (pTotalPage > BlockSize) {
@@ -262,14 +262,13 @@
 			
 			function SaveCSV() {
 				alert(document.getElementById("AnaylsisTable").innerHTML);
-				
-				if (hidRType2.value == "A") { 
+				if (document.getElementById("AnaylsisTable").innerHTML) {
 					document.getElementById("AnalysisData").value = document.getElementById("AnaylsisTable").innerHTML;
 					form_analysissave.submit();
-					alert("<spring:message code='ezQuestion.t124' />"); 
-				}else{
-					
+				} else {
+					alert("<spring:message code='ezQuestion.t124' />");
 				}
+				
 		    }
 		</script>
 	</head>

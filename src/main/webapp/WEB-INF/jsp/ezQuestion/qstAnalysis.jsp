@@ -21,10 +21,10 @@
 			var szRType = "";
 			var savemsg;
 			var buttonFlag = "";
-			var pBrdID = "${pBrdID}";
-			var pItemNo = "${pItemNo}";
-			var pCurrPage = "${pCurrPage}";
-			var pAnswerType = "${pAnswerType}";
+			var pBrdID = "<c:out value='${pBrdID}'/>";
+			var pItemNo = "<c:out value='${pItemNo}'/>";
+			var pCurrPage = "<c:out value='${pCurrPage}'/>";
+			var pAnswerType = "<c:out value='${pAnswerType}'/>";
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {

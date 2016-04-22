@@ -68,9 +68,9 @@
 			}
 		</script>
 		<script type="text/javascript">
-			var tempReceve= "${receve}";
-			var brdID = "${qstUserPermissionVO.brdID}";
-			var itemNo = "${qstUserPermissionVO.itemNo}";
+			var receve= "<c:out value='${receve}'/>";
+			var brdID = "<c:out value='${qstUserPermissionVO.brdID}'/>";
+			var itemNo = "<c:out value='${qstUserPermissionVO.itemNo}'/>";
 			var btnSaveChk = false;
 		    function fun_Save(){
 		        if(form_check() == false)
@@ -115,7 +115,7 @@
 	
 			function form_check(){
 		        var cur_date = new Date();
-	            var start_date = '${qstUserPollItemVO.pollStartDate}';
+	            var start_date = "<c:out value='${qstUserPollItemVO.pollStartDate}'/>";
 
 	            if(start_date > cur_date){
 	                alert("<spring:message code='ezQuestion.t316' />" + start_date + "<spring:message code='ezQuestion.t317' />");

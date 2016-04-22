@@ -31,9 +31,9 @@
 			MM_reloadPage(true);
 		</script>
 		<script type="text/javascript">
-			var tempReceve= "${receve}";
-			var brdId = "${qstUserPermissionVO.brdID}";
-			var itemNo = "${qstUserPermissionVO.itemNo}";
+			var receve= "<c:out value='${receve}'/>";
+			var brdId = "<c:out value='${qstUserPermissionVO.brdID}'/>";
+			var itemNo = "<c:out value='${qstUserPermissionVO.itemNo}'/>";
 			
 			function fun_ResponseView(question_no) {
 				var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + brdId + "&itemNo=" + itemNo + "&questionNo=" + question_no;
@@ -55,7 +55,7 @@
 				}
 		    } */
 
-		    var pUserID = "${userID}";
+		    var pUserID = "<c:out value='${userID}'/>";
 		    
 			function openUserInfo(strEmail) {
 			    var compemail = strEmail;
@@ -132,7 +132,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t265' /></th>
-					<td><a style="cursor:pointer" onclick='openUserInfo("${qstUserPollItemVO.userEmail}")' >${qstUserPollItemVO.userNm} (${qstUserPollItemVO.userEmail}) </a> </td>
+					<td><a style="cursor:pointer" onclick='openUserInfo("${qstUserPollItemVO.userEmail}")' ><c:out value="${qstUserPollItemVO.userNm}"/> (<c:out value="${qstUserPollItemVO.userEmail}"/>) </a> </td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezQuestion.t216' /></th>

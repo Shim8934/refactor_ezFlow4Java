@@ -13,9 +13,9 @@
 		
 		<script language="JavaScript" type="text/javascript">
 		
-			var brd_id = "${brdID}";
-			var item_no = "${itemNo}";
-			var receve = "${receve}";
+			var brd_id = "<c:out value='${brdID}'/>";
+			var item_no = "<c:out value='${itemNo}'/>";
+			var receve = "<c:out value='${receve}'/>";
 			
 		    window.onload = function () {
 		        var UserAgentState = navigator.userAgent.toLowerCase();

@@ -21,14 +21,14 @@
 			}
 		</script>
 		<script type="text/javascript">
-			var type = "${qstAttachVO.attachType}";
-			var href = "${qstAttachVO.attachUrl}";
-			var title = "${title}";
-			var v_brd_id = "${qstAttachVO.brdID}";
-			var v_item_no = "${qstAttachVO.itemNo}";
-			var strQuestionNo ="${qstAttachVO.questionNo}";
-			var strAnswer ="${qstAttachVO.answerNo}";
-			var strAttID ="${qstAttachVO.attachNo}";
+			var type = "<c:out value='${qstAttachVO.attachType}'/>";
+			var href = "<c:out value='${qstAttachVO.attachUrl}'/>";
+			var title = "<c:out value='${title}'/>";
+			var v_brd_id = "<c:out value='${qstAttachVO.brdID}'/>";
+			var v_item_no = "<c:out value='${qstAttachVO.itemNo}'/>";
+			var strQuestionNo = "<c:out value='${qstAttachVO.questionNo}'/>";
+			var strAnswer = "<c:out value='${qstAttachVO.answerNo}'/>";
+			var strAttID = "<c:out value='${qstAttachVO.attachNo}'/>";
 		</script>
 		</head>
 		<c:choose >

@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<c:choose>
-			<c:when test="${ResponseYN==Y }">
+			<c:when test="${responseYN==Y }">
 				<title><spring:message code='ezQuestion.t335' /></title>
 			</c:when>
 			<c:otherwise>
@@ -27,13 +27,14 @@
 			}
 		</STYLE>
 		<script type="text/javascript">
-			var szBrdID = "${brdID}";
-			var szItemNo = "${itemNo}";
-			var szQuestionNo = "${questionNo}";
-			var pResponse_YN = "${ResponseYN}";
-			var pTotalPage = "${pTotalPage}";
-			var CurPage = "${pCurrPage}";
-			var totalCount = "${pTotalCnt}";
+		
+			var szBrdID = "<c:out value='${brdID}'/>";
+			var szItemNo = "<c:out value='${itemNo}'/>";
+			var szQuestionNo = "<c:out value='${questionNo}'/>";
+			var pResponse_YN = "<c:out value='${responseYN}'/>";
+			var pTotalPage = "<c:out value='${pTotalPage}'/>";
+			var CurPage = "<c:out value='${pCurrPage}'/>";
+			var totalCount = "<c:out value='${pTotalCnt}'/>";
 
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
@@ -61,7 +62,7 @@
 						tableXml += "<td style='width:50px;text-align:center'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'NO');
 						tableXml += "</td>";
-						if("${publicflg}"==0){
+						if("${publicFlg}"==0){
 							tableXml += "<td style='width:150px'>";
 							tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(\"";
 							tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
@@ -75,7 +76,7 @@
 					}else{
 						tableXml += "<tr style='text-align:center'>";
 						tableXml += "<td colspan='3' style='height:30px'>";
-						if("${Response}"==N){
+						if("${responseYN}"==N){
 							tableXml += "<spring:message code='ezQuestion.t347' />"
 						}else{
 							tableXml += "<spring:message code='ezQuestion.t121' />"
@@ -84,7 +85,8 @@
 						tableXml += "</tr>";
 					}
 				}
-				$("#xmlTable").html($("#xmlTable").html()+tableXml);
+				
+				document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
 			}
 
 
@@ -234,7 +236,7 @@
 	</head>
 	<body class="mainbody">
 		<c:choose>
-			<c:when test="${ResponseYN == Y}">
+			<c:when test="${responseYN == Y}">
 				 <h1><spring:message code='ezQuestion.t340' /><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
