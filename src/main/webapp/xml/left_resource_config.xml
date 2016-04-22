@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tree>
+	<config>
+		<images>
+			<image path="/images/01.gif" />
+			<image path="/images/01_minus.gif" />
+			<image path="/images/01_plus.gif" />
+			<image path="/images/02.gif" />
+			<image path="/images/02_minus.gif" />
+			<image path="/images/02_plus.gif" />
+			<image path="/images/03.gif" />
+			<image path="/images/03_minus.gif" />
+			<image path="/images/03_plus.gif" />
+			<image path="/images/tree_01.gif" />
+			<image path="/images/tree_02.gif" />
+			<image path="/images/blank.gif" />
+			<image path="/images/vline.gif" />
+		</images>
+	</config>
+</tree>
