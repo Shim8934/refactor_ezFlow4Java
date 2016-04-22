@@ -29,9 +29,17 @@ public class ResGetAdmSubClsTreeVO {
 	private int subClsCnt;
 	/** 게시판 리소스 수*/
 	private int subResCnt;
+	/** 게시판 접근 권한*/
+	private int accessLvl;
 	/** 사용허가유무*/
 	private String approveFlag;
 	
+	public int getAccessLvl() {
+		return accessLvl;
+	}
+	public void setAccessLvl(int accessLvl) {
+		this.accessLvl = accessLvl;
+	}
 	public int getBrdId() {
 		return brdId;
 	}
