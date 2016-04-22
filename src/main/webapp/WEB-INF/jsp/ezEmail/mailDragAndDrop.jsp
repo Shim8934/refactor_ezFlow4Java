@@ -106,7 +106,13 @@ border: 1px solid #3C2F2E;
 
         fileupload();
         if (CrossYN()) {
-            document.getElementById("file").value = "";
+        	if (navigator.userAgent.search('Trident') != -1) { //IE 11
+        		document.getElementById("file").type = "text";
+                document.getElementById("file").type = "file";
+        	} else {
+            	document.getElementById("file").value = "";
+        	}
+            
         }
         else {
             document.getElementById("file").type = "text";

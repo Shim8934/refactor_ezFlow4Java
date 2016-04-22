@@ -41,9 +41,9 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 	var _ITSMAdmin = "${ _ITSMAdmin }";
 	var ITSMEmail = "${ _ITSMEmail }";
 	var ITSMName = "${ _ITSMName }";
-	var sentItems = "${ _IsSentItems }";
+	var sentItems = "${isSentItems}";
 	var IsSecurityMail = "Normal";
-	var ReadCountCheck ="N"; //${pReadFlag}
+	var ReadCountCheck ="${pReadFlag}";
     var IsAttach = "${pIsAttach}";
     var pUse_Editor = "${Use_Editor}";
     var pisDelete = "${ isDelete}";
@@ -83,8 +83,15 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
         }
         if (sentItems.toUpperCase() == "TRUE")
         {
+        	document.getElementById("HolderSent").style.display = "";
+            document.getElementById("HolderElse").style.display = "none";
             SentBcc.style.display = "";
+        } else {
+        	document.getElementById("HolderSent").style.display = "none";
+            document.getElementById("HolderElse").style.display = "";
         }
+        
+        
         try{
             if(ReadCountCheck=="N")
             {
@@ -389,22 +396,18 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
                     <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
                     <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
                     <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
-                    <asp:PlaceHolder ID="HolderSent" Runat="server">
-                    <li><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-                    </asp:PlaceHolder>
+                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
                     <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
-                    <asp:PlaceHolder ID="HolderElse" Runat="server"> 
-                    <li><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
-                    </asp:PlaceHolder>
+                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
                     <%-- if (_Use_ezKMS == "YES") {--%>
                     <li><span ID='btn_KMS' onclick='ToKMS()'>KMS</span></li>
                     <%--}--%>
 		  
                     <li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li>
-                    <%--if(PNFlag=="Y"){ --%>
-                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
-                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
-                    <%--} --%>
+                    <c:if test="${pnFlag=='Y'}">
+	                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
+	                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
+                    </c:if>
                 </ul>
             </div>
             <div id="close"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
@@ -444,25 +447,25 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
                     </td>
                 </tr>
         
-                <%--if(pIsCCFg!="N"){ --%>
+			<c:if test="${pIsCCFg != 'N'}">
                 <tr>
                 <th><spring:message code="ezEmail.t555" /></th>
                 <td colspan="4" style="OVERFLOW-Y:auto;height:100%;">
-                <div id="MsgCCGot" style="HEIGHT:22px;padding-left:5px;"> 
+                <div id="MsgCCGot" style="padding-left:5px;"> 
                 <span id="LabelCC">${ccStr}</span> 
                 </div>
               
-                <div id="MsgCCGotHidden" style="margin-top:5px;margin-bottom:5px;display:none;padding-left:5px;"> 
+                <div id="MsgCCGotHidden" style="margin-bottom:5px;display:none;padding-left:5px;"> 
                 <span id="LabelCCHidden">${ccHiddenStr}</span> 
                 </div>
                 </td>
                 </tr>
-                <%-- } --%>
+			</c:if>
 
                 <tr id="SentBcc" style="display:none">
                 <th><spring:message code="ezEmail.t562" /></th>
                 <td colspan="4"><div id="MsgBCCGot" style="padding-left:5px;"> 
-                <span id="LabelBCC"></span> 
+                <span id="LabelBCC">${bccStr}</span>
                 </div></td>
                 </tr>
        
@@ -485,11 +488,11 @@ P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	selToggleList(document.getElementById("close"), "ul", "li", "0");
-    <%-- if(pIsCCFg!="N"){ --%>
-    document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
-    <%--}else{--%>
-    document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-    <%--}--%>
+	if("${pIsCCFg}"!="N") {
+		document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
+	} else {
+    	document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
+	}
 </script>
 </form>
 <form name="form1" action="mailReadContent.do" method="post" target="message" >

@@ -806,7 +806,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			        FileDataSource source = new FileDataSource(pDirTempPath + File.separator + path);
 			        messageBodyPart.setDataHandler(new DataHandler(source));
 			        messageBodyPart.setFileName(fileName);
-			        messageBodyPart.setHeader("Content-Type", Files.probeContentType(f.toPath()));
+			        String contentType = "application/octet-stream";
+			        
+			        if (Files.probeContentType(f.toPath()) != null) {
+			        	contentType = Files.probeContentType(f.toPath());
+			        } else {
+			        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+			        		contentType = "message/rfc822";
+			        	}
+			        }
+			        
+			        messageBodyPart.setHeader("Content-Type", contentType);
 			        multipart.addBodyPart(messageBodyPart);
 					
 			        //todo: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).

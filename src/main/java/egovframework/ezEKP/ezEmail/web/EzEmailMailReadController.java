@@ -91,7 +91,12 @@ public class EzEmailMailReadController {
 				uid = Long.parseLong(url.substring(index+1));
 			}
 		}
-		String pnFlag = request.getParameter("PNFlag");
+		
+		String pnFlag = "N";
+		if (request.getParameter("PNFlag") != null) {
+			pnFlag = request.getParameter("PNFlag");
+		}
+		
 		String contentClass = request.getParameter("CONTENTCLASS");
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -109,10 +114,13 @@ public class EzEmailMailReadController {
 		String toHiddenStr = null;
 		String ccStr = null;
 		String ccHiddenStr = null;
-		String bccStr = null;
+		String bccStr = "";
 		String subject = null;
 		String dateStr = null;
 		String title = null;
+		String pReadFlag = "Y";
+		boolean isSentItems = false;
+		String pIsCCFg = "Y";
 		
 		if(f != null){
 			f.open(Folder.READ_WRITE);
@@ -211,28 +219,28 @@ public class EzEmailMailReadController {
 							name = MimeUtility.decodeText(name);
 							name = commonUtil.trimDoubleQuotes(name);
 						}
-						if(ccListme){
-							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
-								if(arrRecipientsCC.length > 1){
+						if (ccListme) {
+							if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))) {
+								if (arrRecipientsCC.length > 1) {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 								} else {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
 							}
-							if(ccHiddenStr == null){
+							if (ccHiddenStr == null) {
 								ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							} else {
 								ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							}
 						} else {
-							if(i == 0){
-								if(arrRecipientsCC.length > 1){
+							if (i == 0) {
+								if (arrRecipientsCC.length > 1) {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 								} else {
 									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
 							}
-							if(ccHiddenStr == null){
+							if (ccHiddenStr == null) {
 								ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							} else {
 								ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
@@ -243,7 +251,7 @@ public class EzEmailMailReadController {
 
 				// BCC
 				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-				if(arrRecipientsBCC != null){
+				if (arrRecipientsBCC != null) {
 					String name = null;
 					for (int i=0; i<arrRecipientsBCC.length; i++){
 						name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
@@ -253,26 +261,37 @@ public class EzEmailMailReadController {
 							name = MimeUtility.decodeText(name);
 							name = commonUtil.trimDoubleQuotes(name);
 						}						
-						if (i != 0){
+						if (i != 0) {
 							bccStr += ", ";
 						}
 						bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
 					}
 				}
-
+				
+				if (ccStr == null || ccStr.equals("")) {
+					pIsCCFg = "N";
+				}
+				
 				// received date
 				date = message.getReceivedDate();
-				if(date != null){
+				if (date != null) {
 					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
 				}
 
 				// subject
 				subject = message.getSubject();
-				if(subject != null){
+				if (subject != null) {
 					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 				}
-
-				message.setFlag(Flag.SEEN, true);
+				
+				if (!message.isSet(Flag.SEEN)) {
+					message.setFlag(Flag.SEEN, true);
+					pReadFlag = "N";
+				}
+				
+				if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					isSentItems = true;
+				}
 			}
 			f.close(true);
 		}
@@ -290,7 +309,11 @@ public class EzEmailMailReadController {
 		model.addAttribute("title", title);
 		model.addAttribute("folderPath", folderPath);
 		model.addAttribute("uid", uid);
-		
+		model.addAttribute("pReadFlag", pReadFlag);
+		model.addAttribute("isSentItems", isSentItems);
+		model.addAttribute("pnFlag", pnFlag);
+		model.addAttribute("pIsCCFg", pIsCCFg);
+		System.out.println(pIsCCFg);
 		return "ezEmail/mailRead";
 	}
 	
