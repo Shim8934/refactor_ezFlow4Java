@@ -117,12 +117,12 @@
 
 	
 	<resultMap class="QstReuseQuestionVO" id="qstReuseQuestionVO">
-		<result property="title"					column="TITLE"					columnIndex="1"/>
-		<result property="content"				column="CONTENT"				columnIndex="2"/>
-		<result property="postTerm"				column="POST_TERM"				columnIndex="3"/>
-		<result property="multiResponseFlg"				column="MULTI_RESPONSE_FLG"				columnIndex="4"/>
-		<result property="publicResultFlg"				column="PUBLIC_RESULT_FLG"				columnIndex="5"/>
-		<result property="responseRange"				column="RESPONSE_RANGE"				columnIndex="6"/>
+		<result property="title"					column="TITLE"						columnIndex="1"/>
+		<result property="content"					column="CONTENT"					columnIndex="2"/>
+		<result property="postTerm"					column="POST_TERM"					columnIndex="3"/>
+		<result property="multiResponseFlg"			column="MULTI_RESPONSE_FLG"			columnIndex="4"/>
+		<result property="publicResultFlg"			column="PUBLIC_RESULT_FLG"			columnIndex="5"/>
+		<result property="responseRange"			column="RESPONSE_RANGE"				columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseVO">
@@ -193,16 +193,16 @@
 	</resultMap>
 	
 	<resultMap class="QstTempSaveVO" id="qstTempSaveVO">
-		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"				columnIndex="2"/>
-		<result property="questionNo"				column="QUESTION_NO"					columnIndex="3"/>
-		<result property="quesContent"				column="QUESCONTENT"					columnIndex="4"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
 		<result property="answerType"				column="ANSWERTYPE"					columnIndex="5"/>
-		<result property="answerViewType"				column="ANSWERVIEWTYPE"					columnIndex="6"   nullValue="0"/>
-		<result property="multiSelect"				column="MULTISELECT"					columnIndex="7"/>
-		<result property="quesSN"				column="QUES_SN"					columnIndex="8"/>
-		<result property="answerNo"				column="ANSWERNO"					columnIndex="9"/>
-		<result property="answerContent"				column="ANSWERCONTENT"					columnIndex="10"/>
+		<result property="answerViewType"			column="ANSWERVIEWTYPE"				columnIndex="6"   	nullValue="0"/>
+		<result property="multiSelect"				column="MULTISELECT"				columnIndex="7"/>
+		<result property="quesSN"					column="QUES_SN"					columnIndex="8"/>
+		<result property="answerNo"					column="ANSWERNO"					columnIndex="9"/>
+		<result property="answerContent"			column="ANSWERCONTENT"				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="String" id="responserAnswerCLOB">
@@ -211,103 +211,153 @@
 	
 		
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
-		{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 
 	<procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItemVO">
-		{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="qstUserPermissionVO">
-		{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getAttachInfo" parameterClass="Map" resultMap="qstAttachVO">
-		{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getAttachInfo3" parameterClass="Map" resultMap="qstAttachVO">
-		{CALL EZQUESTION.EZSP_GETATTACHINFO3(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETATTACHINFO3(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQuestionForResponse" parameterClass="Map" resultMap="qstVO">
-		{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQuestionForSubjective" parameterClass="Map" resultMap="qstVO">
-		{CALL EZQUESTION.EZSP_GETQUESTIONFORSUBJECTIVE(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETQUESTIONFORSUBJECTIVE(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstAnswerAnswerVO">
-		{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getAnswerCnt" parameterClass="Map" resultMap="qstAnswerVO">
-		{CALL EZQUESTION.EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getResponseRange" parameterClass="Map" resultMap="qstResponsePermissionVO">
-		{CALL EZQUESTION.EZSP_GETRESPONSERANGE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETRESPONSERANGE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getResponsePerson" parameterClass="Map" resultMap="qstResponsePersonVO">
-		{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getAttachInfo2" parameterClass="Map" resultMap="qstAttachVO">
-		{CALL EZQUESTION.EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.resultSubjectiveList" parameterClass="Map" resultMap="qstResponseVO">
-		{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
-		{CALL EZQUESTION.EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getObjQuestion" parameterClass="Map" resultMap="objQuestion">
-		{CALL EZQUESTION.EZSP_GETOBJQUESTION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETOBJQUESTION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQuestion" parameterClass="Map" resultMap="qstVO">
-		{CALL EZQUESTION.EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.gwPollGetSearch" parameterClass="Map" resultMap="responseDeptVO">
-		{CALL EZQUESTION.GWPOLL_GET_SERACH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.GWPOLL_GET_SERACH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
-		{CALL EZQUESTION.GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
-		{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getResponsePersonForResultTotalSave" parameterClass="Integer" resultMap="qstResponseVO">
-		{CALL EZQUESTION.EZSP_GETRESPERSONFORRESULTTOTA(#v_pItemNo#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETRESPERSONFORRESULTTOTA(#v_pItemNo#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.reUseQuestionData"  parameterClass="Map" resultMap="qstReuseQuestionVO">
-		{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 		
 	<procedure id="EzQuestionDAO.analysisCount" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.resultSubjectiveListCnt" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdID#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdID#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.tableAnswerValue" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_TABLEANSWERVALUE(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_TABLEANSWERVALUE(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 <!-- 	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String"> -->
@@ -315,131 +365,195 @@
 <!-- 	</procedure> -->
 		
 	<procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
-		{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.getQstResponse"	parameterClass="Map" resultClass="Integer">
-		{CALL EZQUESTION.EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.stepSave2" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callCreateMother" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callGetItemSeq" parameterClass="Map" resultClass="Integer" >
-		{CALL EZQUESTION.EZSP_CALLGETITEMSEQ(#v_pstrBrdID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLGETITEMSEQ(#v_pstrBrdID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callUpdateItemSeq" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callInsertItemSeq" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callInsertPollResponseper" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertAnswerAnswerContent"	parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTEN(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTEN(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updatePollItem" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updatePollEndDate" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATEPOLLENDDATE(#v_pstrBrdID#, #v_pItemNo#, #v_penddate#, #v_pendflg#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATEPOLLENDDATE(#v_pstrBrdID#, #v_pItemNo#, #v_penddate#, #v_pendflg#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callDeleteItemSeq" parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CALLDELETEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLDELETEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.deleteItem" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.deletePermission" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.callDeletePollResponseper" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_CALLDELETEPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CALLDELETEPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateReadDate" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateResponsePerson" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATERESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATERESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.updateResCnt" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_UPDATERESCNT(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_UPDATERESCNT(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.insertItemRead" parameterClass="Map">
-		{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.changePermission"	parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.tempSave"	parameterClass="Map"  resultMap="qstTempSaveVO">
-		{CALL EZQUESTION.EZSP_TEMPSAVE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_TEMPSAVE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.questionDelete2"	parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_QUESTIONDELETE2(#v_pstrBrdID#, #v_pItemNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_QUESTIONDELETE2(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzQuestionDAO.questionDelete1"	parameterClass="Map" >
-		{CALL EZQUESTION.EZSP_QUESTIONDELETE1(#v_pstrBrdID#, #v_pItemNo#, #v_QuesNo#)}
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_QUESTIONDELETE1(#v_pstrBrdID#, #v_pItemNo#, #v_QuesNo#)}
+		]]>
 	</procedure>
 	
 	
