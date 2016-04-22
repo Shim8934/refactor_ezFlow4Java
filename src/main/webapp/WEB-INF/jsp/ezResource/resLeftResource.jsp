@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<title><spring:message code="ezResource.t330" /></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=11,chrome=1" />
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/style.css" />
 		<link type="text/css" rel="stylesheet" href="/css/organ_tree.css" />
@@ -14,14 +15,15 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequestPath.js"></script>
 		<script type="text/javascript" src="/js/ezResource/ResTreeInfo_cross.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-		    var Brd_Id		= "${brdId}";			
+		    var brdId		= "${brdID}";			
     		var Brd_Nm		= "${brdNm}";			
     		var brdGubun	= "${brdGubun}";		
-    		var g_UserID	= "${userId}";
-    		var g_DeptID	= "${deptId}";
+    		var g_UserID	= "${userID}";
+    		var g_DeptID	= "${deptID}";
     		var g_DeptPath	= "${deptPathCode}";
-    		var pCompanyID	 = "${companyId}";
+    		var pCompanyID	 = "${companyID}";
     		var g_AccessCode = "${strAccessCode}";
     		var g_ServerName = "${serverName}";
     		var selectNo = "${selectNo}";
@@ -42,7 +44,7 @@
         		TreeView.attachEvent('nodedblclick', TreeView_onNodeDblClick);
 
         		var xmlHTTP = createXMLHttpRequest();
-        		xmlHTTP.open("GET", "/xml/organtree_config2.xml", true);
+        		xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
         		xmlHTTP.send();
 
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -72,7 +74,7 @@
 		        var i = "";
 		        var arrName = "";
 		        var RealPath = "";
-		        var brdId = "";
+		        var brdID = "";
 		        var chkVal = false;
 		        g_SelTree = TreeView;
 		        var selNode = TreeView.selectedIndex();
@@ -86,15 +88,15 @@
             		if (g_AccessCode != "0") g_AccessCode = TreeView.getvalue(nodeIdx, "DATA14");
             		var number = parseInt(TreeView.getvalue(nodeIdx, "DATA3"))
             		for (i = 2; i <= number; i++) {
-                		var brdId = TreeView.getvalue(nodeIdx, "DATA1");
-                		var brdnm = TreeView.getvalue(nodeIdx, "DATA2");
+                		var brdID = TreeView.getvalue(nodeIdx, "DATA1");
+                		var brdNm = TreeView.getvalue(nodeIdx, "DATA2");
                 		var boardGubun = TreeView.getvalue(nodeIdx, "DATA7");
 		
-        		        if (boardGubun == "1") {
+        		        if (boardGubun.equals("1")) {
                     		if ((!chkVal && i == 2) || (chkVal && i == 3)) {
-                        		RealPath = "&nbsp;<a href=" + "listResource.do?Brd_Id=" + brdId + "&brdnm=" + escape(brdnm) + "&AccessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "</a>" + RealPath;
+                        		RealPath = "&nbsp;<a href=" + "listResource.do?brdID=" + brdID + "&brdNm=" + escape(brdNm) + "&AccessCode=" + g_AccessCode + " target='right' class='n'>" + brdNm + "</a>" + RealPath;
                     		} else {
-                        		RealPath = "&nbsp;<a href=" + "listResource.do?Brd_Id=" + brdId + "&brdnm=" + escape(brdnm) + "&AccessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "&nbsp;></a>" + RealPath;
+                        		RealPath = "&nbsp;<a href=" + "listResource.do?brdID=" + brdID + "&brdNm=" + escape(brdNm) + "&AccessCode=" + g_AccessCode + " target='right' class='n'>" + brdNm + "&nbsp;></a>" + RealPath;
                     		}
                 		} else {
                     		chkVal = true;
