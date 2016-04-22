@@ -586,6 +586,8 @@ public class EzCommunityController {
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("keywordCount", keywordCount);
+		model.addAttribute("titleName", titleName);
+		model.addAttribute("bName", bName);
 		
 		return "/ezCommunity/board/bbsList";
 	}

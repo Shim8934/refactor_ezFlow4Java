@@ -240,22 +240,18 @@
 		</script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
-		<%-- <%		switch(bname) { %>
-				<%			case "c_notice" :  %>		
-                                            <h1><%=RM.GetString("t73")%><span id="mailBoxInfo"></span></h1>
-				<%				            break; 
-			                case "c_board" :   %>
-                                            <h1><%=RM.GetString("t2001")%><span id="mailBoxInfo"></span></h1>
-				<%				            break; 
-			                default :  %>			
-                                            <h1><%=titleName%><span id="mailBoxInfo"></span></h1>
-				<%				            break;  } %> --%>
 		<c:choose>
-			<c:when test="${bname == 'c_notice'}">
+			<c:when test="${bName == 'c_notice'}">
 				<h1><spring:message code = "ezCommunity.t73"/><span id="mailBoxInfo"></span></h1>
 			</c:when>
+			<c:when test="${bName == 'c_board'}">
+				<h1><spring:message code = "ezCommunity.t2001"/><span id="mailBoxInfo"></span></h1>
+			</c:when>
+			<c:otherwise>
+				<h1>${titleName }<span id="mailBoxInfo"></span></h1>
+			</c:otherwise>
 		</c:choose>
-				
+		
 		<div id="mainmenu">
 			<ul>
 <%-- 			    <%if (bname == "c_board") {  %> --%>
@@ -267,6 +263,16 @@
 <%-- 				<li><span onclick="btn_list('<%=bname%>')"><%=RM.GetString("t168")%></span></li> --%>
 <%-- 				<%	}%> --%>
 			</ul>
+			
+				<c:if test="${bName == 'c_board'}">
+					<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
+				</c:if>
+				
+				/////////////////////////
+				
+				<c:if test="${keyword != '' }">
+					<li><span onclick="btn_list('${bName }')"><spring:message code = "ezCommunity.t168"/></span></li>
+				</c:if>
 		</div>
 		
 		<script type="text/javascript">
