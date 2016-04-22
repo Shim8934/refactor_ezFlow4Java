@@ -27,7 +27,7 @@
 			    var tempStr = "";
 			    tempStr = ConvertMHTtoHTML(url);
 			    tempXML = loadXMLString(tempStr);
-		
+
 			    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 			    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];	    
 			    CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));

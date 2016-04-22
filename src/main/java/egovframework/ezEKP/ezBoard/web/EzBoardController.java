@@ -355,7 +355,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 호출 Method
 	 */
 	@RequestMapping(value="/ezBoard/boardConfig.do")
-	public String boardConfig() throws Exception{		
+	public String boardConfig() throws Exception{	
 		return "ezBoard/boardConfig";
 	}
 	
@@ -3032,10 +3032,6 @@ public class EzBoardController extends EgovFileMngUtil{
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
         }
         
-        if (boardListVO.getContentLocation() != null && !boardListVO.getContentLocation().equals("")) {
-        	boardListVO.setContentLocation(boardListVO.getContentLocation().replace("\\", "/"));
-        }
-        
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardListVO", boardListVO);
         model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3197,7 +3193,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
-			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ File.separator + boardListVO.getBoardID() + File.separator + "doc" + File.separator + boardListVO.getItemID() + ".mht");
+			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
 		}
 		
 		if (doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")) {
@@ -3323,11 +3319,11 @@ public class EzBoardController extends EgovFileMngUtil{
         if (strType.equals("BOARD")) {
             strHTML = strHTML.replace("'", "''");
         }
-		docPath = strFilePath + File.separator + strBoardID;
+		docPath = strFilePath + commonUtil.separator + strBoardID;
 		mhtFilePath = strMHTFilename + ".mht";
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = docPath + File.separator + "doc";
+		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		try {
 		    stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
 		    File cFile = new File(realPath + docPath);
@@ -3335,14 +3331,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				boolean _flag = cFile.mkdir();
 				cFile = new File(realPath + stordFilePathReal);
 				cFile.mkdir();
-				cFile = new File(realPath + docPath + File.separator + "uploadFile");
+				cFile = new File(realPath + docPath + commonUtil.separator + "uploadFile");
 				cFile.mkdir();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
 		    }
 	
-		    bos = new FileOutputStream(realPath + stordFilePathReal + File.separator + mhtFilePath);
+		    bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
 	
 		    int bytesRead = 0;
 		    byte[] buffer = new byte[BUFF_SIZE];
@@ -3414,13 +3410,13 @@ public class EzBoardController extends EgovFileMngUtil{
             	if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
             		filePath = strAttachments.split(";")[i];
             	} else {
-            		filePath = strFilePath + File.separator + strAttachments.split(";")[i];
+            		filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
             	}
                 File file = new File(realPath + filePath);
                 fileSize = file.length();
                 
                 if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-                    filePath2 = strFilePath + File.separator + strBoardID + File.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
+                    filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
                     File fileinfo = new File(realPath + filePath2);
                     if (!fileinfo.exists()) {
                     	FileUtils.moveFile(file, fileinfo);
@@ -3428,15 +3424,15 @@ public class EzBoardController extends EgovFileMngUtil{
                 } else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
                 	filePath2 = strAttachments.split(";")[i];
                 } else {
-                	filePath2 = strFilePath + File.separator + strAttachments.split(";")[i];
+                	filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
                 }
                 file = null;
             }
             else{
-                File file = new File(realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + File.separator + strAttachments.split(";")[i].replace("\\", "/").split("/")[2]);
+                File file = new File(realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
                 fileSize = file.length();
                 
-                filePath2 = strFilePath + File.separator + strBoardID + File.separator + "uploadFile" + File.separator + strAttachments.split(";")[i].replace("\\", "/").split("/")[2];
+                filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
                 	
                 File fileinfo = new File(realPath + filePath2);
                 if (!fileinfo.exists())
@@ -3489,8 +3485,8 @@ public class EzBoardController extends EgovFileMngUtil{
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {
             for (int i = 0; i < cnt; i++) {
                 String _pFileName = multiFile.get(i).getOriginalFilename();
-                if (_pFileName.indexOf(File.separator) > 0) {
-                    _pFileName = _pFileName.replace("\\", "/").split("/")[_pFileName.replace("\\", "/").split("/").length - 1];
+                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
                 }
                 pFileName[i] = _pFileName;
             }
@@ -3503,11 +3499,11 @@ public class EzBoardController extends EgovFileMngUtil{
 
         String pDirPath = config.getProperty("upload_board.ROOT");
         pDirPath = realPath + pDirPath;
-        if (!pDirPath.substring(pDirPath.length() - 1).equals(File.separator)) {
-        	pDirPath = pDirPath + File.separator;
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
         }
         File file = new File(pDirPath);
-        File file2 = new File(pDirPath + pBoardID + File.separator + "uploadFile");
+        File file2 = new File(pDirPath + pBoardID + commonUtil.separator + "uploadFile");
         if (!file.exists()) {
         	file.mkdir();
         	file2.mkdir();
@@ -3523,7 +3519,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
-                        String pAttachPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + File.separator;
+                        String pAttachPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator;
                         File fTemp = new File(pAttachPath);
                         if (!file.exists()) {
                         	fTemp.mkdir();
@@ -3594,10 +3590,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<NODES>");
 		
 		if (pMode.equals("boardAttach")) {
-            File file = new File(filePath + File.separator + pConLocation);
+            File file = new File(filePath + commonUtil.separator + pConLocation);
             String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
-            String newFilePath = "tempUploadFile" + File.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
-            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + File.separator + newFilePath);
+            String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
+            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + commonUtil.separator + newFilePath);
             FileUtils.copyFile(file, fileMove);
             
             long mhtSize = file.length();
@@ -3612,13 +3608,13 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 
         for (int i = 0; i < boardAttachVOList.size(); i++) {
-            String pFilePath = boardAttachVOList.get(i).getFilePath().replace("\\", "/");
+            String pFilePath = boardAttachVOList.get(i).getFilePath();
             String newFilePath = pFilePath.split("/")[pFilePath.split("/").length - 1];
             
-            newFilePath = "tempUploadFile" +File.separator+ "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
+            newFilePath = "tempUploadFile" +commonUtil.separator+ "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
 
-            File file = new File(filePath + File.separator + pFilePath);
-            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + File.separator + newFilePath);
+            File file = new File(filePath + commonUtil.separator + pFilePath);
+            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + commonUtil.separator + newFilePath);
             FileUtils.copyFile(file, fileMove);
             
             resultXML.append("<NODE>");
@@ -3984,15 +3980,15 @@ public class EzBoardController extends EgovFileMngUtil{
             orgFilePath = attachmentList.get(i);
 
             String fileName = "";
-            fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(File.separator + "uploadFile" + File.separator) + 12).substring(39);
+            fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
             fileName = "{" + UUID.randomUUID() + "}_" + fileName;
 
-            destFilePath = path + File.separator + destBoardID + File.separator + "uploadFile" + File.separator + fileName;
+            destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
 
             if (returnString.equals("")) {
             	returnString += destBoardID + "/uploadFile/" + fileName;
             } else {
-            	returnString = returnString + ";" + destBoardID + File.separator + "uploadFile" + File.separator + fileName;
+            	returnString = returnString + ";" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
             }
             //move 이면 지우고 옮기기
             if (mode.equals("copy")) {
@@ -4012,14 +4008,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orgFilePath = "";
         String destFilePath = "";
 
-        orgFilePath = path + File.separator + orgBoardID + File.separator + "doc" + File.separator + orgItemID + ".mht";
-        destFilePath = path + File.separator + destBoardID + File.separator + "doc" + File.separator + destItemID + ".mht";
+        orgFilePath = path + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht";
+        destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
 
-        File file = new File(path + File.separator + destBoardID);
+        File file = new File(path + commonUtil.separator + destBoardID);
         if (!file.exists()) {
             file.mkdir();
-            new File(path + File.separator + destBoardID + File.separator + "doc").mkdir();
-            new File(path + File.separator + destBoardID + File.separator + "uploadFile").mkdir();
+            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
+            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile").mkdir();
         }
         //move 이면 지우고 옮기기
         if (mode.equals("copy")) {
@@ -4851,7 +4847,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("PICTURE")) {
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE");
-			serverPath = dirPath + File.separator;
+			serverPath = dirPath + commonUtil.separator;
 		} else if (mode.equals("DEL")) {
 			String delServerPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE");
 			String imagePath = "";
@@ -4860,8 +4856,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			for (int i = 0; i < uniqueIDs.split(";").length; i++) {
 				unique_ID = uniqueIDs.split(";")[i];
-				imagePath = delServerPath + File.separator + unique_ID;
-				s_imagePath = delServerPath + File.separator + "s_" + unique_ID;
+				imagePath = delServerPath + commonUtil.separator + unique_ID;
+				s_imagePath = delServerPath + commonUtil.separator + "s_" + unique_ID;
 				File file = new File(imagePath);
 				File file1 = new File(s_imagePath);
 				
@@ -4876,7 +4872,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + config.getProperty("upload_personal.PHOTOTEMP");
-			serverPath = dirPath + File.separator;
+			serverPath = dirPath + commonUtil.separator;
 		}
 		
 		String uniqueName = "";
@@ -4907,8 +4903,8 @@ public class EzBoardController extends EgovFileMngUtil{
                 strXML.append("</NODE>");
 			} else {
 				if (multiFile.get(i).getOriginalFilename() != null && !multiFile.get(i).getOriginalFilename().equals("")) {
-					String pFileName = multiFile.get(i).getOriginalFilename().replace("\\", "/");
-					if (pFileName.indexOf(File.separator.toString()) > 0) {
+					String pFileName = multiFile.get(i).getOriginalFilename();
+					if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
 						pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
 					}
 					fileName = commonUtil.cleanValue(pFileName);
@@ -4924,7 +4920,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				
 				writeUploadedFile(multiFile.get(i), uniqueName, serverPath);
 				fileLocation = uniqueName;
-				File imageFile = new File(serverPath + File.separator + uniqueName);	
+				File imageFile = new File(serverPath + commonUtil.separator + uniqueName);	
 				
 				int nImgWidth = 0;
 				int nImgHeight = 0;
@@ -4944,7 +4940,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     }
                     BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
                     bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-                    ImageIO.write(bufferedImage, extension, new File(serverPath + File.separator + thumbnailName));
+                    ImageIO.write(bufferedImage, extension, new File(serverPath + commonUtil.separator + thumbnailName));
 				}
 				resultUpload = "true";
 
@@ -4952,7 +4948,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
                 strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
                 strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
-                strXML.append("<FILELOCATION><![CDATA[" + serverPath + File.separator + thumbnailName + "]]></FILELOCATION>");
+                strXML.append("<FILELOCATION><![CDATA[" + serverPath + commonUtil.separator + thumbnailName + "]]></FILELOCATION>");
                 strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
                 strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
                 strXML.append("</NODE>");
@@ -4976,12 +4972,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		String filePath = "";
 		
         if (type.equals("BOARDTHUM")) {
-        	pSignatureDir = pSignatureDir + File.separator + boardID + File.separator + "uploadFile";
+        	pSignatureDir = pSignatureDir + commonUtil.separator + boardID + commonUtil.separator + "uploadFile";
         }
         else{
         	pSignatureDir = config.getProperty("upload_board.TEMPUPLOADFILE");
         }
-        filePath = pSignatureDir + File.separator + fileName;
+        filePath = pSignatureDir + commonUtil.separator + fileName;
         
         if (filePath != null && !filePath.equals("")) {
         	if (attID != null && !attID.equals("")) {
@@ -5064,7 +5060,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
-			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ File.separator + boardListVO.getBoardID() + File.separator + "doc" + File.separator + boardListVO.getItemID() + ".mht");
+			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
 		}
 		
 		boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
@@ -5213,12 +5209,12 @@ public class EzBoardController extends EgovFileMngUtil{
         	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() +"</IMAGENAME>");
         	
         	String filePath = photoViewList.get(k).getFilePath();
-        	int idx = filePath.lastIndexOf(File.separator);
-        	g_ImageUrl = config.getProperty("upload_board.ROOT") + File.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
+        	int idx = filePath.lastIndexOf(commonUtil.separator);
+        	g_ImageUrl = config.getProperty("upload_board.ROOT") + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
 
             String pDirPath = realPath + config.getProperty("upload_board.ROOT");
-            String orgpDirPath = pDirPath + File.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
-            String despPath = config.getProperty("upload_board.TEMPUPLOADFILE") + File.separator + filePath.substring(idx + 1);
+            String orgpDirPath = pDirPath + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
+            String despPath = config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + filePath.substring(idx + 1);
         	
             File file = new File(orgpDirPath);
             File file2 = new File(despPath);
@@ -5287,22 +5283,22 @@ public class EzBoardController extends EgovFileMngUtil{
         boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
         
         for (int k = 0; k < savecount; k++) {
-        	File file = new File(uploadFilePath + File.separator + filePaths[k]);
+        	File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
             if (file.exists()) {
-            	boardListVO.setFilePath(uploadFilePath + File.separator + boardListVO.getBoardID() + File.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", ""));
+            	boardListVO.setFilePath(uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", ""));
             }
             FileUtils.copyFile(file, new File(boardListVO.getFilePath()));
             FileUtils.deleteQuietly(file);
 
-            File file2 = new File(uploadFilePath + File.separator + filePaths[k].replace("s_", ""));
+            File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
             if (file2.exists()) {
-            	filePaths[k] = uploadFilePath + File.separator + boardListVO.getBoardID() + File.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
+            	filePaths[k] = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
             }
             FileUtils.copyFile(file2, new File(filePaths[k]));
             FileUtils.deleteQuietly(file2);
             
             boardListVO.setImageID(imageIDs[k].trim());
-            boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + File.separator, ""));
+            boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
             boardListVO.setFileContent(fileContents[k].trim());
             boardListVO.setImageNames(imageName[k].trim());
             
@@ -5342,10 +5338,10 @@ public class EzBoardController extends EgovFileMngUtil{
         	if (imageID.equals(listImage)) {
         		imageContent = photoViewList.get(k).getFileContent();
         		String filePath = photoViewList.get(k).getFilePath();
-        		int idx = filePath.lastIndexOf(File.separator);
+        		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
         		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("s_", "").replace("\\", "/").split("/")[2] + ";";
+        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("s_", "").split("/")[2] + ";";
         		mainFg = photoViewList.get(k).getFlag();
         	}
         }
@@ -5399,25 +5395,25 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	String file_Path = "";
             if (!filePath.equals("")) {
-                File file = new File(uploadFilePath + File.separator + filePath);
+                File file = new File(uploadFilePath + commonUtil.separator + filePath);
                 
                 if (file.exists()) {
-                	file_Path = uploadFilePath + File.separator + boardID + File.separator + "uploadFile" + filePath.replace("tempUploadFile", "");
+                	file_Path = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("tempUploadFile", "");
                 }
                 FileUtils.copyFile(file, new File(file_Path));
                 FileUtils.deleteQuietly(file);
 
-                File file2 = new File(uploadFilePath + File.separator + filePath.replace("s_", ""));
+                File file2 = new File(uploadFilePath + commonUtil.separator + filePath.replace("s_", ""));
                 
                 if (file2.exists()) {
-                	filePath = uploadFilePath + File.separator + boardID + File.separator + "uploadFile" + filePath.replace("s_", "").replace("tempUploadFile", "");
+                	filePath = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("s_", "").replace("tempUploadFile", "");
                 }
                 FileUtils.copyFile(file2, new File(filePath));
                 FileUtils.deleteQuietly(file2);
             }
             
             if (!filePath.equals("")) {
-            	file_Path = file_Path.replace(uploadFilePath + File.separator, "");
+            	file_Path = file_Path.replace(uploadFilePath + commonUtil.separator, "");
             } else {
             	file_Path = "";
             }
@@ -5468,10 +5464,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		for (int k = 0; k < imageCount; k++) {
 			String filePath = photoViewList.get(k).getFilePath();
-			int idx = filePath.lastIndexOf(File.separator);
+			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("\\", "/").split("/")[2] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[2] + ";";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			mainFg += photoViewList.get(k).getFlag().trim() + ";";
@@ -5510,27 +5506,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		String imageContent = "";
 		String fileName = "";
 		String encodeFileHref = "";
-		String realPath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT") + File.separator;
+		String realPath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT") + commonUtil.separator;
 		
 		List<BoardAttachVO> photoViewList = ezBoardService.photoViewDBAll(itemID, boardID);
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
 			String filePath = photoViewList.get(k).getFilePath();
-			int idx = filePath.lastIndexOf(File.separator);
+			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("\\", "/").split("/")[2] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[2] + ";";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
-			if (photoViewList.get(k).getImageName().replace("\\", "/").split("/").length > 1) {
-				fileName += photoViewList.get(k).getImageName().replace("\\", "/").split("/")[3] + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + realPath + filePath + "&fileName=" + (g_ImageUrl.replace("\\", "/").split("/")[2]).replace("s_", "") +
-                        "&attID=" + photoViewList.get(k).getImageName().replace("\\", "/").split("/")[3] + ";";
+			if (photoViewList.get(k).getImageName().split("/").length > 1) {
+				fileName += photoViewList.get(k).getImageName().split("/")[3] + ";";
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + realPath + filePath + "&fileName=" + (g_ImageUrl.split("/")[2]).replace("s_", "") +
+                        "&attID=" + photoViewList.get(k).getImageName().split("/")[3] + ";";
 			} else {
 				fileName += photoViewList.get(k).getImageName() + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + realPath + filePath + "&fileName=" + (g_ImageUrl.replace("\\", "/").split("/")[2]).replace("s_", "") +
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + realPath + filePath + "&fileName=" + (g_ImageUrl.split("/")[2]).replace("s_", "") +
                         "&attID=" + photoViewList.get(k).getImageName() + ";";
 			}
 		}
@@ -5784,6 +5780,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String attID = request.getParameter("attID");
 		String fileName = request.getParameter("fileName");
 		String filePath = "";
+		
 		BoardAttachVO result = ezCommonService.getAttachInfo(type, attID, "", 0, "");
 		
 		filePath = config.getProperty("upload_board.ROOT") + result.getFilePath();

@@ -20,6 +20,7 @@
             <list>
             	<value>classpath:/egovframework/egovProps/globals.properties</value>
             	<value>classpath:/egovframework/egovProps/crypto.properties</value>            	
+            	<value>classpath:/egovframework/egovProps/config.properties</value>            	
             </list>
         </property>
     </bean>
