@@ -63,29 +63,41 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
 
-	public String leftCommunityGet2(String code) throws Exception {
-		return (String) select("EzCommunityDAO.leftCommunityGet2", code);
+	public String leftCommunityGet2(String CODE) throws Exception {
+		return (String) select("EzCommunityDAO.leftCommunityGet2", CODE);
 	}
 
-	public String leftCommunityGet4(String code) throws Exception {
-		return (String) select("EzCommunityDAO.leftCommunityGet4", code);
+	public String leftCommunityGet4(String CODE) throws Exception {
+		return (String) select("EzCommunityDAO.leftCommunityGet4", CODE);
 	}
 
 	public String brdCheckIfBoardGroupAdmin(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.brdCheckIfBoardGroupAdmin", map);
+	}
+	
+	public String getBoardTitleName(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.ezCommunityBaseGet4", map);
 	}
 
 	public String getBoardTreeGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.getBoardTreeGet1", map);
 	}
 	
-	public int checkIfLeafBoardGet(String pBoardID) throws Exception {
-		return (int) select("EzCommunityDAO.checkIfLeafBoardGet", pBoardID);
+	public int checkIfLeafBoardGet(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.checkIfLeafBoardGet", map);
+		return (int) map.get("v_pCount");
+	}
+	
+	public int getBBSListGet1(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.getBBSListGet1", map);
+		return (int) map.get("v_pCount");
 	}
 
 	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.getBoardTreeSet", map);
 	}
 
-
+	public List<CommunityCBoardVO> getBBSListGet2(Map<String, Object> map) {
+		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getBBSListGet2", map);
+	}
 }

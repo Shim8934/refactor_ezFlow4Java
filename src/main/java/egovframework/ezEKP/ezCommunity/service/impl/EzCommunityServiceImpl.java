@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +19,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl implements EzCommunityService{
@@ -28,6 +28,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Autowired
 	private Properties config;
@@ -59,10 +62,10 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", pRootBoardID);
-		map.put("v_pUserID", id);
-		map.put("v_pDeptID", deptID);
-		map.put("v_pCompanyID", companyID);
+		map.put("v_PBOARDID", pRootBoardID);
+		map.put("v_PUSERID", id);
+		map.put("v_PDEPTID", deptID);
+		map.put("v_PCOMPANYID", companyID);
 
 		return ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
 	}
@@ -79,15 +82,15 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA();
 		for(CommunityCCategoryVO category : categoryList){
 			sb.append("<Option Value=\"");
-			sb.append(category.getcCode());
+			sb.append(category.getC_Code());
 			sb.append("\" ");
 			
-			if(strSelCateA.equals(category.getcCode())){
+			if(strSelCateA.equals(category.getC_Code())){
 				sb.append("selected");
 			}
 			
 			sb.append(">");
-			String code = "ezCommunity."+category.getcName();
+			String code = "ezCommunity."+category.getC_Name();
 			sb.append(egovMessageSource.getMessage(code, locale));
 			sb.append("</Option>");
 		}
@@ -100,15 +103,15 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB();
 		for(CommunityCCategoryVO category : categoryList){
 			sb.append("<Option Value=\"");
-			sb.append(category.getcCode());
+			sb.append(category.getC_Code());
 			sb.append("\" ");
 			
-			if(strSelCateB.equals(category.getcCode())){
+			if(strSelCateB.equals(category.getC_Code())){
 				sb.append("selected");
 			}
 			
 			sb.append(">");
-			String code = "ezCommunity."+category.getcName();
+			String code = "ezCommunity."+category.getC_Name();
 			sb.append(egovMessageSource.getMessage(code, locale));
 			sb.append("</Option>");
 		}
@@ -121,15 +124,15 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC();
 		for(CommunityCCategoryVO category : categoryList){
 			sb.append("<Option Value=\"");
-			sb.append(category.getcCode());
+			sb.append(category.getC_Code());
 			sb.append("\" ");
 			
-			if(strSelCateC.equals(category.getcCode())){
+			if(strSelCateC.equals(category.getC_Code())){
 				sb.append("selected");
 			}
 			
 			sb.append(">");
-			String code = "ezCommunity."+category.getcName();
+			String code = "ezCommunity."+category.getC_Name();
 			sb.append(egovMessageSource.getMessage(code, locale));
 			sb.append("</Option>");
 		}
@@ -139,16 +142,17 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pRootBoardID", pRootBoardID);
-		map.put("v_pUserID", pUserID);
-		map.put("v_pDeptID", pDeptID);
-		map.put("v_pCompanyID", pCompanyID);
-		map.put("v_pMode", pMode);
-		map.put("v_pSubFlag", pSubFlag);
-		map.put("v_pSelectBy", pSelectBy);
-		map.put("v_pExcludeBoardID", pExcludeBoardID);
-		map.put("v_pClubNo", pClubNo);
-		map.put("v_strLang", strLang);
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSUBFLAG", pSubFlag);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
+		map.put("v_STRLANG", strLang);
+		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.getBoardTreeGet1(map);
 	}
@@ -156,14 +160,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pRootBoardID", pRootBoardID);
-		map.put("v_pUserID", pUserID);
-		map.put("v_pDeptID", pDeptID);
-		map.put("v_pCompanyID", pCompanyID);
-		map.put("v_pMode", pMode);
-		map.put("v_pSelectBy", pSelectBy);
-		map.put("v_pExcludeBoardID", pExcludeBoardID);
-		map.put("v_pClubNo", pClubNo);
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
 		
 		return ezCommunityDAO.brdBoardTree(map);
 	}
@@ -176,24 +180,27 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pRootBoardID", pRootBoardID);
-		map.put("v_pUserID", pUserID);
-		map.put("v_pDeptID", pDeptID);
-		map.put("v_pCompanyID", pCompanyID);
-		map.put("v_pMode", pMode);
-		map.put("v_pSubFlag", pSubFlag);
-		map.put("v_pSelectBy", pSelectBy);
-		map.put("v_pExcludeBoardID", pExcludeBoardID);
-		map.put("v_pClubNo", pClubNo);
-		map.put("v_strLang", strLang);
-		map.put("v_result", result);
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSUBFLAG", pSubFlag);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
+		map.put("v_STRLANG", strLang);
+		map.put("v_RESULT", result);
 		
 		ezCommunityDAO.getBoardTreeSet(map);
 	}
 
 	@Override
-	public int checkIfLeafBoardGet(String pBoardID) throws Exception {
-		return ezCommunityDAO.checkIfLeafBoardGet(pBoardID);
+	public int checkIfLeafBoardGet(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pCount", 0);
+		return ezCommunityDAO.checkIfLeafBoardGet(map);
 	}
 
 	@Override
@@ -211,14 +218,45 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String pResult = "", pSignatureDir = ""; 
 		
 		if (pType.equals("COMMUNITYTHUM")) {
-			pSignatureDir = config.getProperty("upload_community.ROOT") + File.separator + pBoardID + File.separator + "uploadFile";
+			pSignatureDir = config.getProperty("upload_community.ROOT") + commonUtil.separator + pBoardID + commonUtil.separator + "uploadFile";
 		} else {
 			pSignatureDir = config.getProperty("upload_community.LOGO");
 		}
 		
-		pResult = pSignatureDir + File.separator + pFileName;
+		pResult = pSignatureDir + commonUtil.separator + pFileName;
 		
 		return pResult;
+	}
+
+	@Override
+	public String getBoardTitleName(String strBoardName, String strClubNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_STRBOARDNAME", strBoardName);
+		map.put("v_STRCLUBNO", strClubNo);
+		
+		return ezCommunityDAO.getBoardTitleName(map);
+	}
+
+	@Override
+	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BNAME", bName);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_KEYWORD", pKeyword);
+		map.put("v_S_RADIO", sRadio.toUpperCase());
+		
+		return ezCommunityDAO.getBBSListGet1(map);
+	}
+
+	@Override
+	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BNAME", bName);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_KEYWORD", pKeyword);
+		map.put("v_S_RADIO", sRadio.toUpperCase());
+		
+		return ezCommunityDAO.getBBSListGet2(map);
 	}
 	
 	

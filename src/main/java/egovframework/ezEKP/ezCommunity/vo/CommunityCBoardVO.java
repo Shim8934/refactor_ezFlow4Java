@@ -1,5 +1,9 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
+/**
+ * @author DC363
+ *
+ */
 public class CommunityCBoardVO {
 	/** 게시물일련번호*/
 	int no;
@@ -24,17 +28,17 @@ public class CommunityCBoardVO {
 	/** 관련글내의정렬순서*/
 	int step;
 	/** 댓글레벨*/
-	int reLevel;
+	int re_Level;
 	/** 조회수*/
 	int readNum;
 	/** 사용안함*/
-	int numM;
+	String numM;
 	/** 본문저장파일명*/
 	String fileName;
 	/** 커뮤니티번호 */
-	String 	cClubNo;
+	String 	c_ClubNo;
 	/** 커뮤니티내번호*/
-	int cNo;
+	int c_No;
 	/** CLOB첨부파일 이름*/
 	String charFileName;
 	public int getNo() {
@@ -103,11 +107,11 @@ public class CommunityCBoardVO {
 	public void setStep(int step) {
 		this.step = step;
 	}
-	public int getReLevel() {
-		return reLevel;
+	public int getRe_Level() {
+		return re_Level;
 	}
-	public void setReLevel(int reLevel) {
-		this.reLevel = reLevel;
+	public void setRe_Level(int re_Level) {
+		this.re_Level = re_Level;
 	}
 	public int getReadNum() {
 		return readNum;
@@ -115,10 +119,10 @@ public class CommunityCBoardVO {
 	public void setReadNum(int readNum) {
 		this.readNum = readNum;
 	}
-	public int getNumM() {
+	public String getNumM() {
 		return numM;
 	}
-	public void setNumM(int numM) {
+	public void setNumM(String numM) {
 		this.numM = numM;
 	}
 	public String getFileName() {
@@ -127,23 +131,34 @@ public class CommunityCBoardVO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public String getcClubNo() {
-		return cClubNo;
+	public String getC_ClubNo() {
+		return c_ClubNo;
 	}
-	public void setcClubNo(String cClubNo) {
-		this.cClubNo = cClubNo;
+	public void setC_ClubNo(String c_ClubNo) {
+		this.c_ClubNo = c_ClubNo;
 	}
-	public int getcNo() {
-		return cNo;
+	public int getC_No() {
+		return c_No;
 	}
-	public void setcNo(int cNo) {
-		this.cNo = cNo;
+	public void setC_No(int c_No) {
+		this.c_No = c_No;
 	}
 	public String getCharFileName() {
 		return charFileName;
 	}
 	public void setCharFileName(String charFileName) {
 		this.charFileName = charFileName;
+	}
+	@Override
+	public String toString() {
+		return "CommunityCBoardVO [no=" + no + ", id=" + id + ", companyID="
+				+ companyID + ", userName=" + userName + ", userName2="
+				+ userName2 + ", title=" + title + ", content=" + content
+				+ ", contentUrl=" + contentUrl + ", writeDay=" + writeDay
+				+ ", ref=" + ref + ", step=" + step + ", re_Level=" + re_Level
+				+ ", readNum=" + readNum + ", numM=" + numM + ", fileName="
+				+ fileName + ", c_ClubNo=" + c_ClubNo + ", c_No=" + c_No
+				+ ", charFileName=" + charFileName + "]";
 	}
 	
 }

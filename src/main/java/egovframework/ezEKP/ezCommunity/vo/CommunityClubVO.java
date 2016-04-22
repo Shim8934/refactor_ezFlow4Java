@@ -2,109 +2,109 @@ package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityClubVO {
 	/** 커뮤니티ID*/
-	String cClubNo;
+	String c_ClubNo;
 	/** 커뮤니티 등록 시각*/
-	String cRegDate;
+	String c_RegDate;
 	/** 커뮤니티 이름*/
-	String cClubName;
+	String c_ClubName;
 	/** 커뮤니티 이름(다국어)*/
-	String cClubName2;
+	String c_ClubName2;
 	/** 커뮤니티 카테고리1*/
-	String cCateA;
+	String c_Cate_A;
 	/** 커뮤니티 카테고리2*/
-	String cCateB;
+	String c_Cate_B;
 	/** 커뮤니티 카테고리3*/
-	String cCateC;
+	String c_Cate_C;
 	/** 커뮤니티 공개 여부*/
-	String cClubGubun;
+	String c_ClubGubun;
 	/** 마스터 커뮤니티 승인여부*/
-	String cClubConfirmType;
+	String c_ClubConfirmType;
 	/** 관리자 커뮤니티 승인여부*/
-	String cAdminConfirm;
+	String c_AdminConfirm;
 	/** 커뮤니티 개설자 ID*/
-	String cMaker;
+	String c_Maker;
 	/** 커뮤니티 마스터 ID*/
-	String cSysopID;
+	String c_SysopID;
 	/** 커뮤니티 회원 수 */
-	int cMemberCnt;
+	int c_MemberCnt;
 	/** 커뮤니티 홈 로고  실제 파일 이름*/
-	String cLogo;
+	String c_Logo;
 	/** 커뮤니티 홈 로고 (썸네일용)*/
-	String cLogoThumbnail;
+	String c_Logo_Thumbnail;
 	/** 커뮤니티 백그라운드  실제 파일 이름*/
-	String cBgImage;
+	String c_BgImage;
 	/** 커뮤니티 글씨 색*/
-	String cFontColor;
+	String c_FontColor;
 	/** 커뮤니티 백그라운드 색*/
-	String cBgColor;
+	String c_BgColor;
 	/** 커뮤니티 타이틀  글씨 색*/
-	String cTitleFontColor;
+	String c_TitleFontColor;
 	/** clob커뮤니티 소개 */
-	String cClubDesc;
+	String c_ClubDesc;
 	/** 커뮤니티 배너  실제 파일 이름*/
-	String cClubBanner;
+	String c_ClubBanner;
 	/** 커뮤니티 오픈 시각*/
-	String cOpenDate;
+	String c_OpenDate;
 	/** <공지사항> 게시판명*/
-	String cClubNoticeTitle;
+	String c_ClubNoticeTitle;
 	/** <공지사항> 게시판  제목 색*/
-	String cNoticeTitleColor;
+	String c_NoticeTitleColor;
 	/** <공지사항> 게시판  글씨 색*/
-	String cNoticeFontColor;
+	String c_NoticeFontColor;
 	/** 커뮤니티 왼쪽 메뉴 <공지사항> 게시판 순서*/
-	int cClubNoticeOrderBy;
+	int c_ClubNotice_OrderBy;
 	/** <공지사항> 게시판 사용유무*/
-	String cClubNoticeExist;
+	String c_ClubNotice_Exist;
 	/** <게시판> 게시판명*/
-	String cClubBoardTitle;
+	String c_ClubBoardTitle;
 	/** <게시판> 게시판  제목 색*/
-	String cBoardTitleColor;
+	String c_BoardTitleColor;
 	/** <게시판> 게시판  글씨 색*/
-	String cBoardFontColor;
+	String c_BoardFontColor;
 	/** <게시판> 왼쪽 메뉴 공시사항 게시판 순서*/
-	int cClubBoardOrderBy;
+	int c_ClubBoard_OrderBy;
 	/** <게시판> 게시판 사용유무*/
-	String cClubBoardExist;
+	String c_ClubBoard_Exist;
 	/** <자료실> 게시판명*/
-	String cClubPdsTitle;
+	String c_ClubPdsTitle;
 	/** <자료실> 게시판  제목 색*/
-	String cPdsTitleColor;
+	String c_PdsTitleColor;
 	/** <자료실> 게시판  글씨 색*/
-	String cPdsFontColor;
+	String c_PdsFontColor;
 	/** <자료실> 왼쪽 메뉴 공시사항 게시판 순서*/
-	int cClubPdsOrderBy;
+	int c_ClubPds_OrderBy;
 	/** <자료실> 게시판 사용유무*/
-	String cClubPdsExist;
+	String c_ClubPds_Exist;
 	/** <게시판1> 게시판명*/
-	String cClubBoard1Title;
+	String c_ClubBoard1Title;
 	/** <게시판1> 게시판  제목 색*/
-	String cBoard1TitleColor;
+	String c_Board1TitleColor;
 	/** <게시판1> 게시판 글씨 색*/
-	String cBoard1FontColor;
+	String c_Board1FontColor;
 	/** <게시판1 > 왼쪽 메뉴 공시사항 게시판 순서*/
-	String cClubBoard1Exist;
+	String c_ClubBoard1_Exist;
 	/** <게시판1 > 게시판 사용유무*/
-	int cClubBoard1OrderBy;
+	int c_ClubBoard1_OrderBy;
 	/** <게시판2 > 게시판명*/
-	String cClubBoard2Title;
+	String c_ClubBoard2Title;
 	/** <게시판2 > 게시판  제목 색*/
-	String cBoard2TitleColor;
+	String c_Board2TitleColor;
 	/** <게시판2 > 게시판  글씨 색*/
-	String cBoard2FontColor;
+	String c_Board2FontColor;
 	/** <게시판2 > 게시판 사용유무*/
-	String cClubBoard2Exist;
+	String c_ClubBoard2_Exist;
 	/** <게시판2 > 왼쪽 메뉴 공시사항 게시판 순서*/
-	int cClubBoard2OrderBy;
+	int c_ClubBoard2_OrderBy;
 	/** <자료실> 게시판명*/
-	String cClubPds1Title;
+	String c_ClubPds1Title;
 	/** <자료실> 게시판  제목 색*/
-	String cPds1TitleColor;
+	String c_Pds1TitleColor;
 	/** <자료실> 게시판  글씨 색*/
-	String cPds1FontColor;
+	String c_Pds1FontColor;
 	/** <자료실> 게시판 사용유무*/
-	String cClubPds1Exist;
+	String c_ClubPds1_Exist;
 	/** <자료실> 왼쪽 메뉴 공시사항 게시판 순서*/
-	int cClubPds1OrderBy;
+	int c_ClubPds1_OrderBy;
 	/** 커뮤니티 점수*/
 	int score;
 	/** 회사내외여부*/
@@ -120,318 +120,318 @@ public class CommunityClubVO {
 	/** 할당Disk용량*/
 	String assignDiskSize;
 	/** 커뮤니티 타입*/
-	String cType;
-	public String getcClubNo() {
-		return cClubNo;
+	String c_Type;
+	public String getC_ClubNo() {
+		return c_ClubNo;
 	}
-	public void setcClubNo(String cClubNo) {
-		this.cClubNo = cClubNo;
+	public void setC_ClubNo(String c_ClubNo) {
+		this.c_ClubNo = c_ClubNo;
 	}
-	public String getcRegDate() {
-		return cRegDate;
+	public String getC_RegDate() {
+		return c_RegDate;
 	}
-	public void setcRegDate(String cRegDate) {
-		this.cRegDate = cRegDate;
+	public void setC_RegDate(String c_RegDate) {
+		this.c_RegDate = c_RegDate;
 	}
-	public String getcClubName() {
-		return cClubName;
+	public String getC_ClubName() {
+		return c_ClubName;
 	}
-	public void setcClubName(String cClubName) {
-		this.cClubName = cClubName;
+	public void setC_ClubName(String c_ClubName) {
+		this.c_ClubName = c_ClubName;
 	}
-	public String getcClubName2() {
-		return cClubName2;
+	public String getC_ClubName2() {
+		return c_ClubName2;
 	}
-	public void setcClubName2(String cClubName2) {
-		this.cClubName2 = cClubName2;
+	public void setC_ClubName2(String c_ClubName2) {
+		this.c_ClubName2 = c_ClubName2;
 	}
-	public String getcCateA() {
-		return cCateA;
+	public String getC_Cate_A() {
+		return c_Cate_A;
 	}
-	public void setcCateA(String cCateA) {
-		this.cCateA = cCateA;
+	public void setC_Cate_A(String c_Cate_A) {
+		this.c_Cate_A = c_Cate_A;
 	}
-	public String getcCateB() {
-		return cCateB;
+	public String getC_Cate_B() {
+		return c_Cate_B;
 	}
-	public void setcCateB(String cCateB) {
-		this.cCateB = cCateB;
+	public void setC_Cate_B(String c_Cate_B) {
+		this.c_Cate_B = c_Cate_B;
 	}
-	public String getcCateC() {
-		return cCateC;
+	public String getC_Cate_C() {
+		return c_Cate_C;
 	}
-	public void setcCateC(String cCateC) {
-		this.cCateC = cCateC;
+	public void setC_Cate_C(String c_Cate_C) {
+		this.c_Cate_C = c_Cate_C;
 	}
-	public String getcClubGubun() {
-		return cClubGubun;
+	public String getC_ClubGubun() {
+		return c_ClubGubun;
 	}
-	public void setcClubGubun(String cClubGubun) {
-		this.cClubGubun = cClubGubun;
+	public void setC_ClubGubun(String c_ClubGubun) {
+		this.c_ClubGubun = c_ClubGubun;
 	}
-	public String getcClubConfirmType() {
-		return cClubConfirmType;
+	public String getC_ClubConfirmType() {
+		return c_ClubConfirmType;
 	}
-	public void setcClubConfirmType(String cClubConfirmType) {
-		this.cClubConfirmType = cClubConfirmType;
+	public void setC_ClubConfirmType(String c_ClubConfirmType) {
+		this.c_ClubConfirmType = c_ClubConfirmType;
 	}
-	public String getcAdminConfirm() {
-		return cAdminConfirm;
+	public String getC_AdminConfirm() {
+		return c_AdminConfirm;
 	}
-	public void setcAdminConfirm(String cAdminConfirm) {
-		this.cAdminConfirm = cAdminConfirm;
+	public void setC_AdminConfirm(String c_AdminConfirm) {
+		this.c_AdminConfirm = c_AdminConfirm;
 	}
-	public String getcMaker() {
-		return cMaker;
+	public String getC_Maker() {
+		return c_Maker;
 	}
-	public void setcMaker(String cMaker) {
-		this.cMaker = cMaker;
+	public void setC_Maker(String c_Maker) {
+		this.c_Maker = c_Maker;
 	}
-	public String getcSysopID() {
-		return cSysopID;
+	public String getC_SysopID() {
+		return c_SysopID;
 	}
-	public void setcSysopID(String cSysopID) {
-		this.cSysopID = cSysopID;
+	public void setC_SysopID(String c_SysopID) {
+		this.c_SysopID = c_SysopID;
 	}
-	public int getcMemberCnt() {
-		return cMemberCnt;
+	public int getC_MemberCnt() {
+		return c_MemberCnt;
 	}
-	public void setcMemberCnt(int cMemberCnt) {
-		this.cMemberCnt = cMemberCnt;
+	public void setC_MemberCnt(int c_MemberCnt) {
+		this.c_MemberCnt = c_MemberCnt;
 	}
-	public String getcLogo() {
-		return cLogo;
+	public String getC_Logo() {
+		return c_Logo;
 	}
-	public void setcLogo(String cLogo) {
-		this.cLogo = cLogo;
+	public void setC_Logo(String c_Logo) {
+		this.c_Logo = c_Logo;
 	}
-	public String getcLogoThumbnail() {
-		return cLogoThumbnail;
+	public String getC_Logo_Thumbnail() {
+		return c_Logo_Thumbnail;
 	}
-	public void setcLogoThumbnail(String cLogoThumbnail) {
-		this.cLogoThumbnail = cLogoThumbnail;
+	public void setC_Logo_Thumbnail(String c_Logo_Thumbnail) {
+		this.c_Logo_Thumbnail = c_Logo_Thumbnail;
 	}
-	public String getcBgImage() {
-		return cBgImage;
+	public String getC_BgImage() {
+		return c_BgImage;
 	}
-	public void setcBgImage(String cBgImage) {
-		this.cBgImage = cBgImage;
+	public void setC_BgImage(String c_BgImage) {
+		this.c_BgImage = c_BgImage;
 	}
-	public String getcFontColor() {
-		return cFontColor;
+	public String getC_FontColor() {
+		return c_FontColor;
 	}
-	public void setcFontColor(String cFontColor) {
-		this.cFontColor = cFontColor;
+	public void setC_FontColor(String c_FontColor) {
+		this.c_FontColor = c_FontColor;
 	}
-	public String getcBgColor() {
-		return cBgColor;
+	public String getC_BgColor() {
+		return c_BgColor;
 	}
-	public void setcBgColor(String cBgColor) {
-		this.cBgColor = cBgColor;
+	public void setC_BgColor(String c_BgColor) {
+		this.c_BgColor = c_BgColor;
 	}
-	public String getcTitleFontColor() {
-		return cTitleFontColor;
+	public String getC_TitleFontColor() {
+		return c_TitleFontColor;
 	}
-	public void setcTitleFontColor(String cTitleFontColor) {
-		this.cTitleFontColor = cTitleFontColor;
+	public void setC_TitleFontColor(String c_TitleFontColor) {
+		this.c_TitleFontColor = c_TitleFontColor;
 	}
-	public String getcClubDesc() {
-		return cClubDesc;
+	public String getC_ClubDesc() {
+		return c_ClubDesc;
 	}
-	public void setcClubDesc(String cClubDesc) {
-		this.cClubDesc = cClubDesc;
+	public void setC_ClubDesc(String c_ClubDesc) {
+		this.c_ClubDesc = c_ClubDesc;
 	}
-	public String getcClubBanner() {
-		return cClubBanner;
+	public String getC_ClubBanner() {
+		return c_ClubBanner;
 	}
-	public void setcClubBanner(String cClubBanner) {
-		this.cClubBanner = cClubBanner;
+	public void setC_ClubBanner(String c_ClubBanner) {
+		this.c_ClubBanner = c_ClubBanner;
 	}
-	public String getcOpenDate() {
-		return cOpenDate;
+	public String getC_OpenDate() {
+		return c_OpenDate;
 	}
-	public void setcOpenDate(String cOpenDate) {
-		this.cOpenDate = cOpenDate;
+	public void setC_OpenDate(String c_OpenDate) {
+		this.c_OpenDate = c_OpenDate;
 	}
-	public String getcClubNoticeTitle() {
-		return cClubNoticeTitle;
+	public String getC_ClubNoticeTitle() {
+		return c_ClubNoticeTitle;
 	}
-	public void setcClubNoticeTitle(String cClubNoticeTitle) {
-		this.cClubNoticeTitle = cClubNoticeTitle;
+	public void setC_ClubNoticeTitle(String c_ClubNoticeTitle) {
+		this.c_ClubNoticeTitle = c_ClubNoticeTitle;
 	}
-	public String getcNoticeTitleColor() {
-		return cNoticeTitleColor;
+	public String getC_NoticeTitleColor() {
+		return c_NoticeTitleColor;
 	}
-	public void setcNoticeTitleColor(String cNoticeTitleColor) {
-		this.cNoticeTitleColor = cNoticeTitleColor;
+	public void setC_NoticeTitleColor(String c_NoticeTitleColor) {
+		this.c_NoticeTitleColor = c_NoticeTitleColor;
 	}
-	public String getcNoticeFontColor() {
-		return cNoticeFontColor;
+	public String getC_NoticeFontColor() {
+		return c_NoticeFontColor;
 	}
-	public void setcNoticeFontColor(String cNoticeFontColor) {
-		this.cNoticeFontColor = cNoticeFontColor;
+	public void setC_NoticeFontColor(String c_NoticeFontColor) {
+		this.c_NoticeFontColor = c_NoticeFontColor;
 	}
-	public int getcClubNoticeOrderBy() {
-		return cClubNoticeOrderBy;
+	public int getC_ClubNotice_OrderBy() {
+		return c_ClubNotice_OrderBy;
 	}
-	public void setcClubNoticeOrderBy(int cClubNoticeOrderBy) {
-		this.cClubNoticeOrderBy = cClubNoticeOrderBy;
+	public void setC_ClubNotice_OrderBy(int c_ClubNotice_OrderBy) {
+		this.c_ClubNotice_OrderBy = c_ClubNotice_OrderBy;
 	}
-	public String getcClubNoticeExist() {
-		return cClubNoticeExist;
+	public String getC_ClubNotice_Exist() {
+		return c_ClubNotice_Exist;
 	}
-	public void setcClubNoticeExist(String cClubNoticeExist) {
-		this.cClubNoticeExist = cClubNoticeExist;
+	public void setC_ClubNotice_Exist(String c_ClubNotice_Exist) {
+		this.c_ClubNotice_Exist = c_ClubNotice_Exist;
 	}
-	public String getcClubBoardTitle() {
-		return cClubBoardTitle;
+	public String getC_ClubBoardTitle() {
+		return c_ClubBoardTitle;
 	}
-	public void setcClubBoardTitle(String cClubBoardTitle) {
-		this.cClubBoardTitle = cClubBoardTitle;
+	public void setC_ClubBoardTitle(String c_ClubBoardTitle) {
+		this.c_ClubBoardTitle = c_ClubBoardTitle;
 	}
-	public String getcBoardTitleColor() {
-		return cBoardTitleColor;
+	public String getC_BoardTitleColor() {
+		return c_BoardTitleColor;
 	}
-	public void setcBoardTitleColor(String cBoardTitleColor) {
-		this.cBoardTitleColor = cBoardTitleColor;
+	public void setC_BoardTitleColor(String c_BoardTitleColor) {
+		this.c_BoardTitleColor = c_BoardTitleColor;
 	}
-	public String getcBoardFontColor() {
-		return cBoardFontColor;
+	public String getC_BoardFontColor() {
+		return c_BoardFontColor;
 	}
-	public void setcBoardFontColor(String cBoardFontColor) {
-		this.cBoardFontColor = cBoardFontColor;
+	public void setC_BoardFontColor(String c_BoardFontColor) {
+		this.c_BoardFontColor = c_BoardFontColor;
 	}
-	public int getcClubBoardOrderBy() {
-		return cClubBoardOrderBy;
+	public int getC_ClubBoard_OrderBy() {
+		return c_ClubBoard_OrderBy;
 	}
-	public void setcClubBoardOrderBy(int cClubBoardOrderBy) {
-		this.cClubBoardOrderBy = cClubBoardOrderBy;
+	public void setC_ClubBoard_OrderBy(int c_ClubBoard_OrderBy) {
+		this.c_ClubBoard_OrderBy = c_ClubBoard_OrderBy;
 	}
-	public String getcClubBoardExist() {
-		return cClubBoardExist;
+	public String getC_ClubBoard_Exist() {
+		return c_ClubBoard_Exist;
 	}
-	public void setcClubBoardExist(String cClubBoardExist) {
-		this.cClubBoardExist = cClubBoardExist;
+	public void setC_ClubBoard_Exist(String c_ClubBoard_Exist) {
+		this.c_ClubBoard_Exist = c_ClubBoard_Exist;
 	}
-	public String getcClubPdsTitle() {
-		return cClubPdsTitle;
+	public String getC_ClubPdsTitle() {
+		return c_ClubPdsTitle;
 	}
-	public void setcClubPdsTitle(String cClubPdsTitle) {
-		this.cClubPdsTitle = cClubPdsTitle;
+	public void setC_ClubPdsTitle(String c_ClubPdsTitle) {
+		this.c_ClubPdsTitle = c_ClubPdsTitle;
 	}
-	public String getcPdsTitleColor() {
-		return cPdsTitleColor;
+	public String getC_PdsTitleColor() {
+		return c_PdsTitleColor;
 	}
-	public void setcPdsTitleColor(String cPdsTitleColor) {
-		this.cPdsTitleColor = cPdsTitleColor;
+	public void setC_PdsTitleColor(String c_PdsTitleColor) {
+		this.c_PdsTitleColor = c_PdsTitleColor;
 	}
-	public String getcPdsFontColor() {
-		return cPdsFontColor;
+	public String getC_PdsFontColor() {
+		return c_PdsFontColor;
 	}
-	public void setcPdsFontColor(String cPdsFontColor) {
-		this.cPdsFontColor = cPdsFontColor;
+	public void setC_PdsFontColor(String c_PdsFontColor) {
+		this.c_PdsFontColor = c_PdsFontColor;
 	}
-	public int getcClubPdsOrderBy() {
-		return cClubPdsOrderBy;
+	public int getC_ClubPds_OrderBy() {
+		return c_ClubPds_OrderBy;
 	}
-	public void setcClubPdsOrderBy(int cClubPdsOrderBy) {
-		this.cClubPdsOrderBy = cClubPdsOrderBy;
+	public void setC_ClubPds_OrderBy(int c_ClubPds_OrderBy) {
+		this.c_ClubPds_OrderBy = c_ClubPds_OrderBy;
 	}
-	public String getcClubPdsExist() {
-		return cClubPdsExist;
+	public String getC_ClubPds_Exist() {
+		return c_ClubPds_Exist;
 	}
-	public void setcClubPdsExist(String cClubPdsExist) {
-		this.cClubPdsExist = cClubPdsExist;
+	public void setC_ClubPds_Exist(String c_ClubPds_Exist) {
+		this.c_ClubPds_Exist = c_ClubPds_Exist;
 	}
-	public String getcClubBoard1Title() {
-		return cClubBoard1Title;
+	public String getC_ClubBoard1Title() {
+		return c_ClubBoard1Title;
 	}
-	public void setcClubBoard1Title(String cClubBoard1Title) {
-		this.cClubBoard1Title = cClubBoard1Title;
+	public void setC_ClubBoard1Title(String c_ClubBoard1Title) {
+		this.c_ClubBoard1Title = c_ClubBoard1Title;
 	}
-	public String getcBoard1TitleColor() {
-		return cBoard1TitleColor;
+	public String getC_Board1TitleColor() {
+		return c_Board1TitleColor;
 	}
-	public void setcBoard1TitleColor(String cBoard1TitleColor) {
-		this.cBoard1TitleColor = cBoard1TitleColor;
+	public void setC_Board1TitleColor(String c_Board1TitleColor) {
+		this.c_Board1TitleColor = c_Board1TitleColor;
 	}
-	public String getcBoard1FontColor() {
-		return cBoard1FontColor;
+	public String getC_Board1FontColor() {
+		return c_Board1FontColor;
 	}
-	public void setcBoard1FontColor(String cBoard1FontColor) {
-		this.cBoard1FontColor = cBoard1FontColor;
+	public void setC_Board1FontColor(String c_Board1FontColor) {
+		this.c_Board1FontColor = c_Board1FontColor;
 	}
-	public String getcClubBoard1Exist() {
-		return cClubBoard1Exist;
+	public String getC_ClubBoard1_Exist() {
+		return c_ClubBoard1_Exist;
 	}
-	public void setcClubBoard1Exist(String cClubBoard1Exist) {
-		this.cClubBoard1Exist = cClubBoard1Exist;
+	public void setC_ClubBoard1_Exist(String c_ClubBoard1_Exist) {
+		this.c_ClubBoard1_Exist = c_ClubBoard1_Exist;
 	}
-	public int getcClubBoard1OrderBy() {
-		return cClubBoard1OrderBy;
+	public int getC_ClubBoard1_OrderBy() {
+		return c_ClubBoard1_OrderBy;
 	}
-	public void setcClubBoard1OrderBy(int cClubBoard1OrderBy) {
-		this.cClubBoard1OrderBy = cClubBoard1OrderBy;
+	public void setC_ClubBoard1_OrderBy(int c_ClubBoard1_OrderBy) {
+		this.c_ClubBoard1_OrderBy = c_ClubBoard1_OrderBy;
 	}
-	public String getcClubBoard2Title() {
-		return cClubBoard2Title;
+	public String getC_ClubBoard2Title() {
+		return c_ClubBoard2Title;
 	}
-	public void setcClubBoard2Title(String cClubBoard2Title) {
-		this.cClubBoard2Title = cClubBoard2Title;
+	public void setC_ClubBoard2Title(String c_ClubBoard2Title) {
+		this.c_ClubBoard2Title = c_ClubBoard2Title;
 	}
-	public String getcBoard2TitleColor() {
-		return cBoard2TitleColor;
+	public String getC_Board2TitleColor() {
+		return c_Board2TitleColor;
 	}
-	public void setcBoard2TitleColor(String cBoard2TitleColor) {
-		this.cBoard2TitleColor = cBoard2TitleColor;
+	public void setC_Board2TitleColor(String c_Board2TitleColor) {
+		this.c_Board2TitleColor = c_Board2TitleColor;
 	}
-	public String getcBoard2FontColor() {
-		return cBoard2FontColor;
+	public String getC_Board2FontColor() {
+		return c_Board2FontColor;
 	}
-	public void setcBoard2FontColor(String cBoard2FontColor) {
-		this.cBoard2FontColor = cBoard2FontColor;
+	public void setC_Board2FontColor(String c_Board2FontColor) {
+		this.c_Board2FontColor = c_Board2FontColor;
 	}
-	public String getcClubBoard2Exist() {
-		return cClubBoard2Exist;
+	public String getC_ClubBoard2_Exist() {
+		return c_ClubBoard2_Exist;
 	}
-	public void setcClubBoard2Exist(String cClubBoard2Exist) {
-		this.cClubBoard2Exist = cClubBoard2Exist;
+	public void setC_ClubBoard2_Exist(String c_ClubBoard2_Exist) {
+		this.c_ClubBoard2_Exist = c_ClubBoard2_Exist;
 	}
-	public int getcClubBoard2OrderBy() {
-		return cClubBoard2OrderBy;
+	public int getC_ClubBoard2_OrderBy() {
+		return c_ClubBoard2_OrderBy;
 	}
-	public void setcClubBoard2OrderBy(int cClubBoard2OrderBy) {
-		this.cClubBoard2OrderBy = cClubBoard2OrderBy;
+	public void setC_ClubBoard2_OrderBy(int c_ClubBoard2_OrderBy) {
+		this.c_ClubBoard2_OrderBy = c_ClubBoard2_OrderBy;
 	}
-	public String getcClubPds1Title() {
-		return cClubPds1Title;
+	public String getC_ClubPds1Title() {
+		return c_ClubPds1Title;
 	}
-	public void setcClubPds1Title(String cClubPds1Title) {
-		this.cClubPds1Title = cClubPds1Title;
+	public void setC_ClubPds1Title(String c_ClubPds1Title) {
+		this.c_ClubPds1Title = c_ClubPds1Title;
 	}
-	public String getcPds1TitleColor() {
-		return cPds1TitleColor;
+	public String getC_Pds1TitleColor() {
+		return c_Pds1TitleColor;
 	}
-	public void setcPds1TitleColor(String cPds1TitleColor) {
-		this.cPds1TitleColor = cPds1TitleColor;
+	public void setC_Pds1TitleColor(String c_Pds1TitleColor) {
+		this.c_Pds1TitleColor = c_Pds1TitleColor;
 	}
-	public String getcPds1FontColor() {
-		return cPds1FontColor;
+	public String getC_Pds1FontColor() {
+		return c_Pds1FontColor;
 	}
-	public void setcPds1FontColor(String cPds1FontColor) {
-		this.cPds1FontColor = cPds1FontColor;
+	public void setC_Pds1FontColor(String c_Pds1FontColor) {
+		this.c_Pds1FontColor = c_Pds1FontColor;
 	}
-	public String getcClubPds1Exist() {
-		return cClubPds1Exist;
+	public String getC_ClubPds1_Exist() {
+		return c_ClubPds1_Exist;
 	}
-	public void setcClubPds1Exist(String cClubPds1Exist) {
-		this.cClubPds1Exist = cClubPds1Exist;
+	public void setC_ClubPds1_Exist(String c_ClubPds1_Exist) {
+		this.c_ClubPds1_Exist = c_ClubPds1_Exist;
 	}
-	public int getcClubPds1OrderBy() {
-		return cClubPds1OrderBy;
+	public int getC_ClubPds1_OrderBy() {
+		return c_ClubPds1_OrderBy;
 	}
-	public void setcClubPds1OrderBy(int cClubPds1OrderBy) {
-		this.cClubPds1OrderBy = cClubPds1OrderBy;
+	public void setC_ClubPds1_OrderBy(int c_ClubPds1_OrderBy) {
+		this.c_ClubPds1_OrderBy = c_ClubPds1_OrderBy;
 	}
 	public int getScore() {
 		return score;
@@ -475,10 +475,11 @@ public class CommunityClubVO {
 	public void setAssignDiskSize(String assignDiskSize) {
 		this.assignDiskSize = assignDiskSize;
 	}
-	public String getcType() {
-		return cType;
+	public String getC_Type() {
+		return c_Type;
 	}
-	public void setcType(String cType) {
-		this.cType = cType;
-	}	
+	public void setC_Type(String c_Type) {
+		this.c_Type = c_Type;
+	}
+	
 }

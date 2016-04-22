@@ -39,10 +39,16 @@ public interface EzCommunityService {
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
 
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception;
+	
+	public String getBoardTitleName(String strBoardName, String strClubNo) throws Exception;
 
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception;
 
-	public int checkIfLeafBoardGet(String pBoardID) throws Exception;
+	public int checkIfLeafBoardGet(String boardID) throws Exception;
+
+	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+
+	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

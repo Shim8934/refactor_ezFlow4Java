@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 커뮤니티
@@ -273,8 +274,13 @@ public class EzCommunityController {
 		pClubID = request.getParameter("classID");
 		pRootBoardID = request.getParameter("rootBoardID");
 		pSubFlag = request.getParameter("subFlag");
-		pExcludeBoardID = request.getParameter("excludeBoardID");
-		pSelectBy = Integer.parseInt(request.getParameter("selectFlag"));
+		
+		if (request.getParameter("excludeBoardID") != null) {
+			pExcludeBoardID = request.getParameter("excludeBoardID");
+		}
+		if ( request.getParameter("selectFlag") != null) {
+			pSelectBy = Integer.parseInt(request.getParameter("selectFlag"));
+		}
 		
 		String boardGroupAdminFG = checkIfBoardGroupAdmin(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID());
 
@@ -319,7 +325,7 @@ public class EzCommunityController {
 		for (CommunityClubVO communityClub : clubList) {
 			masterXML.append("<MASTER>");
 			masterXML.append("<VALUE>");
-			masterXML.append(communityClub.getcSysopID().trim());
+			masterXML.append(communityClub.getC_SysopID().trim());
 			masterXML.append("</VALUE>");
 			masterXML.append("</MASTER>");
 			isinXML.append("<ISIN>");
@@ -408,6 +414,180 @@ public class EzCommunityController {
 		model.addAttribute("userLevel", userLevel);
 		
 		return "/ezCommunity/communityCheckCommHome";
+	}
+	
+	/** 알림마당 목록화면 호출 함수*/
+	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
+	public String bbsList(@CookieValue("loginCookie")String loginCookie, Locale locale, HttpServletRequest request, ModelMap model) throws Exception {
+		String bName = "c_Board", mode = "", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
+		String pKeyword = "", titleName = "";
+		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
+		int prevPage = 0, nextPage = 0 , totalBlock = 0, goPage = 0;
+		int comNoPerPage = 17;
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		bName = request.getParameter("bName").toLowerCase();
+		
+		if (request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
+		if (request.getParameter("sRadio") != null) {
+			sRadio = request.getParameter("sRadio");
+		}
+		if (request.getParameter("type") != null) {
+			type = request.getParameter("type");
+		}
+		if (request.getParameter("userLevel") != null) {
+			userLevel = request.getParameter("userLevel");
+		}
+		if (request.getParameter("code") != null) {
+			code = request.getParameter("code");
+		}
+		if (request.getParameter("keyword") != null) {
+			keyword = request.getParameter("keyword");
+			pKeyword = keyword.replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		}
+		if (request.getParameter("goToPage") != null) {
+			curPage = Integer.parseInt(request.getParameter("goToPage"));
+		}
+		if (request.getParameter("block") != null) {
+			nowBlock = Integer.parseInt(request.getParameter("nowBlock"));
+		}
+		
+		if (!code.equals("")) {
+			titleName = ezCommunityService.getBoardTitleName(bName, code);
+		}
+		
+		keywordCount = ezCommunityService.getBBSListGet1(bName, loginVO.getLang(), pKeyword, sRadio);
+		totalPage = keywordCount / comNoPerPage;
+		
+		if (keywordCount % comNoPerPage != 0) {
+			totalPage = totalPage + 1;
+		}
+		
+		curPage = Math.min(curPage, totalPage);
+		
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, loginVO.getLang(), pKeyword, sRadio);
+		
+		StringBuilder strHTML = new StringBuilder();
+		int iColSpan = 5;
+		
+		if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+			iColSpan = 6;
+		}
+		
+		strHTML.append("<tr>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", locale) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", locale) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", locale) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", locale) + "</th>");
+		
+		if (iColSpan == 6) {
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", locale) + "</th>");
+		}
+		
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", locale) + "</th>");
+		strHTML.append("</tr>");
+		
+		int iOutputCount = 1;
+		int iList = 0;
+		String pURL = "";
+		
+		for (CommunityCBoardVO cBoard : cBoardList) {
+			iList++;
+			
+			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			if ( iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			strHTML.append("<tr>");
+			strHTML.append("<td width=\"60px\">");
+			
+			String strClubRecordNo = "";
+			
+			if (code.equals("")) {
+				strClubRecordNo = Integer.toString(cBoard.getNo()).trim();
+			} else {
+				strClubRecordNo = Integer.toString(cBoard.getC_No()).trim();
+			}
+			
+			if (!bName.equals("c_clubnodice") && !bName.equals("c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					strHTML.append("<font color=\"#A4A4A4\">" + strClubRecordNo + "</font>");
+				} else {
+					strHTML.append(strClubRecordNo);
+				}
+			} else {
+				strHTML.append(strClubRecordNo);
+			}
+			
+			strHTML.append("</td>");
+			strHTML.append("<td class=\"t2\" onclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "') style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
+			strHTML.append("<nobr>");
+			
+			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					 int wid = 10 * cBoard.getRe_Level();
+					 
+                     strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+				}
+			}
+			
+			String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+			nowDate = EgovDateUtil.convertDate(nowDate, "", "", "");
+			
+			if (cBoard.getWriteDay().compareTo(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13)) >= 0) {
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">");
+			}
+			
+			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
+			
+			if (commonUtil.getMultiData(loginVO.getLang()).equals("")) {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
+			} else {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"90px\" >" + nowDate + "</td>");
+			
+			String localPdsPath = ""; 
+			
+			if (iColSpan == 6) {
+//				String file = cBoard.getCharFileName();
+//				String fileSize = cBoard.getFil
+				
+				if (bName.equals("c_clubpds")) {
+					localPdsPath = config.getProperty("upload_community.PDS");	
+				} else {
+					localPdsPath = config.getProperty("upload_community.PDS1");
+				}
+			
+				strHTML.append("<td class=\"t1\" >");
+				
+				if (cBoard.getCharFileName().equals("")) {
+					strHTML.append("<img src=\"/images/i_save01.gif\" width=\"12\" height=\"12\" border=\"0\">");
+				}
+				
+				strHTML.append("</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"60px\" >" + cBoard.getReadNum() + "</td>");
+			strHTML.append("</tr>");
+			
+			iOutputCount++;
+		}
+
+		model.addAttribute("idSpan", strHTML.toString());
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("curPage", curPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("keywordCount", keywordCount);
+		
+		return "/ezCommunity/board/bbsList";
 	}
 
 	/** 카테고리목록 호출 함수*/
@@ -499,7 +679,7 @@ public class EzCommunityController {
             
             result.append("<DATA3>" + pRootBoardID + "</DATA3>");
             result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
-            result.append("<DATA5>" + brdBoardTreeList.get(i).getcClubNo() + "</DATA4>");
+            result.append("<DATA5>" + brdBoardTreeList.get(i).getC_ClubNo() + "</DATA4>");
             result.append("<DATA6>" + brdBoardTreeList.get(i).getGubun() + "</DATA5>");
             result.append("<EXPANDED>FALSE</EXPANDED>");
             result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardID()) + "</ISLEAF>");

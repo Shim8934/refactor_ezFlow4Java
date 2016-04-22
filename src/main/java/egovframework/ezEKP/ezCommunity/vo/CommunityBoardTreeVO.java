@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityBoardTreeVO {
 	/** 커뮤니티 아이디*/
-	String cClubNo;
+	String c_ClubNo;
 	/** 게시판아이디*/
 	String boardID;
 	/** 게시판이름*/
@@ -45,12 +45,12 @@ public class CommunityBoardTreeVO {
 	String showPosition;
 	/** 순서*/
 	int sn;
-	
-	public String getcClubNo() {
-		return cClubNo;
+
+	public String getC_ClubNo() {
+		return c_ClubNo;
 	}
-	public void setcClubNo(String cClubNo) {
-		this.cClubNo = cClubNo;
+	public void setC_ClubNo(String c_ClubNo) {
+		this.c_ClubNo = c_ClubNo;
 	}
 	public String getBoardID() {
 		return boardID;
