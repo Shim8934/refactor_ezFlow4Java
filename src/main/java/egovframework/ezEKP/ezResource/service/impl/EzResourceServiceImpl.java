@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
+import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl implements EzResourceService{
@@ -38,4 +40,24 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_PUSERID", userID);
 		return ezResourceDAO.getSubClsTree(map);
 	}
+	
+	@Override
+	public ResGetAdminFlagVO getAdminFlag(String companyID, String resID,String memberID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("resID", resID);
+		map.put("memberID", memberID);
+		return ezResourceDAO.getAdminFlag(map);
+	}
+
+	@Override
+	public List<ResGetItemListVO> getBrdMainList(String brdID,String companyID, String lang) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_BRD_ID", brdID);
+		map.put("v_COMPANY", companyID);
+		map.put("v_LANG", lang);
+		return ezResourceDAO.getBrdMainList(map);
+	}
+	
+	
 }
