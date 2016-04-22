@@ -1039,9 +1039,9 @@ public class EzBoardServiceImpl implements EzBoardService {
 		
 		for(int i = 0; i < boardListVO.getImageCount(); i++){
 			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
-			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + File.separator + strFilePath);
+			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			strFilePath = boardListVO.getBoardID() + "/uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
-			File mvFile = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + File.separator + strFilePath);
+			File mvFile = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
@@ -1054,7 +1054,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 			map.put("v_pWriterID", boardListVO.getWriterID());
 			map.put("v_pWriterName", boardListVO.getWriterName());
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
-			map.put("v_pFilePath", strFilePath.replace("\\", "/"));
+			map.put("v_pFilePath", strFilePath);
 			map.put("v_pWriteDate", boardListVO.getWriteDate());
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
