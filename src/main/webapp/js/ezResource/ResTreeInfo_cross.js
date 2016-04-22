@@ -1,6 +1,5 @@
 ﻿// p_Flag: USER
-function initTreeInfo(p_Flag, p_UserID, p_DeptID)
-{
+function initTreeInfo(p_Flag, p_UserID, p_DeptID) {
 	g_DeptBoardYN = false;
    	var xmlhttp = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
@@ -62,15 +61,15 @@ function GetTreeBrdsInfo()
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
 			var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			
-			var strUrl = "viewResList2.do?brd_id=" + brd_id + "&AccessCode=" + g_AccessCode; 
-			strUrl = strUrl + "&brdnm=" + escape(brd_nm);
+			var strUrl = "/ezResource/viewResList2.do?brdID=" + brd_id + "&accessCode=" + g_AccessCode; 
+			strUrl = strUrl + "&brdNm=" + escape(brd_nm);
 			
 			Navigate( strUrl );
 			
 		}
 	} else {
 
-	        strUrl = "ResSch/scheduleMain.do?ResID=" + brd_id + "&AccessCode=" + g_AccessCode;
+	        strUrl = "ResSch/scheduleMain.do?resID=" + brd_id + "&accessCode=" + g_AccessCode;
 	    
 		Navigate( strUrl );
 	}	
