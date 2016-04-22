@@ -411,7 +411,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String fileName = request.getParameter("guid") + "." + fileType;
 		String filePath = config.getProperty("upload_board.TEMPUPLOADFILE");
 		String realPath = request.getServletContext().getRealPath("");
-		String realFullPath = realPath + filePath + File.separator + "S_" + fileName;
+		String realFullPath = realPath + filePath + commonUtil.separator + "S_" + fileName;
 
 		int width = 0;
 		int height = 0;
@@ -452,7 +452,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 
 			try {
-				File tempFile = new File(realPath + tempFilePath + File.separator + "S_" + fileName);
+				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + fileName);
 
 				if (tempFile != null) {
 					tempFile.delete();
@@ -478,7 +478,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String realPath = request.getServletContext().getRealPath("");
 
 		try {
-			File tempFile = new File(realPath + filePath + File.separator +"S_" + fileName);
+			File tempFile = new File(realPath + filePath + commonUtil.separator +"S_" + fileName);
 
 			if (tempFile != null) {
 				tempFile.delete();

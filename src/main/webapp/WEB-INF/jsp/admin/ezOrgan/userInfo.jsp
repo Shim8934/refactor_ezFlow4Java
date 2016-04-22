@@ -175,7 +175,7 @@
 			                    } catch (e) { }
 			                }
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim() != ""){
-			                    document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:120px; height:130px;' SRC='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2") + "'>";
+			                    document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2") + "'>";
 			                }
 						}
 		            });
@@ -445,8 +445,28 @@
 
 		        if (ret != undefined) {
 		            alert("<spring:message code='ezOrgan.t273' />");
-		            UserPhotoDiv.innerHTML = "<img style='width:120px; height:130px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";
+		            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";		            
 		        }
+		    }
+		    function deleteImg() {		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/saveUserInfo.do",
+					data : {parentCn : "", cn : document.getElementById("UserID").value, prop : "", extensionAttribute2 : ""},
+					async : false,
+					success : function(result){
+						if(result != "OK"){
+							alert("<spring:message code='ezOrgan.t270' />");
+						}else{
+							alert("<spring:message code='ezOrgan.t271' />");
+							UserPhotoDiv.innerHTML = "<B><spring:message code='ezOrgan.t272' /></B>";
+						}
+					},
+					error : function(){
+						alert("<spring:message code='ezOrgan.t270' />");
+					}
+				});
 		    }
 	    </script>
 	</head>
@@ -474,17 +494,17 @@
 	            <td rowspan="5" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center">
 	                <b><spring:message code='ezOrgan.t272' /></b> 
 	            </td>
-	            <th style="width: 80px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
+	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px">
 	                <input id="UserID" style="ime-mode: disabled; width: 98%;" />
 	            </td>
-	            <th style="width: 80px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
+	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px;">
 	                <input type="password" id="Password" style="width: 98%" />
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width: 80px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t276' /><span style="color:red"> *</span></th>
+	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t276' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
@@ -501,7 +521,7 @@
 	                    </tr>
 	                </table>
 	            </td>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t278' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t278' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
@@ -520,7 +540,7 @@
 	            </td>
 	        </tr>       
 	        <tr>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t279' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t279' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
@@ -537,7 +557,7 @@
 	                    </tr>
 	                </table>
 	            </td>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t280' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t280' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
@@ -556,24 +576,24 @@
 	            </td>
 	        </tr>       
 	        <tr>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
 	            <td style="width: 240px;">
 	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly" />
 	                <c:if test="${lang != '1'}"><br /></c:if>	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
 	            </td>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >
 	                <input id="SocialNum" style="width: 98%" />
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t284' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t284' /></th>
 	            <td style="width: 240px;">
 	                <input id="SecurityLevel" style="width: 98%" />
 	            </td>
-	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t226' /></th>
+	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t226' /></th>
 	            <td style="width: 240px;">
 	                <input id="SortNum" style="width: 98%" maxlength="10" />
 	            </td>

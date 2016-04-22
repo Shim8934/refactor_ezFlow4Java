@@ -7,38 +7,54 @@
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
-											    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
+												    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
+		]]>											    
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
-												#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
-												#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
+													#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
+													#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
+		]]>	
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
-		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+		]]>
 	</procedure>
 	
 	<procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_DB_SETRETIREUSER(#v_CN#)}
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_DB_SETRETIREUSER(#v_CN#)}
+		]]>
 	</procedure>
 
 	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
@@ -60,7 +76,7 @@
      			ezHrmaster.TBLDEPTMASTER 
       		WHERE  
       			extensionattribute1 = #cn#
-	     ]]> 
+	     ]]>
 	</select>
 
 	<select id="EzOrganAdminDAO.userCheck" parameterClass="String" resultClass="int">
@@ -74,33 +90,35 @@
 	     ]]>
 	</select>
 	
-	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">		
+	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">
+		<![CDATA[
 			UPDATE 
 				ezHrmaster.TBLDEPTMASTER
-     		SET 
-     			<dynamic>
-	     			<isNotNull property="displayName">displayName = #displayName#</isNotNull>
-	     			<isNotNull property="displayName2" prepend=","> displayName2 = #displayName2#</isNotNull>     			
-	     			<isNotNull property="mail" prepend=","> mail = #mail#</isNotNull>
-	     			<isNotNull property="extensionAttribute1" prepend=","> extensionattribute1 = #extensionAttribute1#</isNotNull>
-	     			<isNotNull property="extensionAttribute2" prepend=","> extensionattribute2 = #extensionAttribute2#</isNotNull>
-	     			<isNotNull property="extensionAttribute3" prepend=","> extensionattribute3 = #extensionAttribute3#</isNotNull>
-	     			<isNotNull property="extensionAttribute4" prepend=","> extensionattribute4 = #extensionAttribute4#</isNotNull>
-	     			<isNotNull property="extensionAttribute5" prepend=","> extensionattribute5 = #extensionAttribute5#</isNotNull>
-	     			<isNotNull property="extensionAttribute6" prepend=","> extensionattribute6 = #extensionAttribute6#</isNotNull>
-	     			<isNotNull property="extensionAttribute7" prepend=","> extensionattribute7 = #extensionAttribute7#</isNotNull>
-	     			<isNotNull property="extensionAttribute8" prepend=","> extensionattribute8 = #extensionAttribute8#</isNotNull>
-	     			<isNotNull property="extensionAttribute9" prepend=","> extensionattribute9 = #extensionAttribute9#</isNotNull>
-	     			<isNotNull property="extensionAttribute10" prepend=","> extensionattribute10 = #extensionAttribute10#</isNotNull>
-	     			<isNotNull property="extensionAttribute11" prepend=","> extensionattribute11 = #extensionAttribute11#</isNotNull>
-	     			<isNotNull property="extensionAttribute12" prepend=","> extensionattribute12 = #extensionAttribute12#</isNotNull>
-	     			<isNotNull property="extensionAttribute13" prepend=","> extensionattribute13 = #extensionAttribute13#</isNotNull>
-	     			<isNotNull property="extensionAttribute14" prepend=","> extensionattribute14 = #extensionAttribute14#</isNotNull>
-	     			<isNotNull property="extensionAttribute15" prepend=","> extensionattribute15 = #extensionAttribute15#</isNotNull>
-     			</dynamic>
-     			, updatedt = sysdate
+     		SET
+     			updatedt = sysdate 
+     	]]>		
+		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
+		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>     			
+		<isNotNull property="mail" prepend=","> <![CDATA[mail = #mail#]]></isNotNull>
+		<isNotNull property="extensionAttribute1" prepend=","> <![CDATA[extensionattribute1 = #extensionAttribute1#]]></isNotNull>
+		<isNotNull property="extensionAttribute2" prepend=","> <![CDATA[extensionattribute2 = #extensionAttribute2#]]></isNotNull>
+		<isNotNull property="extensionAttribute3" prepend=","> <![CDATA[extensionattribute3 = #extensionAttribute3#]]></isNotNull>
+		<isNotNull property="extensionAttribute4" prepend=","> <![CDATA[extensionattribute4 = #extensionAttribute4#]]></isNotNull>
+		<isNotNull property="extensionAttribute5" prepend=","> <![CDATA[extensionattribute5 = #extensionAttribute5#]]></isNotNull>
+		<isNotNull property="extensionAttribute6" prepend=","> <![CDATA[extensionattribute6 = #extensionAttribute6#]]></isNotNull>
+		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionattribute7 = #extensionAttribute7#]]></isNotNull>
+		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionattribute8 = #extensionAttribute8#]]></isNotNull>
+		<isNotNull property="extensionAttribute9" prepend=","> <![CDATA[extensionattribute9 = #extensionAttribute9#]]></isNotNull>
+		<isNotNull property="extensionAttribute10" prepend=","> <![CDATA[extensionattribute10 = #extensionAttribute10#]]></isNotNull>
+		<isNotNull property="extensionAttribute11" prepend=","> <![CDATA[extensionattribute11 = #extensionAttribute11#]]></isNotNull>
+		<isNotNull property="extensionAttribute12" prepend=","> <![CDATA[extensionattribute12 = #extensionAttribute12#]]></isNotNull>
+		<isNotNull property="extensionAttribute13" prepend=","> <![CDATA[extensionattribute13 = #extensionAttribute13#]]></isNotNull>
+		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionattribute14 = #extensionAttribute14#]]></isNotNull>
+		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>   	
+   		<![CDATA[     			
       		WHERE  
       			cn = #cn#
+      	]]>		
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
@@ -108,26 +126,33 @@
 			UPDATE
 				ezHrmaster.TBLUSERMASTER
      		SET
-	     		displayName = #displayName#,
-	     		displayName2 = #displayName2#,
-	     		title= #title#,
-	     		title2 = #title2#,
-	     		extensionAttribute15 = #extensionAttribute15#,
-	     		extensionAttribute6 = #extensionAttribute6#,
-	     		extensionAttribute14 = #extensionAttribute14#,
-	     		extensionAttribute10 = #extensionAttribute10#,
-	     		extensionAttribute102 = #extensionAttribute102#,
-	     		telephoneNumber = #telephoneNumber#,
-	     		homePhone = #homePhone#,
-	     		facsimileTelephoneNumber = #facsimileTelephoneNumber#,
-	     		mobile = #mobile#,
-	     		postalCode = #postalCode#,
-	     		streetAddress = #streetAddress#,
-	     		birthType = #birthType#,
-	     		birth = #birth#	     		
+     			updatedt = sysdate
+     	]]>	
+		<dynamic>
+	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
+	  		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>
+	  		<isNotNull property="title" prepend=","> <![CDATA[title= #title#]]></isNotNull>
+	  		<isNotNull property="title2" prepend=","> <![CDATA[title2 = #title2#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionAttribute15 = #extensionAttribute15#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute6" prepend=","> <![CDATA[extensionAttribute6 = #extensionAttribute6#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionAttribute14 = #extensionAttribute14#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute10" prepend=","> <![CDATA[extensionAttribute10 = #extensionAttribute10#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute2" prepend=","> <![CDATA[extensionAttribute2 = #extensionAttribute2#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute3" prepend=","> <![CDATA[extensionAttribute3 = #extensionAttribute3#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute102" prepend=","> <![CDATA[extensionAttribute102 = #extensionAttribute102#]]></isNotNull>
+	  		<isNotNull property="telephoneNumber" prepend=","> <![CDATA[telephoneNumber = #telephoneNumber#]]></isNotNull>
+	  		<isNotNull property="homePhone" prepend=","> <![CDATA[homePhone = #homePhone#]]></isNotNull>
+	  		<isNotNull property="facsimileTelephoneNumber" prepend=","> <![CDATA[facsimileTelephoneNumber = #facsimileTelephoneNumber#]]></isNotNull>
+	  		<isNotNull property="mobile" prepend=","> <![CDATA[mobile = #mobile#]]></isNotNull>
+	  		<isNotNull property="postalCode" prepend=","> <![CDATA[postalCode = #postalCode#]]></isNotNull>
+	  		<isNotNull property="streetAddress" prepend=","> <![CDATA[streetAddress = #streetAddress#]]></isNotNull>
+	  		<isNotNull property="birthType" prepend=","> <![CDATA[birthType = #birthType#]]></isNotNull>
+	  		<isNotNull property="birth" prepend=","> <![CDATA[birth = #birth#]]></isNotNull>
+	  	</dynamic>
+	  	<![CDATA[
       		WHERE
       			cn = #cn#
-		]]>      			
+      	]]>		
 	</update>
 	
 </sqlMap>

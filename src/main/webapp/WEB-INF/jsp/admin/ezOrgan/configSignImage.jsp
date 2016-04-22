@@ -66,22 +66,7 @@
 				
 				var imgSrc = "/admin/ezOrgan/getApprovalSignInfo.do?type="+SignPath+"&fileName="+encodeURI(signlist.value);
 				signimage.innerHTML = "<img src="+imgSrc+" width=50 height=50 />";
-		    }
-			function btn_AttachAdd_onclick(obj) {
-		        if (document.form.file1.value != "") {
-		            //if (document.getElementById('mode').value == "PHOTO") {
-		                //if (document.getElementById("form").file1.files.length < 2) {
-		                //}
-		                //else
-		                //    alert("한개의 파일만 업로드 가능합니다.");
-		            //}
-		            var frm = document.getElementById('form');
-		            frm.action = "/myoffice/ezOrgan/admin/signImange_upload_Cross.aspx?mode=Logo&userID=" + userid;
-		            frm.submit();
-		            document.form.file1.value = "";
-		        }
-
-		    }
+		    }			
 			function add_sign(ocx_file) {
 		        document.getElementById('mode').value = "PHOTO";
 		        document.form.file1.click();
@@ -138,7 +123,62 @@
 				}
 				else
 					alert("<spring:message code='ezOrgan.t189' />");
-			}
+			}			
+			function btn_AttachAdd_onclick(obj) {
+		        if (document.form.file1.value != "") {
+		        	// TODO : 2016-04-22 장진혁과장 --우선적으로 서명 1개만 등록할 수 있도록 구현
+		            if (document.getElementById('mode').value == "PHOTO") {
+		                if (document.getElementById("form").file1.files.length > 1) {
+				            alert("<spring:message code='ezOrgan.t9902' />");
+				        }
+		            } 
+        
+		            var fd = new FormData();
+		            var mode = "";
+		         	// TODO : 2016-04-22 장진혁과장 --우선적으로 서명 1개만 등록할 수 있도록 구현
+		            fd.append("file1", document.getElementById("form").file1.files[0]);
+		            
+		            xhr = new XMLHttpRequest();
+		            xhr.addEventListener("load", uploadComplete, false);
+		            
+		            if (signPath == "APPROVALGSIGN") {
+		            	mode = "GLOGO";
+		            } else {
+		            	mode = "LOGO";
+		            }
+		            
+		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode="+mode+"&userID=" + userid);
+		            xhr.send(fd);
+		        }
+		    }
+			function uploadComplete() {		        
+		        if(xhr.responseText == "UPLOAD_ERROR"){
+		        	alert("<spring:message code='fail.common.msg' />");
+		        	
+		        	document.getElementById("file1").value = "";
+		        	document.getElementById("tempFilePath").value = "";
+		        }else{
+		        	document.getElementById("tempFilePath").value = xhr.responseText;		        			        	
+		        	var fileName = xhr.responseText;
+					
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/saveUserInfo.do",
+						data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : fileName},
+						success : function(result){
+							if(result != "OK"){
+								alert("<spring:message code='ezOrgan.t119' />");
+							}else{
+								GetSignInfo();
+							}
+						},
+						error : function(){
+							alert("<spring:message code='ezOrgan.t269' />");
+						}
+					});
+		        }		      
+		    }
 	    </script>
 	</head>
 	<body class="popup"> 
@@ -156,9 +196,10 @@
 		  	</tr> 
 		</table> 
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezOrgan/admin/signImange_upload_Cross.aspx?mode=Logo" target="ifrm">
+		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
 			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" />
 			<input type="hidden" name="mode" id="mode" />
+			<input type="text" name="tempFilePath" id="tempFilePath" />
 		</form>		
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezOrgan.t141' /></span></a>

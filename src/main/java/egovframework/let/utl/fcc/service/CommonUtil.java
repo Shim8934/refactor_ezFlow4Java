@@ -80,6 +80,8 @@ public class CommonUtil {
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
+	public String separator = "/";
+	
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);

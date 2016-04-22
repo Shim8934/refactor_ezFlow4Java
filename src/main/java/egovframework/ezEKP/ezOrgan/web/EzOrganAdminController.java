@@ -334,7 +334,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		if(type.equals("APPROVALSIGN")){
 			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
 		}else{			
-			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + File.separator + fileName.split("_")[0] + File.separator + fileName;
+			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
 			if(fileName != null && !fileName.equals("")){
 				ezCommonService.responseAttach(filePath, "", true, request, response);
@@ -415,7 +415,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String saveUserInfo(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = "";
 		
-		if(vo.getParentCn().equals("")){
+		if(vo.getParentCn().equals("")){		
 			ezOrganAdminService.updateDBData_user(vo);
 			result = "OK";
 		}else{
@@ -438,7 +438,6 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				result = "OK";
 			}
 		}
-		
 		return result;
 	}
 	
@@ -456,22 +455,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do")
 	public void getPersonalInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String fileName = request.getParameter("fileName");
-		String filePath = config.getProperty("upload_personal.PHOTO") + File.separator + fileName;
+		String filePath = config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
 		
-		if(fileName != null && !fileName.equals("")){
-			ezCommonService.responseAttach(filePath, fileName, false, request, response);
-		}
-	}
-	
-	/**
-	 * 조직도관리 사원정보 사진이미지 정보 DB 저장 실행 함수
-	 */
-	@RequestMapping(value = "/admin/ezOrgan/signImageSave.do")
-	public void signImageSave(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String fileName = request.getParameter("fileName");
-		String filePath = config.getProperty("upload_personal.PHOTO") + File.separator + fileName;
-		
-		if(fileName != null && !fileName.equals("")){
+		if (fileName != null && !fileName.equals("")) {
 			ezCommonService.responseAttach(filePath, fileName, false, request, response);
 		}
 	}
@@ -484,42 +470,35 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String signImangeUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
-		String userID = request.getParameter("userID");		
-		//String guid = UUID.randomUUID().toString();
+		String userID = request.getParameter("userID");
+		String guid = UUID.randomUUID().toString();
 		MultipartFile multiFile = request.getFile("file1");
-		String realPath = request.getServletContext().getRealPath("");		
-		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + File.separator;
-		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + File.separator;
+		String realPath = request.getServletContext().getRealPath("");
+		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator;
+		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + commonUtil.separator;
 		String serverPath = "";
-		String fileName = "";		
-		String extension = "";
-		
+						
 		if(userID.equals("")){
 			userID = userInfo.getId();
 		}
 		
 		try{
-			fileName = multiFile.getOriginalFilename();
+			String fileName = multiFile.getOriginalFilename();
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
-			extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			fileName = userID + "_" + guid + ".";
 			
 			if(mode.equals("PICTURE")){
-				serverPath = thumbPath;
-				fileName = userID + "." + extension;
+				serverPath = thumbPath;				
 			}else if(mode.equals("TEMP")){
 				serverPath = tempPath;
-				fileName = userID + "." + extension;
-			}
-			//2016-04-20 장진혁과장 -- 전자결재 서명 업로드 구현 시 수정
-			/*else if(mode.equals("GLOGO")){
-				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + File.separator + userID + File.separator;
-				fileName = userID + "_" + guid + "." + extension;
+			}else if(mode.equals("GLOGO")){
+				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
 			}else{
-				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + File.separator + userID + File.separator;
-				fileName = userID + "_" + guid + "." + extension;
-			}*/
-			
+				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+			}
+						
 			File file = new File(serverPath);
 			
 			if(!file.exists()){
@@ -534,18 +513,18 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				}
 			}
 			
-			writeUploadedFile(multiFile, fileName, tempPath);
-			File imageFile = new File(tempPath + File.separator + fileName);			
+			writeUploadedFile(multiFile, fileName + extension, tempPath);
+			File imageFile = new File(tempPath + fileName + extension);			
 			
 			BufferedImage bi = ImageIO.read(imageFile);
             BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
-            ImageIO.write(bufferedImage, "png", new File(thumbPath + File.separator + fileName));
+            ImageIO.write(bufferedImage, "png", new File(thumbPath + fileName + "png"));
             
             FileUtils.deleteQuietly(imageFile);
             //2016-04-20 장진혁과장 --만약 전자결재에서 이미지 파일 원본을 필요로 한다면 주석을 제거 후 구현필요
             //writeUploadedFile(multiFile, fileName, serverPath);
-            return thumbPath + fileName;            
+            return fileName + "png";            
 			
 		}catch(Exception e){
 			return "UPLOAD_ERROR";

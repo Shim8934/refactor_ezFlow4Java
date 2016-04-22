@@ -223,7 +223,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String today = EgovDateUtil.getToday();
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
-		filePath = filePath + File.separator + today;
+		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
         if (!file.exists()) {
         	file.mkdir();
@@ -234,15 +234,15 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
-		File imageFile = new File(realPath + filePath + File.separator + fileName);			
+		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
 	
 		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + File.separator + fileName));			    
+			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
 		
-		model.addAttribute("imgPath", (filePath + File.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
+		model.addAttribute("imgPath", (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
 		
 		return "ezCommon/ckUpload";
 	}
@@ -260,7 +260,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String today = EgovDateUtil.getToday();
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
-		filePath = filePath + File.separator + today;
+		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
 		
         if (!file.exists()) {
@@ -269,7 +269,7 @@ public class EzCommonController extends EgovFileMngUtil{
         
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
-		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + File.separator + fileName).replace("\\", "/") + "', '')</script>";
+		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
 	}
 	
 	/**
@@ -685,7 +685,7 @@ public class EzCommonController extends EgovFileMngUtil{
         m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
         m_strMHT.append("Content-Type: Text/HTML" + System.lineSeparator());
         m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-        m_strMHT.append("Content-Location: file://c:" + File.separator + "test.html" + System.lineSeparator());
+        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.html" + System.lineSeparator());
         m_strMHT.append(System.lineSeparator());
         byte[] arr = strHtml.getBytes("UTF-8");
         String strMhtBase64 = Base64.encodeBase64String(arr);
@@ -852,8 +852,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		byte[] imageBytes = Base64.decodeBase64(strImageMht);
 		
 		String strImageName = UUID.randomUUID() + ".tmp";
-        String SfilePath = m_strSPath + File.separator + strImageName;
-        String LfilePath = m_strLPath + File.separator + strImageName;
+        String SfilePath = m_strSPath + commonUtil.separator + strImageName;
+        String LfilePath = m_strLPath + commonUtil.separator + strImageName;
         
         File file = new File(m_strLPath);
         if (!file.exists()) {

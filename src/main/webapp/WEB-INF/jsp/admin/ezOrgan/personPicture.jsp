@@ -54,16 +54,15 @@
 		        }
 	        }
 			
-			function uploadComplete() {
-		        document.getElementById("file1").value = "";
-		        
+			function uploadComplete() {		        
 		        if(xhr.responseText == "UPLOAD_ERROR"){
 		        	alert("<spring:message code='fail.common.msg' />");
 		        	
 		        	document.getElementById("file1").value = "";
 		        	document.getElementById("tempFilePath").value = "";
-		        }else{		        
+		        }else{
 		        	document.getElementById("tempFilePath").value = xhr.responseText;
+		        	document.getElementById("imagefile").value = xhr.responseText;
 		        }
 		        //returnvalue(xhr.responseText);
 		    }
@@ -78,19 +77,25 @@
 				
 				$.ajax({
 					type : "POST",
-					dataType : "xml",
-					url : "/admin/ezOrgan/signImageSave.do",
-					data : {mode : "PICTURE", userID : RetValue, extensionAttribute2 : fileName},
+					dataType : "text",
+					url : "/admin/ezOrgan/saveUserInfo.do",
+					data : {parentCn : "", cn : RetValue, prop : "", extensionAttribute2 : fileName},
 					success : function(result){
-						
-					}	
+						if(result != "OK"){
+							alert("<spring:message code='ezOrgan.t119' />");
+						}else{
+							if (ReturnFunction != null){
+				                ReturnFunction(fileName);
+							}else{
+				                window.returnValue = fileName;
+							}
+				            window.close();
+						}
+					},
+					error : function(){
+						alert("<spring:message code='ezOrgan.t269' />");
+					}
 				});
-								
-			    if (document.form.file1.value != "") {
-			        var frm = document.getElementById('form');
-			        frm.action = "/admin/ezOrgan/signImageSave.do?mode=PICTURE&userID=" + RetValue;
-			        frm.submit();
-			    }
 			}
 			
 			function close_Click() {
@@ -99,6 +104,15 @@
 			    /* }else{
 			        window.close();
 			    } */
+			}
+			
+			function divImageFile_onclick() {
+			    if (document.form.file1.value != "") {
+			        preview.src = "";
+					preview.style.visibility = "hidden";
+					preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("tempFilePath").value;
+					preview.style.visibility = "visible";
+				}
 			}
 	    </script>
 	</head>
@@ -119,12 +133,12 @@
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">
-		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" />
+		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-		  				<input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="true" />
+		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="true" />
 		    			<input type="hidden" name="mode" id="mode" />
-		    			<input type="text" name="tempFilePath" id="tempFilePath" />
+		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>
 					<a class="imgbtn"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px"><spring:message code='ezOrgan.t101' /></span></a>
 				</td>
@@ -133,7 +147,6 @@
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="imgConfirm_onclick()"><spring:message code='ezOrgan.t246' /></span></a>
 		    <a class="imgbtn"><span onClick="close_Click()"><spring:message code='ezOrgan.t111' /></span></a>
-		</div>
-		<IFRAME id=iframe style="DISPLAY:none" src="Uploadform.aspx"></IFRAME>
+		</div>		
 	</body>
 </html>

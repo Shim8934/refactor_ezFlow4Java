@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl implements EzBoardAdminService {	
@@ -36,6 +37,9 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 
 	@Override
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{
@@ -92,7 +96,7 @@ public class EzBoardAdminServiceImpl implements EzBoardAdminService {
 		String dbPath = "";
 		
 		try{			
-			String docPath = config.getProperty("upload_board.FORM") + File.separator;	
+			String docPath = config.getProperty("upload_board.FORM") + commonUtil.separator;	
 			String fullPath = realPath + docPath;
 			File doc = new File(fullPath);		
 		
