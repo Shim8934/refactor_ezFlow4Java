@@ -3,6 +3,8 @@
 
 <sqlMap namespace="ezResource">
 	<typeAlias  alias="ResGetAdmSubClsTreeVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO"/>
+	<typeAlias  alias="ResGetAdminFlagVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
+	<typeAlias  alias="ResGetItemListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdId"					column="BRD_ID"						columnIndex="1"/>
@@ -19,7 +21,19 @@
 		<result property="attachSize"					column="ATTACH_SIZE"					columnIndex="12"/>
 		<result property="subClsCnt"			column="SUB_CLSCNT"				columnIndex="13"/>
 		<result property="subResCnt"			column="SUB_RESCNT"				columnIndex="14"/>
-		<result property="approveFlag"			column="APPROVEFLAG"				columnIndex="15"/>
+		<result property="accessLvl"			column="ACCESS_LVL"				columnIndex="15"/>
+		<result property="approveFlag"			column="APPROVEFLAG"				columnIndex="16"/>
+	</resultMap>
+	
+	<resultMap class="ResGetAdminFlagVO" id="resGetAdminFlagVO">
+		<result property="memberID"					column="MEMBER_ID"						columnIndex="1"/>
+		<result property="accessLvl"			column="ACCESS_LVL"				columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap class="ResGetItemListVO" id="resGetItemListVO">
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdNm"			column="BRD_NM"				columnIndex="2"/>
+		<result property="approveFlag"			column="APPROVEFLAG"				columnIndex="3"/>
 	</resultMap>
 	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
@@ -30,6 +44,24 @@
 		{CALL EZRESOURCE.EZSP_GETSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #v_P_USERID#, #v_PCOMID#, #v_PDEPTID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultMap="resGetItemListVO">
+		{CALL EZRESOURCE.EZSP_GETBRDMAINLIST(#v_BRD_ID#, #v_COMPANY#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<select id="EzResourceDAO.getAdminFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+		<![CDATA[
+			SELECT
+				member_id, access_lvl 
+      		FROM
+      			EZRESOURCE.RESACL 
+      		WHERE
+      			companyid	=	#companyID#
+      		AND
+      			resid	=	#resID#
+			AND
+				member_id	=	#memberID#      			
+		]]>
+	</select>
 	
 </sqlMap>
 
