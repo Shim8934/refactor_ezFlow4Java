@@ -84,8 +84,8 @@ public class EzEmailMailReadController {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 
+		// retrieve the passed in parameters		
 		String url = request.getParameter("URL");
-		//url = new String(url.getBytes("ISO-8859-1"),"UTF-8");
 		long uid = 0;
 		String folderPath = null;
 		if(url != null){
@@ -331,6 +331,7 @@ public class EzEmailMailReadController {
 		String id = userInfo.get(0);
 		String password = userInfo.get(1);
 
+		// retrieve the passed in parameters
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
 
@@ -376,10 +377,7 @@ public class EzEmailMailReadController {
 		// retrieve the passed in parameters
 		String folderPath = request.getParameter("folderPath");
 		String strUid = request.getParameter("uid");
-		long uid = 0;
-		if(strUid != null){
-			uid = Long.parseLong(strUid);
-		}
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
 		String filename = request.getParameter("filename");
 		if(filename != null){
 			filename = URLDecoder.decode(filename, "UTF-8");
@@ -441,16 +439,15 @@ public class EzEmailMailReadController {
 	 */
 	@RequestMapping(value="/ezEmail/downloadInline.do")
 	public void downloadInline(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 
+		// retrieve the passed in parameters
 		String folderPath = request.getParameter("folderPath");
 		String strUid = request.getParameter("uid");
-		long uid = 0;
-		if(strUid != null){
-			uid = Long.parseLong(strUid);
-		}
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
 		String contentId = request.getParameter("contentId");
 		if(contentId != null){
 			contentId = URLDecoder.decode(contentId, "UTF-8");
@@ -501,6 +498,7 @@ public class EzEmailMailReadController {
 	 */
 	@RequestMapping(value="/ezEmail/mailPrevShow.do")
 	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -679,9 +677,12 @@ public class EzEmailMailReadController {
 	 */
 	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
 	public String previewContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
+		
+		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
 		long uid = 0;
 		String folderPath = null;
@@ -735,10 +736,7 @@ public class EzEmailMailReadController {
 			
 			logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
 			
-			// process for the case where the message only consists of a single attachment (not multi-part).
 			if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
-				logger.debug("contentType=" + part.getContentType());
-				
 				String filename = part.getFileName();
 				double size = part.getSize();
 				String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
@@ -752,11 +750,8 @@ public class EzEmailMailReadController {
 				}										
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				
-				if (filename == null) {
-					filename = "";
-				} else{
-					filename = MimeUtility.decodeText(filename);
-				}
+				filename = (filename != null) ? MimeUtility.decodeText(filename) : "";
+				
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
