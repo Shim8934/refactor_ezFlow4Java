@@ -615,7 +615,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" name="frmCreate" id="frmCreate" action="qstList.do?brd_id=5">
+		<form method="post" name="frmCreate" id="frmCreate" action="qstList.do?brdID=5">
 			<h1><spring:message code="ezQuestion.t436" /></h1>
 			<div id="Main_List">
         		<div id="mainmenu">
@@ -635,7 +635,8 @@
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="${qstStep1VO.txtSubject}"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
+                   			
            			</tr>
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
@@ -665,7 +666,7 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value='${pStep1DataXML}'/>
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="${pStep1DataXML}"/>
 			</div>
 		</form>
 	    	<div id="Privew_List" style="display: none;">
