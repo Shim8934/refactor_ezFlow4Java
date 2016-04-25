@@ -219,6 +219,17 @@ public class EzResourceController extends EgovFileMngUtil {
 		return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
 	}
 	
+	/**
+	 * 스케줄 정보 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleGet.do")
+	public String scheduleGet(HttpServletRequest req, Model model) throws Exception {
+		
+		
+	
+		return "/ezResource/resMain";
+	}
+	
 	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID) throws Exception {
 		String strParentID = "";
 		String strCompanyID = "";
