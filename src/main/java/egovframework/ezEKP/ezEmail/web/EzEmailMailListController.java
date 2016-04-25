@@ -80,20 +80,22 @@ public class EzEmailMailListController {
 			HttpServletRequest request,
 			Model model) throws Exception {
 		logger.debug("showMailList started");
-		String dispname = request.getParameter("dispname");
-		String url = request.getParameter("url");
-		if (url == null) {
-			url = "INBOX";
-		}
-		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		
+		// retrieve the passed in parameters
+		String dispname = request.getParameter("dispname");
+		String url = request.getParameter("url");
+		url = (url != null) ? url : "INBOX";
+		logger.debug("dispname=" + dispname + ",url=" + url);
+				
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String userLang ="1";
+		String userLang = "1";
+		String domainName = config.getProperty("config.DomainName");
+		String useEditor = config.getProperty("config.EDITOR");
 		
 		if (dispname != null) {
 			folderName = dispname;
@@ -109,13 +111,15 @@ public class EzEmailMailListController {
 			folderType = "delete";
 		}
 		
+		// retrieve the mail general settings from db.
 		MailGeneralVO mailGeneral = null;
 		List<MailGeneralVO> mailGeneralList = ezEmailService.getMailGeneral(userId);
 		if (mailGeneralList.size() > 0) {
 			mailGeneral = mailGeneralList.get(0);
-			logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral);
 		}
+		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral);		
 		
+		// set model
 		model.addAttribute("folderName", folderName);
 		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
@@ -123,7 +127,9 @@ public class EzEmailMailListController {
 		model.addAttribute("listCount", "30");
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("userId", userId);
+		model.addAttribute("domainName", domainName);
 		model.addAttribute("mailGeneral", mailGeneral);
+		model.addAttribute("useEditor", useEditor);
 		
 		logger.debug("showMailList ended");
 		

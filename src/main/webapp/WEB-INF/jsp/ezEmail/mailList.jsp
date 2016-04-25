@@ -35,10 +35,10 @@
 	    var importanceColor = "#ff0000";
 	    var g_userLang = "${userLang}";
 	    var USE_OCS = "NO";
+	    var g_useremail = g_loginID + "@${domainName}";	    
 	    var searchMode = false;
 	    var SearchKeyword = "";
 	    var g_loginID = "${userId}";
-	    var g_useremail = g_loginID + "@opensol2016.com";
 	    var SecurityMailReadUndo = true;
 	    var p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
 	    var p_Listoption = "1";
@@ -68,6 +68,9 @@
 	    var pMailListDiv_H = 0;
 	    var pMailPreVDiv_H = 0;
 	    var tmp_href;
+	    var pUse_Editor = "${useEditor}";
+	    var pNoneActiveX = "YES";
+	    
 	    document.onselectstart = function () { return false; };
 	    window.onresize = Window_resize;
 	    window.onunload = Window_onunload;
