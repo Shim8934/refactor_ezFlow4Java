@@ -41,7 +41,7 @@
 	    	var pUserID = "${userID}";
 	    	var pDeptID = "${deptID}";
 	    	var pAdminFg = "${adminFg}";
-		    var folder_Url = "/ResSch/scheduleGet.do";
+		    var folder_Url = "/ezResource/scheduleGet.do";
 		    var p_Type = "MAIN";
 	    	var title_name = new Array();
 	    	var pBrdCount = "${brdCount}";
