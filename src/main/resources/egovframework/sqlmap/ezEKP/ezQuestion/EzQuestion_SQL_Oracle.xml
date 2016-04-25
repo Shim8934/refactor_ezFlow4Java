@@ -193,16 +193,16 @@
 	</resultMap>
 	
 	<resultMap class="QstTempSaveVO" id="qstTempSaveVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
-		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
-		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
-		<result property="answerType"				column="ANSWERTYPE"					columnIndex="5"/>
-		<result property="answerViewType"			column="ANSWERVIEWTYPE"				columnIndex="6"   	nullValue="0"/>
-		<result property="multiSelect"				column="MULTISELECT"				columnIndex="7"/>
-		<result property="quesSN"					column="QUES_SN"					columnIndex="8"/>
-		<result property="answerNo"					column="ANSWERNO"					columnIndex="9"/>
-		<result property="answerContent"			column="ANSWERCONTENT"				columnIndex="10"/>
+		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
+		<result property="itemNo"				column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"			column="QUESTION_NO"			columnIndex="3"/>
+		<result property="quesContent"			column="QUESCONTENT"			columnIndex="4"/>
+		<result property="answerType"			column="ANSWERTYPE"			columnIndex="5"/>
+		<result property="answerViewType"	column="ANSWERVIEWTYPE"	columnIndex="6"   nullValue="0"/>
+		<result property="multiSelect"			column="MULTISELECT"			columnIndex="7"/>
+		<result property="quesSN"				column="QUES_SN"					columnIndex="8"/>
+		<result property="answerNo"				column="ANSWERNO"				columnIndex="9"/>
+		<result property="answerContent"		column="ANSWERCONTENT"	columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="String" id="responserAnswerCLOB">
