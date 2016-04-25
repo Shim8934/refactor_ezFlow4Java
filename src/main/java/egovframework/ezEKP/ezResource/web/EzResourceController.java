@@ -28,6 +28,8 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
+import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -74,32 +76,32 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/resMain.do")
 	public String resMain(HttpServletRequest req, Model model) throws Exception {
-		String brdId = "";
+		String brdID = "";
 		String brdNm = "";
 		String brdTopPath = "";
 		String pUrl = "";
 		String url = "/ezResource/leftResource.do";
 		
-		if(req.getParameter("brd_id") != null) {
-			brdId = req.getParameter("brd_id");
+		if(req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
+		
+		}
+		if(req.getParameter("brdNm") != null) {
+			 brdNm = req.getParameter("brdnm");
 		}
 		
-		if(req.getParameter("brdnm") != null) {
-			brdNm = req.getParameter("brdnm");
-		}
-		
-		if(req.getParameter("brdpath") != null) {
+		if(req.getParameter("brdPath") != null) {
 			brdTopPath = req.getParameter("brdpath");
 		}
 		
-		if(brdId == "" || brdId.equals("")) {
-			if(brdTopPath == "B" || brdTopPath.equals("")) {
+		if(brdID.equals("")) {
+			if(brdTopPath.equals("B")) {
 				pUrl = url + "?BoardGbn=" + brdTopPath;
 			} else {
 				pUrl = url;
 			} 
 		} else {
-			pUrl = url + "?brdId=" + brdId + "&brdNm=" + brdNm + "&boardGbn=M";
+			pUrl = url + "?brdID=" + brdID + "&brdNm=" + brdNm + "&boardGbn=M";
 		}
 		
 		model.addAttribute("pUrl", pUrl);
@@ -112,27 +114,27 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/leftResource.do")
 	public String resLeftResource(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String brdId = "";
+		String brdID = "";
 	    String brdNm = "";
 	    String brdGubun = "";
 	    String brdGbn = "";
 	    String strAccessCode = "";
 	    String selectNo = "";
 	    
-		if(req.getParameter("brdId") != null) {
-			brdId = req.getParameter("brdId");
+		if(req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
 		}
 		
 		if(req.getParameter("brdNm") != null) {
-			brdId = req.getParameter("brdNm");
+			brdNm = req.getParameter("brdNm");
 		}
 		
 		if(req.getParameter("pbrdGubun") != null) {
 			brdGubun = req.getParameter("pbrdGubun");
 		}
 		
-		if(req.getParameter("BoardGbn") != null) {
-			brdGbn = req.getParameter("BoardGbn");
+		if(req.getParameter("boardGbn") != null) {
+			brdGbn = req.getParameter("boardGbn");
 		}
 		
 		//관리자체크
@@ -147,13 +149,13 @@ public class EzResourceController extends EgovFileMngUtil {
 			selectNo = req.getParameter("flag");
 		}
 		
-		model.addAttribute("brdId", brdId);
+		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("brdGubun", brdGubun);
-		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("deptPathCode", userInfo.getDeptPathCode());
-		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("strAccessCode", strAccessCode);
 		model.addAttribute("selectNo", selectNo);
 		model.addAttribute("serverName", req.getServerName());
@@ -172,39 +174,49 @@ public class EzResourceController extends EgovFileMngUtil {
 		if(req.getParameter("flag") != null) {
 			selectFlag = req.getParameter("flag");
 		}
-		Document xmlDom = commonUtil.convertStringToDocument(xmlReq);
-
-		String ret = getSubClsTree(xmlReq, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
 		
-		xmlDom = null;
+		String ret = getSubClsTree(xmlReq, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
 		Document xmlRet = commonUtil.convertStringToDocument(ret);
+		
 		XPath xpath = XPathFactory.newInstance().newXPath();
-		NodeList nodes = (NodeList)xpath.evaluate("//TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
-		NodeList nodes1 = (NodeList)xpath.evaluate("//TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes1 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes2 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
+		NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes6 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes7 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+		//nodes2.item(0).setTextContent("SELECT_NO");
 		if(nodes.getLength() != 0) {
 			for(int i=0; i<nodes.getLength(); i++) {
 				nodes.item(i).setTextContent("TRUE");
-				nodes1.item(i).removeChild((Node)xpath.evaluate("//TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET));
+				nodes1.item(i).removeChild((Node) nodes4.item(i));
+				if(nodes2.item(0).getTextContent().equals("")) {
+					nodes2.item(0).setTextContent("<![CDATA[]]>");
+				}
 				
-				if(selectFlag == "SELECT_NO") {
-					if((Node)xpath.evaluate("//TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET) != null) {
-						NodeList nodes2 = (NodeList) xpath.evaluate("//TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);  
-						nodes2.item(i).removeChild((Node)xpath.evaluate("//TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET));
+				if(nodes5.item(i).getTextContent().equals("")) {
+					nodes5.item(i).setTextContent("<![CDATA[]]>");
+				}
+				
+				if(nodes6.item(i).getTextContent().equals("")) {
+					nodes6.item(i).setTextContent("<![CDATA[]]>");
+				}
+				
+				if(nodes7.item(i).getTextContent().equals("")) {
+					nodes7.item(i).setTextContent("<![CDATA[]]>");
+				}
+				
+				if(selectFlag.equals("SELECT_NO")) {
+					if(nodes2.getLength() > 0) {
+						NodeList nodes3 = (NodeList) xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);  
+						nodes3.item(i).removeChild((Node)nodes2.item(0));
 					}
 				}
 			}
 		}
 		
-		NodeList nodes3 = (NodeList)xpath.evaluate("//NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
-		NodeList nodes4 = (NodeList)xpath.evaluate("//NODES/NODE", xmlRet, XPathConstants.NODESET);
-		NodeList nodes5 = (NodeList)xpath.evaluate("//NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
-		if(nodes3.getLength() != 0) {
-			for(int i=0; i<nodes3.getLength(); i++) {
-				nodes3.item(i).setTextContent("TRUE");
-				nodes4.item(i).removeChild((Node) nodes5);
-			}
-		}
-		return commonUtil.convertDocumentToString(xmlRet);
+		return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
 	}
 	
 	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID) throws Exception {
@@ -217,103 +229,92 @@ public class EzResourceController extends EgovFileMngUtil {
         String strTreeType = "";
         String returnXML = "";
    
-        //Document xmlRes = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
         strParentID = xmlRes.getElementsByTagName("PARENT_ID").item(0).getTextContent().trim();
         strCompanyID = xmlRes.getElementsByTagName("COMPANY_ID").item(0).getTextContent().trim();
         strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
         strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
         strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
-        
+
         if(xmlRes.getElementsByTagName("BRDLIST").getLength() > 5) {
         	strUserID = xmlRes.getElementById("BRDLIST").getChildNodes().item(5).getTextContent().trim();
         	strDeptPath = xmlRes.getElementById("BRDLIST").getChildNodes().item(6).getTextContent().trim();
         	strDeptPath = "'" + strDeptPath.replace("," , "', '")+ "'";
         }
-        String strXML = "";
         
         List<ResGetAdmSubClsTreeVO> resGetAdmSubClsTree = new ArrayList<ResGetAdmSubClsTreeVO>();
-        if(strAccessFlag == "0") {
+        if(strAccessFlag.equals("0")) {
         	resGetAdmSubClsTree = ezResourceService.getAdmSubClsTree(strParentID, strCompanyID, strTreeType);
         } else {
         	resGetAdmSubClsTree = ezResourceService.getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID);
         }
-        
-        for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
-        	strXML = commonUtil.getQueryResult(resGetAdmSubClsTree.get(i));	
-        }
-        
-        if(strFirstNode == "Y") {
-        	String strTreeStyle = "";
-        	strTreeStyle = "<TREEVIEWDATA>" +
-        						"<TEXTCOLOR>" +
-        						"	<NAME>ENTUMTEXTCOLOR</NAME>" +
-        						"	<DEFAULT></DEFAULT>" +
-        						"	<DEFAULTTEXTCOLOR>black</DEFAULTTEXTCOLOR>" +
-        						"   <DEFAULTBGCOLOR>ffffff</DEFAULTBGCOLOR>" +
-        						"   <SELECTEDTEXTCOLOR>164AAD</SELECTEDTEXTCOLOR>" +
-        						"   <SELECTEDBGCOLOR>ffffff</SELECTEDBGCOLOR>" +
-        						"   <HOTTRACKINGTEXTCOLOR>164AAD</HOTTRACKINGTEXTCOLOR>" +
-        						"   <HOTTRACKINGBGCOLOR>ffffff</HOTTRACKINGBGCOLOR>" +
-        						"</TEXTCOLOR>" +
-        						"<NODEICONIMAGE>" +
-        						"    <NAME>RESCLASS</NAME>" +
-        						"    <DEFAULT></DEFAULT>" +
-        						"    <LEAFDEFAULTICON>/images/left/tree_01.gif</LEAFDEFAULTICON>" +
-        						"    <LEAFSELECTEDICON>/images/left/tree_01.gif</LEAFSELECTEDICON>" +
-        						"    <BRANCHDEFAULTICON>/images/left/tree_01.gif</BRANCHDEFAULTICON>" +
-        						"    <BRANCHSELECTEDICON>/images/left/tree_01.gif</BRANCHSELECTEDICON>" +
-        						"</NODEICONIMAGE>" +
-        						"<NODEICONIMAGE>" +
-        						"    <NAME>RESOURCE</NAME>" +
-        						"    <DEFAULT></DEFAULT>" +
-        						"    <LEAFDEFAULTICON>/images/left/tree_02.gif</LEAFDEFAULTICON>" +
-        						"    <LEAFSELECTEDICON>/images/left/tree_02.gif</LEAFSELECTEDICON>";
 
-        	strTreeStyle = strTreeStyle +
-        	"    <BRANCHDEFAULTICON>/images/left/tree_02.gif</BRANCHDEFAULTICON>" +
-        	"    <BRANCHSELECTEDICON>/images/left/tree_02.gif</BRANCHSELECTEDICON>" +
-        	"</NODEICONIMAGE>" +
-        	"<HERITAGEICONIMAGE>" +
-        	"    <DEFAULT></DEFAULT>" +
-        	"    <BLANKICON>/images/left/blank.gif</BLANKICON>" +
-        	"    <VERTICALLINEICON>/images/left/vline.gif</VERTICALLINEICON>" +
-        	"    <NODEICON>/images/left/02.gif</NODEICON>" +
-        	"    <MNODEICON>/images/left/02_minus.gif</MNODEICON>" +
-        	"    <PNODEICON>/images/left/02_plus.gif</PNODEICON>" +
-        	"    <ROOTNODEICON>/images/left/03.gif</ROOTNODEICON>" +
-        	"    <MROOTNODEICON>/images/left/03_minus.gif</MROOTNODEICON>" +
-        	"    <PROOTNODEICON>/images/left/03_plus.gif</PROOTNODEICON>" +
-        	"    <LASTNODEICON>/images/left/03.gif</LASTNODEICON>" +
-        	"    <MLASTNODEICON>/images/left/03_minus.gif</MLASTNODEICON>" +
-        	"    <PLASTNODEICON>/images/left/03_plus.gif</PLASTNODEICON>" +
-        	"    <FIRSTROOTNODEICON>/images/left/02.gif</FIRSTROOTNODEICON>" +
-        	"    <MFIRSTROOTNODEICON>/images/left/02_minus.gif</MFIRSTROOTNODEICON>" +
-        	"    <PFIRSTROOTNODEICON>/images/left/02_plus.gif</PFIRSTROOTNODEICON>" +
-        	"</HERITAGEICONIMAGE>";
-
-        	returnXML = strTreeStyle;
+        StringBuilder strTreeStyle = new StringBuilder();
+        if(strFirstNode.equals("Y")) {
+        	strTreeStyle.append("<TREEVIEWDATA>");
+        	strTreeStyle.append("<TEXTCOLOR>");
+        	strTreeStyle.append("<NAME>ENTUMTEXTCOLOR</NAME>");
+        	strTreeStyle.append("<DEFAULT></DEFAULT>");
+        	strTreeStyle.append("<DEFAULTTEXTCOLOR>black</DEFAULTTEXTCOLOR>");					
+        	strTreeStyle.append("<DEFAULTBGCOLOR>ffffff</DEFAULTBGCOLOR>");
+        	strTreeStyle.append("<SELECTEDTEXTCOLOR>164AAD</SELECTEDTEXTCOLOR>");
+        	strTreeStyle.append("<SELECTEDBGCOLOR>ffffff</SELECTEDBGCOLOR>");
+        	strTreeStyle.append("<HOTTRACKINGTEXTCOLOR>164AAD</HOTTRACKINGTEXTCOLOR>");
+        	strTreeStyle.append("<HOTTRACKINGBGCOLOR>ffffff</HOTTRACKINGBGCOLOR>");
+        	strTreeStyle.append("</TEXTCOLOR>");
+        	strTreeStyle.append("<NODEICONIMAGE>");
+        	strTreeStyle.append("<NAME>RESCLASS</NAME>");
+        	strTreeStyle.append("<DEFAULT></DEFAULT>");
+        	strTreeStyle.append("<LEAFDEFAULTICON>/images/left/tree_01.gif</LEAFDEFAULTICON>");
+        	strTreeStyle.append("<LEAFSELECTEDICON>/images/left/tree_01.gif</LEAFSELECTEDICON>");
+        	strTreeStyle.append("<BRANCHDEFAULTICON>/images/left/tree_01.gif</BRANCHDEFAULTICON>");
+        	strTreeStyle.append("<BRANCHSELECTEDICON>/images/left/tree_01.gif</BRANCHSELECTEDICON>");
+        	strTreeStyle.append("</NODEICONIMAGE>");
+        	strTreeStyle.append("<NODEICONIMAGE>");
+        	strTreeStyle.append("<NAME>RESOURCE</NAME>");
+        	strTreeStyle.append("<DEFAULT></DEFAULT>");
+        	strTreeStyle.append("<LEAFDEFAULTICON>/images/left/tree_02.gif</LEAFDEFAULTICON>");
+        	strTreeStyle.append("<LEAFSELECTEDICON>/images/left/tree_02.gif</LEAFSELECTEDICON>");
+        	
+        	strTreeStyle.append("<BRANCHDEFAULTICON>/images/left/tree_02.gif</BRANCHDEFAULTICON>");
+        	strTreeStyle.append("<BRANCHSELECTEDICON>/images/left/tree_02.gif</BRANCHSELECTEDICON>");
+        	strTreeStyle.append("</NODEICONIMAGE>");
+        	strTreeStyle.append("<HERITAGEICONIMAGE>");
+        	strTreeStyle.append("<DEFAULT></DEFAULT>");
+        	strTreeStyle.append("<BLANKICON>/images/left/blank.gif</BLANKICON>");
+        	strTreeStyle.append("<VERTICALLINEICON>/images/left/vline.gif</VERTICALLINEICON>");
+        	strTreeStyle.append("<NODEICON>/images/left/02.gif</NODEICON>");
+        	strTreeStyle.append("<MNODEICON>/images/left/02_minus.gif</MNODEICON>");
+        	strTreeStyle.append("<PNODEICON>/images/left/02_plus.gif</PNODEICON>");
+        	strTreeStyle.append("<ROOTNODEICON>/images/left/03.gif</ROOTNODEICON>");
+        	strTreeStyle.append("<MROOTNODEICON>/images/left/03_minus.gif</MROOTNODEICON>");
+        	strTreeStyle.append("<PROOTNODEICON>/images/left/03_plus.gif</PROOTNODEICON>");
+        	strTreeStyle.append("<LASTNODEICON>/images/left/03.gif</LASTNODEICON>");
+        	strTreeStyle.append("<MLASTNODEICON>/images/left/03_minus.gif</MLASTNODEICON>");
+        	strTreeStyle.append("<PLASTNODEICON>/images/left/03_plus.gif</PLASTNODEICON>");
+        	strTreeStyle.append("<FIRSTROOTNODEICON>/images/left/02.gif</FIRSTROOTNODEICON>");
+        	strTreeStyle.append("<MFIRSTROOTNODEICON>/images/left/02_minus.gif</MFIRSTROOTNODEICON>");
+        	strTreeStyle.append("<PFIRSTROOTNODEICON>/images/left/02_plus.gif</PFIRSTROOTNODEICON>");
+        	strTreeStyle.append("</HERITAGEICONIMAGE>");
+        
+        	returnXML = strTreeStyle.toString();
         } else {
-        	returnXML = "<NODES>";
+        	strTreeStyle.append("<NODES>");
+        	returnXML = strTreeStyle.toString();
         }
         
-        Document returnXmlDom = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        returnXmlDom = commonUtil.convertStringToDocument(strXML);
-        XPath xpath = XPathFactory.newInstance().newXPath();
-		NodeList nodes = (NodeList)xpath.evaluate("DATA/ROW", returnXmlDom, XPathConstants.NODESET);
-		
-        if(strFirstNode == "Y") {
-        	for(int i=0; i<nodes.getLength(); i++) {
+        if(strFirstNode.equals("Y")) {
+        	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
         		if(i == 0) {
-        			 returnXML += makeNodesFromADOFlds(nodes.item(i).getNodeName(), true, langStr);
+        			 returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), true, langStr);
         		} else {
-        			returnXML += makeNodesFromADOFlds(nodes.item(i).getNodeName(), false, langStr);
+        			returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
         		}
         	}
         	returnXML += "</TREEVIEWDATA>";
         } else {
-        	for(int i=0; i<nodes.getLength(); i++) {
-        		returnXML += makeNodesFromADOFlds(nodes.item(i).getNodeValue(), false, langStr);
+        	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
+        		returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
         	}
         	returnXML += "</NODES>";
         }
@@ -321,55 +322,38 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	public String makeNodesFromADOFlds(String xmlStr, boolean blnFirstNode, String langStr) throws Exception{
-		Document xmlRes = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		String returnXML = "";
-		String strValue = "";
-		String strStyle = "";
-        String strData1 = "";
         String strData2 = "";
-        String strData3 = "";
-        String strData4 = "";
-        String strData5 = "";
-        String strData6 = "";
-        String strData7 = "";
-        String strData8 = "";
-        String strData9 = "";
-        String strData10 = "";
-        String strData11 = "";
-        String strData12 = "";
-        String strData13 = "";
-        String strData14 = "";
-        String strData15 = "";
         int intSubCnt = 0;
         String strIsLeaf = "";
         String strSetNodeIconByName = "";
         
+        Document xmlRes = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         xmlRes = commonUtil.convertStringToDocument(xmlStr);
+        String strData1 = xmlRes.getElementsByTagName("BRDID").item(0).getTextContent();
         
-        strData1 = xmlRes.getElementById("BRD_ID").getTextContent();
-        
-        if(langStr == "1") {
-        	strData2 = xmlRes.getElementById("BRD_NM").getTextContent();
+        if(langStr.equals("1")) {
+        	strData2 = xmlRes.getElementsByTagName("BRDNM").item(0).getTextContent();
         } else {
-        	strData2 = xmlRes.getElementById("BRD_NM"+langStr).getTextContent();
+        	strData2 = xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent();
         }
-        strData3 = xmlRes.getElementById("BRD_LEVEL").getTextContent();
-        strData4 = xmlRes.getElementById("BRD_STEP").getTextContent();
-        strData5 = xmlRes.getElementById("BRD_POSTTERM").getTextContent();
-        strData6 = xmlRes.getElementById("BRD_UPPER").getTextContent();
-        strData7 = xmlRes.getElementById("BRD_GB").getTextContent();
-        strData8 = xmlRes.getElementById("BRD_URL").getTextContent();
-        strData9 = xmlRes.getElementById("BRD_EXPLAIN").getTextContent();
-        strData10 = xmlRes.getElementById("BRD_ACCESS").getTextContent();
-        strData11 = xmlRes.getElementById("ATTACH_SIZE").getTextContent();
-        strData12 = xmlRes.getElementById("SUB_CLSCNT").getTextContent();
-        strData13 = xmlRes.getElementById("SUB_RESCNT").getTextContent();
-        strData14 = xmlRes.getElementById("ACCESS_LVL").getTextContent();
-        strData15 = xmlRes.getElementById("APPROVEFLAG").getTextContent();
+        String strData3 = xmlRes.getElementsByTagName("BRDLEVEL").item(0).getTextContent();
+        String strData4 = xmlRes.getElementsByTagName("BRDSTEP").item(0).getTextContent();
+        String strData5 = xmlRes.getElementsByTagName("BRDPOSTTERM").item(0).getTextContent();
+        String strData6 = xmlRes.getElementsByTagName("BRDUPPER").item(0).getTextContent();
+        String strData7 = xmlRes.getElementsByTagName("BRDGB").item(0).getTextContent();
+        String strData8 = xmlRes.getElementsByTagName("BRDURL").item(0).getTextContent();
+        String strData9 = xmlRes.getElementsByTagName("BRDEXPLAIN").item(0).getTextContent();
+        String strData10 = xmlRes.getElementsByTagName("BRDACCESS").item(0).getTextContent();
+        String strData11 = xmlRes.getElementsByTagName("ATTACHSIZE").item(0).getTextContent();
+        String strData12 = xmlRes.getElementsByTagName("SUBCLSCNT").item(0).getTextContent();
+        String strData13 = xmlRes.getElementsByTagName("SUBRESCNT").item(0).getTextContent();
+        String strData14 = xmlRes.getElementsByTagName("ACCESSLVL").item(0).getTextContent();
+        String strData15 = xmlRes.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
         
         intSubCnt = Integer.parseInt(strData12.trim()) + Integer.parseInt(strData13.trim());
-        strValue = strData2;
-        strStyle = "font-weight:normal;height:10px;";
+        String strValue = strData2;
+        String strStyle = "font-weight:normal;height:10px;";
         
         returnXML += "<NODE>";
         returnXML += makeXMLElement(strValue, "VALUE", true);
@@ -396,7 +380,7 @@ public class EzResourceController extends EgovFileMngUtil {
         	strIsLeaf = "FALSE";
         }
         
-        if(strData7 == "1") {
+        if(strData7.equals("1")) {
         	strSetNodeIconByName = "RESCLASS";
         } else {
         	strSetNodeIconByName = "RESOURCE";
@@ -415,7 +399,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	public String makeXMLElement(String strElementText, String strElementName, boolean blnCData) {
 		if(blnCData == true) {
-			return "<"+strElementName+"><!CDATA["+strElementText+"]]></"+strElementName+">";
+			return "<"+strElementName+"><![CDATA["+strElementText+"]]></"+strElementName+">";
 		} else {
 			return "<"+strElementName+">"+strElementText+"</"+strElementName+">";
 		}
@@ -425,4 +409,80 @@ public class EzResourceController extends EgovFileMngUtil {
 		return "<"+strElementName+">"+strElementText+"</"+strElementName+">";
 	}
 	
+	@RequestMapping(value = "/ezResource/viewResList2.do")
+	public String viewResList2(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String accessCode = "";
+		String brdNm = "";
+		int brdCount;
+		String useEditor = "";
+		
+		if(req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
+		}
+		
+		if(req.getParameter("accessCode") != null) {
+			accessCode = req.getParameter("accessCode");
+		}
+		
+		if(req.getParameter("brdNm") != null) {
+			brdNm = req.getParameter("brdNm");
+		}
+		
+		String adminFg = getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()); 
+		brdNm = brdNm.replace("char(38)", "&");
+		String childBrd = getItemList(loginCookie,brdID);
+		
+		List<ResGetItemListVO> list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
+		brdCount = list.size();
+		
+		model.addAttribute("childBrd", childBrd);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("accessCode", accessCode);
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("adminFg", adminFg);
+		model.addAttribute("brdCount", brdCount);
+		
+		return "/ezResource/resViewResList2";
+	}
+	
+	public String getAdminFlag(String companyID, String brdID, String userID) throws Exception {
+		String accessLvl = "";
+		try {
+			ResGetAdminFlagVO resGetAdminFlag = ezResourceService.getAdminFlag(companyID, brdID, userID);
+			String strXML = commonUtil.getQueryResult(resGetAdminFlag);
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+		
+			if(xmlDom.getElementsByTagName("ROW") != null) {
+				for(int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+					accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
+				}
+			}
+		
+			if(accessLvl.trim().equals("1")) {
+				return "Y";
+			} else if(accessLvl.trim().equals("2")) {
+				return "U";
+			} else {
+				return "";
+			}
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public String getItemList(@CookieValue("loginCookie") String loginCookie,String brdID) throws Exception {
+		String childBrd = "";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ResGetItemListVO> list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
+		
+		for(int i=0; i<list.size(); i++) {
+			childBrd += list.get(i).getBrdID()+"/"+list.get(i).getBrdNm()+"/"+list.get(i).getApproveFlag()+",";
+		}
+		
+		return childBrd;
+	}
 }
