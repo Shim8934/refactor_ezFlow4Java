@@ -640,16 +640,16 @@ function newSchedule_onclick(e) {
     
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
-        window.open("/Myoffice/ezResource/ResSch/Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
             var feature = GetOpenPosition(770, 700);
-            window.open("/Myoffice/ezResource/ResSch/Schedule_Add.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
         else {
             var feature = GetOpenPosition(770, 700);
-            window.open("/Myoffice/ezResource/ResSch/Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 
@@ -1185,19 +1185,19 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
         //else
         //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 
-        window.open("/myoffice/ezResource/ResSch/Schedule_Read.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     }
     else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
-            window.open("/myoffice/ezResource/ResSch/Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
         else {
             if (pUse_Editor == "" || pUse_Editor == "CK") {
-                window.open("/myoffice/ezResource/ResSch/Schedule_Add.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
             }
             else {
-                window.open("/myoffice/ezResource/ResSch/Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
             }
         }
     }
@@ -1278,7 +1278,7 @@ function MemberInfo_onClick(pSelUserID)
     var py = (s_Height - c_Height) / 2;
 
 	if (pSelUserID != "")
-		window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 }
 
 function showTooltip_MouseOver(obj, e) {
