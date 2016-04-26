@@ -1498,12 +1498,12 @@ function Gumdrop(uri)
     	                g_MOC_Div = document.createElement('<div id="MOC_Div" style="display:none;"></div>');
     	                document.body.insertBefore(g_MOC_Div);
     	                document.getElementById("MOC_Div").innerHTML = '<object id="MOC" height="0" style="display:none"; codeType="application/x-oleobject" width="0" classid="clsid:8885370D-B33E-44B7-875D-28E403CF9270" VIEWASTEXT></object>';
-    	                MOCObjectEventEnable();
+    	                //MOCObjectEventEnable();
     	            }
     	            else if(document.getElementById("MOC_Div").innerHTML == "") 
     	            {
     	                document.getElementById("MOC_Div").innerHTML = '<object id="MOC" height="0" style="display:none"; codeType="application/x-oleobject" width="0" classid="clsid:8885370D-B33E-44B7-875D-28E403CF9270" VIEWASTEXT></object>';
-    	                MOCObjectEventEnable();
+    	                //MOCObjectEventEnable();
     	            }
     	        }
     	    }
@@ -1572,13 +1572,13 @@ function Gumdrop(uri)
         }
     }
 }
-
-function MOCObjectEventEnable() {
+//2016-04-26 장진혁과장 --function 오류로 인한 임시 주석처리, 관련된 2개의 함수도 함께 주석처리
+/*function MOCObjectEventEnable() {
         // MOC 객체에 이벤트 추가
        	function MOC.object::OnContactStatusChange(contact, state) {   
             	UpdateStatus('PresenceUpdate');
         }
-}
+}*/
 
 function UpdateStatus(caller)
 {
