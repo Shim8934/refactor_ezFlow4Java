@@ -30,9 +30,12 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -223,12 +226,69 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 스케줄 정보 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGet.do")
-	public String scheduleGet(HttpServletRequest req, Model model) throws Exception {
+	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model) throws Exception {
+		String resID = "";
+		String cmd = "";
+		String type = "";
+		String viewType = "";
+		String approveFlag = "";
+		String writerName = "";
+		String writerDept = "";
+		String gubun = "P";
+		String gubunID = "";
+		int page = 0;
 		
+		try {
+			if (req.getParameter("resID") != null) {
+				resID = req.getParameter("resID");
+			}
+			if (req.getParameter("cmd") != null) {
+				cmd = req.getParameter("cmd");
+			}
+			if (req.getParameter("pType") != null) {
+				type = req.getParameter("type");
+			}
+			if (req.getParameter("viewType") != null) {
+				viewType = req.getParameter("viewType");
+			}
+			if (req.getParameter("page") != null) {
+				page = Integer.parseInt(req.getParameter("page"));
+			}
 		
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+			if (cmd.equals("get")) {
+				String startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+				String endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+			
+				if (viewType.equals("list")) {
+					approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
+					writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+					writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
+				}
+			
+				if (type.equals("") || type == null) {
+					xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
+					xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
+				} else {
+					if (type.equals("MAIN")) {
+						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
+						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
+					} else {
+						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(6,7), -1), "", "","");
+						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(6,7), 1), "", "","");		
+						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
+						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
+					}
+				}
+			}
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+			return "/ezResource/resMain";
+		}
 	
-		return "/ezResource/resMain";
-	}
+	
 	
 	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID) throws Exception {
 		String strParentID = "";
@@ -495,5 +555,105 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		return childBrd;
+	}
+	
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String gubun, String pType, String pWriterName, String pWriterDept) {
+		String returnStr = "";
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String sDate = xmlRes.getElementsByTagName("STARTDATETIME").item(0).getTextContent().trim();
+		String eDate = xmlRes.getElementsByTagName("ENDDATETIME").item(0).getTextContent().trim();
+		String app = xmlRes.getElementsByTagName("APP").item(0).getTextContent().trim();
+		
+		
+		return "";
+	}
+	
+	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept) throws Exception {
+		StringBuilder returnStr = new StringBuilder();
+		returnStr.append("<DATA>");
+		String todayStartStr = "";
+		String todayEndStr = "";
+		if (pType.equals("MAIN")) {
+			todayStartStr = eDate + " 23:59:59";
+			todayEndStr = sDate + " 00:00:01";
+		} else {
+			todayStartStr = eDate + " 00:00:01";
+			todayEndStr = sDate;
+		}
+		String returnSchdule = "";
+		if (pType.equals("")) {
+			List<ResGetScheduleListVO> getScheduleList = ezResourceService.getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+			
+			for (int i=0; i<getScheduleList.size(); i++) {
+				returnSchdule = commonUtil.getQueryResult(getScheduleList.get(i));
+			}
+			
+		} else if (pType.equals("MAIN")) {
+			List<ResGetScheduleListMainVO> getScheduleListMain = ezResourceService.getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
+			for (int i=0; i<getScheduleListMain.size(); i++) {
+				returnSchdule = commonUtil.getQueryResult(getScheduleListMain.get(i));
+			}
+		}
+		
+		Document returnDom1 = commonUtil.convertStringToDocument(returnSchdule);
+		
+		for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
+			returnStr.append("<ROW>");
+			returnStr.append("<num>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(0).getTextContent()+"</num>");
+			returnStr.append("<pnum>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(1).getTextContent()+"</pnum>");
+			returnStr.append("<ownerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(2).getTextContent()+"</ownerID>");
+			returnStr.append("<title><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(3).getTextContent()+"]]></title>");
+			returnStr.append("<location><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(4).getTextContent()+"]]></location>");
+			returnStr.append("<timeDisplay><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(5).getTextContent()+"]]></timeDisplay>");
+			returnStr.append("<startDate>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(6).getTextContent()+"</startDate>");
+			returnStr.append("<endDAte>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(7).getTextContent()+"</endDAte>");
+			returnStr.append("<alertTime>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(8).getTextContent()+"</alertTime>");
+			returnStr.append("<reFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(9).getTextContent()+"</reFlag>");
+			returnStr.append("<gresFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(10).getTextContent()+"</gresFlag>");
+			returnStr.append("<writerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(11).getTextContent()+"</writerID>");
+			returnStr.append("<content><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(12).getTextContent()+"]]></content>");
+			returnStr.append("<importance>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(13).getTextContent()+"</importance>");
+			returnStr.append("<entryList>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(14).getTextContent()+"</entryList>");
+			returnStr.append("<allDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(15).getTextContent()+"</allDay>");
+			returnStr.append("<writeDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(16).getTextContent()+"</writeDay>");
+			returnStr.append("<attachFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(17).getTextContent()+"</attachFlag>");
+			returnStr.append("<characterID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(18).getTextContent()+"</characterID>");
+			returnStr.append("<approveFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(19).getTextContent()+"</approveFlag>");
+			returnStr.append("<owner_nm><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(20).getTextContent()+"]]></owner_nm>");
+			returnStr.append("<dept_name><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></dept_name>");
+			if (pType.equals("")) {
+				returnStr.append("<owner_nm2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></owner_nm2>");
+				returnStr.append("<dept_name2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(22).getTextContent()+"]]></dept_name2>");
+				returnStr.append("<jobtitle><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(23).getTextContent()+"]]></jobtitle>");
+				returnStr.append("<jobtitle2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(24).getTextContent()+"]]></jobtitle2>");
+			}
+			returnStr.append("</ROW>");
+		}
+		
+		String returnRepetition = "";
+		
+		if (pType.equals("")) {
+			List<ResGetScheduleListVO> getScheduleListRept= ezResourceService.getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+			returnRepetition = commonUtil.getQueryResult(getScheduleListRept);
+		} else {
+			List<ResGetScheduleListMainVO> getScheduleListReptMain = ezResourceService.getScheduleListRepetitim(ownerID, companyID, todayStartStr);
+			returnRepetition = commonUtil.getQueryResult(getScheduleListReptMain);
+		}
+		
+		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
+		for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
+			String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
+			String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
+			String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
+		}
+		return "";
+	}
+	
+	public String getRepDeteTimes(String companyID, String num, String ownerID, String sDate, String eDate) throws Exception {
+		String returnStr = "";
+		String returnRepetition = "";
+		
+		
+		return "";
 	}
 }
