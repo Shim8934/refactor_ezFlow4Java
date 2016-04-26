@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
@@ -26,6 +28,26 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ResGetItemListVO> getBrdMainList(Map<String, Object> map){
 		return  (List<ResGetItemListVO>) list("EzResourceDAO.getBrdMainList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleListVO> getScheduleList(Map<String, Object> map){
+		return  (List<ResGetScheduleListVO>) list("EzResourceDAO.getScheduleList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleListMainVO> getScheduleListMain(Map<String, Object> map){
+		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListMain", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleListVO> getScheduleListRepetiti(Map<String, Object> map){
+		return  (List<ResGetScheduleListVO>) list("EzResourceDAO.getScheduleListRepetiti", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(Map<String, Object> map){
+		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListRepetitim", map);
 	}
 	
 	public ResGetAdminFlagVO getAdminFlag(Map<String, Object> map) {
