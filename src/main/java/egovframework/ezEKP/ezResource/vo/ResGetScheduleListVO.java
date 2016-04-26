@@ -9,6 +9,8 @@ public class ResGetScheduleListVO {
 	private String ownerID;
 	/** 제목*/
 	private String title;
+	/** 위치*/
+	private String location;
 	/** 시간표시형식*/
 	private String timeDisplay;
 	/** 게시기간-부터*/
@@ -52,6 +54,12 @@ public class ResGetScheduleListVO {
 	/** 영문직급*/
 	private String jobTitle2;
 	
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	public int getNum() {
 		return num;
 	}
