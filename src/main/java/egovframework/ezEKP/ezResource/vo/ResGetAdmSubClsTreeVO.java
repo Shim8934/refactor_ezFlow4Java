@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezResource.vo;
 
 public class ResGetAdmSubClsTreeVO {
 	/** 자원 번호*/
-	private int brdId;
+	private int brdID;
 	/** 자원 이름*/
 	private String brdNm;
 	/** 자원 번호 2*/
@@ -41,10 +41,10 @@ public class ResGetAdmSubClsTreeVO {
 		this.accessLvl = accessLvl;
 	}
 	public int getBrdId() {
-		return brdId;
+		return brdID;
 	}
-	public void setBrdId(int brdId) {
-		this.brdId = brdId;
+	public void setBrdId(int brdID) {
+		this.brdID = brdID;
 	}
 	public String getBrdNm() {
 		return brdNm;
