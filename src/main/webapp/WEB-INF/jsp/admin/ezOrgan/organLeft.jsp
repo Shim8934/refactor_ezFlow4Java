@@ -63,7 +63,7 @@
 				        url = "/myoffice/ezOrgan/Admin/Permissions_List.aspx";
 				        break;
 				    case 13:
-				        url = "/myoffice/ezOrgan/Admin/AddJob_List.aspx";
+				        url = "/admin/ezOrgan/addJobList.do";
 				        break;
 		            case 20:
 		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";

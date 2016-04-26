@@ -1,9 +1,17 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.List;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 
 public interface EzOrganAdminService {
+	
+	public List<OrganDeptVO> getCompanyList(String lang) throws Exception;
+	
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception;
+	
+	public OrganUserVO getUserAddJobList(String cn, String strLang) throws Exception;
 	
 	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
 	
@@ -36,6 +44,8 @@ public interface EzOrganAdminService {
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
 	public void insertDBData_user(OrganUserVO vo) throws Exception;
+
+	public void addJob(String userID, String titleInfo) throws Exception;
 
 	 
 }

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,36 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Autowired	
 	private CommonUtil commonUtil;
 	
+	
+	@Override
+	public List<OrganDeptVO> getCompanyList(String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_LANGDATA", lang);
+		
+		return ezOrganAdminDao.getCompanyList(map);
+	}
+	
+	@Override
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_COMPANYID", companyID);
+		map.put("v_LANGDATA", strLang);
+		
+		return ezOrganAdminDao.getAddJobList(map);
+	}
+
+	@Override
+	public OrganUserVO getUserAddJobList(String cn, String strLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_CN", cn);
+		map.put("v_LANGDATA", strLang);
+		
+		return ezOrganAdminDao.getUserAddJobList(map);
+	}
+
 	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode) throws Exception {
 		String propvalue = "";
@@ -250,8 +281,51 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		return ezOrganAdminDao.getUserInfo(map);
 	}
-	
-	
+
+	@Override
+	public void addJob(String userID, String titleInfo) throws Exception {
+		String sTitle1 = "";
+        String sTitle2 = "";
+        String delFlag = "1";
+        String pDeptID = "";
+        
+        if(!titleInfo.equals("")){
+        	String[] addJobinfo = titleInfo.split(";");
+        	
+            for (int i = 0; i < addJobinfo.length; i++) {
+            	String[] userInfo = addJobinfo[i].split(":");
+            	pDeptID = userInfo[0];
+                sTitle1 = userInfo[1];
+                sTitle2 = "";
+                
+                if (userInfo.length == 3) {
+                    sTitle2 = userInfo[2];
+                }
+                
+                Map<String, Object> map = new HashMap<String, Object>();		
+        		
+        		map.put("v_CN", userID);
+        		map.put("v_DEPTID", pDeptID);
+        		map.put("v_TITLE1", sTitle1);
+        		map.put("v_TITLE2", sTitle2);
+        		map.put("v_DELFLAG", delFlag);
+                
+        		ezOrganAdminDao.setAddJob(map);
+        		
+        		delFlag = "2";
+            }
+        } else {
+        	Map<String, Object> map = new HashMap<String, Object>();		
+    		
+    		map.put("v_CN", userID);
+    		map.put("v_DEPTID", "");
+    		map.put("v_TITLE1", "");
+    		map.put("v_TITLE2", "");
+    		map.put("v_DELFLAG", delFlag);
+    		
+    		ezOrganAdminDao.setAddJob(map);
+        }		
+	}
 	
 	
 }

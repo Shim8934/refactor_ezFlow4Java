@@ -661,13 +661,14 @@
 			}
 			function MoveConfirm_onclick(){
 				var objNode = "";
+				var pClass = "";
 			    var treeView = new TreeView();
 			    treeView.LoadFromID("FromTreeView");
 			    var nodeIdx = treeView.GetSelectNode();			    
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(nodeIdx.NodeID);
 
-		        var listview = new ListView();
+		        var listview = new ListView();		        
 		        listview.LoadFromID("lvUserList");
 
 				if (listview.GetDataRows().length == 0){
@@ -681,12 +682,18 @@
 					}
 				}
 				
+				if (listOpt1.checked == true){
+					pClass = "user";
+				} else {
+					pClass = "dept";
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					url : "/admin/ezOrgan/saveOrderList.do",
 					async : false,
-					data : {cn : objNode},
+					data : {cn : objNode, pClass : pClass},
 					success : function(result){
 						alert("<spring:message code='ezOrgan.t49' />");
 						getDeptFullTree(treeNode.GetNodeData("CN"));

@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezOrgan.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -14,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -265,12 +269,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String cn = request.getParameter("cn");		
+		String pClass = request.getParameter("pClass");
+		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
 		String result = "";
 		
 		for(int i=0; i<cnDatas.length; i++){
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", "dept");	
+			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass);	
 		}
 		
 		return result;
@@ -531,5 +536,172 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}		
 	}
 	
+	/**
+	 * 조직도관리 겸직관리 메뉴 호출 화면
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobList.do")
+	public String addJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String strLang = config.getProperty("config.primary");
+		String use_editor = config.getProperty("config.EDITOR");
+		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
+		
+/*		if (request.getIndexOf("MSIE") > -1 || request.UserAgent.IndexOf("Trident") > -1)
+            CrossYN = false;
+        else
+            CrossYN = true;
+		*/
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j, vo);
+			}
+		}
+		
+		model.addAttribute("use_editor", use_editor);
+		model.addAttribute("use_ie11Browser", use_ie11Browser);
+		model.addAttribute("list", resultList);
+		
+		return "/admin/ezOrgan/addJobList";
+	}
+	
+	/**
+	 * 조직도관리 겸직관리 대상자 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getAddJobList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		String companyID = request.getParameter("companyID");
+		String strLang = config.getProperty("config.primary");
+				
+		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang);
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+        result.append("<ROWS>");
+        
+        for (int i = 0; i < list.size(); i++){
+        	OrganUserVO vo = list.get(i);
+        	
+        	result.append("<ROW>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + vo.getCn() + "</VALUE>");
+            result.append("<DATA1>" + vo.getCn() + "</DATA1>");
+            result.append("<DATA2>" + vo.getExtensionAttribute4() + "</DATA2>");
+            result.append("<DATA3>" + vo.getDisplayName() + "</DATA3>");
+            result.append("<DATA4>" + vo.getMail() + "</DATA4>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + vo.getDisplayName() + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + vo.getTitle() + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + vo.getDescription() + "</VALUE>");
+            result.append("</CELL>");                    
+            result.append("<CELL>");
+            result.append("<VALUE>" + vo.getCompany() + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }                
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+		
+		return result.toString();
+	}
+	
+	/**
+	 * 조직도관리 겸직관리 대상자 상세정보 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getUserAddJobList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUserAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		String cn = request.getParameter("cn");
+		String strLang = config.getProperty("config.primary");
+		
+		OrganUserVO vo = ezOrganAdminService.getUserAddJobList(cn, strLang);
+		String rows = commonUtil.getQueryResult(vo);
+		
+		StringBuilder result = new StringBuilder();
+        result.append("<DATA>");
+        result.append(rows.toString());
+        result.append("</DATA>");
+        
+		return result.toString();
+	}
+	
+	/**
+	 * 조직도관리 겸직관리 겸직삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String saveSubTitle(@RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
+		String titleInfo = "";
+				
+		if (!doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
+			for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++){
+				if (titleInfo.equals("")) {
+					titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
+				} else {
+					titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
+				}
+			}
+		}
+		
+		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user");
+		
+		ezOrganAdminService.addJob(userID, titleInfo);
+		
+		return "OK";
+	}
+	
+	/**
+	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do")	
+	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);		
+		//관리자 권한 체크
+		if(user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+			return "cmm/error/adminDenied";
+		}
+		
+		String topID = "";        
+        String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
+        String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
+        String lang = config.getProperty("config.primary");		
+		String primary = config.getProperty("config.lang_Primary" + lang);
+		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		
+		if (user.getRollInfo().indexOf("c=1") == -1){
+			topID = user.getCompanyID();
+		}else{
+			topID = "Top";
+		}
+
+		model.addAttribute("topID", topID);
+		model.addAttribute("use_ocs", "");
+		model.addAttribute("userID", userID);
+		model.addAttribute("selCompany", selCompany);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("userInfo", user);
+		
+		return "admin/ezOrgan/addJobConfig";
+	}	
 	
 }

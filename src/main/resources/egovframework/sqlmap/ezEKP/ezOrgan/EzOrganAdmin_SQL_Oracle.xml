@@ -6,6 +6,18 @@
 	<typeAlias alias="OrganUserVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	
+	<resultMap id="userAddJobList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="department" 							column="Deptid" 						columnIndex="2"/>
+		<result property="positionCD" 							column="POSITIONCD"						columnIndex="3"/>
+		<result property="title" 								column="TITLE" 							columnIndex="4"/>		
+		<result property="displayName" 							column="DisplayName" 					columnIndex="5"/>		
+		<result property="description" 							column="DESCRIPTION" 					columnIndex="6"/>		
+		<result property="company" 								column="COMPANYNAME" 					columnIndex="7"/>		
+		<result property="title1" 								column="T1" 							columnIndex="8"/>		
+		<result property="title2" 								column="T2" 							columnIndex="9"/>		
+	</resultMap>
+	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -54,6 +66,30 @@
 	<procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_DB_SETRETIREUSER(#v_CN#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_SETADDJOB(#v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_DELFLAG#)}
 		]]>
 	</procedure>
 

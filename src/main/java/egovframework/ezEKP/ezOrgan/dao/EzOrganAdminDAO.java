@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -10,8 +11,22 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzOrganAdminDAO")
 public class EzOrganAdminDAO extends EgovAbstractDAO {
+
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getCompanyList(Map<String, Object> map) throws Exception{
+		return (List<OrganDeptVO>) list("EzOrganAdminDAO.getCompanyList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getAddJobList(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getAddJobList", map);
+	}
+		
+	public OrganUserVO getUserAddJobList(Map<String, Object> map) throws Exception{
+		return (OrganUserVO) select("EzOrganAdminDAO.getUserAddJobList", map);
+	}
 	
-	public OrganUserVO getUserInfo(Map<String, Object> map) {
+	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
 		return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
 	}
 	
@@ -19,7 +34,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganAdminDAO.companyCheck", cn);
 	}
 	
-	public int companyChildCheck(String cn) {
+	public int companyChildCheck(String cn) throws Exception{
 		return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
 	}
 
@@ -63,6 +78,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		delete("EzOrganAdminDAO.retireDBData", map);
 	}
 
+	public void setAddJob(Map<String, Object> map) throws Exception{
+		delete("EzOrganAdminDAO.setAddJob", map);
+	}
 
 
 }
