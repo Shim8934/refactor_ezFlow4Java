@@ -13,6 +13,7 @@
 	<typeAlias	alias="QstReuseQuestionVO"			type="egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO"/>
 	<typeAlias  alias="QstResponseVO"				type="egovframework.ezEKP.ezQuestion.vo.QstResponseVO"/>
 	<typeAlias  alias="QstTempSaveVO"				type="egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO"/>
+	<typeAlias  alias="QstDeleteAttachUrlVO"				type="egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO"/>
 	
 	<resultMap class="QstListVO" id="qstListVO">
 		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
@@ -209,7 +210,11 @@
 		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="1"		javaType="String" jdbcType="CLOB"/>
 	</resultMap>
 	
-		
+	<resultMap class="QstDeleteAttachUrlVO" id="qstDeleteAttachUrlVO">
+		<result property="attachUrl"				column="ATTACHURL"		columnIndex="1"	/>
+		<result property="attachType"			column="ATTACHTYPE"		columnIndex="2"	/>
+	</resultMap>
+	
 	<procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		<![CDATA[
 			{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -556,7 +561,17 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.getDeleteAttachUrl"	parameterClass="Map"  resultClass="qstDeleteAttachUrlVO">
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_GETDELETEATTACHURL(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
+	<procedure id="EzQuestionDAO.deletePollAttach"	parameterClass="Map" >
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_DELETEPOLLATTACH(#v_pstrBrdID#, #v_pItemNo#)}
+		]]>
+	</procedure>
 	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
 		<![CDATA[
