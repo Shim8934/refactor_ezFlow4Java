@@ -104,7 +104,7 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER $strSQL$
+	    		ezHrmaster.TBLUSERMASTER A $strSQL$
 	    		 
 	      	UNION ALL
 	      		      	

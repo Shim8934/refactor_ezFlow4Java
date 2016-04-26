@@ -120,8 +120,7 @@
 		        		alert("<spring:message code='ezOrgan.t11' />" + error);
 		        		xmlDOM = null;
 		        	}
-		        });
-		        
+		        });		        
 		        
 		        if (adCount == 0) {
 		            alert("<spring:message code='ezOrgan.t61' />");
@@ -198,9 +197,8 @@
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
-		            }
-		            else {
-		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText)
+		            } else {
+		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText);
 		                g_xmlHTTP = null;
 		            }
 		        }

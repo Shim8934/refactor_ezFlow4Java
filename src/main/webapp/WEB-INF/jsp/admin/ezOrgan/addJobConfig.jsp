@@ -126,7 +126,7 @@
 		        SelectDeptNM.setAttribute("countinfo", "")
 
 		        // TODO : 2016-04-25 장진혁과장 해당 조건문에 대한 구현 필요함
-		        if (isfirst && cn != "") {			        	
+		        if (isfirst && cn != "") {
 		            document.getElementById('search_type').selectedIndex = 1;
 		            
 		            $.ajax({
@@ -134,7 +134,7 @@
 			        	dataType : "xml",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : 'company;description;displayname;title;telephonenumber'+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user'},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user'},
 			        	success : function(result){	
 			        		var headerData = createXmlDom();
 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
@@ -149,11 +149,9 @@
 		                    }
 		                    pListXML_Info = headerData;
 		                    pSeach = true;
-		                    // TODO : 2016-04-25 장진혁과장 해당 function에 대한 구현 필요함 DisplayUserImageList()		                    
 		                    DisplayUserImageList();
 
 		                    if ("<c:out value='${use_ocs}'/>" == "YES") {
-		                    	// TODO : 2016-04-25 장진혁과장 해당 function에 대한 구현 필요함 check_presence()	
 		                        check_presence();
 		                    }
 			        	},
@@ -190,7 +188,6 @@
 		                DisplayUserImageList();
 
 		                if ("<c:out value='${use_ocs}'/>" == "YES") {
-	                    	// TODO : 2016-04-25 장진혁과장 해당 function에 대한 구현 필요함 check_presence()	
 	                        check_presence();
 	                    }
 		        	},
@@ -428,9 +425,9 @@
 	                    var M_TR_DIV = document.createElement("DIV");
 	                    M_TR_DIV.setAttribute("class", "pic");
 	                    
-	                    if (M_TR.getAttribute("_DATA9") != "") {
+	                    if (M_TR.getAttribute("_DATA9") != "") {	                    	
 	                        var M_TR_IMG = document.createElement("IMG");
-	                        M_TR_IMG.setAttribute("SRC", "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + M_TR.getAttribute("_DATA9"));
+	                        M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
 	                        M_TR_IMG.setAttribute("width", "90px");
 	                        M_TR_IMG.setAttribute("height", "90px");
 	                        M_TR_DIV.appendChild(M_TR_IMG);
@@ -469,7 +466,7 @@
 	                    Sub_TD3.style.textAlign = "left";
 	                    var Sub_TD3_Img = document.createElement("IMG");
 	                    Sub_TD3_Img.setAttribute("class", "icon");
-	                    Sub_TD3_Img.setAttribute("src", "/images/organtree/icon_hp.gif");
+	                    Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
 	                    Sub_TD3.appendChild(Sub_TD3_Img);
 	                    Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
 	                    Sub_TR3.appendChild(Sub_TD3);
@@ -479,7 +476,7 @@
 	                    Sub_TD4.style.textAlign = "left";
 	                    var Sub_TD4_Img = document.createElement("IMG");
 	                    Sub_TD4_Img.setAttribute("class", "icon");
-	                    Sub_TD4_Img.setAttribute("src", "/images/organtree/icon_mail.gif");
+	                    Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
 	                    Sub_TD4.appendChild(Sub_TD4_Img);
 	                    Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
 	                    Sub_TR4.appendChild(Sub_TD4);
@@ -747,43 +744,41 @@
 		        		xmlDOM = null;
 		        	}
 		        });
+		        
 		        if (adCount == 0) {
-		            alert("<%=RM.GetString("t61")%>");
+		        	alert("<spring:message code='ezOrgan.t61' />");
 		            return;
-		        }
-		        else if (adCount == 1) {
+		        } else if (adCount == 1) {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
 
-		            if (CrossYN())
+		            if (CrossYN()) {
 		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-		            else
+		            } else {
 		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-
-		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            }
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
-		        }
-		        else {
+		        } else {
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
-		            var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 372);
-		            feature = feature + GetShowModalPosition(540, 460);
-
-		            if (CrossYN()) {
+		            
+		            if (CrossYN()){
 		                checkname2_cross_dialogArguments[0] = rgParams;
-		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", "checkName2_cross", GetOpenWindowfeature(540, 460));
+		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
+		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
 		                try { OpenWin.focus(); } catch (e) { }
-		            }
-		            else {
-		                window.showModalDialog("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", rgParams, feature);
+		            }else{
+		                var feature = "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(600, 340);
+		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
 		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-		                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
 		                }
@@ -795,26 +790,26 @@
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
 		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
 		        }
 		    }
-
+		    var bSearch = true;
 		    function event_getDeptFullTree() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 		            if (g_xmlHTTP.statusText == "OK") {
 		                if (!bSearch) {
 		                    try {
-		                        if (CrossYN())
+		                        if (CrossYN()) {
 		                            opener.opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
-		                        else
+		                        } else {
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
-		                    }
-		                    catch (e) { }
+		                        }
+		                    } catch (e) { }
 		                }
 
-		                var treeXML = loadXMLFile("/myoffice/common/organtree_config2.xml");
+		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 		                document.getElementById('TreeView').innerHTML = "";
 
 		                var treeView = new TreeView();
@@ -825,12 +820,83 @@
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
-		            }
-		            else {
-		                alert("<%=RM.GetString("t9")%>" + g_xmlHTTP.statusText)
+		            } else {
+		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText);
 		                g_xmlHTTP = null;
 		            }
 		        }
+		    }
+		    
+		    function search_click(){
+				if (keyword.value == ""){
+					alert("<spring:message code='ezOrgan.t56' />");
+					keyword.focus();
+					return;
+				}			   
+			    				
+				$.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",		        	
+		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	success : function(result){
+		        		var usedefault;		                
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                
+		                if (CrossYN()) {
+		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
+		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+		                    var Node = headerData.importNode(xmlRtn, true);
+		                    headerData.documentElement.appendChild(Node);
+		                } else {
+		                	usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
+		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+		                    headerData.documentElement.appendChild(xmlRtn);
+		                }
+		                pListXML_Info = headerData;
+		                pSeach = true;
+		                DisplayUserImageList();
+
+		                if ("<c:out value='${use_ocs}'/>" == "YES") {
+		                    check_presence();
+		                }
+		                
+					},
+					error : function(error){
+						alert("<spring:message code='ezOrgan.t9' />" + error);
+					}
+		        });				
+				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
+				//keyword.value = "";
+			}
+		    
+		    function deptsearch_press() {
+	            if (window.event.keyCode == "13") {
+	                deptsearch_click();
+	                event.cancelBubble = true;
+	                event.returnValue = false;
+	            }
+	        }
+		    
+		    function search_press(){
+				if (window.event.keyCode == "13"){
+					search_click();
+				}
+			}
+		    
+		    String.prototype.trim = function () {
+		        return this.replace(/(^\s*)|(\s*$)/g, "");
+		    }
+		    function keyword_Clear() {
+		        document.getElementById("keyword").value = "";
+		    }
+		    
+		    function ChangeListView_onClick(Div) {
+		        pListType = Div;
+		        ListTypeChangeIcon();
+		        DisplayUserImageList();
 		    }
 	    </script>
 	</head>

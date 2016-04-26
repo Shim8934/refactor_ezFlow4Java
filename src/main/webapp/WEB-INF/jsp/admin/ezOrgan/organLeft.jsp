@@ -24,7 +24,7 @@
 				
 				switch(idx){
 				    case 1:
-				        url = "/myoffice/ezOrgan/Admin/admin_main_Cross.aspx";
+				        url = "/admin/ezOrgan/organRight.do";
 						break;
 				    case 2:
 				        url = "/myoffice/ezEmail/Admin/mail_distributionlist_Cross.aspx";

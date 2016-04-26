@@ -381,6 +381,29 @@
 		    function AddJob_Add_Complete() {
 		        window.location.reload(false);
 		    }
+		    
+		    function User_View() {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvAddJobList");
+
+		        if (listview.GetSelectedRows().length == 0) {
+		            alert(strLang13);
+		            return;
+		        }
+
+		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
+		        
+		      	//2016-04-25 장진혁과장 -- Cross 버전 선택 주석처리
+		        //if (CrossYN()) {		       
+	            addjob_config_dialogArguments = new Array();
+	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;		            
+	            var OpenWin = window.open("/admin/ezOrgan/addJobConfig.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(970, 580));
+	            try { OpenWin.focus(); } catch (e) { }
+		        /* } else {
+		            window.showModalDialog("Addjob_Config.aspx?userid=" + escape(id) + "&companyid=" + document.getElementById("ListCompany").value, "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
+		            window.location.reload(false);
+		        } */
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
