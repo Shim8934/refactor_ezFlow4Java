@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
+import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
@@ -111,6 +112,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<QstTempSaveVO> tempSave(Map<String, Object> map) {
 		return (List<QstTempSaveVO>) list("EzQuestionDAO.tempSave",map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(Map<String, Object> map) {
+		return (List<QstDeleteAttachUrlVO>) list("EzQuestionDAO.getDeleteAttachUrl", map);
 	}
 	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
@@ -321,6 +327,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	public void deletePermission(Map<String,Object> map) {
 		delete("EzQuestionDAO.deletePermission", map);
+	}
+	
+	public void deletePollAttach(Map<String,Object> map) {
+		delete("EzQuestionDAO.deletePollAttach", map);
 	}
 	public void callDeleteItemSeq(Map<String,Object> map) {
 		delete("EzQuestionDAO.callDeleteItemSeq", map);
