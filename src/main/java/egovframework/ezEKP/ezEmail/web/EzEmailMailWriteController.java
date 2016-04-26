@@ -1295,64 +1295,65 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //
 //        }
         
-        MimeMultipart relatedPart = null;
+        
         
         //inline image 처리
-        if (root.getElementsByTagName("IMAGENAME") != null && root.getElementsByTagName("IMAGEPATH") != null) {
-        	String imageName = "";
-            String imagePath = "";
-        	
-            relatedPart = new MimeMultipart("related");
-            
-        	for (int i=0; true; i++) {
-            	if (root.getElementsByTagName("IMAGENAME").item(i) == null || root.getElementsByTagName("IMAGEPATH").item(i) == null) {
-            		break;
-            	}
-            	
-            	imageName = root.getElementsByTagName("IMAGENAME").item(i).getTextContent();
-            	imagePath = root.getElementsByTagName("IMAGEPATH").item(i).getTextContent();
-            	
-            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
-                	//TODO: embedding제거
-            		
-                	String cid = imageName + "@12345678.87654321";
-                	String strContent = content.getContent().toString();
-                	int index = strContent.indexOf("src=\"" + imageName);
-                	if (index != -1) {
-                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
-                	}
-                	content.setContent(strContent, "text/html; charset=utf-8");
-                	
-                	
-                	
-                	String realPath = request.getServletContext().getRealPath("");
-                	imagePath = new URL(imagePath).getPath();
-                	String pDirPath = realPath + imagePath;
-                	
-                	MimeBodyPart messageBodyPart = new MimeBodyPart();
-        	        File f = new File(pDirPath);
-        	        
-        	        if (f.exists()) {
-	        	        FileDataSource source = new FileDataSource(f);
-	        	        messageBodyPart.setDataHandler(new DataHandler(source));
-	        	        messageBodyPart.setFileName(imageName);
-	        	        String contentType = "application/octet-stream";
-	        	        if (Files.probeContentType(f.toPath()) != null) {
-	        	        	contentType = Files.probeContentType(f.toPath());
-	        	        }
-	        	        messageBodyPart.setHeader("Content-Type", contentType);
-	        	        messageBodyPart.setContentID("<" + cid + ">");
-	        	        messageBodyPart.setDisposition(Part.INLINE);
-	        	        
-	        	        relatedPart.addBodyPart(messageBodyPart);
-        	        }
-                }
-            }
-        	
-        	relatedPart.addBodyPart(content, 0);
-        	message.setContent(relatedPart);
-		}
+        MimeMultipart relatedPart = null;
         
+        if (!simpleMime.equals("1")) {
+	        if (root.getElementsByTagName("IMAGENAME") != null && root.getElementsByTagName("IMAGEPATH") != null) {
+	        	String imageName = "";
+	            String imagePath = "";
+	        	
+	            relatedPart = new MimeMultipart("related");
+	            
+	        	for (int i=0; true; i++) {
+	            	if (root.getElementsByTagName("IMAGENAME").item(i) == null || root.getElementsByTagName("IMAGEPATH").item(i) == null) {
+	            		break;
+	            	}
+	            	
+	            	imageName = root.getElementsByTagName("IMAGENAME").item(i).getTextContent();
+	            	imagePath = root.getElementsByTagName("IMAGEPATH").item(i).getTextContent();
+	            	
+	            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
+	                	//TODO: embedding제거
+	            		
+	                	String cid = imageName + "@12345678.87654321";
+	                	String strContent = content.getContent().toString();
+	                	int index = strContent.indexOf("src=\"" + imageName);
+	                	if (index != -1) {
+	                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
+	                	}
+	                	content.setContent(strContent, "text/html; charset=utf-8");
+	                	
+	                	String realPath = request.getServletContext().getRealPath("");
+	                	imagePath = new URL(imagePath).getPath();
+	                	String pDirPath = realPath + imagePath;
+	                	
+	                	MimeBodyPart messageBodyPart = new MimeBodyPart();
+	        	        File f = new File(pDirPath);
+	        	        
+	        	        if (f.exists()) {
+		        	        FileDataSource source = new FileDataSource(f);
+		        	        messageBodyPart.setDataHandler(new DataHandler(source));
+		        	        messageBodyPart.setFileName(imageName);
+		        	        String contentType = "application/octet-stream";
+		        	        if (Files.probeContentType(f.toPath()) != null) {
+		        	        	contentType = Files.probeContentType(f.toPath());
+		        	        }
+		        	        messageBodyPart.setHeader("Content-Type", contentType);
+		        	        messageBodyPart.setContentID("<" + cid + ">");
+		        	        messageBodyPart.setDisposition(Part.INLINE);
+		        	        
+		        	        relatedPart.addBodyPart(messageBodyPart);
+	        	        }
+	                }
+	            }
+	        	
+	        	relatedPart.addBodyPart(content, 0);
+	        	message.setContent(relatedPart);
+			}
+        }
         
         //첨부파일 처리
         Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
@@ -1532,6 +1533,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
         // sendmail_2010변환 끝
 		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
+        
+        //서버에 업로드된 inline image 파일 삭제
+        if (root.getElementsByTagName("IMAGEPATH") != null) {
+            String imagePath = "";
+            
+        	for (int i=0; true; i++) {
+            	if (root.getElementsByTagName("IMAGEPATH").item(i) == null) {
+            		break;
+            	}
+            	
+            	imagePath = root.getElementsByTagName("IMAGEPATH").item(i).getTextContent();
+            	
+            	if (!imagePath.trim().equals("")) {
+            		String realPath = request.getServletContext().getRealPath("");
+                	imagePath = new URL(imagePath).getPath();
+                	String pDirPath = realPath + imagePath;
+            		File f = new File(pDirPath);
+            		if (f.exists()) {
+            			f.delete();
+            		}
+            	}
+        	}
+        }
+        
         String pResult = null;
         pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
         pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
