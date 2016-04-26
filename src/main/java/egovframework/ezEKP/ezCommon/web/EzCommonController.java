@@ -2,10 +2,11 @@ package egovframework.ezEKP.ezCommon.web;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -19,10 +20,9 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -277,18 +277,20 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	public String startHtml2Mht(String m_strHTML, String realPath) throws Exception{
 		StringBuilder m_strMHT = new StringBuilder();
+		String[] strHtml = {m_strHTML};
 		String m_strBoundary = "";
 		String[] m_ImageList = null;
 		String[] m_BackImageList = null;
-        if (m_strHTML != "") {
+		
+        if (strHtml[0] != "") {
             //MHT 헤더 생성.
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
-        	m_ImageList = extractImageSource(m_strHTML);
+        	m_ImageList = extractImageSource(strHtml);
             //백그라운드 경로 추출 및 가상경로 매칭
-        	m_BackImageList = extractBackgroundSource(m_strHTML, m_ImageList);
+        	m_BackImageList = extractBackgroundSource(strHtml, m_ImageList);
             //본문 인코딩
-        	doHtmlEncoding(m_strHTML, m_strMHT, m_strBoundary);
+        	doHtmlEncoding(strHtml[0], m_strMHT, m_strBoundary);
             //이미지 인코딩
             if (m_ImageList != null) {
             	doImageEncoding(m_ImageList, m_strMHT, m_strBoundary, realPath);
@@ -301,11 +303,9 @@ public class EzCommonController extends EgovFileMngUtil{
             m_strMHT.append("--" + System.lineSeparator());
             
             return m_strMHT.toString();
-        }
-        else{
+        } else {
         	return "error : Html 데이터가 존재하지 않습니다.";
         }
-
     }
 
 	/**
@@ -336,8 +336,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
             if (nch < 26) {
                 strBoundary += (char)(65 + nch);
-            }
-            else{
+            } else {
                 strBoundary += (char)(97 + nch - 26);
             }
         }
@@ -436,9 +435,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 html -> mht 변환 이미지추출 표출 Method
 	 */
-	private String[] extractImageSource(String strHtml) throws Exception{
+	private String[] extractImageSource(String[] strHtml) throws Exception{
 		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
-        String strTempHtml = strHtml.toLowerCase();
+        String strTempHtml = strHtml[0].toLowerCase();
         String strImgsrc = "";
         String strTempList[] = null;
         String m_ImageList[] = null;
@@ -477,7 +476,7 @@ public class EzCommonController extends EgovFileMngUtil{
                     if (nposStart > 0) {
                         nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
                         if ((nposEnd - nposStart - 6) > 0) {
-                            strImgsrc = strHtml.substring(nposStart + 6, nposEnd);
+                            strImgsrc = strHtml[0].substring(nposStart + 6, nposEnd);
                             npos = nposEnd;
                             strTempList[i] = strImgsrc;
                             i++;
@@ -530,15 +529,14 @@ public class EzCommonController extends EgovFileMngUtil{
                     if (isSameUrl == false) {
                         m_ImageList[nImgCount] = strtempResource;
                         nImgCount++;
-                    }
-                    else{
+                    } else {
                     	isSameUrl = false;
                     }
                 }
 
                 int index = 1;
                 for (String strResource : m_ImageList) {
-                    strHtml = strHtml.replace(strResource, "file:///C:/IMAGE" + index + ".gif");
+                	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/IMAGE" + index + ".gif");
                     index++;
                 }
             }
@@ -549,8 +547,8 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 html -> mht 변환 배경화면추출 표출 Method
 	 */
-	private String[] extractBackgroundSource(String strHtml, String[] m_ImageList) throws Exception{
-        String strTempHtml = strHtml.toLowerCase();
+	private String[] extractBackgroundSource(String[] strHtml, String[] m_ImageList) throws Exception{
+        String strTempHtml = strHtml[0].toLowerCase();
         int npos = 0, nposStart = 0, nposEnd = 0;
         int nImgCount = 0;
         String strImgsrc = "";
@@ -565,7 +563,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
                     if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
+                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
                     } else {
@@ -588,7 +586,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
                     if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
+                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
                     } else {
@@ -597,8 +595,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 } else {
                     npos = npos + 6;
                 }
-            }
-            else{
+            } else {
             	break;
             }
         }
@@ -612,7 +609,7 @@ public class EzCommonController extends EgovFileMngUtil{
                 if (nposStart > 0) {
                     nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
                     if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml.substring(nposStart + 13, nposEnd - nposStart - 13);
+                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
                     } else {
@@ -660,8 +657,7 @@ public class EzCommonController extends EgovFileMngUtil{
                     if (isSameUrl == false) {
                         m_BackImageList[nImgCount] = strtempResource;
                         nImgCount++;
-                    }
-                    else{
+                    } else {
                     	isSameUrl = false;
                     }
                 }
@@ -670,7 +666,7 @@ public class EzCommonController extends EgovFileMngUtil{
             L_BackImage = null;
             int index = 1;
             for (String strResource : m_ImageList) {
-                strHtml = strHtml.replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + ".gif");
+            	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + ".gif");
                 index++;
             }
         }
@@ -687,8 +683,10 @@ public class EzCommonController extends EgovFileMngUtil{
         m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
         m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.html" + System.lineSeparator());
         m_strMHT.append(System.lineSeparator());
+        
         byte[] arr = strHtml.getBytes("UTF-8");
         String strMhtBase64 = Base64.encodeBase64String(arr);
+        
         m_strMHT.append(strMhtBase64 + System.lineSeparator());
         m_strMHT.append("--" + m_strBoundary);
         
@@ -707,24 +705,38 @@ public class EzCommonController extends EgovFileMngUtil{
             //이미지 본문 영역
 
             String strTemp = m_ImageList[i].substring(0, 4);
-            BufferedImage imageSample = null;
-            BufferedImage newImage = null;
+            ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+            InputStream in = null;
             
             if (strTemp.equals("http")) {
             	URL url = new URL(m_ImageList[i].replace("&amp;", "&"));
-            	imageSample = ImageIO.read(url);
-            	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            	in = url.openStream();
+                int len = 0;
+                byte[] buf = new byte[1024];
+                
+                while ((len = in.read(buf)) != -1) {
+                	byteOutStream.write(buf, 0, len);
+                }
             } else {
             	File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
-            	imageSample = ImageIO.read(file);
-            	newImage = new BufferedImage(imageSample.getWidth(), imageSample.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            	in = new FileInputStream(file);
+                int len = 0;
+                byte[] buf = new byte[1024];
+                
+                while ((len = in.read(buf)) != -1) {
+                	byteOutStream.write(buf, 0, len);
+                }
+                if (m_ImageList[i].length() > 1) {
+                	FileUtils.deleteQuietly(file);
+                }
             }
             
-            byte[] imageByte = newImage.toString().getBytes();
-            String strImageData = Base64.encodeBase64String(imageByte);
+            in.close();
+            byteOutStream.close();
             
-            imageSample.flush();
-
+            byte[] imageByte = byteOutStream.toByteArray();
+            String strImageData = new String(Base64.encodeBase64String(imageByte));
+            
             m_strMHT.append(strImageData + System.lineSeparator());
             m_strMHT.append("--" + m_strBoundary);
         }
@@ -741,27 +753,36 @@ public class EzCommonController extends EgovFileMngUtil{
             m_strMHT.append(System.lineSeparator());
             //이미지 본문 영역
             
-            BufferedImage imageSample = null;
-
-            String strExt = m_ImageList[i].substring(m_ImageList[i].lastIndexOf(".") + 1);
+            ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+            InputStream in = null;
             String strTemp = m_BackImageList[i].substring(0, 4);
+            
             if (strTemp.equals("http")) {
             	URL url = new URL(m_BackImageList[i].replace("&amp;", "&"));
-                InputStream inputStream = url.openStream();
-                ImageInputStream Imgstream = ImageIO.createImageInputStream(inputStream);
-                imageSample = ImageIO.read(Imgstream);
+            	in = url.openStream();
+                int len = 0;
+                byte[] buf = new byte[1024];
+                
+                while ((len = in.read(buf)) != -1) {
+                	byteOutStream.write(buf, 0, len);
+                }
             } else {
             	File file = new File(m_BackImageList[i].replace("&amp;", "&"));
-            	imageSample = ImageIO.read(file);
+            	in = new FileInputStream(file);
+                int len = 0;
+                byte[] buf = new byte[1024];
+                
+                while ((len = in.read(buf)) != -1) {
+                	byteOutStream.write(buf, 0, len);
+                }
             }
             
-            ImageOutputStream outputStream = ImageIO.createImageOutputStream(imageSample);
-            ImageIO.write(imageSample, strExt, outputStream);
-            byte[] imageByte = outputStream.toString().getBytes();
+            byte[] imageByte = byteOutStream.toByteArray();
             String strImageData = Base64.encodeBase64String(imageByte);
-            outputStream.close();
-            imageSample.flush();
-
+            
+            in.close();
+            byteOutStream.close();
+            
             m_strMHT.append(strImageData + System.lineSeparator());
             m_strMHT.append("--" + m_strBoundary);
         }
@@ -776,17 +797,18 @@ public class EzCommonController extends EgovFileMngUtil{
 
         filePath = realPath + uploadModule;
         File file = new File(filePath);
+        
         if (!file.exists()) {
         	file.mkdir();
         }
         String url = ezCommonService.getContentInfo(type, itemID);
         String m_strMHT = "";
+        
         try {
         	m_strMHT = loadMHTFile(realPath + url);
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
-        
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         if (strHTML.trim().length() > 0) {
@@ -808,6 +830,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		
 		strBoundary = getBoundaryText(m_strMHT);
+		
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
 				return "error : boundary 를 찾을 수 없습니다.";
@@ -815,15 +838,15 @@ public class EzCommonController extends EgovFileMngUtil{
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				
 				for (int i = 1; i < m_Mimechunk.length; i++) {
-					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator()+System.lineSeparator());
+					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator() + System.lineSeparator());
 					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
-					
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
 							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
-						}else if (strMime_info_tupe[0].equals("Image/gif")) {
+						} else if (strMime_info_tupe[1].equals("Image/gif")) {
 							String[] strMime_info_location = strMime_info_p[2].split(": ");
+							
 							if (strMime_info_location[0].equals("Content-Location")) {
 								m_ListImageLocation.add(strMime_info_location[1]);
 							}
@@ -852,18 +875,17 @@ public class EzCommonController extends EgovFileMngUtil{
 		byte[] imageBytes = Base64.decodeBase64(strImageMht);
 		
 		String strImageName = UUID.randomUUID() + ".tmp";
-        String SfilePath = m_strSPath + commonUtil.separator + strImageName;
-        String LfilePath = m_strLPath + commonUtil.separator + strImageName;
-        
+        String SfilePath = m_strSPath + strImageName;
+        String LfilePath = m_strLPath + strImageName;
         File file = new File(m_strLPath);
+        
         if (!file.exists()) {
         	file.mkdir();
         }
-        BufferedWriter fw = new BufferedWriter(new FileWriter(LfilePath, true));
-
-        fw.write(imageBytes.toString());
-    	fw.flush();
-    	fw.close();
+        
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(LfilePath));
+        fileOutputStream.write(imageBytes);
+        fileOutputStream.close();
         
 		return SfilePath;
 	}
@@ -884,6 +906,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	private String getBoundaryText(String m_strMHT) {
 		String strTemp = m_strMHT;
         int nPos = strTemp.indexOf("boundary=");
+        
         if (nPos > 0) {
             int nEndPos = strTemp.indexOf("\"", nPos + 10);
             return "--" + strTemp.substring(nPos + 10, nEndPos);
@@ -911,6 +934,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	    } finally {
 	        br.close();
 	    }
+	    
         return strMhtData;
     }
 	

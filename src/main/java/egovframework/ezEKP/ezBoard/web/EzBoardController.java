@@ -645,10 +645,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String deptPath = userInfo.getDeptPathCode();
 	    String deptPathOrgan="";
 	    for (int ch = 0; ch < deptPath.split(",").length; ch++) {
-	        if (ch==0)
-	            deptPathOrgan+=deptPath.split(",")[ch].trim();
-	        else
-	            deptPathOrgan+=","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim();
+	        if (ch==0) {
+	        	deptPathOrgan+=deptPath.split(",")[ch].trim();
+	        } else {
+	        	deptPathOrgan+=","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim();
+	        }
 	    }
 	    
 	    String userDeptPath = deptPathOrgan+",everyone";
@@ -3321,6 +3322,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 		docPath = strFilePath + commonUtil.separator + strBoardID;
 		mhtFilePath = strMHTFilename + ".mht";
+		
 		InputStream stream = null;
 		OutputStream bos = null;
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
@@ -3736,6 +3738,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
 			boardID = boardListVO.getBoardID();
+			
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 			
 			if (!boardInfo.getDelete_FG().equals("true")) {

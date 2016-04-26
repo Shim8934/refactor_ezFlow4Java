@@ -2,4 +2,91 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApprovalG">
+	<typeAlias  alias="ApprGLeftVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO"/>
+	
+	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGLeftVO">
+		{CALL EZAPPROVALG_${companyNum}.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="ApprGLeftVO">
+		{CALL EZAPPROVALG_${companyNum}.EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getName2Code" parameterClass="Map" resultClass="ApprGLeftVO">
+		{CALL EZAPPROVALG_${companyNum}.EZSP_GETNAME2CODE(#v_CODE1#, #v_NAME#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<select id="EzApprovalG.getUseContInfo1" parameterClass="String" resultClass="ApprGLeftVO">
+		<![CDATA[
+			SELECT 
+				A.containerid ,
+	            B.containertypename ,
+	            B.containertypename2 ,
+	            B.containertypeid 
+	        FROM 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        JOIN 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        ON 
+	        	A.containertypeid = B.containertypeid
+	        WHERE  
+	        	A.containerowndepid = #deptID#
+	        ORDER BY 
+	        	B.containertypeid
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getUseContInfo2" parameterClass="String" resultClass="ApprGLeftVO">
+		<![CDATA[
+			SELECT 
+				A.containerid ,
+	            B.containertypename ,
+	            B.containertypename2 ,
+	            B.containertypeid 
+	        FROM 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        JOIN 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        ON 
+	        	A.containertypeid = B.containertypeid
+            JOIN 
+            	EZAPPROVALG_${companyNum}.TBCONTAINERUSEDEP C
+            ON 
+            	A.containerid = C.containerid
+	        WHERE  
+	        	C.usedepid = #deptID#
+            AND 
+            	A.containerowndepid = #deptID#
+        	ORDER BY 
+        		B.containertypeid
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getUseContInfo3" parameterClass="String" resultClass="ApprGLeftVO">
+		<![CDATA[
+			SELECT 
+				A.containerid ,
+	            B.containertypename ,
+	            B.containertypename2 ,
+	            B.containertypeid,
+	            A.containerowndepid
+	        FROM 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        JOIN 
+	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        ON 
+	        	A.containertypeid = B.containertypeid
+            JOIN 
+            	EZAPPROVALG_${companyNum}.TBCONTAINERUSEDEP C
+            ON 
+            	A.containerid = C.containerid
+	        WHERE  
+	        	C.usedepid = #deptID#
+            AND 
+            	A.containerowndepid <> #deptID#
+        	ORDER BY 
+        		A.containerowndepid,
+        		B.containertypeid
+        ]]>
+	</select>
 </sqlMap>
