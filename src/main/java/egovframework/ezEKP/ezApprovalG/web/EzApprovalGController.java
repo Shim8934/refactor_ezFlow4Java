@@ -112,13 +112,14 @@ public class EzApprovalGController {
 		model.addAttribute("infoXML", infoXML);
 		model.addAttribute("userSendOut", userSendOut);
 		model.addAttribute("optGamsabu", optGamsabu);
+		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang()));
 		
 		return "ezApprovalG/apprGLeft";
 	}
 
 	private void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
-		String propList = "extensionAttribute4;department;Description;Title;Title2;Description2";
+		String propList = "extensionAttribute4;department;description;title;title2;description2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
 		String myDept = "";
 		String subTitleString = "";

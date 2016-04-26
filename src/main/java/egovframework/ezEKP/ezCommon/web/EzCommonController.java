@@ -62,6 +62,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private Properties globals;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -189,12 +192,12 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         String m_strMHT = "";
         
-//        try {
+        try {
         	m_strMHT = loadMHTFile(realPath + strURL);
         	m_strMHT = m_strMHT.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
-//		} catch (Exception e) {
-//			m_strMHT= "";
-//		}
+		} catch (Exception e) {
+			m_strMHT= "";
+		}
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
         
         strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
@@ -303,7 +306,7 @@ public class EzCommonController extends EgovFileMngUtil{
             
             return m_strMHT.toString();
         } else {
-        	return "error : Html 데이터가 존재하지 않습니다.";
+        	return egovMessageSource.getMessage("main.t0603", new Locale(globals.getProperty("Globals.language")));
         }
     }
 
@@ -680,7 +683,7 @@ public class EzCommonController extends EgovFileMngUtil{
         m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
         m_strMHT.append("Content-Type: Text/HTML" + System.lineSeparator());
         m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.html" + System.lineSeparator());
+        m_strMHT.append("Content-Location: file://C:" + commonUtil.separator + "test.html" + System.lineSeparator());
         m_strMHT.append(System.lineSeparator());
         
         byte[] arr = strHtml.getBytes("UTF-8");
@@ -832,7 +835,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
-				return "error : boundary 를 찾을 수 없습니다.";
+				return egovMessageSource.getMessage("main.t0600", new Locale(globals.getProperty("Globals.language")));
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				
@@ -858,12 +861,12 @@ public class EzCommonController extends EgovFileMngUtil{
 						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i)); 
 					}
 				} else {
-					return "error : 파싱오류.";
+					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));
 				}
 				return m_strHTML;
 			}
 		} else {
-			return "error : MHT 데이터가 존재하지 않습니다.";
+			return egovMessageSource.getMessage("main.t0602", new Locale(globals.getProperty("Globals.language")));
 		}
 	}
 

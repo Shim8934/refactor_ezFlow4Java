@@ -18,6 +18,10 @@ import java.util.Date;
  *  @see
  *  
  */
+/**
+ * @author YOON
+ *
+ */
 public class LoginVO implements Serializable{	
 
 	private static final long serialVersionUID = -8274004534207618049L;
@@ -94,7 +98,8 @@ public class LoginVO implements Serializable{
 	private String lang;
 	/** 핸드폰번호*/
 	private String phone;
-
+	/** 직책(extensionattribute10)*/
+	private String jikChek;
 	public String getId() {
 		return id;
 	}
@@ -304,6 +309,12 @@ public class LoginVO implements Serializable{
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getJikChek() {
+		return jikChek;
+	}
+	public void setJikChek(String jikChek) {
+		this.jikChek = jikChek;
 	}	
 	
 }

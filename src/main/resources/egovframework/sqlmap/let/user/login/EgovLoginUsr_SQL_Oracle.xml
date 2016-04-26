@@ -24,6 +24,7 @@
 		<result property="rollInfo" 			column="rollinfo"					columnIndex="14"/>
 		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
 		<result property="email"				column="mail"						columnIndex="16"/>
+		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
 	</resultMap>	
 	
 	<!-- 일반 로그인 -->
@@ -46,7 +47,8 @@
 		     	updatedt,
 		     	extensionattribute1 as rollinfo,
 		     	telephonenumber,
-		     	mail
+		     	mail,
+		     	extensionattribute10 as jikchek
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 

@@ -18,8 +18,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pListTypeValue = "${listType}";
 		    var PresentOpen = "APPROVAL";
@@ -31,6 +31,7 @@
 		    var pChackYN = "FALSE";
 		    var ContainerID;
 		    var PageSize   = 10;
+		    var szRoleInfo = "${szRoleInfo}";
 		    var Containers = "${containers}";
 		    var DocList_Flag="";
 		    var DocDeptYN;
@@ -75,7 +76,6 @@
 		            document.getElementById("tag10").style.display = "none";
 		        }
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
-		
 		        if (parseInt(pListTypeValue) < 10) {
 		            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue, "right");
 		
