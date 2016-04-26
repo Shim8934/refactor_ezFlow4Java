@@ -1047,7 +1047,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
-				FileUtils.deleteQuietly(file);
+				file.delete();
 			}
 			
 			map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());

@@ -3715,6 +3715,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemList = "";
 		String boardID = "";
 		String itemIDs = "";
+		String docPath = "";
+		String realPath = request.getServletContext().getRealPath("");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		itemList = request.getParameter("itemList");
@@ -3722,6 +3724,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardID = request.getParameter("boardID");
 		
 		if (boardID != null && !boardID.equals("")) {
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
+			docPath = boardListVO.getContentLocation();
+			
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 			
 			if (!boardInfo.getDelete_FG().equals("true")) {
@@ -3738,6 +3743,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
 			boardID = boardListVO.getBoardID();
+			docPath = boardListVO.getContentLocation();
 			
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 			
@@ -3757,10 +3763,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			String tempItem = itemList.split(";")[i].split(",")[0];
 			itemIDs += tempItem + ";";
 		}
+		
 		if (mode != null && mode.equals("temp")) {
 			ezBoardService.deleteTempItem(itemIDs, boardID);
+			if (docPath != null && !docPath.equals("")){
+				deleteFile(realPath + docPath);
+			}
 		} else {
 			ezBoardService.deleteItem(itemIDs, boardID);
+			if (docPath != null && !docPath.equals("")){
+				deleteFile(realPath + docPath);
+			}
 		}
 		
 		return "OK";
