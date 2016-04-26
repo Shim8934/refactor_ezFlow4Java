@@ -13,6 +13,8 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl implements EzResourceService{
@@ -58,6 +60,47 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_LANG", lang);
 		return ezResourceDAO.getBrdMainList(map);
 	}
-	
-	
+
+	@Override
+	public List<ResGetScheduleListVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_WRITERDEPT", writerDept);
+		return ezResourceDAO.getScheduleList(map);
+	}
+
+	@Override
+	public List<ResGetScheduleListMainVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		return ezResourceDAO.getScheduleListMain(map);
+	}
+
+	@Override
+	public List<ResGetScheduleListVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		map.put("v_WRITERNAME", writerName);
+		map.put("v_WRITERDEPT", writerDept);
+		return ezResourceDAO.getScheduleListRepetiti(map);
+	}
+
+	@Override
+	public List<ResGetScheduleListMainVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		return ezResourceDAO.getScheduleListRepetitim(map);
+	}
 }
