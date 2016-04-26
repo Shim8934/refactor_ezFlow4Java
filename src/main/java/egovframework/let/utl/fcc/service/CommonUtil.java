@@ -192,12 +192,13 @@ public class CommonUtil {
 	public String getQueryResult(Object vo) throws Exception{
 		StringBuilder stb = new StringBuilder();		
 		
+		if(vo != null){		
 			stb.append("<ROW>");
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
 		        field.setAccessible(true);
 				String data = String.valueOf(field.get(vo));
-
+	
 				if(data == null || data.equals(null) || data.equals("null")){
 					data = "";
 				}				
@@ -206,8 +207,10 @@ public class CommonUtil {
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
 			stb.append("</ROW>");
-			
-			return stb.toString();
+		}else{
+			stb.append("");
+		}		
+		return stb.toString();
 	}
 	
 	public String convertLangCode(String pLangCode){   

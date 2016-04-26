@@ -92,8 +92,9 @@
 		        obj.className = "tabover";
 		    }
 		    function Tab1_MouserOut(obj) {
-		        if (Tab1_SelectID != obj.id)
+		        if (Tab1_SelectID != obj.id){
 		            obj.className = "";
+		        }
 		    }
 		    function Tab1_MouseClick(obj) {
 		        obj.className = "tabon";
@@ -417,7 +418,7 @@
 	            <div style="margin-top:5px;margin-bottom:10px">		           
 		            <select id="ListCompany" onchange="company_change()">
 		            	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
 		            </select>
 	            </div>

@@ -21,9 +21,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getAddJobList(Map<String, Object> map) throws Exception{
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getAddJobList", map);
 	}
-		
-	public OrganUserVO getUserAddJobList(Map<String, Object> map) throws Exception{
-		return (OrganUserVO) select("EzOrganAdminDAO.getUserAddJobList", map);
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getUserAddJobList(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getUserAddJobList", map);
 	}
 	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{

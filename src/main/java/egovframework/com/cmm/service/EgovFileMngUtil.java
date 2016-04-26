@@ -27,6 +27,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
+
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -137,6 +138,25 @@ public class EgovFileMngUtil {
 		    fileKey++;
 		}
 		return result;
+    }
+    
+    /**
+     * 첨부파일 삭제를 진행한다.
+     *
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    protected void deleteFile(String filePath) throws Exception {
+	    try {
+			File targetFile = new File(filePath);
+	
+			if (targetFile != null) {
+				targetFile.delete();
+			}
+		} catch (Exception e) {
+			LOGGER.debug("FILE DELETE ERROR: {}", e.getMessage());
+		}
     }
 
     /**

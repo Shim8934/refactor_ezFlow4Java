@@ -510,10 +510,10 @@
 					    ModalCheck = true;
 					    checkname2_cross_dialogArguments[0] = rgParams;
 					    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-					    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(609, 340));					    
+					    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));					    
 					    try { OpenWin.focus(); } catch (e) { }
 					}else{
-					    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 340));
+					    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 340));
 
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();

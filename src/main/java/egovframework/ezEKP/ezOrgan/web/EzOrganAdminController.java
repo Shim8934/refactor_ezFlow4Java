@@ -571,6 +571,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
+		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		
 		return "/admin/ezOrgan/addJobList";
@@ -630,12 +631,17 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String cn = request.getParameter("cn");
 		String strLang = config.getProperty("config.primary");
 		
-		OrganUserVO vo = ezOrganAdminService.getUserAddJobList(cn, strLang);
-		String rows = commonUtil.getQueryResult(vo);
+		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(cn, strLang);
 		
 		StringBuilder result = new StringBuilder();
-        result.append("<DATA>");
-        result.append(rows.toString());
+		result.append("<DATA>");
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganUserVO vo = list.get(i);
+			
+			String rows = commonUtil.getQueryResult(vo);
+			result.append(rows.toString());
+		}
         result.append("</DATA>");
         
 		return result.toString();
@@ -674,7 +680,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do")	
 	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LoginVO user = commonUtil.userInfo(loginCookie);		
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if(user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
 			return "cmm/error/adminDenied";
@@ -702,6 +708,24 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", user);
 		
 		return "admin/ezOrgan/addJobConfig";
+	}
+	
+	/**
+	 * 조직도관리 겸직관리 겸직등록 대상부서 선택 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addjobAdd.do")	
+	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		if(companyID == null || companyID.equals("")){
+			companyID = "Top";
+		}
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("userInfo", user);
+		
+		return "admin/ezOrgan/addJobAdd";
 	}	
 	
 }

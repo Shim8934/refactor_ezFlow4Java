@@ -11,7 +11,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception;
 	
-	public OrganUserVO getUserAddJobList(String cn, String strLang) throws Exception;
+	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception;
 	
 	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
 	

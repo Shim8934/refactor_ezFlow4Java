@@ -58,7 +58,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public OrganUserVO getUserAddJobList(String cn, String strLang) throws Exception {
+	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_CN", cn);

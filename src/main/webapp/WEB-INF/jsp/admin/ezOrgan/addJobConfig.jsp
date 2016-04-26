@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
@@ -76,8 +76,7 @@
 
 		                xmlHTTP = null;
 		                isfirst = false;
-		            }
-		            else {
+		            } else {
 		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
 		                xmlHTTP = null;
 		            }
@@ -188,7 +187,7 @@
 		                }
 		                pListXML_Info = headerData;
 		                pSeach = false;
-		                //DisplayUserImageList();
+		                DisplayUserImageList();
 
 		                if ("<c:out value='${use_ocs}'/>" == "YES") {
 	                    	// TODO : 2016-04-25 장진혁과장 해당 function에 대한 구현 필요함 check_presence()	
@@ -201,12 +200,154 @@
 		        });
 		    }
 		    
+		    var m_strColorSelect = "#DBE1E7";
+	        var m_strColorOver = "#f4f5f5";
+	        var m_strColorDefault = "#ffffff";
+	        var p_ListOrderObject = null;
+	        function event_listMover(obj) {
+	            for (var i = 0; i < listContentArry.length; i++) {
+	                if (document.getElementById(listContentArry[i]) == obj) {
+	                    return;
+	                }
+	            }	            
+	            if (p_ListOrderObject != obj) {
+	                for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
+	                    obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
+	                }
+	            }
+	        }
+	        function event_listMout(obj) {
+	            for (var i = 0; i < listContentArry.length; i++) {
+	                if (document.getElementById(listContentArry[i]) == obj) {
+	                    return;
+	                }
+	            }
+	            if (p_ListOrderObject != obj) {
+	                for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
+	                    obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+	                }
+	            }
+	        }
+	        
+	        var listContentArry = new Array();
+	        var listSubContentArry = new Array();
+	        var listEventCheckbox = false;
+	        var listSubEventCheckbox = false;
+	        function event_listclick(obj) {
+	            if (!listEventCheckbox) {
+	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
+	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+	                        p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
+	                        
+	                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+	                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+	                        }
+	                    }
+	                    listContentArry = new Array();
+	                }
+	                p_ListOrderObject = obj;
+	                var insertFlag = true;
+	                
+	                for (var i = 0; i < listContentArry.length; i++) {
+	                    if (listContentArry[i] == p_ListOrderObject.getAttribute("id")) {
+	                        insertFlag = false;
+	                        
+	                        if (PressCtrlKey) {
+	                            listContentArry.splice(i, 1);
+	                            
+	                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+	                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+	                            }
+	                            if (listContentArry.length == 0) {
+	                                p_ListOrderObject = "";
+	                            }
+	                        }
+	                    }
+	                }
+	                if (insertFlag) {
+	                    for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+	                        p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+	                    }
+	                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+	                }
+	            }
+	            Addjob_Check(GetAttribute(p_ListOrderObject, "_data2"));
+	        }
+	        
+	        function Addjob_Check(UserID) {
+	            var listview = new ListView();
+	            listview.LoadFromID("lvUserList");
+	            var xmlDom = createXmlDom();
+		            
+	            $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/admin/ezOrgan/getUserAddJobList.do",
+		        	async : false,
+		        	data : {cn : UserID},
+		        	success : function(result){
+		        		xmlDom = result;		        		
+	                    var LISTVIEWDATA = "<LISTVIEWDATA><ROWS>";
+	                    for (var i = 0; i < xmlDom.documentElement.getElementsByTagName("ROW").length; i++) {
+	                        LISTVIEWDATA = LISTVIEWDATA + "<ROW><CELL>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<VALUE>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])) + ")";
+	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA1>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA2>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("CN")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA2>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA3>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE1")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA3>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA4>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE2")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA4>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA5>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
+	                    }
+	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
+	                    
+	                    document.getElementById('UserAddJobList').innerHTML = "";
+	                    var Resultxml = loadXMLString(LISTVIEWDATA);
+	                    var pAclList = new ListView();
+	                    pAclList.SetID("lvAddjobList");
+	                    pAclList.SetMulSelectable(false);
+	                    pAclList.SetHeightFree(true);
+	                    pAclList.DataSource(Resultxml);
+	                    pAclList.DataBind("UserAddJobList");		               
+		        	} 
+	            });
+	        }
+	        
+	        function InsertReceiver() {
+	            document.getElementById('layer_popup').style.display = "";       
+	        }
+	        
+	        function DeleteReceiver() {
+	            var listid = "lvAddjobList";
+	            var selList = new ListView();
+	            selList.LoadFromID(listid);
+
+	            var arrRows = selList.GetSelectedRows();
+	            var strName = "";
+
+	            for (var i = 0; i < arrRows.length; i++) {
+	                selList.DeleteRow(arrRows[i].id);
+	            }
+	        }
+		    
 		    pSeach = false;
 		    function DisplayUserImageList() {
 		        var xmlRtn = pListXML_Info;
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
-		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
+		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes;
 		        
 		        while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
 		            document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
@@ -215,16 +356,19 @@
 		        while (document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
 		            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 		        }
+		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
+		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
 		            document.getElementById("txtlist_Layer").style.display = "none";
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
+		            
 		            if (pSeach) {
 		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
@@ -266,10 +410,10 @@
 	                    M_TR.onselectstart = function () { return false; };
 	                    
 	                    if (CrossYN()) {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
-	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
-	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
-	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
+	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 	                            }
 	                        }
 	                    } else {
@@ -283,6 +427,7 @@
 	                    M_TR_TD.setAttribute("class", "pictd");
 	                    var M_TR_DIV = document.createElement("DIV");
 	                    M_TR_DIV.setAttribute("class", "pic");
+	                    
 	                    if (M_TR.getAttribute("_DATA9") != "") {
 	                        var M_TR_IMG = document.createElement("IMG");
 	                        M_TR_IMG.setAttribute("SRC", "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=PERSONAL&FILENAME=" + M_TR.getAttribute("_DATA9"));
@@ -345,23 +490,24 @@
 	                    M_TR_TDS_Table.appendChild(Sub_TR4);
 
 	                    M_TR.appendChild(M_TR_TD2);
-	                    MainTable.appendChild(M_TR);
+	                    MainTable.appendChild(M_TR);	                    
+	                    
 	                    document.getElementById("DeptUserImgList").appendChild(MainTable);
 	                } else {
 	                    var M_TR = document.createElement("TR");
 	                    M_TR.setAttribute("id", "MailUserlist_" + i);
 	                    M_TR.style.cursor = "pointer";
-	                    M_TR.onmouseover = function () { event_listMover(this); };
+ 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };                    
+	                    M_TR.onclick = function () { event_listclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
 	                    if (CrossYN()) {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
-	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
-	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
-	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
+	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 	                            }
 	                        }
 	                    } else {
@@ -452,6 +598,239 @@
 		            window.returnValue = "true";
 		        }
 		        window.close();
+		    }
+		    
+		    function btn_Add_onclick() {
+		        var pparsingXML = "";
+		        var pparsingXML2 = "";
+		        var pAddFlag = false;
+		        
+		        if (p_ListOrderObject == null || p_ListOrderObject == "") {
+		            alert(strLang13);
+		            return;
+		        } else {
+		            var dept;
+		            
+		            if (CrossYN()) {
+		                dept = document.getElementById("TreeFrame").contentWindow.OK_Click().split(';');
+		            } else {
+		                dept = document.getElementById("TreeFrame").OK_Click().split(';');
+		            }		            
+		            if (dept[0] == "") {
+		                alert("<spring:message code='ezOrgan.t249' />");
+		                return;
+		            }
+
+		            var listview = new ListView();
+		            listview.LoadFromID("lvUserList");
+		            var UserAddjoblistview = new ListView();
+		            UserAddjoblistview.LoadFromID("lvAddjobList");
+		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		            
+		            if (bFlag) {
+		                alert(strLang25);
+		                pAddFlag = true;
+		            } else {
+		                pparsingXML2 = "";
+		                pparsingXML = "";
+		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                pparsingXML = pparsingXML + "<ROW><CELL>";
+		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
+		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
+		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data2")) + "</DATA2>";
+		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";
+		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(document.getElementById("txt_TitleName2").value) + "</DATA4>";
+		                pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
+		                pparsingXML = pparsingXML + "</CELL></ROW>";
+		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                Resultxml = loadXMLString(pparsingXML2);
+
+		                var listview = new ListView();
+		                listview.LoadFromID("lvAddjobList");		                
+		                var MaxID = 0;
+		                var InitTr = listview.GetDataRows();
+		                var MaxCntNum = 0;
+
+		                for (var j = 0  ; j < InitTr.length  ; j++) {
+		                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                    
+		                    if (MaxID < curnum) {
+		                        MaxID = curnum;
+		                        MaxCntNum = j;
+		                    }
+		                }
+		                var objTr = listview.AddRow(InitTr.length);
+		                
+		                if (MaxCntNum != 0) {
+		                    MaxCntNum = MaxCntNum + 1;
+		                }
+		                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                listview.AddDataRow(objTr, Resultxml);
+
+		                var _tdlength = document.getElementById("lvAddjobList").getElementsByTagName("TD").length;
+		                for (var y = 0; y < _tdlength; y++) {
+		                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.textOverflow = "";
+		                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.overflow = "";
+		                }
+		            }
+		        }
+		        document.getElementById('layer_popup').style.display = "none";
+		        document.getElementById("txt_TitleName").value = "";
+		        document.getElementById("txt_TitleName2").value = "";
+		    }
+		    
+		    function OK_Click() {
+	            var Addjoblistview = new ListView();
+	            Addjoblistview.LoadFromID("lvAddjobList");
+	            
+	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
+	                alert(strLang13);
+	                return;
+	            }
+
+	            var AddjobText = "";
+	            var xmlHTTP = createXMLHttpRequest();
+	            var xmlDom = createXmlDom();
+	            var xmlPara = createXmlDom();
+	            var objRoot, objNode, subNode;
+	            createNodeInsert(xmlDom, objNode, "DATA");
+	            
+	            for (var i = 0; i < Addjoblistview.GetRowCount() ; i++) {
+	                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(p_ListOrderObject, "_data2"));
+	                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
+	                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
+
+	                AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
+	            }
+	            if (Addjoblistview.GetRowCount() == 0) {
+	                alert("<spring:message code='ezOrgan.t330' />");
+	                return;
+	            }
+	            xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
+	            xmlHTTP.send(xmlDom);
+
+	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+	                if (xmlHTTP.responseText == "EXIST") {
+	                    alert("<spring:message code='ezOrgan.t202' />");
+	                } else {
+	                    alert("<spring:message code='ezOrgan.t203' />");
+	                }
+	            } else {
+	            	// TODO : 2016-04-26 장진혁과장 --senmail 관련 자바스크립트 구현 필요
+	                //sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang27, AddjobText);
+	                alert("<spring:message code='ezOrgan.t204' />");
+	            }
+	        }
+		    
+		    var rgParams = new Array();
+		    var checkname2_cross_dialogArguments = new Array();
+		    function deptsearch_click() {
+		        if (document.all("deptkeyword").value == "") {
+		        	alert("<spring:message code='ezOrgan.t56' />");
+		            document.all("deptkeyword").focus();
+		            return;
+		        }
+		        var xmlDOM = createXmlDom();
+		        
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : false,
+		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group'},
+		        	success : function(result){	
+		        		xmlDOM = result;
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		        	},
+		        	error : function(error){
+		        		alert("<spring:message code='ezOrgan.t11' />" + error);
+		        		xmlDOM = null;
+		        	}
+		        });
+		        if (adCount == 0) {
+		            alert("<%=RM.GetString("t61")%>");
+		            return;
+		        }
+		        else if (adCount == 1) {
+		            bSearch = true;
+		            g_xmlHTTP = createXMLHttpRequest();
+
+		            if (CrossYN())
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		            else
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+
+		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }
+		        else {
+		            rgParams["addrBook"] = xmlDOM;
+		            rgParams["deptid"] = "";
+		            var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 372);
+		            feature = feature + GetShowModalPosition(540, 460);
+
+		            if (CrossYN()) {
+		                checkname2_cross_dialogArguments[0] = rgParams;
+		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+		                var OpenWin = window.open("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", "checkName2_cross", GetOpenWindowfeature(540, 460));
+		                try { OpenWin.focus(); } catch (e) { }
+		            }
+		            else {
+		                window.showModalDialog("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", rgParams, feature);
+
+		                if (rgParams["deptid"] != "") {
+		                    bSearch = true;
+		                    g_xmlHTTP = createXMLHttpRequest();
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		                    g_xmlHTTP.send(strQuery);
+		                }
+		            }
+		        }
+		    }
+		    function deptsearch_click_Complete() {
+		        if (rgParams["deptid"] != "") {
+		            bSearch = true;
+		            g_xmlHTTP = createXMLHttpRequest();
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }
+		    }
+
+		    function event_getDeptFullTree() {
+		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+		            if (g_xmlHTTP.statusText == "OK") {
+		                if (!bSearch) {
+		                    try {
+		                        if (CrossYN())
+		                            opener.opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
+		                        else
+		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
+		                    }
+		                    catch (e) { }
+		                }
+
+		                var treeXML = loadXMLFile("/myoffice/common/organtree_config2.xml");
+		                document.getElementById('TreeView').innerHTML = "";
+
+		                var treeView = new TreeView();
+		                treeView.SetConfig(treeXML);
+		                treeView.SetID("FromTreeView");
+		                treeView.SetUseAgency(true);
+		                treeView.SetRequestData("RequestData");
+		                treeView.SetNodeClick("TreeViewNodeClick");
+		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
+		                treeView.DataBind("TreeView");
+		            }
+		            else {
+		                alert("<%=RM.GetString("t9")%>" + g_xmlHTTP.statusText)
+		                g_xmlHTTP = null;
+		            }
+		        }
 		    }
 	    </script>
 	</head>
@@ -587,7 +966,7 @@
 	                <table class="content" style="width:300px">                    
 	                    <tr>
 	                        <td colspan="2" style="padding:0px; margin:0px;">
-	                            <iframe id="TreeFrame" style="border:0px; height: 300px;" src="Addjob_Add.aspx" scrolling="auto"></iframe>
+	                            <iframe id="TreeFrame" style="border:0px; height: 300px;" src="/admin/ezOrgan/addjobAdd.do" scrolling="auto"></iframe>
 	                        </td>
 	                    </tr>
 	                    <tr class="primary">
