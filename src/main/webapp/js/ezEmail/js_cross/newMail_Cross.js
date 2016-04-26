@@ -1857,14 +1857,14 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         else if (imgColl.item(i).src.toLowerCase().indexOf("upload_personal/mailsignimage") > -1 || imgColl.item(i).src.toLowerCase().indexOf("upload_common") > -1) {
             var pos = imgColl.item(i).src.lastIndexOf("/");
             var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
-            imgColl.item(i).src = rePath
+            imgColl.item(i).src = rePath;
             imgColl.item(i).setAttribute("embedding", "1");
         }//20140801 mailsign sec
         else if (imgColl.item(i).src.toLowerCase().indexOf("ezcommon_interface.aspx") > -1) {
             var pos = imgColl.item(i).src.indexOf("FILENAME=");
             if (pos > -1) {
                 var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 9), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
-                imgColl.item(i).src = rePath
+                imgColl.item(i).src = rePath;
                 imgColl.item(i).setAttribute("embedding", "1");
             }
             else {
@@ -1891,7 +1891,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
             else {
                 var pos = imgColl.item(i).src.lastIndexOf("/");
                 var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
-                imgColl.item(i).src = rePath
+                imgColl.item(i).src = rePath;
             }
         }
     }

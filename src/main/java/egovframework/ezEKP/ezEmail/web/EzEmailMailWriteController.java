@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,6 +83,8 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 @Controller
 public class EzEmailMailWriteController extends EgovFileMngUtil{
 
+	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailWriteController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -158,13 +162,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String outMailColor = "";
 		String useEditor = "";
 		
+		// get user credentials
 		String userId = "";
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
 		if (userIdnPw !=null && userIdnPw.get(0) != null) {
 			userId = userIdnPw.get(0);
 		}
+		
+		// retrieve user info from db.
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
+		
 		useEditor = config.getProperty("config.EDITOR");
 
 		//hostURL = request.getRequestURL().substring(0, request.getRequestURI().length()) + "/ezEmail/"; - 지금은 필요없는데 나중에 필요할지도?
@@ -592,6 +600,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		strXML = "<ROOT><NODES>";
 		String pDirPath = config.getProperty("upload_mail.ROOT");
 		pDirPath = realPath + pDirPath;
+		
+		// check the upload mail root folder and create it if it doesn't exist.
+		File uploadMailRootFolder = new File(pDirPath);
+		if (!uploadMailRootFolder.exists()) {
+			logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
+			uploadMailRootFolder.mkdir();
+		}
 		
 		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
