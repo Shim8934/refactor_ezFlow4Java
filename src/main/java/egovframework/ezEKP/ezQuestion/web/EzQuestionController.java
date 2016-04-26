@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
+import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
@@ -1755,17 +1756,38 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		String pBrdID = "";
 		String itemNo = "";
-		
-		if(req.getParameter("brdID") != null) {
-			pBrdID = req.getParameter("brdID");
+		String strXML = "";
+		try {
+			if(req.getParameter("brdID") != null) {
+				pBrdID = req.getParameter("brdID");
+			}
+			
+			if(req.getParameter("itemNo") != null) {
+				itemNo = req.getParameter("itemNo");
+			}
+			String pResult = "";
+			QstCompleteVO qstComplete = new QstCompleteVO();
+			qstComplete.setStrBrdID(Integer.parseInt(pBrdID));
+			qstComplete.setItemNo(Integer.parseInt(itemNo));
+			
+			List<QstDeleteAttachUrlVO> temp = ezQuestionService.getDeleteAttachUrl(Integer.parseInt(pBrdID), Integer.parseInt(itemNo));
+			for(int i=0; i<temp.size(); i++) {
+				if(temp.get(i).getAttachType().equals("1") || temp.get(i).getAttachType().equals("2")) {
+					pResult += temp.get(i).getAttachUrl().toString()+";";
+				}
+				
+				if (!pResult.equals("")) {
+					String qDirPath = req.getServletContext().getRealPath("");
+					deleteFile(qDirPath+commonUtil.separator+pResult.split(";")[i]);
+				}
+			}
+
+			ezQuestionService.deleteItem(qstComplete);
+			ezQuestionService.deletePollAttach(Integer.parseInt(pBrdID), Integer.parseInt(itemNo));
+			strXML = "<DATA>DELETE_OK</DATA>";
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		if(req.getParameter("itemNo") != null) {
-			itemNo = req.getParameter("itemNo");
-		}
-		
-		ezQuestionService.deletePermission(Integer.parseInt(pBrdID), Integer.parseInt(itemNo));
-		String strXML = "<DATA>DELETE_OK</DATA>";
 		return strXML;
 	}
 	
@@ -3436,7 +3458,7 @@ System.out.println(str.toString());
 		
 		String[] arrLine;
 		String strResult = "";
-		boolean chkType = false;
+//		boolean chkType = false;
 
 		List<QstTempSaveVO> qstTempSaveVO = ezQuestionService.tempSave(5, itemNo);
 		
@@ -4337,4 +4359,5 @@ System.out.println(str.toString());
 
 		return strData;
     }
+	
 }
