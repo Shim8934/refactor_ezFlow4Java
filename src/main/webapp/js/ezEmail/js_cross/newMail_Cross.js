@@ -1714,7 +1714,7 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
         if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0) {
-            var encodedText = GetEncodeTextNew(imgColl.item(i).src, '0');
+            var imagePath = imgColl.item(i).src;
             var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1)
 
             var XmlHtml = getNodeText(SelectNodes(xmlDoc, "DATA/HTMLBODY")[0]);
@@ -1730,7 +1730,7 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
             else
                 SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].text = XmlHtml;
             createNodeAndInsertText(xmlDoc, rootNode, "IMAGENAME", formname);
-            createNodeAndInsertText(xmlDoc, rootNode, "IMAGECONTENT", encodedText);
+            createNodeAndInsertText(xmlDoc, rootNode, "IMAGEPATH", imagePath);
         }
         if (imgColl.item(i).src.toLowerCase().indexOf("ezcommon_interface.aspx") > -1) {
             var encodedText = GetEncodeTextNew(imgColl.item(i).src, '1');
