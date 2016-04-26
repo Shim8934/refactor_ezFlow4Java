@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezResource.vo;
 
-public class ResGetSchduleListMainVO {
+public class ResGetScheduleListMainVO {
 	/** 순번*/
 	private int num;
 	/** 부모 일정번호*/
