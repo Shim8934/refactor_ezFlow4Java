@@ -6,6 +6,7 @@ import java.util.Map;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
+import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
@@ -49,6 +50,8 @@ public interface EzQuestionService {
 	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo) throws Exception;
 	
 	public List<QstTempSaveVO> tempSave(int brdID, int itemNo) throws Exception;
+	
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo) throws Exception;
 	
 	public String tableAnswerValue(int brdID, int itemNo, int questionNo) throws Exception;
 	
@@ -159,6 +162,8 @@ public interface EzQuestionService {
 	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception;
 
 	public void deletePermission(int brdID, int itemNo) throws Exception;
+	
+	public void deletePollAttach(int brdID, int itemNo) throws Exception;
 	
 	public void callDeletePollResponseper(int brdID, int itemNo) throws Exception;
 	

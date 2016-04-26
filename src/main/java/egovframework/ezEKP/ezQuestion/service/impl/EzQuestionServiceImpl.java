@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
+import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
@@ -777,6 +778,14 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pQuesNo", vQuesNo);
 		return ezQuestionDAO.gwPollJikgubSearch(map);
 	}
+	
+	@Override
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdID);
+		map.put("v_pItemNo", itemNo);
+		return ezQuestionDAO.getDeleteAttachUrl(map);
+	}
 
 	@Override
 	public String getQuestionNoCnt(String itemNo) throws Exception {
@@ -805,12 +814,20 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 	}
 
 	@Override
-	public void questionDelete1(int brdID, int itemNo, int quesNo)
-			throws Exception {
+	public void questionDelete1(int brdID, int itemNo, int quesNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", quesNo);
 		ezQuestionDAO.questionDelete2(map);
 	}
+
+	@Override
+	public void deletePollAttach(int brdID, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdID);
+		map.put("v_pItemNo", itemNo);
+		ezQuestionDAO.deletePollAttach(map);
+	}
+	
 }
