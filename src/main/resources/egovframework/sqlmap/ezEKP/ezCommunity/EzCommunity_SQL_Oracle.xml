@@ -51,6 +51,18 @@
 	<procedure id="EzCommunityDAO.getBBSListGet2"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET2(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsViewNewGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsEditNew"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+		{CALL EZCOMMUNITY.EZSP_BBS_EDIT_NEW(#v_BNAME#, #v_NO#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsEditOkGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET1(#v_BNAME#, #v_GANT#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -66,6 +78,22 @@
 	
 	<procedure id="EzCommunityDAO.ezCommunityBaseGet4"			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET4(#v_STRBOARDNAME#, #v_STRCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.ezCommunityBaseGet2"			parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET2(#v_STRUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsEditGet1"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_BBS_EDIT_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET2(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.bbsEditOkGet3"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
@@ -88,6 +116,15 @@
 		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_SET(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSUBFLAG#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #v_STRLANG#, #v_RESULT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.bbsEditOkSet1"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_SET1(#v_BNAME#, #v_TITLE#, #v_GANT#, #v_CODE#, #v_ATTACHLIST#, #v_TEXTCONTENT#)}
+	</procedure>
+	
+	
+	<procedure id="EzCommunityDAO.bbsEditOkSet2"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_SET2(#v_BNAME#, #v_MYREF#, #v_MYSTEP#, #v_CODE#)}
+	</procedure>
+
 	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 

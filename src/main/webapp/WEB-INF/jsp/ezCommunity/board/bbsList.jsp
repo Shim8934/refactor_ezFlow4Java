@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -46,7 +47,7 @@
 		</script>
 		
 		<script type="text/javascript">
-			<%-- document.onselectstart = function () { return false; };
+			document.onselectstart = function () { return false; };
 
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -60,20 +61,20 @@
 		    
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
-					var strSearch = "s_radio=title&keyword=" + document.page.keyword.value;
+					var strSearch = "sRadio=title&keyword=" + document.page.keyword.value;
 				} else if (document.page.s_radio.value == "titleContent" ) {
-					var strSearch = "s_radio=titleContent&keyword=" + document.page.keyword.value;
+					var strSearch = "sRadio=titleContent&keyword=" + document.page.keyword.value;
 				} else {
-					var strSearch = "s_radio=writer&keyword=" + document.page.keyword.value;
+					var strSearch = "sRadio=writer&keyword=" + document.page.keyword.value;
 				}
 				
-				strSearch = strSearch + "&code=" + "<%=code%>" + "&bname=" + "<%=bname%>" + "&key=" + document.page.keyword.value;
-				window.location.href = "bbs_list.aspx" + "?" + encodeURI(strSearch);
+				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}" + "&key=" + document.page.keyword.value;
+				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 
 			function comm_searchCheck() {
 				if ( document.page.keyword.value.length < 2 || document.page.keyword.value.indexOf("%") != -1) {
-					OpenAlertUI("<%=RM.GetString("t164")%>");
+					OpenAlertUI("<spring:message code = 'ezCommunity.t164'/>");
 					
 					return false;
 				}
@@ -93,25 +94,25 @@
 	             PagingHTML += strtext;
 	             var pageNum = curPage;
 	             if (totalPage > 1 && pageNum != 1) {
-	                 strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                 strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 	                 PagingHTML += strtext;
 	             }
 	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 	                 PagingHTML += strtext;
 	             }
 	             if (totalPage > BlockSize) {
 	                 if (pageNum > BlockSize) {
-	                     strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                     strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                     PagingHTML += strtext;
 	                 }
 	                 else {
-	                     strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                     strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                     PagingHTML += strtext;
 	                 }
 	             }
 	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                 PagingHTML += strtext;
 	             }
 	             var MaxNum;
@@ -136,26 +137,26 @@
 	             if (totalPage > BlockSize) {
 	                 if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                     strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                     strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+	                     strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                     PagingHTML += strtext;
 	                 }
 	                 else {
 	                     strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                     strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                     strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                     PagingHTML += strtext;
 	                 }
 	             }
 	             else {
 	                 strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                 strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                 strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                 PagingHTML += strtext;
 	             }
 	             if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                 strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+	                 strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 	                 PagingHTML += strtext;
 	             }
 	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 	                 PagingHTML += strtext;
 	             }
 	             PagingHTML += "</div>";
@@ -197,9 +198,10 @@
 	         }
 				
 			function goToPage(page) {
-				var href = "bbs_list.aspx?bname=<%=bname%>&code="+ escape("<%=code%>") + "&keyword=" + pKeyWord + "&s_radio=" + escape("<%=s_radio%>") + "&block="+escape("<%=nowblock%>");
+// 				var href = "/ezCommunity/board/bbsList.do?bName=${bName}&code="+ escape("${code}") + "&keyword=" + pKeyWord + "&sRadio=" + escape("${sRadio}");
+				var href = "/ezCommunity/board/bbsList.do?bName=${bName}&code="+ escape("${code}") + "&keyword=" + pKeyWord + "&sRadio=" + escape("${sRadio}") + "&block="+escape("${nowblock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage))  {
-					document.location.href = href + "&GotoPage=" + escape(parseInt(page));
+					document.location.href = href + "&goToPage=" + escape(parseInt(page));
 				}	
 			}				
 			
@@ -213,30 +215,21 @@
 	            
 	            var feature = "width=760,height=720";
 	            feature = feature + GetOpenPosition(760, 720);
-	            window.open("bbs_view_new.aspx?mode=content&no=" + sURL + "&bname=" + ttt, "<%=RM.GetString("t166")%>", feature);						        
+	            
+	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "<spring:message code = 'ezCommunity.t166'/>", feature);						        
 				
 			}
 			
 			function btn_write(bname) {
 			    var feature = "width=760,height=720";
 			    feature = feature + GetOpenPosition(760, 720);
-	            
-			    if (CrossYN() || pNoneActiveX == "YES") {
-			        window.open("bbs_edit_new_Cross.aspx?mode=write&bname=" + bname, "<%=RM.GetString("t166")%>", feature);
-			    } else {
-			        if (pUse_Editor == "" || pUse_Editor == "CK") {
-			            window.open("bbs_edit_new.aspx?mode=write&bname=" + bname, "<%=RM.GetString("t166")%>", feature);
-			        } else {
-			            window.open("bbs_edit_new_IE.aspx?mode=write&bname=" + bname, "<%=RM.GetString("t166")%>", feature);
-			        }
-			    }
-	            
+		        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bname + "&code=" + "${code}" , "<spring:message code = 'ezCommunity.t166'/>", feature);
 			}
 			
 			function btn_list(bname) {
-				url = "bbs_list.aspx?bname=<%=bname%>"
+				url = "/ezCommunity/board/bbsList.do?bName=${bname}";
 				location.href = url;
-			}			 --%>
+			}
 		</script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
@@ -254,52 +247,46 @@
 		
 		<div id="mainmenu">
 			<ul>
-<%-- 			    <%if (bname == "c_board") {  %> --%>
-<%-- 						<li><span onClick="btn_write('<%=bname%>')"><%=RM.GetString("t167")%></span></li> --%>
-<%-- 				<%   }else if ( (userinfo.RollInfo.IndexOf("k=1") > -1 || userinfo.RollInfo.IndexOf("t=1") > -1 ) && bname == "c_notice") {   %> --%>
-<%-- 						<li><span onClick="btn_write('<%=bname%>')"><%=RM.GetString("t167")%></span></li> --%>
-<%-- 				<%	}%> --%>
-<%-- 				<%if (keyword != "" ) {  %> --%>
-<%-- 				<li><span onclick="btn_list('<%=bname%>')"><%=RM.GetString("t168")%></span></li> --%>
-<%-- 				<%	}%> --%>
-			</ul>
-			
-				<c:if test="${bName == 'c_board'}">
-					<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
-				</c:if>
-				
-				/////////////////////////
+				<c:choose>
+					<c:when test="${bName == 'c_board'}">
+						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
+					</c:when>
+					<c:when test="${(fn:indexOf(rollInfo, 'k=1') > -1 && fn:indexOf(rollInfo, 't=1') > -1) && bName == 'c_notice'}">
+						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
+					</c:when>
+				</c:choose>
 				
 				<c:if test="${keyword != '' }">
 					<li><span onclick="btn_list('${bName }')"><spring:message code = "ezCommunity.t168"/></span></li>
 				</c:if>
+			</ul>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<%-- <table class="content" >
+		<table class="content" >
 			<form name="page">
 				<tr>
-					<th><%=RM.GetString("t28")%></th>
+					<th><spring:message code = "ezCommunity.t28"/></th>
 					<td>
-						<select name="s_radio" style="vertical-align:middle">
-							<option value="title" selected><%=RM.GetString("t124")%></option>
-							<option value="titleContent"><%=RM.GetString("t169")%></option>
-							<option value="writer"><%=RM.GetString("t138")%></option>
+						<select name="sRadio" style="vertical-align:middle">
+							<option value="title" selected><spring:message code = "ezCommunity.t124"/></option>
+							<option value="titleContent"><spring:message code = "ezCommunity.t169"/></option>
+							<option value="writer"><spring:message code = "ezCommunity.t138"/></option>
 						</select>
 						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px;vertical-align:middle">
-						<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><%=RM.GetString("t31")%></span></a></td>
+						<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = "ezCommunity.t31"/></span></a></td>
 				</tr>
 			</form>
-		</table> --%>
+		</table>
 		
 		<br>
 		
-		<!-- <table class="mainlist" style="width:100%">
-			<span id="idSpan" runat="server"></span>
-		</table> -->
+		<table class="mainlist" style="width:100%">
+			<span id="idSpan" >${idSpanVal } </span>
+		</table>
 		
 		<div id="tblPageRayer"></div>
 	</body>

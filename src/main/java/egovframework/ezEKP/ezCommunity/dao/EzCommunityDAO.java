@@ -59,6 +59,23 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityClubVO>) list("EzCommunityDAO.goAdminOkGet2", v_PCLUBID);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityCBoardVO> getBBSListGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getBBSListGet2", map);
+	}
+	
+	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
+		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
+	}
+
+	public CommunityCBoardVO bbsEditNew(Map<String, Object> map) throws Exception{
+		return (CommunityCBoardVO) select("EzCommunityDAO.bbsEditNew", map);
+	}
+	
+	public CommunityCBoardVO bbsEditOkGet1(Map<String, Object> map) throws Exception{
+		return (CommunityCBoardVO) select("EzCommunityDAO.bbsEditOkGet1", map);
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
@@ -83,6 +100,22 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.getBoardTreeGet1", map);
 	}
 	
+	public String ezCommunityBaseGet2(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.ezCommunityBaseGet2", map);
+	}
+
+	public String bbsEditGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.bbsEditGet1", map);
+	}
+	
+	public String bbsEditOkGet2(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommunityDAO.bbsEditOkGet2", map);
+	}
+	
+	public String bbsEditOkGet3(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommunityDAO.bbsEditOkGet3", map);
+	}
+	
 	public int checkIfLeafBoardGet(Map<String, Object> map) throws Exception {
 		select("EzCommunityDAO.checkIfLeafBoardGet", map);
 		return (int) map.get("v_pCount");
@@ -97,7 +130,15 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.getBoardTreeSet", map);
 	}
 
-	public List<CommunityCBoardVO> getBBSListGet2(Map<String, Object> map) {
-		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getBBSListGet2", map);
+	public void bbsEditOkSet1(Map<String, Object> map) throws Exception{
+		update("EzCommunityDAO.bbsEditOkSet1", map);
 	}
+
+	public void bbsEditOkSet2(Map<String, Object> map) throws Exception{
+		update("EzCommunityDAO.bbsEditOkSet2", map);
+	}
+
+
+
+
 }

@@ -1020,7 +1020,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		if (xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") || xmldom.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
         			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
         		} else {
-        			literalPhoto = "<IMG SRC='/ezCommon/ezCommonInterFace.do?TYPE=PERSONAL&FILENAME=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+        			literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
         		}
         		
         		literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();

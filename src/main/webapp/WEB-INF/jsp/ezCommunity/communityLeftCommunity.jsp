@@ -24,11 +24,10 @@
 	        var xmlDom_treeview = createXmlDom();
 	        var xmlhttp = createXMLHttpRequest();
 	        var ch_selected = false;
-
 			var totalCnt = 0;
 			var xmlhttp;
 			var xmlhttp2;
-<%-- 			var pNoneActiveX = "<%=NoneActiveX%>"; --%>
+
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
