@@ -53,8 +53,8 @@ public class EzAddressController{
 	public String address_zip_iframe(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
 		String dong = request.getParameter("dong");
 
-		if(dong != null){
-			if(!dong.equals("")){
+		if (dong != null) {
+			if (!dong.equals("")) {
 				List<AddressVO> list = ezAddressService.getAddressInfo(dong);
 				model.addAttribute("list", list);
 			}			

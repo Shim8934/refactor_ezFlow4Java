@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,15 +82,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String organRight(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);		
 		//관리자 권한 체크
-		if(user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
 		String topid = "";
 		
-		if(user.getRollInfo().indexOf("c=1") == -1){
+		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topid = user.getCompanyID();
-		}else{
+		} else {
 			topid = "Top";
 		}
 		
@@ -132,9 +131,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		int cnt = ezOrganAdminService.companyCheck(cn);
 
-		if(cnt > 0){
+		if (cnt > 0) {
 			result = "PRE";
-		}else{
+		} else {
 			String mailAddr = cn + "@" + domain;
 			ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
 			
@@ -156,9 +155,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		int cnt = ezOrganAdminService.companyChildCheck(cn);
 		
-		if(cnt > 0){
+		if (cnt > 0) {
 			result = "HASCHILD";
-		}else{			
+		} else {			
 			ezOrganAdminService.deleteDBData(cn, pClass);			
 			result = "OK";
 		}
@@ -204,15 +203,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String domain = config.getProperty("config.DomainName");
 		String result = "";
 
-		if(vo.getParentCn() == null){
+		if (vo.getParentCn() == null) {
 			ezOrganAdminService.updateDBData_dept(vo);
-		}else{
+		} else {
 			String cn = vo.getCn();
 			int cnt = ezOrganAdminService.companyCheck(cn);
 			
-			if(cnt > 0){
+			if (cnt > 0) {
 				result = "PRE";
-			}else{							
+			} else {							
 				String mailAddr = cn + "@" + domain;
 				vo.setMail(mailAddr);
 				
@@ -232,7 +231,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String selectDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
 		String companyID = request.getParameter("companyID");
 		
-		if(companyID == null || companyID.equals("")){
+		if (companyID == null || companyID.equals("")) {
 			companyID = "Top";
 		}
 		
@@ -274,7 +273,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String[] cnDatas = cn.split(",");
 		String result = "";
 		
-		for(int i=0; i<cnDatas.length; i++){
+		for (int i=0; i<cnDatas.length; i++) {
 			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass);	
 		}
 		
@@ -288,7 +287,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String userInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
-		if(!auth){
+		if (!auth) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -316,7 +315,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String signImageSize = config.getProperty("config.SignImageSizeLimit");
 		String sign = "APPROVALSIGN";
 		
-		if(userInfo_approvalG.equals("YES")){
+		if (userInfo_approvalG.equals("YES")) {
 			sign = "APPROVALGSIGN";
 		}
 		
@@ -336,12 +335,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String fileName = request.getParameter("fileName");
 		
-		if(type.equals("APPROVALSIGN")){
+		if (type.equals("APPROVALSIGN")) {
 			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
-		}else{			
+		} else {			
 			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
-			if(fileName != null && !fileName.equals("")){
+			if (fileName != null && !fileName.equals("")) {
 				ezCommonService.responseAttach(filePath, "", true, request, response);
 			}
 		}	
@@ -363,7 +362,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String pw = request.getParameter("password");
 		String cn[] = request.getParameter("cn").split(",");
 		
-		for(int i=0; i < cn.length; i++){			
+		for (int i=0; i < cn.length; i++) {			
 			ezOrganAdminService.setPassword(cn[i], pw);
 		}
 	}
@@ -375,7 +374,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public void retireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		String cn[] = request.getParameter("cn").split(",");
 		
-		for(int i=0; i < cn.length; i++){			
+		for (int i=0; i < cn.length; i++) {			
 			ezOrganAdminService.retireEntry(cn[i]);
 		}
 	}
@@ -390,10 +389,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String cn[] = request.getParameter("cn").split(",");
 		String result = "OK";
 		
-		for(int i=0; i < cn.length; i++){			
+		for (int i=0; i < cn.length; i++) {			
 			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user");
 		
-			if(!result.equals("OK")){
+			if (!result.equals("OK")) {
 				break;
 			}
 		}
@@ -407,7 +406,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public void delUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String cn[] = request.getParameter("cn").split(",");
 				
-		for(int i=0; i < cn.length; i++){			
+		for (int i=0; i < cn.length; i++) {			
 			ezOrganAdminService.deleteDBData(cn[i], "user");
 		}		
 	}
@@ -420,18 +419,18 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String saveUserInfo(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = "";
 		
-		if(vo.getParentCn().equals("")){		
+		if (vo.getParentCn().equals("")) {		
 			ezOrganAdminService.updateDBData_user(vo);
 			result = "OK";
-		}else{
+		} else {
 			String domain = config.getProperty("config.DomainName");
 			String cn = vo.getCn();
 			
 			int cnt = ezOrganAdminService.userCheck(cn);
 			
-			if(cnt > 0){
+			if (cnt > 0) {
 				result = "PRE";
-			}else{
+			} else {
 				String mailAddr = cn + "@" + domain;
 				vo.setMail(mailAddr);				
 				String userPrincipalName = cn + "@" + domain;
@@ -483,7 +482,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + commonUtil.separator;
 		String serverPath = "";
 						
-		if(userID.equals("")){
+		if (userID.equals("")) {
 			userID = userInfo.getId();
 		}
 		
@@ -494,26 +493,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
 			fileName = userID + "_" + guid + ".";
 			
-			if(mode.equals("PICTURE")){
+			if (mode.equals("PICTURE")) {
 				serverPath = thumbPath;
-			}else if(mode.equals("TEMP")){
+			} else if (mode.equals("TEMP")) {
 				serverPath = tempPath;
-			}else if(mode.equals("GLOGO")){
+			} else if (mode.equals("GLOGO")) {
 				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
-			}else{
+			} else {
 				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
 			}
 						
 			File file = new File(serverPath);
 			
-			if(!file.exists()){
+			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			if(!mode.equals("TEMP")){
+			if (!mode.equals("TEMP")) {
 				File file1 = new File(tempPath);
 				
-				if(!file1.exists()){
+				if (!file1.exists()) {
 					file1.mkdirs();
 				}
 			}
@@ -525,13 +524,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
             BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
             ImageIO.write(bufferedImage, "png", new File(serverPath + fileName + "png"));
+            //임시 저장 파일 삭제
+            deleteFile(tempPath + fileName + extension);
             
-            FileUtils.deleteQuietly(imageFile);
-            //2016-04-20 장진혁과장 --만약 전자결재에서 이미지 파일 원본을 필요로 한다면 주석을 제거 후 구현필요
-            //writeUploadedFile(multiFile, fileName + extension, serverPath);
             return fileName + "png";            
 			
-		}catch(Exception e){
+		}catch(Exception e) {
 			return "UPLOAD_ERROR";
 		}		
 	}
@@ -550,12 +548,6 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String strLang = config.getProperty("config.primary");
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
-		
-/*		if (request.getIndexOf("MSIE") > -1 || request.UserAgent.IndexOf("Trident") > -1)
-            CrossYN = false;
-        else
-            CrossYN = true;
-		*/
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -591,7 +583,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
         result.append("<ROWS>");
         
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
         	OrganUserVO vo = list.get(i);
         	
         	result.append("<ROW>");
@@ -659,7 +651,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String titleInfo = "";
 				
 		if (!doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
-			for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++){
+			for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 				if (titleInfo.equals("")) {
 					titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
 				} else {
@@ -682,7 +674,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
-		if(user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -693,9 +685,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String primary = config.getProperty("config.lang_Primary" + lang);
 		String secondary = config.getProperty("config.lang_Secondary" + lang);
 		
-		if (user.getRollInfo().indexOf("c=1") == -1){
+		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
-		}else{
+		} else {
 			topID = "Top";
 		}
 
@@ -718,7 +710,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
-		if(companyID == null || companyID.equals("")){
+		if (companyID == null || companyID.equals("")) {
 			companyID = "Top";
 		}
 		

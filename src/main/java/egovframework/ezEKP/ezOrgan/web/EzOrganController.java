@@ -107,34 +107,34 @@ public class EzOrganController {
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
-		if(page == null){		
+		if (page == null) {		
 			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang);
-		}else{
+		} else {
 			/* 2016-03-29 장진혁과장 pagination 작업 필요 */
 			//infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page);			 
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
 		
-		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1){
+		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             String tooltip = "";
             int idx = 0;
             
-            for (int j = 0; j < arryCell.length; j++){
-                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")){
+            for (int j = 0; j < arryCell.length; j++) {
+                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")) {
                     idx = j;
                 }
             }
             
-            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++){
+            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
                 Element Nodetip = doc.createElement("TOOLTIP");
 
-                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")){
+                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
                     String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
                     
-                    if (arry.length > 5){
+                    if (arry.length > 5) {
                         tooltip += " " + messageSource.getMessage(arry[5]);
                     }
                     
@@ -178,34 +178,34 @@ public class EzOrganController {
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
-		if(page == null){
+		if (page == null) {
 			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang);
-		}else{
+		} else {
 			/* TODO 2016-03-29 장진혁과장 pagination 작업 필요 */
 			//infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
 		
-		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1){
+		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             String tooltip = "";
             int idx = 0;
             
-            for (int j = 0; j < arryCell.length; j++){
-                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")){
+            for (int j = 0; j < arryCell.length; j++) {
+                if (arryCell[j].equals("EXTENSIONATTRIBUTE5")) {
                     idx = j;
                 }
             }
             
-            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++){
+            for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
                 Element Nodetip = doc.createElement("TOOLTIP");
 
-                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")){
+                if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
                     String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3] + " ~ " + arry[4];
                     
-                    if (arry.length > 5){
+                    if (arry.length > 5) {
                         tooltip += " " + arry[5];
                     }
                     
