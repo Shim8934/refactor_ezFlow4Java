@@ -1301,19 +1301,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         MimeMultipart relatedPart = null;
         
         if (!simpleMime.equals("1")) {
-	        if (root.getElementsByTagName("IMAGENAME") != null && root.getElementsByTagName("IMAGEPATH") != null) {
+        	NodeList imageNameList = root.getElementsByTagName("IMAGENAME");
+        	NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+        	
+	        if (imageNameList != null && imagePathList != null) {
 	        	String imageName = "";
 	            String imagePath = "";
 	        	
 	            relatedPart = new MimeMultipart("related");
 	            
 	        	for (int i=0; true; i++) {
-	            	if (root.getElementsByTagName("IMAGENAME").item(i) == null || root.getElementsByTagName("IMAGEPATH").item(i) == null) {
+	            	if (imageNameList.item(i) == null || imagePathList.item(i) == null) {
 	            		break;
 	            	}
 	            	
-	            	imageName = root.getElementsByTagName("IMAGENAME").item(i).getTextContent();
-	            	imagePath = root.getElementsByTagName("IMAGEPATH").item(i).getTextContent();
+	            	imageName = imageNameList.item(i).getTextContent();
+	            	imagePath = imagePathList.item(i).getTextContent();
 	            	
 	            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
 	                	//TODO: embedding제거
@@ -1535,15 +1538,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
         
         //서버에 업로드된 inline image 파일 삭제
-        if (root.getElementsByTagName("IMAGEPATH") != null) {
+        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+        if (imagePathList != null) {
             String imagePath = "";
             
         	for (int i=0; true; i++) {
-            	if (root.getElementsByTagName("IMAGEPATH").item(i) == null) {
+            	if (imagePathList.item(i) == null) {
             		break;
             	}
             	
-            	imagePath = root.getElementsByTagName("IMAGEPATH").item(i).getTextContent();
+            	imagePath = imagePathList.item(i).getTextContent();
             	
             	if (!imagePath.trim().equals("")) {
             		String realPath = request.getServletContext().getRealPath("");
