@@ -698,11 +698,13 @@
     var DragDropAttachObjetLoading = false;
     function DragObjectComplet() {
         DragDropAttachObjetLoading = true;
-        var AttachRows = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW")
-
-        if (AttachRows.length > 0) {
-            AppendFileAttachInfo(pAttachListXml);
-            dadiframe.fileupload2(pAttachListXml);
+        if (pAttachListXml != "") {
+	        var AttachRows = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW")
+	
+	        if (AttachRows.length > 0) {
+	            AppendFileAttachInfo(pAttachListXml);
+	            dadiframe.fileupload2(pAttachListXml);
+	        }
         }
     }
 
