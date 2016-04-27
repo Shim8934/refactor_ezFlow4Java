@@ -1600,6 +1600,49 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 일반 첨부파일 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailDelInterAttach.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Element root = xmlDoc.getDocumentElement();
+		
+		long uid = 0;
+		if (root.getElementsByTagName("ITEMID") != null) {
+			String uidStr = root.getElementsByTagName("ITEMID").item(0).getTextContent();
+			if (uidStr != null && !uidStr.trim().equals("")) {
+				uid = Long.parseLong(uidStr);
+			}
+			
+			if (uid != 0) {
+				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+						id+"@"+config.getProperty("config.DomainName"), password);
+				MimeMessage message = sa.createMimeMessage();
+				
+				NodeList rows = root.getElementsByTagName("ROW");
+				if (rows != null) {
+					
+				}
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * 대용량 첨부파일 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String fileListDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+		return "";
+	}
+	
+	/**
 	 * 사원 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8")
