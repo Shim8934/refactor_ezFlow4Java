@@ -64,7 +64,7 @@ function DelAttachFileAtList(obj) {
         }
         else {
             var xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("GET", "remote/FilelistDelete.aspx?filedata=" + filedate + "&realFileNM=" + pItemID.split('\\')[1], false);
+            xmlhttp.open("GET", "/ezEmail/fileListDelete.do?filedata=" + filedate + "&realFileNM=" + pItemID.split('\\')[1], false);
             xmlhttp.send();
         }
     } catch (ErrMsg) {
@@ -75,7 +75,7 @@ function DelAttachFileAtList(obj) {
 function DelList(resultXML) {
     var xml = loadXMLString(resultXML);
     xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_del_interattach.aspx", false);
+    xmlhttp.open("POST", "/ezEmail/mailDelInterAttach.do", false);
     xmlhttp.send(xml);
 }
 
