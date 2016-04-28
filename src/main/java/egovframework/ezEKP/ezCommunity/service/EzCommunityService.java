@@ -23,6 +23,8 @@ public interface EzCommunityService {
 	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception;
 	
 	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+	
+	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -69,6 +71,10 @@ public interface EzCommunityService {
 	public void bbsEditOkSet1(String bName, String title, String gant, String code, String attachList, String textContent) throws Exception;
 
 	public void bbsEditOkSet2(String bName, int myRef, int myStep, String code) throws Exception;
+
+	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception;
+
+	
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

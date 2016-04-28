@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>bbs_list</title>
+		<title><spring:message code='ezCommunity.t2001' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
@@ -29,7 +29,6 @@
 		    var totalCount = "<c:out value='${keywordCount}'/>";
 			function keyword_onkeydown(e) 
 			{
-				alert(window.ActiveXObject);
 			    if (!window.ActiveXObject) {
 			        var keyCode = e.keyCode;
 			    }
@@ -215,7 +214,6 @@
 	            
 	            var feature = "width=760,height=720";
 	            feature = feature + GetOpenPosition(760, 720);
-	            
 	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "<spring:message code = 'ezCommunity.t166'/>", feature);						        
 				
 			}

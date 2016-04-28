@@ -64,6 +64,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getBBSListGet2", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityCBoardVO> bbsViewNewGet2(String v_BNAME) throws Exception {
+		return (List<CommunityCBoardVO>) list("EzCommunityDAO.bbsViewNewGet2", v_BNAME);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -126,10 +131,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (int) map.get("v_pCount");
 	}
 
-	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.getBoardTreeSet", map);
-	}
-
 	public void bbsEditOkSet1(Map<String, Object> map) throws Exception{
 		update("EzCommunityDAO.bbsEditOkSet1", map);
 	}
@@ -138,7 +139,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.bbsEditOkSet2", map);
 	}
 
+	public void bbsEditOkInsert(Map<String, Object> map) throws Exception{
+		insert("EzCommunityDAO.bbsEditOkInsert", map);
+	}
 
+	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.getBoardTreeSet", map);
+	}
 
 
 }

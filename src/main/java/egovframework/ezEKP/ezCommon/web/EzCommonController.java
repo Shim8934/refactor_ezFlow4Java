@@ -266,7 +266,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		File file = new File(realPath + filePath);
 		
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
         
 		writeUploadedFile(multiFile, fileName, realPath + filePath);

@@ -343,6 +343,34 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		ezCommunityDAO.bbsEditOkSet2(map);
 	}
+	
+	@Override
+	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BNAME", bName);
+		map.put("v_MYREF", myRef);
+		map.put("v_NEWSTEP", newStep);
+		map.put("v_NEWLEVEL", newLevel);
+		map.put("v_ATTACHLIST", attachList);
+		map.put("v_NUMBER", number);
+		map.put("v_TEXTCONTENT", textContent);
+		map.put("v_DATETIME_NOW", nowDate);
+		map.put("v_FILENAME", fileName);
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERNM", userNm);
+		map.put("v_USERNM2", userNm2);
+		map.put("v_TITLE", title);
+		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+
+		ezCommunityDAO.bbsEditOkInsert(map);
+	}
+
+	@Override
+	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception {
+		return ezCommunityDAO.bbsViewNewGet2(bName);
+	}
 
 	@Override
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception {
@@ -392,6 +420,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return strReturn;
 	}
+	
+
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);
@@ -442,6 +472,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return sb.toString();
 	}*/
-	
+
+
 	
 }
