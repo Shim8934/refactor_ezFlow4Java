@@ -93,25 +93,25 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Autowired
 	private Properties globals;
 	
-	@Resource(name="loginService")
+	@Resource(name = "loginService")
 	private LoginService loginService;
 	
-	@Resource(name="crypto") 
+	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
  
-	@Resource(name="EzBoardService")
+	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
 	
-	@Resource(name="EzBoardAdminService")
+	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 
-	@Resource(name="EzOrganService")
+	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
-	@Resource(name="EzCommonService")
+	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	@Resource(name="egovMessageSource")
+	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);

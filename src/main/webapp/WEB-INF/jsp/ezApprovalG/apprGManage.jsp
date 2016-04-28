@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -17,6 +18,7 @@
 			}
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>	
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/setLogData.js"></script>
@@ -75,9 +77,12 @@
 		    var nowblock = "0";
 		    var OrderOption = "";
 		    var OrderCell = "";
+		    var USE_OCS = "${useOcs}";
 		    var SendOutFlag = "O";
 		    var userLang = "1";
+		    var pSelMenu = "${selMenu}";
 		    var pOpenYaer = "${openYear}";
+		    var ViewLeftCount = "${viewLeftCount}";
 		    var CurrentHeight = 0;
 		    var CurrentWidth = 0;
 		
@@ -1439,8 +1444,14 @@ End Function
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li>
 				<li id="tbtnApprove"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
-<%-- 				<li id="tbtnApproveALL"  <% if(Use_Mobile !="YES"){ %>style="DISPLAY:none" <%} %>><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li> --%>
-<%-- 				<li id="tbtnApprove2" <% if(Use_Mobile =="YES"){ %>style="DISPLAY:none" <%} %>><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li> --%>
+				<c:if test="${useMobile != 'YES'}">
+					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+					<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
+				</c:if>
+				<c:if test="${useMobile == 'YES'}">
+					<li id="tbtnApproveALL"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
+				</c:if>
 				<li id="tbtnReceipt"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>

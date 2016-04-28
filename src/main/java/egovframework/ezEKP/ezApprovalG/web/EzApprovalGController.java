@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -45,10 +46,10 @@ public class EzApprovalGController {
 	@Autowired
 	private Properties globals;
 
-	@Resource(name="EzApprovalGService")
+	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
 
-	@Resource(name="EzOrganService")
+	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value = "/ezApprovalG/apprGMain.do")
@@ -112,6 +113,7 @@ public class EzApprovalGController {
 		model.addAttribute("infoXML", infoXML);
 		model.addAttribute("userSendOut", userSendOut);
 		model.addAttribute("optGamsabu", optGamsabu);
+		model.addAttribute("firstContainerID", firstContainerID);
 		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
 		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang()));
 		
@@ -194,6 +196,10 @@ public class EzApprovalGController {
 		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		String susinAdmin = "";
 		String listType = request.getParameter("listType");
+		String viewLeftCount = config.getProperty("APPROVLEFTCOUNT");
+		String useMobile = config.getProperty("config.Use_Mobile");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String selMenu = "all";
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		nowDate = nowDate.substring(0, 16);
@@ -211,11 +217,116 @@ public class EzApprovalGController {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("viewLeftCount", viewLeftCount);
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("selMenu", selMenu);
 		model.addAttribute("openYear", openYear);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useMobile", useMobile);
 		model.addAttribute("listType", listType);
 		
 		return "ezApprovalG/apprGManage";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getAprDocList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		String listType = request.getParameter("listType");
+		String userID = request.getParameter("userID");
+		String deptID = request.getParameter("deptID");
+		String pageSize = request.getParameter("pageSize");
+		String pageNum = request.getParameter("pageNum");
+		String companyID = request.getParameter("companyID");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String searchQuery = request.getParameter("searchQuery");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userLang = userInfo.getLang();
+		Document domSub = null;
+		
+		if (searchQuery != null && searchQuery.length() > 10) {
+			String tempQuery = "";
+			String returnQuery = "(1 = 1) ";
+			
+			domSub = commonUtil.convertStringToDocument(searchQuery);
+			tempQuery = domSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+			
+			if (tempQuery.indexOf("DOCNO;") != -1) {
+				returnQuery += " AND DOCNO LIKE '%" + domSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+			}
+			
+			if (tempQuery.indexOf("DOCTITLE;") != -1) {
+                returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+            }
+
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
+                if (listType.equals("10")) {
+                	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                } else {
+                	returnQuery += " AND STARTDATE >=TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                }
+            }
+            
+            if (tempQuery.indexOf("APRENDDATE;") != -1) {
+                if (listType.equals("10")){
+                	returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                } else {
+                	returnQuery += " AND STARTDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                }
+            }
+            
+            if (tempQuery.indexOf("FORMID;") != -1) {
+                returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("KAPR;") != -1) {
+                returnQuery += " AND keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("KEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("CAPR;") != -1) {
+                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("CEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
+                returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            
+            searchQuery = returnQuery;
+		}
+		
+		String resultXML = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userLang, searchQuery, domSub);
+		
+		return resultXML;
 	}
 }

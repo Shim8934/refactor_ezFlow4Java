@@ -3,20 +3,30 @@
 
 <sqlMap namespace="ezApprovalG">
 	<typeAlias  alias="ApprGLeftVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO"/>
+	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
+	<typeAlias  alias="ApprGListHeaderVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO"/>
 	
-	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGLeftVO">
-		{CALL EZAPPROVALG_${companyNum}.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="ApprGLeftVO">
-		{CALL EZAPPROVALG_${companyNum}.EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getName2Code" parameterClass="Map" resultClass="ApprGLeftVO">
-		{CALL EZAPPROVALG_${companyNum}.EZSP_GETNAME2CODE(#v_CODE1#, #v_NAME#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzApprovalG.getName2Code" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETNAME2CODE(#v_CODE1#, #v_NAME#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<select id="EzApprovalG.getUseContInfo1" parameterClass="String" resultClass="ApprGLeftVO">
+	<procedure id="EzApprovalG.getAprDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLIST(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #iv_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<select id="EzApprovalG.getUseContInfo1" parameterClass="Map" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 
 				A.containerid ,
@@ -24,9 +34,9 @@
 	            B.containertypename2 ,
 	            B.containertypeid 
 	        FROM 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        	EZAPPROVALG_$companyID$.TBCONTAINER A
 	        JOIN 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        	EZAPPROVALG_$companyID$.TBCONTAINERTYPE B
 	        ON 
 	        	A.containertypeid = B.containertypeid
 	        WHERE  
@@ -36,7 +46,7 @@
         ]]>
 	</select>
 	
-	<select id="EzApprovalG.getUseContInfo2" parameterClass="String" resultClass="ApprGLeftVO">
+	<select id="EzApprovalG.getUseContInfo2" parameterClass="Map" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 
 				A.containerid ,
@@ -44,13 +54,13 @@
 	            B.containertypename2 ,
 	            B.containertypeid 
 	        FROM 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        	EZAPPROVALG_$companyID$.TBCONTAINER A
 	        JOIN 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        	EZAPPROVALG_$companyID$.TBCONTAINERTYPE B
 	        ON 
 	        	A.containertypeid = B.containertypeid
             JOIN 
-            	EZAPPROVALG_${companyNum}.TBCONTAINERUSEDEP C
+            	EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP C
             ON 
             	A.containerid = C.containerid
 	        WHERE  
@@ -62,7 +72,7 @@
         ]]>
 	</select>
 	
-	<select id="EzApprovalG.getUseContInfo3" parameterClass="String" resultClass="ApprGLeftVO">
+	<select id="EzApprovalG.getUseContInfo3" parameterClass="Map" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 
 				A.containerid ,
@@ -71,13 +81,13 @@
 	            B.containertypeid,
 	            A.containerowndepid
 	        FROM 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINER A
+	        	EZAPPROVALG_$companyID$.TBCONTAINER A
 	        JOIN 
-	        	EZAPPROVALG_${companyNum}.TBCONTAINERTYPE B
+	        	EZAPPROVALG_$companyID$.TBCONTAINERTYPE B
 	        ON 
 	        	A.containertypeid = B.containertypeid
             JOIN 
-            	EZAPPROVALG_${companyNum}.TBCONTAINERUSEDEP C
+            	EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP C
             ON 
             	A.containerid = C.containerid
 	        WHERE  
@@ -87,6 +97,32 @@
         	ORDER BY 
         		A.containerowndepid,
         		B.containertypeid
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getIsUse" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				isuse 
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBCODELIST 
+       		WHERE  
+       			code1 = #v_CODE1#
+            AND 
+            	code2 = #v_CODE2#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getAprDocListReceiveSN" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				receivesn 
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBAPRRECEIPTPROCESSINFO 
+       		WHERE  
+       			docid = #v_DOCID#
+            AND 
+            	receiveddeptid = #v_RECEIVEDDEPTID#
         ]]>
 	</select>
 </sqlMap>
