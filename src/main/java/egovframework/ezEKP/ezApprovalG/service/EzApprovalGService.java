@@ -15,4 +15,8 @@ public interface EzApprovalGService {
 
 	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData) throws Exception;
 
+	public String getProxyUser(String id, String string) throws Exception;
+
+	public String getAprLineInfo(String docID, String flag, String userID, String formID, String companyID) throws Exception;
+
 }

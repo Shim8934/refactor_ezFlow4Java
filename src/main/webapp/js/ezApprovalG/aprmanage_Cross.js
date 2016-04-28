@@ -568,28 +568,37 @@ function DisplayWaitStat() {
 }
 
 function getAprLine(tr) {
-    var pDocID;
+    var pDocID,pMode = "",pFlag = "";
 
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
 
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
 
-    if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-        createNodeAndInsertText(xmlpara, objNode, "Mode", "END");
-    else if (pListTypeValue == "21")
-        createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "Mode", "APR");
+    if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
+    	pMode = "END";
+    } else if (pListTypeValue == "21") {
+    	pFlag = "TMP";
+    } else {
+    	pMode = "APR";
+    }
 
-    xmlhttp.open("POST", "ezaprline/aspx/GetLineList.aspx", true);
-    xmlhttp.onreadystatechange = getAprovSub_after;
-    xmlhttp.send(xmlpara);
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezApprovalG/getLineList.do",
+		data : {
+				docID : pDocID,
+				mode  : pMode,
+				flag  : pFlag
+				},
+		success: function(xml){
+			getAprovSub_after(xml);
+		}        			
+	});
+    
 }
 
 function getAprovSub_after() {

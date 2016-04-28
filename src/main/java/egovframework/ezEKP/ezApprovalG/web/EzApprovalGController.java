@@ -329,4 +329,33 @@ public class EzApprovalGController {
 		
 		return resultXML;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getLineList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
+				if (docID != null && !docID.equals("")) {
+					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+					String[] proxyUserArray = proxyUser.split(",");
+					boolean checkPermission = true;
+					
+					if (proxyUserArray.length > 1) {
+						String docList = ezApprovalGService.getAprLineInfo(docID.trim(), "1", "", "", userInfo.getCompanyID());
+						Document docXML = commonUtil.convertStringToDocument(docList);
+System.out.println(docXML.getDocumentElement().getChildNodes().getLength());
+						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+							
+						}
+					}
+				}
+			}
+		}
+		return "";
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
@@ -37,6 +38,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGDocListVO> getAprDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprDocList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getAprLineInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getAprLineInfo", map);
+	}
 
 	public String getCode2Name(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getCode2Name", map);
@@ -50,13 +56,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getIsUse", map);
 	}
 
+	public String getAprDocListReceiveSN(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getAprDocListReceiveSN", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
-	}
-
-	public String getAprDocListReceiveSN(Map<String, Object> map) throws Exception{
-		return (String) select("EzApprovalG.getAprDocListReceiveSN", map);
 	}
 
 }

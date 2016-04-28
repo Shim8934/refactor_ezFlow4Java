@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
@@ -494,6 +495,7 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		return ezApprovalGDAO.getAprDocListCount(map);
 	}
 
+	@Override
 	public String getProxyUser(String userID, String userLang) throws Exception{
 		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, userLang);
 		Document doc = commonUtil.convertStringToDocument(rtnXML);
@@ -541,6 +543,28 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 
 	public String makeRightField(String userID) {
 		return userID.replace("'", "''").replace("\0", "");
+	}
+
+	@Override
+	public String getAprLineInfo(String docID, String flag, String userID, String formID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_FLAG", flag);
+		map.put("v_USERID", userID);
+		map.put("v_FORMID", formID);
+		map.put("companyID", companyID);
+		
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 
 }

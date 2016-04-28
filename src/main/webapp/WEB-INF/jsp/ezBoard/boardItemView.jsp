@@ -488,15 +488,15 @@
 		            checks.item(i).checked = true;
 		    }
 		    function attach_Download() {
-		        checks = lstAttachLink.getElementsByTagName("input");
+		        var checks = document.getElementById('lstAttachLink');
 		        downloadAll(checks);
 		    }
 		
 		    var suffix = 0;
 		    function downloadAll(checks) {
-		        if (checks.item(suffix)) {
-		            if (checks.item(suffix).checked) {
-		                location.href = GetAttribute(checks.item(suffix++), "filehref");
+		        if (checks.getElementsByTagName("input").item(suffix)) {
+		            if (checks.getElementsByTagName("input").item(suffix).checked) {
+		                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
 		                setTimeout(function () { downloadAll(checks) }, 1000);
 		            }
 		            else {
