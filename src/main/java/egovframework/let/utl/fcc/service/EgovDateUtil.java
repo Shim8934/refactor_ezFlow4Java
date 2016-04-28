@@ -273,10 +273,16 @@ public class EgovDateUtil {
 		if (EgovStringUtil.isNullToString(strSource).trim().equals("")) {
 			return "";
 		}
-		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals(""))
+		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals("")) {
 			_fromDateFormat = "yyyyMMddHHmmss"; // default값
-		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals(""))
+		} else {
+			_fromDateFormat = fromDateFormat;
+		}
+		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals("")) {
 			_toDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		} else {
+			_toDateFormat = toDateFormat;
+		}
 
 		try {
 			simpledateformat = new SimpleDateFormat(_fromDateFormat, Locale.getDefault());
