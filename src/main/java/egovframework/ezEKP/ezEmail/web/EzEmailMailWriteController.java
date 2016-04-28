@@ -756,6 +756,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 		String uidStr = xmldom.getElementsByTagName("URL").item(0).getTextContent();
 		
+		NodeList bigs = xmldom.getElementsByTagName("BIG");
+		boolean hasAttachFile = false;
+		if (bigs != null) {
+			for (int i=0; i<bigs.getLength(); i++) {
+				if (bigs.item(i).getTextContent().equals("N")) {
+					hasAttachFile = true;
+					break;
+				}
+			}
+		}
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -868,7 +879,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String xmldomStr = commonUtil.convertDocumentToString(xmldom);
 		return xmldomStr;
 	}
-	
 	
 	/**
 	 * 메일 전송 실행 함수
@@ -1600,6 +1610,46 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 첨부파일 정보(templist) 반환 함수
+	 */
+	@RequestMapping(value="/ezEmail/fileListSession.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String fileListSession(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
+		
+		String pDirPath = config.getProperty("upload_mail.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		pDirPath = realPath + pDirPath;
+		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
+    	
+		String returnValue = "";
+		File f = new File(xmlPath);
+        if (f.exists()) {
+			InputStreamReader isr = null;
+	    	BufferedReader br = null;
+	    	try {
+	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	br = new BufferedReader(isr);
+	        	int read = 0;
+				while ((read = br.read()) != -1) {
+					returnValue += (char)read;
+				}
+	    	} catch(Exception e) {
+	    		throw e;
+	    	} finally {
+	    		if (br != null) {
+	    			br.close();
+	    		}
+	    		if (isr != null) {
+	    			isr.close();
+	    		}
+	    	}
+        }
+		
+		return returnValue;
+	}
+	
+	/**
 	 * 일반 첨부파일 삭제 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailDelInterAttach.do", produces = "text/xml; charset=utf-8")
@@ -1636,9 +1686,50 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 대용량 첨부파일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String fileListDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String fileListDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
+		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
+		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
+		String pDirPath = config.getProperty("upload_mail.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		pDirPath = realPath + pDirPath;
+		String xmlPath = pDirPath + commonUtil.separator + fileData + ".txt";
+		
+		File f = new File(xmlPath);
+		if (f.exists()) {
+			String strXml = "";
+			InputStreamReader isr = null;
+			try {
+				isr = new InputStreamReader(new FileInputStream(xmlPath));
+			    int read = 0;
+				while ((read = isr.read()) != -1) {
+					strXml += (char)read;
+				}
+			} finally {
+				if (isr != null) {
+					isr.close();
+				}
+			}
+			
+			String strXml2 = "<ROOT><NODES>";
+			Document xmlDom = commonUtil.convertStringToDocument(strXml);
+			NodeList nodeList = xmlDom.getElementsByTagName("NODE");
+			if (nodeList != null) {
+				for (int i=0; i<nodeList.getLength(); i++) {
+					if (!nodeList.item(i).getFirstChild().getTextContent().equals(realFileNM)) {
+						strXml2 += nodeList.item(i).toString();
+					} else {
+						
+					}
+					
+				}
+				System.out.println(strXml2);
+			}
+		}
+		
+		
+		
 		return "";
 	}
 	

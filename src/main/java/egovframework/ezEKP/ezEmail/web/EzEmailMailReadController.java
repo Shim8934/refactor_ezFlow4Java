@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -28,6 +31,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +39,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -58,7 +64,7 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
  */
 
 @Controller
-public class EzEmailMailReadController {
+public class EzEmailMailReadController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailReadController.class);
 
@@ -433,7 +439,48 @@ public class EzEmailMailReadController {
 		}
 		ia.close();
 	}
-
+	
+	/**
+	 * 메일 대용량 첨부파일 다운로드 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
+	public void downloadAttachCommon(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
+		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
+		
+		String pDirPath = config.getProperty("upload_mail.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
+		pDirPath = realPath + pDirPath;
+		String xmlPath = pDirPath + commonUtil.separator + fileDate + commonUtil.separator + fileId;
+		
+		//get original filename from text file
+		String fileName = "";
+		File originalNameFile = new File(xmlPath + "__.txt");
+		if (originalNameFile.exists()) {
+			InputStreamReader isr = null;
+			try {
+				isr = new InputStreamReader(new FileInputStream(originalNameFile));
+			    int read = 0;
+				while ((read = isr.read()) != -1) {
+					fileName += (char)read;
+				}
+			} finally {
+				if (isr != null) {
+					isr.close();
+				}
+			}
+		}
+		
+		if (fileName.equals("")) {
+			fileName = fileId;
+		}
+		else {
+			fileName = new String(Base64.decodeBase64(fileName), "UTF-8");
+		}
+		
+		downFile(response, xmlPath, fileName);
+	}
+	
 	/**
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */

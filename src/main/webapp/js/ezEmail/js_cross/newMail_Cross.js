@@ -1803,7 +1803,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("GET", "remote/FilelistSession.aspx?filedata=" + filedate, false);
+        xmlhttp.open("GET", "/ezEmail/fileListSession.do?filedata=" + filedate, false);
         xmlhttp.send();
         var pAttachXml = loadXMLString(xmlhttp.responseText);
         var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
@@ -1823,7 +1823,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                         strTarget = "target=''";
                     }
 
-                    var EmailHref = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate;
+                    var EmailHref = "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
