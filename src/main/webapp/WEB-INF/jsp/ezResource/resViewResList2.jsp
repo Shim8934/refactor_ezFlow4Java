@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/ezResource/Calendar_Action_cross.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -113,7 +113,7 @@
 	    	}
 
 	    	function btnView_Resource() {
-		        var strUrl = "viewResList.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
+		        var strUrl = "/ezResource/viewResList.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdnm=" + encodeURI(pBrdnm);
 
 	    	    window.open(strUrl, 'right');
@@ -133,7 +133,7 @@
 	        	}
 
 	        	var pURL;
-	        	pURL = "/ezReource/ClsItem/AddClsItem.do?brdID=" + pBrdid
+	        	pURL = "/ezResource/ClsItem/AddClsItem.do?brdID=" + pBrdid
 	        	var openLocation = pURL;
 	        	openwindow(openLocation, "", 580, 450);
 	    	}
