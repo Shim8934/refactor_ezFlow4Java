@@ -33,8 +33,6 @@
 			
 			window.onload = function () {
 		        GetFileURL();
-		        
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommunity/getCommunityContentInfo.do&type=COMMUNITYNOTI&docID=" + escape(no);
 		      
 				var html = "";
 				$.ajax({
@@ -43,7 +41,7 @@
 					async : false,
 					url : "/ezCommunity/getCommunityContentInfo.do",
 					data : { type	:	"COMMUNITYNOTI", 
-							 docID	:	escape(no)
+							 itemID	:	escape(no)
 						   },
 					success: function(result){
 						html = result;
@@ -53,8 +51,6 @@
 				doc.open();
 				doc.write(html);
 				doc.close();
-				
-// 	            document.getElementById('message').src = "/ezCommon/getCommunityContentInfo.do?href=" + fullPath; 
 		        
 // 		        if (g_progresswin) {
 // 		        	g_progresswin.close();
@@ -104,7 +100,7 @@
 		    }
 				
 		    function btn_Modify_Onclick() {
-		        window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=edit&bName=" + bName + "&no=" + grsNo + "&pagec=" + pagec + "&block=" + nowBlock + "&sRadio= " + sRadio + "&keyword= " + keyword;
+		        window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=edit&bName=" + bName + "&no=" + grsNo + "&pagec=" + goToPage + "&block=" + nowBlock + "&sRadio= " + sRadio + "&keyword= " + keyword;
 		    }
 
 		    function OpenUserInfo(pUserID) {
@@ -201,7 +197,7 @@
 							<c:if test="${bName == 'c_board'}">
 								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
 							</c:if>
-							<c:if test="${strWriterID == userinfo.userID ||fn:indexOf(userinfo.rollInfo, 'c=1') > -1 || fn:indexOf(userinfo.rollInfo, 'k=1') > -1}">
+							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
 								<li id="btn_Delete"><span  onclick="btn_Delete_Onclick()" ><spring:message code='ezCommunity.t208' /></span></li>
 		          			</c:if>
@@ -237,14 +233,7 @@
   			</tr>
   			<tr>
 				<td style="padding-top:10px;height:70%" id="ItemOverflow">
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="((Request.UserAgent.IndexOf("MSIE") > -1 || Request.UserAgent.IndexOf("Trident") > -1) && Use_IE11Browser == "")"> --%>
-<!-- 							<iframe id="message" class="viewbox" src="" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe> -->
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-							<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
+					<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
     			</td>
   			</tr>
   			<tr>

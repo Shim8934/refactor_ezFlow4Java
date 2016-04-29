@@ -198,8 +198,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
+
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-        
         strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
         
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
@@ -796,29 +796,60 @@ public class EzCommonController extends EgovFileMngUtil{
 	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
         String filePath = "";
         String uploadModule = config.getProperty("config.LocalPath");
-
-        filePath = realPath + uploadModule;
-        File file = new File(filePath);
         
-        if (!file.exists()) {
-        	file.mkdir();
-        }
-        String url = ezCommonService.getContentInfo(type, itemID);
-        String m_strMHT = "";
-        
-        try {
-        	m_strMHT = loadMHTFile(realPath + url);
-		} catch (Exception e) {
-			m_strMHT= "";
+        //TODO 2016-04-28 community부분 추가
+        if (type.equals("COMMUNITYNOTI")) {
+			uploadModule = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator;
+			
+			filePath = realPath + uploadModule;
+	        File file = new File(filePath);
+	        
+	        if (!file.exists()) {
+	        	file.mkdir();
+	        }
+	        
+	        String url = ezCommonService.getContentInfo(type, itemID);
+	        String m_strMHT = "";
+	        
+	        try {
+	        	//
+	        	m_strMHT = loadMHTFile(filePath + url);
+			} catch (Exception e) {
+				m_strMHT= "";
+			}
+	        
+	        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+	        
+	        if (strHTML.trim().length() > 0) {
+	        	return strHTML;
+	        } else {
+	        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
+	        }
+		} else {
+			filePath = realPath + uploadModule;
+	        File file = new File(filePath);
+	        
+	        if (!file.exists()) {
+	        	file.mkdir();
+	        }
+	        
+	        String url = ezCommonService.getContentInfo(type, itemID);
+	        String m_strMHT = "";
+	        
+	        try {
+	        	m_strMHT = loadMHTFile(realPath + url);
+			} catch (Exception e) {
+				m_strMHT= "";
+			}
+	        
+	        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+	        
+	        if (strHTML.trim().length() > 0) {
+	        	return strHTML;
+	        } else {
+	        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
+	        }
 		}
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-        
-        if (strHTML.trim().length() > 0) {
-        	return strHTML;
-        } else {
-        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
-        }
-
 	}
 	
 	/**
@@ -832,13 +863,13 @@ public class EzCommonController extends EgovFileMngUtil{
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		
 		strBoundary = getBoundaryText(m_strMHT);
-		
+
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
 				return egovMessageSource.getMessage("main.t0600", new Locale(globals.getProperty("Globals.language")));
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
-				
+
 				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator() + System.lineSeparator());
 					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
@@ -856,6 +887,7 @@ public class EzCommonController extends EgovFileMngUtil{
 						}
 					}
 				}
+
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i)); 
@@ -863,7 +895,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				} else {
 					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));
 				}
-				return m_strHTML;
+				return m_strHTML.replace("&nbsp;", "");
 			}
 		} else {
 			return egovMessageSource.getMessage("main.t0602", new Locale(globals.getProperty("Globals.language")));

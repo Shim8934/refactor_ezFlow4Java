@@ -47,6 +47,7 @@
 			    var XmlBodyATT = createXmlDom();
 			    var XmlBodyDATA = createXmlDom();
 			    var tempStr = "";
+
 			    tempStr = ConvertMHTtoHTML(url);
 			    tempXML = loadXMLString(tempStr);
 

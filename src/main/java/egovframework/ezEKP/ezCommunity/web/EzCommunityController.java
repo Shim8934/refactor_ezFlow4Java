@@ -632,7 +632,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsViewNew.do")
 	public String bbsNewViewNew(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-		String keyword = "", sRadio = "", pagec = "";
+		String keyword = "", sRadio = "", pagec = "1";
 		String strTitle = "", strWriteName = "", strWriterID = "";
 		int myStep = 0, myLevel = 0, grsRef = 0, readNo = 0, grsNo = 0;	
 		String previousItemID = "", nextItemID = "";
@@ -703,7 +703,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		for (int i = 0; i < cBoardList.size(); i++) {
 			if (cBoardList.get(i).getNo() == grsNo) {
-				if (i+1 <= cBoardList.size()) {
+				if (i < cBoardList.size()-1) {
 					nextItemID = Integer.toString(cBoardList.get(i+1).getNo());
 					nextTitle = cBoardList.get(i+1).getTitle();
 				}
@@ -719,8 +719,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strTitle", strTitle);
 		model.addAttribute("myStep", myStep);
 		model.addAttribute("myLevel", myLevel);
+		model.addAttribute("grsRef", grsRef);
 		model.addAttribute("readNo", readNo);
 		model.addAttribute("grsNo", grsNo);
+		model.addAttribute("pagec", pagec);		
 		model.addAttribute("strWriteDate", strWriteDate);
 		model.addAttribute("strWriteName", strWriteName);
 		model.addAttribute("strWriterID", strWriterID);
@@ -739,8 +741,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do")
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception{
-		String code = "", sRadio = "", keyword = "", cID = "", no = "", fileName = "", title = "", grsUserName = "", attachFiles = "", writeFakeName = "";
-		int pagec = 0, block = 0, myStep = 0, myLevel = 0, grsRef = 0;
+		String code = "", sRadio = "", keyword = "", cID = "", no = "", fileName = "", title = "", grsUserName = "", attachFiles = "", writeFakerName = "";
+		int pagec = 0, block = 0;
+		String step = "", level = "", ref = "";
 		
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
@@ -758,10 +761,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pagec = Integer.parseInt(request.getParameter("pagec"));
 			block = Integer.parseInt(request.getParameter("block"));
 		} else {
-		//TODO 쓰기일때 
+			step = request.getParameter("step");
+			level = request.getParameter("level");
+			ref = request.getParameter("ref");
 			
-			
+			if (request.getParameter("no") != null) {
+				no = request.getParameter("no");
+			}
+			if (request.getParameter("pagec") != null) {
+				pagec = Integer.parseInt(request.getParameter("pagec"));
+			}
 		}
+		
 		//TODO 2016-04-27 이효진 사용하는곳 없음
 		/*if (!code.equals("")){
 			String titleName = ezCommunityService.getBoardTitleName(bName, code);
@@ -776,7 +787,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			fileName = ezCommunityService.bbsEditGet1(bName, no);
 			cBoardVO = ezCommunityService.bbsEditNew(bName, no, commonUtil.getMultiData(loginVO.getLang()));
 			
-			 if (!no.equals("") && !mode.equals("edit")) {
+			 if (!no.equals("")) { // 수정(mode : "edit") 답변 (mode : "write")
 				 if (loginVO.getLang().equals("2")) {
 					 grsUserName = loginVO.getDisplayName2();
 				 } else {
@@ -791,9 +802,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			 }
 			 
 			 if (commonUtil.getMultiData(loginVO.getLang()).equals("2")) {
-				 writeFakeName = cBoardVO.getUserName2();
+				 writeFakerName = cBoardVO.getUserName2();
 			 } else {
-				 writeFakeName = cBoardVO.getUserName();
+				 writeFakerName = cBoardVO.getUserName();
 			 }
 		} else { // 쓰기(mode :  "write")
 			if (loginVO.getLang().equals("2")) {
@@ -812,16 +823,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("bName", bName);
 		model.addAttribute("grsUserName", grsUserName);
-		model.addAttribute("writeFakeName", writeFakeName);
+		model.addAttribute("writerFakerName", writeFakerName);
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("userInfoUserNM1", loginVO.getDisplayName1());
 		model.addAttribute("userInfoUserNM2", loginVO.getDisplayName2());
 		model.addAttribute("userInfoUserID", loginVO.getId());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("cBoard", cBoardVO);
+		model.addAttribute("step", step);
+		model.addAttribute("level", level);
+		model.addAttribute("gref", ref);
 		
 		return "/ezCommunity/board/bbsEditNew";
-		
 	}
 	
 	/**
@@ -832,7 +845,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String bbsEditOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(xmlData);		
-		
+
 		int myRef = 0, myStep = 0, myLevel = 0;
 		String mode = doc.getElementsByTagName("Mode").item(0).getTextContent();
 		String code = doc.getElementsByTagName("Code").item(0).getTextContent();
@@ -867,48 +880,47 @@ public class EzCommunityController extends EgovFileMngUtil{
         InputStream is = null;
         OutputStream os = null;
         PrintWriter pw = null;
-        
+
         if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = ezCommunityService.bbsEditOkGet1(bName, gant, code);
-        	
         	int adminCheck = ezCommunityService.bbsAdminCheck(loginVO.getId(), loginVO.getRollInfo());
-        	if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
-                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
-                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName() + ".mht";
-                
-                try{
-	                is = new ByteArrayInputStream(MHTcontent.getBytes("UTF-8"));
-	                os = new FileOutputStream(strPath);
-	                int bytesRead = 0;
-	    		    byte[] buffer = new byte[BUFF_SIZE];
-	    	
-	    		    while ((bytesRead = is.read(buffer, 0, BUFF_SIZE)) != -1) {
-	    		    	os.write(buffer, 0, bytesRead);
-	    		    } 
-	    		    
-                } catch (FileNotFoundException fnfe) {
-    				LOGGER.debug("fnfe: {}", fnfe);
-    			} catch (IOException ioe) {
-    				LOGGER.debug("ioe: {}", ioe);
-    			} catch (Exception e) {
-    				LOGGER.debug("e: {}", e);
-    			} finally {
-    			    if (os != null) {
-    					try {
-    					    os.close();
-    					} catch (Exception ignore) {
-    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-    					}
-    			    }
-    			    
-    			    if (is != null) {
-    					try {
-    					    is.close();
-    					} catch (Exception ignore) {
-    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-    					}
-    			    }
-                }
+
+        	if (cBoard != null) {
+        		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
+    			//if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
+        		if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1) {
+        			textContent = textContent.substring(624);
+	                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
+	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
+	                
+	                try{
+		    		    pw = new PrintWriter(new File(strPath));
+			    		pw.print(MHTcontent);
+			    		pw.flush();
+			    		pw.close();
+			    		
+	                } catch (FileNotFoundException fnfe) {
+	    				LOGGER.debug("fnfe: {}", fnfe);
+	    			} catch (Exception e) {
+	    				LOGGER.debug("e: {}", e);
+	    			} finally {
+	    			    if (os != null) {
+	    					try {
+	    					    os.close();
+	    					} catch (Exception ignore) {
+	    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+	    					}
+	    			    }
+	    			    
+	    			    if (is != null) {
+	    					try {
+	    					    is.close();
+	    					} catch (Exception ignore) {
+	    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+	    					}
+	    			    }
+	                }
+	        	}
         	}
         } else {
         	String fileName = "";
@@ -1029,10 +1041,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getCommunityContentInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String type = request.getParameter("type");
-		String docID = request.getParameter("docID");
+		String itemID = request.getParameter("itemID");
 		String realPath = request.getServletContext().getRealPath("");
-		String fileName = ezCommonService.getContentInfo(type, docID);
+		String strUrl = ezCommonService.getContentInfo(type, itemID);
 		String filePath = "";
+		String m_strMHT = "";
 
 		if (type.equals("COMMUNITYNOTI")) {
 			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator;
@@ -1040,13 +1053,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 			filePath = "";
 		}
 
+		try{
+			m_strMHT = ezCommonController.loadMHTFile(realPath + filePath + strUrl);
+		}catch(Exception e){
+			m_strMHT = "";
+		}
 		
-		/*if (!filePath.equals("")) {
-			ezCommonService.responseAttach(filePath, fileName, false, request, response);
-		}*/
-		
-        String m_strMHT = ezCommonController.loadMHTFile(realPath + filePath + fileName);
         String strHTML = ezCommonController.startMHT2HTML(realPath +filePath, m_strMHT, realPath + filePath);
+
         
         if (strHTML.trim().length() > 0) {
         	return strHTML;

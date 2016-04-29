@@ -22,7 +22,7 @@
 			var DHTMLEditCtrlLoadFlag = false;
 			var pMode = "<c:out value='${mode}'/>";
 			var pNo = "<c:out value='${no}'/>";
-			var pGant = "<c:out value='${grsNo}'/>";
+			var pGant = "<c:out value='${cBoard.no}'/>";
 			var pSradio = "<c:out value='${sRadio}'/>";
 			var pKeyword = "<c:out value='${keyword}'/>";
 			var pID = "<c:out value='${grsID}'/>";
@@ -39,6 +39,7 @@
 			var strContentLocation ="";
 			var g_progresswin;
 			var pTitle = "<c:out value='${cBoard.title}'/>";
+			var wDate = "<c:out value='${cBoard.writeDay}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
 			
@@ -47,6 +48,7 @@
 			}
 			
 			window.onload = function() {
+				alert(pCode, pGant);
 				document.getElementById("title").focus();
 
                 if (pMode == "write" && pNo != "" && (pBname == "c_clubpds" || pBname == "c_clubpds1")) {
@@ -55,7 +57,7 @@
 				}
                 
 				if (pMode == "edit" || pNo != "") {
-					document.getElementById("title").value = ConvMakeXMLString(pTitle);
+					document.getElementById("title").value = pTitle;
 				}
 			}
 			
@@ -85,12 +87,12 @@
 			
 			function mhtml_encodecomplete( ntype ) {
 				var pAttachFileList ="";
-				
+
 				if ( ntype == 0 ) {
 					idstate.style.display = "none";
 					
                     if (pMode == "write" && pNo != "") {
-// 					    var html = '<div style=\"font-family: '<spring:message code = "ezCommunity.t128"/>'\">&nbsp;<div><BLOCKQUOTE style="MARGIN-RIGHT: 0px; MARGIN-TOP: 0px"><DIV>-------------------------[ <spring:message code = "ezCommunity.t131"/> ] -------------------------</DIV>' + i_mhtml.htmlData + '</BLOCKQUOTE></div></div>';
+                    	var html = '<div style=\"font-family: <spring:message code = "ezCommunity.t150"/>">&nbsp;<div><BLOCKQUOTE style="MARGIN-RIGHT: 0px; MARGIN-TOP: 0px"><DIV>-------------------------[ <spring:message code = "ezCommunity.t131"/> ] -------------------------</DIV>' + i_mhtml.htmlData + '</BLOCKQUOTE></div></div>';
 					    tbContentElement.editor.DOM.body.innerHTML = html;
                     } else {
 // 					    tbContentElement.editor.DOM.body.innerHTML = '<div style=\"font-family: <spring:message code = "ezCommunity.t150"/> \">' + i_mhtml.htmlData + '</div>';
@@ -136,7 +138,6 @@
 						alert("<spring:message code = 'ezCommunity.t152'/>");
 					} else {
 						alert("<spring:message code = 'ezCommunity.t153'/>");
-					    i_mhtml_save = null;
 					    
 					    if (window.opener.parent.left != undefined) {
 					        window.opener.parent.left.getBoardList();
@@ -192,18 +193,18 @@
 						break;
 				}
 				
-				strContentLocation = "/upload_community/filedata/" + strReturn + "/" + fileName;
+				strContentLocation = "/files/upload_community/filedata/" + strReturn + "/" + fileName;
 			}
 			
 			var isComplete = false;
 			function DocumentComplete() {
 			    if(pNo != "") {
 			        GetFileURL();
-			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+			        var fullPath = strContentLocation;
 			        var htmlData = message.SetEditorContentURL2(fullPath);
 			        
 			        if(pMode == "write" && pNo != "") {
-			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t152"/>" + "</B>" + "${wdate}" + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + title + "<br><br>" + htmlData;
+			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + pTitle + "<br><br>" + htmlData;
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);

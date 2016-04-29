@@ -1,4 +1,4 @@
-﻿//XMLHttpRequest객체를 생성합니다.
+﻿﻿//XMLHttpRequest객체를 생성합니다.
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -777,9 +777,9 @@ function GetNamedItem(iframePage, id, index) {
 function GetMhtContentHTML(pfilepath) {
     var Result = "";
     try {
-        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pfilepath);
+        var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filepath=" + escape(pfilepath);
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath, false);
+        xmlhttp.open("POST", "/ezCommon/mhtToHTMLContent.do?href=" + fullPath, false);
         xmlhttp.send();
         Result = xmlhttp.responseText;
     } catch (e) {
