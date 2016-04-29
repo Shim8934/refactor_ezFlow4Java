@@ -1,0 +1,670 @@
+﻿<public:component urn="www.asitaka.com:organtreeview">
+
+<public:property name="config" put="put_config" />
+<public:property name="source" put="put_source" />
+<public:property name="selectedIndex" get="get_selectedIndex" />
+<public:property name="gnodeid" get="get_gnodeid" />
+<public:property name="dragdrop" put="put_dragdrop" />
+<public:property name="nodecount" get="get_nodecount" />
+<public:property name="server" put="put_server" />
+
+<public:method name="update" internalname="ex_update" />
+<public:method name="toggle" internalname="ex_toggle" />
+<public:method name="getvalue" internalname="ex_getvalue" />
+<public:method name="putvalue" internalname="ex_putvalue" />
+<public:method name="putcaption" internalname="ex_putcaption" />
+<public:method name="select" internalname="ex_select" />
+<public:method name="putchildxml" internalname="ex_putchildxml" />
+<public:method name="deletenode" internalname="ex_deletenode" />
+<public:method name="addnode" internalname="ex_addnode" />
+<public:method name="findindex" internalname="ex_findindex" />
+<public:method name="haschild" internalname="ex_haschild" />
+
+<public:event name="onnodedblclick" id="nodedblclick" />
+<public:event name="onnodeselect" id="nodeselect" />
+<public:event name="onrequestdata" id="noderequestdata" />
+
+<public:attach event="onselectstart" for="element" handler="event_onselectstart" />
+<public:attach event="onmousedown" for="element" handler="event_onmousedown" />
+<public:attach event="ondblclick" for="element" handler="event_ondblclick" />
+<public:attach event="onmouseover" for="element" handler="event_onmouseover" />
+<public:attach event="onmouseout" for="element" handler="event_onmouseout" />
+<public:attach event="onkeydown" for="element" handler="event_onkeydown" />
+<public:attach event="onbeforeunload" for="window" handler="event_onbeforeunload" />
+
+<script language="JScript">
+	var g_configXML = null;
+	var g_treeXML = null;
+	var g_nodeArray = {"nodeXML":new Array(), "depth":new Array()};
+	var g_nodeCount = 0;
+	var g_baseImage = new Array();
+	var g_baseImageName = new Array();
+	var g_baseClass = new Array();
+	var g_images = new Array();
+	var g_selectedIdx = -1;
+	var g_toggleid = element.id + "_img_";
+	var g_nodeid = element.id + "_node_";
+	var g_childid = element.id + "_child_";
+	var g_imageWidth = -1;
+	var g_imageHeight = -1;
+	var g_serverName = "";
+
+	function put_source(sourceXML)
+	{
+		if (typeof(sourceXML) == "object")
+			g_treeXML = sourceXML;
+		else
+		{
+			g_treeXML = new ActiveXObject("Microsoft.XMLDom");
+			g_treeXML.loadXML(sourceXML);
+		}
+	}
+
+	function put_config(configXML)
+	{
+		g_configXML = configXML;
+	}
+	
+	function get_selectedIndex()
+	{
+		return g_selectedIdx;
+	}
+
+	function get_gnodeid()
+	{
+		return g_nodeid;
+	}
+	
+	function get_nodecount()
+	{
+		return g_nodeCount;
+	}
+
+	function put_server(server)
+	{
+		g_serverName = server;
+	}
+
+	function ex_select(nodeIdx)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return;
+
+		if (g_selectedIdx != -1)
+			element.all(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
+
+		element.all(g_nodeid + nodeIdx).className = g_baseClass["selected"];
+		g_selectedIdx = nodeIdx;
+		nodeselect.fire();
+	}
+
+	function ex_update()
+	{
+		if (g_treeXML == null)
+			return;
+        
+		g_nodeCount = 0;
+		g_selectedIdx = -1;
+		set_initvalue();
+		element.innerHTML = make_childHtml(0, g_treeXML.selectSingleNode("TREEVIEWDATA").selectNodes("NODE"));
+	
+		if (g_selectedIdx != -1)
+		{
+			nodeselect.fire();
+			
+			var height = element.all(g_nodeid + g_selectedIdx).clientHeight;
+			height = height * g_selectedIdx - this.clientHeight / 2 - height / 2;
+		
+			if (height > 0)
+				this.scrollTop = height;
+		}
+	}
+
+	function ex_toggle(nodeIdx)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return;
+
+		if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["plus_normal"]) == -1 &&
+		    element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["minus_normal"]) == -1 &&
+		    element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["plus_end"]) == -1 &&
+		    element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["minus_end"]) == -1)
+			return;
+
+		if (element.all(g_childid + nodeIdx).style.display == "none")
+		{
+			element.all(g_childid + nodeIdx).style.display = "";
+			if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["plus_normal"]) >= 0)
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"];
+			else
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_end"];
+
+			if (element.all(g_childid + nodeIdx).innerHTML == "")
+			{
+				var oEvent = createEventObject();
+				oEvent.nodeIdx = nodeIdx;
+				noderequestdata.fire(oEvent);
+			}	
+		}
+		else
+		{
+			element.all(g_childid + nodeIdx).style.display = "none";
+			if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["minus_normal"]) >= 0)
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_normal"];
+			else
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_end"];
+		}
+	}
+
+	function ex_getvalue(nodeIdx, valueName)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return "";
+
+		return g_nodeArray["nodeXML"][nodeIdx][valueName];
+	}
+	
+	// 수정(2007.05.30) : DATA 값 변경함수 추가
+	function ex_putvalue(nodeIdx, valueName, value)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return "";
+		
+		g_nodeArray["nodeXML"][nodeIdx][valueName] = value;
+	}
+	
+	// 수정(2007.05.30) : Text 값 변경함수 추가
+	function ex_putcaption(nodeIdx, caption)
+	{
+		element.all(g_nodeid + nodeIdx).innerHTML = caption;
+	}
+	
+	function ex_putchildxml(nodeIdx, childxml)
+	{	
+		if (typeof(childxml) == "object")
+			var childXML = childxml;
+		else
+		{
+			var childXML = new ActiveXObject("Microsoft.XMLDom");
+			childXML.loadXML(childxml);
+		}
+
+		var childHTML = make_childHtml(nodeIdx, childXML.documentElement.selectNodes("NODE"));
+
+		if (childHTML == "<div></div>")
+		{
+			element.all(g_childid + nodeIdx).style.display = "none";
+			if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImageName["minus_normal"]) >= 0)
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_normal"];
+			else
+				element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_end"];
+		}
+		else
+			element.all(g_childid + nodeIdx).innerHTML = childHTML;
+	}
+
+	function ex_findindex(valueName, value)
+	{
+		for (var i=1; i<=g_nodeCount; i++)
+		{
+			try {
+				if (g_nodeArray["nodeXML"][i] != null)
+					if (g_nodeArray["nodeXML"][i].selectSingleNode(valueName) != null)
+						if (g_nodeArray["nodeXML"][i].selectSingleNode(valueName).text == value)
+							return i;
+			} catch(e) {}
+		}
+
+		return -1;
+	}
+
+	function ex_haschild(nodeIdx)
+	{
+		var depth = g_nodeArray["depth"][nodeIdx].length;
+		var src = element.all(g_nodeid + nodeIdx).parentElement.children.item(depth-1).src;		
+
+		if (src.indexOf(g_baseImageName["plus_normal"]) > 0 || 
+		    src.indexOf(g_baseImageName["plus_end"]) > 0 ||
+		    src.indexOf(g_baseImageName["minus_normal"]) > 0 ||
+		    src.indexOf(g_baseImageName["minus_end"]) > 0)
+			return true;
+		else
+			return false;			
+	}
+
+	function event_onselectstart()
+	{
+		event.cancelBubble = true;
+		event.returnValue = false;
+	}
+
+	function event_onmousedown()
+	{
+		var elementid = window.event.srcElement.id;
+		if (elementid.indexOf(g_toggleid) == 0)
+			ex_toggle(elementid.split(g_toggleid)[1]);
+		else if (elementid.indexOf(g_nodeid) == 0)
+			ex_select(elementid.split(g_nodeid)[1]);
+	}
+
+	function event_ondblclick()
+	{
+		var elementid = window.event.srcElement.id;
+
+		if (elementid.indexOf(g_nodeid) == 0)
+			nodedblclick.fire();
+	}
+
+	function event_onmouseover()
+	{
+		var elementid = window.event.srcElement.id;
+
+		if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+			element.all(elementid).className = g_baseClass["hover"];
+	}
+
+	function event_onmouseout()
+	{
+		var elementid = window.event.srcElement.id;
+
+		if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+		{
+			if (g_selectedIdx == elementid.split(g_nodeid)[1])
+				element.all(elementid).className = g_baseClass["selected"];
+			else
+				element.all(elementid).className = g_baseClass["normal"];
+		}
+	}
+
+	function event_onkeydown()
+	{
+		try {
+			var href = window.event.srcElement.href;
+			// tab키(9) : 노드 이동 (웹브라우저 이동 패턴 사용)
+			// enter키(13) : 노드 선택 (웹브라우저의 노드 선택 패턴 사용)
+			// right arrow(39)/left(37) arrow 키 : 노드 expand/fold
+			if (window.event.keyCode == 39 || window.event.keyCode == 37)
+			{
+				ex_select(href.split('#')[1]);
+				ex_toggle(get_selectedIndex());
+			}
+			if (window.event.keyCode == 13)
+			{
+				ex_select(href.split('#')[1]);
+			}
+		}
+		catch (e)
+		{
+			;
+		}
+	}
+
+	function event_onbeforeunload()
+	{
+		g_treeXML = null;
+	}
+
+	function make_childHtml(nodeIdx, nodeXML)
+	{
+		if (nodeIdx == 0)
+			var depth = "";
+		else
+			var depth = g_nodeArray["depth"][nodeIdx];
+
+		var childHtml = "<div>";
+		var childLength = nodeXML.length;
+
+		for (var i=0; i<childLength; i++)
+		{
+			g_nodeCount++;
+			
+			var nodeCount = g_nodeCount;			
+			var mydepth = depth;
+			var childNode = nodeXML.item(i);
+			var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+			
+			for (var j=0; j< depth.length; j++)
+			{
+				if (depth.charAt(j) == "1")
+					nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+				else
+					nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+			}
+
+			var bEndNode = (i == childLength-1)?true:false;
+			if (childNode.selectSingleNode("ISLEAF").text == "FALSE"){
+				bParent = true;
+			}else{
+				bParent = false;
+			}
+
+			nodeHtml += "<img src='";
+			if (bParent)
+			{
+				if (!bEndNode)
+				{
+					if (childNode.selectSingleNode("NODES") == null)
+						nodeHtml += g_baseImage["plus_normal"];
+					else
+						nodeHtml += g_baseImage["minus_normal"];
+					mydepth += "1";
+				}
+				else
+				{
+					if (childNode.selectSingleNode("NODES") == null)
+					    nodeHtml += g_baseImage["plus_normal"];
+					else
+					    nodeHtml += g_baseImage["minus_normal"];
+
+					mydepth += "0";
+				}
+
+				nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+			}
+			else
+			{
+				if (!bEndNode)
+				{
+					nodeHtml += g_baseImage["dot_normal"];
+					mydepth += "1";
+				}
+				else
+				{
+					nodeHtml += g_baseImage["dot_end"];
+					mydepth += "0";
+				}
+
+				nodeHtml += ("' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+			}
+			
+			if (childNode.selectSingleNode("SETNODEICONBYNAME") != null)
+				nodeHtml += ("<img src='" + g_images[childNode.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
+			else
+				nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+
+			//표준모듈(2012.11.19) 수정 : 수신할 수 없는 기관은 GRAY색상으로 표시 처리
+			var color = "";
+			if(childNode.selectSingleNode("SETTEXTCOLORBYNAME") != null)
+			{
+			    color = "#bbbbbb";//childNode.selectSingleNode("SETTEXTCOLORBYNAME").text
+			}
+
+			if (childNode.selectSingleNode("SELECT") != null)
+			{
+				nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" + 
+						g_baseClass["selected"] + "' style='color:" + color + "'>"); 
+				g_selectedIdx = nodeCount;
+			}
+			else			
+				nodeHtml += ("<a href='#" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" + 
+						g_baseClass["normal"] + "' style='color:" + color + "'>"); 
+
+      //표준모듈(2012.11.19) 수정 : 수신할 수 없는 기관은 GRAY색상으로 표시 처리 완료
+            
+			nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></a></div>");
+			
+
+			g_nodeArray["nodeXML"][nodeCount] = new Array();
+			for (var j=0; j<childNode.childNodes.length; j++)
+			{
+				if (childNode.childNodes.item(j).nodeName != "NODES")
+					g_nodeArray["nodeXML"][nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+			}
+
+			g_nodeArray["depth"][nodeCount] = mydepth;
+	
+			if (childNode.selectSingleNode("NODES") != null)
+			{
+				nodeHtml += ("<span id='" + g_childid + nodeCount + "'>" + make_childHtml(nodeCount, childNode.selectSingleNode("NODES").selectNodes("NODE")) + "</span>");
+				nodeHtml += "</div>"
+			}
+			else
+			{
+				nodeHtml += ("<span style='display:none' id='" + g_childid + nodeCount + "'></span>");
+				nodeHtml += "</div>"
+			}
+
+			childHtml += nodeHtml;
+			childNode = null;
+		}
+		childHtml += "</div>"
+
+		nodeXML = null;
+		return childHtml;
+	}
+
+	function set_initvalue()
+	{
+		var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+		var protocol = window.location.protocol;
+		var serverName = window.location.hostname;
+		
+		var downloadPath = "";
+		for(var i=0; i<bimageNodes.length; i++)
+		{
+			g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
+			downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
+			g_baseImage[bimageNodes.item(i).nodeName] = downloadPath;
+		}
+
+		bimageNodes = null;
+
+		var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+		for(var i=0; i<imageNodes.length; i++)
+		{
+			downloadPath = protocol + "//" + serverName + imageNodes.item(i).attributes.getNamedItem("path").text;
+		   	g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = downloadPath;
+		}
+
+		imageNodes = null;
+
+		var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+		for(var i=0; i<classNodes.length; i++)
+			g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+		
+		classNodes = null;
+
+		g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
+		g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+	}
+	
+	// 수정(2007.05.30) : 노드 추가가 정상적으로 처리되지 않아 함수 변경
+	function ex_addnode(nodeIdx, nodeXML)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return "";
+
+		var node = element.all(g_nodeid + nodeIdx)
+		var depth = g_nodeArray["depth"][nodeIdx].length;
+		var childNodes = element.all(g_nodeid + nodeIdx).parentNode.parentNode.parentNode.children.item(1);
+		
+		if (childNodes.innerHTML == "")
+		{
+			var imgnode = node.parentElement.parentElement.children.item(depth-1);
+
+			if( imgnode != null )
+			{
+				if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0)
+					imgnode.src = g_baseImage["plus_normal"];
+				else if (imgnode.src.indexOf(g_baseImageName["dot_end"]) >= 0)
+					imgnode.src = g_baseImage["plus_end"];
+				
+				imgnode = null;
+			}
+		}
+		else
+		{
+			var childXML = new ActiveXObject("Microsoft.XMLDom");
+			childXML.loadXML(nodeXML);
+
+			g_nodeCount++;
+
+			var childNode = childXML.childNodes.item(0);
+			
+			var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+			for (var j=0; j< depth; j++)
+			{
+				if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
+					nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+				else
+					nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+			}
+
+			nodeHtml += ("<img src='" + g_baseImage["dot_end"]);
+			nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+
+			if (childXML.documentElement.selectSingleNode("SETNODEICONBYNAME") != null)
+				nodeHtml += ("<img src='" + g_images[childXML.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
+			else
+				nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+
+			nodeHtml += ("<a href='#" + g_nodeCount + "'><span id='" + g_nodeid + g_nodeCount + "' class='" + 
+					g_baseClass["normal"] + "'>");
+
+			nodeHtml += (childXML.documentElement.selectSingleNode("VALUE").text + "</span></a></div>");
+			
+			g_nodeArray["nodeXML"][g_nodeCount] = new Array();
+			for (var j=0; j<childNode.childNodes.length; j++)
+			{
+				if (childNode.childNodes.item(j).nodeName != "NODES")
+					g_nodeArray["nodeXML"][g_nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+			}
+			
+			nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
+			
+			var nodeDIV = document.createElement("DIV");
+			nodeDIV.innerHTML = nodeHtml;
+			childNodes.children.item(0).appendChild(nodeDIV);
+			
+			var prelastnode = childNodes.children.item(0).children.item(0).children.item(childNodes.children.item(0).children.item(0).children.length-2);
+			if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["dot_end"]) >= 0)
+			{
+				prelastnode.children.item(depth).src = g_baseImage["dot_normal"];
+			}
+			else
+			{
+				if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["plus_end"]) >= 0)
+					prelastnode.children.item(depth).src = g_baseImage["plus_normal"];
+				else
+					prelastnode.children.item(depth).src = g_baseImage["minus_normal"];
+
+				//changeRecursiveImg(prelastnode.parentNode, false, depth, 0);
+			}
+
+			var depthlist = g_nodeArray["depth"][prelastnode.children.item(depth+2).children.item(0).id.split(g_nodeid)[1]];
+			depthlist = depthlist.substr(0, depthlist.length-1) + "1";
+			g_nodeArray["depth"][prelastnode.children.item(depth+2).id.split(g_nodeid)[1]] = depthlist;
+			g_nodeArray["depth"][g_nodeCount] = g_nodeArray["depth"][nodeIdx] + "0";
+			
+			nodeDIV = null;
+			prelastnode = null;
+			childXML = null;
+		}
+		
+		node = null;
+		childnodes = null;
+	}
+	
+	// 수정(2007.05.30) : 노드 삭제가 정상적으로 처리되지 않아 함수 변경
+	function ex_deletenode(nodeIdx)
+	{
+		if (nodeIdx > g_nodeCount || nodeIdx < 1)
+			return "";
+
+		var node = element.all(g_nodeid + nodeIdx).parentElement.parentElement;
+		var children = node.parentElement.parentElement.parentElement.children;
+		
+		if (children.item(0).children.item(children.item(0).children.length-1).children.item(0) == node)
+		{
+			if (children.item(0).children.length > 1)
+			{
+				var child = children.item(0).children.item(children.item(0).children.length-2)
+				var depth = g_nodeArray["depth"][nodeIdx].length;
+				var imgnode = child.children.item(0).children.item(depth-1);
+
+				if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0)
+				{
+					imgnode.src = g_baseImage["dot_end"];
+				}
+				else
+				{
+					if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0)
+						imgnode.src = g_baseImage["plus_end"];
+					else
+						imgnode.src = g_baseImage["minus_end"];
+
+					//changeRecursiveImg(child, true, depth-1, 0);
+				}
+
+				var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth+1).children.item(0).id.split(g_nodeid)[1]];
+				depthlist = depthlist.substr(0, depthlist.length-1) + "0";
+				g_nodeArray["depth"][child.children.item(0).children.item(depth+1).children.item(0).id.split(g_nodeid)[1]] = depthlist;
+				
+				node.parentElement.parentElement.removeChild(node.parentElement);
+				
+				imgnode = null;
+				child = null;
+			}
+			else
+			{
+				var depth = g_nodeArray["depth"][nodeIdx].length;
+
+				imgnode = node.parentElement.parentElement.parentElement.parentElement.children.item(0).children.item(depth-2);
+				if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImageName["minus_normal"]) >= 0)
+					imgnode.src = g_baseImage["dot_normal"];
+				else
+					imgnode.src = g_baseImage["dot_end"];
+
+				node.parentElement.parentElement.parentElement.style.display = "none";
+				node.parentElement.parentElement.parentElement.innerHTML = "";
+
+				imgnode = null;
+			}
+		}
+		else
+		{
+			node.parentElement.parentElement.removeChild(node.parentElement);
+		}
+
+		g_nodeArray["nodeXML"][nodeIdx] = null;
+		g_nodeArray["depth"][nodeIdx] = "";
+		node = null;
+		children = null;
+		g_selectedIdx = -1;
+	}
+
+	// 수정(2007.05.30) : 노드 추가가 정상적으로 처리되지 않아 함수 변경
+	function changeRecursiveImg(node, bspace, depth, recuringCount)
+	{
+		if (node.innerHTML == "")
+			return;
+	
+		for (var i=0; i<node.children.length; i++)
+		{
+			var child = node.children.item(i);
+			
+			if (child.innerHTML == "")
+				continue;
+				
+			if (bspace)
+			{
+				child.children.item(depth).src = g_baseImage["space"];
+				var depthlist = g_nodeArray["depth"][child.children.item(depth+2+recuringCount).children.item(0).id.split(g_nodeid)[1]];
+				depthlist = depthlist.substr(0, depth) + "0" + depthlist.substr(depth+1, depthlist.length-depth-1);
+				g_nodeArray["depth"][child.children.item(depth+2+recuringCount).children.item(0).id.split(g_nodeid)[1]] = depthlist;
+				changeRecursiveImg(child.children.item(1), bspace, depth, recuringCount+1);
+			}
+			else
+			{
+				child.children.item(depth).src = g_baseImage["dot_continue"];
+				var depthlist = g_nodeArray["depth"][child.children.item(depth+2+recuringCount).children.item(0).id.split(g_nodeid)[1]];
+				depthlist = depthlist.substr(0, depth) + "1" + depthlist.substr(depth+1, depthlist.length-depth-1);
+				g_nodeArray["depth"][child.children.item(depth+2+recuringCount).children.item(0).id.split(g_nodeid)[1]] = depthlist;
+				changeRecursiveImg(child.children.item(1), bspace, depth, recuringCount+1);
+			}
+			child = null;
+		}
+	}
+
+</script>
+</public:htc>
