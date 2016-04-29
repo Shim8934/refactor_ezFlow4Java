@@ -284,13 +284,15 @@ public class EzResourceController extends EgovFileMngUtil {
 					} else {
 						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1), "yyyyMMdd", "yyyy-MM-dd","");
 						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1), "yyyyMMdd", "yyyy-MM-dd","");
-
+						
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
 					}
 				}
+				System.out.println(EgovDateUtil.convertDate(commonUtil.addDay("2016-04-25 12:00:00", -1), "yyyy-MM-dd HH:mm:ss", "", ""));
+				System.out.println(EgovDateUtil.convertDate(commonUtil.addDay("2016-05-01 12:00:00", 1), "yyyy-MM-dd HH:mm:ss", "",""));
 				reVal = getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
-				
+System.out.println("reVal:"+reVal);				
 				/*Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
 					
@@ -516,11 +518,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		String adminFg = getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()); 
-		brdNm = brdNm.replace("char(38)", "&");
+		brdNm = brdNm.replace("chr(38)", "&");
 		String childBrd = getItemList(loginCookie,brdID);
 		
 		List<ResGetItemListVO> list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
 		brdCount = list.size();
+		
+		for (int i=0; i<brdCount; i++) {
+			childBrd += list.get(i).getBrdID() + "/" + list.get(i).getBrdNm() + "/" + list.get(i).getApproveFlag() + ",";
+		}
 		
 		model.addAttribute("childBrd", childBrd);
 		model.addAttribute("brdID", brdID);
@@ -533,6 +539,41 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		
 		return "/ezResource/resViewResList2";
+	}
+	
+	@RequestMapping(value = "/ezResource/viewResList.do")
+	public String viewResList(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
+		String strXML = "";
+		String brdID = "";
+		String accessCode = "";
+		String brdNm = "";
+		String sortGbn = "";
+		String curPage = "";
+		String adminFg = "";
+		String chkCtrl = "";
+		int pageSize = 15;
+		int totalCnt = 0;
+		int totalPage = 0;
+		int limitLine = 0;
+		
+		if (req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
+		}
+		if (req.getParameter("accessCode") != null) {
+			accessCode = req.getParameter("accessCode");
+		}
+		if (req.getParameter("brdNm") != null) {
+			brdNm = req.getParameter("brdNm");
+		}
+		if (req.getParameter("sortGbn") != null) {
+			sortGbn = req.getParameter("sortGbn");
+		}
+		if (req.getParameter("goToPage") != null) {
+			curPage = req.getParameter("goToPage");
+		}
+		
+		
+		return "/ezResource/resViewResList";
 	}
 	
 	public String getAdminFlag(String companyID, String brdID, String userID) throws Exception {
