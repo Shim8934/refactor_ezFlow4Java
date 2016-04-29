@@ -3,12 +3,13 @@
 
 <sqlMap namespace="ezResource">
 	<typeAlias  alias="ResGetAdmSubClsTreeVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO"/>
-	<typeAlias  alias="ResGetAdminFlagVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
-	<typeAlias  alias="ResGetItemListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
-	<typeAlias  alias="ResGetScheduleListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
-	<typeAlias  alias="ResGetScheduleListMainVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO"/>
-	<typeAlias  alias="ResGetRepDateTimesVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
-	<typeAlias  alias="ResGetScheduleListTermVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
+	<typeAlias  alias="ResGetAdminFlagVO" 							type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
+	<typeAlias  alias="ResGetItemListVO" 								type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
+	<typeAlias  alias="ResGetScheduleListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
+	<typeAlias  alias="ResGetScheduleListMainVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO"/>
+	<typeAlias  alias="ResGetRepDateTimesVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
+	<typeAlias  alias="ResGetScheduleListTermVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
+	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -29,18 +30,18 @@
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
 	</resultMap>
 	
-	<resultMap class="ResGetAdminFlagVO" id="resGetAdminFlagVO">
+	<resultMap class="ResGetAdminFlagVO" 			id="resGetAdminFlagVO">
 		<result property="memberID"			column="MEMBER_ID"				columnIndex="1"/>
 		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
 	</resultMap>
 	
-	<resultMap class="ResGetItemListVO" id="resGetItemListVO">
+	<resultMap class="ResGetItemListVO" 				id="resGetItemListVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
 		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="3"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleListVO" id="resGetScheduleListVO">
+	<resultMap class="ResGetScheduleListVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -95,7 +96,7 @@
 		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
 	</resultMap>
 	
-	<resultMap class="ResGetRepDateTimesVO" id="resGetRepDateTimesVO">
+	<resultMap class="ResGetRepDateTimesVO" 	id="resGetRepDateTimesVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
 		<result property="num"					column="NUM"						columnIndex="2"/>
 		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
@@ -135,6 +136,33 @@
 		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="23"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="24"/>
+	</resultMap>
+	
+		<resultMap class="ResBrdListVO" 				id="resBrdListVO">
+		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="1"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue="0"	/>
+		<result property="brdCompany"			column="BRD_COMPANY"		columnIndex="3"/>
+		<result property="brdCount"				column="BRD_COUNT"				columnIndex="4"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="5"			nullValue="0"/>
+		<result property="brdGb"					column="BRD_GB"					columnIndex="6"/>
+		<result property="brdGroup"				column="BRD_GROUP"				columnIndex="7"/>
+		<result property="brdID"					column="BRD_ID"					columnIndex="8"/>
+		<result property="brdLevel"				column="BRD_LEVEL"				columnIndex="9"  		nullValue="0"/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="10"/>
+		<result property="brdPostterm"			column="BRD_POSTTERM"		columnIndex="11"/>
+		<result property="brdRef"					column="BRD_REF"					columnIndex="12" 		nullValue="0"/>
+		<result property="brdStep"				column="BRD_STEP"				columnIndex="13"/>
+		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="14"/>
+		<result property="brdUrl"					column="BRD_URL"					columnIndex="15"		nullValue="0"/>
+		<result property="makeDate"				column="MAKEDATE"				columnIndex="16"/>
+		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="17"/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="18"/>
+		<result property="ownerCall"				column="OWNERCALL"			columnIndex="19"		nullValue="0"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="22"/>
+		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
+		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue="0"/>
 	</resultMap>
 	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
@@ -183,9 +211,21 @@
 		]]>
 	</procedure>
 	
-		<procedure id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
+	<procedure id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTTERM(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETBRDLIST(#v_PTOPCNT#, #v_PBRDID#, #v_PCOMPANYID#, #v_POWNDEPTNM#, #v_POWNERNM#, #v_POWNERPOSITION#, #v_PBRDNM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETBRDCNT(#v_PBRDID#, #v_PCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure>
 	
