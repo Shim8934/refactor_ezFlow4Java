@@ -57,7 +57,7 @@ function todayonlaod(s_Year, s_Month, s_Date)
     objRoot.appendChild(objNode);
     
     //요청하고자 하는 자원의 값을 받아온다. 전체검색은 = TOTAL
-    var param = "&ResID=" + pBrdid + "&p_Type=" + p_Type;
+    var param = "&resID=" + pBrdid + "&pType=" + p_Type;
     
     //요청하고자하는 페이지 URL 
     var P_Url = folder_Url;
@@ -115,7 +115,7 @@ function weekonload(s_Year, s_Month, s_Date)
     objNode.text = "1";
     objRoot.appendChild(objNode);
 
-    var param = "&ResID=" + pBrdid + "&p_Type=" + p_Type;
+    var param = "&resID=" + pBrdid + "&pType=" + p_Type;
         
     var P_Url = folder_Url;
     
@@ -157,7 +157,7 @@ function nextToday_onclick(result)
     objNode.text = "1";
     objRoot.appendChild(objNode);
     
-    var param = "&ResID=" + pBrdid + "&p_Type=" + p_Type;
+    var param = "&resID=" + pBrdid + "&pType=" + p_Type;
     
     var P_Url = folder_Url;
     
@@ -208,7 +208,7 @@ function nextWeek_onclick(result) {
     objNode.text = "1";
     objRoot.appendChild(objNode);
     
-    var param = "&ResID=" + pBrdid + "&p_Type=" + p_Type;
+    var param = "&resID=" + pBrdid + "&pType=" + p_Type;
 
     var P_Url = folder_Url;
 
@@ -387,7 +387,7 @@ function tableListControl_Week()
             _mtd.onselectstart = function () { return false; };
             _mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if (title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img src='/myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             else
                 _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
@@ -1126,16 +1126,16 @@ function newSchedule_onclick(e) {
     
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
-        window.open("/Myoffice/ezResource/ResSch/Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
             var feature = GetOpenPosition(770, 700);
-            window.open("/Myoffice/ezResource/ResSch/Schedule_Add.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
         else {
             var feature = GetOpenPosition(770, 700);
-            window.open("/Myoffice/ezResource/ResSch/Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&day_view=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 
@@ -1194,18 +1194,18 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
         //    else
         //        window.open("/myoffice/ezResource/ResSch/Schedule_add.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 
-        window.open("/myoffice/ezResource/ResSch/Schedule_Read.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     }
     else if (p_Type != "MAIN") {
         if (CrossYN() || pNoneActiveX == "YES") {
-            window.open("/myoffice/ezResource/ResSch/Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
         else {
             if (pUse_Editor == "" || pUse_Editor == "CK") {
-                window.open("/myoffice/ezResource/ResSch/Schedule_Add.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
             }
             else {
-                window.open("/myoffice/ezResource/ResSch/Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&day_view=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
             }
         }
 
@@ -1281,7 +1281,7 @@ function MemberInfo_onClick(pSelUserID)
     var py = (s_Height - c_Height) / 2;
 
 	if (pSelUserID != "")
-		window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 }
 
 
@@ -1320,14 +1320,14 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     var _img = document.createElement("IMG");
     if (obj.getAttribute("approveFlag") == "1") {
-        _img.src = "/myoffice/ezResource/ResSch/calendar/images/calendar/icon_resource_ok.png"
+        _img.src = "/images/calendar/icon_resource_ok.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     }
     else {
-        _img.src = "/myoffice/ezResource/ResSch/calendar/images/calendar/icon_resource_no.png"
+        _img.src = "/images/calendar/icon_resource_no.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
