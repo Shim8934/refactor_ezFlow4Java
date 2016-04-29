@@ -745,7 +745,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 첨부파일 메일 임시 저장 함수
+	 * 첨부파일을 포함한 메일을 임시 보관함에 저장하는 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
@@ -1089,6 +1089,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String name = "";
 		String address = "";
 		
+		// From
+		logger.debug("from=" + from);
 		String pattern = "\"?([^\"]*)\"? <([^<>]+)>";
 		Pattern r = Pattern.compile(pattern);
 		Matcher m = r.matcher(from);
@@ -1100,6 +1102,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			message.setFrom(internetAddress);
 		}
 		
+		// To
+		logger.debug("to=" + to);
 		m = r.matcher(to);
 		while (m.find()) {
 			name = m.group(1);
@@ -1109,17 +1113,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			message.addRecipient(RecipientType.TO, internetAddress);
 		}
 		
-		// TODO : 원래의 To remove (원래의 To - 새로운 To) add (새로운 To - 원래의 To)
-//		EmailAddressComparer comparer = new EmailAddressComparer();
-//        IEnumerable<EmailAddress> removeemail = message.ToRecipients.Except<EmailAddress>(emailarr, comparer);
-//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.ToRecipients, comparer);
-//
-//        while (removeemail.Count<EmailAddress>() > 0)
-//        {
-//            message.ToRecipients.Remove(removeemail.First<EmailAddress>());
-//        }
-//        message.ToRecipients.AddRange(addemail);
-
+		// Cc
+		logger.debug("cc=" + cc);
 		m = r.matcher(cc);
 		while (m.find()) {
 			name = m.group(1);
@@ -1129,17 +1124,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			message.addRecipient(RecipientType.CC, internetAddress);
 		}
 		
-		// TODO : 원래의 CC remove (원래의 CC - 새로운 CC) add (새로운 CC - 원래의 CC)
-//		EmailAddressComparer comparer = new EmailAddressComparer();
-//        IEnumerable<EmailAddress> removeemail = message.CcRecipients.Except<EmailAddress>(emailarr, comparer);
-//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.CcRecipients, comparer);
-//
-//        while (removeemail.Count<EmailAddress>() > 0)
-//        {
-//            message.CcRecipients.Remove(removeemail.First<EmailAddress>());
-//        }
-//        message.CcRecipients.AddRange(addemail);
-
+		// Bcc
+		logger.debug("bcc=" + bcc);
 		m = r.matcher(bcc);
 		while (m.find()) {
 			name = m.group(1);
@@ -1147,22 +1133,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			internetAddress.setPersonal(name, "UTF-8");
 			internetAddress.setAddress(address);
 			message.addRecipient(RecipientType.BCC, internetAddress);
-		}
-		
-		// TODO : 원래의 BCC remove (원래의 BCC - 새로운 BCC) add (새로운 BCC - 원래의 BCC)
-//		EmailAddressComparer comparer = new EmailAddressComparer();
-//        IEnumerable<EmailAddress> removeemail = message.BccRecipients.Except<EmailAddress>(emailarr, comparer);
-//        IEnumerable<EmailAddress> addemail = emailarr.Except<EmailAddress>(message.BccRecipients, comparer);
-//
-//        while (removeemail.Count<EmailAddress>() > 0)
-//        {
-//            message.BccRecipients.Remove(removeemail.First<EmailAddress>());
-//        }
-//        message.BccRecipients.AddRange(addemail);
-		
+		}				
 		
 		// 메일 제목
 		message.setSubject(subject, "UTF-8");
+		
+		logger.debug("cmd=" + cmd + ",simpleMime=" + simpleMime);
 		
 		// 메일 본문 및 타입
 		MimeBodyPart content = new MimeBodyPart();
@@ -1213,6 +1189,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         }
 		
 		// 추적(배달되면 알림)
+		logger.debug("replySendTime=" + replySendTime);
         if (replySendTime.equals("1")) {
         	message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
         } else {
@@ -1220,6 +1197,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         }
 
         // 추적(수신확인)
+        logger.debug("replyReadTime=" + replyReadTime);
         if (replyReadTime.equals("1")) {
         	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
         } else {
@@ -1232,89 +1210,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         //User-Agent 설정
         message.setHeader("User-Agent", "JMocha Mail 0.1");
         
-        
-//        // 첨부및 이미지첨부 처리
-//        Dictionary<int, KeyValuePair<string, string>> images = new Dictionary<int, KeyValuePair<string, string>>();
-//        XmlNodeList imagenamenodes = xmldom.SelectNodes("DATA/IMAGENAME");
-//
-//        if (imagenamenodes != null)
-//        {
-//            for (int i = 0; i < imagenamenodes.Count; i++)
-//            {
-//                if (imagenamenodes.Item(i).InnerText != "")
-//                {
-//                    images.Add(i, new KeyValuePair<string, string>(imagenamenodes.Item(i).InnerText, null));
-//                    allattlist.Add(imagenamenodes.Item(i).InnerText);
-//                }
-//            }
-//        }
-//
-//        XmlNodeList imagecontentnodes = xmldom.SelectNodes("DATA/IMAGECONTENT");
-//        if (imagecontentnodes != null)
-//        {
-//            for (int i = 0; i < imagecontentnodes.Count; i++)
-//            {
-//                if (images.ContainsKey(i))
-//                {
-//                    string key = images[i].Key;
-//                    images[i] = new KeyValuePair<string, string>(key, imagecontentnodes.Item(i).InnerText);
-//                }
-//            }
-//        }
-//
-//        // 20110907 이미 존재하면 추가 생략
-//        foreach (var item in images.Values)
-//        {
-//            string fatmp = item.Key;
-//            // cid가 GUID 라면 //<![CDATA[14DD26F9-E508-40C3-8953-552F741067FA]]>
-//            bool isguid = false;
-//            if (fatmp.Length == 36 && fatmp[8].Equals('-') && fatmp[13].Equals('-') && fatmp[18].Equals('-') && fatmp[23].Equals('-'))
-//            {
-//                isguid = true;
-//            }
-//
-//            bool isadd = true; // 추가할려고 하는데
-//            foreach (var attachment in message.Attachments)
-//            {
-//
-//                //WriteTextLog("attachment.IsInline", "attachment.IsInline", attachment.IsInline.ToString());
-//                //WriteTextLog("attachment.ContentId", "attachment.ContentId", attachment.ContentId.ToString());
-//                //WriteTextLog("fatmp", "fatmp", fatmp.ToString());
-//                // 예전에 존재한 첨부이미지는 생략
-//                if (!isguid && fatmp.IndexOf("@") == -1 && attachment.IsInline && attachment.ContentId.Equals(fatmp.Replace(".tmp", ".png")))
-//                {
-//                    this.attlist.Add(fatmp);
-//                    isadd = false;
-//                    break;
-//                }
-//                if (attachment.IsInline && attachment.ContentId.Equals(fatmp + (isguid || fatmp.IndexOf("@") > -1 ? "" : "@12345678.87654321")))
-//                {
-//                    isadd = false;
-//                    break;
-//                }
-//            }
-//
-//            if (isadd)
-//            {
-//                FileAttachment fa = message.Attachments.AddFileAttachment(fatmp, Convert.FromBase64String(item.Value));
-//                fa.IsInline = true;
-//                fa.ContentId = fatmp + (isguid || fatmp.IndexOf("@") > -1 ? "" : "@12345678.87654321");
-//                //20121017 : 본문이미지 첨부로 빠지는 문제로 주석
-//                //fa.ContentType = "image/unknown"; // 파일명에서 확장자가 없을 때 
-//            }
-//
-//        }
-        
-        
-        
         //inline image 처리
         MimeMultipart relatedPart = null;
         
         if (!simpleMime.equals("1")) {
+        	// getElementsByTagName always returns non-null object even if
+        	// the tag doesn't exist, so its length must be checked.
         	NodeList imageNameList = root.getElementsByTagName("IMAGENAME");
         	NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
         	
-	        if (imageNameList != null && imagePathList != null) {
+	        if (imageNameList != null && imageNameList.getLength() > 0
+	        		&& imagePathList != null && imagePathList.getLength() > 0) {
 	        	String imageName = "";
 	            String imagePath = "";
 	        	
@@ -1372,6 +1278,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
         folder.open(Folder.READ_WRITE);
         
+        logger.debug("url=" + url);
         long uid = 0;
         if (!url.trim().equals("")) {
         	uid = Long.parseLong(url);
@@ -1410,12 +1317,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					oldMessage.setFlag(Flags.Flag.DELETED, true);
 				}
 			}
-			
-			
-        }
-        
-        
-        
+        }        
         
 //        //발송전 처리 부분- 내용 , 첨부,본문, 임시저장
 //        String htmlbody = null;
@@ -1480,65 +1382,76 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //            }
 //        }
         long draftUID = 0;
-        if (cmd.equalsIgnoreCase("SEND")) {
+        if (cmd.equalsIgnoreCase("SAVE")) {
+        	logger.debug("Saving the message");
+        	
+    		message.setFlag(Flags.Flag.SEEN, true);
+    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
+    		if (uids != null && uids[0] != null) {
+    			draftUID = uids[0].uid;
+    		} 
+    		
+        	rtnStatus = "OK";
+        } else if (cmd.equalsIgnoreCase("SEND")) {
+        	logger.debug("Saving the message");
+        	
+        	// TODO: 이후 예외 처리 필요
         	// 편지함 용량 초과 메세지 확인을 위해 임시저장
     		message.setFlag(Flags.Flag.SEEN, true);
     		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
     		if (uids != null && uids[0] != null) {
     			draftUID = uids[0].uid;
-    		}
-    		
-            
-        }
+    		} 
         
-		String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
-        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
-        if (!delaySendTime.equals("")) {
-        	//예약발송
-            //do_delaysend(xmldom, message);
-            rtnStatus = "OK";
-        } else {                        
-            if (!eShowDisplayName.equals("")) {
-            	//eShowDisplayName = Base64Encode(eShowDisplayName);
-                //message.SetExtendedProperty(new ExtendedPropertyDefinition(DefaultExtendedPropertySet.InternetHeaders, "X-NEW-DISPLAYNAME", MapiPropertyType.String), eShowDisplayName);
-            }
-            //message.Update(ConflictResolutionMode.AlwaysOverwrite);
-
-//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
-//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
-//            else
-//            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
-            
-            //InnterMailSend 변환 시작
-            if (isEachMailB) {
-            	//개별발송에 따른 "X-READCHECK" 값  Update
-            	String strRecvGuid = UUID.randomUUID().toString();
-            	message.setHeader("x-readcheck", strRecvGuid);
-            	message.setHeader("x-eachmail", "true");
-            	
-            	Address[] allRecipients = message.getAllRecipients();
-            	
-            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
-            	message.removeHeader("TO");
-        		message.removeHeader("CC");
-        		message.removeHeader("BCC");
-            	for(Address a : allRecipients){
-            		message.setRecipient(RecipientType.TO, a);
-            		
-            		Transport.send(message);
-            	}
-            	
-            } else {
-            	Transport.send(message);
-            	
-            	//보낸편지함에 저장
-        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-        		sendFolder.open(Folder.READ_WRITE);
-        		message.setFlag(Flags.Flag.SEEN, true);
-        		sendFolder.appendMessages(new Message[]{message});
-        		sendFolder.close(true);
-            }
-            rtnStatus = "OK";
+			String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
+	        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+	        if (!delaySendTime.equals("")) {
+	        	//예약발송
+	            //do_delaysend(xmldom, message);
+	            rtnStatus = "OK";
+	        } else {                        
+	            if (!eShowDisplayName.equals("")) {
+	            	//eShowDisplayName = Base64Encode(eShowDisplayName);
+	                //message.SetExtendedProperty(new ExtendedPropertyDefinition(DefaultExtendedPropertySet.InternetHeaders, "X-NEW-DISPLAYNAME", MapiPropertyType.String), eShowDisplayName);
+	            }
+	            //message.Update(ConflictResolutionMode.AlwaysOverwrite);
+	
+	//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
+	//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
+	//            else
+	//            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+	            
+	            //InnterMailSend 변환 시작
+	            if (isEachMailB) {
+	            	//개별발송에 따른 "X-READCHECK" 값  Update
+	            	String strRecvGuid = UUID.randomUUID().toString();
+	            	message.setHeader("x-readcheck", strRecvGuid);
+	            	message.setHeader("x-eachmail", "true");
+	            	
+	            	Address[] allRecipients = message.getAllRecipients();
+	            	
+	            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
+	            	message.removeHeader("TO");
+	        		message.removeHeader("CC");
+	        		message.removeHeader("BCC");
+	            	for(Address a : allRecipients){
+	            		message.setRecipient(RecipientType.TO, a);
+	            		
+	            		Transport.send(message);
+	            	}
+	            	
+	            } else {
+	            	Transport.send(message);
+	            	
+	            	//보낸편지함에 저장
+	        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+	        		sendFolder.open(Folder.READ_WRITE);
+	        		message.setFlag(Flags.Flag.SEEN, true);
+	        		sendFolder.appendMessages(new Message[]{message});
+	        		sendFolder.close(true);
+	            }
+	            rtnStatus = "OK";
+	        }
         }
         
         folder.close(true);
@@ -1549,7 +1462,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
         //서버에 업로드된 inline image 파일 삭제
         NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-        if (imagePathList != null) {
+        if (imagePathList != null && imagePathList.getLength() > 0) {
             String imagePath = "";
             
         	for (int i=0; true; i++) {
