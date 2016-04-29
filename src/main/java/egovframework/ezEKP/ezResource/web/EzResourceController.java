@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,7 +32,9 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -120,7 +124,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdID = "";
 	    String brdNm = "";
 	    String brdGubun = "";
-	    String brdGbn = "";
+	    //String brdGbn = "";
 	    String strAccessCode = "";
 	    String selectNo = "";
 	    
@@ -136,9 +140,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdGubun = req.getParameter("pbrdGubun");
 		}
 		
-		if(req.getParameter("boardGbn") != null) {
+		/*if(req.getParameter("boardGbn") != null) {
 			brdGbn = req.getParameter("boardGbn");
-		}
+		}*/
 		
 		//관리자체크
 		//if(userInfo.get) {
@@ -189,7 +193,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
 		NodeList nodes6 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
 		NodeList nodes7 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
-		//nodes2.item(0).setTextContent("SELECT_NO");
+		
 		if(nodes.getLength() != 0) {
 			for(int i=0; i<nodes.getLength(); i++) {
 				nodes.item(i).setTextContent("TRUE");
@@ -226,7 +230,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 스케줄 정보 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGet.do")
-	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model) throws Exception {
+	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String reVal = "";
 		String resID = "";
 		String cmd = "";
 		String type = "";
@@ -235,7 +241,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String writerName = "";
 		String writerDept = "";
 		String gubun = "P";
-		String gubunID = "";
+		String groupID = "";
 		int page = 0;
 		
 		try {
@@ -246,7 +252,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				cmd = req.getParameter("cmd");
 			}
 			if (req.getParameter("pType") != null) {
-				type = req.getParameter("type");
+				type = req.getParameter("pType");
 			}
 			if (req.getParameter("viewType") != null) {
 				viewType = req.getParameter("viewType");
@@ -254,13 +260,14 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (req.getParameter("page") != null) {
 				page = Integer.parseInt(req.getParameter("page"));
 			}
-		
+			
+			
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 			if (cmd.equals("get")) {
 				String startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 				String endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-			
+
 				if (viewType.equals("list")) {
 					approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
 					writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
@@ -275,12 +282,19 @@ public class EzResourceController extends EgovFileMngUtil {
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
 					} else {
-						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(6,7), -1), "", "","");
-						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(6,7), 1), "", "","");		
+						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1), "yyyyMMdd", "yyyy-MM-dd","");
+						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1), "yyyyMMdd", "yyyy-MM-dd","");
+
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
 					}
 				}
+				reVal = getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
+				
+				/*Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
+				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
+					
+				}*/
 			}
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -516,6 +530,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("brdCount", brdCount);
+		model.addAttribute("useEditor", useEditor);
 		
 		return "/ezResource/resViewResList2";
 	}
@@ -557,103 +572,1310 @@ public class EzResourceController extends EgovFileMngUtil {
 		return childBrd;
 	}
 	
-	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String gubun, String pType, String pWriterName, String pWriterDept) {
-		String returnStr = "";
-		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
-		String sDate = xmlRes.getElementsByTagName("STARTDATETIME").item(0).getTextContent().trim();
-		String eDate = xmlRes.getElementsByTagName("ENDDATETIME").item(0).getTextContent().trim();
-		String app = xmlRes.getElementsByTagName("APP").item(0).getTextContent().trim();
-		
-		
-		return "";
+	@SuppressWarnings("deprecation")
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
+		StringBuilder returnStr = new StringBuilder();
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			String sDate = xmlRes.getElementsByTagName("STARTDATETIME").item(0).getTextContent().trim();
+			String eDate = xmlRes.getElementsByTagName("ENDDATETIME").item(0).getTextContent().trim();
+			String app = xmlRes.getElementsByTagName("APP").item(0).getTextContent().trim();
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept);
+			Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
+			
+			returnStr.append("<root>");
+			
+			for (int i=0; i<scheRSDom.getElementsByTagName("ROW").getLength(); i++) {
+				String num = scheRSDom.getElementsByTagName("num").item(i).getTextContent();
+				String pNum = scheRSDom.getElementsByTagName("pnum").item(i).getTextContent();
+				String ownerIDStr = scheRSDom.getElementsByTagName("ownerID").item(i).getTextContent();
+				String writerIDStr = scheRSDom.getElementsByTagName("writerID").item(i).getTextContent();
+				String title = scheRSDom.getElementsByTagName("title").item(i).getTextContent();
+				String loc = scheRSDom.getElementsByTagName("location").item(i).getTextContent();
+				String startDateTime = scheRSDom.getElementsByTagName("startDate").item(i).getTextContent();
+				String endDateTime = scheRSDom.getElementsByTagName("endDate").item(i).getTextContent();
+				String reFlag = scheRSDom.getElementsByTagName("reFlag").item(i).getTextContent();
+				String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
+				String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
+				String writeDay = scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent();
+				String jobTitle = "";
+				String jobTitle2 = "";
+				
+				if (pType.equals("") || pType == null) {
+					 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
+					 jobTitle2 = scheRSDom.getElementsByTagName("jobtitle2").item(i).getTextContent();
+				}
+				if (app.equals("0")) {
+					returnStr.append("<appointment>");
+					
+					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
+					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
+					returnStr.append("<alldayevent>"+allDay+"</alldayevent>");
+					
+					String timeDisplay = scheRSDom.getElementsByTagName("timeDisplay").item(i).getTextContent(); 
+					if (timeDisplay.equals("1")) {
+						timeDisplay = "Busy";
+					} else if (timeDisplay.equals("2")) {
+						timeDisplay = "Tentative";
+					} else if (timeDisplay.equals("3")) {
+						timeDisplay = "OOF";
+					} else if (timeDisplay.equals("4")) {
+						timeDisplay = "Free";
+					} else {
+						timeDisplay = "";
+					}
+					returnStr.append("<busystatus>"+timeDisplay+"</busystatus>");
+					returnStr.append("</appointment>");
+				} else {
+					returnStr.append("<appointment>");
+					returnStr.append("<number>" + num + "</number>");
+					
+					if (pNum.equals("Null") || pNum.equals("NULL")) {
+						pNum = "";
+					}
+					returnStr.append("<pnumber>" + pNum + "</pnumber>");
+					returnStr.append("<owner_id>" + ownerIDStr + "</owner_id>");
+					
+					if (writerIDStr.equals("Null") || writerIDStr.equals("NULL")) {
+						writerIDStr = "";
+					}
+					returnStr.append("<writer_id>" + writerIDStr + "</writer_id>");
+					
+					if (title.equals("Null") || title.equals("NULL")) {
+						title = "";
+					}
+					returnStr.append("<subject><![CDATA[" + title + "]]></subject>");
+					returnStr.append("<instancetype>" + reFlag + "</instancetype>");
+					
+					if (loc.equals("Null") || loc.equals("NULL")) {
+						loc = "";
+					}
+					returnStr.append("<location><![CDATA[" + loc + "]]></location>");
+					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
+					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
+					returnStr.append("<dstartTime>"+(format.parse(startDateTime).getHours()*60 +format.parse(startDateTime).getMinutes())+"</dstartTime>");
+					returnStr.append("<dendTime>"+(format.parse(endDateTime).getHours()*60 +format.parse(endDateTime).getMinutes())+"</dendTime>");
+					returnStr.append("<dsDaytype>"+(int)format.parse(startDateTime).getDay()+"</dsDaytype>");
+					returnStr.append("<deDaytype>"+(int)format.parse(endDateTime).getDay()+"</deDaytype>");
+					returnStr.append("<alldayevent>"+ allDay +"</alldayevent>");
+					
+					String timeDisplay = scheRSDom.getElementsByTagName("timeDisplay").item(i).getTextContent();
+					
+					if (timeDisplay.equals("1")) {
+						timeDisplay = "Busy";
+					} else if (timeDisplay.equals("2")) {
+						timeDisplay = "Tentative";
+					} else if (timeDisplay.equals("3")) {
+						timeDisplay = "OOF";
+					} else if (timeDisplay.equals("4")) {
+						timeDisplay = "Free";
+					} else {
+						timeDisplay = "";
+					}
+					returnStr.append("<busystatus>"+ timeDisplay +"</busystatus>");
+					if (gresFlag.equals("Null") || gresFlag.equals("NULL")) {
+						gresFlag = "";
+					}
+					returnStr.append("<groupflag>"+ gresFlag +"</groupflag>");
+					returnStr.append("<gubunFlag>"+ gubun +"</gubunFlag>");
+					returnStr.append("<importance>"+ scheRSDom.getElementsByTagName("importance").item(i).getTextContent() +"</importance>");
+					returnStr.append("<approveFlag>"+ scheRSDom.getElementsByTagName("approveFlag").item(i).getTextContent() +"</approveFlag>");
+					returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
+					returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
+					returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
+					
+					if (pType.equals("") || pType == null) {
+						returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
+						returnStr.append("<dept_name2><![CDATA[" + scheRSDom.getElementsByTagName("dept_name2").item(i).getTextContent() + "]]></dept_name2>");
+						returnStr.append("<jobtitle><![CDATA[" +jobTitle + "]]></jobtitle>");
+						returnStr.append("<jobtitle2><![CDATA[" + jobTitle2 + "]]></jobtitle2>");
+					}
+					returnStr.append("</appointment>");
+				}
+			}
+			returnStr.append("</root>");
+
+		} catch (Exception e) {
+			
+		}
+		return returnStr.toString();
 	}
 	
 	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept) throws Exception {
 		StringBuilder returnStr = new StringBuilder();
-		returnStr.append("<DATA>");
-		String todayStartStr = "";
-		String todayEndStr = "";
-		if (pType.equals("MAIN")) {
-			todayStartStr = eDate + " 23:59:59";
-			todayEndStr = sDate + " 00:00:01";
-		} else {
-			todayStartStr = eDate + " 00:00:01";
-			todayEndStr = sDate;
-		}
-		String returnSchdule = "";
-		if (pType.equals("")) {
-			List<ResGetScheduleListVO> getScheduleList = ezResourceService.getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+		try {
+			returnStr.append("<DATA>");
+			String todayStartStr = "";
+			String todayEndStr = "";
+			if (pType.equals("MAIN")) {
+				todayStartStr = eDate + " 23:59:59";
+				todayEndStr = sDate + " 00:00:01";
+			} else {
+				todayStartStr = eDate + " 00:00:01";
+				todayEndStr = sDate;
+			}
+			String returnSchedule = "";
+			try {
+				if (pType.equals("")) {
+					List<ResGetScheduleListVO> getScheduleList = ezResourceService.getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+					for (int i=0; i<getScheduleList.size(); i++) {
+						returnSchedule = commonUtil.getQueryResult(getScheduleList.get(i));
+					}
+					
+				} else if (pType.equals("MAIN")) {
+	
+					List<ResGetScheduleListMainVO> getScheduleListMain = ezResourceService.getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
+					for (int i=0; i<getScheduleListMain.size(); i++) {
+						returnSchedule = commonUtil.getQueryResult(getScheduleListMain.get(i));
+					}
+				}
 			
-			for (int i=0; i<getScheduleList.size(); i++) {
-				returnSchdule = commonUtil.getQueryResult(getScheduleList.get(i));
+		
+				Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
+			
+				for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
+					returnStr.append("<ROW>");
+					returnStr.append("<num>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(0).getTextContent()+"</num>");
+					returnStr.append("<pnum>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(1).getTextContent()+"</pnum>");
+					returnStr.append("<ownerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(2).getTextContent()+"</ownerID>");
+					returnStr.append("<title><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(3).getTextContent()+"]]></title>");
+					returnStr.append("<location><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(4).getTextContent()+"]]></location>");
+					returnStr.append("<timeDisplay><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(5).getTextContent()+"]]></timeDisplay>");
+					returnStr.append("<startDate>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(6).getTextContent()+"</startDate>");
+					returnStr.append("<endDAte>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(7).getTextContent()+"</endDAte>");
+					returnStr.append("<alertTime>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(8).getTextContent()+"</alertTime>");
+					returnStr.append("<reFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(9).getTextContent()+"</reFlag>");
+					returnStr.append("<gresFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(10).getTextContent()+"</gresFlag>");
+					returnStr.append("<writerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(11).getTextContent()+"</writerID>");
+					returnStr.append("<content><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(12).getTextContent()+"]]></content>");
+					returnStr.append("<importance>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(13).getTextContent()+"</importance>");
+					returnStr.append("<entryList>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(14).getTextContent()+"</entryList>");
+					returnStr.append("<allDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(15).getTextContent()+"</allDay>");
+					returnStr.append("<writeDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(16).getTextContent()+"</writeDay>");
+					returnStr.append("<attachFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(17).getTextContent()+"</attachFlag>");
+					returnStr.append("<characterID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(18).getTextContent()+"</characterID>");
+					returnStr.append("<approveFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(19).getTextContent()+"</approveFlag>");
+					returnStr.append("<owner_nm><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(20).getTextContent()+"]]></owner_nm>");
+					returnStr.append("<dept_name><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></dept_name>");
+					if (pType.equals("")) {
+						returnStr.append("<owner_nm2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></owner_nm2>");
+						returnStr.append("<dept_name2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(22).getTextContent()+"]]></dept_name2>");
+						returnStr.append("<jobtitle><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(23).getTextContent()+"]]></jobtitle>");
+						returnStr.append("<jobtitle2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(24).getTextContent()+"]]></jobtitle2>");
+					}
+					returnStr.append("</ROW>");
+				}
+			} catch (Exception e) {
+				//e.printStackTrace();
 			}
 			
-		} else if (pType.equals("MAIN")) {
-			List<ResGetScheduleListMainVO> getScheduleListMain = ezResourceService.getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
-			for (int i=0; i<getScheduleListMain.size(); i++) {
-				returnSchdule = commonUtil.getQueryResult(getScheduleListMain.get(i));
-			}
-		}
-		
-		Document returnDom1 = commonUtil.convertStringToDocument(returnSchdule);
-		
-		for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
-			returnStr.append("<ROW>");
-			returnStr.append("<num>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(0).getTextContent()+"</num>");
-			returnStr.append("<pnum>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(1).getTextContent()+"</pnum>");
-			returnStr.append("<ownerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(2).getTextContent()+"</ownerID>");
-			returnStr.append("<title><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(3).getTextContent()+"]]></title>");
-			returnStr.append("<location><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(4).getTextContent()+"]]></location>");
-			returnStr.append("<timeDisplay><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(5).getTextContent()+"]]></timeDisplay>");
-			returnStr.append("<startDate>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(6).getTextContent()+"</startDate>");
-			returnStr.append("<endDAte>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(7).getTextContent()+"</endDAte>");
-			returnStr.append("<alertTime>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(8).getTextContent()+"</alertTime>");
-			returnStr.append("<reFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(9).getTextContent()+"</reFlag>");
-			returnStr.append("<gresFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(10).getTextContent()+"</gresFlag>");
-			returnStr.append("<writerID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(11).getTextContent()+"</writerID>");
-			returnStr.append("<content><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(12).getTextContent()+"]]></content>");
-			returnStr.append("<importance>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(13).getTextContent()+"</importance>");
-			returnStr.append("<entryList>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(14).getTextContent()+"</entryList>");
-			returnStr.append("<allDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(15).getTextContent()+"</allDay>");
-			returnStr.append("<writeDay>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(16).getTextContent()+"</writeDay>");
-			returnStr.append("<attachFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(17).getTextContent()+"</attachFlag>");
-			returnStr.append("<characterID>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(18).getTextContent()+"</characterID>");
-			returnStr.append("<approveFlag>"+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(19).getTextContent()+"</approveFlag>");
-			returnStr.append("<owner_nm><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(20).getTextContent()+"]]></owner_nm>");
-			returnStr.append("<dept_name><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></dept_name>");
+			String returnRepetition = "";
+			
 			if (pType.equals("")) {
-				returnStr.append("<owner_nm2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(21).getTextContent()+"]]></owner_nm2>");
-				returnStr.append("<dept_name2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(22).getTextContent()+"]]></dept_name2>");
-				returnStr.append("<jobtitle><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(23).getTextContent()+"]]></jobtitle>");
-				returnStr.append("<jobtitle2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(24).getTextContent()+"]]></jobtitle2>");
+				List<ResGetScheduleListVO> getScheduleListRept= ezResourceService.getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+				returnRepetition = commonUtil.getQueryResult(getScheduleListRept);
+			} else {
+				List<ResGetScheduleListMainVO> getScheduleListReptMain = ezResourceService.getScheduleListRepetitim(ownerID, companyID, todayStartStr);
+				returnRepetition = commonUtil.getQueryResult(getScheduleListReptMain);
 			}
-			returnStr.append("</ROW>");
+			
+			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
+			for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
+				String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
+				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
+				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
+				
+				String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate);
+				if (!returnRepDateTimes.trim().equals("")) {
+					Document returnRepDateTimesDom = commonUtil.convertStringToDocument(returnRepDateTimes);
+					
+					for (int j=0; j<returnRepDateTimesDom.getElementsByTagName("f_sDate").getLength(); j++) {
+						String fSDate = returnRepetitionDom.getElementsByTagName("f_sDate").item(j).getTextContent().substring(0, 10);
+						String fEDate = returnRepetitionDom.getElementsByTagName("f_eDate").item(j).getTextContent().substring(0, 10);
+						
+						ResGetScheduleListTermVO getScheduleListTerm = ezResourceService.getScheduleListTerm(Integer.parseInt(reNum), companyID, reOwnerID, fSDate.substring(0,  10)+" 23:59:59", fEDate, pWriterName, pWriterDept);
+						
+						if (!getScheduleListTerm.equals("")) {
+							if (!getScheduleListTerm.getReFlag().equals("4")) {
+								String reStartDate = getScheduleListTerm.getStartDate().substring(11, 8);
+								String reEndDate = getScheduleListTerm.getEndDate().substring(11, 8);
+								
+								String reSDate = fSDate + reStartDate;
+								String reEDate = fEDate + reEndDate;
+								
+								returnStr.append("<ROW>");
+								returnStr.append("<num>" + getScheduleListTerm.getNum() + "</num>");
+								returnStr.append("<pnum>" + getScheduleListTerm.getpNum() + "</pnum>");
+								returnStr.append("<ownerID>" + getScheduleListTerm.getOwnerID() + "</ownerID>");
+								returnStr.append("<title>" + getScheduleListTerm.getTitle() + "</title>");
+								returnStr.append("<location>" + getScheduleListTerm.getLocation() + "</location>");
+								returnStr.append("<timeDisplay>" + getScheduleListTerm.getTimeDisplay() + "</timeDisplay>");
+								returnStr.append("<startDate>" + reSDate + "</startDate>");
+								returnStr.append("<endDAte>" + reEDate + "</endDAte>");
+								returnStr.append("<alertTime>" + getScheduleListTerm.getAlertTime() + "</alertTime>");
+								returnStr.append("<reFlag>" + getScheduleListTerm.getReFlag() + "</reFlag>");
+								returnStr.append("<gresFlag>" + getScheduleListTerm.getgResFlag() + "</gresFlag>");
+								returnStr.append("<writerID>" + getScheduleListTerm.getWriterID() + "</writerID>");
+								returnStr.append("<content>" + getScheduleListTerm.getContent() + "</content>");
+								returnStr.append("<importance>" + getScheduleListTerm.getImportance() + "</importance>");
+								returnStr.append("<entryList>" + getScheduleListTerm.getEntryList() + "</entryList>");
+								returnStr.append("<allDay>" + getScheduleListTerm.getAllDay() + "</allDay>");
+								returnStr.append("<writeDay>" + getScheduleListTerm.getWriteDay() + "</writeDay>");
+								returnStr.append("<attachFlag>" + getScheduleListTerm.getAttachFlag() + "</attachFlag>");
+								returnStr.append("<characterID>" + getScheduleListTerm.getCharacterID() + "</characterID>");
+								returnStr.append("<approveFlag>" + getScheduleListTerm.getApproveFlag() + "</approveFlag>");
+								returnStr.append("<owner_nm>" + getScheduleListTerm.getOwnerNm() + "</owner_nm>");
+								returnStr.append("<dept_name>" + getScheduleListTerm.getDeptNm() + "</dept_name>");
+								
+								if (pType.equals("") || pType == null) {
+									returnStr.append("<jobtitle>" + getScheduleListTerm.getJobTitle() + "</jobtitle>");
+									returnStr.append("<jobtitle2>" + getScheduleListTerm.getJobTitle2() + "</jobtitle2>");
+								}
+								returnStr.append("</ROW>");
+							}
+						} else {
+							returnStr.append("<ROW>");
+							returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(0) + "</num>");
+							returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(1) + "</pnum>");
+							returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(2) + "</ownerID>");
+							returnStr.append("<title>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(3) + "</title>");
+							returnStr.append("<location>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(4) + "</location>");
+							returnStr.append("<timeDisplay>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(5) + "</timeDisplay>");
+							returnStr.append("<startDate>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(6) + "</startDate>");
+							returnStr.append("<endDAte>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(7) + "</endDAte>");
+							returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(8) + "</alertTime>");
+							returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(9) + "</reFlag>");
+							returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(10) + "</gresFlag>");
+							returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(11) + "</writerID>");
+							returnStr.append("<content>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(12) + "</content>");
+							returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(13) + "</importance>");
+							returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(14) + "</entryList>");
+							returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(15) + "</allDay>");
+							returnStr.append("<writeDay>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(16) + "</writeDay>");
+							returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(17) + "</attachFlag>");
+							returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(18) + "</characterID>");
+							returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(19) + "</approveFlag>");
+							returnStr.append("<owner_nm>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(20) + "</owner_nm>");
+							returnStr.append("<dept_name>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(21) + "</dept_name>");
+							if (pType.equals("") || pType == null) {
+								returnStr.append("<owner_nm2>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(21) + "</owner_nm2>");
+								returnStr.append("<dept_name2>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(22) + "</dept_name2>");
+								returnStr.append("<jobtitle>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(23) + "</jobtitle>");
+								returnStr.append("<jobtitle2>" + returnRepetitionDom.getElementsByTagName("ROW").item(i).getChildNodes().item(24) + "</jobtitle2>");
+							}
+							returnStr.append("</ROW>");
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
 		}
-		
-		String returnRepetition = "";
-		
-		if (pType.equals("")) {
-			List<ResGetScheduleListVO> getScheduleListRept= ezResourceService.getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
-			returnRepetition = commonUtil.getQueryResult(getScheduleListRept);
-		} else {
-			List<ResGetScheduleListMainVO> getScheduleListReptMain = ezResourceService.getScheduleListRepetitim(ownerID, companyID, todayStartStr);
-			returnRepetition = commonUtil.getQueryResult(getScheduleListReptMain);
-		}
-		
-		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
-		for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
-			String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
-			String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
-			String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
-		}
-		return "";
+		return returnStr.toString();
 	}
 	
 	public String getRepDeteTimes(String companyID, String num, String ownerID, String sDate, String eDate) throws Exception {
 		String returnStr = "";
-		String returnRepetition = "";
 		
+		ResGetRepDateTimesVO getRepDateTimes = ezResourceService.getRepDateTimes(ownerID, companyID, Integer.parseInt(num));
+		if (!getRepDateTimes.equals("") || getRepDateTimes != null) {
+			String startDateTime = getRepDateTimes.getStartDateTime();
+			String endDateTime = getRepDateTimes.getEndDateTime();
+			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			startDateTime = date.format(startDateTime).toString();
+			endDateTime = date.format(endDateTime).toString();
+			
+			String reWay = getRepDateTimes.getReWay();
+			String reDay = getRepDateTimes.getReDay();
+			String reNum = getRepDateTimes.getReNum();
+			String reYoil = getRepDateTimes.getReYoil();
+			String reMonth = getRepDateTimes.getReMonth();
+			String reOrd = getRepDateTimes.getReOrd();
+			String endFlag = getRepDateTimes.getEndFlag();
+			String reCount = getRepDateTimes.getReCount();
+			
+			String freq = reWay.substring(0, 1);
+			String sel = reWay.substring(reWay.length()-1, 1);
+			
+			if (reNum.equals("") || reNum == null) {
+				reNum = "";
+			}
+			
+			if (reYoil.equals("") || reYoil == null) {
+				reYoil = "";
+			}
+			
+			if (reDay.equals("") || reDay == null) {
+				reDay = "";
+			}
+			
+			if (reMonth.equals("") || reMonth == null) {
+				reMonth = "";
+			}
+			
+			if (reCount.equals("") || reCount == null) {
+				reCount = "";
+			}
+			
+			StringBuilder reXMLStr = new StringBuilder();
+			reXMLStr.append("<recurrence>");
+			reXMLStr.append("<frequency>"+freq+"</frequency");
+			reXMLStr.append("<selType>"+sel+"</selType");
+			reXMLStr.append("<endRecurType>"+endFlag+"</endRecurType");
+			reXMLStr.append("<startDateTime>"+startDateTime+"</startDateTime");
+			reXMLStr.append("<endDateTime>"+endDateTime+"</endDateTime");
+			reXMLStr.append("<interval>"+reNum+"</interval");
+			reXMLStr.append("<daysOfWeek>"+reYoil+"</daysOfWeek");
+			reXMLStr.append("<daysOfMonth>"+reDay+"</daysOfMonth");
+			reXMLStr.append("<byPosition>"+reOrd+"</byPosition");
+			reXMLStr.append("<monthsOfYear>"+reMonth+"</monthsOfYear");
+			reXMLStr.append("<instances>"+reCount+"</instances");
+			reXMLStr.append("</recurrence>");
+			
+			if (freq.equals("4")) {
+				returnStr = getDailyRepDateTimes(reXMLStr.toString(), sDate, eDate); 
+			} else if (freq.equals("5")) {
+				returnStr = getWeeklyRepDateTime(reXMLStr.toString(), sDate, eDate);
+			} else if (freq.equals("6")) {
+				returnStr = getMonthlyRepDateTimes(reXMLStr.toString(), sDate, eDate);
+			} else if (freq.equals("7")) {
+				returnStr = getYearlyRepDateTimes(reXMLStr.toString(), sDate, eDate);
+			}
+		}
+		return returnStr.toString();
+	}
+	
+	public String getDailyRepDateTimes(String xmlStr, String sDate, String eDate) {
+		StringBuilder returnXML = new StringBuilder();
 		
-		return "";
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			String selType = xmlRes.getElementsByTagName("selType").item(0).getTextContent().trim();
+			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent().trim();
+			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent().trim();
+			String interval2 = xmlRes.getElementsByTagName("interval").item(0).getTextContent().trim();
+			int interval = Integer.parseInt(interval2);
+			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent().trim();
+			String instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent().trim();
+			
+			String tmpSTime = startDateTime.substring(11, 8);
+			String tmpETime = endDateTime.substring(11, 8);
+			
+			String tmpDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = startDateTime.substring(0, 10);
+			
+			String tmpSDTStr = tmpDTStr;
+			String tmpEDTStr1 = tmpEDTStr;
+			
+			if (number(tmpSTime) > number(tmpETime)) {
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1), "", "", "");
+				tmpSDTStr = startDateTime.substring(0, 10);
+			}
+			
+			String orgTmpDTStr = tmpDTStr;
+			
+			int n = 1;
+			
+			
+			returnXML.append("<DATA>");
+			
+			int temp = 0;
+			boolean whileFlag = true;
+			while (whileFlag) {
+				if (selType.equals("0")) {
+					if (endRecurType.equals("0")) {
+						if (number(tmpDTStr) > number(eDate)) {
+							break;
+						} else {
+							if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+								returnXML.append("<ROW>");
+								returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+								returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+								returnXML.append("</ROW>");
+							}
+						}
+					} else if (endRecurType.equals("1")) {
+						if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+							break;
+						} else {
+							if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+								returnXML.append("<ROW>");
+								returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+								returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+								returnXML.append("</ROW>");
+							}
+							
+							if (number(tmpDTStr) >= number(orgTmpDTStr)) {
+								n = n+1;
+							}
+						}
+					} else if (endRecurType.equals("2")) {
+						if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+							returnXML.append("<ROW>");
+							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("</ROW>");
+						}
+					}
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval), "", "", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval), "", "", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval), "", "", "");
+				} else {
+					if (endRecurType.equals("0")) {
+						if (number(tmpDTStr) > number(eDate)) {
+							break;
+						} else if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7) {
+							if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+								returnXML.append("<ROW>");
+								returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+								returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+								returnXML.append("</ROW>");
+							}
+						}
+					} else if (endRecurType.equals("1")) {
+						if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+							break;
+						} else if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7) {
+							if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+								returnXML.append("<ROW>");
+								returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+								returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+								returnXML.append("</ROW>");
+							}
+							
+							if (number(tmpDTStr) >= number(orgTmpDTStr)) {
+								n = n+1;
+							}
+						}
+					} else if (endRecurType.equals("2")) {
+						if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
+							break;
+						} else if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7) {
+							if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+								returnXML.append("<ROW>");
+								returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+								returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+								returnXML.append("</ROW>");
+							}
+						}
+					}
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:MM:ss");
+					
+					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+				}
+				temp++;
+				if (temp > 1000) {
+					break;
+				}
+			}
+			returnXML.append("</DATA>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXML.toString();
+	}
+	
+	public String getWeeklyRepDateTime (String xmlStr, String sDate, String eDate) {
+		StringBuilder returnXML = new StringBuilder();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:MM:ss");
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			
+			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent().trim();
+			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent().trim();
+			String interval2 = xmlRes.getElementsByTagName("interval").item(0).getTextContent().trim();
+			int interval = Integer.parseInt(interval2);
+			String daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent().trim();
+			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent().trim();
+			String instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent().trim();
+			
+			String tmpSTime = startDateTime.substring(11, 8);
+			String tmpETime = endDateTime.substring(11, 8);
+			
+			String tmpDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = startDateTime.substring(0, 10);
+			
+			String tmpSDTStr = tmpDTStr;
+			String tmpEDTStr1 = tmpEDTStr;
+			
+			if (number(tmpSTime) > number(tmpETime)) {
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1), "", "", "");
+				tmpSDTStr = startDateTime.substring(0, 10);
+			}
+			
+			boolean isFirst = true;
+			String orgTmpDTStr = tmpDTStr;
+			String selDTStr = "";
+			int temp = 0;
+			int temp2 = 0;
+			int n = 1;
+			String[] wDay;
+			wDay = daysOfWeek.split(",");
+			int wDayCnt = wDay.length;
+			
+			returnXML.append("<DATA>");
+			
+			boolean whileFlag = true;
+			while (whileFlag) {
+				selDTStr = tmpDTStr;
+				boolean secondWhileFlag = true;
+				while (secondWhileFlag == true) {
+					for (int i=0; i<wDayCnt; i++) {
+						if (wDay[i].equals("")) {
+							wDay[i] = "0";
+						}
+						if (orgTmpDTStr.equals(selDTStr) && weekDay(tmpDTStr) == Integer.parseInt(wDay[i] + 1) && isFirst == true) {
+							isFirst = false;
+							secondWhileFlag = false;
+							break;
+						} else if (weekDay(tmpDTStr) < Integer.parseInt(wDay[i]) + 1 || !selDTStr.equals(tmpDTStr)) {
+							int tmpWeekDay = weekDay(tmpDTStr);
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+							
+							secondWhileFlag = false;
+							break;
+						}
+					}
+					if (secondWhileFlag == false) {
+						break;
+					}
+					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval * 7).toString();
+					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval * 7).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval * 7).toString();
+					
+					if (weekDay(tmpDTStr) != 1) {
+						int tmpWeekDay = weekDay(tmpDTStr);
+						
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - weekDay(tmpDTStr)).toString();
+						tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();
+						tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();
+					}
+					for (int i=0; i<wDayCnt; i++) {
+						if (wDay[i].equals("")) {
+							wDay[i] = "0";
+						}
+						if (weekDay(tmpDTStr) != (Integer.parseInt(wDay[i]) + 1)) {
+							int tmpWeekDay = weekDay(tmpDTStr);
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+						}
+					}
+					temp2 ++;
+					if (temp2 > 1000) {
+						break;
+					}
+				}
+				
+				if (endRecurType.equals("0")) {
+					if (number(tmpDTStr) > number(eDate)) {
+						break;
+					} else {
+						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+							returnXML.append("<ROW>");
+							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("</ROW>");
+						}
+					}
+				} else if (endRecurType.equals("1")) {
+					if (number(tmpDTStr) > number(eDate) || n > number(instances) * (wDayCnt-1)) {
+						break;
+					} else {
+						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
+							returnXML.append("<ROW>");
+							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("</ROW>");
+						}
+						
+						if (number(tmpDTStr) >= number(orgTmpDTStr)) {
+							n = n +1;
+						}
+					}
+				} else if (endRecurType.equals("2")) {
+					if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
+						break;
+					} else  {
+						if ((number(tmpDTStr) > number(eDate) || number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1))) {
+							returnXML.append("<ROW>");
+							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("</ROW>");
+						}
+					}
+				}
+				temp++;
+				if (temp > 1000) {
+					break;
+				}
+			}
+			returnXML.append("</DATA>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXML.toString();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String getMonthlyRepDateTimes(String xmlStr, String sDate, String eDate) {
+		StringBuilder returnXML = new StringBuilder();
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			
+			String selType = xmlRes.getElementsByTagName("selType").item(0).getTextContent().trim();
+			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent().trim();
+			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent().trim();
+			String interval2 = xmlRes.getElementsByTagName("interval").item(0).getTextContent().trim();
+			int interval = Integer.parseInt(interval2);
+			String daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent().trim();
+			String daysOfMonth = xmlRes.getElementsByTagName("daysOfMonth").item(0).getTextContent().trim();
+			String byPosition = xmlRes.getElementsByTagName("byPosition").item(0).getTextContent().trim();
+			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent().trim();
+			String instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent().trim();
+			String[] wDay = daysOfWeek.split(",");
+			String tmpSTime = startDateTime.substring(11, 8);
+			String tmpETime = endDateTime.substring(11, 8);
+			String tmpDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = startDateTime.substring(0, 10);
+			String tmpSDTStr = tmpDTStr;
+			String tmpEDTStr1 = tmpEDTStr;
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:MM:ss");
+			
+			if (number(tmpSTime) > number(tmpETime)) {
+				startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();
+				tmpSDTStr = startDateTime.substring(0, 10);
+			}
+			String orgtmpDTStr = tmpDTStr;
+			int n = 1;
+			returnXML.append("<DATA>");
+			
+			int temp = 0;
+			boolean whileFlag = true;
+			while(whileFlag) {
+				int wDayCnt = wDay.length;
+				if (wDayCnt != 0) {
+					wDayCnt = wDayCnt - 1;
+				}
+				if (daysOfWeek.indexOf(",") < 0) {
+					wDayCnt = 0;
+				}
+				if (selType.equals("0")) {
+					int datePartDay = format.parse(tmpDTStr).getDate();
+					int datePartMonth = format.parse(tmpDTStr).getMonth();
+					int datePartYear = format.parse(tmpDTStr).getYear();
+					boolean checkLastDate = true;
+					
+					if (daysOfMonth.equals("31") && (datePartMonth == 2 || datePartMonth == 4 || datePartMonth == 6 || datePartMonth == 9 || datePartMonth == 11)) {
+						checkLastDate = false;
+					} else if (daysOfMonth.equals("30") && datePartMonth == 2) {
+						checkLastDate = false;
+					} else if (daysOfMonth.equals("29") && datePartMonth == 2 && !(datePartYear % 4 == 0 && datePartYear % 100 != 0 || datePartYear % 400 == 0)) {
+						checkLastDate = false;
+					}
+					SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+					if (checkLastDate) {
+						tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpEDTStr = LocalDateTime.from(format1.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						
+						if (endRecurType.equals("0")) {
+							if (number(tmpDTStr) > number(eDate)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						} else if (endRecurType.equals("1")) {
+							if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+								
+								if (number(tmpDTStr) >= number(orgtmpDTStr)) {
+									n = n+1;
+								}
+							}
+						} else if (endRecurType.equals("2")) {
+							if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					}
+				} else {
+					int count = 1;
+					int datePartDay = format.parse(tmpDTStr).getDate();
+					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					
+					String sTmpDTStr = tmpDTStr;
+					
+					if (!byPosition.equals("-1")) {
+						while (true) {
+							if (wDayCnt == 0) {
+								if (weekDay(tmpDTStr) == Integer.parseInt(daysOfWeek) + 1) {
+									break;
+								}
+							} else if (wDayCnt == 2) {
+								if (weekDay(tmpDTStr) == 7) {
+									break;
+								}
+							} else {
+								if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7) {
+									if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 6) {
+										break;
+									}
+								} else {
+									if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 2) {
+										break;
+									}
+								}
+							}
+							count ++;
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+						}
+						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
+							tmpDTStr = sTmpDTStr;
+							wDayCnt = count;
+						}
+						
+						if (!byPosition.equals("1")) {
+							if (wDayCnt == 5) {
+								if (format.parse(tmpDTStr).getDate() == 1) {
+									tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+								} else {
+									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString(); 
+									} else {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();
+									}
+								}
+							} 
+						} else {
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+						}
+					} else {
+						int count1 = 1;
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						
+						int tmpWeekDay = weekDay(tmpDTStr);
+						
+						while (true) {
+							if (wDayCnt == 0) {
+								if (weekDay(tmpDTStr) == Integer.parseInt(daysOfWeek) + 1) {
+									break;
+								}
+							} else if (wDayCnt == 2) {
+								if (weekDay(tmpDTStr) == 7) {
+									break;
+								}
+							} else {
+								if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 2) {
+									break;
+								}
+							}
+							count1++;
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+						}
+						if (wDayCnt == 2) {
+							if (tmpWeekDay == 7) {
+								wDayCnt = 0;
+							}
+						} else if (wDayCnt == 5) {
+							if (tmpWeekDay == 1 || tmpWeekDay == 7) {
+								wDayCnt = 5;
+							} else {
+								wDayCnt = count1;
+							}
+						}
+					}
+					if (endRecurType.equals("0")) {
+						if (number(tmpDTStr) > number(eDate)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); 
+									}
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					} else if (endRecurType.equals("1")) {
+						if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+									}
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+							if (number(tmpDTStr) >= number(orgtmpDTStr)) {
+								n = n + 1;
+							}
+						}
+					} else if (endRecurType.equals("2")) {
+						if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr1)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+									}
+									
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+									
+									if (tmpDTStr.equals(tmpEDTStr1)) {
+										break;
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					}
+				}
+				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval).toString();
+				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval).toString();
+				
+				temp++;
+				if (temp > 1000) {
+					break;
+				}
+			}
+			returnXML.append("</DATA>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXML.toString();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String getYearlyRepDateTimes (String xmlStr, String sDate, String eDate) {
+		StringBuilder returnXML = new StringBuilder();
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			
+			String selType = xmlRes.getElementsByTagName("selType").item(0).getTextContent().trim();
+			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent().trim();
+			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent().trim();
+			String daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent().trim();
+			String daysOfMonth = xmlRes.getElementsByTagName("daysOfMonth").item(0).getTextContent().trim();
+			String byPosition = xmlRes.getElementsByTagName("byPosition").item(0).getTextContent().trim();
+			String monthsOfYear = xmlRes.getElementsByTagName("monthsOfYear").item(0).getTextContent().trim();
+			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent().trim();
+			String instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent().trim();
+			String[] wDay = daysOfWeek.split(",");
+			String tmpSTime = startDateTime.substring(11, 8);
+			String tmpETime = endDateTime.substring(11, 8);
+			String tmpDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = startDateTime.substring(0, 10);
+			String tmpSDTStr = tmpDTStr;
+			String tmpEDTStr1 = tmpEDTStr;
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			if (number(tmpSTime) > number(tmpETime)) {
+				startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();
+				tmpSDTStr = startDateTime.substring(0, 10);
+			}
+			String orgtmpDTStr = tmpDTStr;
+			int n = 1;
+			returnXML.append("<DATA>");
+			
+			int temp = 0;
+			boolean whileFlag = true;
+			while(whileFlag) {
+				int wDayCnt = wDay.length;
+				if (wDayCnt != 0) {
+					wDayCnt = wDayCnt - 1;
+				}
+				if (daysOfWeek.indexOf(",") < 0) {
+					wDayCnt = 0;
+				}
+				
+				int datePartMonth = format.parse(tmpDTStr).getMonth();
+				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
+				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
+				
+				if (selType.equals("0")) {
+					int datePartDay = format.parse(tmpDTStr).getDate();
+					int datePartYear = format.parse(tmpDTStr).getYear();
+					int tmpDatePartMonth = format.parse(tmpDTStr).getMonth();
+					boolean checkLastDate = true;
+					
+					if (daysOfMonth.equals("31") && (tmpDatePartMonth == 2 || tmpDatePartMonth == 4 || tmpDatePartMonth == 6 || tmpDatePartMonth == 9 || tmpDatePartMonth == 11)) {
+						checkLastDate = false;
+					} else if (daysOfMonth.equals("30") && tmpDatePartMonth == 2) {
+						checkLastDate = false;
+					} else if (daysOfMonth.equals("29") && tmpDatePartMonth == 2 && !(datePartYear % 4 == 0 && datePartYear % 100 != 0 || datePartYear % 400 == 0)) {
+						checkLastDate = false;
+					}
+					SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+					if (checkLastDate) {
+						tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpEDTStr = LocalDateTime.from(format1.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						
+						if (endRecurType.equals("0")) {
+							if (number(tmpDTStr) > number(eDate)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						} else if (endRecurType.equals("1")) {
+							if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+								
+								if (number(tmpDTStr) >= number(orgtmpDTStr)) {
+									n = n+1;
+								}
+							}
+						} else if (endRecurType.equals("2")) {
+							if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
+								break;
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					}
+				} else {
+					int count = 1;
+					int datePartDay = format.parse(tmpDTStr).getDate();
+					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					
+					String sTmpDTStr = tmpDTStr;
+					
+					if (!byPosition.equals("-1")) {
+						while (true) {
+							if (wDayCnt == 0) {
+								if (weekDay(tmpDTStr) == Integer.parseInt(daysOfWeek) + 1) {
+									break;
+								}
+							} else if (wDayCnt == 2) {
+								if (weekDay(tmpDTStr) == 7) {
+									break;
+								}
+							} else {
+								if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7) {
+									if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 6) {
+										break;
+									}
+								} else {
+									if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 2) {
+										break;
+									}
+								}
+							}
+							count ++;
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+						}
+						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
+							tmpDTStr = sTmpDTStr;
+							wDayCnt = count;
+						}
+						
+						if (!byPosition.equals("1")) {
+							if (wDayCnt == 5) {
+								if (format.parse(tmpDTStr).getDate() == 1) {
+									tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+								} else {
+									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString(); 
+									} else {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();
+									}
+								}
+							} 
+						} else {
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+						}
+					} else {
+						int count1 = 1;
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						
+						int tmpWeekDay = weekDay(tmpDTStr);
+						
+						while (true) {
+							if (wDayCnt == 0) {
+								if (weekDay(tmpDTStr) == Integer.parseInt(daysOfWeek) + 1) {
+									break;
+								}
+							} else if (wDayCnt == 2) {
+								if (weekDay(tmpDTStr) == 7) {
+									break;
+								}
+							} else {
+								if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7 && weekDay(tmpDTStr) == 2) {
+									break;
+								}
+							}
+							count1++;
+							
+							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+						}
+						if (wDayCnt == 2) {
+							if (tmpWeekDay == 7) {
+								wDayCnt = 0;
+							}
+						} else if (wDayCnt == 5) {
+							if (tmpWeekDay == 1 || tmpWeekDay == 7) {
+								wDayCnt = 5;
+							} else {
+								wDayCnt = count1;
+							}
+						}
+					}
+					if (endRecurType.equals("0")) {
+						if (number(tmpDTStr) > number(eDate)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); 
+									}
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					} else if (endRecurType.equals("1")) {
+						if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+									}
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+							if (number(tmpDTStr) >= number(orgtmpDTStr)) {
+								n = n + 1;
+							}
+						}
+					} else if (endRecurType.equals("2")) {
+						if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr1)) {
+							break;
+						} else {
+							if (wDayCnt != 0) {
+								for (int i=0; i<wDayCnt; i++) {
+									if (i>0) {
+										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+									}
+									
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
+										returnXML.append("<ROW>");
+										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+										returnXML.append("</ROW>");
+									}
+									
+									if (tmpDTStr.equals(tmpEDTStr1)) {
+										break;
+									}
+								}
+							} else {
+								if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
+									returnXML.append("<ROW>");
+									returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
+									returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+									returnXML.append("</ROW>");
+								}
+							}
+						}
+					}
+				}
+				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusYears(1).toString();
+				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusYears(1).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusYears(1).toString();
+				
+				temp++;
+				if (temp > 1000) {
+					break;
+				}
+			}
+			returnXML.append("</DATA>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXML.toString();
+	}
+	
+	public int number(String inputStr) {
+		try {
+			return Integer.parseInt(inputStr.replace("-", "").replace(" ", "").replace(":", "").trim());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public int weekDay(String inputStr) {
+		int returnValue = 0;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		try {
+				if (format.parse(inputStr).getDay() == 0) {
+					returnValue = 1;
+				}
+				
+				if (format.parse(inputStr).getDay() == 1) {
+					returnValue = 2;
+				}
+				
+				if (format.parse(inputStr).getDay() == 2) {
+					returnValue = 3;
+				}
+				
+				if (format.parse(inputStr).getDay() == 3) {
+					returnValue = 4;
+				}
+				
+				if (format.parse(inputStr).getDay() == 4) {
+					returnValue = 5;
+				}
+				
+				if (format.parse(inputStr).getDay() == 5) {
+					returnValue = 6;
+				}
+				
+				if (format.parse(inputStr).getDay() == 6) {
+					returnValue = 7;
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnValue;
 	}
 }

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -50,8 +52,16 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListRepetitim", map);
 	}
 	
+	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
+		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
+	}
+	
 	public ResGetAdminFlagVO getAdminFlag(Map<String, Object> map) {
 		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdminFlag", map);
+	}
+	
+	public ResGetRepDateTimesVO getRepDateTimes(Map<String, Object> map) {
+		return (ResGetRepDateTimesVO) select("EzResourceDAO.getRepDateTimes", map);
 	}
 }
 
