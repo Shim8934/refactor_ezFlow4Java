@@ -1099,15 +1099,15 @@ function callMsgDlg(szContentClass, Href) {
     else {
         var newwin;
         var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-        if (CrossYN() || pNoneActiveX == "YES") {
-            newwin = window.open("mail_write_Cross.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
-        }
+//        if (CrossYN() || pNoneActiveX == "YES") {
+            newwin = window.open("/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
+/*        }
         else {
             if (pUse_Editor == "")
                 newwin = window.open("mail_write.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
             else
                 newwin = window.open("mail_write_IE.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
-        }
+        } */
         newwin.focus();
     }
 }

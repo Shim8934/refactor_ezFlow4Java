@@ -18,159 +18,160 @@
     <SCRIPT type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></SCRIPT>
     <SCRIPT type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></SCRIPT>
     <script type="text/javascript">
-        var g_szAuthor = "";
-        var g_szExchange = "exchange";
-        var g_cmd = "${cmd}";
-        var Org_cmd = "${cmd}";
-        var g_servername = document.location.hostname;
-        var g_myname = "${userInfo.displayName}";
-        var g_myemail = "${userInfo.mail}";
-        var g_szUserID = "${userInfo.mailNickName}";
-        var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
-        var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
-        var g_eImportance = "${importance}";
-        var g_ePostType = "${postType}";
-        var g_url = "${url}";
-        var g_unread = "${unread}";
-        var m_rgParams4PostOption = new Array();
-        var g_bDirty = false;
-        var m_addrBook = null;
-        var g_bSended = false;
-        var objMHT;
-        var g_SendFrom = "${sendFrom}";
-        var g_charset = "utf-8";
-        var g_encoding = "BASE64";
-        var g_font = "<spring:message code='ezEmail.t409' />";
-        var g_showdisplay = "";
-        var g_simplemimeencoding = "7bit";
-        var g_simplemime = "";
-        var g_xmldoc = createXmlDom();
-        var useMultiLangMail = "${useMultiLangMail}";
-        var g_isFormat = false;
-        var g_DisplayNamePrintable = "${displayNamePrintable}";
-        var g_showEnglishDisplay = "";
-        var g_charsetCheck = "${charsetCheck}";
-	    var g_use_ApprovalG = "${userInfoApprovalG}";
-        var g_ReSendFlag = "${reSendFlag}";
-        var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
-        var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
-        var totSizeAttachMBSize = "${mailAttachLimit}";
-        var BigSizeAttachSize = BigSizeAttachMBSize * 1024 * 1024;
-        var totBigSizeAttachSize = totBigSizeAttachMBSize * 1024 * 1024;
-        var totSizeAttachSize = totSizeAttachMBSize * 1024 * 1024;
-        var FBigSizeAttachSize = parseInt(BigSizeAttachSize);
-        var FtotBigSizeAttachSize = parseInt(totBigSizeAttachSize);
-        var FtotSizeAttachSize = parseInt(totSizeAttachSize);
-        var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDay}";
-        var charsetControlFlag = "${userLang}";
-        var userTimezone = "${userTimeset}";
-        var isPrimary = "${userPrimary}";
-        var initFlag = false;
-        var gg_cmd = "${cmdOwn}";
-        var gg_url = "${urlOwn}";        
-        var g_newid = "${newWindowId}";
-        var FileUploadtype = "${fileUploadType}";
-        var iseachMail = "false";
-        var individualmailuser = "${individualMailUser}";
-        var pSecurity = "${pSecurity}";
-        var docHref = "${docHref}";
-        var isReserve = "NO";
-        var pCDOMessageId = "";
-        var Add_xmlhttp = "";
-        var mailsel = "${mailSignSel}";
-        var mailpath = "";
-        var fileSize_add = "";
-        var fileName_add = "";
-        var fileType_add = "";
-        var bigtrue = 0;
-        var tmpXML = "";
-        var tempUrl = "";
-        var folderDate = "${folderDate}";
-        var filedate = "${stateName}";
-        var gubunlist = "1";
-        var tempvalue = "0";
-        var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
-        var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
-        var ua = navigator.userAgent;
-        var InnerDomain = "${mailInnerDomain}";
-        var inMailColor = "${inMailColor}";
-        var outMailColor = "${outMailColor}";
-        var pUse_Editor = "${useEditor}";
-        window.onload = function () {
+    var g_szAuthor = "";
+    var g_szExchange = "exchange";
+    var g_cmd = "${cmd}";
+    var Org_cmd = "${cmd}";
+    var g_servername = document.location.hostname;
+    var g_myname = "${userInfo.displayName}";
+    var g_myemail = "${userInfo.mail}";
+    var g_szUserID = "${userInfo.mailNickName}";
+    var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
+    var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
+    var g_eImportance = "${importance}";
+    var g_ePostType = "${postType}";
+    var g_url = "${url}";
+    var g_unread = "${unread}";
+    var m_rgParams4PostOption = new Array();
+    var g_bDirty = false;
+    var m_addrBook = null;
+    var g_bSended = false;
+    var objMHT;
+    var g_SendFrom = "${sendFrom}";
+    var g_charset = "utf-8";
+    var g_encoding = "BASE64";
+    var g_font = "<spring:message code='ezEmail.t409' />";
+    var g_showdisplay = "";
+    var g_simplemimeencoding = "7bit";
+    var g_simplemime = "";
+    var g_xmldoc = createXmlDom();
+    var useMultiLangMail = "${useMultiLangMail}";
+    var g_isFormat = false;
+    var g_DisplayNamePrintable = "${displayNamePrintable}";
+    var g_showEnglishDisplay = "";
+    var g_charsetCheck = "${charsetCheck}";
+	var g_use_ApprovalG = "${userInfoApprovalG}";
+    var g_ReSendFlag = "${reSendFlag}";
+    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
+    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
+    var totSizeAttachMBSize = "${mailAttachLimit}";
+    var BigSizeAttachSize = BigSizeAttachMBSize * 1024 * 1024;
+    var totBigSizeAttachSize = totBigSizeAttachMBSize * 1024 * 1024;
+    var totSizeAttachSize = totSizeAttachMBSize * 1024 * 1024;
+    var FBigSizeAttachSize = parseInt(BigSizeAttachSize);
+    var FtotBigSizeAttachSize = parseInt(totBigSizeAttachSize);
+    var FtotSizeAttachSize = parseInt(totSizeAttachSize);
+    var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDay}";
+    var charsetControlFlag = "${userLang}";
+    var userTimezone = "${userTimeset}";
+    var isPrimary = "${userPrimary}";
+    var initFlag = false;
+    var gg_cmd = "${cmdOwn}";
+    var gg_url = "${urlOwn}";        
+    var g_newid = "${newWindowId}";
+    var FileUploadtype = "${fileUploadType}";
+    var iseachMail = "false";
+    var individualmailuser = "${individualMailUser}";
+    var pSecurity = "${pSecurity}";
+    var docHref = "${docHref}";
+    var isReserve = "NO";
+    var pCDOMessageId = "";
+    var Add_xmlhttp = "";
+    var mailsel = "${mailSignSel}";
+    var mailpath = "";
+    var fileSize_add = "";
+    var fileName_add = "";
+    var fileType_add = "";
+    var bigtrue = 0;
+    var tmpXML = "";
+    var tempUrl = "";
+    var folderDate = "${folderDate}";
+    var filedate = "${stateName}";
+    var gubunlist = "1";
+    var tempvalue = "0";
+    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
+    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
+    var ua = navigator.userAgent;
+    var InnerDomain = "${mailInnerDomain}";
+    var inMailColor = "${inMailColor}";
+    var outMailColor = "${outMailColor}";
+    var pUse_Editor = "${useEditor}";
+    window.onload = function () {
 
-            if (g_unread == "1") {
-                try {
-                    window.opener.document.Script.refreshUnreadCount()
-                } catch (e) { }
-            }
-            if (pSecurity == "Security") {
-                pSecurity = "3";
-            }
-            if (typeof (document.getElementById("xmpSubject").outerText) != "undefined" && document.getElementById("xmpSubject").outerText != "")
-                document.getElementById("eSubject").value = document.getElementById("xmpSubject").outerText;
-
-            eFrom.value = xmpFrom.innerHTML;
-            importantSelect.selectedIndex = g_eImportance;
-            m_rgParams4PostOption["important"] = g_eImportance;
-            m_rgParams4PostOption["postType"] = g_ePostType;
-            m_rgParams4PostOption["replySendTime"] = "0";
-            m_rgParams4PostOption["replyReadTime"] = "1";
-            m_rgParams4PostOption["delaySendDate"] = "";
-            m_rgParams4PostOption["showMsgCC"] = true;
-            m_rgParams4PostOption["showMsgBCC"] = true;
-            m_rgParams4PostOption["tagMsgCC"] = MsgCC_TR;
-            m_rgParams4PostOption["tagMsgCCu"] = MsgCC_TRu;
-            m_rgParams4PostOption["tagMsgBCC"] = MsgBCC_TR;
-            m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
-            m_rgParams4PostOption["bodyType"] = "0";
-            m_rgParams4PostOption["EachMail"] = iseachMail;
-            m_rgParams4PostOption["SecurityMail"] = pSecurity;
-            if (xmpTo.innerHTML != "") {
-                var splitAddr = getEmailAddressList(xmpTo.innerHTML);
-                addReceiverFromList(0, splitAddr);
-            }
-            if (xmpCc.innerHTML != "") {
-                splitAddr = getEmailAddressList(xmpCc.innerHTML);
-                addReceiverFromList(1, splitAddr);
-            }
-            if (xmpBcc.innerHTML != "") {
-                splitAddr = getEmailAddressList(xmpBcc.innerHTML);
-                addReceiverFromList(2, splitAddr);
-            }
-            Subject_ReApply();
-            g_bDirty = false;
-            if (g_charsetCheck == "0") {
-                if (confirm("<spring:message code='ezEmail.t665' />")) {
-                    location.href = location.href + "&attach=1";
-                }
-            }
-            if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML != "") {
-                AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
-            }
-            SelMailSign.value = "${mailSignSel}";
-
-        Simple_Choice();
-        var pSaveTime = "${pAutoSaveTime}";
-        var pSaveInterval = parseInt(pSaveTime) * 1000;
-        if (pSaveInterval > 0)
-            window.setInterval("Mail_AutoSave()", pSaveInterval);
-
-        var ua = navigator.userAgent;
-        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-            document.getElementById("file1").multiple = false;
+        if (g_unread == "1") {
+            try {
+                window.opener.document.Script.refreshUnreadCount()
+            } catch (e) { }
         }
+        if (pSecurity == "Security") {
+            pSecurity = "3";
+        }
+        if (typeof (document.getElementById("xmpSubject").outerText) != "undefined" && document.getElementById("xmpSubject").outerText != "")
+            document.getElementById("eSubject").value = document.getElementById("xmpSubject").outerText;
 
-        if (document.getElementById("eSubject").value == "")
-            document.getElementById("MsgTo").focus();
+        eFrom.value = xmpFrom.innerHTML;
+        importantSelect.selectedIndex = g_eImportance;
+        m_rgParams4PostOption["important"] = g_eImportance;
+        m_rgParams4PostOption["postType"] = g_ePostType;
+        m_rgParams4PostOption["replySendTime"] = "0";
+        m_rgParams4PostOption["replyReadTime"] = "1";
+        m_rgParams4PostOption["delaySendDate"] = "";
+        m_rgParams4PostOption["showMsgCC"] = true;
+        m_rgParams4PostOption["showMsgBCC"] = true;
+        m_rgParams4PostOption["tagMsgCC"] = MsgCC_TR;
+        m_rgParams4PostOption["tagMsgCCu"] = MsgCC_TRu;
+        m_rgParams4PostOption["tagMsgBCC"] = MsgBCC_TR;
+        m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
+        m_rgParams4PostOption["bodyType"] = "0";
+        m_rgParams4PostOption["EachMail"] = iseachMail;
+        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+        if (xmpTo.innerHTML != "") {
+            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
+            addReceiverFromList(0, splitAddr);
         }
-    var isAutoSave = false;
-    var MailStatus = "NO";
-    function Mail_AutoSave() {
-        if (MailStatus == "NO") {
-            isAutoSave = true;
-            Save_onClick("tempsave");
+        if (xmpCc.innerHTML != "") {
+            splitAddr = getEmailAddressList(xmpCc.innerHTML);
+            addReceiverFromList(1, splitAddr);
         }
-    }
+        if (xmpBcc.innerHTML != "") {
+            splitAddr = getEmailAddressList(xmpBcc.innerHTML);
+            addReceiverFromList(2, splitAddr);
+        }
+        Subject_ReApply();        
+        g_bDirty = false;
+        if (g_charsetCheck == "0") {
+            if (confirm("<spring:message code='ezEmail.t665' />")) {
+                location.href = location.href + "&attach=1";
+            }
+        }        
+        if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
+            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
+        }
+        SelMailSign.value = "${mailSignSel}";
+        
+		Simple_Choice();		
+		var pSaveTime = "${pAutoSaveTime}";
+		var pSaveInterval = parseInt(pSaveTime) * 1000;
+		if (pSaveInterval > 0)
+		    window.setInterval("Mail_AutoSave()", pSaveInterval);
+		
+		var ua = navigator.userAgent;
+		if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		    document.getElementById("file1").multiple = false;
+		}
+		
+		if (document.getElementById("eSubject").value == "")
+		    document.getElementById("MsgTo").focus();
+	}
+    
+	var isAutoSave = false;
+	var MailStatus = "NO";
+	function Mail_AutoSave() {
+	    if (MailStatus == "NO") {
+	        isAutoSave = true;
+	        Save_onClick("tempsave");
+	    }
+	}
     window.onresize = function () {       
         if (document.getElementById("BccViewer").getAttribute("status") == "off") {
             document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
