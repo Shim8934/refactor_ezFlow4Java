@@ -293,6 +293,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				System.out.println(EgovDateUtil.convertDate(commonUtil.addDay("2016-05-01 12:00:00", 1), "yyyy-MM-dd HH:mm:ss", "",""));
 				reVal = getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
 System.out.println("reVal:"+reVal);				
+System.out.println("getOs:"+userInfo.getOs());
 				/*Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
 					
@@ -572,7 +573,6 @@ System.out.println("reVal:"+reVal);
 			curPage = req.getParameter("goToPage");
 		}
 		
-		
 		return "/ezResource/resViewResList";
 	}
 	
@@ -626,7 +626,7 @@ System.out.println("reVal:"+reVal);
 			
 			String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept);
 			Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
-			
+System.out.println("scheRs:"+scheRs);
 			returnStr.append("<root>");
 			
 			for (int i=0; i<scheRSDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -769,12 +769,12 @@ System.out.println("reVal:"+reVal);
 				} else if (pType.equals("MAIN")) {
 	
 					List<ResGetScheduleListMainVO> getScheduleListMain = ezResourceService.getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
+System.out.println("size:"+getScheduleListMain.size());
 					for (int i=0; i<getScheduleListMain.size(); i++) {
 						returnSchedule = commonUtil.getQueryResult(getScheduleListMain.get(i));
 					}
 				}
 			
-		
 				Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
 			
 				for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
@@ -1177,9 +1177,9 @@ System.out.println("reVal:"+reVal);
 						} else if (weekDay(tmpDTStr) < Integer.parseInt(wDay[i]) + 1 || !selDTStr.equals(tmpDTStr)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
+							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();*/
 							
 							secondWhileFlag = false;
 							break;
@@ -1188,16 +1188,16 @@ System.out.println("reVal:"+reVal);
 					if (secondWhileFlag == false) {
 						break;
 					}
-					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval * 7).toString();
+					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval * 7).toString();
 					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval * 7).toString();
 					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval * 7).toString();
-					
+					*/
 					if (weekDay(tmpDTStr) != 1) {
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - weekDay(tmpDTStr)).toString();
+					/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - weekDay(tmpDTStr)).toString();
 						tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();
-						tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();
+						tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();*/
 					}
 					for (int i=0; i<wDayCnt; i++) {
 						if (wDay[i].equals("")) {
@@ -1206,9 +1206,9 @@ System.out.println("reVal:"+reVal);
 						if (weekDay(tmpDTStr) != (Integer.parseInt(wDay[i]) + 1)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
+							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();*/
 						}
 					}
 					temp2 ++;
@@ -1294,7 +1294,7 @@ System.out.println("reVal:"+reVal);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:MM:ss");
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();
+				/*startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();*/
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			String orgtmpDTStr = tmpDTStr;
@@ -1326,9 +1326,9 @@ System.out.println("reVal:"+reVal);
 					}
 					SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					if (checkLastDate) {
-						tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						/*tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
 						tmpEDTStr = LocalDateTime.from(format1.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
-						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();*/
 						
 						if (endRecurType.equals("0")) {
 							if (number(tmpDTStr) > number(eDate)) {
@@ -1372,9 +1372,9 @@ System.out.println("reVal:"+reVal);
 				} else {
 					int count = 1;
 					int datePartDay = format.parse(tmpDTStr).getDate();
-					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
 					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - datePartDay).toString();
-					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();*/
 					
 					String sTmpDTStr = tmpDTStr;
 					
@@ -1401,9 +1401,9 @@ System.out.println("reVal:"+reVal);
 							}
 							count ++;
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 						}
 						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
 							tmpDTStr = sTmpDTStr;
@@ -1423,14 +1423,14 @@ System.out.println("reVal:"+reVal);
 								}
 							} 
 						} else {
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 						}
 					} else {
 						int count1 = 1;
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1450,9 +1450,9 @@ System.out.println("reVal:"+reVal);
 							}
 							count1++;
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 						}
 						if (wDayCnt == 2) {
 							if (tmpWeekDay == 7) {
@@ -1473,7 +1473,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); 
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); */
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1498,7 +1498,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1526,7 +1526,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+									/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 									}
 									
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
@@ -1551,9 +1551,9 @@ System.out.println("reVal:"+reVal);
 						}
 					}
 				}
-				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval).toString();
+				/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval).toString();
 				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval).toString();
-				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval).toString();*/
 				
 				temp++;
 				if (temp > 1000) {
@@ -1593,7 +1593,7 @@ System.out.println("reVal:"+reVal);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();
+				/*startDateTime = LocalDateTime.from(format.parse(startDateTime).toInstant()).plusDays(1).toString();*/
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			String orgtmpDTStr = tmpDTStr;
@@ -1612,9 +1612,9 @@ System.out.println("reVal:"+reVal);
 				}
 				
 				int datePartMonth = format.parse(tmpDTStr).getMonth();
-				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
+				/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
 				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
-				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusMonths(Integer.parseInt(monthsOfYear) - datePartMonth).toString();*/
 				
 				if (selType.equals("0")) {
 					int datePartDay = format.parse(tmpDTStr).getDate();
@@ -1631,9 +1631,9 @@ System.out.println("reVal:"+reVal);
 					}
 					SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					if (checkLastDate) {
-						tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						/*tmpDTStr = LocalDateTime.from(format1.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
 						tmpEDTStr = LocalDateTime.from(format1.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
-						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();
+						tmpSDTStr = LocalDateTime.from(format1.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(daysOfMonth) - datePartDay).toString();*/
 						
 						if (endRecurType.equals("0")) {
 							if (number(tmpDTStr) > number(eDate)) {
@@ -1677,9 +1677,9 @@ System.out.println("reVal:"+reVal);
 				} else {
 					int count = 1;
 					int datePartDay = format.parse(tmpDTStr).getDate();
-					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
 					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - datePartDay).toString();
-					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();*/
 					
 					String sTmpDTStr = tmpDTStr;
 					
@@ -1706,9 +1706,9 @@ System.out.println("reVal:"+reVal);
 							}
 							count ++;
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 						}
 						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
 							tmpDTStr = sTmpDTStr;
@@ -1718,24 +1718,24 @@ System.out.println("reVal:"+reVal);
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+									/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString(); 
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/ 
 									} else {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();*/
 									}
 								}
 							} 
 						} else {
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 						}
 					} else {
 						int count1 = 1;
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+						/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
+						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1755,9 +1755,9 @@ System.out.println("reVal:"+reVal);
 							}
 							count1++;
 							
-							tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
 							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 						}
 						if (wDayCnt == 2) {
 							if (tmpWeekDay == 7) {
@@ -1778,7 +1778,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); 
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/ 
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1803,7 +1803,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1831,7 +1831,7 @@ System.out.println("reVal:"+reVal);
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 									}
 									
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
@@ -1856,9 +1856,9 @@ System.out.println("reVal:"+reVal);
 						}
 					}
 				}
-				tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusYears(1).toString();
+				/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusYears(1).toString();
 				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusYears(1).toString();
-				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusYears(1).toString();
+				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusYears(1).toString();*/
 				
 				temp++;
 				if (temp > 1000) {
