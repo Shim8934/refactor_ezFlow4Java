@@ -1,4 +1,4 @@
-﻿﻿//XMLHttpRequest객체를 생성합니다.
+﻿//XMLHttpRequest객체를 생성합니다.
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
