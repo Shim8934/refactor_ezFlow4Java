@@ -373,6 +373,26 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
+	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BNAME", bName);
+		map.put("v_DOG", itemNo);
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.bbsDelOkGet(map);
+	}
+
+	@Override
+	public void bbsDelOkDel(String bName, String itemNo, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BNAME", bName);
+		map.put("v_DOG", itemNo);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.bbsDelOkDel(map);
+	}
+
+	@Override
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception {
 		String pResult = "", pSignatureDir = ""; 
 		

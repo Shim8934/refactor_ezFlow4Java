@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -478,7 +480,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		if (request.getParameter("keyword") != null) {
 			keyword = request.getParameter("keyword");
-			pKeyword = keyword.replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+			pKeyword = URLDecoder.decode(keyword, "UTF-8");
 		}
 		if (request.getParameter("goToPage") != null) {
 			curPage = Integer.parseInt(request.getParameter("goToPage"));
@@ -490,6 +492,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!code.equals("")) {
 			titleName = ezCommunityService.getBoardTitleName(bName, code);
 		}
+		
+		System.out.println(keyword);
+		System.out.println(pKeyword);
 
 		keywordCount = ezCommunityService.getBBSListGet1(bName, loginVO.getLang(), pKeyword, sRadio);
 		totalPage = keywordCount / comNoPerPage;
@@ -569,9 +574,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 			}
 			
-			String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-			nowDate = EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13);			
-			nowDate = EgovDateUtil.convertDate(nowDate, "", "", "");
+			String nowDate = EgovDateUtil.getTodayTime();
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate.substring(0, 8) + nowDate.substring(8,13)) >= 0) {
 				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">");
@@ -880,7 +884,6 @@ public class EzCommunityController extends EgovFileMngUtil{
         InputStream is = null;
         OutputStream os = null;
         PrintWriter pw = null;
-        String today = EgovDateUtil.getToday();
 
         if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = ezCommunityService.bbsEditOkGet1(bName, gant, code);
@@ -891,7 +894,7 @@ public class EzCommunityController extends EgovFileMngUtil{
     			//if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
         		if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1) {
 	                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
-	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator + cBoard.getFileName().trim();
+	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
 	                
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
@@ -959,7 +962,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                     fileName = "0000000001" + "(" + code + ").mht";
                 }
                 
-                strPath = config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator +fileName;
+                strPath = config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator +fileName;
             } else {
                 int iName = Integer.parseInt(strMaxNum);
                 iName = iName + 1;
@@ -971,8 +974,8 @@ public class EzCommunityController extends EgovFileMngUtil{
                 }
                 
                 fileName = strName + ".mht";
-                dirPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator;
-                strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator +fileName;
+                dirPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator ;
+                strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + fileName;
             }
 
         	String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
@@ -1045,12 +1048,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String realPath = request.getServletContext().getRealPath("");
 		String uploadModule = config.getProperty("config.LocalPath");
 		String strUrl = ezCommonService.getContentInfo(type, itemID);
-		String today = EgovDateUtil.getToday();
 		String filePath = "";
 		String m_strMHT = "";
 
 		if (type.equals("COMMUNITYNOTI")) {
-			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator + today + commonUtil.separator; 
+			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator; 
 		} else {
 			filePath = "";
 		}
@@ -1061,7 +1063,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			m_strMHT = "";
 		}
 		
-        String strHTML = ezCommonController.startMHT2HTML(realPath + uploadModule + today + commonUtil.separator, m_strMHT, realPath + uploadModule + today + commonUtil.separator);
+        String strHTML = ezCommonController.startMHT2HTML(realPath + uploadModule + commonUtil.separator, m_strMHT, realPath + uploadModule + commonUtil.separator);
 
         
         if (strHTML.trim().length() > 0) {
@@ -1076,21 +1078,56 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
-	public String bbsDelOk(@CookieValue("loginCookie")String loginCookie,@RequestBody String data){
+	public String bbsDelOk(@CookieValue("loginCookie")String loginCookie,@RequestBody String data, CommunityCBoardVO board, HttpServletRequest request) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
-		String itemNo = doc.getElementById("ItemNo").getTextContent();
-		String goToPage = doc.getElementById("GoToPage").getTextContent();
-		String bName = doc.getElementById("Bname").getTextContent();
+		String itemNo = doc.getElementsByTagName("ItemNo").item(0).getTextContent();
+		String goToPage = doc.getElementsByTagName("GoToPage").item(0).getTextContent();
+		String bName = doc.getElementsByTagName("Bname").item(0).getTextContent();
+		String code = "";
 		String fileName = "", folder = "", strFile = "";
 		
+		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
 		//EZSP_BBS_DEL_OK_GET
-			
-			//EZSP_BBS_DEL_OK_DEL
-			//
+		board = ezCommunityService.bbsDelOkGet(bName, itemNo, code);
 		
-		return "OK";
+		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			fileName = board.getFileName();
+			
+			if (fileName != null) {
+				folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator;
+				strFile = folder + fileName;
+				File file = new File(strFile);
+				
+				if (file.exists()) {
+					file.delete();
+				}
+			}
+			
+			if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+				String attachList = "";
+				if (board.getCharFileName() != null) {
+					attachList = board.getCharFileName();
+					String[] strAttachFile = attachList.split(";");
+					folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator;
+					
+					for (int i = 0; i <= strAttachFile.length; i++) {
+						strFile = folder + strAttachFile[i];
+						File file = new File(strFile);
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			}
+			
+			ezCommunityService.bbsDelOkDel(bName, itemNo, code);
+			
+			return "OK";
+		}
+		return "ERROR";
 	}
 	
 	/**

@@ -51,8 +51,9 @@
 				document.getElementById("title").focus();
 
                 if (pMode == "write" && pNo != "" && (pBname == "c_clubpds" || pBname == "c_clubpds1")) {
-				    document.getElementById("divBody").innerHTML = makeAttachDIV(document.getElementById("preAttachList").innerText);	
-				    document.getElementById("attachedFile").innerHTML = makeAttachDIV2(document.getElementById("preAttachList").innerText);
+//첨부파일 부분을 아예 사용안함
+// 				    document.getElementById("divBody").innerHTML = makeAttachDIV(document.getElementById("preAttachList").innerText);	
+// 				    document.getElementById("attachedFile").innerHTML = makeAttachDIV2(document.getElementById("preAttachList").innerText);
 				}
                 
 				if (pMode == "edit" || pNo != "") {
@@ -200,19 +201,19 @@
 			        GetFileURL();
 			        var fullPath = strContentLocation;
 			        var htmlData = message.SetEditorContentURL2(fullPath);
-alert(htmlData);
+			        
 			        if(pMode == "write" && pNo != "") {
 			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + pTitle + "<br><br>" + htmlData;
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);
 			        }
-alert(message.GetEditorContent());
 			    } 
 			}
 		</script>
 		
-		<c:if test="${mode == 'edit' && no != '' && (bName == 'c_clubpds' || bName == 'c_clubpds1')}">
+<!-- 		사용안함 -->
+		<%-- <c:if test="${mode == 'edit' && no != '' && (bName == 'c_clubpds' || bName == 'c_clubpds1')}">
 			<script type="text/javascript">
 				function makeAttachDIV(attachStr){
 				
@@ -262,7 +263,7 @@ alert(message.GetEditorContent());
 				attachedFile.innerHTML = makeAttachDIV2(preAttachList.innerText);		
 			}
 			</script>
-		</c:if>
+		</c:if> --%>
 	</head>
 	<body class = "popup" style = "height:97%">
 		<table class="layout">

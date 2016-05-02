@@ -81,6 +81,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsEditOkGet1", map);
 	}
 	
+	public CommunityCBoardVO bbsDelOkGet(Map<String, Object> map) throws Exception{
+		return (CommunityCBoardVO) select("EzCommunityDAO.getbbsDelOkGet", map);
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
@@ -147,5 +151,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.getBoardTreeSet", map);
 	}
 
+	public void bbsDelOkDel(Map<String, Object> map) throws Exception{
+		delete("EzCommunityDAO.bbsDelOkDel", map);
+	}
 
 }

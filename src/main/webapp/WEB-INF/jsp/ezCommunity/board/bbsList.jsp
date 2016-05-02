@@ -59,16 +59,16 @@
 		    }
 		    
 			function search() {
-				if (document.page.s_radio.value == "title" ) {
+				if (document.page.sRadio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + document.page.keyword.value;
-				} else if (document.page.s_radio.value == "titleContent" ) {
+				} else if (document.page.sRadio.value == "titleContent" ) {
 					var strSearch = "sRadio=titleContent&keyword=" + document.page.keyword.value;
 				} else {
 					var strSearch = "sRadio=writer&keyword=" + document.page.keyword.value;
 				}
 				
-				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}" + "&key=" + document.page.keyword.value;
-				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + encodeURI(strSearch);
+				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}";
+				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + strSearch;
 			}
 
 			function comm_searchCheck() {

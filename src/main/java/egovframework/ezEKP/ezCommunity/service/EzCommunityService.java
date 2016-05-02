@@ -32,6 +32,8 @@ public interface EzCommunityService {
 	
 	public CommunityCBoardVO bbsEditOkGet1(String bName, String gant, String code) throws Exception;
 	
+	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception;
+	
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
 
 	public String leftCommunityGet2(String code) throws Exception;
@@ -74,7 +76,7 @@ public interface EzCommunityService {
 
 	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception;
 
-	
+	public void bbsDelOkDel(String bName, String itemNo, String code) throws Exception;
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

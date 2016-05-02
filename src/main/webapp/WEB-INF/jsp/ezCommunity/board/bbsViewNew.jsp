@@ -63,13 +63,13 @@
 		        result = confirm("<spring:message code='ezCommunity.t136' />");
 
 		        if (result) {
-		            var xmlDom = "";
-		            var xmlHTTP = "";
+		        	var xmlDom = createXmlDom();
+					var xmlHTTP = createXMLHttpRequest();
 
 	                var objNode;
 	                createNodeInsert(xmlDom, objNode, "DATA");
 	                createNodeAndInsertText(xmlDom, objNode, "ItemNo", grsNo);
-	                createNodeAndInsertText(xmlDom, objNode, "GoToPage", gotopage);
+	                createNodeAndInsertText(xmlDom, objNode, "GoToPage", goToPage);
 	                createNodeAndInsertText(xmlDom, objNode, "Bname", bName);
 		         
 
@@ -77,9 +77,9 @@
 		            xmlHTTP.send(xmlDom);
 
 		            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		                alert("spring:message code='ezCommunity.t203' />");
+		                alert("<spring:message code='ezCommunity.t203' />");
 		            else {
-		                alert("spring:message code='ezCommunity.t204' />");
+		                alert("<spring:message code='ezCommunity.t204' />");
 		                //window.opener.parent.left.getBoardList();
 		                window.opener.location.reload(false);
 		                window.close();
