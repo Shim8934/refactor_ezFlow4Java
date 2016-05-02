@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -128,4 +130,26 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_WRITERDEPT", writerDept);
 		return ezResourceDAO.getScheduleListTerm(map);
 	}
+
+	@Override
+	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PTOPCNT", topCnt);
+		map.put("v_PBRDID", brdID);
+		map.put("v_PCOMPANYID", CompanyID);
+		map.put("v_POWNDEPTNM", ownDeptNm);
+		map.put("v_POWNERNM", ownerNm);
+		map.put("v_POWNERPOSITION", ownerPosition);
+		map.put("v_PBRDNM", brdNm);
+		return ezResourceDAO.getBrdList(map);
+	}
+
+	@Override
+	public int getBrdCnt(int brdID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDID", brdID);
+		map.put("v_PCOMPANYID", companyID);
+		return ezResourceDAO.getBrdCnt(map);
+	}
 }
+
