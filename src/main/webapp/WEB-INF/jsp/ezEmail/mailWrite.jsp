@@ -22,7 +22,7 @@
     var g_szExchange = "exchange";
     var g_cmd = "${cmd}";
     var Org_cmd = "${cmd}";
-    var g_servername = document.location.hostname;
+    var g_servername = "${serverName}";
     var g_myname = "${userInfo.displayName}";
     var g_myemail = "${userInfo.mail}";
     var g_szUserID = "${userInfo.mailNickName}";
