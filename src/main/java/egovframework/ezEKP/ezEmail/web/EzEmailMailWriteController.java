@@ -247,8 +247,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
 			day = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
 		}
-		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday(), day);
-		bigSizeMailAttachDelDay = EgovDateUtil.formatDate(bigSizeMailAttachDelDay, "-");
+		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getTodayTime().split(" ")[0], day, "yyyy-MM-dd");
 
 		displayNamePrintable = userInfo.getDisplayName();
 
@@ -490,7 +489,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         	pBigAttachDownloadDaynum = Integer.parseInt(pBigAttachDownloadDay);
         }
         
-        pBigAttachDownloadPeriod = EgovDateUtil.formatDate(EgovDateUtil.getToday(), "/") + " ~ " + EgovDateUtil.formatDate(EgovDateUtil.addDay(EgovDateUtil.getToday(), pBigAttachDownloadDaynum), "/");
+        pBigAttachDownloadPeriod = EgovDateUtil.formatDate(EgovDateUtil.getToday(), "/") + " ~ " + EgovDateUtil.formatDate(EgovDateUtil.addDay(EgovDateUtil.getToday(), pBigAttachDownloadDaynum, ""), "/");
 
 		if (userLang.equals("1")) {
 			pAttachWarning = "일반첨부파일은 총 " + mailAttachLimit + "MB까지 가능하며, 대용량첨부는 " + totBigSizeMailAttachLimit + "MB까지 가능(" + pBigAttachDownloadDay + "일후 자동삭제) ";
@@ -688,9 +687,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                 }
                 pBigFileUpload = "Y";
                 
-                //TODO : 잘 변환되어 들어갔는지 검사
-                String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes()); //pFileName[i]을 UTF8로 인코딩해야하는것인가?
-//                String base64OrgFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(pFileName[i]));
+                String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes());
                 FileOutputStream fos = null;
                 try {
                 	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
