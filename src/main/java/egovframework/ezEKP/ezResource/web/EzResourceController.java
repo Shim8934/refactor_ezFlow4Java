@@ -281,15 +281,15 @@ public class EzResourceController extends EgovFileMngUtil {
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
 					} else {
-						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1), "yyyyMMdd", "yyyy-MM-dd","");
-						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1), "yyyyMMdd", "yyyy-MM-dd","");
+						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, ""), "yyyyMMdd", "yyyy-MM-dd","");
+						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, ""), "yyyyMMdd", "yyyy-MM-dd","");
 						
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
 					}
 				}
-				System.out.println(EgovDateUtil.convertDate(commonUtil.addDay("2016-04-25 12:00:00", -1), "yyyy-MM-dd HH:mm:ss", "", ""));
-				System.out.println(EgovDateUtil.convertDate(commonUtil.addDay("2016-05-01 12:00:00", 1), "yyyy-MM-dd HH:mm:ss", "",""));
+				System.out.println(EgovDateUtil.convertDate(EgovDateUtil.addDay("2016-04-25 12:00:00", -1, ""), "yyyy-MM-dd HH:mm:ss", "", ""));
+				System.out.println(EgovDateUtil.convertDate(EgovDateUtil.addDay("2016-05-01 12:00:00", 1, ""), "yyyy-MM-dd HH:mm:ss", "",""));
 				reVal = getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
 System.out.println("reVal:"+reVal);				
 System.out.println("getOs:"+userInfo.getOs());
@@ -762,7 +762,7 @@ System.out.println("scheRs:"+scheRs);
 				if (pType.equals("")) {
 					List<ResGetScheduleListVO> getScheduleList = ezResourceService.getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
 					for (int i=0; i<getScheduleList.size(); i++) {
-						returnSchedule = commonUtil.getQueryResult(getScheduleList.get(i));
+						returnSchedule += commonUtil.getQueryResult(getScheduleList.get(i));
 					}
 					
 				} else if (pType.equals("MAIN")) {
@@ -770,7 +770,7 @@ System.out.println("scheRs:"+scheRs);
 					List<ResGetScheduleListMainVO> getScheduleListMain = ezResourceService.getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
 System.out.println("size:"+getScheduleListMain.size());
 					for (int i=0; i<getScheduleListMain.size(); i++) {
-						returnSchedule = commonUtil.getQueryResult(getScheduleListMain.get(i));
+						returnSchedule += commonUtil.getQueryResult(getScheduleListMain.get(i));
 					}
 				}
 			
@@ -816,19 +816,26 @@ System.out.println("size:"+getScheduleListMain.size());
 			
 			if (pType.equals("")) {
 				List<ResGetScheduleListVO> getScheduleListRept= ezResourceService.getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
-				returnRepetition = commonUtil.getQueryResult(getScheduleListRept);
+				returnRepetition += commonUtil.getQueryResult(getScheduleListRept);
 			} else {
 				List<ResGetScheduleListMainVO> getScheduleListReptMain = ezResourceService.getScheduleListRepetitim(ownerID, companyID, todayStartStr);
-				returnRepetition = commonUtil.getQueryResult(getScheduleListReptMain);
+System.out.println("size1:"+getScheduleListReptMain.size());
+System.out.println(getScheduleListReptMain.get(0).getStartDate());
+				for(int j=0; j<getScheduleListReptMain.size(); j++) {
+					returnRepetition += commonUtil.getQueryResult(getScheduleListReptMain.get(j));
+				}
 			}
 			
+			System.out.println("returnRepetition:"+returnRepetition);
 			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
+System.out.println("rowLength:"+returnRepetitionDom.getElementsByTagName("ROW").getLength());
 			for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 				String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
 				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 				
 				String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate);
+System.out.println("returnRepDateTimes:"+returnRepDateTimes);
 				if (!returnRepDateTimes.trim().equals("")) {
 					Document returnRepDateTimesDom = commonUtil.convertStringToDocument(returnRepDateTimes);
 					
@@ -912,7 +919,7 @@ System.out.println("size:"+getScheduleListMain.size());
 				}
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		return returnStr.toString();
 	}
@@ -975,7 +982,7 @@ System.out.println("size:"+getScheduleListMain.size());
 			reXMLStr.append("<monthsOfYear>"+reMonth+"</monthsOfYear");
 			reXMLStr.append("<instances>"+reCount+"</instances");
 			reXMLStr.append("</recurrence>");
-			
+System.out.println("freq:"+freq);			
 			if (freq.equals("4")) {
 				returnStr = getDailyRepDateTimes(reXMLStr.toString(), sDate, eDate); 
 			} else if (freq.equals("5")) {
@@ -1012,7 +1019,7 @@ System.out.println("size:"+getScheduleListMain.size());
 			String tmpEDTStr1 = tmpEDTStr;
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1), "", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "yyyy-MM-dd HH:mm:ss", "", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			
@@ -1061,9 +1068,9 @@ System.out.println("size:"+getScheduleListMain.size());
 							returnXML.append("</ROW>");
 						}
 					}
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval), "", "", "");
-					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval), "", "", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval), "", "", "");
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, ""), "", "", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval, ""), "", "", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, ""), "", "", "");
 				} else {
 					if (endRecurType.equals("0")) {
 						if (number(tmpDTStr) > number(eDate)) {
@@ -1107,6 +1114,8 @@ System.out.println("size:"+getScheduleListMain.size());
 					
 					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
 					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, ""), "", "", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, ""), "", "", "");
 				}
 				temp++;
 				if (temp > 1000) {
@@ -1144,7 +1153,7 @@ System.out.println("size:"+getScheduleListMain.size());
 			String tmpEDTStr1 = tmpEDTStr;
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1), "", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "", "", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			
