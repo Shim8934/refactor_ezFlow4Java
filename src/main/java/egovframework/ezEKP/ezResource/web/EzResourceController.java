@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -1106,8 +1105,8 @@ System.out.println("size:"+getScheduleListMain.size());
 					}
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:MM:ss");
 					
-					tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
-					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();
+					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
+					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 				}
 				temp++;
 				if (temp > 1000) {
@@ -1413,12 +1412,12 @@ System.out.println("size:"+getScheduleListMain.size());
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
+									/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString(); 
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/ 
 									} else {
-										tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();
+										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();*/
 									}
 								}
 							} 
