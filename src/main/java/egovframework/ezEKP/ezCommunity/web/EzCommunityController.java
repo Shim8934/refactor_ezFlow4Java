@@ -577,7 +577,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String nowDate = EgovDateUtil.getTodayTime();
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
-			if (cBoard.getWriteDay().compareTo(nowDate.substring(0, 8) + nowDate.substring(8,13)) >= 0) {
+			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
 				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">");
 			}
 			
