@@ -185,7 +185,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		useEditor = config.getProperty("config.EDITOR");
 
 		//hostURL = request.getRequestURL().substring(0, request.getRequestURI().length()) + "/ezEmail/"; - 지금은 필요없는데 나중에 필요할지도?
-		folderDate = EgovDateUtil.getToday();
+		folderDate = EgovDateUtil.getToday("");
 		stateName = UUID.randomUUID().toString();
 
 		if (config.getProperty("config.MailInnerDomain") != null) {
@@ -489,7 +489,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         	pBigAttachDownloadDaynum = Integer.parseInt(pBigAttachDownloadDay);
         }
         
-        pBigAttachDownloadPeriod = EgovDateUtil.formatDate(EgovDateUtil.getToday(), "/") + " ~ " + EgovDateUtil.formatDate(EgovDateUtil.addDay(EgovDateUtil.getToday(), pBigAttachDownloadDaynum, ""), "/");
+        pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), pBigAttachDownloadDaynum, "yyyy/MM/dd");
 
 		if (userLang.equals("1")) {
 			pAttachWarning = "일반첨부파일은 총 " + mailAttachLimit + "MB까지 가능하며, 대용량첨부는 " + totBigSizeMailAttachLimit + "MB까지 가능(" + pBigAttachDownloadDay + "일후 자동삭제) ";
@@ -678,7 +678,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
-                String pDate = EgovDateUtil.getToday();
+                String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
                 pDirTempPath = pDirPath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
