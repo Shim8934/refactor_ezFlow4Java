@@ -2604,7 +2604,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	            		Node node = nList.item(i);
 	            		
 	            		myFavoriteVO.setBoardId(node.getChildNodes().item(2).getTextContent());
-            			myFavoriteVO.setNowDate(EgovDateUtil.getToday());
+            			myFavoriteVO.setNowDate(EgovDateUtil.getToday(""));
             			myFavoriteVO.setUserId(userInfo.getId());
             			myFavoriteVO.setType("1");
             			
@@ -2954,7 +2954,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String expireDays = "";
         String expireItem = "";
         String strTitle = "";
-        String today = EgovDateUtil.getTodayTime().split(" ")[0];
+        String today = EgovDateUtil.getToday("-");
         
         if (!url.equals("")) {        	
         	startDateTime = today;

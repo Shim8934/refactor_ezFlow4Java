@@ -416,8 +416,8 @@ public class EgovDateUtil {
 	 * 표기법은 yyyy-mm-dd                                  <BR>
 	 * @return  String      yyyymmdd형태의 현재 한국시간.   <BR>
 	 */
-	public static String getToday() {
-		return getCurrentDate("");
+	public static String getToday(String type) {
+		return getCurrentDate(type);
 	}
 	
 	/**
@@ -451,7 +451,7 @@ public class EgovDateUtil {
 					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date)) + " " 
 					  + hour + ":" + min + ":" + sec;
 		}else{
-			strDate = Integer.toString(year) + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month))
+			strDate = Integer.toString(year) + dateType + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month)) + dateType
 					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));
 		}
 		return strDate;

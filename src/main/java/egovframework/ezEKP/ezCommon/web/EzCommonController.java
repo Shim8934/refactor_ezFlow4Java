@@ -222,7 +222,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
 		String realPath = request.getServletContext().getRealPath("");
-		String today = EgovDateUtil.getToday();
+		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
 		filePath = filePath + commonUtil.separator + today;
@@ -259,7 +259,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
 		String realPath = request.getServletContext().getRealPath("");
-		String today = EgovDateUtil.getToday();
+		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
 		filePath = filePath + commonUtil.separator + today;
