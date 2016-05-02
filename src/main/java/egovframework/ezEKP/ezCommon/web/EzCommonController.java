@@ -818,7 +818,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				m_strMHT= "";
 			}
 	        
-	        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+	        String strHTML = startMHT2HTML(realPath+config.getProperty("config.LocalPath"), m_strMHT, filePath);
 	        
 	        if (strHTML.trim().length() > 0) {
 	        	return strHTML;

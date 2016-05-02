@@ -875,12 +875,12 @@ public class EzCommunityController extends EgovFileMngUtil{
             myLevel = Integer.parseInt(doc.getElementsByTagName("Level").item(0).getTextContent());
         }
 		
-System.out.println("textContent = " + textContent);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
         OutputStream os = null;
         PrintWriter pw = null;
+        String today = EgovDateUtil.getToday();
 
         if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = ezCommunityService.bbsEditOkGet1(bName, gant, code);
@@ -890,9 +890,8 @@ System.out.println("textContent = " + textContent);
         		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
     			//if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
         		if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1) {
-//        			textContent = textContent.substring(624);
 	                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
-	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
+	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator + cBoard.getFileName().trim();
 	                
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
@@ -960,7 +959,7 @@ System.out.println("textContent = " + textContent);
                     fileName = "0000000001" + "(" + code + ").mht";
                 }
                 
-                strPath = config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + fileName;
+                strPath = config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator +fileName;
             } else {
                 int iName = Integer.parseInt(strMaxNum);
                 iName = iName + 1;
@@ -972,8 +971,8 @@ System.out.println("textContent = " + textContent);
                 }
                 
                 fileName = strName + ".mht";
-                dirPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName);
-                strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + fileName;
+                dirPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator;
+                strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + today + commonUtil.separator +fileName;
             }
 
         	String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
@@ -1044,12 +1043,14 @@ System.out.println("textContent = " + textContent);
 		String type = request.getParameter("type");
 		String itemID = request.getParameter("itemID");
 		String realPath = request.getServletContext().getRealPath("");
+		String uploadModule = config.getProperty("config.LocalPath");
 		String strUrl = ezCommonService.getContentInfo(type, itemID);
+		String today = EgovDateUtil.getToday();
 		String filePath = "";
 		String m_strMHT = "";
 
 		if (type.equals("COMMUNITYNOTI")) {
-			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator;
+			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator + today + commonUtil.separator; 
 		} else {
 			filePath = "";
 		}
@@ -1060,7 +1061,7 @@ System.out.println("textContent = " + textContent);
 			m_strMHT = "";
 		}
 		
-        String strHTML = ezCommonController.startMHT2HTML(realPath +filePath, m_strMHT, realPath + filePath);
+        String strHTML = ezCommonController.startMHT2HTML(realPath + uploadModule + today + commonUtil.separator, m_strMHT, realPath + uploadModule + today + commonUtil.separator);
 
         
         if (strHTML.trim().length() > 0) {
