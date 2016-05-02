@@ -444,7 +444,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
-	public void downloadAttachCommon(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadAttachCommon(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		
