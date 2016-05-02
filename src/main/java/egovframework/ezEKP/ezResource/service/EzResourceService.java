@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezResource.service;
 
-import java.util.Date;
 import java.util.List;
 
+import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -26,9 +26,13 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate) throws Exception;
 	
+	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm) throws Exception;
+	
 	public ResGetAdminFlagVO getAdminFlag(String companyID, String resID, String memberID) throws Exception; 
 	
 	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num) throws Exception;
 	
 	public ResGetScheduleListTermVO getScheduleListTerm(int num,String companyID, String ownerID, String startDate, String endDate, String writerName, String writerDept) throws Exception;
+	
+	public int getBrdCnt(int brdID, String companyID) throws Exception;
 }
