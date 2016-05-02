@@ -247,7 +247,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
 			day = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
 		}
-		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getTodayTime().split(" ")[0], day, "yyyy-MM-dd");
+		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), day, "yyyy-MM-dd");
 
 		displayNamePrintable = userInfo.getDisplayName();
 
