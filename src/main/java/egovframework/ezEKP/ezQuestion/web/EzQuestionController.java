@@ -679,7 +679,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstResponseVO.setResponseUserJikgub2(jikGub2);
 		qstResponseVO.setResponseUserGender(gender);
 		qstResponseVO.setResponseUserAge(Integer.parseInt(age));
-		qstResponseVO.setResponseDate(EgovDateUtil.getToday());
+		qstResponseVO.setResponseDate(EgovDateUtil.getToday(""));
 		qstResponseVO.setResponseUserIp(responseUserIp);
 		/** EZSP_GETQUESTIONFORRESPONSE*/
 		QstVO questionVO = new QstVO();
