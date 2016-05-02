@@ -464,6 +464,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int comNoPerPage = 17;
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
+		request.setCharacterEncoding("UTF-8");
+		
 		bName = request.getParameter("bName").toLowerCase();
 		
 		if (request.getParameter("sRadio") != null) {
@@ -480,7 +482,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		if (request.getParameter("keyword") != null) {
 			keyword = request.getParameter("keyword");
-			pKeyword = URLDecoder.decode(keyword, "UTF-8");
+			pKeyword = new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
 		}
 		if (request.getParameter("goToPage") != null) {
 			curPage = Integer.parseInt(request.getParameter("goToPage"));
@@ -492,11 +494,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!code.equals("")) {
 			titleName = ezCommunityService.getBoardTitleName(bName, code);
 		}
-		
-		System.out.println(keyword);
-		System.out.println(pKeyword);
 
-		keywordCount = ezCommunityService.getBBSListGet1(bName, loginVO.getLang(), pKeyword, sRadio);
+		keywordCount = ezCommunityService.getBBSListGet1(bName, commonUtil.getMultiData(loginVO.getLang()), pKeyword, sRadio);
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -504,7 +503,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, loginVO.getLang(), pKeyword, sRadio);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, commonUtil.getMultiData(loginVO.getLang()), pKeyword, sRadio);
 		
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;

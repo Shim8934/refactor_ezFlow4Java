@@ -110,6 +110,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	//TODO 2016-05-02 이효진 formatter 부분 EgovDateUtil 로 변경해야함
 	/**
 	 * 전자설문 설문리스트 메인 화면 호출 함수
 	 */
@@ -784,13 +785,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		/** EZSP_GETREADDATEITEMFORRESULT*/
 		String readDate = ezQuestionService.getReadDateItemForResult(qstUserPollItemVO, userID);
 		/** EZSP_UPDATEREADDATE*/
-		Date sysDate=new Date();
-		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		if(readDate != null){
 			ezQuestionService.updateReadDate(qstUserPollItemVO, readDate, userID);
 		}else{
-			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, formatter.format(sysDate));
+			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, EgovDateUtil.getTodayTime());
 		}
 		
 		/** EZSP_GETUSERPERMISSION*/
@@ -2706,9 +2705,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		Cell cell;
 		
 		String pFileName = "";
-		Date sysDate=new Date();
-		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String strDate = formatter.format(sysDate);
+		String strDate = EgovDateUtil.getToday("-");
 		String StrAnalysisDate = request.getParameter("AnalysisData").replaceAll("&nbsp;", "").trim();
 
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
@@ -3130,8 +3127,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
-		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
-		String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+		String curDate = EgovDateUtil.getTodayTime();
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));

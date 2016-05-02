@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<style> 
 	        .pagetd{padding-top:6px; }
@@ -59,6 +60,27 @@
 		    }
 		    
 			function search() {
+// 				var sRadio;
+// 				if (document.page.sRadio.value == "title" ) {
+// 					 sRadio = "title";
+// 				} else if (document.page.sRadio.value == "titleContent" ) {
+// 					sRadio = "titleContent";
+// 				} else {
+// 					sRadio = "writer";
+// 				}
+				
+// 				$.ajax({
+// 					type : "POST",
+// 					dataType : "text",
+// 					async : false,
+// 					url : "/ezCommunity/board/bbsList.do",
+// 					data : {sRadio	:	sRadio,
+// 							keyword	:	document.page.keyword.value,
+// 							code	:	"${code}",
+// 							bName	:	"${bName}"
+// 						   }      			
+// 				});
+				
 				if (document.page.sRadio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + document.page.keyword.value;
 				} else if (document.page.sRadio.value == "titleContent" ) {
@@ -68,7 +90,8 @@
 				}
 				
 				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}";
-				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + strSearch;
+				
+				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 
 			function comm_searchCheck() {
@@ -225,7 +248,7 @@
 			}
 			
 			function btn_list(bname) {
-				url = "/ezCommunity/board/bbsList.do?bName=${bname}";
+				url = "/ezCommunity/board/bbsList.do?bName=${bName}";
 				location.href = url;
 			}
 		</script>
