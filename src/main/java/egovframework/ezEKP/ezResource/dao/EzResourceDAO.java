@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -52,6 +53,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListRepetitim", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ResBrdListVO> getBrdList(Map<String, Object> map){
+		return  (List<ResBrdListVO>) list("EzResourceDAO.getBrdList", map);
+	}
+	
 	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
 		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
@@ -62,6 +68,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public ResGetRepDateTimesVO getRepDateTimes(Map<String, Object> map) {
 		return (ResGetRepDateTimesVO) select("EzResourceDAO.getRepDateTimes", map);
+	}
+	
+	public int getBrdCnt(Map<String , Object> map) {
+		select("EzResourceDAO.getBrdCnt", map);
+		return (int)map.get("v_pCount");
 	}
 }
 
