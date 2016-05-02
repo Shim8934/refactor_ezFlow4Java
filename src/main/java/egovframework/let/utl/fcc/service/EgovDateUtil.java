@@ -55,32 +55,39 @@ public class EgovDateUtil {
 	 * DateUtil.addYearMonthDay("20040229", 2, 0, 1)   = "20060301"
 	 * </pre>
 	 *
-	 * @param  dateStr 날짜 문자열(yyyyMMdd, yyyy-MM-dd의 형식)
+	 * @param  dateStr 날짜 문자열(dateFormat 파라메터의 형식)
 	 * @param  year 가감할 년. 0이 입력될 경우 가감이 없다
 	 * @param  month 가감할 월. 0이 입력될 경우 가감이 없다
 	 * @param  day 가감할 일. 0이 입력될 경우 가감이 없다
-	 * @return  yyyyMMdd 형식의 날짜 문자열
+	 * @return dateFormat에 선언된 형식의 날짜 문자열
 	 * @throws IllegalArgumentException 날짜 포맷이 정해진 바와 다를 경우.
 	 *         입력 값이 <code>null</code>인 경우.
 	 */
-	public static String addYearMonthDay(String sDate, int year, int month, int day) {
-
-		String dateStr = validChkDate(sDate);
-
+	public static String addYearMonthDay(String sDate, int year, int month, int day, String dateFormat) {		
+		
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+		
+		if(dateFormat.equals("")){
+			dateFormat = "yyyyMMdd";
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
+		
 		try {
-			cal.setTime(sdf.parse(dateStr));
+			cal.setTime(sdf.parse(sDate));
 		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format: " + dateStr);
+			throw new IllegalArgumentException("Invalid date format: " + sDate);
 		}
 
-		if (year != 0)
+		if (year != 0){
 			cal.add(Calendar.YEAR, year);
-		if (month != 0)
+		}
+		if (month != 0){
 			cal.add(Calendar.MONTH, month);
-		if (day != 0)
+		}
+		if (day != 0){
 			cal.add(Calendar.DATE, day);
+		}
 		return sdf.format(cal.getTime());
 	}
 
@@ -102,8 +109,8 @@ public class EgovDateUtil {
 	 * @throws IllegalArgumentException 날짜 포맷이 정해진 바와 다를 경우.
 	 *         입력 값이 <code>null</code>인 경우.
 	 */
-	public static String addYear(String dateStr, int year) {
-		return addYearMonthDay(dateStr, year, 0, 0);
+	public static String addYear(String dateStr, int year, String dateFormat) {
+		return addYearMonthDay(dateStr, year, 0, 0, dateFormat);
 	}
 
 	/**
@@ -125,8 +132,8 @@ public class EgovDateUtil {
 	 * @throws IllegalArgumentException 날짜 포맷이 정해진 바와 다를 경우.
 	 *         입력 값이 <code>null</code>인 경우.
 	 */
-	public static String addMonth(String dateStr, int month) {
-		return addYearMonthDay(dateStr, 0, month, 0);
+	public static String addMonth(String dateStr, int month, String dateFormat) {
+		return addYearMonthDay(dateStr, 0, month, 0, dateFormat);
 	}
 
 	/**
@@ -151,8 +158,8 @@ public class EgovDateUtil {
 	 * @throws IllegalArgumentException 날짜 포맷이 정해진 바와 다를 경우.
 	 *         입력 값이 <code>null</code>인 경우.
 	 */
-	public static String addDay(String dateStr, int day) {
-		return addYearMonthDay(dateStr, 0, 0, day);
+	public static String addDay(String dateStr, int day, String dateFormat) {
+		return addYearMonthDay(dateStr, 0, 0, day, dateFormat);
 	}
 
 	/**
@@ -412,6 +419,15 @@ public class EgovDateUtil {
 	public static String getToday() {
 		return getCurrentDate("");
 	}
+	
+	/**
+	 * 현재(한국기준) 날짜정보를 얻는다.                     <BR>
+	 * 표기법은 yyyy-mm-dd                                  <BR>
+	 * @return  String      yyyymmdd형태의 현재 한국시간.   <BR>
+	 */
+	public static String getTodayTime() {
+		return getCurrentDate("time");
+	}
 
 	/**
 	 * 현재(한국기준) 날짜정보를 얻는다.                     <BR>
@@ -423,13 +439,21 @@ public class EgovDateUtil {
 
 		int year = aCalendar.get(Calendar.YEAR);
 		int month = aCalendar.get(Calendar.MONTH) + 1;
-		int date = aCalendar.get(Calendar.DATE);
-		String strDate = Integer.toString(year) + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month))
-				+ ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));
-
-		if (!"".equals(dateType))
-			strDate = convertDate(strDate, "yyyyMMdd", dateType);
-
+		int date = aCalendar.get(Calendar.DATE);		
+		String strDate = "";
+		
+		if(dateType.equals("time")){
+			int hour = aCalendar.get(Calendar.HOUR_OF_DAY);
+			int min = aCalendar.get(Calendar.MINUTE);
+			int sec = aCalendar.get(Calendar.SECOND);
+			
+			strDate = Integer.toString(year) + "-" + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month)) + "-"
+					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date)) + " " 
+					  + hour + ":" + min + ":" + sec;
+		}else{
+			strDate = Integer.toString(year) + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month))
+					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));
+		}
 		return strDate;
 	}
 
@@ -756,7 +780,7 @@ public class EgovDateUtil {
 	public static String addYMDtoWeek(String sDate, int year, int month, int day) {
 		String dateStr = validChkDate(sDate);
 
-		dateStr = addYearMonthDay(dateStr, year, month, day);
+		dateStr = addYearMonthDay(dateStr, year, month, day, "");
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
@@ -787,7 +811,7 @@ public class EgovDateUtil {
 		String dateStr = validChkDate(sDate);
 		String timeStr = validChkTime(sTime);
 
-		dateStr = addYearMonthDay(dateStr, year, month, day);
+		dateStr = addYearMonthDay(dateStr, year, month, day, "");
 
 		dateStr = convertDate(dateStr, timeStr, "yyyyMMddHHmm");
 

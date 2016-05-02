@@ -971,8 +971,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
 	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
 	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-	    				    String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-	    				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+	    					String nowDate = EgovDateUtil.getTodayTime();
+	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+	    				    
 	    					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 	    						resultXML.append("<DATA7>Y</DATA7>");
 	    					} else {
@@ -1083,8 +1084,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
@@ -1215,8 +1216,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
 	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
 	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-	    				    String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-	    				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+	    				    String nowDate = EgovDateUtil.getTodayTime();
+	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 	    				    
 	    					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 	    						resultXML.append("<DATA7>Y</DATA7>");
@@ -1329,8 +1330,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
 					} else {
@@ -1461,8 +1463,9 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
     					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
     					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-    				    String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-    				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+    					String nowDate = EgovDateUtil.getTodayTime();
+    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+    				    
     					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
     						resultXML.append("<DATA7>Y</DATA7>");
     					} else {
@@ -1549,8 +1552,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
 					} else {
@@ -1697,8 +1701,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 	resultXML.append("<DATA1>"+boardThumbnailList.get(j).get("BOARDID")+"</DATA1>");
                 	resultXML.append("<DATA2>"+boardThumbnailList.get(j).get("ITEMID")+"</DATA2>");
         			resultXML.append("<DATA3>"+boardThumbnailList.get(j).get("WRITERID")+"</DATA3>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+        			String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA4>Y</DATA4>");
 					} else {
@@ -1902,8 +1907,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardSearchList.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardSearchList.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardSearchList.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardSearchList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
 					} else {
@@ -2039,8 +2045,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 	resultXML.append("<DATA1>"+boardThumbnailList.get(j).get("BOARDID")+"</DATA1>");
                 	resultXML.append("<DATA2>"+boardThumbnailList.get(j).get("ITEMID")+"</DATA2>");
         			resultXML.append("<DATA3>"+boardThumbnailList.get(j).get("WRITERID")+"</DATA3>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+        			String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA4>Y</DATA4>");
 					} else {
@@ -2168,8 +2175,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardSearchList.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardSearchList.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardSearchList.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardSearchList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
 					} else {
@@ -2426,8 +2434,9 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
     					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
     					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-    				    String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-    				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+    					String nowDate = EgovDateUtil.getTodayTime();
+    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+    				    
     					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
     						resultXML.append("<DATA7>Y</DATA7>");
     					} else {
@@ -2514,8 +2523,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-				    nowDate = EgovDateUtil.convertDate(EgovDateUtil.addDay(nowDate.substring(0, 8), -1) + nowDate.substring(8,13), "", "", "");
+					String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						resultXML.append("<DATA7>Y</DATA7>");
 					} else {
@@ -2944,10 +2954,11 @@ public class EzBoardController extends EgovFileMngUtil{
         String expireDays = "";
         String expireItem = "";
         String strTitle = "";
+        String today = EgovDateUtil.getTodayTime().split(" ")[0];
         
-        if (!url.equals("")) {
-        	startDateTime = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "").split(" ")[0];
-        	endDateTime = EgovDateUtil.addDay(startDateTime, 30);
+        if (!url.equals("")) {        	
+        	startDateTime = today;
+        	endDateTime = EgovDateUtil.addDay(startDateTime, 30, "yyyy-MM-dd");
         	expireDays = "-1";
         } else {
         	expireDays = boardInfo.getExpireDays();
@@ -2975,9 +2986,9 @@ public class EzBoardController extends EgovFileMngUtil{
         		if (boardListVO.getEndDate().substring(0, 4).equals("9999")) {
         			expireItem = "YES";
         			if (expireDays.equals("-1")) {
-        				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), 30);
+        				endDateTime = EgovDateUtil.addDay(today, 30, "yyyy-MM-dd");
         			} else {
-        				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), Integer.parseInt(expireDays));
+        				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
         			}
         		} else {
         			boardListVO.setEndDate(boardListVO.getEndDate().split(" ")[0]);
@@ -2985,9 +2996,9 @@ public class EzBoardController extends EgovFileMngUtil{
         		startDateTime = boardListVO.getStartDate();
         	} else {
         		if (expireDays.equals("-1")) {
-        			endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), 30);
+        			endDateTime = EgovDateUtil.addDay(today, 30, "yyyy-MM-dd");
     			} else {
-    				endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday(), Integer.parseInt(expireDays));
+    				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
     			}
         	}
         	if (boardInfo.getGuBun().equals("2")) {
@@ -3012,8 +3023,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
         }
         startDateTime = strDate.get(Calendar.YEAR)+ "-"+ (strDate.get(Calendar.MONTH)+1)+"-"+strDate.get(Calendar.DATE)+" "+strDate.get(Calendar.HOUR)+":"+strDate.get(Calendar.MINUTE)+":"+strDate.get(Calendar.SECOND);
-        endDateTime = EgovDateUtil.convertDate(endDateTime,"0000","yyyy-MM-dd");
-        
+                
         if (reservedItem.equals("true")) {
         	startDateTime = boardListVO.getStartDate();
         }
@@ -3032,7 +3042,6 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
         	boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
         }
-        
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardListVO", boardListVO);
         model.addAttribute("boardAttributeListVO", boardAttributeListVO);
