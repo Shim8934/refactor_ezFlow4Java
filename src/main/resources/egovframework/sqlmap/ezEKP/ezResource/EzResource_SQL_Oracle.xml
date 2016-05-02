@@ -189,13 +189,13 @@
 	
 	<procedure id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELIST_MAIN(#v_pOwnerID#, #v_pCompanyID#, to_date(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'), to_date(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS'), #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_GETSCHEDULELIST_MAIN(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
 	<procedure id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_POWNERID#, to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_WRITERNAME#, #v_WRITERDEPT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
