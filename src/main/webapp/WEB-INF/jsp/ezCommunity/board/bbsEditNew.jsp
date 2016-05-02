@@ -48,7 +48,6 @@
 			}
 			
 			window.onload = function() {
-				alert(pCode, pGant);
 				document.getElementById("title").focus();
 
                 if (pMode == "write" && pNo != "" && (pBname == "c_clubpds" || pBname == "c_clubpds1")) {
@@ -108,11 +107,10 @@
 
 					var xmlDom = createXmlDom();
 					var xmlHTTP = createXMLHttpRequest();
-					
 				    var objNode;
 					createNodeInsert(xmlDom, objNode, "DATA"); 
-                    createNodeAndInsertText(xmlDom, objNode, "Attachlist", pAttachFileList);					
-                    createNodeAndInsertText(xmlDom, objNode, "Content", message.ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"));
+                    createNodeAndInsertText(xmlDom, objNode, "Attachlist", pAttachFileList);		
+                    createNodeAndInsertText(xmlDom, objNode, "Content", message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"));
 					createNodeAndInsertText(xmlDom, objNode, "Title", title.value);
 					createNodeAndInsertText(xmlDom, objNode, "Textcontent", message.GetEditorContent());
 					createNodeAndInsertText(xmlDom, objNode, "Mode", pMode);
@@ -202,13 +200,14 @@
 			        GetFileURL();
 			        var fullPath = strContentLocation;
 			        var htmlData = message.SetEditorContentURL2(fullPath);
-			        
+alert(htmlData);
 			        if(pMode == "write" && pNo != "") {
 			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + pTitle + "<br><br>" + htmlData;
 			            message.SetEditorContent(htmlData);
 			        } else {
 			            message.SetEditorContentURL(fullPath);
 			        }
+alert(message.GetEditorContent());
 			    } 
 			}
 		</script>

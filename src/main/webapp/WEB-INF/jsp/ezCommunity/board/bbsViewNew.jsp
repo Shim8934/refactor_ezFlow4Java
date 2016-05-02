@@ -68,8 +68,8 @@
 
 	                var objNode;
 	                createNodeInsert(xmlDom, objNode, "DATA");
-	                createNodeAndInsertText(xmlDom, objNode, "Dog", grsNo);
-	                createNodeAndInsertText(xmlDom, objNode, "GoTopage", gotopage);
+	                createNodeAndInsertText(xmlDom, objNode, "ItemNo", grsNo);
+	                createNodeAndInsertText(xmlDom, objNode, "GoToPage", gotopage);
 	                createNodeAndInsertText(xmlDom, objNode, "Bname", bName);
 		         
 

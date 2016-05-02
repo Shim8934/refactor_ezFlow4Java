@@ -875,6 +875,7 @@ public class EzCommunityController extends EgovFileMngUtil{
             myLevel = Integer.parseInt(doc.getElementsByTagName("Level").item(0).getTextContent());
         }
 		
+System.out.println("textContent = " + textContent);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
@@ -889,7 +890,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
     			//if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
         		if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1) {
-        			textContent = textContent.substring(624);
+//        			textContent = textContent.substring(624);
 	                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
 	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
 	                
@@ -1067,6 +1068,28 @@ public class EzCommunityController extends EgovFileMngUtil{
         } else {
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
+	}
+	
+	/**
+	 * 알림마당 Delete 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
+	@ResponseBody
+	public String bbsDelOk(@CookieValue("loginCookie")String loginCookie,@RequestBody String data){
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String itemNo = doc.getElementById("ItemNo").getTextContent();
+		String goToPage = doc.getElementById("GoToPage").getTextContent();
+		String bName = doc.getElementById("Bname").getTextContent();
+		String fileName = "", folder = "", strFile = "";
+		
+		//EZSP_BBS_DEL_OK_GET
+			
+			//EZSP_BBS_DEL_OK_DEL
+			//
+		
+		return "OK";
 	}
 	
 	/**
