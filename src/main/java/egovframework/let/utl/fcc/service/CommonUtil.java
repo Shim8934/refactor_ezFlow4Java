@@ -22,8 +22,12 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -246,6 +250,19 @@ public class CommonUtil {
 		}		
 		
 		return src;
+	}
+	
+	public String addDay(String sDate, int day) {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		try {
+			cal.setTime(sdf.parse(sDate));
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid date format: " + sDate);
+		}
+		if (day != 0)
+			cal.add(Calendar.DATE, day);
+		return sdf.format(cal.getTime());
 	}
 	
 }
