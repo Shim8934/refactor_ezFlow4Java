@@ -594,7 +594,8 @@ function Save_onClick_Complete(ReturnValue) {
             if (m_rgParams4PostOption["bodyType"] != 1) {
                 mhtBody = message.GetEditorContent();
                 mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-                mhtBody = ConvertHTMLtoMHT(mhtBody);
+                // dhlee: this line seems to be not needed.
+//                mhtBody = ConvertHTMLtoMHT(mhtBody);
             }
             else {
                 var div_ = document.createElement("DIV");

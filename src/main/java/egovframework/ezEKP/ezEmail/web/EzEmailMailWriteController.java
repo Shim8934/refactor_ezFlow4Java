@@ -1550,9 +1550,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
     			draftUID = uids[0].uid;
     		} 
     		
+            // this deletion code block has been moved here because
+            // it needs to be kept in Drafts if an error occurs during the above process.
+            if (oldMessage != null) {
+            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+            }
+            
         	rtnStatus = "OK";
         } else if (cmd.equalsIgnoreCase("SEND")) {
-        	logger.debug("Saving the message");
+        	logger.debug("Sending the message");
         	
         	// TODO: 이후 예외 처리 필요
         	// 편지함 용량 초과 메세지 확인을 위해 임시저장
@@ -1567,6 +1573,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        if (!delaySendTime.equals("")) {
 	        	//예약발송
 	            //do_delaysend(xmldom, message);
+	        	
+	            // this deletion code block has been moved here because
+	            // it needs to be kept in Drafts if an error occurs during the above process.
+	            if (oldMessage != null) {
+	            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+	            }
+	            
 	            rtnStatus = "OK";
 	        } else {                        
 	            if (!eShowDisplayName.equals("")) {
@@ -1599,27 +1612,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	            		Transport.send(message);
 	            	}
 	            	
+	                // this deletion code block has been moved here because
+	                // it needs to be kept in Drafts if an error occurs during the above process.
+	                if (oldMessage != null) {
+	                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+	                }
 	            } else {
 	            	Transport.send(message);
 	            	
+	                // this deletion code block has been moved here because
+	                // it needs to be kept in Drafts if an error occurs during the above process.
+	                if (oldMessage != null) {
+	                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+	                }
+	                	            	
 	            	//보낸편지함에 저장
 	        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-	        		sendFolder.open(Folder.READ_WRITE);
-	        		message.setFlag(Flags.Flag.SEEN, true);
-	        		sendFolder.appendMessages(new Message[]{message});
-	        		sendFolder.close(true);
+	        		Message draftMessage = ((IMAPFolder)folder).getMessageByUID(draftUID);
+	        		folder.copyMessages(new Message[]{draftMessage}, sendFolder);
+	        		draftMessage.setFlag(Flags.Flag.DELETED, true);	        		
 	            }
 	            rtnStatus = "OK";
 	        }
         }
-        
-        // this deletion code block has been moved here because
-        // it needs to be kept in Drafts if an error occurs during the above process.
-        if (oldMessage != null) {
-        	oldMessage.setFlag(Flags.Flag.DELETED, true);
-        }
-        
-        folder.close(true);
+                
+        folder.close(true);        
         ia.close();
         
         // sendmail_2010변환 끝
