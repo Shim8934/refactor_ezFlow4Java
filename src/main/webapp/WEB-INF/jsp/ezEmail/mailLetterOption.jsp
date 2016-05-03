@@ -8,33 +8,33 @@
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title><spring:message code='ezEmail.t353' /></title>
-		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/myoffice/ezEmail/controls_cross/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/myoffice/ezEmail/controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/myoffice/common/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/JQuery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/JQuery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/JQuery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/JQuery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/JQuery/dateControls/demos.css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
-		<script type="text/javascript" src="/JQuery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/JQuery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript">
 	
 			var g_timezone = "${_UserTimeSet}";
 		    var nowDateTime = "${_setLocalTime}";
-		    var NonActiveX = "${_NonActiveX}";
+		    var NonActiveX = "YES";
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        var NowDate = new Date();
@@ -44,7 +44,7 @@
 		        $('#Stimepicker').timepicker('setTime', new Date());
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
-		    var lang = "${userinfo.lang}";
+		    var lang = "${userInfo.lang}";
 		    if(lang == "1"){
 			    $(function () {
 			        $.datepicker.regional['ko'] = {

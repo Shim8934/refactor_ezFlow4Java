@@ -67,14 +67,14 @@
 	            var pLeft = (pwidth - 890) / 2;
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW", "", feature);
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }
 	            else {
 	                if (pUse_Editor == "")
-	                    window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW", "", feature);
+	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	                else {
 	
-	                    window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW", "", feature);
+	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	                }
 	            }          
 	        }

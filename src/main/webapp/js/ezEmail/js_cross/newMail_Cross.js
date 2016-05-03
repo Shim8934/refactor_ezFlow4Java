@@ -2234,7 +2234,7 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[0] = m_rgParams4PostOption;
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
-    DivPopUpShow(410, 375, "/myoffice/ezEmail/htm/letterOption_cross.aspx");
+    DivPopUpShow(410, 375, "/ezEmail/letterOption.do");
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {
