@@ -31,6 +31,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -305,7 +306,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					xmlDom2.getElementsByTagName("dtend").item(i).setTextContent(eDate);
 				}
 				reVal = commonUtil.convertDocumentToString(xmlDom2);
-System.out.println("reVal:"+reVal);				
+			
 				if (viewType.equals("list")) {
 					String ownerNm = "owner_nm";
 					String deptName = "dept_name";
@@ -559,7 +560,8 @@ System.out.println("reVal:"+reVal);
 	
 	@RequestMapping(value = "/ezResource/viewResList.do")
 	public String viewResList(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
-		/*String strXML = "";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String strXML = "";
 		String brdID = "";
 		String accessCode = "";
 		String brdNm = "";
@@ -586,7 +588,70 @@ System.out.println("reVal:"+reVal);
 		}
 		if (req.getParameter("goToPage") != null) {
 			curPage = req.getParameter("goToPage");
-		}*/
+		}
+		adminFg = getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId());
+		brdNm = brdNm.replace(String.valueOf(38), "&");
+		
+		if (curPage.equals("") || Integer.parseInt(curPage.trim()) < 1) {
+			curPage = "1";
+		} else {
+			curPage = curPage;
+		}
+		
+		totalCnt = ezResourceService.getBrdCnt(Integer.parseInt(brdID), userInfo.getCompanyID());
+		
+		if (totalCnt > 0) {
+			totalPage = totalCnt / pageSize;
+		}
+		if (totalCnt == pageSize) {
+			limitLine = 15;
+		} else {
+			limitLine = totalCnt % pageSize;
+			if (totalPage > 1 && limitLine == 0) {
+				limitLine = 15;
+			}
+		}
+		if (Integer.parseInt(curPage.trim()) > totalPage) {
+			curPage = String.valueOf(totalPage);
+		}
+		if (Integer.parseInt(curPage.trim()) != totalPage) {
+			limitLine = 15;
+		} else if (totalCnt == 0) {
+			curPage = "1";
+			totalPage = 1;
+		}
+		
+		int topCount = Integer.parseInt(curPage.trim()) * pageSize; 
+		String brdNmStr = "";
+		String ownDeptNm = "";
+		String ownerNm = "";
+		String ownerPosition = "";
+		if (userInfo.getLang().equals("1")) {
+			brdNmStr = "Brd_NM";
+			ownerNm = "OwnerNm";
+			ownDeptNm = "OwnDeptNm";
+			ownerPosition = "OwnerPosition";
+		} else {
+			brdNmStr = "Brd_NM" + userInfo.getLang();
+			ownDeptNm = "OwnDeptNm" + userInfo.getLang();
+			ownerNm = "OwnerNm" + userInfo.getLang();
+			ownerPosition = "OwnerPosition" + userInfo.getLang();
+		}
+		
+		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(5, Integer.parseInt(brdID), userInfo.getCompanyID(), ownDeptNm, ownerNm, ownerPosition, brdNmStr);
+System.out.println("size:"+resBrdList.size());
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("brdNm", brdNm);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("accessCode", accessCode);
+		model.addAttribute("resBrdList", resBrdList);
+		model.addAttribute("curPage", curPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("sortGbn", sortGbn);
+		model.addAttribute("adminFg", adminFg);
+		model.addAttribute("totalCnt", totalCnt);
 		
 		return "/ezResource/resViewResList";
 	}
