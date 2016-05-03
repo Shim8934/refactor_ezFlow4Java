@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
-		
+
 		<script type="text/javascript">
 			document.onselectstart = function () { 
 				return false;
@@ -32,9 +32,9 @@
 		        var new_subID = "{" + GetGUID().toUpperCase() + "}";
 
 		        document.make.sNewID.value = newID;
-		        document.make.sNew_subID.value = new_subID;
+		        document.make.sNewSubID.value = new_subID;
 
-		        if (document.make.clubname.value == "") {
+		        if (document.make.clubName.value == "") {
 		            alert("<spring:message code='ezCommunity.t2' />");
 
 	                document.make.clubname.focus();
@@ -42,18 +42,18 @@
 	                return;
 	            }
 
-	            if (document.make.clubname.value.length > 50) {
+	            if (document.make.clubName.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
 
-	                document.make.clubname.focus();
+	                document.make.clubName.focus();
 
 	                return;
 	            }
 
-	            if (document.make.clubname2.value.length > 50) {
+	            if (document.make.clubName2.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
 
-	                document.make.clubname2.focus();
+	                document.make.clubName2.focus();
 
 	                return;
 	            }
@@ -66,13 +66,13 @@
 	                return;
 	            }
 
-	            selA = parseInt(document.make.c_cate_a[document.make.c_cate_a.selectedIndex].value);
-	            selB = parseInt(document.make.c_cate_b[document.make.c_cate_b.selectedIndex].value);
-	            selC = parseInt(document.make.c_cate_c[document.make.c_cate_c.selectedIndex].value);
+	            selA = parseInt(document.make.cCateA[document.make.cCateA.selectedIndex].value);
+	            selB = parseInt(document.make.cCateB[document.make.cCateB.selectedIndex].value);
+	            selC = parseInt(document.make.cCateC[document.make.cCateC.selectedIndex].value);
 
 	            if (selA == 0 && selB == 0 && selC == 0) {
 	                alert("<spring:message code='ezCommunity.t4' />");
-	                make.c_cate_a.focus();
+	                make.cCateA.focus();
 
 	                return;
 	            }
@@ -85,14 +85,14 @@
 	                return;
 	            }
 
-	            document.make.hidden_clubname.value = document.make.clubname.value;
+	            document.make.hiddenClubName.value = document.make.clubName.value;
 
-	            if (document.make.clubname2.value != "") {
-	                document.make.hidden_clubname2.value = document.make.clubname2.value;
+	            if (document.make.clubName2.value != "") {
+	                document.make.hiddenClubName2.value = document.make.clubName2.value;
 	            }
 
 	            if (document.make.intro.value != "") {
-	                document.make.hidden_intro.value = document.make.intro.value;
+	                document.make.hiddenIntro.value = document.make.intro.value;
 	            }
 
 	            document.make.submit();
@@ -135,22 +135,16 @@
 	                        break;
 	                    }
 	                }
+	                
 	                if (!bool) {
 	                    alert(filename + strLang40);
 	                    document.getElementById(fileid).value = "";
 	                    return;
 	                }
-	                if (!window.ActiveXObject){
-	                    document.getElementById(printspanid).textContent = filename;
-	                }else{
-	                    document.getElementById(printspanid).innerText = filename;
-	                }
+	                
+	                document.getElementById(printspanid).innerText = filename;
 	            }else {
-	                if (!window.ActiveXObject){
-	                    document.getElementById(printspanid).textContent = "";
-	                }else{
-	                    document.getElementById(printspanid).innerText = "";
-	                }
+	            	document.getElementById(printspanid).innerText = "";
 	            }
 	        }
 		</script>
@@ -166,7 +160,7 @@
 	    </div>
 	
 	    <table class="content">
-	        <form method="post" name="make" action="commMakeOk.do" enctype="multipart/form-data">
+	        <form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
 	            <input type="hidden" name="makeID" value=<c:out value="${userInfoUserID }"/>>
 	            <input type="hidden" name="hiddenClubName">
 	            <input type="hidden" name="hiddenClubName2">
@@ -249,6 +243,7 @@
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap"><spring:message code='ezCommunity.t1024' /></td>
 	            </tr>
+<!-- 				2016-05-02 이효진 사용하지 않는 부분 -->
 	            <tr style="display:none;">
 	                <th><spring:message code='ezCommunity.t1025' /></th>
 	                <td>

@@ -28,7 +28,7 @@
 		<result property="treeViewOrder"			column="TreeViewOrder"				columnIndex="4"/>
 		<result property="boardColor"				column="BoardColor"					columnIndex="5"/>
 		<result property="c_ClubNo"					column="C_ClubNo"					columnIndex="6"/>
-		<result property="gubun"					column="Gubun"						columnIndex="7"/>
+		<result property="gubun"					column="Gubun"						columnIndex="7"		nullValue="0"/>
 	</resultMap>
 		
 	
@@ -71,6 +71,10 @@
 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true">
 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -104,20 +108,52 @@
 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.commMakeOkGet6"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET6(#v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkGet3"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET3(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getClubCHK"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_GETCLUB_CHK(#v_PUSERID#, #iv_PCLUBNO#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commHomeGet1"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commHomeGet4"					parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Integer"	resultClass="Integer">
+	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"	resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_CHECKIFLEAFBOARD_GET(#v_pBoardID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.getBBSListGet1"				parameterClass="Map"		resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET1(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkGet2"				parameterClass="Map"		resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET2(#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkGet4"				parameterClass="Map"		resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET4(#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commHomeGet2"					parameterClass="Map"		resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET2(#v_CODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map">
@@ -139,7 +175,29 @@
 	<procedure id="EzCommunityDAO.bbsDelOkDel"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_BBS_DEL_OK_DEL(#v_CODE#, #v_BNAME#, #v_DOG#)}
 	</procedure>
-
+	
+	<procedure id="EzCommunityDAO.joinOkInsert"					parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_JOIN_OK_INSERT(#v_COMPANYID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_COMPANYNAME#, #v_COMPANYNAME2#, #v_COMPANYZIP#, #v_COMPANYADDRESS#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYTEL#, #v_COMPANYFAX#, #v_HOMETEL#, #v_HANDPHONE#, #v_EMAIL#, #v_BIRTHDAY#, #v_GENDER#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkSet1"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_SET1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#, #v_FILESIZE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkInsert1">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
+	</procedure>
+	
+	
+	
 	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
@@ -153,7 +211,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueA"	resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueA"											resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -167,7 +225,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueB"	resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueB"											resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -181,7 +239,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueC"	resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueC"											resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -195,7 +253,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.leftCommunityGet4"		parameterClass="String"		resultClass="String">
+	<select id="EzCommunityDAO.leftCommunityGet4"				parameterClass="String"		resultClass="String">
 		<![CDATA[
 			SELECT 
 				C_SYSOPID
@@ -206,5 +264,18 @@
 		]]>		
 	</select>
 	
+	<update id="EzCommunityDAO.updateLastDate"					parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZCOMMUNITY.C_CLUBUSER
+        	SET
+        		C_VISITED = C_VISITED + 1,
+        		C_LASTDATE = #STRNOW# 
+       		WHERE 
+       			C_CLUBNO = #CODE#
+       		AND
+       			C_ID = #ID#
+		]]>
+	</update>
 	
 </sqlMap>

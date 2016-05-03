@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties globals;
 	
 	@Autowired
 	private Properties config;
@@ -408,6 +412,173 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 	@Override
+	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CLUBNAME", clubName);
+		map.put("v_C_CATE_A", cCateA);
+		map.put("v_C_CATE_B", cCateB);
+		map.put("v_C_CATE_C", cCateC);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.commMakeOkGet1(map);
+	}
+
+	@Override
+	public int commMakeOkGet2() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commMakeOkGet2(map);
+	}
+	
+	@Override
+	public int commMakeOkGet4() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commMakeOkGet4(map);
+	}
+
+	@Override
+	public void commMakeOkInsert1() throws Exception {
+		ezCommunityDAO.commMakeOkInsert1();
+	}
+
+	@Override
+	public String commMakeOkGet3() throws Exception {
+		return ezCommunityDAO.commMakeOkGet3();
+	}
+
+	@Override
+	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TMP_CLUBID", clubNo);
+		map.put("v_DATETIME_NOW1", todayTime);
+		map.put("v_CLUBNAME", clubName);
+		map.put("v_CLUBNAME2", clubName2);
+		map.put("v_C_CATE_A", cCateA);
+		map.put("v_C_CATE_B", cCateB);
+		map.put("v_C_CATE_C", cCateC);
+		map.put("v_CLUBTYPE", clubType);
+		map.put("v_CLUBCONFIRMTYPE", clubConfirmType);
+		map.put("v_INTRO", intro);
+		map.put("v_ISIN", isIn);
+		map.put("v_LOGO", logo);
+		map.put("v_LOGO_THUMBNAIL", logo);
+		map.put("v_BANNER", banner);
+		map.put("v_B_BOARD_NAME1", bBoardName1);
+		map.put("v_B_BOARD_NAME2", bBoardName2);
+		map.put("v_COMATT", comatt);
+		map.put("v_CODE", code);
+		map.put("v_B_NOTI_NAME1", bNotiName1);
+		map.put("v_B_NOTI_NAME2", bNotiName2);
+		map.put("v_PNEWID", pNewID);
+		map.put("v_BOARDNO", boardNo);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_DISPLAYNAME", displayName1);
+		map.put("v_USERINFO_COMPANYNAME", companyName1);
+		map.put("v_USERINFO_DEPTNAME", deptName1);
+		map.put("v_PNEW_SUBID", pNewSubID);
+		map.put("v_DATETIME_NOW2", todayTime);
+		map.put("v_OPENEMAIL", openEmail);
+		map.put("v_OPENHP", openHp);
+		map.put("v_OPENCOMP", openComp);
+		map.put("v_OPENHOUSE", openHouse);
+		map.put("v_OPENJOB", openJob);
+		map.put("v_OPENBIRTH", openBirth);
+		map.put("v_OPENSEX", openSex);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		
+		ezCommunityDAO.commMakeOkInsert2(map);
+	}
+
+	@Override
+	public String commMakeOkGet6(String companyID, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_COMPANYID",	companyID);
+		map.put("v_USERINFO_USERID", id);
+		return ezCommunityDAO.commMakeOkGet6(map);
+	}
+
+	@Override
+	public void joinOkInsert(String companyID, String userID, String userName, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERID", userID);
+		map.put("v_USERNAME", userName);
+		map.put("v_USERNAME2", userName);
+		map.put("v_COMPANYNAME", companyName);
+		map.put("v_COMPANYNAME2", companyName2);
+		map.put("v_COMPANYZIP", companyZip);
+		map.put("v_COMPANYADDRESS", companyAddress);
+		map.put("v_DEPTNAME", deptName);
+		map.put("v_DEPTNAME2", deptName2);
+		map.put("v_COMPANYTEL", companyTel);
+		map.put("v_COMPANYFAX", companyFax);
+		map.put("v_HOMETEL", homeTel);
+		map.put("v_HANDPHONE", handPhone);
+		map.put("v_EMAIL", eMail);
+		map.put("v_BIRTHDAY", birthDay);
+		map.put("v_GENDER", gender);
+		
+		ezCommunityDAO.joinOkInsert(map);
+	}
+
+	@Override
+	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME", logoFileName);
+		map.put("v_LOGOFILENAME_THUMBNAIL", thumbnailFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		
+		ezCommunityDAO.commMakeOkSet1(map);
+	}
+
+	@Override
+	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BANNERFILENAME", bannerFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		
+		ezCommunityDAO.commMakeOkSet2(map);
+	}
+	
+	@Override
+	public String commHomeGet1(String id, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.commHomeGet1(map);
+	}
+
+	@Override
+	public void updateLastDate(String strNow, String code, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("STRNOW", strNow);
+		map.put("CODE", code);
+		map.put("ID", id);
+		
+		ezCommunityDAO.updateLastDate(map);
+	}
+
+	@Override
+	public String commHomeGet4(String v_CODE) throws Exception {
+		return ezCommunityDAO.commHomeGet4(v_CODE);
+	}
+
+	@Override
+	public int commHomeGet2(String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commHomeGet2(map);
+	}
+
+	@Override
 	public String getFileFolderName(String bName) throws Exception {
 		String strReturn = "";
 		switch (bName){
@@ -440,6 +611,36 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return strReturn;
 	}
+
+	@Override
+	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception {
+		String rtnValue = "";
+		boolean result = false;
+		
+		if (rollInfo.indexOf("c=1") < 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_PUSERID", id);
+			map.put("iv_PCLUBNO", clubID);
+			map.put("v_PBOARDID", boardID);
+			
+			rtnValue = ezCommunityDAO.getClubCHK(map);
+		} else {
+			rtnValue = "1";
+		}
+		
+		if (mode == 0 && (rtnValue.equals("1") || rtnValue.equals("2"))) {
+			result = true;
+		}
+		if (mode == 0 && rtnValue.equals("1")) {
+			result = true;
+		}
+		if (result != true) {
+			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", new Locale(globals.getProperty("Globals.language"))));
+			response.getWriter().flush();
+		}
+	}
+
+	
 	
 
 /*	@Override

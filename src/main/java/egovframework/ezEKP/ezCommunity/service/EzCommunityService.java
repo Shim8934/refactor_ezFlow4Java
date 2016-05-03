@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezCommunity.service;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
+
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
@@ -34,6 +36,8 @@ public interface EzCommunityService {
 	
 	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception;
 	
+	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception;
+	
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
 
 	public String leftCommunityGet2(String code) throws Exception;
@@ -62,11 +66,21 @@ public interface EzCommunityService {
 	
 	public String bbsEditOkGet3(String maxIdFieldName, String bName, String code, String strMaxNum) throws Exception;
 	
+	public String commMakeOkGet6(String companyID, String id) throws Exception;
+	
+	public String commMakeOkGet3() throws Exception;
+	
+	public String commHomeGet1(String id, String code) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 
 	public int bbsAdminCheck(String userID, String rollInfo) throws Exception;
+	
+	public int commMakeOkGet2() throws Exception;
+	
+	public int commMakeOkGet4() throws Exception;
 
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception;
 
@@ -78,6 +92,25 @@ public interface EzCommunityService {
 
 	public void bbsDelOkDel(String bName, String itemNo, String code) throws Exception;
 
+	public void commMakeOkInsert1() throws Exception;
+
+	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception;
+
+	public void joinOkInsert(String companyID, String userID, String userName, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception;
+
+	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception;
+
+	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize) throws Exception;
+
+	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception;
+
+	public void updateLastDate(String strNow, String code, String id) throws Exception;
+
+	public String commHomeGet4(String code) throws Exception;
+
+	public int commHomeGet2(String code) throws Exception;
+
+	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
 //	public String sortXML(String pXML, String pSortBy) throws Exception;

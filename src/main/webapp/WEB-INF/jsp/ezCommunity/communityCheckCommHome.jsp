@@ -8,10 +8,10 @@
 		    var ResultString;
 		    var code = "<c:out value='${code}'/>";
 		    var codeName = "<c:out value='${codeName}'/>";
-		    var UserLevel = "<c:out value='${UserLevel}'/>";
+		    var userLevel = "<c:out value='${userLevel}'/>";
 		    window.onload = function () {
 		        if (code != "") {
-		            window.location.href = "/ezCommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel;
+		            window.location.href = "/ezCommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel;
 		        }
 		    }
 		</script>
