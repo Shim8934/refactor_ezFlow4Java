@@ -261,7 +261,6 @@ public class EzResourceController extends EgovFileMngUtil {
 				page = Integer.parseInt(req.getParameter("page"));
 			}
 			
-			
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 			if (cmd.equals("get")) {
@@ -302,24 +301,17 @@ public class EzResourceController extends EgovFileMngUtil {
 			return reVal.toString();
 		}
 	
-	
-	
 	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID) throws Exception {
-		String strParentID = "";
-		String strCompanyID = "";
-        String strAccessFlag = "";
         String strUserID = "";
         String strDeptPath = "";
-        String strFirstNode = "";
-        String strTreeType = "";
         String returnXML = "";
    
         Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
-        strParentID = xmlRes.getElementsByTagName("PARENT_ID").item(0).getTextContent().trim();
-        strCompanyID = xmlRes.getElementsByTagName("COMPANY_ID").item(0).getTextContent().trim();
-        strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
-        strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
-        strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
+        String strParentID = xmlRes.getElementsByTagName("PARENT_ID").item(0).getTextContent().trim();
+        String strCompanyID = xmlRes.getElementsByTagName("COMPANY_ID").item(0).getTextContent().trim();
+        String strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
+        String strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
+        String strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
 
         if(xmlRes.getElementsByTagName("BRDLIST").getLength() > 5) {
         	strUserID = xmlRes.getElementById("BRDLIST").getChildNodes().item(5).getTextContent().trim();
@@ -623,7 +615,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept);
 			Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
-System.out.println("scheRs:"+scheRs);
+
 			returnStr.append("<root>");
 			
 			for (int i=0; i<scheRSDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -840,7 +832,7 @@ System.out.println("scheRs:"+scheRs);
 					 reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 					
 					String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate);
-	System.out.println("returnRepDateTimes:"+returnRepDateTimes);
+	
 					if (!returnRepDateTimes.trim().equals("")) {
 						Document returnRepDateTimesDom = commonUtil.convertStringToDocument(returnRepDateTimes);
 
@@ -938,12 +930,10 @@ System.out.println("scheRs:"+scheRs);
 			if (getRepDateTimes != null) {
 				String startDateTime = getRepDateTimes.getStartDateTime();
 				String endDateTime = getRepDateTimes.getEndDateTime();
-	System.out.println("startDateTime:"+startDateTime);
-	System.out.println("endDateTime:"+endDateTime);
-				
+
 				startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "", "");
 				endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "", "");
-System.out.println("reYoil:" + getRepDateTimes.getReYoil());
+
 				String reWay = getRepDateTimes.getReWay();
 				String reDay = getRepDateTimes.getReDay();
 				String reNum = getRepDateTimes.getReNum();
@@ -952,26 +942,21 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 				String reOrd = getRepDateTimes.getReOrd();
 				String endFlag = getRepDateTimes.getEndFlag();
 				String reCount = getRepDateTimes.getReCount();
-				
 				String freq = reWay.substring(0, 1);
 				String sel = reWay.substring(reWay.length()-1, 1);
 				
 				if (reNum.equals("Null") || reNum.equals("NULL")) {
 					reNum = "";
 				}
-				
 				if (reYoil.equals("Null") || reYoil.equals("NULL")) {
 					reYoil = "";
 				}
-				
 				if (reDay.equals("Null") || reDay.equals("NULL")) {
 					reDay = "";
 				}
-				
 				if (reMonth.equals("Null") || reMonth.equals("NULL")) {
 					reMonth = "";
 				}
-				
 				if (reCount.equals("Null") || reCount.equals("NULL")) {
 					reCount = "";
 				}
@@ -990,8 +975,7 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 				reXMLStr.append("<monthsOfYear>"+reMonth+"</monthsOfYear>");
 				reXMLStr.append("<instances>"+reCount+"</instances>");
 				reXMLStr.append("</recurrence>");
-	System.out.println("freq:"+freq);
-	System.out.println("reXMLStr:"+reXMLStr.toString());
+	
 				if (freq.equals("4")) {
 					returnStr = getDailyRepDateTimes(reXMLStr.toString(), sDate, eDate); 
 				} else if (freq.equals("5")) {
@@ -1036,9 +1020,7 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 			}
 			
 			String orgTmpDTStr = tmpDTStr;
-			
 			int n = 1;
-			
 			
 			returnXML.append("<DATA>");
 			
@@ -1144,7 +1126,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 		try {
 			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 			
-			
 			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent().trim();
 			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent().trim();
 			String interval2 = xmlRes.getElementsByTagName("interval").item(0).getTextContent().trim();
@@ -1195,10 +1176,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						} else if (weekDay(tmpDTStr) < Integer.parseInt(wDay[i]) + 1 || !selDTStr.equals(tmpDTStr)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
-							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();*/
-							
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), ""), "yyyyMMdd", "yyyyMMdd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1210,20 +1187,12 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 					if (secondWhileFlag == false) {
 						break;
 					}
-					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval * 7).toString();
-					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval * 7).toString();
-					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval * 7).toString();
-					*/
 					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
 					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
 					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
 					
 					if (weekDay(tmpDTStr) != 1) {
 						int tmpWeekDay = weekDay(tmpDTStr);
-						
-					/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - weekDay(tmpDTStr)).toString();
-						tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();
-						tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - tmpWeekDay).toString();*/
 						
 						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1- weekDay(tmpDTStr)), ""), "yyyyMMdd", "yyyyMMdd", "");
 						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (1 - tmpWeekDay), ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1235,10 +1204,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						}
 						if (weekDay(tmpDTStr) != (Integer.parseInt(wDay[i]) + 1)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
-							
-							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr)).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(Integer.parseInt(wDay[i]) + 1 - tmpWeekDay).toString();*/
 							
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), ""), "yyyyMMdd", "yyyyMMdd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1408,9 +1373,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 					int count = 1;
 					int datePartDay = format.parse(tmpDTStr).getDate();
 					
-					/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1 - datePartDay).toString();
-					tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1 - datePartDay).toString();
-					tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1 - datePartDay).toString();*/
 					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
 					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
 					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1440,9 +1402,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							}
 							count ++;
 							
-						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1456,30 +1415,23 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									} else {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();*/
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 								}
 							} 
 						} else {
-						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 					} else {
 						int count1 = 1;
-						/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
+						
 						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						
@@ -1501,9 +1453,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							}
 							count1++;
 							
-						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
@@ -1527,7 +1476,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString(); */
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
@@ -1553,7 +1501,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
@@ -1582,7 +1529,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-									/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									
@@ -1608,9 +1554,6 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						}
 					}
 				}
-				/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(interval).toString();
-				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(interval).toString();
-				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(interval).toString();*/
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
@@ -1767,9 +1710,9 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							}
 							count ++;
 							
-						/*	tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 						}
 						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
 							tmpDTStr = sTmpDTStr;
@@ -1779,24 +1722,25 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
+									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/ 
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
 									} else {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -2) * 7).toString();*/
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
 									}
 								}
 							} 
 						} else {
-							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays((Integer.parseInt(byPosition) -1) * 7).toString();*/
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
 						}
 					} else {
 						int count1 = 1;
-						/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusMonths(1).toString();
-						tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
+						
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1816,9 +1760,9 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							}
 							count1++;
 							
-							/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();
-							tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusDays(1).toString();
-							tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusDays(1).toString();*/
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 						}
 						if (wDayCnt == 2) {
 							if (tmpWeekDay == 7) {
@@ -1839,7 +1783,7 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/ 
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1864,7 +1808,7 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1892,7 +1836,7 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusDays(1).toString();*/
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 									}
 									
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
@@ -1917,9 +1861,9 @@ System.out.println("reYoil:" + getRepDateTimes.getReYoil());
 						}
 					}
 				}
-				/*tmpDTStr = LocalDateTime.from(format.parse(tmpDTStr).toInstant()).plusYears(1).toString();
-				tmpEDTStr = LocalDateTime.from(format.parse(tmpEDTStr).toInstant()).plusYears(1).toString();
-				tmpSDTStr = LocalDateTime.from(format.parse(tmpSDTStr).toInstant()).plusYears(1).toString();*/
+				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
 				
 				temp++;
 				if (temp > 1000) {
