@@ -1044,7 +1044,9 @@ function event_HeaderCheckBoxClick(obj) {
             for (var RowCnt = 0; RowCnt < document.getElementById("MailList").childNodes.item(i).childNodes.length; RowCnt++) {
                 document.getElementById("MailList").childNodes.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
             }
-            listContentArry[listContentArry.length] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
+            // dhlee: modified so that existing elements aren't merged with new ones.
+            //listContentArry[listContentArry.length] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
+            listContentArry[i] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
         }
     }
     else {
