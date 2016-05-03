@@ -295,7 +295,7 @@
 
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", DestURL);
-		        xmlHTTP2.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", true);
+		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
 		        xmlHTTP2.onreadystatechange = delete_mail_2010_complete;
 		        xmlHTTP2.send(xmlDOM);
 		        ShowMailProgress();
@@ -343,7 +343,7 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "NEW");
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
 		            return true;
@@ -359,7 +359,7 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "MOVE");
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
@@ -378,7 +378,7 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "COPY");
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
@@ -397,7 +397,7 @@
 		        createNodeInsert(xmlDOM, objNode, "DATA");
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "DEL");
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
@@ -423,7 +423,7 @@
 			    createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
 			    createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
 			    createNodeAndInsertText(xmlDOM, objNode, "CMD", "MODIFY");
-			    xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+			    xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 			    xmlHTTP.send(xmlDOM);
 			    if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
 			        return true;
