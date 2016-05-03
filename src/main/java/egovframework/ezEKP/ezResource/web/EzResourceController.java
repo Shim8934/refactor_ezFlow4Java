@@ -1,8 +1,11 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -229,7 +232,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 스케줄 정보 호출 함수
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ezResource/scheduleGet.do")
+	@RequestMapping(value = "/ezResource/scheduleGet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String reVal = "";
@@ -289,11 +292,34 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 				}
 				reVal = getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
-				
-				/*Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
+
+				Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
+					String sDate = getLocalTime(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent().replace("T","").substring(0, 16));
+					String eDate = getLocalTime(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent().replace("T","").substring(0, 16));
 					
-				}*/
+					sDate = convertToUTC(sDate);
+					eDate = convertToUTC(eDate);
+					
+					xmlDom2.getElementsByTagName("dtstart").item(i).setTextContent(sDate);
+					xmlDom2.getElementsByTagName("dtend").item(i).setTextContent(eDate);
+				}
+				reVal = commonUtil.convertDocumentToString(xmlDom2);
+System.out.println("reVal:"+reVal);				
+				if (viewType.equals("list")) {
+					String ownerNm = "owner_nm";
+					String deptName = "dept_name";
+					if (!userInfo.getLang().equals("1")) {
+						ownerNm = "owner_nm2";
+						deptName = "dept_name2";
+					}
+					if (!approveFlag.trim().equals("")) {
+						// orderXML
+					}
+					
+					int listCnt = xmlDom2.getElementsByTagName("appointment").getLength();
+					
+				}
 			}
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -1924,4 +1950,94 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		return returnValue;
 	}
+	
+	public String getLocalTime(String pDateTime) {
+		String strDateTime = "";
+		if (pDateTime.equals("")) {
+			return strDateTime;
+		}
+		
+		try {
+			//TODO userInfo.Offset
+			String pOffset = "+09:00";
+			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
+			strDateTime = EgovDateUtil.convertDate(addMinutes(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
+			
+			if (pDateTime.length() < 19) {
+				strDateTime = strDateTime.substring(0, pDateTime.length());
+			}
+			return strDateTime;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return pDateTime;
+		}
+	}
+	
+	public static String addHours(String sDate, int hour, String dateFormat) {		
+		Calendar cal = Calendar.getInstance();
+		
+		if(dateFormat.equals("")){
+			dateFormat = "yyyyMMdd";
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
+		
+		try {
+			cal.setTime(sdf.parse(sDate));
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid date format: " + sDate);
+		}
+
+		if (hour != 0) {
+			cal.add(Calendar.HOUR, hour);
+		}
+		return sdf.format(cal.getTime());
+	}
+	
+	public static String addMinutes(String sDate, int minute, String dateFormat) {		
+		Calendar cal = Calendar.getInstance();
+		
+		if(dateFormat.equals("")){
+			dateFormat = "yyyyMMdd";
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
+		
+		try {
+			cal.setTime(sdf.parse(sDate));
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid date format: " + sDate);
+		}
+
+		if (minute != 0) {
+			cal.add(Calendar.MINUTE, minute);
+		}
+		return sdf.format(cal.getTime());
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String convertToUTC(String pDate) {
+		try {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			String utcDate = (date.parse(pDate).getYear()+1900) + "-" + fedLeft(date.parse(pDate).getMonth()) + "-" + fedLeft(date.parse(pDate).getDate()) + "T" + fedLeft(date.parse(pDate).getHours()) + ":" + fedLeft(date.parse(pDate).getMinutes()) + ":01.000Z";  
+			return utcDate;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	public String fedLeft(int pDatePart) {
+		try {
+			String datePart = String.valueOf(pDatePart);
+			if (datePart.length() == 1) {
+				datePart = "0" + datePart;
+			}
+			return datePart;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 }
