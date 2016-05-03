@@ -66,6 +66,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		return ezOrganAdminDao.getUserAddJobList(map);
 	}
+	
+	@Override
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TYPE", type);
+		map.put("v_LANGDATA", strLang);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		
+		return ezOrganAdminDao.getPermissionList(map);
+	}
 
 	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode) throws Exception {
@@ -188,6 +201,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int userCheck(String cn) throws Exception {
 		return ezOrganAdminDao.userCheck(cn);
+	}
+
+	@Override
+	public int getPermissionListCount(String companyID, String type, String strLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TYPE", type);
+		map.put("v_LANGDATA", strLang);
+		
+		return ezOrganAdminDao.getPermissionListCount(map);
 	}
 
 	@Override

@@ -27,6 +27,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getUserAddJobList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getPermissionList(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);
+	}
+	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
 		return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
 	}
@@ -41,6 +46,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
 	public int userCheck(String cn) throws Exception{
 		return (int) select("EzOrganAdminDAO.userCheck", cn);
+	}
+	
+	public int getPermissionListCount(Map<String, Object> map) throws Exception{
+		select("EzOrganAdminDAO.getPermissionListCount", map);
+		int ret = (int) map.get("v_pCount");
+		
+		return ret;
 	}
 
 	public void insertDBData_company(Map<String, Object> map) throws Exception{
@@ -82,6 +94,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void setAddJob(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.setAddJob", map);
 	}
+
 
 
 }

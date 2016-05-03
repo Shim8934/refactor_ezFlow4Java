@@ -718,6 +718,131 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", user);
 		
 		return "admin/ezOrgan/addJobAdd";
+	}
+	
+	/**
+	 * 조직도관리 권한관리 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/permissionsList.do")	
+	public String permissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String strLang = config.getProperty("config.primary");
+		String use_editor = config.getProperty("config.EDITOR");
+		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j, vo);
+			}
+		}
+		
+		model.addAttribute("use_editor", use_editor);
+		model.addAttribute("use_ie11Browser", use_ie11Browser);
+		model.addAttribute("userCompany", user.getCompanyID());
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezOrgan/permissionsList";
+	}	
+	
+	/**
+	 * 조직도관리 권한관리 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionsList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		String companyID = request.getParameter("companyID");
+		String type = request.getParameter("type");
+		String strLang = config.getProperty("config.primary");
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+		int startRow = (pageSize * (pageNum - 1)) + 1;
+        int endRow = pageSize * pageNum;
+        
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang);
+        
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow);
+        
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < list.size(); i++) {
+        	OrganUserVO vo = list.get(i);
+        	
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+        	result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
+            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCn()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute1()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getMail()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTelephoneNumber()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCompany()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+		return result.toString();
+	}
+	
+	/**
+	 * 조직도관리 권한관리 권한등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do")	
+	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
+        String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
+		String topID = "";
+		
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topID = user.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userID", userID);
+		model.addAttribute("companyID", selCompany);
+		model.addAttribute("topID", topID);
+		model.addAttribute("userInfo", user);
+		
+		return "admin/ezOrgan/permissionsCheck";
 	}	
 	
 }

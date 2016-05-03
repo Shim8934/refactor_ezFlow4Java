@@ -18,6 +18,17 @@
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
 	</resultMap>
 	
+	<resultMap id="permissionList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="extensionAttribute1" 					column="extensionAttribute1" 			columnIndex="2"/>
+		<result property="displayName" 							column="displayName"					columnIndex="3"/>
+		<result property="mail" 								column="mail" 							columnIndex="4"/>		
+		<result property="title" 								column="title" 							columnIndex="5"/>		
+		<result property="description" 							column="description" 					columnIndex="6"/>		
+		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="7"/>		
+		<result property="company" 								column="company" 						columnIndex="8"/>		
+	</resultMap>
+	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -90,6 +101,18 @@
 	<procedure id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_SETADDJOB(#v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_DELFLAG#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 
@@ -173,6 +196,7 @@
 	  		<isNotNull property="extensionAttribute6" prepend=","> <![CDATA[extensionAttribute6 = #extensionAttribute6#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionAttribute14 = #extensionAttribute14#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute10" prepend=","> <![CDATA[extensionAttribute10 = #extensionAttribute10#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute1" prepend=","> <![CDATA[extensionAttribute1 = #extensionAttribute1#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute2" prepend=","> <![CDATA[extensionAttribute2 = #extensionAttribute2#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute3" prepend=","> <![CDATA[extensionAttribute3 = #extensionAttribute3#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute102" prepend=","> <![CDATA[extensionAttribute102 = #extensionAttribute102#]]></isNotNull>

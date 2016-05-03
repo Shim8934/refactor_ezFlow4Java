@@ -60,7 +60,7 @@
 						url = "/myoffice/ezEmail/Admin/Right_LargeSizeMailManage.aspx";
 						break;
 				    case 12:
-				        url = "/myoffice/ezOrgan/Admin/Permissions_List.aspx";
+				        url = "/admin/ezOrgan/permissionsList.do";
 				        break;
 				    case 13:
 				        url = "/admin/ezOrgan/addJobList.do";

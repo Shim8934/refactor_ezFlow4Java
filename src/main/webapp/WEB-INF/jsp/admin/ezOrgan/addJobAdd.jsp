@@ -13,7 +13,7 @@
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-		var g_xmlHTTP = null;
+			var g_xmlHTTP = null;
 			var topid = "<c:out value='${companyID}'/>";			
 			var xmlHTTP = createXMLHttpRequest();
 			
