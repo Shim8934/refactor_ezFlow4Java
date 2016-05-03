@@ -23,11 +23,11 @@
 			var pCompanyID	= "${companyID}";
 			var pUserID		= "${userID}";
 			var pDeptID		= "${deptID}";
-			var ptotalPage	= "${deptID}";
-			var pcurpage	= "${deptID}";
-			var pSortGbn	= "${deptID}";
-			var pAdminFg = "${deptID}";
-			var TotalCnt = "${deptID}";
+			var ptotalPage	= "${totalPage}";
+			var pcurpage	= "${curPage}";
+			var pSortGbn	= "${sortGbn}";
+			var pAdminFg = "${adminFg}";
+			var TotalCnt = "${totalCnt}";
 
 		    	function MemberInfo_onDblclick(pSelUserID) {
 			        var feature = GetOpenPosition(420, 438);
@@ -375,7 +375,7 @@
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
-		<h1>"${brdNm}"<span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<h1>${brdNm}<span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 
 		<div id="mainmenu">
   			<ul>
@@ -400,30 +400,19 @@
     			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
     			<th style="width:100px;"> <spring:message code='ezResource.t148' /></th>
   			</tr>
-  			<%-- <%
-				if (xmldom.SelectNodes("DATA/ROW").Count > 0) {
-					for (int i = PageSize * (int.Parse(curpage.Trim()) - 1); i < xmldom.SelectNodes("DATA/ROW").Count; i++) {
-						System.Xml.XmlNode xmlNode = xmldom.SelectNodes("DATA/ROW").Item(i);
-			%> --%>
-  			<tr>
-    			<%-- <td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="<%=xmlNode.SelectSingleNode("BRD_ID").InnerText.Trim()%>" ownerid="<%=xmlNode.SelectSingleNode("OWNERID").InnerText.Trim()%>">    </td>
-    			<td title="<%=Replace(xmlNode.SelectSingleNode("BRD_NM").InnerText.Trim(), chr(34), "&quot")%>" onClick="Item_View('<%=xmlNode.SelectSingleNode("BRD_ID").InnerText.Trim()%>');"
-				style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr> <%=xmlNode.SelectSingleNode("BRD_NM").InnerText.Trim()%> </nobr> </td>
-    			<td id="OwnDeptID" value="<%=xmlNode.SelectSingleNode("OWNDEPTNM").InnerText.Trim()%>" style="text-overflow: ellipsis;
-				overflow: hidden"><nobr> <%=Server.HtmlEncode(xmlNode.SelectSingleNode("OWNDEPTNM").InnerText.Trim())%> </nobr> </td>
-    			<td id="OwnerID"  style="cursor:pointer;" value="<%=xmlNode.SelectSingleNode("OWNERID").InnerText.Trim()%>" onClick="MemberInfo_onDblclick('<%=xmlNode.SelectSingleNode("OWNERID").InnerText.Trim()%>')" nowrap><%=Server.HtmlEncode(xmlNode.SelectSingleNode("OWNERNM").InnerText.Trim())%> </td>
-    			<td id="OwnerPosition"><%=xmlNode.SelectSingleNode("OWNERPOSITION").InnerText.Trim()%> </td>
-    			<td id="OwnerCall"><%=xmlNode.SelectSingleNode("OWNERCALL").InnerText.Trim()%> </td>
-    			<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden"><nobr> <%=xmlNode.SelectSingleNode("RESLOCATION").InnerText.Trim()%> </nobr> </td> --%>
-  			</tr>
-  		<%-- 	<% 
-				if (i < limitline) {
-				}
-			}
-		} else {
-        	Response.Write("<tr style='background-color:#ffffff;'><td colspan='7' style='text-align:center;'>" + RM.GetString("t368") + "</td></tr>");
-		}
-		%> --%>
+			<c:if test="${!empty resBrdList}" >
+				<c:forEach var="list"  items="${resBrdList}">
+  					<tr>
+    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
+						<td title="${list.brdNm}" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr>${list.brdNm}</nobr> </td>
+						<td id="OwnDeptID" value="${list.ownDeptNm}" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.ownDeptNm}</nobr> </td>
+						<td id="OwnerID"  style="cursor:pointer;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+						<td id="OwnerPosition">${list.ownerPosition}</td>
+						<td id="OwnerCall">${list.ownerCall} </td>			
+						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.resLocation}</nobr> </td>
+					</tr> 
+				</c:forEach>
+			</c:if>
 		</table>
     	<div id="tblPageRayer"></div>
 		<form name="frmRefresh" action="/ezResource/viewResList.do" method="post">
