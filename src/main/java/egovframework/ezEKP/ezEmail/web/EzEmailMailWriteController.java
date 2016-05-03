@@ -1926,6 +1926,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 메일 옵션화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/letterOption.do")
+	public String mailLetterOption(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		//TODO: 변수들 setting
+		String userTimeSet = "";
+		String setLocalTime = "";
+		String nonActiveX = "YES";
+		boolean outMailReadCheck = false;
+		
+		model.addAttribute("userTimeSet", userTimeSet);
+		model.addAttribute("setLocalTime", setLocalTime);
+		model.addAttribute("nonActiveX", nonActiveX);
+		model.addAttribute("outMailReadCheck", outMailReadCheck);
+		
+		return "ezEmail/mailLetterOption";
+	}
+	
+	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
