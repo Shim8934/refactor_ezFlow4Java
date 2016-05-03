@@ -28,6 +28,8 @@ import javax.mail.internet.MimeUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 
 public class IMAPAccess {
@@ -201,6 +203,30 @@ public class IMAPAccess {
 		}
 		
 		return folder;
+	}
+	
+	public void createFolder(String folderName, String folderPath) {
+		boolean isCreated = false;
+		
+		try {
+			Folder paraentFolder = null;
+			if (!folderPath.equals("")) {
+				paraentFolder = getStore().getFolder(folderPath);
+			} else {
+				paraentFolder = getStore().getDefaultFolder();
+			}
+			if (paraentFolder.exists()) {
+				if (!paraentFolder.getFolder(folderName).exists()) {
+					isCreated = paraentFolder.getFolder(folderName).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+					if (isCreated) {
+						logger.debug(folderName + " folder is created.");
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			logger.error("Error create folder: " + e.getMessage());
+		}
+		
 	}
 	
 	public boolean hasAttachment(Part part) {

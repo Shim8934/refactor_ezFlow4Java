@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -13,9 +15,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -86,5 +95,91 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		
 		return "ezEmail/mailMoveCopy";
+	}
+	
+	/**
+	 * 편지함 추가/수정/삭제/이동/복사/메일삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
+	@ResponseBody
+	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Element root = xmlDoc.getDocumentElement();
+		
+		String url = "";
+		String name = "";
+		String destination = "";
+		String cmd = "";
+		
+		if (root.getElementsByTagName("URL") != null && root.getElementsByTagName("URL").item(0) != null) {
+			url = root.getElementsByTagName("URL").item(0).getTextContent();
+		}
+		if (root.getElementsByTagName("NAME") != null && root.getElementsByTagName("NAME").item(0) != null) {
+			name = root.getElementsByTagName("NAME").item(0).getTextContent();
+		}
+		if (root.getElementsByTagName("DESTINATION") != null && root.getElementsByTagName("DESTINATION").item(0) != null) {
+			destination = root.getElementsByTagName("DESTINATION").item(0).getTextContent();
+		}
+		if (root.getElementsByTagName("CMD") != null && root.getElementsByTagName("CMD").item(0) != null) {
+			cmd = root.getElementsByTagName("CMD").item(0).getTextContent();
+		}
+		
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdnPw.get(0);
+		String password  = userIdnPw.get(1);
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+        switch (cmd) {
+            case "NEW": 
+            	ia.createFolder(name, url);
+                break;
+            case "MOVE": 
+//            	folder = Folder.Bind(esb, (FolderId)xmldoc.GetElementsByTagName("URL")[0].InnerText);
+//                newFolder = folder.Move((FolderId)xmldoc.GetElementsByTagName("DESTINATION")[0].InnerText);
+//                returnFolderID = newFolder.Id.UniqueId;
+                break;
+            case "DEL": 
+//            	folder = Folder.Bind(esb, (FolderId)xmldoc.GetElementsByTagName("URL")[0].InnerText);
+//                folder.Delete(DeleteMode.HardDelete);
+                break;
+            case "COPY": 
+//            	folder = Folder.Bind(esb, (FolderId)xmldoc.GetElementsByTagName("URL")[0].InnerText);
+//                newFolder = folder.Copy((FolderId)xmldoc.GetElementsByTagName("DESTINATION")[0].InnerText);
+//                returnFolderID = newFolder.Id.UniqueId;
+                break;
+            case "MODIFY":
+            	Folder oldFolder = ia.getFolder(url);
+            	if (oldFolder.exists()) {
+            		String parentPath = oldFolder.getParent().getFullName();
+            		Folder newFolder = ia.getFolder(parentPath).getFolder(destination);
+            		boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+            		if (isRenamed) {
+            			logger.debug(url + " folder is renamed as " + destination + ".");
+            		}
+            	}
+                break;
+            case "MAILREALDEL": 
+//            	findResults = esb.FindItems((FolderId)xmldoc.GetElementsByTagName("URL")[0].InnerText, new ItemView(int.MaxValue));
+//                foreach (Item item in findResults)
+//                {
+//                    item.Delete(DeleteMode.SoftDelete);
+//                }
+                break;
+            case "MAILDEL": 
+//            	findResults = esb.FindItems((FolderId)xmldoc.GetElementsByTagName("URL")[0].InnerText, new ItemView(int.MaxValue));
+//                foreach (Item item in findResults)
+//                {
+//                    item.Delete(DeleteMode.MoveToDeletedItems);
+//                }
+                break;
+            default:
+                break;
+        }
+		
+        ia.close();
+        
+		return "";
 	}
 }
