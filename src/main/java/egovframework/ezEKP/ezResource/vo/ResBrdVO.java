@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezResource.vo;
 
 public class ResBrdVO {
 	/** 게시판ID*/
-	private int brdID;
+	private String brdID;
 	/** 게시판명*/
 	private String brdNm;
 	/** 영문 게시판명*/
@@ -36,10 +36,10 @@ public class ResBrdVO {
 	/** 게시판 접근 거부 메시지*/
 	private int brdAccess;
 	
-	public int getBrdID() {
+	public String getBrdID() {
 		return brdID;
 	}
-	public void setBrdID(int brdID) {
+	public void setBrdID(String brdID) {
 		this.brdID = brdID;
 	}
 	public String getBrdNm() {
