@@ -101,14 +101,15 @@
 		<result property="num"					column="NUM"						columnIndex="2"/>
 		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
 		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
-		<result property="endDateTime"			column="ENDATETIME"			columnIndex="5"/>
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
 		<result property="reWay"					column="REWAY"					columnIndex="6"/>
-		<result property="reDay"					column="REDAY"					columnIndex="7"/>
-		<result property="reYoil"					column="REYOIL"					columnIndex="8"/>
-		<result property="reMonth"				column="REMONTH"				columnIndex="9"/>
-		<result property="reOrd"					column="REORD"					columnIndex="10"/>
-		<result property="endFlag"				column="ENDFLAG"					columnIndex="11"/>
-		<result property="reCount"				column="RECOUNT"				columnIndex="12"/>
+		<result property="reNum"					column="RENUM"					columnIndex="7"/>
+		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue="NULL"/>
+		<result property="reYoil"					column="REYOIL"					columnIndex="9"			nullValue="NULL"/>
+		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue="NULL"/>
+		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue="NULL"/>
+		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="NULL"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleListTermVO" id="resGetScheduleListTermVO">
@@ -201,7 +202,7 @@
 	
 	<procedure id="EzResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITIM(#v_PCOMPANYID#, to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITIM(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -213,7 +214,7 @@
 	
 	<procedure id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTTERM(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTTERM(#v_PNUM#, #v_PCOMPANYID#, #v_POWNERID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
 		]]>
 	</procedure>
 	
