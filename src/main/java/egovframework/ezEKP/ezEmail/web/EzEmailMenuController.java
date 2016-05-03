@@ -153,7 +153,12 @@ public class EzEmailMenuController {
 			StringBuilder subFolderXML = new StringBuilder();
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-			List<Folder> subMailFolder = ia.getSubFolders(folderName);
+			List<Folder> subMailFolder = null;
+			if (!folderName.equals("")) {
+				subMailFolder = ia.getSubFolders(folderName);
+			} else {
+				subMailFolder = ia.getTopLevelFolders();
+			}
 			try {
 				for(int i=0; i<subMailFolder.size(); i++){
 					Folder fd = subMailFolder.get(i);
