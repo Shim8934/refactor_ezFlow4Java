@@ -7,8 +7,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
-	    <script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
+	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
@@ -947,7 +947,7 @@
 	    <input id="eFrom" type="hidden" name="eFrom">
 	    <input type="hidden" name="eImportant" style="display: none;">
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-	     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
 	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
 	        <input type="hidden" name="maxsize" id="maxsize" />
 	        <input type="hidden" name="cnt" id="cnt" />
@@ -968,7 +968,7 @@
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
 	    </script>
 	</body>
-	 <xmp id="AttachXmlList" style="display:none;">
-	    ${attach}
-	 </xmp>
+	<xmp id="AttachXmlList" style="display:none;">
+	   ${attach}
+	</xmp>
 </html>

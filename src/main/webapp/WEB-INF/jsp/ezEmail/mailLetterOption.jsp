@@ -25,9 +25,9 @@
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript">
 	
-			var g_timezone = "${_UserTimeSet}";
-		    var nowDateTime = "${_setLocalTime}";
-		    var NonActiveX = "YES";
+			var g_timezone = "${userTimeSet}";
+		    var nowDateTime = "${setLocalTime}";
+		    var NonActiveX = "${nonActiveX}";
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -478,7 +478,7 @@
 		    <td><input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
 		      <span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
 		      <c:choose>
-		      	<c:when test="OutMailReadCheck">
+		      	<c:when test="${outMailReadCheck}">
 					<select id="responseReadType" onChange="">
 		      			<option value="1" selected><spring:message code='ezEmail.t371' /></option>
 		      			<option value="2"><spring:message code='ezEmail.t372' /></option>

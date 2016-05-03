@@ -9,6 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <script language="javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script language="javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
 	    <style type="text/css">PRE {font-size:small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>

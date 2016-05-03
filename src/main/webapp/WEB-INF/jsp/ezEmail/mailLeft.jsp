@@ -7,7 +7,7 @@
 	<head>
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
@@ -15,7 +15,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <link rel="stylesheet" href="/css/default_kr.css">
+	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
@@ -224,7 +224,7 @@
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
-	            var OpenWin = window.open("/myoffice/ezEmail/mail_foldermanage_Cross.aspx", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 500));
+	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
