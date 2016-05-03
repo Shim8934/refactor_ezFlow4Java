@@ -169,12 +169,17 @@ public class IMAPAccess {
 	}
 	
 	public List<Folder> getSubFolders(String parent){
-		ArrayList<Folder> subFolders = new ArrayList<Folder>();
+		List<Folder> subFolders = new ArrayList<Folder>();
 		try {
-			Folder[] f = getStore().getFolder(parent).list();
-			for(Folder fd : f){
-				subFolders.add(fd);
+			if (parent.equals("")) {
+				subFolders = getTopLevelFolders();
+			} else {
+				Folder[] f = getStore().getFolder(parent).list();
+				for(Folder fd : f){
+					subFolders.add(fd);
+				}
 			}
+			
 		} catch (MessagingException e) {
 			logger.error("Error get sub folder: " + e.getMessage());
 		}
