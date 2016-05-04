@@ -29,6 +29,20 @@
 		<result property="company" 								column="company" 						columnIndex="8"/>		
 	</resultMap>
 	
+	<resultMap id="retireList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="displayName" 							column="DisplayName" 					columnIndex="2"/>
+		<result property="displayName2" 						column="DisplayName2"					columnIndex="3"/>
+		<result property="description" 							column="Description" 					columnIndex="4"/>		
+		<result property="description2" 						column="Description2" 					columnIndex="5"/>		
+		<result property="title" 								column="Title" 							columnIndex="6"/>		
+		<result property="title2" 								column="Title2" 						columnIndex="7"/>		
+		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="8"/>
+		<result property="extensionAttribute102" 				column="extensionAttribute102" 			columnIndex="9"/>
+		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
+		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
+	</resultMap>
+	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -113,6 +127,30 @@
 	<procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_DB_GETRETIRELIST(#v_PAGE#, #v_ROWPERPAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			{CALL EZHRMASTER.EZSP_GETUSERINFO_RETIRE(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 

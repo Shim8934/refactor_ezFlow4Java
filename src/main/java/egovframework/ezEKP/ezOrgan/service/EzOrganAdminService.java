@@ -15,7 +15,11 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow) throws Exception;
 	
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow) throws Exception;
+	
 	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
+	
+	public OrganUserVO getRetireEntryInfo(String cn, String lang) throws Exception;
 	
 	public String getPropertyList(String cn, String proplist, String string) throws Exception;
 	
@@ -28,6 +32,8 @@ public interface EzOrganAdminService {
 	public int companyChildCheck(String cn) throws Exception;
 	
 	public int userCheck(String cn) throws Exception;
+	
+	public int getRetireListCount(int pPage, int pPageRow) throws Exception;
 	
 	public int getPermissionListCount(String companyID, String type, String strLang) throws Exception;
 
@@ -50,7 +56,8 @@ public interface EzOrganAdminService {
 	public void insertDBData_user(OrganUserVO vo) throws Exception;
 
 	public void addJob(String userID, String titleInfo) throws Exception;
-	
+
+	public void restoreRetireEntry(String cn, String deptID) throws Exception;
 
 	 
 }

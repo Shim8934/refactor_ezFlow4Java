@@ -81,6 +81,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow)	throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PAGE", pPage);
+		map.put("v_ROWPERPAGE", pPageRow);
+		
+		return ezOrganAdminDao.getRetireList(map);
+	}
+
+	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode) throws Exception {
 		String propvalue = "";
 		String DataType = "user";
@@ -202,6 +212,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public int userCheck(String cn) throws Exception {
 		return ezOrganAdminDao.userCheck(cn);
 	}
+	
+	@Override
+	public int getRetireListCount(int pPage, int pPageRow) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PAGE", pPage);
+		map.put("v_ROWPERPAGE", pPageRow);
+		
+		return ezOrganAdminDao.getRetireListCount(map);
+	}
 
 	@Override
 	public int getPermissionListCount(String companyID, String type, String strLang) throws Exception {
@@ -305,6 +325,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		return ezOrganAdminDao.getUserInfo(map);
 	}
+	
+	@Override
+	public OrganUserVO getRetireEntryInfo(String cn, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();		
+		
+		map.put("v_CN", cn);
+		map.put("v_LANGDATA", lang);
+		
+		return ezOrganAdminDao.getRetireEntryInfo(map);
+	}
 
 	@Override
 	public void addJob(String userID, String titleInfo) throws Exception {
@@ -349,6 +379,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     		
     		ezOrganAdminDao.setAddJob(map);
         }		
+	}
+
+	@Override
+	public void restoreRetireEntry(String cn, String deptID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();		
+		
+		map.put("v_CN", cn);
+		map.put("v_PARENTCN", deptID);
+		
+		ezOrganAdminDao.restoreRetireEntry(map);
 	}
 	
 	

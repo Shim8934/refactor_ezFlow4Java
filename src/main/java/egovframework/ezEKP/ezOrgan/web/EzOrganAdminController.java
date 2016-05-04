@@ -843,6 +843,105 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", user);
 		
 		return "admin/ezOrgan/permissionsCheck";
+	}
+	
+	/**
+	 * 조직도관리 퇴직자관리 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/retireUserManage.do")	
+	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String strLang = config.getProperty("config.primary");
+		int pPageRow = 20;
+   		int pPage = 1;
+   		
+   		if (request.getParameter("page") != null) {
+   			pPage = Integer.parseInt(request.getParameter("page"));
+   		}
+   		
+   		int totalCount = ezOrganAdminService.getRetireListCount(pPage, pPageRow);
+   		int totalPage = 0;
+   		
+		if (totalCount > 0) {
+			if (totalCount > pPageRow) {
+				String cnt = Double.toString((double)totalCount/(double)pPageRow);
+				
+				if (cnt.indexOf(".") >= 0) {
+					totalPage = Integer.parseInt(cnt.split(".")[0]) + 1;
+				} else {
+					totalPage = Integer.parseInt(cnt);
+				}
+			} else {
+				totalPage = 1;
+			}
+		} else {
+			totalPage = 1;
+		}
+		
+		List<OrganUserVO> list = ezOrganAdminService.getRetireList(pPage, pPageRow);
+		
+		model.addAttribute("lang", strLang);
+   		model.addAttribute("list", list);
+   		model.addAttribute("pPage", pPage);
+   		model.addAttribute("totalPage", totalPage);
+		
+		return "admin/ezOrgan/retireUserManage";
+	}	
+	
+	/**
+	 * 조직도관리 퇴직자관리 복구 기능 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/restoreRetireUser.do")
+	public void restoreRetireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String deptID = request.getParameter("deptID");
+		String[] cn = request.getParameter("cn").split(",");
+		
+		for (int i = 0; i < cn.length; i++) {
+			ezOrganAdminService.restoreRetireEntry(cn[0], deptID);
+		}		
+	}
+	
+	/**
+	 * 조직도관리 퇴직자관리 퇴직사원 상세정보 창 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/retireUserInfo.do")
+	public String retireUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String id = (request.getParameter("id") == null ? "" : request.getParameter("id"));
+		String lang = config.getProperty("config.primary");		
+		String primary = config.getProperty("config.lang_Primary" + lang);
+		String secondary = config.getProperty("config.lang_Secondary" + lang);
+				
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);		
+		model.addAttribute("userID", id);
+		
+		return "admin/ezOrgan/retireUserInfo";
+	}	
+	
+	/**
+	 * 조직도관리 퇴직자관리 퇴직사원 상세정보 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getRetireEntryInfo.do")
+	public String getRetireEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		String cn = request.getParameter("cn");
+		String lang = config.getProperty("config.primary");	
+		
+		OrganUserVO vo = ezOrganAdminService.getRetireEntryInfo(cn, lang);
+		
+		model.addAttribute("info", vo);
+		
+		return "json";
 	}	
 	
 }

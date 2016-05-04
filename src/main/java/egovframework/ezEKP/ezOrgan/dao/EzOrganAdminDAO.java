@@ -32,10 +32,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getRetireList(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getRetireList", map);
+	}
+	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
 		return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
 	}
 	
+	public OrganUserVO getRetireEntryInfo(Map<String, Object> map) throws Exception{
+		return (OrganUserVO) select("EzOrganAdminDAO.getRetireEntryInfo", map);
+	}
+
 	public int companyCheck(String cn) throws Exception{		
 		return (int) select("EzOrganAdminDAO.companyCheck", cn);
 	}
@@ -54,6 +63,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		
 		return ret;
 	}
+	
+	public int getRetireListCount(Map<String, Object> map) throws Exception{
+		select("EzOrganAdminDAO.getRetireListCount", map);
+		int ret = (int) map.get("v_pCount");
+		
+		return ret;
+	}
+
 
 	public void insertDBData_company(Map<String, Object> map) throws Exception{
 		insert("EzOrganAdminDAO.insertDBData_company", map);
@@ -79,6 +96,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateProperty", map);
 	}
 	
+	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.restoreRetireEntry", map);
+	}
+	
 	public void deleteDBData(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.deleteDBData", map);
 	}
@@ -94,7 +115,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void setAddJob(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.setAddJob", map);
 	}
-
-
+		
 
 }
