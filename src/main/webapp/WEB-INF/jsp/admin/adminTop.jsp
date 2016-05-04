@@ -30,7 +30,7 @@
 			            parent.frames["bottom"].location.href = "index_approval.aspx";
 						break;
 					case "menu04":		
-					    parent.frames["bottom"].location.href = "index_ApprovalG.aspx";
+					    parent.frames["bottom"].location.href = "/admin/ezApprovalG/apprGMain.do";
 						break;
 					case "menu06":	//게시판관리
 					    parent.frames["bottom"].location.href = "/admin/ezBoard/boardMain.do";
