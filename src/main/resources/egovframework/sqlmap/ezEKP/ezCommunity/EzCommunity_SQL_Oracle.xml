@@ -75,6 +75,10 @@
 	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzCommunityDAO.aspCommInfoGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 		
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

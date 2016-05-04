@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +30,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
-import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
@@ -243,25 +241,28 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티 로고 출력 함수
+	 * 커뮤니티 로고 출력 함수(ezCommon_Interface)
 	 */
 	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do")
 	public void getCommunityThumInfo(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-		String pType = "5";
-		String pBoardID = "";
-		//TODO 왼쪽화면 호출시에는 사용안함
-		/*String pItemID = "";
-		String pQstNo = "";
-        String pAnsNo = "";
-        String pAttID = "";*/
-        String pFileName = "";
-        String pFilePath = "";
+        String pType = request.getParameter("type");
+		String pFileName = request.getParameter("fileName");
+		String pFilePath = "", pBoardID = "";
 		
-        pType = request.getParameter("type");
-		pFileName = request.getParameter("fileName");
-		pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO");
+		if (request.getParameter("boardID") != null) {
+			pBoardID = request.getParameter("boardID");
+		}
 
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO");
+			
+	        if (pFilePath != null && pFilePath != "") {
+	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+	        }
+		}
+		
+		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM");
 	        if (pFilePath != null && pFilePath != "") {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 	        }
@@ -293,8 +294,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			userInfoDisplayName = loginVO.getDisplayName1();
 		}
-		
-		System.out.println(getCategory("", "", "", locale));
 
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
@@ -587,8 +586,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pMode = 1;
 		}
 		
-		strXML = getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(loginVO.getLang()));
-		
+		strXML = ezCommunityService.getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(loginVO.getLang()));
+
 		return strXML;
 	}
 	
@@ -757,7 +756,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			mode = 1;
 		}
 		
-		String retXML = getBoardTree(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		String retXML = ezCommunityService.getBoardTree(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
@@ -782,14 +781,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 			checkSysop = true;
 		}
 		
+		model.addAttribute("code", code);
 		model.addAttribute("copType", copType);
 		model.addAttribute("joinFlag", joinFlag);
 		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
 		model.addAttribute("checkSysop", checkSysop);
-		
+		model.addAttribute("retXML", retXML);
 		model.addAttribute("userInfo", userInfo);
 		
-		return "/ezCommunity/commHome/popupCommHome";
+		return "/ezCommunity/popupCommHome";
 	}
 	
 	/**
@@ -797,9 +797,67 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	public String commHomeInfo(@RequestBody String xmlData) {
-System.out.println(xmlData);
-		return "";
+	@ResponseBody
+	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = commonUtil.convertStringToDocument(xmlData).getElementsByTagName("CODE").item(0).getTextContent();
+		String strSysopID = "";
+		
+		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		String temp = commonUtil.getQueryResult(clubVO);
+		sb.append(temp.substring(5, temp.length()-6));
+		sb.append("</DATA>");
+		
+		Document xmlMainDom = commonUtil.convertStringToDocument(sb.toString());
+		strSysopID = xmlMainDom.getElementsByTagName("C_SYSOPID").item(0).getTextContent().trim();
+		
+		String proplist = "displayName;description;company;extensionAttribute2";
+		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang());
+		
+		Document xmldomMemberInfo = commonUtil.convertStringToDocument(infoXMLMemberInfo);
+		
+		String name = xmldomMemberInfo.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		String companyNM = xmldomMemberInfo.getElementsByTagName("COMPANY").item(0).getTextContent();
+		String deptName = xmldomMemberInfo.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String userImage = xmldomMemberInfo.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent();
+		
+		Node targetNode = xmlMainDom.getElementsByTagName("DATA").item(0);
+		Node newRow = xmlMainDom.createElement("MEMBER");
+		Node newDataName = null;
+		Node newDataValue = null;
+		
+		newDataName = xmlMainDom.createElement("USERNAME");
+		newDataValue = xmlMainDom.createTextNode(name);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("DEPTNAME");
+		newDataValue = xmlMainDom.createTextNode(deptName);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("COMPANYNAME");
+		newDataValue = xmlMainDom.createTextNode(companyNM);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("USERIMAGE");
+		newDataValue = xmlMainDom.createTextNode(userImage);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("USERID");
+		newDataValue = xmlMainDom.createTextNode(strSysopID);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		targetNode.appendChild(newRow);
+		
+		return commonUtil.convertDocumentToString(xmlMainDom);
 	}
 	
 	/**
@@ -1512,103 +1570,5 @@ System.out.println(xmlData);
 			return "NO";
 		}
 	}
-	
-	/**
-	 * 게시판 Tree 호출 함수
-	 */
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
-		int count = 0;
-        String strForbiddenBoardIDList = "";
-		StringBuilder result;
-		List<CommunityBoardTreeVO> boardTreeList;
-		List<CommunityBoardTreeVO> brdBoardTreeList = new ArrayList<CommunityBoardTreeVO>();
-		
-        String retValue = ezCommunityService.getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode ,pSubFlag ,pSelectBy ,pExcludeBoardID, pClubNo, strLang);
-        
-        if (retValue != null && retValue.length() > 30) {
-    		return retValue;
-        }
-        
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
-        
-        for (int i = 0; i < pAccessID.split(",").length; i++) {
-        	boardTreeList = ezCommunityService.getBoardTreeGet2(pAccessID.split(",")[i].trim());
-        	brdBoardTreeList = ezCommunityService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), "", "", pMode, pSelectBy, pExcludeBoardID, pClubNo);
-        	
-			if (boardTreeList.size() > 0) {
-				for (int r = 0; r < boardTreeList.size(); r++) {
-					strForbiddenBoardIDList += boardTreeList.get(r).getBoardID().split(",")[0].trim()+";";
-				}
-			}
-        }
-        
-        result = new StringBuilder();
-        
-        if (pSubFlag == 1) {
-        	result.append("<NODES>");
-        } else {
-        	result.append("<TREEVIEWDATA>");
-        }
-        
-        for (int i = 0; i < brdBoardTreeList.size(); i++) {
-        	if (strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
-                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardID()) > -1) {
-                	continue;
-                }
-            }
-        	
-        	result.append("<NODE>");
-        	
-        	if (strLang.equals("")) {
-        		result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></VALUE>");
-        	} else {
-        		result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></VALUE>");
-        	}        	
-        	
-            result.append("<STYLE><![CDATA[]]></STYLE>");
-            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardID() + "</DATA1>");
-            
-            if (strLang.equals("")) {
-            	result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></DATA2>");
-            } else {
-            	result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></DATA2>");
-            }
-            
-            result.append("<DATA3>" + pRootBoardID + "</DATA3>");
-            result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
-            result.append("<DATA5>" + brdBoardTreeList.get(i).getC_ClubNo() + "</DATA4>");
-            result.append("<DATA6>" + brdBoardTreeList.get(i).getGubun() + "</DATA5>");
-            result.append("<EXPANDED>FALSE</EXPANDED>");
-            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardID()) + "</ISLEAF>");
 
-            if (count == 0 && pSubFlag != 1) {
-            	result.append("<SELECT>TRUE</SELECT>");
-            }
-            
-            result.append("</NODE>");
-            count++;
-        }
-        
-        if (pSubFlag == 1) {
-        	result.append("</NODES>");
-        } else {
-        	result.append("</TREEVIEWDATA>");
-        }
-        
-        ezCommunityService.getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"));
-
-        return result.toString();
-	}
-	
-	/**
-	 * 게시판 트리하위여부 표출 Method
-	 */
-	public String checkIfLeafBoard(String pBoardID) throws Exception {
-		if (ezCommunityService.checkIfLeafBoardGet(pBoardID) > 0) {
-			return "FALSE";
-		} else {
-			return "TRUE";
-		}
-	}
 }

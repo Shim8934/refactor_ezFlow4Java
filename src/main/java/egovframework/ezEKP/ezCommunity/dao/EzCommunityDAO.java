@@ -210,12 +210,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.updateLastDate", map);
 	}
 
-	public String commHomeGet4(String v_CODE) throws Exception{
+	public String commHomeGet4(String v_CODE) throws Exception {
 		return (String) select("EzCommunityDAO.commHomeGet4", v_CODE);
 	}
 
 	public int commHomeGet2(Map<String, Object> map) {
 		select("EzCommunityDAO.commHomeGet2", map);
 		return (int) map.get("v_pCount");
+	}
+
+	public CommunityClubVO aspCommInfoGet1(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.aspCommInfoGet1", map);
 	}
 }

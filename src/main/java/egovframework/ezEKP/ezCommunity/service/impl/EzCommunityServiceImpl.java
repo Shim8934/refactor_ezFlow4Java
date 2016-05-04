@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,8 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommunityService")
@@ -29,6 +32,12 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
+	
+	@Resource(name="EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -397,21 +406,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception {
-		String pResult = "", pSignatureDir = ""; 
-		
-		if (pType.equals("COMMUNITYTHUM")) {
-			pSignatureDir = config.getProperty("upload_community.ROOT") + commonUtil.separator + pBoardID + commonUtil.separator + "uploadFile";
-		} else {
-			pSignatureDir = config.getProperty("upload_community.LOGO");
-		}
-		
-		pResult = pSignatureDir + commonUtil.separator + pFileName;
-		
-		return pResult;
-	}
-	
-	@Override
 	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CLUBNAME", clubName);
@@ -579,6 +573,29 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
+	public CommunityClubVO aspCommInfoGet1(String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.aspCommInfoGet1(map);
+	}
+
+	@Override
+	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception {
+		String pSignatureDir = ""; 
+		
+		if (pType.equals("COMMUNITYTHUM")) {
+			pSignatureDir = config.getProperty("upload_community.ROOT") + commonUtil.separator + pBoardID + commonUtil.separator + "uploadFile";
+		} else {
+			pSignatureDir = config.getProperty("upload_community.LOGO");
+		}
+		
+		String pResult = pSignatureDir + commonUtil.separator + pFileName;
+		
+		return pResult;
+	}
+
+	@Override
 	public String getFileFolderName(String bName) throws Exception {
 		String strReturn = "";
 		switch (bName){
@@ -640,9 +657,106 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 	}
 
-	
-	
+	@Override
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
+		int count = 0;
+        String strForbiddenBoardIDList = "";
+		StringBuilder result;
+		List<CommunityBoardTreeVO> boardTreeList;
+		List<CommunityBoardTreeVO> brdBoardTreeList = new ArrayList<CommunityBoardTreeVO>();
+		
+        String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode ,pSubFlag ,pSelectBy ,pExcludeBoardID, pClubNo, strLang);
+        
+        if (retValue != null && retValue.length() > 30) {
+    		return retValue;
+        }
+        
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
+        
+        for (int i = 0; i < pAccessID.split(",").length; i++) {
+        	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim());
+        	brdBoardTreeList = brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), "", "", pMode, pSelectBy, pExcludeBoardID, pClubNo);
+        	
+			if (boardTreeList.size() > 0) {
+				for (int r = 0; r < boardTreeList.size(); r++) {
+					strForbiddenBoardIDList += boardTreeList.get(r).getBoardID().split(",")[0].trim()+";";
+				}
+			}
+        }
+        
+        result = new StringBuilder();
+        
+        if (pSubFlag == 1) {
+        	result.append("<NODES>");
+        } else {
+        	result.append("<TREEVIEWDATA>");
+        }
+        
+        for (int i = 0; i < brdBoardTreeList.size(); i++) {
+        	if (strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardID()) > -1) {
+                	continue;
+                }
+            }
+        	
+        	result.append("<NODE>");
+        	
+        	if (strLang.equals("")) {
+        		result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
+        	} else {
+        		result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+        	}        	
+        	
+            result.append("<STYLE></STYLE>");
+            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardID() + "</DATA1>");
+            
+            if (strLang.equals("")) {
+            	result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
+            } else {
+            	result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+            }
+            
+            result.append("<DATA3>" + pRootBoardID + "</DATA3>");
+            
+            if (brdBoardTreeList.get(i).getBoardColor() != null) {
+            	result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
+            } else {
+            	result.append("<DATA4></DATA4>");
+            }
+            
+            result.append("<DATA5>" + brdBoardTreeList.get(i).getC_ClubNo() + "</DATA5>");
+            result.append("<DATA6>" + brdBoardTreeList.get(i).getGubun() + "</DATA6>");
+            result.append("<EXPANDED>FALSE</EXPANDED>");
+            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardID()) + "</ISLEAF>");
 
+            if (count == 0 && pSubFlag != 1) {
+            	result.append("<SELECT>TRUE</SELECT>");
+            }
+            
+            result.append("</NODE>");
+            count++;
+        }
+        
+        if (pSubFlag == 1) {
+        	result.append("</NODES>");
+        } else {
+        	result.append("</TREEVIEWDATA>");
+        }
+        
+        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"));
+
+        return result.toString();
+	}
+	
+	@Override
+	public String checkIfLeafBoard(String pBoardID) throws Exception {
+		if (checkIfLeafBoardGet(pBoardID) > 0) {
+			return "FALSE";
+		} else {
+			return "TRUE";
+		}
+	}
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);

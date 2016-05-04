@@ -72,6 +72,8 @@ public interface EzCommunityService {
 	
 	public String commHomeGet1(String id, String code) throws Exception;
 	
+	public String commHomeGet4(String code) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -81,6 +83,8 @@ public interface EzCommunityService {
 	public int commMakeOkGet2() throws Exception;
 	
 	public int commMakeOkGet4() throws Exception;
+	
+	public int commHomeGet2(String code) throws Exception;
 
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception;
 
@@ -106,11 +110,12 @@ public interface EzCommunityService {
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
 
-	public String commHomeGet4(String code) throws Exception;
-
-	public int commHomeGet2(String code) throws Exception;
-
+	public CommunityClubVO aspCommInfoGet1(String code) throws Exception;
 	
+	public String checkIfLeafBoard(String pBoardID) throws Exception;
+	
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
+
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
 //	public String sortXML(String pXML, String pSortBy) throws Exception;

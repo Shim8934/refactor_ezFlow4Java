@@ -17,7 +17,7 @@
 		<script type="text/javascript">
 			var strlang = "<c:out value='${userInfo.lang }'/>";
 			var xmlDomTreeView = createXmlDom();
-			var treedate = "<c:out value='${retXML }'/>";
+			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
 // 			안될꺼같다
@@ -60,9 +60,9 @@
 
 // 		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
 // 		        xmlhttp2.send(xmlDom);
-		        
+
 		        var treedom = loadXMLString(treedate);
-		        
+
 		        if (SelectNodes(treedom, "TREEVIEWDATA/NODE").length > 0) {
 		            for (var i = 0; i < SelectNodes(treedom, "TREEVIEWDATA/NODE").length; i++) {
 		                var h2 = document.createElement("H2");
@@ -99,7 +99,8 @@
 		        }
 		        if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
 		            var xmldom = loadXMLString(xmlhttp.responseText);
-
+		            alert(xmlhttp.responseText);
+		            
 		            var _img = document.createElement("img");
 		            _img.id = "coplogo";
 		            _img.style.width = "894px";
@@ -122,13 +123,13 @@
 		                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
 		            }
 
-		            document.getElementById("mastericon").onclick = function () { openinfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
+		            document.getElementById("mastericon").onclick = function () { openInfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
 		            document.getElementById("mastername").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERNAME");
 		            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
 		            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
 		            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
 		            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
-alert(1);
+
 		            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
 		            var _img = document.createElement("img");
@@ -212,7 +213,7 @@ alert(1);
 		    
 		    function SetTreeConfig() {
 		        xmlhttp = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
+		        xmlhttp.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
 		        xmlhttp.send();
 
 		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -653,8 +654,8 @@ alert(1);
 
 		                                        var img = document.createElement("IMG");
 		                                        var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
-// 		                                        변경 
-		                                        img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYTHUM&BOARDID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&FILENAME=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
+		                                        
+		                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
 		                                        img.style.width = "68px";
 		                                        img.style.height = "68px";
 
@@ -768,8 +769,8 @@ alert(1);
 
 		                                    var img = document.createElement("IMG");
 		                                    var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
-// 		                                    변경
-		                                    img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYTHUM&BOARDID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&FILENAME=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
+
+		                                    img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
 		                                    img.style.width = "68px";
 		                                    img.style.height = "68px";
 

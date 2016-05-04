@@ -121,6 +121,8 @@ public class CommunityClubVO {
 	String assignDiskSize;
 	/** 커뮤니티 타입*/
 	String c_Type;
+	/** 게시판 글 수*/
+	int itemCnt;
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}
@@ -480,6 +482,12 @@ public class CommunityClubVO {
 	}
 	public void setC_Type(String c_Type) {
 		this.c_Type = c_Type;
+	}
+	public int getItemCnt() {
+		return itemCnt;
+	}
+	public void setItemCnt(int itemCnt) {
+		this.itemCnt = itemCnt;
 	}
 	
 }
