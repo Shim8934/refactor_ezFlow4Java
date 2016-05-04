@@ -52,6 +52,9 @@ public class EzApprovalGController {
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	/**
+	 * 전자결재G 메인화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/apprGMain.do")
 	public String apprGMain(HttpServletRequest request, Model model){
 		int listType = 1;
@@ -65,6 +68,9 @@ public class EzApprovalGController {
 		return "ezApprovalG/apprGMain";
 	}
 
+	/**
+	 * 전자결재G LEFT화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/apprGLeft.do")
 	public String apprGLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		String viewLeftCount = config.getProperty("config.APPROVLEFTCOUNT");
@@ -120,6 +126,9 @@ public class EzApprovalGController {
 		return "ezApprovalG/apprGLeft";
 	}
 
+	/**
+	 * 전자결재G 서브타이틀 실행 Method
+	 */
 	private void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
 		String propList = "extensionAttribute4;department;description;title;title2;description2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
@@ -189,6 +198,9 @@ public class EzApprovalGController {
         referenceTemp.set(1, isSubTitle);
 	}
 	
+	/**
+	 * 전자결재G 우측리스트 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/aprManage.do")
 	public String aprManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		String openYear = config.getProperty("config.Site_OpenYear");
@@ -229,6 +241,9 @@ public class EzApprovalGController {
 		return "ezApprovalG/apprGManage";
 	}
 	
+	/**
+	 * 전자결재G 결재리스트 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getAprDocList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
@@ -330,6 +345,9 @@ public class EzApprovalGController {
 		return resultXML;
 	}
 	
+	/**
+	 * 전자결재G 결재라인리스트 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getLineList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
@@ -348,7 +366,7 @@ public class EzApprovalGController {
 					if (proxyUserArray.length > 1) {
 						String docList = ezApprovalGService.getAprLineInfo(docID.trim(), "1", "", "", userInfo.getCompanyID());
 						Document docXML = commonUtil.convertStringToDocument(docList);
-System.out.println(docXML.getDocumentElement().getChildNodes().getLength());
+						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
 							
 						}
