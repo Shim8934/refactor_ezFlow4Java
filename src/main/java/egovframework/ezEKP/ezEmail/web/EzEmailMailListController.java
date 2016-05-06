@@ -39,6 +39,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -71,6 +72,9 @@ public class EzEmailMailListController {
     @Resource(name="EzEmailService")
     private EzEmailService ezEmailService;        
 	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+    
     /**
 	 * 메일 리스트화면 호출 함수
 	 */
@@ -299,27 +303,7 @@ public class EzEmailMailListController {
 			String addressStr = "";
 			Address[] addresses = null;
 			if (!viewSelectIndex.equals("3")) {
-				addresses = message.getFrom();
-				if (addresses != null) {
-					addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
-					if (addressStr == null) {
-						addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
-					}
-					else {
-						// decoding is needed for the name part
-						// ex) =?UTF-8?B?44WC44WC?=
-						//     =?utf-8?B?Z2lzYTE=?=
-						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
-						addressStr = MimeUtility.decodeText(addressStr);
-					}
-				}			
-				// in case there is only a name with no email address
-				else {
-					String[] fromHeaders = message.getHeader("From");
-					if (fromHeaders != null) {
-						addressStr = MimeUtility.decodeText(fromHeaders[0]);
-					}
-				}
+				addressStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
 			}
 			// in case of Sent mailbox
 			else {

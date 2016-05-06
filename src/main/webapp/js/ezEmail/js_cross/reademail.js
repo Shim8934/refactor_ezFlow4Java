@@ -102,20 +102,7 @@ function reply_onClick() {
     var pLeft = (pwidth - 890) / 2;
 
     var URL = "";
-    if (navigator.userAgent.indexOf("MSIE") != -1) {
-        if (pNoneActiveX == "YES")
-            URL = "mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
-        else {
-            if (pUse_Editor == "")
-                URL = "mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
-            else
-                URL = "mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
-        }
-        var newwin = window.open(URL, "noMeanReply", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-    }
-    else if (navigator.userAgent.indexOf("MSIE") == -1) {
-            window.location.href = "mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";        
-    }
+    window.location.href = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";        
 }
 
 function allreply_onClick() {

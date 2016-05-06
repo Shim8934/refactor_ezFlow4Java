@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -10,10 +11,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
@@ -56,23 +60,99 @@ public class EzEmailUtil {
 		return strSize;
 	}
 	
+	public String getFromNameOrAddressOfMessage(Message message) {
+		String addressStr = "";
+		
+		try {
+			Address[] addresses = message.getFrom();
+			
+			if (addresses != null) {
+				addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
+				if (addressStr == null) {
+					addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
+				}
+				else {
+					// decoding is needed for the name part
+					// ex) =?UTF-8?B?44WC44WC?=
+					//     =?utf-8?B?Z2lzYTE=?=
+					//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
+					addressStr = MimeUtility.decodeText(addressStr);
+				}
+			}			
+			// in case there is only a name with no email address
+			else {
+				String[] fromHeaders = message.getHeader("From");
+				if (fromHeaders != null) {
+					addressStr = MimeUtility.decodeText(fromHeaders[0]);
+				}
+			}			
+		} catch (MessagingException e) {
+		} catch (UnsupportedEncodingException e) {			
+		}		
+		
+		return addressStr;
+	}
+	
+	public String getFullFromAddressOfMessage(Message message) {
+		String fullFromAddressStr = "";
+		
+		try {
+			Address[] addresses = message.getFrom();			
+			StringBuilder addressBuilder = new StringBuilder();
+			
+			if (addresses != null) {
+				Address address = addresses[0];
+				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
+				String name = ((InternetAddress)address).getPersonal(); // name part
+				if (name != null) {
+					name = MimeUtility.decodeText(name);
+					
+					addressBuilder.append(name + " <" + addressStr + ">");					
+				}
+				else {
+					addressBuilder.append("<" + addressStr + ">");
+				}				
+				
+				fullFromAddressStr = addressBuilder.toString();
+			}			
+			// in case there is only a name with no email address
+			else {
+				String[] fromHeaders = message.getHeader("From");
+				if (fromHeaders != null) {
+					fullFromAddressStr = MimeUtility.decodeText(fromHeaders[0]);
+				}
+			}			
+		} catch (MessagingException e) {
+		} 
+		catch (UnsupportedEncodingException e) {			
+		}		
+		
+		return fullFromAddressStr;
+	}
+	
 	/**
 	 * returns a comma separated string list containing the passed-in addresses. 
 	 */
-	public String getStringListFromAddresses(Address[] addresses) {
+	public String getStringListOfAddresses(Address[] addresses) {
 		String stringList = "";
 		
 		if (addresses != null) {
 			StringBuilder addressBuilder = new StringBuilder();
 			for (Address address : addresses) {
+				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
 				String name = ((InternetAddress)address).getPersonal(); // name part
-				try {
-					name = MimeUtility.decodeText(name);
-				} catch (UnsupportedEncodingException e) {
+				if (name != null) {
+					try {
+						name = MimeUtility.decodeText(name);
+					} catch (UnsupportedEncodingException e) {
+					}
+					
+					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
-				String addressStr = ((InternetAddress)address).getAddress(); // email address part
+				else {
+					addressBuilder.append("<" + addressStr + ">");
+				}
 				
-				addressBuilder.append(name + " <" + addressStr + ">");
 				addressBuilder.append(",");
 			}
 			stringList = addressBuilder.toString();
@@ -274,6 +354,35 @@ public class EzEmailUtil {
 			e.printStackTrace();
 		}
 		return resultList;
+	}
+	
+	public boolean copyInlineParts(Part src, Multipart dest) throws MessagingException, IOException {
+		if (src.isMimeType("multipart/related")) {
+			Multipart mp = (Multipart)src.getContent();
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				BodyPart p = mp.getBodyPart(i);
+				
+				if (p.getDisposition() != null) {
+					dest.addBodyPart(p);
+				}
+			}
+			
+			return true;
+		} 
+		else if(src.isMimeType("multipart/*")){
+			Multipart mp = (Multipart)src.getContent();
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				BodyPart p = mp.getBodyPart(i);
+				
+				if (copyInlineParts(p, dest)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

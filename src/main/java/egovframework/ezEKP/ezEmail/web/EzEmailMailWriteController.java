@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -350,11 +351,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //            }
             
             body = EgovStringUtil.getSpclStrCnvr("<DIV style='font-size:12px;'><br><br><DIV id='MailSign'>" + resultXML + "</div><br></DIV>");
-        } else if (!_url.equals("")) {
+        } 
+        // when _url is passed in from the client
+        else if (!_url.equals("")) {
         	mailSignSel = "0";
         	
     		long uid = 0;
 			int index = _url.lastIndexOf("/");			
+			
+			// separate the passed-in url into a folder path and a message uid
 			if (index != -1) {
 				folderPath = _url.substring(0, index);
 				url = _url.substring(index + 1);
@@ -362,30 +367,45 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 			logger.debug("folderPath=" + folderPath + ",url=" + url);
         	
-        	String draftFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
-        	if (folderPath.equals(draftFolderName) && _cmd.equals("EDIT")) {
-        		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-        				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
- 
-        		Folder draftFolder = ia.getFolder(draftFolderName);
-        		draftFolder.open(Folder.READ_ONLY);       
-				Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(uid);
-				if (draftMessage != null) {  
-					Address[] addresses = draftMessage.getRecipients(Message.RecipientType.TO);
-					to = ezEmailUtil.getStringListFromAddresses(addresses);
-					addresses = draftMessage.getRecipients(Message.RecipientType.CC);
-					cc = ezEmailUtil.getStringListFromAddresses(addresses);
-					addresses = draftMessage.getRecipients(Message.RecipientType.BCC);
-					bcc = ezEmailUtil.getStringListFromAddresses(addresses);
-					subject = draftMessage.getSubject();
+    		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+    				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+    		Folder orgFolder = ia.getFolder(folderPath);
+    		orgFolder.open(Folder.READ_ONLY);       
+    		
+			// retrieve the Drafts folder name
+        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+    		
+    		// retrieve the specified message.
+			Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+
+			if (orgMessage != null) {				        	
+	        	// in case of editing a message in Drafts folder.
+	        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
+					// retrieve the TO addresses from the message.
+					Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+					to = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the CC addresses from the message.
+					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+					cc = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the BCC addresses from the message.
+					addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+					bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the subject from the message.
+					subject = orgMessage.getSubject();
 					subject = (subject != null) ? subject : "";
 					
+					// analyze the message and retrieve the attached file list.
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(draftMessage, folderPath, uid, -1, attachedFileList);					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
 					tempBody = bodyInfoList.get(0);
 					
 					if (attachedFileList.size() > 0) {
-		                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");					
+		                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+		                
 						for (int i = 0; i < attachedFileList.size(); i++) {
 							Map<String, String> fileInfo = attachedFileList.get(i);
 							
@@ -398,14 +418,88 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
 			                attachXmlList.append("</NODE>");
 						}
+						
 		                attachXmlList.append("</NODES></ROOT>");						
 		                attach = attachXmlList.toString();	
-					}
+					}				
 					
-					draftFolder.close(true);
-					ia.close();				
-				}
-        	}
+					orgFolder.close(true);
+	        	}
+	        	// in case of replying
+	        	else if (_cmd.equals("REPLY")) {
+	        		Message replyMessage = orgMessage.reply(false);	        		
+	        		replyMessage.setFlag(Flags.Flag.SEEN, true);	        			        		
+
+	        		MimeMultipart relatedPart = new MimeMultipart("related");
+	        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+	        			replyMessage.setContent(relatedPart);
+	        		}
+	        		else {
+	        			replyMessage.setText("placeholder");
+	        		}	        		
+
+					// retrieve the TO addresses from the reply message.
+					Address[] addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+					to = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the CC addresses from the reply message.
+					addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+					cc = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the BCC addresses from the reply message.
+					addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
+					bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the subject from the message.
+					subject = orgMessage.getSubject();
+					subject = (subject != null) ? subject : "";
+					String reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+					if (!subject.startsWith(reStr)) {
+						subject = reStr + ": " + subject;
+					}
+	        		
+					// retrieve the TO addresses from the original message.
+					addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+					String orgTo = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+					// retrieve the CC addresses from the original message.
+					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+					String orgCc = ezEmailUtil.getStringListOfAddresses(addresses);
+					
+		            StringBuilder sb = new StringBuilder();
+		            sb.append("<hr tabindex=\"-1\">");
+		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+		            
+		            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( Z )");
+		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate())));
+		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+		            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessage.getSubject())));
+					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, null);					
+					String tmphtmlbody = bodyInfoList.get(0);
+		            
+		            bodyValue = sb.toString() + tmphtmlbody;		            
+	    			
+	        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+	        		draftsFolder.open(Folder.READ_WRITE);       
+	        		
+	        		long draftUID = 0;
+	        		// TODO: 에러 발생 시 처리
+	        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
+	        		if (uids != null && uids[0] != null) {
+	        			draftUID = uids[0].uid;
+	        		} 	        		
+	        		url = String.valueOf(draftUID);
+	        		
+	        		logger.debug("draftUID=" + draftUID);
+	        		
+	        		draftsFolder.close(true);
+	        	}
+			}
+        	        	
+			orgFolder.close(true);			
+			ia.close();        	
         }
         
 //        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")))
@@ -980,7 +1074,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -1387,6 +1481,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 				
 				if (oldMessage != null) {
+					// copy existing headers that are needed.
+					String[] headers = oldMessage.getHeader("References");
+					if (headers != null) {
+						message.setHeader("References", headers[0]);
+					}
+					headers = oldMessage.getHeader("In-Reply-To");
+					if (headers != null) {
+						message.setHeader("In-Reply-To", headers[0]);
+					}
+					
 					if (oldMessage.getContent() instanceof Multipart) {
 						Multipart mp = (Multipart)oldMessage.getContent();
 						int count = mp.getCount();
@@ -1410,11 +1514,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 									relatedPart.removeBodyPart(0);
 								}
 								
-								Multipart replatedPartContent = (Multipart)p.getContent();
-								int relatedPartCount = replatedPartContent.getCount();
+								Multipart relatedPartContent = (Multipart)p.getContent();
+								int relatedPartCount = relatedPartContent.getCount();
 								BodyPart relatedSubPart = null;
 								for (int j = 0; j < relatedPartCount; j++) {
-									relatedSubPart = replatedPartContent.getBodyPart(j);
+									relatedSubPart = relatedPartContent.getBodyPart(j);
 									if (relatedSubPart.getDisposition() != null) {
 										relatedPart.addBodyPart(relatedSubPart);
 									}
@@ -1684,6 +1788,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String password  = userInfo.get(1);
 		
 		String uidStr = request.getParameter("itemid");
+		logger.debug("uidStr=" + uidStr);
+		
 		long uid = 0;
 		if (uidStr != null && !uidStr.equals("")) {
 			uid = Long.parseLong(uidStr);
@@ -1695,6 +1801,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 		folder.open(Folder.READ_WRITE);
 		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+		logger.debug("message=" + message);
+		
 		if (message != null) {
 			message.setFlag(Flags.Flag.DELETED, true);
 		}

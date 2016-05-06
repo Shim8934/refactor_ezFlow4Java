@@ -90,15 +90,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 
-		// retrieve the passed in parameters		
+		// retrieve the passed in parameters
 		String url = request.getParameter("URL");
 		long uid = 0;
 		String folderPath = null;
-		if(url != null){
+		if (url != null) {
 			int index = url.lastIndexOf("/");
-			if(index != -1){
+			
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
 				folderPath = url.substring(0, index);
-				uid = Long.parseLong(url.substring(index+1));
+				uid = Long.parseLong(url.substring(index + 1));
 			}
 		}
 		
@@ -309,6 +311,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
+		model.addAttribute("url", url);
 		model.addAttribute("toStr", toStr);
 		model.addAttribute("toHiddenStr", toHiddenStr);
 		model.addAttribute("ccStr", ccStr);
@@ -733,7 +736,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String url = request.getParameter("iptURL");
 		long uid = 0;
 		String folderPath = null;
-		if(url != null){
+		if (url != null) {
 			int index = url.lastIndexOf(commonUtil.separator);
 			if(index != -1){
 				folderPath = url.substring(0, index);
@@ -762,6 +765,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		ia.close();
+		
+		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);

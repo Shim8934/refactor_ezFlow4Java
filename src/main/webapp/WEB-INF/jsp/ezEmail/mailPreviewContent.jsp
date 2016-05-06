@@ -14,7 +14,7 @@
 	    <style type="text/css">PRE {font-size:small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script language="javascript" type="text/javascript">
-	        var g_paramURL = decodeURIComponent('${System.Web.HttpUtility.UrlEncode(url)}');
+	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
 		    function window_onload()
@@ -184,19 +184,9 @@
 	                oForm.submit();
 	            }
 	            else if (Division == "RE") {
-	                var newwin = window.open("", "Pre_reply_mail", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                if (CrossYN() || pNoneActiveX == "YES") {
-	                    oForm.action = "mail_write_Cross.aspx?cmd=REPLY";                    
-	                }
-	                else {
-	                    if (editor == "")
-	                        oForm.action = "mail_write_Cross.aspx?cmd=REPLY";
-	                    else
-	                        oForm.action = "mail_write_Cross.aspx?cmd=REPLY";
-	                }
-	                oForm.target = "Pre_reply_mail";
-	                oForm.submit();
-	                return;
+	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                newwin.focus();
 	            }
 	            else if (Division = "FW") {
 	                var newwin = window.open("", "Pre_transmission", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");

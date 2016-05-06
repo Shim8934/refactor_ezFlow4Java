@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript">	
-		    var g_paramURL = decodeURIComponent('${System.Web.HttpUtility.UrlEncode(_url)}');
+		    var g_paramURL = "${url}";
 			var g_expath = "exchange";
 			var g_servername = ""; 
 			var g_userID = "${ userinfo.EmailID }";
