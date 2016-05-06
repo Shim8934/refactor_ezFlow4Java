@@ -41,6 +41,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
@@ -421,13 +422,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 						
 		                attachXmlList.append("</NODES></ROOT>");						
 		                attach = attachXmlList.toString();	
-					}				
-					
-					orgFolder.close(true);
+					}									
 	        	}
 	        	// in case of replying
-	        	else if (_cmd.equals("REPLY")) {
-	        		Message replyMessage = orgMessage.reply(false);	        		
+	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+	        		Message replyMessage = null; 
+	        				
+	        		if (_cmd.equals("REPLY")) {
+	        			replyMessage = orgMessage.reply(false);
+	        		}
+	        		else {
+	        			replyMessage = orgMessage.reply(true);
+	        		}
 	        		replyMessage.setFlag(Flags.Flag.SEEN, true);	        			        		
 
 	        		MimeMultipart relatedPart = new MimeMultipart("related");
@@ -1517,11 +1523,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 								Multipart relatedPartContent = (Multipart)p.getContent();
 								int relatedPartCount = relatedPartContent.getCount();
 								BodyPart relatedSubPart = null;
+								
 								for (int j = 0; j < relatedPartCount; j++) {
 									relatedSubPart = relatedPartContent.getBodyPart(j);
-									if (relatedSubPart.getDisposition() != null) {
-										relatedPart.addBodyPart(relatedSubPart);
-									}
+									
+									if (relatedSubPart instanceof MimePart) {
+										if (((MimePart)relatedSubPart).getContentID() != null) {
+											relatedPart.addBodyPart(relatedSubPart);						
+										}
+									}				
 								}
 								
 								String bodyContent = content.getContent().toString();

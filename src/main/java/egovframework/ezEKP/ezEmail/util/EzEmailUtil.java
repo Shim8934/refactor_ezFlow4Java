@@ -363,9 +363,11 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p.getDisposition() != null) {
-					dest.addBodyPart(p);
-				}
+				if (p instanceof MimePart) {
+					if (((MimePart)p).getContentID() != null) {
+						dest.addBodyPart(p);						
+					}
+				}				
 			}
 			
 			return true;

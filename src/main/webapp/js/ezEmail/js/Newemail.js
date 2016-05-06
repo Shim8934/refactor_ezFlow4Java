@@ -231,16 +231,7 @@ function all_reply_mail_onclick() {
             conWidth = 890;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - 890) / 2;
-        var pURI;
-        if (CrossYN() || pNoneActiveX == "YES") {
-            pURI = "mail_write_Cross.aspx?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
-        }
-        else {
-            if (pUse_Editor == "")
-                pURI = "mail_write.aspx?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
-            else
-                pURI = "mail_write_IE.aspx?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
-        }        
+        var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }

@@ -170,18 +170,9 @@
 	            oForm.appendChild(oInputHidden);
 	            window.document.body.appendChild(oForm);
 	            if (Division == "ALLRE") {
-	                var newwin = window.open("", "Pre_all_reply", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                if (CrossYN() || pNoneActiveX == "YES") {
-	                        oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-	                }
-	                else {
-	                    if(editor == "")
-	                        oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-	                    else
-	                        oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-	                }
-	                oForm.target = "Pre_all_reply";
-	                oForm.submit();
+	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                newwin.focus();	            	
 	            }
 	            else if (Division == "RE") {
 	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
