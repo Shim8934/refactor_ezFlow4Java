@@ -344,7 +344,28 @@ public class EzEmailMailListController {
 			// read/unread
 			int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 			sb.append(String.format("<read><![CDATA[%d]]></read>", readFlag));
-			sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
+						
+			if (message.isSet(Flags.Flag.ANSWERED)) {
+				sb.append("<contentclass><![CDATA[REPLY]]></contentclass>");
+			}
+			else {
+				boolean isForwarded = false;
+				String[] flags = message.getFlags().getUserFlags();				
+				for (String flag : flags) {
+					if (flag.equals("$Forwarded")) {
+						isForwarded = true;
+						break;
+					}
+				}
+				
+				if (isForwarded) {
+					sb.append("<contentclass><![CDATA[FORWARD]]></contentclass>");
+				}
+				else {
+					sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
+				}
+			}
+			
 			sb.append("</response>");
 		}
 		sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 

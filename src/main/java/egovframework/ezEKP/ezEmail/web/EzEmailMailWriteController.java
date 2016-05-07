@@ -318,6 +318,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         if (request.getParameter("URL") != null) {
         	_url = request.getParameter("URL");
         }
+        urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
         
         if (_url.equals("") && _cmd.equals("NEW")) {
@@ -435,6 +436,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		else {
 	        			replyMessage = orgMessage.reply(true);
 	        		}
+	        		
+	        		// ANSWERED flag needs to be cleared since the above reply method sets it.
+	        		orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 	        		
 	        		replyMessage.setFlag(Flags.Flag.SEEN, true);	        			        		
 
@@ -1821,6 +1825,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		folder.copyMessages(new Message[]{draftMessage}, sendFolder);
 	        		draftMessage.setFlag(Flags.Flag.DELETED, true);	        		
 	            }
+	            
+	            // set the ANSWERED flag of the original message to indicate it has been replied.
+	            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
+	    			int index = orgUrl.lastIndexOf("/");			
+	    			
+	    			if (index != -1) {
+	    				String orgMsgFolderPath = orgUrl.substring(0, index);
+	    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
+
+	    				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+	    				
+	    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+	    		        orgMsgFolder.open(Folder.READ_WRITE);
+	    				
+	    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+    		        	Flags forwardedFlag = new Flags("$Forwarded");
+    		        	
+	    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
+	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+	    		        	orgMessage.setFlags(forwardedFlag, false);
+	    		        }
+	    		        else {
+	    		        	orgMessage.setFlags(forwardedFlag, true);
+	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+	    		        }
+	    		        orgMsgFolder.close(true);
+	    			}
+	            }
+	            
 	            rtnStatus = "OK";
 	        }
         }
