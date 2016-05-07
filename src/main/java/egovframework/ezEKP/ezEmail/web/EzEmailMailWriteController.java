@@ -425,41 +425,79 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					}									
 	        	}
 	        	// in case of replying
-	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
 	        		Message replyMessage = null; 
-	        				
-	        		if (_cmd.equals("REPLY")) {
+	        		
+	        		// reply call is needed to create 'References' & 'In-Reply-To' headers.
+	        		if (_cmd.equals("REPLY") || _cmd.equals("FORWARD")) {
 	        			replyMessage = orgMessage.reply(false);
 	        		}
 	        		else {
 	        			replyMessage = orgMessage.reply(true);
 	        		}
+	        		
 	        		replyMessage.setFlag(Flags.Flag.SEEN, true);	        			        		
 
-	        		MimeMultipart relatedPart = new MimeMultipart("related");
-	        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
-	        			replyMessage.setContent(relatedPart);
+	        		if (_cmd.equals("FORWARD")) {
+	        			if (orgMessage.isMimeType("multipart/related")) {
+			        		MimeMultipart relatedPart = new MimeMultipart("related");
+			        		
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			replyMessage.setContent(relatedPart);
+			        		}	        			
+			        		else {
+			        			replyMessage.setText("placeholder");
+			        		}	        					        		
+	        			}
+	        			else if (orgMessage.isMimeType("multipart/*")) {
+			                MimeMultipart mixedPart = new MimeMultipart();
+			                
+			                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+			                
+			                replyMessage.setContent(mixedPart);	    
+	        			}
+	        			else {
+	        				replyMessage.setText("placeholder");
+	        			}
 	        		}
 	        		else {
-	        			replyMessage.setText("placeholder");
-	        		}	        		
+		        		MimeMultipart relatedPart = new MimeMultipart("related");
+		        		
+		        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+		        			replyMessage.setContent(relatedPart);
+		        		}
+		        		else {
+		        			replyMessage.setText("placeholder");
+		        		}	        		
+	        		}
 
-					// retrieve the TO addresses from the reply message.
-					Address[] addresses = replyMessage.getRecipients(Message.RecipientType.TO);
-					to = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the CC addresses from the reply message.
-					addresses = replyMessage.getRecipients(Message.RecipientType.CC);
-					cc = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the BCC addresses from the reply message.
-					addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
-					bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+	        		Address[] addresses = null;
+	        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+						// retrieve the TO addresses from the reply message.
+						addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+						to = ezEmailUtil.getStringListOfAddresses(addresses);
+						
+						// retrieve the CC addresses from the reply message.
+						addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+						cc = ezEmailUtil.getStringListOfAddresses(addresses);
+						
+						// retrieve the BCC addresses from the reply message.
+						addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
+						bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+	        		}
 					
 					// retrieve the subject from the message.
 					subject = orgMessage.getSubject();
 					subject = (subject != null) ? subject : "";
-					String reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+					String reStr = ""; 
+							
+					if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {		
+						reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+					}
+					else if (_cmd.equals("FORWARD")) {
+						reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+					}
+					
 					if (!subject.startsWith(reStr)) {
 						subject = reStr + ": " + subject;
 					}
@@ -482,11 +520,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 		            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessage.getSubject())));
 					
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, null);					
+					// analyze the message and retrieve the attached file list.
+					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
 					String tmphtmlbody = bodyInfoList.get(0);
 		            
 		            bodyValue = sb.toString() + tmphtmlbody;		            
 	    			
+		            if (_cmd.equals("FORWARD")) {
+						if (attachedFileList.size() > 0) {
+			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+			                
+							for (int i = 0; i < attachedFileList.size(); i++) {
+								Map<String, String> fileInfo = attachedFileList.get(i);
+								
+				                attachXmlList.append("<NODE>");
+				                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
+				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+				                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+				                attachXmlList.append("</NODE>");
+							}
+							
+			                attachXmlList.append("</NODES></ROOT>");						
+			                attach = attachXmlList.toString();				                
+						}											            	
+		            }
+		            
 	        		Folder draftsFolder = ia.getFolder(draftsFolderName);
 	        		draftsFolder.open(Folder.READ_WRITE);       
 	        		
@@ -1546,6 +1608,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 								if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
 									hasAttach = true;
 								}
+							}
+							else if (p.isMimeType("message/*")) {
+								mixedPart.addBodyPart(p);
+								hasAttach = true;
+							}							
+							else {
+								// there are cases where an in-line image part doesn't have
+								// a Content-Disposition header, but has a Content-ID header.
+								if (p instanceof MimePart) {
+									if (((MimePart)p).getContentID() != null) {
+										mixedPart.addBodyPart(p);			
+									}
+								}												
 							}
 						}
 						

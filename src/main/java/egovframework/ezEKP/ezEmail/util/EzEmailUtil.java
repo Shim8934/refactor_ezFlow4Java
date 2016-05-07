@@ -360,19 +360,21 @@ public class EzEmailUtil {
 		if (src.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
+			boolean isAdded = false;
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
 					if (((MimePart)p).getContentID() != null) {
-						dest.addBodyPart(p);						
+						dest.addBodyPart(p);	
+						isAdded = true;
 					}
 				}				
 			}
 			
-			return true;
+			return isAdded;
 		} 
-		else if(src.isMimeType("multipart/*")){
+		else if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
@@ -383,6 +385,22 @@ public class EzEmailUtil {
 				}
 			}
 		}
+		
+		return false;
+	}
+	
+	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
+		if (src.isMimeType("multipart/*")) {
+			Multipart mp = (Multipart)src.getContent();
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				BodyPart p = mp.getBodyPart(i);
+				
+				dest.addBodyPart(p);										
+			}
+			
+			return true;
+		} 
 		
 		return false;
 	}

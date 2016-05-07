@@ -180,17 +180,9 @@
 	                newwin.focus();
 	            }
 	            else if (Division = "FW") {
-	                var newwin = window.open("", "Pre_transmission", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                if (CrossYN() || pNoneActiveX == "YES") {
-	                        oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-	                } else {
-	                    if (editor == "")
-	                        oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-	                    else
-	                        oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-	                }
-	                oForm.target = "Pre_transmission";
-	                oForm.submit();
+	            	var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                newwin.focus();
 	            }
 	
 	        }

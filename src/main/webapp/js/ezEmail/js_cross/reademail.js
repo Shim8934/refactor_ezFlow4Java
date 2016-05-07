@@ -120,20 +120,8 @@ function pass_onClick() {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-    if (navigator.userAgent.indexOf("MSIE") != -1) {
-        if (pNoneActiveX == "YES")
-            var newwin = window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD", "pass", feature);
-        else {
-            if (pUse_Editor == "")
-                var newwin = window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD", "pass", feature);
-            else
-                var newwin = window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD", "pass", feature);
-        }
-    }
-    else if (navigator.userAgent.indexOf("MSIE") == -1) {
-            window.location.href = "mail_write_Cross.aspx?url=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
-    }
+    
+    window.location.href = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
 }
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {
