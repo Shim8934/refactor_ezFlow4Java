@@ -10,6 +10,7 @@
 	<typeAlias  alias="ResGetRepDateTimesVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
 	<typeAlias  alias="ResGetScheduleListTermVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
 	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
+	<typeAlias  alias="ResBrdVO" 										type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -139,7 +140,7 @@
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="24"/>
 	</resultMap>
 	
-		<resultMap class="ResBrdListVO" 				id="resBrdListVO">
+	<resultMap class="ResBrdListVO" 				id="resBrdListVO">
 		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="1"/>
 		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue="0"	/>
 		<result property="brdCompany"			column="BRD_COMPANY"		columnIndex="3"/>
@@ -164,6 +165,26 @@
 		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="22"/>
 		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue="0"/>
+	</resultMap>
+	
+	<resultMap class="ResBrdVO" 					id="resBrdVO">
+		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="4"/>
+		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="5"	/>
+		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="6"/>
+		<result property="ownDeptNm2"		column="OWNDEPTNM2"			columnIndex="7"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="8"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="9" />
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="10"/>
+		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="11"/>
+		<result property="ownerPosition2"		column="OWNERPOSITION2"	columnIndex="12" 		nullValue="NULL"/>
+		<result property="ownerCall"				column="OWNERCALL"			columnIndex="13"/>
+		<result property="resLocation"			column="RESLOCATION"			columnIndex="14"/>
+		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="17"/>
 	</resultMap>
 	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
@@ -227,6 +248,12 @@
 	<procedure id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETBRDCNT(#v_PBRDID#, #v_PCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETBRD(#v_pBrdID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
