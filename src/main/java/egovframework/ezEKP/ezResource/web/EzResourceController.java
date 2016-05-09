@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -32,6 +33,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
+import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -180,7 +182,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String callNodeTreeData(@RequestBody String xmlReq,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectFlag = "";
-		
+System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");		
 		if(req.getParameter("flag") != null) {
 			selectFlag = req.getParameter("flag");
 		}
@@ -232,8 +234,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 스케줄 정보 호출 함수
 	 */
-	@ResponseBody
+	
 	@RequestMapping(value = "/ezResource/scheduleGet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
 	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String reVal = "";
@@ -599,7 +602,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		totalCnt = ezResourceService.getBrdCnt(Integer.parseInt(brdID), userInfo.getCompanyID());
-		
+
 		if (totalCnt > 0) {
 			totalPage = totalCnt / pageSize;
 		}
@@ -611,6 +614,11 @@ public class EzResourceController extends EgovFileMngUtil {
 				limitLine = 15;
 			}
 		}
+		
+		if (((totalPage * pageSize) != totalCnt) && ((totalCnt % pageSize) != 0)) {
+			totalPage = totalPage + 1;
+		}
+		
 		if (Integer.parseInt(curPage.trim()) > totalPage) {
 			curPage = String.valueOf(totalPage);
 		}
@@ -620,8 +628,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			curPage = "1";
 			totalPage = 1;
 		}
-		
-		int topCount = Integer.parseInt(curPage.trim()) * pageSize; 
+
+		int topCount = (Integer.parseInt(curPage.trim()) * pageSize);
+
 		String brdNmStr = "";
 		String ownDeptNm = "";
 		String ownerNm = "";
@@ -638,8 +647,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ownerPosition = "OwnerPosition" + userInfo.getLang();
 		}
 		
-		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(5, Integer.parseInt(brdID), userInfo.getCompanyID(), ownDeptNm, ownerNm, ownerPosition, brdNmStr);
-System.out.println("size:"+resBrdList.size());
+		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(topCount, Integer.parseInt(brdID), userInfo.getCompanyID(), ownDeptNm, ownerNm, ownerPosition, brdNmStr);
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
@@ -654,6 +662,74 @@ System.out.println("size:"+resBrdList.size());
 		model.addAttribute("totalCnt", totalCnt);
 		
 		return "/ezResource/resViewResList";
+	}
+	
+	@RequestMapping(value = "/ezResource/viewClsItem.do")
+	public String viewClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, HttpServletResponse resp, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String strBrdNm = "";
+		String strOwnDeptNm = "";
+		String strOwnerNm = "";
+		String strOwnerPosition = "";
+		String strBrdID = "";
+		String strBrdExplain = "";
+		String strResLocation = "";
+		String strOwnDeptID = "";
+		String ownerCall = "";
+		String strOwnerID = "";
+		String strMakeDate = "";
+		String strApproveFlag = "";
+		
+		try {
+			if (!req.getParameter("brdID").equals("")) {
+				brdID = req.getParameter("brdID");
+			}
+			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID());
+			strBrdID = resBrd.getBrdID();
+			strBrdExplain = resBrd.getBrdExplain();
+			strResLocation = resBrd.getResLocation();
+			strOwnDeptID = resBrd.getOwnDeptID();
+			strOwnerID = resBrd.getOwnerID();
+			ownerCall = resBrd.getOwnerCall();
+			
+			if (userInfo.getLang().equals("1")) {
+				strBrdNm = resBrd.getBrdNm();
+				strOwnDeptNm = resBrd.getOwnDeptNm();
+				strOwnerNm = resBrd.getOwnerNm();
+				strOwnerPosition = resBrd.getOwnerPosition();
+			} else {
+				strBrdNm = resBrd.getBrdNm2();
+				strOwnDeptNm = resBrd.getOwnDeptNm2();
+				strOwnerNm = resBrd.getOwnerNm2();
+				strOwnerPosition = resBrd.getOwnerPosition2();
+			}
+			strMakeDate = resBrd.getMakeDate() + " " + getCurrentDate();
+			strApproveFlag = resBrd.getApproveFlag();
+			
+			/*if (strApproveFlag.equals("1")) {
+				resp.getWriter().write("&nbsp;" + egovMessageSource.getMessage("ezQuestion.t161", locale));
+			} else {
+				resp.getWriter().write("&nbsp;" + egovMessageSource.getMessage("ezQuestion.t162", locale));
+			}*/
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("strBrdID", strBrdID);
+		model.addAttribute("strBrdNm", strBrdNm);
+		model.addAttribute("brdExplain", strBrdExplain);
+		model.addAttribute("ownDeptNm", strOwnDeptNm);
+		model.addAttribute("ownDeptID", strOwnDeptID);
+		model.addAttribute("ownerID", strOwnerID);
+		model.addAttribute("ownerNm", strOwnerNm);
+		model.addAttribute("ownerPosition", strOwnerPosition);
+		model.addAttribute("ownerCall", ownerCall);
+		model.addAttribute("resLocation", strResLocation);
+		model.addAttribute("makeDate", strMakeDate.subSequence(0, 10));
+		model.addAttribute("approveFlag", strApproveFlag);
+		
+		return "/ezResource/viewClsItem";
 	}
 	
 	public String getAdminFlag(String companyID, String brdID, String userID) throws Exception {
@@ -2103,6 +2179,19 @@ System.out.println("size:"+resBrdList.size());
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	//TODO HH:mm:ss 형식의 현재시간 출력 
+	public String getCurrentDate() {
+		Calendar aCalendar = Calendar.getInstance();
+		String strDate = "";
+		
+		int hour = aCalendar.get(Calendar.HOUR_OF_DAY);
+		int min = aCalendar.get(Calendar.MINUTE);
+		int sec = aCalendar.get(Calendar.SECOND);
+		
+		strDate = hour + ":" + min + ":" + sec;
+		return strDate;
 	}
 	
 }
