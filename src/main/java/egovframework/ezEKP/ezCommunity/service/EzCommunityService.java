@@ -5,10 +5,15 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
 	
@@ -27,6 +32,10 @@ public interface EzCommunityService {
 	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 	
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception;
+	
+	public List<CommunityBoardInfoVO> copHomeBoardGet(String code) throws Exception;
+	
+	public List<CommunityBoardItemVO> copHomeBoardItemGet(String boardID) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -37,6 +46,16 @@ public interface EzCommunityService {
 	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception;
 	
 	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception;
+	
+	public CommunityClubVO aspCommInfoGet1(String code) throws Exception;
+	
+	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception;
+	
+	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id) throws Exception;
+	
+	public CommunityBoardPropertyVO getACL(String pBoardID, String pAccessID) throws Exception;
+
+	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
 
@@ -74,6 +93,18 @@ public interface EzCommunityService {
 	
 	public String commHomeGet4(String code) throws Exception;
 	
+	public String checkIfLeafBoard(String pBoardID) throws Exception;
+	
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
+	
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception;
+	
+	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception;
+
+	public String getNewItemListCount(String id) throws Exception;
+
+	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
+
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -109,12 +140,8 @@ public interface EzCommunityService {
 	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
-
-	public CommunityClubVO aspCommInfoGet1(String code) throws Exception;
 	
-	public String checkIfLeafBoard(String pBoardID) throws Exception;
-	
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
+	public String getBoardTotalItemCount(String pBoardID) throws Exception;
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

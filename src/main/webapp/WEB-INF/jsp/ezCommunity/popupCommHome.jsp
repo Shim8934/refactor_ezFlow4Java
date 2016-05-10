@@ -56,10 +56,10 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CODE", code);
 
-// 		        xmlhttp2.open("POST", "/ezCommunity/commHome/commHomeBoardInfo.do", true);
+		        xmlhttp2.open("POST", "/ezCommunity/commHome/commHomeBoardInfo.do", true);
 
-// 		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
-// 		        xmlhttp2.send(xmlDom);
+		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
+		        xmlhttp2.send(xmlDom);
 
 		        var treedom = loadXMLString(treedate);
 
@@ -99,7 +99,6 @@
 		        }
 		        if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
 		            var xmldom = loadXMLString(xmlhttp.responseText);
-		            alert(xmlhttp.responseText);
 		            
 		            var _img = document.createElement("img");
 		            _img.id = "coplogo";

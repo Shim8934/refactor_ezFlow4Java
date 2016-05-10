@@ -14,8 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
@@ -23,7 +30,9 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl implements EzCommunityService{
@@ -38,6 +47,12 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Resource(name="EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="EzBoardAdminService")
+	private EzBoardAdminService ezBoardAdminService;
+	
+	@Resource(name="EzBoardService")
+	private EzBoardService ezBoardService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -662,25 +677,29 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		int count = 0;
         String strForbiddenBoardIDList = "";
 		StringBuilder result;
-		List<CommunityBoardTreeVO> boardTreeList;
+		List<CommunityBoardTreeVO> boardTreeList = null;
 		List<CommunityBoardTreeVO> brdBoardTreeList = new ArrayList<CommunityBoardTreeVO>();
 		
-        String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode ,pSubFlag ,pSelectBy ,pExcludeBoardID, pClubNo, strLang);
-        
+		//TODO 왜 계속 null 인지 모르겟음
+/*        String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang);
+System.out.println("retValue = "+retValue);
+
         if (retValue != null && retValue.length() > 30) {
+System.out.println("@");
     		return retValue;
-        }
+        }*/
         
         String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
         String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {
         	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim());
+        	//TODO 여기서 트리가 나와야하는데 size가 0이네
         	brdBoardTreeList = brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), "", "", pMode, pSelectBy, pExcludeBoardID, pClubNo);
         	
 			if (boardTreeList.size() > 0) {
 				for (int r = 0; r < boardTreeList.size(); r++) {
-					strForbiddenBoardIDList += boardTreeList.get(r).getBoardID().split(",")[0].trim()+";";
+					strForbiddenBoardIDList += boardTreeList.get(r).getBoardID().split(";")[0].trim()+";";
 				}
 			}
         }
@@ -757,6 +776,233 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			return "TRUE";
 		}
 	}
+
+	@Override
+	public List<CommunityBoardInfoVO> copHomeBoardGet(String code) throws Exception {
+		return ezCommunityDAO.copHomeBoardGet(code);
+	}
+
+	@Override
+	public List<CommunityBoardItemVO> copHomeBoardItemGet(String boardID) throws Exception {
+		return ezCommunityDAO.copHomeBoardItemGet(boardID);
+	}
+
+	@Override
+	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception {
+		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
+		
+		if (pBoardID.equals("")) {
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
+			boardInfo.setBoardName2(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
+			return boardInfo;
+		}
+		
+		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
+		
+		for (int i=0; i<userDeptPath.split(",").length; i++) {
+			CommunityBoardPropertyVO boardInfoTemp = getACL(pBoardID, userDeptPath.split(",")[i].trim());
+			
+			if (boardInfoTemp == null) {
+				break;
+			} else {
+				boardInfo = boardInfoTemp;
+			}
+		}
+		
+		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
+		boardInfo.setSs_Board_MaxRows(17);
+		boardInfo.setSs_SearchBoard_MaxRows(10);
+		
+		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+	    	boardInfo.setAccess_FG("1");
+			boardInfo.setBoardAdmin_FG("false");
+			boardInfo.setListView_FG("true");
+			boardInfo.setRead_FG("true");
+			boardInfo.setWrite_FG("true");
+			boardInfo.setReply_FG("true");
+			boardInfo.setDelete_FG("true");
+		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+			boardInfo.setAccess_FG("1");
+			boardInfo.setBoardAdmin_FG("true");
+			boardInfo.setListView_FG("true");
+			boardInfo.setRead_FG("true");
+			boardInfo.setWrite_FG("true");
+			boardInfo.setReply_FG("true");
+			boardInfo.setDelete_FG("true");
+		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {	
+			boardInfo.setAccess_FG("1");
+			boardInfo.setBoardAdmin_FG("true");
+			boardInfo.setListView_FG("true");
+			boardInfo.setRead_FG("true");
+			boardInfo.setWrite_FG("true");
+			boardInfo.setReply_FG("true");
+			boardInfo.setDelete_FG("true");
+		} else if (boardInfo.getBoardAdmin_FG().equals("") || boardInfo.getBoardAdmin_FG() == null) {
+			boardInfo.setAccess_FG("1");
+			boardInfo.setBoardAdmin_FG("false");
+			boardInfo.setListView_FG("false");
+			boardInfo.setRead_FG("false");
+			boardInfo.setWrite_FG("false");
+			boardInfo.setReply_FG("false");
+			boardInfo.setDelete_FG("false");
+		}
+		
+		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID);
+		
+		if (strProp != null) {
+	    	boardInfo.setExpireDays(strProp.getExpireDays());
+	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
+		    boardInfo.setBoardName(strProp.getBoardName());
+		    boardInfo.setBoardName2(strProp.getBoardName2());
+			boardInfo.setReplyNotify(strProp.getReplyNotify());
+			boardInfo.setGubun(strProp.getGubun());
+			boardInfo.setUrl(strProp.getUrl());
+		}
+		
+		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
+			boardInfo.setSs_Board_MaxRows(12);
+		}
+		
+		return boardInfo;
+	}
+
+	@Override
+	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_USERINFO_USERID", id);
+		return ezCommunityDAO.boardItemListGet1(map);
+	}
+	
+	@Override
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
+		if (Integer.parseInt(brdCheckIfBoardGroupAdmin(pRootBoardID, id, deptID, companyID)) > 0) {
+			return "OK";
+		} else {
+			return "NO";
+		}
+	}
+	
+	@Override
+	public CommunityBoardPropertyVO getACL(String pBoardID, String pAccessID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pAccessID", pAccessID);
+		
+		return ezCommunityDAO.getACL(map);
+	}
+	
+	@Override
+	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) {
+		return ezCommunityDAO.getBoardProperty(pBoardID);
+	}
+
+	@Override
+	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", id);
+		map.put("v_PSORTBY", pSortBy);
+		
+		if (pEndRow > 0){
+			map.put("v_PENDROW", pEndRow);
+		} else {
+			map.put("v_PENDROW", 0);
+		}
+		
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityBoardItemVO> list = ezCommunityDAO.getNewItemListXML(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardItemVO itemList : list) {
+			count ++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
+				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
+				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
+				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
+				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
+				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
+				sb.append("<Title>" + itemList.getTitle() + "</Title>");
+				sb.append("<Attachments>" + itemList.getAttachMents() + "</Attachments>");
+				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
+				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getNewItemListCount(String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUserID", id);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
+		
+		return ezCommunityDAO.brdNewItemCount(map);
+	}
+
+	@Override
+	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
+		map.put("v_PUSERID", id);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_PSORTBY", pSortBy);
+		map.put("v_PENDROW", pEndRow);
+		
+		///////////////////////////////
+		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardListVO boardList : list) {
+			sb.append("<NODE>");
+			sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
+			sb.append("<WriterID>" + boardList.getWriterID() + "</WriterID>");
+			sb.append("<WriterName>" + boardList.getWriterName() + "</WriterName>");
+			sb.append("<WriterDeptName>" + boardList.getWriterDeptName() + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + boardList.getWriterCompanyName() + "</WriterCompanyName>");
+			sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
+			sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
+			sb.append("<Title>" + boardList.getTitle() + "</Title>");
+			sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
+			sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
+			sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
+			sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
+			sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+			sb.append("</NODE>");
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getBoardTotalItemCount(String pBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		
+		return ezCommunityDAO.getBoardTotalItemCount(map);
+	}
+	
+	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);
