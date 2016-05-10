@@ -240,7 +240,7 @@
 		            childXML += "/>";
 		            PostTreeView.deletenode(PostTreeView.selectedIndex());
 		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML);
+		            PostTreeView.addnode(nodeIdx, childXML); //TODO: 수정 필요.
 		        }
 		        else if (moveUrl["cmd"] == "COPY") {
 		            var result = copy_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
@@ -253,7 +253,7 @@
 		            childXML += ("href='" + szURL + "/' ");
 		            childXML += "/>";
 		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML);
+		            PostTreeView.addnode(nodeIdx, childXML); //TODO: 수정 필요.
 		        }
 		        LoadAddressTree(moveUrl["idx"]);
 		        EventCheck = true;
@@ -362,8 +362,17 @@
 		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
+		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
+		        	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
+		        		if (szURL == "<spring:message code='ezEmail.t99000028' />") {
+		        			alert("<spring:message code='ezEmail.t99000087' />");
+		        		} else {
+		        			alert("<spring:message code='ezEmail.t99000086' />");
+		        		}
+		        		return false;
+		        	}
 		            return true;
+		        }
 		        else
 		            return xmlHTTP.status;
 		    }
@@ -381,10 +390,16 @@
 		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
 
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
+		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
+		        	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
+		        		alert("<spring:message code='ezEmail.t99000086' />");
+		        		return false;
+		        	}
 		            return true;
-		        else
+		        }
+		        else {
 		            return xmlHTTP.status;
+		        }
 		    }
 			
 		    function copy_folder(szOriURL, szURL) {
@@ -425,10 +440,16 @@
 			    createNodeAndInsertText(xmlDOM, objNode, "CMD", "MODIFY");
 			    xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 			    xmlHTTP.send(xmlDOM);
-			    if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
+			    if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
+			    	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
+		        		alert("<spring:message code='ezEmail.t99000088' />");
+		        		return false;
+		        	}
 			        return true;
-			    else
+			    }
+			    else {
 			        return xmlHTTP.status;
+			    }
 			}
 			function getparentnode(currentnode) {
 			    var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling;

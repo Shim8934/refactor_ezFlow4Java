@@ -1980,6 +1980,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
+		String returnValue = "<DATA><![CDATA[";
+		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
 		
@@ -1989,19 +1991,72 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			if (uidStr != null && !uidStr.trim().equals("")) {
 				uid = Long.parseLong(uidStr);
 			}
+		}
+		
+		if (uid != 0) {
+			NodeList rows = root.getElementsByTagName("ROW");
 			
-			if (uid != 0) {
+			if (rows != null && rows.item(0) != null) {
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 						id+"@"+config.getProperty("config.DomainName"), password);
-				MimeMessage message = sa.createMimeMessage();
 				
-				NodeList rows = root.getElementsByTagName("ROW");
-				if (rows != null) {
+				IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				
+				Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+				folder.open(Folder.READ_WRITE);
+				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+				
+				if (oldMessage != null) {
+					MimeMessage newMessage = sa.createMimeMessage();
+					Multipart multipart = new MimeMultipart();
+					
+					Multipart mp = (Multipart)oldMessage.getContent();
+					int count = mp.getCount();
+					BodyPart p = null;
+					
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						
+						int length = rows.getLength();
+						boolean isRemoved = false;
+						if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+							for (int j=0; j<length; j++) {
+								if (rows.item(j).getFirstChild().getTextContent().equals(p.getFileName())) {
+									isRemoved = true;
+								}
+							}
+						}
+						
+						if (!isRemoved) {
+							multipart.addBodyPart(p);
+						}
+					}
+					
+					Enumeration<Header> e = oldMessage.getAllHeaders();
+					while(e.hasMoreElements()){
+						Header header = e.nextElement();
+						newMessage.setHeader(header.getName(), header.getValue());
+					}
+					
+					if (multipart.getCount() != 0) {
+						newMessage.setContent(multipart);
+						newMessage.setFlag(Flags.Flag.SEEN, true);
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+						returnValue += uids[0].uid;
+					}
+					
+					oldMessage.setFlag(Flags.Flag.DELETED, true);
 					
 				}
+				folder.close(true);
+				
+				ia.close();
 			}
 		}
-		return "";
+		
+		returnValue += "]]></DATA>";
+		return returnValue;
 	}
 	
 	/**
@@ -2035,31 +2090,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			
 			Document xmlDom = commonUtil.convertStringToDocument(strXml);
 			NodeList nodeList = xmlDom.getElementsByTagName("NODE");
+			
 			if (nodeList != null) {
 				for (int i=0; i<nodeList.getLength(); i++) {
-					System.out.println(nodeList.item(i).getFirstChild().getTextContent());
-					System.out.println(realFileNM);
 					if (nodeList.item(i).getFirstChild().getTextContent().equals(realFileNM)) {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
 						String pRealFilePath = pDirPath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
 						File bigAttachFile = new File(pRealFilePath);
-						if (bigAttachFile.exists())
-						{
+						
+						if (bigAttachFile.exists()) {
 							bigAttachFile.delete();
 							File bigAttachNameFile = new File(pRealFilePath+"__.txt");
 							bigAttachNameFile.delete();
 						}
-						
-						Node removed = nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-						System.out.println(removed.getTextContent());
+
+						nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
 					}
 				}
 			}
 			
 			String strXml2 = commonUtil.convertDocumentToString(xmlDom);
-			System.out.println("strXml : "+strXml);
-			System.out.println("strXml2 : "+strXml2);
+			logger.debug("strXml : "+strXml);
+			logger.debug("strXml2 : "+strXml2);
 			
 			OutputStreamWriter osw = null;
 			try {

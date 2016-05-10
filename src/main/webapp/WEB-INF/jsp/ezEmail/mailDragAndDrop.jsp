@@ -300,6 +300,8 @@
 		
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        var hasAttachment = false;
+		        var xmlStr = "<FILE>";
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
@@ -307,8 +309,19 @@
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
-		                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
-		
+						
+		                var pItemID = document.getElementById("filelist").childNodes[i].getAttribute("_itemid");
+		                var pISBig = document.getElementById("filelist").childNodes[i].getAttribute("_big");
+		                if (pISBig != "Y") {
+		                	hasAttachment = true;
+		                	xmlStr += "<ROW>";
+		                	xmlStr += "<ATTACHID><![CDATA[" + pItemID + "]]></ATTACHID>";
+		                	xmlStr += "<BIGYN><![CDATA[" + pISBig + "]]></BIGYN>";
+		                	xmlStr += "</ROW>";
+		                } else {
+		                	window.parent.DelAttachFileAtList2(document.getElementById("filelist").childNodes[i]);
+		                }
+		                
 		                var delfilesize;
 		                if(CrossYN())
 		                    delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent.replace('KB', '');
@@ -322,8 +335,13 @@
 		                filecnt--;
 		            }
 		        }
+		        
+		        if (hasAttachment) {
+		        	window.parent.DelAttachFileAtList3(xmlStr);
+		        }
+		        
 		    }
-		
+			
 		    function checkall() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		

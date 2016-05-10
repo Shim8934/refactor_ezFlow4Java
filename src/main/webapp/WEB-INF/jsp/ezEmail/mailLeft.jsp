@@ -230,7 +230,7 @@
 	        function folder_manager_after(RtnVal) {
 	            if (RtnVal) {
 	                var href = PostTreeView.getvalue(1, "href");
-	                var url = "/myoffice/ezEmail/mail_list_cross.aspx?dispname=" + encodeURI(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURI(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
 	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
 	                PostTreeView.update();
 	                if (PostTreeView.selectedIndex() == -1) {

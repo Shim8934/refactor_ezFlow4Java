@@ -615,7 +615,7 @@
 	                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
 	                if (big_yn == "Y") {
 	                    bigtrue = bigtrue + 1;
-	                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('\\')[0]);
+	                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('/')[0]);
 	                }
 	                else {
 	                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);

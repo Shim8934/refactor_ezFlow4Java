@@ -64,9 +64,29 @@ function DelAttachFileAtList(obj) {
         }
         else {
             var xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("GET", "/ezEmail/fileListDelete.do?filedata=" + filedate + "&realFileNM=" + pItemID.split('\\')[1], false);
+            xmlhttp.open("GET", "/ezEmail/fileListDelete.do?filedata=" + filedate + "&realFileNM=" + pItemID.split('/')[1], false);
             xmlhttp.send();
         }
+    } catch (ErrMsg) {
+        alert(ErrMsg.description);
+    }
+}
+
+function DelAttachFileAtList2(obj) {
+    try {
+	var pItemID = obj.getAttribute("_itemid");
+	var xmlhttp = createXMLHttpRequest();
+        xmlhttp.open("GET", "/ezEmail/fileListDelete.do?filedata=" + filedate + "&realFileNM=" + pItemID.split('/')[1], false);
+        xmlhttp.send();
+    } catch (ErrMsg) {
+        alert(ErrMsg.description);
+    }
+}
+
+function DelAttachFileAtList3(xmlStr) {
+    try {
+	xmlStr += "<ITEMID><![CDATA[" + g_url + "]]></ITEMID></FILE>";
+	DelList(xmlStr);
     } catch (ErrMsg) {
         alert(ErrMsg.description);
     }
