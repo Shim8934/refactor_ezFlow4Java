@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code="ezResource.t330" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<meta http-equiv="X-UA-Compatible" content="IE=11,chrome=1" />
+		<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/style.css" />
 		<link type="text/css" rel="stylesheet" href="/css/organ_tree.css" />
-		<script type="text/javascript" src="<spring:message code="ezResource.e1" />"></script>
+		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequestPath.js"></script>
 		<script type="text/javascript" src="/js/ezResource/ResTreeInfo_cross.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 		    var brdId		= "${brdID}";			
     		var Brd_Nm		= "${brdNm}";			

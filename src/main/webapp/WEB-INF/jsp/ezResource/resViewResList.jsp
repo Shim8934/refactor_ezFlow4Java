@@ -15,7 +15,6 @@
 			.pcol{ padding-top:6px; }
 			.Right_Point01 { font:bold; color:#017bec; }
 		</style>
-		
 		<script type="text/javascript">
 			var pBrdid		= "${brdID}";
 			var pBrdnm		= "${brdNm}";
@@ -166,10 +165,10 @@
 			        window.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
 
 			        document.frmRefresh.target = "_self"
-			        document.frmRefresh.brd_id.value = pBrdid
-		    	    document.frmRefresh.AccessCode.value = pAccessCode
-		        	document.frmRefresh.brdnm.value = pBrdnm
-		        	document.frmRefresh.GoTopage.value = pcurpage
+			        document.frmRefresh.brdID.value = pBrdid
+		    	    document.frmRefresh.accessCode.value = pAccessCode
+		        	document.frmRefresh.brdNm.value = pBrdnm
+		        	document.frmRefresh.goToPage.value = pcurpage
 		        	document.frmRefresh.submit();
 		    	}
 
@@ -337,10 +336,10 @@
 		        var pURL;
 		        if (parseInt(newPage) > 0 && parseInt(newPage) != "" && parseInt(newPage) <= parseInt(ptotalPage)) {
 		            document.frmRefresh.target = "_self"
-		            document.frmRefresh.brd_id.value = pBrdid
-		            document.frmRefresh.AccessCode.value = pAccessCode
-		            document.frmRefresh.brdnm.value = pBrdnm
-		            document.frmRefresh.GoTopage.value = newPage
+		            document.frmRefresh.brdID.value = pBrdid
+		            document.frmRefresh.accessCode.value = pAccessCode
+		            document.frmRefresh.brdNm.value = pBrdnm
+		            document.frmRefresh.goToPage.value = newPage
 		            document.frmRefresh.submit();
 		        }
 		    }
@@ -358,10 +357,10 @@
 		        var pURL;
 		        if (parseInt(pGoToPage) > 0 && parseInt(pGoToPage) != "" && parseInt(pGoToPage) <= parseInt(ptotalPage)) {
 		            document.frmRefresh.target = "_self"
-		            document.frmRefresh.brd_id.value = pBrdid
-		            document.frmRefresh.AccessCode.value = pAccessCode
-		            document.frmRefresh.brdnm.value = pBrdnm
-		            document.frmRefresh.GoTopage.value = pGoToPage
+		            document.frmRefresh.brdID.value = pBrdid
+		            document.frmRefresh.accessCode.value = pAccessCode
+		            document.frmRefresh.brdNm.value = pBrdnm
+		            document.frmRefresh.goToPage.value = pGoToPage
 		            document.frmRefresh.submit();
 		        }
 
@@ -369,7 +368,7 @@
 
 		    function btnCcalendar_Click() {
 		        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
-		        strUrl = strUrl + "&brdnm=" + encodeURI(pBrdnm);
+		        strUrl = strUrl + "&brdNm=" + encodeURI(pBrdnm);
 		        window.open(strUrl, 'right');
 		    }
 		</script>
@@ -419,8 +418,8 @@
   			<input type="hidden" name="brdID">
   			<input type="hidden" name="brdNm">
   			<input type="hidden" name="accessCode">
-  			<input type="hidden" name="SortGbn">
-  			<input type="hidden" name="GoTopage">
+  			<input type="hidden" name="sortGbn">
+  			<input type="hidden" name="goToPage">
 		</form>
 	</body>
 </html>
