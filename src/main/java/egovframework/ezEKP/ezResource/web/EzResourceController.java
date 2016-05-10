@@ -1,9 +1,5 @@
 package egovframework.ezEKP.ezResource.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -11,7 +7,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilderFactory;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -34,13 +30,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
-import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
-import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -247,7 +237,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String writerDept = "";
 		String gubun = "P";
 		String groupID = "";
-		int page = 0;
+		//int page = 0;
 		
 		try {
 			if (req.getParameter("resID") != null) {
@@ -263,7 +253,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				viewType = req.getParameter("viewType");
 			}
 			if (req.getParameter("page") != null) {
-				page = Integer.parseInt(req.getParameter("page"));
+				//page = Integer.parseInt(req.getParameter("page"));
 			}
 			
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -384,14 +374,14 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/viewResList.do")
 	public String viewResList(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String strXML = "";
+		//String strXML = "";
 		String brdID = "";
 		String accessCode = "";
 		String brdNm = "";
 		String sortGbn = "";
 		String curPage = "";
 		String adminFg = "";
-		String chkCtrl = "";
+		//String chkCtrl = "";
 		int pageSize = 15;
 		int totalCnt = 0;
 		int totalPage = 0;
