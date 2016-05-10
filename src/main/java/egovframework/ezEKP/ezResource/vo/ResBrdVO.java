@@ -34,7 +34,7 @@ public class ResBrdVO {
 	/** 사용 허가 유무*/
 	private String approveFlag;
 	/** 게시판 접근 거부 메시지*/
-	private int brdAccess;
+	private String brdAccess;
 	
 	public String getBrdID() {
 		return brdID;
@@ -132,10 +132,10 @@ public class ResBrdVO {
 	public void setApproveFlag(String approveFlag) {
 		this.approveFlag = approveFlag;
 	}
-	public int getBrdAccess() {
+	public String getBrdAccess() {
 		return brdAccess;
 	}
-	public void setBrdAccess(int brdAccess) {
+	public void setBrdAccess(String brdAccess) {
 		this.brdAccess = brdAccess;
 	}
 }
