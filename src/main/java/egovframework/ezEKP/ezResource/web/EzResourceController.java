@@ -108,7 +108,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		if(brdID.equals("")) {
 			if(brdTopPath.equals("B")) {
-				pUrl = url + "?BoardGbn=" + brdTopPath;
+				pUrl = url + "?boardGbn=" + brdTopPath;
 			} else {
 				pUrl = url;
 			} 
@@ -141,8 +141,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdNm = req.getParameter("brdNm");
 		}
 		
-		if(req.getParameter("pbrdGubun") != null) {
-			brdGubun = req.getParameter("pbrdGubun");
+		if(req.getParameter("boardGbn") != null) {
+			brdGubun = req.getParameter("boardGbn");
 		}
 		
 		/*if(req.getParameter("boardGbn") != null) {
@@ -182,7 +182,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String callNodeTreeData(@RequestBody String xmlReq,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectFlag = "";
-System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");		
+
 		if(req.getParameter("flag") != null) {
 			selectFlag = req.getParameter("flag");
 		}
@@ -227,7 +227,6 @@ System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				}
 			}
 		}
-		
 		return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
 	}
 	
