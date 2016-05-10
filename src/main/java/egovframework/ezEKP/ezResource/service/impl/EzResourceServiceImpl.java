@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
+import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -150,6 +151,14 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_PBRDID", brdID);
 		map.put("v_PCOMPANYID", companyID);
 		return ezResourceDAO.getBrdCnt(map);
+	}
+
+	@Override
+	public ResBrdVO getBrd(int brdID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pBrdID", brdID);
+		map.put("v_pCompanyID", companyID);
+		return ezResourceDAO.getBrd(map);
 	}
 }
 

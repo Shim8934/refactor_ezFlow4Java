@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezResource.service;
 import java.util.List;
 
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
+import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -33,6 +34,8 @@ public interface EzResourceService {
 	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num) throws Exception;
 	
 	public ResGetScheduleListTermVO getScheduleListTerm(int num,String companyID, String ownerID, String startDate, String endDate, String writerName, String writerDept) throws Exception;
+	
+	public ResBrdVO getBrd(int brdID, String companyID) throws Exception;
 	
 	public int getBrdCnt(int brdID, String companyID) throws Exception;
 }
