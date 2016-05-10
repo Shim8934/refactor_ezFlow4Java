@@ -257,7 +257,7 @@
 		]]>
 	</procedure>
 	
-	<select id="EzResourceDAO.getAdminFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
 				member_id, access_lvl 
