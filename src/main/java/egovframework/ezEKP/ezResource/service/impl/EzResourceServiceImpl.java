@@ -1510,7 +1510,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 		
 		try {
 			//TODO userInfo.Offset
-			String pOffset = "+09:00";
+			//String pOffset = "+09:00";
 			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
 			strDateTime = EgovDateUtil.convertDate(addMinutes(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
 			
