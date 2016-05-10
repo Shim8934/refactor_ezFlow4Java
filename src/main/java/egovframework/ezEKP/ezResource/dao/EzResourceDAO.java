@@ -63,8 +63,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
 	
-	public ResGetAdminFlagVO getAdminFlag(Map<String, Object> map) {
-		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdminFlag", map);
+	public ResGetAdminFlagVO getAdmFlag(Map<String, Object> map) {
+		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdmFlag", map);
 	}
 	
 	public ResGetRepDateTimesVO getRepDateTimes(Map<String, Object> map) {

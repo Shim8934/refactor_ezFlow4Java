@@ -29,7 +29,7 @@ public interface EzResourceService {
 	
 	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm) throws Exception;
 	
-	public ResGetAdminFlagVO getAdminFlag(String companyID, String resID, String memberID) throws Exception; 
+	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID) throws Exception; 
 	
 	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num) throws Exception;
 	
@@ -38,4 +38,20 @@ public interface EzResourceService {
 	public ResBrdVO getBrd(int brdID, String companyID) throws Exception;
 	
 	public int getBrdCnt(int brdID, String companyID) throws Exception;
+
+	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept) throws Exception;
+
+	public String getLocalTime(String substring) throws Exception;
+
+	public String convertToUTC(String sDate) throws Exception;
+
+	public String getAdminFlag(String companyID, String brdID, String id) throws Exception;
+
+	public String getItemList(String loginCookie, String brdID) throws Exception;
+
+	public String getCurrentDate() throws Exception;
+
+	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id) throws Exception;
+
+	
 }
