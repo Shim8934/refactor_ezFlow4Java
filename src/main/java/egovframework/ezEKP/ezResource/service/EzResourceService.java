@@ -52,6 +52,10 @@ public interface EzResourceService {
 	public String getCurrentDate() throws Exception;
 
 	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id) throws Exception;
+	
+	public void delResData(String brdID, String companyID) throws Exception;
+
+	public boolean multiDelResData(String xmlStr);
 
 	
 }
