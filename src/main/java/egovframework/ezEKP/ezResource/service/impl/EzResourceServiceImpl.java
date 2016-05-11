@@ -179,6 +179,14 @@ public class EzResourceServiceImpl implements EzResourceService{
 		return ezResourceDAO.getBrd(map);
 	}
 	
+	@Override
+	public void delResData(String brdID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_Brd_ID", brdID);
+		map.put("v_P_CompanyID", companyID);
+		ezResourceDAO.delResData(map);
+	}
+	
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
 		StringBuilder returnStr = new StringBuilder();
@@ -1606,8 +1614,10 @@ public class EzResourceServiceImpl implements EzResourceService{
 	
 	public String getAdminFlag(String companyID, String brdID, String userID) throws Exception {
 		String accessLvl = "";
+
 		try {
 			ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID);
+
 			String strXML = commonUtil.getQueryResult(resGetAdminFlag);
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
@@ -1625,6 +1635,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 				return "";
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}
@@ -1735,6 +1746,7 @@ public class EzResourceServiceImpl implements EzResourceService{
         	}
         	returnXML += "</NODES>";
         }
+System.out.println(returnXML);
 		return returnXML;
 	}
 	
@@ -1825,5 +1837,29 @@ public class EzResourceServiceImpl implements EzResourceService{
 	public String makeXMLElement(String strElementText, String strElementName) {
 		return "<"+strElementName+">"+strElementText+"</"+strElementName+">";
 	}
+	
+	public boolean multiDelResData(String xmlStr) {
+		String brdID = "";
+		String companyID = "";
+		
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			brdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
+			companyID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
+System.out.println("brdID:"+brdID);
+System.out.println("companyID:"+companyID);
+			for (int i=0; i<brdID.split(",").length; i++) {
+				delResData(brdID.split(",")[i], companyID);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+
+	
+	
 }
 
