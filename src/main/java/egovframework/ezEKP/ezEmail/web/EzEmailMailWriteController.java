@@ -1034,26 +1034,28 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			if (hasAttachFile && uid != 0) {
 				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 				if (oldMessage != null) {
-					Multipart mp = (Multipart)oldMessage.getContent();
-					int count = mp.getCount();
-					BodyPart p = null;
-					
-					if (oldMessage.isMimeType("multipart/related")) {
-						Multipart relatedPart = new MimeMultipart("related");
+					if (oldMessage.getContent() instanceof Multipart) {
+						Multipart mp = (Multipart)oldMessage.getContent();
+						int count = mp.getCount();
+						BodyPart p = null;
 						
-						for (int i = 0; i < count; i++) {
-							p = mp.getBodyPart(i);
-							relatedPart.addBodyPart(p);
+						if (oldMessage.isMimeType("multipart/related")) {
+							Multipart relatedPart = new MimeMultipart("related");
+							
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+								relatedPart.addBodyPart(p);
+							}
+							
+							MimeBodyPart wrap = new MimeBodyPart();
+							wrap.setContent(relatedPart);
+							multipart.addBodyPart(wrap, 0);
 						}
-						
-						MimeBodyPart wrap = new MimeBodyPart();
-						wrap.setContent(relatedPart);
-						multipart.addBodyPart(wrap, 0);
-					}
-					else {
-						for (int i = 0; i < count; i++) {
-							p = mp.getBodyPart(i);
-							multipart.addBodyPart(p);
+						else {
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+								multipart.addBodyPart(p);
+							}
 						}
 					}
 					
