@@ -214,5 +214,4 @@ public class CommunityBoardListVO {
 	public void setReadFlag(String readFlag) {
 		this.readFlag = readFlag;
 	}
-	
 }

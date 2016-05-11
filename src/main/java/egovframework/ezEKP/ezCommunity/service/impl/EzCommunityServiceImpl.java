@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -105,7 +104,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String getCategoryValueA(String strSelCateA, Locale locale) throws Exception {
+	public String getCategoryValueA(String strSelCateA) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA();
 		for(CommunityCCategoryVO category : categoryList){
@@ -119,14 +118,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, locale));
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
 			sb.append("</Option>");
 		}
 		return sb.toString();
 	}
 
 	@Override
-	public String getCategoryValueB(String strSelCateB, Locale locale) throws Exception {
+	public String getCategoryValueB(String strSelCateB) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB();
 		for(CommunityCCategoryVO category : categoryList){
@@ -140,14 +139,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, locale));
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
 			sb.append("</Option>");
 		}
 		return sb.toString();
 	}
 
 	@Override
-	public String getCategoryValueC(String strSelCateC, Locale locale) throws Exception {
+	public String getCategoryValueC(String strSelCateC) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC();
 		for(CommunityCCategoryVO category : categoryList){
@@ -161,7 +160,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, locale));
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
 			sb.append("</Option>");
 		}
 		return sb.toString();
@@ -790,7 +789,7 @@ System.out.println("@");
 	@Override
 	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception {
 		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
-		
+
 		if (pBoardID.equals("")) {
 			boardInfo.setBoardName(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
 			boardInfo.setBoardName2(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
@@ -863,6 +862,8 @@ System.out.println("@");
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
 			boardInfo.setSs_Board_MaxRows(12);
 		}
+		
+		boardInfo.setBoardID(pBoardID);
 		
 		return boardInfo;
 	}
@@ -973,13 +974,13 @@ System.out.println("@");
 		for (CommunityBoardListVO boardList : list) {
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
-			sb.append("<WriterID>" + boardList.getWriterID() + "</WriterID>");
-			sb.append("<WriterName>" + boardList.getWriterName() + "</WriterName>");
-			sb.append("<WriterDeptName>" + boardList.getWriterDeptName() + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + boardList.getWriterCompanyName() + "</WriterCompanyName>");
+			sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
+			sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
 			sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
 			sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-			sb.append("<Title>" + boardList.getTitle() + "</Title>");
+			sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 			sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
 			sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
 			sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
@@ -1000,6 +1001,105 @@ System.out.println("@");
 		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		return ezCommunityDAO.getBoardTotalItemCount(map);
+	}
+	
+	@Override
+	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception {
+		StringBuilder strHTML = new StringBuilder();
+		
+		strHTML.append("<Select name=\"cCateA\">");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
+		strHTML.append(getCategoryValueA(strSelCateA));
+		strHTML.append("</Select>");
+		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
+		strHTML.append(getCategoryValueB(strSelCateB));
+		strHTML.append("</Select>");
+		strHTML.append("<Select name=\"cCateC\" class=\"text\" style='display:none'>");
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
+		strHTML.append(getCategoryValueC(strSelCateC));
+		strHTML.append("</Select>");
+		
+		return strHTML.toString();
+	}
+
+	@Override
+	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		
+		if (!searchStart.trim().equals("")) {
+            if (searchStart.indexOf(" ") != -1) {
+            	searchStart = searchStart.split(" ")[0];
+            }
+        }
+
+        if (!searchEnd.trim().equals("")) {
+            if (searchEnd.indexOf(" ") != -1) {
+            	searchEnd = searchEnd.split(" ")[0];
+            }
+        }
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_PENDROW", pEndRow);
+        map.put("v_STRLANG", strLang);
+        map.put("v_PBOARDID", boardID);
+        map.put("v_PUSERID", id);
+        map.put("v_PTITLE", title);
+        map.put("v_PWRITERNAME", writerName);
+        map.put("v_PABSTRACT", abstracts);
+        map.put("v_PSTARTDATE", searchStart);
+        map.put("v_PENDDATE", searchEnd);
+        
+        List<CommunityBoardListVO> list = ezCommunityDAO.searchItemXML(map);
+        
+        sb.append("<NODES>");
+		
+		for (CommunityBoardListVO boardList : list) {
+			count++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
+				
+				if (boardList.getWriteDate().equals(boardList.getParentWriteDate())) {
+					sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
+				} else {
+					sb.append("<WriteDate>" + boardList.getParentWriteDate() + "</WriteDate>");
+				}
+				
+				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				
+				if (boardList.getAttachments().equals("")) {
+					sb.append("<Attachments></Attachments>");
+				} else {
+					sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
+				}
+				
+				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
+				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
+				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public int searchItemCount(String id, String boardID, String title,
+			String writerName, String abstracts, String startDateTime,
+			String endDateTime) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

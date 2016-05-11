@@ -266,4 +266,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public String getBoardTotalItemCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.getBoardTotalItemCount", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> searchItemXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.searchItemXML", map);
+	}
 }

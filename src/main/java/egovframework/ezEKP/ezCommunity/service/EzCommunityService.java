@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCommunity.service;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,11 +64,11 @@ public interface EzCommunityService {
 	
 	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception;
 
-	public String getCategoryValueA(String strSelCateA, Locale locale) throws Exception;
+	public String getCategoryValueA(String strSelCateA) throws Exception;
 
-	public String getCategoryValueB(String strSelCateB, Locale locale) throws Exception;
+	public String getCategoryValueB(String strSelCateB) throws Exception;
 	
-	public String getCategoryValueC(String strSelCateC, Locale locale) throws Exception;
+	public String getCategoryValueC(String strSelCateC) throws Exception;
 
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception;
 
@@ -104,6 +103,10 @@ public interface EzCommunityService {
 	public String getNewItemListCount(String id) throws Exception;
 
 	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
+	
+	public String getBoardTotalItemCount(String pBoardID) throws Exception;
+
+	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception;
 
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
@@ -140,9 +143,13 @@ public interface EzCommunityService {
 	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
-	
-	public String getBoardTotalItemCount(String pBoardID) throws Exception;
 
+	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception;
+
+	public int searchItemCount(String id, String boardID, String title,
+			String writerName, String abstracts, String startDateTime,
+			String endDateTime) throws Exception;
+	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
 //	public String sortXML(String pXML, String pSortBy) throws Exception;

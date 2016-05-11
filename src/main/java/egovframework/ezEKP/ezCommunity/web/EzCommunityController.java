@@ -34,7 +34,6 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
@@ -278,7 +277,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티만들기 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commMake.do")
-	public String commMake(@CookieValue("loginCookie")String loginCookie, Locale locale, ModelMap model, HttpServletRequest request) throws Exception {
+	public String commMake(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		String userInfoUserID = "", userInfoDisplayName = "";
 		String langPrimary="", langSecondary="";
 		//TODO 2016-05-02 이효진 사용하는곳 없음
@@ -305,7 +304,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfoUserID", userInfoUserID);
 		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
 //		model.addAttribute("flag", flag);		
-		model.addAttribute("idSpanValue", getCategory("", "", "", locale));
+		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", ""));
 		
 		return "/ezCommunity/communityCommMake";
 	}
@@ -725,7 +724,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commHome/popupCommHome.do")
 	public String popupCommHome(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String rootBoardID = "TOP";
-		Document xmlDom = null;
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
 		
@@ -925,7 +923,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userLevel = "", url = "", pSortBy = "", strXML = "", showAdjacent = "";
-		int pPage = 1, totalCount = 0;
+		int pPage = 1, totalCount = 0, totalPage = 0;
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		String pBoardName = request.getParameter("boardName");
@@ -967,6 +965,20 @@ public class EzCommunityController extends EgovFileMngUtil{
                 strXML = ezCommunityService.getBoardListItemXML(userInfo.getId(), pBoardID, pStartRow, pEndRow, pSortBy, userInfo.getLang());
                 totalCount = Integer.parseInt(ezCommunityService.getBoardTotalItemCount(pBoardID));
             }
+			
+			if (totalCount > 0) {
+				if (totalCount > boardInfo.getSs_Board_MaxRows()) {
+					if(totalCount % boardInfo.getSs_Board_MaxRows() > 0) {
+						totalPage = totalCount / boardInfo.getSs_Board_MaxRows() + 1;
+					} else {
+						totalPage = 1;
+					}
+				} else {
+					totalPage = 1;
+				}
+			} else {
+				totalPage = 1;
+			}
 		}
 		
 		model.addAttribute("boardInfo", boardInfo);
@@ -974,13 +986,100 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("url", url);
-		model.addAttribute("sortBy", pSortBy);
-		model.addAttribute("page", pPage);
+		model.addAttribute("pSortBy", pSortBy);
+		model.addAttribute("pPage", pPage);
 		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("strXML", strXML);
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("pBoardName", pBoardName);
 		
-		return "/ezCommunity/boardItemList";
+		return "/ezCommunity/communityBoardItemList";
+	}
+	
+	/**
+	 * 커뮤니티 검색화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/searchBoardItem.do")
+	public String searchBoardItem(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		int pPage = 1, totalPage = 1, totalCount = 0;
+		String title = "", writerName = "", abstracts = "", searchStart = "", searchEnd = "";
+		String strXML="";
+		
+		//TODO 이효진 2016-05-11 정렬에 필요한 변수. 추가 작업 필요
+		String pSortBy = "";
+		
+		String boardID = request.getParameter("boardID");
+		String orgBoardParameters = request.getParameter("orgBoardParameters");
+		String code = request.getParameter("code");
+		
+		if (request.getParameter("page") != null) {
+			pPage = Integer.parseInt(request.getParameter("page"));
+		}
+		if (request.getParameter("title") != null) {
+			title = request.getParameter("title");
+		}
+		if (request.getParameter("writerName") != null) {
+			writerName = request.getParameter("writerName");
+		}
+		if (request.getParameter("abstract") != null) {
+			abstracts = request.getParameter("abstract");
+		}
+		if (request.getParameter("searchStart") != null) {
+			searchStart = request.getParameter("searchStart");
+		}
+		if (request.getParameter("searchEnd") != null) {
+			searchEnd = request.getParameter("searchEnd");
+		}
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		// 20100119 보안처리 관련 추가작업(권한체크)
+        ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+        
+        int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
+        int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+        String startDateTime = "";
+        String endDateTime = "";
+        
+        if (!searchStart.equals("")) {
+        	startDateTime = searchStart.split(" ")[0];
+        	endDateTime = searchEnd.split(" ")[0];
+        }
+
+        if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
+            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()));
+            totalCount = ezCommunityService.searchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime);
+            
+            if (totalCount > 0) {
+				if (totalCount > boardInfo.getSs_SearchBoard_MaxRows()) {
+					if(totalCount % boardInfo.getSs_SearchBoard_MaxRows() > 0) {
+						totalPage = totalCount / boardInfo.getSs_SearchBoard_MaxRows() + 1;
+					} else {
+						totalPage = 1;
+					}
+				} else {
+					totalPage = 1;
+				}
+			} else {
+				totalPage = 1;
+			}
+        }
+
+        System.out.println(strXML);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("orgBoardParameters", orgBoardParameters);
+        model.addAttribute("startDateTime", startDateTime);
+        model.addAttribute("endDateTime", endDateTime);
+        model.addAttribute("pSortBy", pSortBy);
+        
+        model.addAttribute("strXML", strXML);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("totalPage", totalPage);
+        
+		return "/ezCommunity/communitySearchBoardItem";
 	}
 	
 	/**
@@ -1658,28 +1757,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "OK";
 		}
 		return "ERROR";
-	}
-	
-	/**
-	 * 카테고리목록 호출 함수
-	 */
-	private String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, Locale locale) throws Exception {
-		StringBuilder strHTML = new StringBuilder();
-		
-		strHTML.append("<Select name=\"cCateA\">");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", locale) + "</Option>");
-		strHTML.append(ezCommunityService.getCategoryValueA(strSelCateA, locale));
-		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", locale) + "</Option>");
-		strHTML.append(ezCommunityService.getCategoryValueB(strSelCateB, locale));
-		strHTML.append("</Select>");
-		strHTML.append("<Select name=\"cCateC\" class=\"text\" style='display:none'>");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", locale) + "</Option>");
-		strHTML.append(ezCommunityService.getCategoryValueC(strSelCateC, locale));
-		strHTML.append("</Select>");
-		
-		return strHTML.toString();
 	}
 
 }

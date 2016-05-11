@@ -41,7 +41,7 @@
 					async : false,
 					url : "/ezCommunity/getCommunityContentInfo.do",
 					data : { type	:	"COMMUNITYNOTI", 
-							 itemID	:	escape(no)
+							 itemID	:	encodeURIComponent(no)
 						   },
 					success: function(result){
 						html = result;

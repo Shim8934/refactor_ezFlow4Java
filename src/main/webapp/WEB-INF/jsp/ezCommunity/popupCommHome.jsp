@@ -5,14 +5,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-<!-- 		title 수정필요할듯-->
-		<title id="cop_title"></title>
+		<title>popupCommHome</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var strlang = "<c:out value='${userInfo.lang }'/>";
@@ -20,7 +20,6 @@
 			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
-// 			안될꺼같다
 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 			var codeName = "<c:out value='${codeName }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
@@ -36,7 +35,7 @@
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    
-		    window.onload = function () {
+		    $(function () {
 		        xmlhttp = createXMLHttpRequest();
 
 		        var xmlDom = createXmlDom();
@@ -91,7 +90,7 @@
 		                document.getElementById("treediv").appendChild(div);
 		            }
 		        }
-		    }
+		    });
 		    
 		    function event_get_commhomeinfo() {
 		        if (xmlhttp == null || xmlhttp.readyState != 4) {
