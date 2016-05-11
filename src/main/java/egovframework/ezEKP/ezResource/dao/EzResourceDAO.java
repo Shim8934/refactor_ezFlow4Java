@@ -79,5 +79,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		select("EzResourceDAO.getBrdCnt", map);
 		return (int)map.get("v_pCount");
 	}
+	
+	public void delResData(Map<String, Object> map) {
+		delete("EzResourceDAO.delResData", map);
+	}
+	
 }
 
