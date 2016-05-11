@@ -2279,18 +2279,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
     }
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
-		try {
-			htmlStr = URLDecoder.decode(htmlStr, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return htmlStr;
-		}
-
-		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=<(.*?)>\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				
 		StringBuffer result = new StringBuffer();
 		while (mat.find()) {
-			mat.appendReplacement(result, "src=\"cid:" + mat.group(1) + "\"");
+			String cid = mat.group(1);
+			try {
+				cid = URLDecoder.decode(cid, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			mat.appendReplacement(result, "src=\"cid:" + cid + "\"");
 		}
 		mat.appendTail(result);
 		
