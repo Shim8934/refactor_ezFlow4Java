@@ -257,6 +257,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzResourceDAO.delResData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DELRESDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
+		]]>
+	</procedure>
+	
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
