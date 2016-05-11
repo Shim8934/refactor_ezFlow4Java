@@ -20,6 +20,9 @@ public class ApprGLeftVO {
 	private String containerOwnDepID;
 	/** 코드*/
 	private String code2;
+	/** 컨테이너 사용하는 부서ID */
+	private String useDepID;
+	
 	
 	public String getName() {
 		return name;
@@ -74,6 +77,12 @@ public class ApprGLeftVO {
 	}
 	public void setCode2(String code2) {
 		this.code2 = code2;
+	}
+	public String getUseDepID() {
+		return useDepID;
+	}
+	public void setUseDepID(String useDepID) {
+		this.useDepID = useDepID;
 	}
 	
 }

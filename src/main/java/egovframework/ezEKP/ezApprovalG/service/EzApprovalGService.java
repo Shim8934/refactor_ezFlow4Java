@@ -18,5 +18,9 @@ public interface EzApprovalGService {
 	public String getProxyUser(String id, String string) throws Exception;
 
 	public String getAprLineInfo(String docID, String flag, String userID, String formID, String companyID) throws Exception;
+	
+	public String getListHeader(String listCode, String companyID, String lang) throws Exception;
+	
+	public String getCode2Name(String code1, String code2, String companyID, String lang) throws Exception;
 
 }

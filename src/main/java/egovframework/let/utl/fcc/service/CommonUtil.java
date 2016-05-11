@@ -213,8 +213,8 @@ public class CommonUtil {
 		return stb.toString();
 	}
 	
-	public String convertLangCode(String pLangCode){   
-		if (pLangCode != "2"){
+	public String convertLangCode(String lang){   
+		if (lang != "2"){
             return "1";
         }else{
             return "2";
@@ -226,6 +226,14 @@ public class CommonUtil {
 			return "2";
 		}else{
 			return "";
+		}
+	}
+	
+	public String getLangData(String lang){
+		if(lang.equals("1")){
+			return "";
+		}else{
+			return lang;
 		}
 	}	
 	

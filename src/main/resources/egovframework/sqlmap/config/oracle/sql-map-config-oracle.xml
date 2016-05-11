@@ -2,17 +2,36 @@
 <!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
-<sqlMapConfig>	
+<sqlMapConfig>
+	<!-- 1.사용자 모듈관리 SQL쿼리 XML -->
+	
+	<!-- 로그인 -->
 	<sqlMap resource="egovframework/sqlmap/let/user/login/EgovLoginUsr_SQL_Oracle.xml"/>
+	<!-- 게시판 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Oracle.xml"/>
-	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoardAdmin_SQL_Oracle.xml"/>
+	<!-- 조직도 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Oracle.xml"/>
-	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Oracle.xml"/>
+	<!-- 설문조사 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Oracle.xml"/>
+	<!-- 이메일 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Oracle.xml"/>
+	<!-- 공통 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommon/EzCommon_SQL_Oracle.xml"/>
+	<!-- 자원관리 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResource_SQL_Oracle.xml"/>
+	<!-- 주소록 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAddress/EzAddress_SQL_Oracle.xml"/>
+	<!-- 커뮤니티 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunity_SQL_Oracle.xml"/>
+	<!-- 전자결재G -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalG_SQL_Oracle.xml"/>
+	
+	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
+	
+	<!-- 게시판 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoardAdmin_SQL_Oracle.xml"/>
+	<!-- 조직도 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Oracle.xml"/>
+	<!-- 전자결재G 관리자-->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

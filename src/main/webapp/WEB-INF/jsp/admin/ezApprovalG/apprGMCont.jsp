@@ -77,11 +77,11 @@
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
-		        	url : "/admin/ezApprovalG/mgetContInfo.do",
+		        	url : "/admin/ezApprovalG/apprGMgetContInfo.do",
 		        	async : false,
 		        	data : {deptID : DeptID, comID : CompanyID},
 		        	success : function(result){
-		        		xmlRtn = loadXMLString(xmlhttp.responseText);		        		
+		        		xmlRtn = loadXMLString(result);		        		
 		        		document.getElementById('lvtForm').innerHTML = "";
 				        listview.DataSource(xmlRtn);
 				        listview.DataBind("lvtForm");
@@ -96,6 +96,104 @@
 		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>");
 		        }
 		    }
+		    
+		    var mconttype_cross_dialogArguments = new Array();
+		    function btnDocTypeReg_onclick() {
+		        var para = new Array();
+		        
+		        if (CompanyID == "") {
+		            alert("<spring:message code='ezApprovalG.t1588'/>");
+		        } else {
+		            para["P_companyID"] = CompanyID;
+		            mconttype_cross_dialogArguments[0] = para;
+		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(290, 390));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		    }
+		    
+		    var minsconttype_cross_dialogArguments = new Array();
+		    function btnContTypeReg_onclick() {
+		        var para = new Array();
+
+		        if (CompanyID == "") {
+		            alert("<spring:message code='ezApprovalG.t1588'/>");
+		        } else {
+		            para["P_companyID"] = CompanyID;
+		            minsconttype_cross_dialogArguments[0] = para;
+		            var OpenWin = window.open("/admin/ezApprovalG/apprGMinsContType.do", "MinsContType_Cross", GetOpenWindowfeature(540, 420));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		    }
+		    
+		    var minscontmain_cross_dialogArguments = new Array();
+		    function btnIns_onclick() {
+		        var para = new Array();
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+		        if (CompanyID == "") {
+		            alert("<spring:message code='ezApprovalG.t1588'/>");
+		            return;
+		        }
+		        if (nodeIdx.NodeID != null) {
+		            para[0] = "I";
+		            para[1] = treeNode.GetNodeData("CN");
+		            para[2] = CompanyID;
+		            para[3] = DeptID;
+
+		            var url = "/admin/ezApprovalG/apprGMinsContMain.do?tCheck=DContIns";
+
+		            minscontmain_cross_dialogArguments[0] = para;
+		            minscontmain_cross_dialogArguments[1] = btnIns_onclick_Complete;
+
+		            var OpenWin = window.open(url, "MinsContMain_Cross", GetOpenWindowfeature(580, 455));
+		            try { OpenWin.focus(); } catch (e) { }
+		        } else {
+		            alert("<spring:message code='ezApprovalG.t1589'/>");
+		        }
+		    }
+		    
+	        function btnIns_onclick_Complete() {
+	            getContInfo(tempDeptID);
+	        }
+	        
+	        function btnUpdate_onclick() {
+	            var para = new Array();
+	            listview.LoadFromID("lvtDocForm");
+	            var selRow = listview.GetSelectedRows();
+
+	            if (CompanyID == "") {
+	            	alert("<spring:message code='ezApprovalG.t1588'/>");
+	                return;
+	            }
+	            
+	            if (selRow) {
+	                para[0] = "U";
+	                para[1] = selRow[0].getAttribute("DATA1");
+	                para[2] = selRow[0].getAttribute("DATA2");
+	                para[3] = selRow[0].getAttribute("DATA4");
+	                para[4] = CompanyID;
+	                para[5] = DeptID
+
+	                var url = "/admin/ezApprovalG/apprGMinsContMain.do?tCheck=DContUpdate";
+
+	                minscontmain_cross_dialogArguments[0] = para;
+	                minscontmain_cross_dialogArguments[1] = btnUpdate_onclick_Complete;
+
+	                var OpenWin = window.open(url, "MinsContMain_Cross", GetOpenWindowfeature(580, 455));
+	                try { OpenWin.focus(); } catch (e) { }
+	            } else {
+	            	alert("<spring:message code='ezApprovalG.t1590'/>");
+	            }
+	        }
+	        
+	        function btnUpdate_onclick_Complete() {
+	            getContInfo(para[3]);
+	        }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -131,7 +229,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview" style="BORDER-RIGHT: #b6b6b6 1px solid; BORDER-TOP: #b6b6b6 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; BORDER-LEFT: #b6b6b6 1px solid; BORDER-BOTTOM: #b6b6b6 1px solid; WIDTH: 300px; HEIGHT: 400px; BACKGROUND-COLOR: #ffffff">
-	                    <div id="TreeView"></div>
+	                    <div id="TreeView" style="padding:5px"></div>
 	                </div>
 	            </td>
 	            <td style="padding-left: 5px; padding-right: 5px">

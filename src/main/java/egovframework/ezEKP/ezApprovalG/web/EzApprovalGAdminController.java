@@ -2,17 +2,23 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -42,11 +48,17 @@ public class EzApprovalGAdminController {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Autowired
+	private EzApprovalGAdminService ezApprovalGAdminService;
+	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
 	/**
 	 * 전자결재G 관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMain.do")
-	public String apprGMain(HttpServletRequest request, Model model) throws Exception{		
+	public String apprGMain() throws Exception{		
 		return "/admin/ezApprovalG/apprGMain";
 	}
 	
@@ -54,7 +66,7 @@ public class EzApprovalGAdminController {
 	 * 전자결재G 관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGLeft.do")
-	public String apprGLeft(HttpServletRequest request, Model model) throws Exception{		
+	public String apprGLeft() throws Exception{		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
 	
@@ -62,7 +74,7 @@ public class EzApprovalGAdminController {
 	 * 전자결재G 관리 문서함관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
-	public String apprMCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -94,14 +106,159 @@ public class EzApprovalGAdminController {
 	/**
 	 * 전자결재G 관리 문서함관리 문서함데이터 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/mgetContInfo.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String mgetContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String apprMgetContInfo(HttpServletRequest request) throws Exception{
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("comID");
+		String lang = config.getProperty("config.primary");
 
-		//2016-05-04 여기서부터 계발
-		return "/admin/ezApprovalG/apprGMCont";
+		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, lang);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함명관리 팝업 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMContType.do")
+	public String apprMContType(Model model) throws Exception{
+		String lang = config.getProperty("config.primary");
+		String primary = config.getProperty("config.lang_Primary" + lang);
+		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		
+		return "admin/ezApprovalG/apprGMContType";
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함명관리 팝업 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMLgetDoctype.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGMLgetDoctype(HttpServletRequest request) throws Exception{
+		String companyID = request.getParameter("comID");
+		String lang = config.getProperty("config.primary");
+		
+		String result = ezApprovalGAdminService.getContTypeInfo("LIST", companyID, lang);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함타입 등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGInsertContType.do")	
+	public void apprGInsertContType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String docTypeName = request.getParameter("docTypeName");
+		String docTypeName2 = request.getParameter("docTypeName2");
+		String companyID = request.getParameter("comID");
+		
+		ezApprovalGAdminService.insertContainerType(docTypeName, docTypeName2, companyID);
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함타입 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGDeleteContType.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGDeleteContType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String docTypeID = request.getParameter("docTypeID");
+		String companyID = request.getParameter("comID");
+		
+		String result = ezApprovalGAdminService.deleteContainerType(docTypeID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서상태등록 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContType.do")
+	public String apprGMinsContType(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+		return "admin/ezApprovalG/apprGMinsContType";
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서상태등록 등록된 문서함상태 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGGetContDocType.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGGetContDocType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String companyID = request.getParameter("comID");
+		String lang = config.getProperty("config.primary");
+		
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, lang);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서상태등록 문서함상태 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGUpdateContDoctype.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprUpdateContDoctype(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);		
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		
+		String result = ezApprovalGAdminService.updateContainerToDocStateInfo(doc, companyID);
+
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함 추가 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContMain.do")
+	public String apprMinsContMain(HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) throws Exception{
+		String tCheck = request.getParameter("tCheck");
+		String serverName = config.getProperty("config.ServerName");
+		String title = "";
+		
+		if (tCheck != null) {
+			if (tCheck.equals("DContIns")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t1651", locale);
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t1652", locale);
+			}
+		}
+		
+		model.addAttribute("title", title);
+		model.addAttribute("serverName", serverName);
+		
+		return "admin/ezApprovalG/apprGMinsContMain";
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함 추가 그룹 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContGroup.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGMgetContGroup(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String contID = request.getParameter("contID");
+		String companyID = request.getParameter("comID");
+		String lang = config.getProperty("config.primary");
+		
+		String result = ezApprovalGAdminService.getContainerUseDeptInfo(contID, companyID, lang);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함 추가 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsCont.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGMinsCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);
+		String companyID = doc.getDocumentElement().getChildNodes().item(doc.getDocumentElement().getChildNodes().getLength() - 1).getTextContent();
+		
+		String result = ezApprovalGAdminService.insertContainerContID(doc, companyID);
+		
+		return result;
 	}
 
 }
