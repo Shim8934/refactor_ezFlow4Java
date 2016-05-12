@@ -7,6 +7,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -26,6 +28,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -70,6 +73,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	
 	/**
@@ -578,6 +584,134 @@ System.out.println("????");
 				return returnXML.toString();
 			}
 		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 자원관리 자원정보 수정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/modClsItem.do")
+	public String modClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String resID = "";
+		String strBrdNm = "";
+		String strOwnDeptNm = "";
+		String strOwnerNm = "";
+		String strOwnerPosition = "";
+		String strBrdID = "";
+		String strBrdExplain = "";
+		String strResLocation = "";
+		String strOwnDeptID = "";
+		String ownerCall = "";
+		String strOwnerID = "";
+		String strMakeDate = "";
+		String strApproveFlag = "";
+		
+		try {
+			if (req.getParameter("brdID") != null) {
+				brdID = req.getParameter("brdID");
+			}
+			if (req.getParameter("resID") != null) {
+				resID = req.getParameter("resID");
+			}
+			
+			if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId()).equals("Y")) {
+				ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID());
+				strBrdID = resBrd.getBrdID();
+				strBrdExplain = resBrd.getBrdExplain();
+				strResLocation = resBrd.getResLocation();
+				strOwnDeptID = resBrd.getOwnDeptID();
+				strOwnerID = resBrd.getOwnerID();
+				ownerCall = resBrd.getOwnerCall();
+				
+				if (userInfo.getLang().equals("1")) {
+					strBrdNm = resBrd.getBrdNm();
+					strOwnDeptNm = resBrd.getOwnDeptNm();
+					strOwnerNm = resBrd.getOwnerNm();
+					strOwnerPosition = resBrd.getOwnerPosition();
+				} else {
+					strBrdNm = resBrd.getBrdNm2();
+					strOwnDeptNm = resBrd.getOwnDeptNm2();
+					strOwnerNm = resBrd.getOwnerNm2();
+					strOwnerPosition = resBrd.getOwnerPosition2();
+				}
+				strMakeDate = resBrd.getMakeDate() + " " + ezResourceService.getCurrentDate();
+				strApproveFlag = resBrd.getApproveFlag();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("userName", userInfo.getName());
+		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("deptName", userInfo.getDeptName1());
+		model.addAttribute("strBrdID", strBrdID); 
+		model.addAttribute("strBrdNm", strBrdNm);
+		model.addAttribute("brdExplain", strBrdExplain);
+		model.addAttribute("ownDeptNm", strOwnDeptNm);
+		model.addAttribute("ownDeptID", strOwnDeptID);
+		model.addAttribute("ownerID", strOwnerID);
+		model.addAttribute("ownerNm", strOwnerNm);
+		model.addAttribute("ownerPosition", strOwnerPosition);
+		model.addAttribute("ownerCall", ownerCall);
+		model.addAttribute("resLocation", strResLocation);
+		model.addAttribute("makeDate", strMakeDate.subSequence(0, 10));
+		model.addAttribute("approveFlag", strApproveFlag);
+		
+		return "/ezResource/resModClsItem";
+	
+	}
+	
+	/**
+	 * 자원관리 자원정보 수정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/callModClsItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callModClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model, @RequestBody String xmlStr) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			
+			String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
+			String propList = "displayName1;displayName2;title1;title2;description1;description2";
+			String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang());
+			
+			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
+			String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+			String deptName2 = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+			String displayName = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
+			String displayName2 = xmlDom2.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+			String title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
+			String title2 = xmlDom2.getElementsByTagName("TITLE2").item(0).getTextContent();
+			
+			xmlDom.getElementsByTagName("DATA").item(2).setTextContent(deptName);
+			xmlDom.getElementsByTagName("DATA").item(4).setTextContent(displayName);
+			xmlDom.getElementsByTagName("DATA").item(5).setTextContent(title);
+			
+			Node data1 = xmlDom.createElement("DATA");
+			data1.setTextContent(deptName2);
+			
+			Node data2 = xmlDom.createElement("DATA");
+			data2.setTextContent(displayName2);
+			
+			Node data3 = xmlDom.createElement("DATA");
+			data3.setTextContent(title2);
+			
+			xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data1);
+			xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data2);
+			xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data3);
+			
+			boolean returnValue = ezResourceService.modifyResData(commonUtil.convertDocumentToString(xmlDom));
+			
+			StringBuilder strXML = new StringBuilder();
+			strXML.append("<RTN>" + String.valueOf(returnValue) + "</RTN>");
+			return strXML.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}
