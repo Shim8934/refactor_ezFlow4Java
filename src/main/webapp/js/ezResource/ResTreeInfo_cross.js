@@ -62,7 +62,7 @@ function GetTreeBrdsInfo()
 			var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			
 			var strUrl = "/ezResource/viewResList2.do?brdID=" + brd_id + "&accessCode=" + g_AccessCode; 
-			strUrl = strUrl + "&brdNm=" + escape(brd_nm);
+			strUrl = strUrl + "&brdNm=" + encodeURI(brd_nm);
 			
 			Navigate( strUrl );
 			
