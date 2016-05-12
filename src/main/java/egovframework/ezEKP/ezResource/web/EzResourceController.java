@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.awt.SecondaryLoop;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -714,5 +715,37 @@ System.out.println("????");
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	/**
+	 * 자원관리 자원 추가 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/addClsItem.do")
+	public String addClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		
+		try {
+			if (!req.getParameter("brdID").equals("")) {
+				brdID = req.getParameter("brdID");
+			}
+		} catch (Exception e) {
+			
+		}
+		
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("userName", userInfo.getName());
+		model.addAttribute("deptName", userInfo.getDeptName1());
+		model.addAttribute("title", userInfo.getTitle1());
+		model.addAttribute("displayName", userInfo.getDisplayName1());
+		model.addAttribute("ownerCall", userInfo.getPhone());
+		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
+		model.addAttribute("langPrimary", config.getProperty("config.lang_Primary1"));
+		model.addAttribute("langSecondary", config.getProperty("config.lang_Secondary1"));
+		
+		return "/ezResource/resAddClsItem";
 	}
 }
