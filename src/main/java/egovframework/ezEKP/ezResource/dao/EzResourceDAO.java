@@ -80,9 +80,12 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (int)map.get("v_pCount");
 	}
 	
+	public void modifyResData(Map<String, Object> map) {
+		update("EzResourceDAO.modifyResData", map);
+	}
+	
 	public void delResData(Map<String, Object> map) {
 		delete("EzResourceDAO.delResData", map);
 	}
-	
 }
 

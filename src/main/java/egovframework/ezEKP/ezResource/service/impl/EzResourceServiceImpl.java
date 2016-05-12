@@ -187,6 +187,29 @@ public class EzResourceServiceImpl implements EzResourceService{
 		ezResourceDAO.delResData(map);
 	}
 	
+	@Override
+	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
+			String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_Brd_ID", brdID);
+		map.put("v_P_ODeptID", deptID);
+		map.put("v_P_ODeptNm", deptNm);
+		map.put("v_P_OwnerID", ownerID);
+		map.put("v_P_OwnerNm", ownerNm);
+		map.put("v_P_OwnerPos", ownerPos);
+		map.put("v_P_OwnerCall", ownerCall);
+		map.put("v_P_Brd_NM", brdNm);
+		map.put("v_P_ResLocation", resLocation);
+		map.put("v_P_Brd_Explain", brdExplain);
+		map.put("v_P_CompanyID", companyID);
+		map.put("v_P_Approve", approve);
+		map.put("v_P_Brd_NM2", brdNm2);
+		map.put("v_P_ODeptNm2", deptNm2);
+		map.put("v_P_OwnerNm2", ownerNm2);
+		map.put("v_P_OwnerPos2", ownerPos2);
+		ezResourceDAO.modifyResData(map);
+	}
+
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
 		StringBuilder returnStr = new StringBuilder();
@@ -1846,8 +1869,7 @@ System.out.println(returnXML);
 			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 			brdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
 			companyID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
-System.out.println("brdID:"+brdID);
-System.out.println("companyID:"+companyID);
+
 			for (int i=0; i<brdID.split(",").length; i++) {
 				delResData(brdID.split(",")[i], companyID);
 			}
@@ -1858,8 +1880,49 @@ System.out.println("companyID:"+companyID);
 		return true;
 	}
 
-
-	
+	public boolean modifyResData(String xmlStr) {
+		String strBrdID = "";
+		String strODeptID = "";
+		String strODeptNm = "";
+		String strOwnerID = "";
+		String strOwnerNm = "";
+		String strOwnerPos = "";
+	    String strOwnerCall = "";
+	    String strBrdNm = "";
+	    String strResLocation = "";
+	    String strBrdExplain = "";
+	    String strCompanyID = "";
+	    String strApprove = "";
+	    String strBrdNm2 = "";
+	    String strODeptNm2 = "";
+	    String strOwnerNm2 = "";
+	    String strOwnerPos2 = "";
+	    
+	    try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
+			strODeptID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
+			strODeptNm = xmlRes.getElementsByTagName("DATA").item(2).getTextContent().trim();
+			strOwnerID = xmlRes.getElementsByTagName("DATA").item(3).getTextContent().trim();
+			strOwnerNm = xmlRes.getElementsByTagName("DATA").item(4).getTextContent().trim();
+			strOwnerPos = xmlRes.getElementsByTagName("DATA").item(5).getTextContent().trim();
+			strOwnerCall = xmlRes.getElementsByTagName("DATA").item(6).getTextContent().trim();
+			strBrdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent().trim();
+			strResLocation = xmlRes.getElementsByTagName("DATA").item(8).getTextContent().trim();
+			strBrdExplain = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
+			strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
+			strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
+			strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
+			strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+			strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+			strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+			
+			modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 	
 }
 
