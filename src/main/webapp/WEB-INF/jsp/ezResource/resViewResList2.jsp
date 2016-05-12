@@ -133,7 +133,7 @@
 	        	}
 
 	        	var pURL;
-	        	pURL = "/ezResource/ClsItem/AddClsItem.do?brdID=" + pBrdid
+	        	pURL = "/ezResource/addClsItem.do?brdID=" + pBrdid
 	        	var openLocation = pURL;
 	        	openwindow(openLocation, "", 580, 450);
 	    	}
