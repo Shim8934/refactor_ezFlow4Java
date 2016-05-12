@@ -42,6 +42,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
@@ -1006,7 +1007,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		if (uidStr != null && !uidStr.equals("")) {
 			uid = Long.parseLong(uidStr);
 		}
-		
+				
 		String realPath = request.getServletContext().getRealPath("");
 		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
 		
@@ -1081,7 +1082,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			        File f = new File(pDirTempPath + commonUtil.separator + path);
 			        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 			        messageBodyPart.setDataHandler(new DataHandler(source));
-			        messageBodyPart.setFileName(fileName);
+			        
+			        // MimeUtility.encodeText is necessary, otherwise filename encoding 
+			        // may be wrong on some systems(linux, etc) although it works on 
+			        // other systems.
+			        messageBodyPart.setFileName(MimeUtility.encodeText(fileName, "UTF-8", null));
+			        
 			        String contentType = "application/octet-stream";
 			        
 			        if (Files.probeContentType(f.toPath()) != null) {

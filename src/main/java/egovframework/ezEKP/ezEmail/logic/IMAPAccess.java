@@ -22,13 +22,10 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 
@@ -66,6 +63,12 @@ public class IMAPAccess {
 			//cause the socket to be created using the java.net.Socket class. Defaults to true.
 			properties.setProperty("mail.imap.socketFactory.fallback", "false");
 			properties.setProperty("mail.imap.socketFactory.port", String.valueOf(port));
+			
+			// these properties are required to be set to false, otherwise
+			// big mail body part(in-line image, attachment, etc) fetching may be very slow.
+			properties.setProperty("mail.imap.partialfetch", "false");
+			properties.setProperty("mail.imaps.partialfetch", "false");
+			
 			Session session = Session.getDefaultInstance(properties);
 
 			store = session.getStore("imap");
