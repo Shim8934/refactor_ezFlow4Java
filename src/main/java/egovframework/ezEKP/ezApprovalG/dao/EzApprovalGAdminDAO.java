@@ -56,8 +56,20 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertContainerDocState", map);
 	}
 	
+	public void updateContainer(Map<String, Object> map) throws Exception{
+		update("EzApprovalGAdmin.updateContainer", map);
+	}
+	
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
+	}
+
+	public void deleteContainerUseDep(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteContainerUseDep", map);
+	}
+
+	public void deleteContainer(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteContainer", map);
 	}
 
 

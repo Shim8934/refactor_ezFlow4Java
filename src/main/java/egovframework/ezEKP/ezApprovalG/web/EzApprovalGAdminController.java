@@ -210,7 +210,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 추가 팝업 호출 함수
+	 * 전자결재G 관리 문서함관리 문서함 추가/수정 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContMain.do")
 	public String apprMinsContMain(HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) throws Exception{
@@ -233,7 +233,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 추가 그룹 목록 호출 함수
+	 * 전자결재G 관리 문서함관리 문서함 추가/수정 팝업 공유부서 목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -256,7 +256,35 @@ public class EzApprovalGAdminController {
 		Document doc = commonUtil.convertStringToDocument(data);
 		String companyID = doc.getDocumentElement().getChildNodes().item(doc.getDocumentElement().getChildNodes().getLength() - 1).getTextContent();
 		
-		String result = ezApprovalGAdminService.insertContainerContID(doc, companyID);
+		String result = ezApprovalGAdminService.insertContainer(doc, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함 수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMupdateCont.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGMupdateCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Document doc = commonUtil.convertStringToDocument(data);
+		String companyID = doc.getDocumentElement().getChildNodes().item(doc.getDocumentElement().getChildNodes().getLength() - 1).getTextContent();
+		
+		String result = ezApprovalGAdminService.updateContainer(doc, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리 문서함관리 문서함 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMdelCont.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String apprGMdelCont(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+		String contID = request.getParameter("contID");
+		String companyID = request.getParameter("comID");
+				
+		String result = ezApprovalGAdminService.deleteContainer(contID, companyID);
 		
 		return result;
 	}

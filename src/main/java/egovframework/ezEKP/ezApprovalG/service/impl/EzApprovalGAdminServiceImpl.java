@@ -80,9 +80,9 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 						sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
 						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</DATA3>");
 					}
-					sb.append("<DATA1>" + vo.getContainerID() + "</DATA1>");
-					sb.append("<DATA2>" + vo.getContainerTypeID() + "</DATA2>");
-					sb.append("<DATA4>" + vo.getContainerOwnDepID() + "</DATA4>");
+					sb.append("<DATA1>" + vo.getContainerID().trim() + "</DATA1>");
+					sb.append("<DATA2>" + vo.getContainerTypeID().trim() + "</DATA2>");
+					sb.append("<DATA4>" + vo.getContainerOwnDepID().trim() + "</DATA4>");
 					sb.append("</CELL></ROW>");
 				}				
 				sb.append("</ROWS></LISTVIEWDATA>");
@@ -92,7 +92,7 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 				for (int i = 0; i < listBody.size(); i++) {
 					ApprGLeftVO vo = listBody.get(i);
 					
-					sb.append("<CONTID" + i + ">" + vo.getContainerID() + "</CONTID" + i + ">");
+					sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
 										
 					if(strMultiData.equals("")){
 						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
@@ -131,7 +131,7 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 				}else{
 					sb.append("<ROW><CELL><VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
 				}
-				sb.append("<DATA1>" + vo.getContainerTypeID() + "</DATA1></CELL></ROW>");				
+				sb.append("<DATA1>" + vo.getContainerTypeID().trim() + "</DATA1></CELL></ROW>");				
 			}
 			sb.append("</ROWS></LISTVIEWDATA>");
 		} else {
@@ -140,11 +140,11 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			for (int i = 0; i < list.size(); i++) {
 				ApprGLeftVO vo = list.get(i);
 				
-				sb.append("<ID" + i + ">" + vo.getContainerTypeID() + "</ID" + i + ">");
+				sb.append("<ID" + i + ">" + vo.getContainerTypeID().trim() + "</ID" + i + ">");
 				
-				if(strMultiData.equals("")){
+				if (strMultiData.equals("")) {
 					sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
-				}else{
+				} else {
 					sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
 				}
 			}
@@ -216,7 +216,7 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			} else {
 				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
 			}			
-			sb.append("<DATA1>" + vo.getContainerTypeID() + "</DATA1></CELL>");
+			sb.append("<DATA1>" + vo.getContainerTypeID().trim() + "</DATA1></CELL>");
 			sb.append("</ROW>");
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
@@ -259,6 +259,8 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 		map.put("v_CONTID", contID);		
 		map.put("companyID", companyID);
 		
+		String strMultiData = commonUtil.getMultiData(lang);
+		
 		try {
 			List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
 			sb.append("<PARAMETER>");
@@ -267,8 +269,13 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 				for (int i = 0; i < list.size(); i++) {
 					ApprGLeftVO vo = list.get(i);
 					
-					sb.append("<ID" + i + ">" + vo.getUseDepID() + "</ID" + i + ">");
-					sb.append("<NAME" + i + ">" + vo.getUseDepID() + "</NAME" + i + ">");
+					sb.append("<ID" + i + ">" + vo.getUseDepID().trim() + "</ID" + i + ">");
+					
+					if (strMultiData.equals("")) {
+						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
+					} else {
+						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
+					}
 				}
 			}else{
 				sb.append("<ID0>FALSE</ID0><NAME0></NAME0>");
@@ -282,11 +289,11 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 	}
 
 	@Override
-	public String insertContainerContID(Document xmlData, String companyID)	throws Exception {
+	public String insertContainer(Document xmlData, String companyID)	throws Exception {
 		try {
 			String pMaxContainerID = ezApprovalGAdminDAO.insertContainerContID(companyID);
 			
-			int tempMaxContainerID = Integer.parseInt(pMaxContainerID) + 1;
+			int tempMaxContainerID = Integer.parseInt(pMaxContainerID.trim()) + 1;
 	        pMaxContainerID = tempMaxContainerID + "";
 	        int pMaxContainerIDLength = pMaxContainerID.length();
 	        int i;
@@ -295,16 +302,16 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 	            pMaxContainerID = "0" + pMaxContainerID;
 	        }
 	
-			String pContType = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent();
-			String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent();
+			String pContType = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
+			String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent().trim();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("contID", pMaxContainerID);		
-			map.put("contType", pContType.trim());		
+			map.put("contType", pContType);		
 			map.put("deptID", pOwnDeptID);		
 			map.put("companyID", companyID);
-	
+			//문서함 등록 함수
 			ezApprovalGAdminDAO.insertContainer(map);
 			
 			pMaxContainerIDLength = xmlData.getDocumentElement().getChildNodes().getLength();
@@ -314,9 +321,9 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			    	Map<String, Object> map1 = new HashMap<String, Object>();
 					
 					map1.put("contID", pMaxContainerID);		
-					map1.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent());
+					map1.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
 					map1.put("companyID", companyID);
-					
+					//문서함 공유부서 등록 함수	
 			    	ezApprovalGAdminDAO.insertContainerUseDep(map1);		        
 			    }
 			}
@@ -325,6 +332,60 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";
 		}
 	}
+
+	@Override
+	public String updateContainer(Document xmlData, String companyID) throws Exception {
+		String pContID = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
+		String pContType = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent().trim();
+		String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(2).getTextContent().trim();
+				
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("contID", pContID);		
+			map.put("contType", pContType);		
+			map.put("deptID", pOwnDeptID);		
+			map.put("companyID", companyID);
+	
+			//문서함 수정 함수
+			ezApprovalGAdminDAO.updateContainer(map);
+			//문서함 공유부서 삭제 함수
+			ezApprovalGAdminDAO.deleteContainerUseDep(map);
+			
+			int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
+		
+		    for (int i = 3; i < cnt - 1; i++) {
+		    	Map<String, Object> map1 = new HashMap<String, Object>();
+				
+				map1.put("contID", pContID);		
+				map1.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+				map1.put("companyID", companyID);
+				//문서함 공유부서 등록 함수
+		    	ezApprovalGAdminDAO.insertContainerUseDep(map1);
+		    }
+		    return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String deleteContainer(String contID, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_CONTID", contID);
+			map.put("companyID", companyID);
+	
+			//문서함 삭제 함수
+			ezApprovalGAdminDAO.deleteContainer(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}		
+	}
 	
 
+	
 }

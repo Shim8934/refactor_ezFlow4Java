@@ -250,13 +250,13 @@ public class EzOrganServiceImpl implements EzOrganService {
                 sb.append(commonUtil.getQueryResult(userVO));
             }else{
             	map1.put("v_CN", obj.getCn());
-        		map1.put("v_LANGDATA", pDeptID);
+        		map1.put("v_LANGDATA", pLangCode);
         		                
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
                 sb.append(commonUtil.getQueryResult(userVO));
             }
             sb.append("</DATA>");
-
+            
             String cn2 = obj.getCn();
             String displayname2 = obj.getDisplayName();
             

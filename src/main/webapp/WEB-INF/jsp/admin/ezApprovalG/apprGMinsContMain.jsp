@@ -183,57 +183,61 @@
 		    
 		    function btnDeldept_onclick() {
 		        var index;
-		        index = selUseDept.selectedIndex
-		        if (index != -1)
+		        index = selUseDept.selectedIndex;
+		        
+		        if (index != -1) {
 		            selUseDept.remove(index);
-		        else
+		        } else {
 		            alert("<spring:message code='ezApprovalG.t1646'/>");
+		        }
 		    }
 		    
 		    function btnOk_onclick() {
-		        var rtnVal, itmeCnt;
-
-		        if (gState == "I") {
-		            if (document.getElementById("chkUseDept").checked) {
-		                itemCnt = selUseDept.length;
-		                
-		                if (itemCnt > 0) {
-		                    rtnVal = insCont("G");
-		                } else {
-		                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
-		                    return;
-		                }
-		            } else {
-		                rtnVal = insCont("N");
-		            }
-		        } else {
-		            if (chkUseDept.checked) {
-		                itemCnt = selUseDept.length;
-		                
-		                if (itemCnt > 0) {
-		                    rtnVal = UpdateCont("G");
-		                } else {
-		                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
-		                    return;
-		                }
-		            } else {
-		                rtnVal = UpdateCont("N");
-		            }
-		        }
-
-		        if (typeof (rtnVal) != "undefined") {
-		            if (rtnVal) {
-		                ReturnFunction();
-		                window.returnValue = "TRUE"
-		                window.close();
-		            } else {
-		                window.returnValue = "FALSE"
-		                window.close();
-		            }
-		        } else {
-		            window.returnValue = "FALSE"
-		            window.close();
-		        }
+		    	if (confirm("<spring:message code='ezQuestion.t12'/>")) {
+			        var rtnVal, itmeCnt;
+	
+			        if (gState == "I") {
+			            if (document.getElementById("chkUseDept").checked) {
+			                itemCnt = selUseDept.length;
+			                
+			                if (itemCnt > 0) {
+			                    rtnVal = insCont("G");
+			                } else {
+			                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
+			                    return;
+			                }
+			            } else {
+			                rtnVal = insCont("N");
+			            }
+			        } else {
+			            if (chkUseDept.checked) {
+			                itemCnt = selUseDept.length;
+			                
+			                if (itemCnt > 0) {
+			                    rtnVal = UpdateCont("G");
+			                } else {
+			                    window.alert("<spring:message code='ezApprovalG.t1647'/>");
+			                    return;
+			                }
+			            } else {
+			                rtnVal = UpdateCont("N");
+			            }
+			        }
+	
+			        if (typeof (rtnVal) != "undefined") {
+			            if (rtnVal) {
+			                ReturnFunction();
+			                window.returnValue = "TRUE"
+			                window.close();
+			            } else {
+			                window.returnValue = "FALSE"
+			                window.close();
+			            }
+			        } else {
+			            window.returnValue = "FALSE"
+			            window.close();
+			        }
+		    	}
 		    }
 		    
 		    function insCont(state) {
@@ -260,6 +264,37 @@
 		        xmlhttp.open("POST", "/admin/ezApprovalG/apprGMinsCont.do", false);
 		        xmlhttp.send(xmlpara);
 
+		        if (xmlhttp.responseText == "FALSE") {
+		            return false;
+		        } else {
+		            return true;
+		        }
+		    }
+		    
+		    function UpdateCont(state) {
+		        var xmlpara = createXmlDom();
+		        var ParaName, ParaValue
+
+		        createNodeInsert(xmlpara, objNode, "PARAMETER");
+		        createNodeAndInsertText(xmlpara, objNode, "CONTID", document.getElementById("tbContID").value);
+		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
+		        createNodeAndInsertText(xmlpara, objNode, "CONTOWNDEPID", gDeptID);
+
+		        if (state == "G") {
+		            var Count = selUseDept.length;
+		            
+		            for (i = 0; i < Count; i++) {
+		                ParaName = "Dept" + i
+		                ParaValue = selUseDept.item(i)
+		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+		            }
+		        }
+
+		        createNodeAndInsertText(xmlpara, objNode, "comID", P_companyID);
+
+		        xmlhttp.open("POST", "/admin/ezApprovalG/apprGMupdateCont.do", false);
+		        xmlhttp.send(xmlpara);
+		        
 		        if (xmlhttp.responseText == "FALSE") {
 		            return false;
 		        } else {

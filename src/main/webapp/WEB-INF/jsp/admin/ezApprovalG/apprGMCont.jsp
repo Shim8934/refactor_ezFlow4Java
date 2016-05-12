@@ -177,7 +177,7 @@
 	                para[2] = selRow[0].getAttribute("DATA2");
 	                para[3] = selRow[0].getAttribute("DATA4");
 	                para[4] = CompanyID;
-	                para[5] = DeptID
+	                para[5] = DeptID;
 
 	                var url = "/admin/ezApprovalG/apprGMinsContMain.do?tCheck=DContUpdate";
 
@@ -192,8 +192,39 @@
 	        }
 	        
 	        function btnUpdate_onclick_Complete() {
-	            getContInfo(para[3]);
+	        	getContInfo(tempDeptID);
 	        }
+	        
+	        function delContainer(selRow) {
+	            var ContID = listview.GetDataRows()[selRow].getAttribute("DATA1");
+	            var xmlRtn = createXmlDom();
+	            
+	            $.ajax({
+		        	type : "POST",
+		        	dataType : "text",
+		        	url : "/admin/ezApprovalG/apprGMdelCont.do",
+		        	async : false,
+		        	data : {contID : ContID, comID : CompanyID},
+		        	success : function(result){
+		        		if (result == "TRUE") {
+			                listview.GetDataRows()[selRow].parentElement.removeChild(listview.GetDataRows()[selRow]);
+			            } else {
+			                window.alert("<spring:message code='ezApprovalG.t1587'/>");
+			        	}
+		        	}
+		        });	            
+	   	 	}
+	        
+		    function btnDel_onclick() {
+		    	if (confirm("<spring:message code='ezApprovalG.t999933'/>")) {
+			        listview.LoadFromID("lvtDocForm");		        
+			        var selRow = listview.GetSelectedIndexes().split(",");
+			        
+			        if (selRow) {
+			            delContainer(selRow);
+			        }
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">

@@ -110,7 +110,7 @@ public class EzOrganController {
 		if (page == null) {		
 			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang);
 		} else {
-			/* 2016-03-29 장진혁과장 pagination 작업 필요 */
+			/* TODO : 2016-03-29 장진혁과장 pagination 작업 필요 */
 			//infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page);			 
 		}
 		
