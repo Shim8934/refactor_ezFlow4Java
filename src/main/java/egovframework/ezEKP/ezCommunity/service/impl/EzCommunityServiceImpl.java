@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -810,7 +811,7 @@ System.out.println("@");
 		
 		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-		boardInfo.setSs_Board_MaxRows(17);
+		boardInfo.setSs_Board_MaxRows(10);
 		boardInfo.setSs_SearchBoard_MaxRows(10);
 		
 		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
@@ -860,7 +861,7 @@ System.out.println("@");
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
-			boardInfo.setSs_Board_MaxRows(12);
+			boardInfo.setSs_Board_MaxRows(10);
 		}
 		
 		boardInfo.setBoardID(pBoardID);
@@ -958,6 +959,7 @@ System.out.println("@");
 
 	@Override
 	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
+		int count = 0;
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
@@ -972,21 +974,25 @@ System.out.println("@");
 		sb.append("<NODES>");
 		
 		for (CommunityBoardListVO boardList : list) {
-			sb.append("<NODE>");
-			sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
-			sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
-			sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
-			sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
-			sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-			sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
-			sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
-			sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
-			sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
-			sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
-			sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
-			sb.append("</NODE>");
+			count++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
+				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
+				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
+				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
+				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
 		}
 		
 		sb.append("</NODES>");
@@ -1095,13 +1101,71 @@ System.out.println("@");
 	}
 
 	@Override
-	public int searchItemCount(String id, String boardID, String title,
-			String writerName, String abstracts, String startDateTime,
-			String endDateTime) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public String searchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PTITLE", title);
+		map.put("v_PWRITERNAME", writerName);
+		map.put("v_PABSTRACT", abstracts);
+		map.put("v_PSTARTDATE", startDateTime);
+		map.put("v_PENDDATE", endDateTime);
+		
+		
+		return ezCommunityDAO.searchItemCount(map);
 	}
-	
+
+	@Override
+	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("iv_pBoardID", boardID);
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_pUserName", userInfo.getDisplayName1());
+		map.put("v_pUserDeptName", userInfo.getDeptName1());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+		map.put("v_pUserTitle", userInfo.getTitle1());
+		map.put("v_pUserName2", userInfo.getDisplayName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		
+		for (String item : itemIDList.split(";")) {
+			map.put("v_pItemID", item);
+			ezCommunityDAO.setAsRead(map);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteItem(String itemList) throws Exception {
+		String boardID = "";
+		
+		for (String itemID : itemList.split(";")) {
+			itemID = itemID.split(",")[0];
+			boardID = ezCommunityDAO.deleteItemGet(itemID);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("boardID", boardID);
+			map.put("itemID", itemID);
+
+			ezCommunityDAO.deleteItem1(itemID);
+			ezCommunityDAO.deleteItem2(itemID);
+			ezCommunityDAO.deleteItem3(itemID);
+			ezCommunityDAO.deleteItem4(map);
+		}
+	}
+
+	@Override
+	public String checkIfHasReply(String itemList) throws Exception {
+		for (String item : itemList.split(";")) {
+			String itemID = item.split(",")[0];
+			String ret = ezCommunityDAO.checkIfHasReply(itemID);
+
+			if (!ret.equals("0")) {
+				return "FALSE";
+			}
+		}
+		return "TRUE";
+	}
 	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {

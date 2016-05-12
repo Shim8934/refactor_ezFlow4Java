@@ -101,35 +101,35 @@
 					}
 					
 					listXML += "<tr id='rowdata'>";
-					listXML += "<td width=20 align=center valign=middle style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><td>";
-					listXML += "<td title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim() + "</nobr><td>"
+					listXML += "<td width=20 align=center valign=middle style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'></td>";
+					listXML += "<td title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim() + "</nobr></td>"
 
 					if (gubun == "1") {
-						listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "<td>";
+						listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</td>";
 					}
 					
 					if (gubun != "2") {
-						listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "<td>";
+						listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</td>";
 					}
 					
 					if (gubun == "2") {
-						listXML += "<td><div style='cursor:pointer'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div><td>";
+						listXML += "<td><div style='cursor:pointer'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 					} else {
-						listXML += "<td><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div><td>";
+						listXML += "<td><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 					}
-					
-					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "<td>";
+
+					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<td align=center><img src='/images/i_save01.gif'><td>";
+						listXML += "<td align=center><img src='/images/i_save01.gif'></td>";
 					} else {
-						listXML += "<td><td>";
+						listXML += "<td></td>";
 					}
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") == ""){
-						listXML += "<td align=center>0<td>";
+						listXML += "<td align=center>0</td>";
 					} else {
-						listXML += "<td align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "<td>";
+						listXML += "<td align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</td>";
 					}
 					
 					listXML += "<tr>";
@@ -137,7 +137,7 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-    			$('.mainlist').append(listXML);
+    			$('.mainlist').html($('.mainlist').html() + listXML);
     			
     			makePageSelPage();
     			
@@ -325,6 +325,7 @@
 				}
 				
 				var ret = confirm("<spring:message code='ezCommunity.t426' />");
+				
 				if (ret)	{
 					DeleteItem();	
 				}
@@ -504,12 +505,12 @@
 	            }
 	        }
 	        
-	        function movePage(newPage) {	
+	        function movePage(newPage) {
 	        	var title = txtTitle.value;
-	        	var writerName = txtWriterName.value;
-	        	var strAbstract = txtAbstract.value;
-	        	var searchStart = document.getElementById("idDatepicker").value;
-	        	var searchEnd = _D2.value;
+				var writerName = txtWriterName.value;
+				var strAbstract = txtAbstract.value;
+			    var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
@@ -531,8 +532,8 @@
 				var title = txtTitle.value;
 				var writerName = txtWriterName.value;
 				var strAbstract = txtAbstract.value;
-				var searchStart = idDatepicker.value;
-				var searchEnd = _D2.value;
+				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
@@ -554,8 +555,8 @@
 				var title = txtTitle.value;
 				var writerName = txtWriterName.value;
 				var strAbstract = txtAbstract.value;
-				var searchStart = idDatepicker.value;
-				var searchEnd = _D2.value;
+				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
@@ -743,7 +744,7 @@
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208'/></span></li>
 				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li>
-				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
+				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li>
 				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>
 			</ul>
@@ -778,7 +779,7 @@
 			</tr>
 			
 			<table class="mainlist" style="margin-top:3px;width:100%">
-				<form name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
+				<form id = "listXML" name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
 					<tr>
 					    <th style="padding:0" align="center" width="20"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
 					    <c:choose>

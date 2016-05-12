@@ -162,6 +162,10 @@
 		{CALL EZCOMMUNITY.EZSP_BRDTOTALITEMCOUNT(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_SEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -228,6 +232,14 @@
 	
 	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.setAsRead"					parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.checkIfHasReply"				parameterClass="String" 	resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
@@ -326,6 +338,18 @@
 		]]>		
 	</select>
 	
+	
+	<select id="EzCommunityDAO.deleteItemGet"					parameterClass="String"		resultClass="String">
+		<![CDATA[
+			SELECT 
+				boardid
+        	FROM 
+        		EZCOMMUNITY.TBL_BOARD_ITEM 
+       		WHERE 
+       			ITEMID = #itemID#
+		]]>		
+	</select>
+	
 	<update id="EzCommunityDAO.updateLastDate"					parameterClass="Map">
 		<![CDATA[
 			UPDATE 
@@ -339,5 +363,46 @@
        			C_ID = #ID#
 		]]>
 	</update>
+	
+	<delete id="EzCommunityDAO.deleteItem1"						parameterClass="String">
+		<![CDATA[
+			DELETE 
+        	FROM 
+        		EZCOMMUNITY.TBL_BOARD_ITEM 
+       		WHERE 
+       			ITEMID = #itemID#
+		]]>		
+	</delete>
+	
+	<delete id="EzCommunityDAO.deleteItem2"						parameterClass="String">
+		<![CDATA[
+			DELETE 
+        	FROM 
+        		EZCOMMUNITY.TBL_BOARD_ONELINEREPLY 
+       		WHERE 
+       			ITEMID = #itemID#
+		]]>		
+	</delete>
+	
+	<delete id="EzCommunityDAO.deleteItem3"						parameterClass="String">
+		<![CDATA[
+			DELETE 
+        	FROM 
+        		EZCOMMUNITY.TBL_BOARD_ITEM_READ 
+       		WHERE 
+       			ITEMID = #itemID#
+		]]>		
+	</delete>
+	
+	<delete id="EzCommunityDAO.deleteItem4"						parameterClass="Map">
+		<![CDATA[
+			INSERT
+        	INTO
+        		EZCOMMUNITY.TBL_BOARD_DELETERESERVEDITEM
+       		VALUES
+       			(#boardID#, #itemID#)
+		]]>		
+	</delete>
+	
 	
 </sqlMap>

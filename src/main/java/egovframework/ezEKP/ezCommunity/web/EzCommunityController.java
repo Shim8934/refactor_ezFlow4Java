@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -16,9 +18,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.connector.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -887,8 +891,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			sb.append("<GUBUN>"+boardInfo.getGubun()+"</GUBUN>");
 			sb.append("</ROW>");
 		}
-		sb.append("</DATA>");
 		
+		sb.append("</DATA>");
 		sb.append("</BOARDINFO>");
 		sb.append("<BOARDITEM>");
 		sb.append("<DATA>");
@@ -958,12 +962,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 			int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
 			
 			if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				totalCount = Integer.parseInt(ezCommunityService.getNewItemListCount(userInfo.getId()));
+				
+				if (totalCount < pEndRow) {
+					pEndRow = totalCount;
+				}
+				
                 strXML = ezCommunityService.getNewItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy);
-                totalCount = Integer.parseInt(ezCommunityService.getNewItemListCount(userInfo.getId()));
             } else {
                 showAdjacent = "1";
-                strXML = ezCommunityService.getBoardListItemXML(userInfo.getId(), pBoardID, pStartRow, pEndRow, pSortBy, userInfo.getLang());
                 totalCount = Integer.parseInt(ezCommunityService.getBoardTotalItemCount(pBoardID));
+                
+                if (totalCount < pEndRow) {
+					pEndRow = totalCount;
+				}
+                
+                strXML = ezCommunityService.getBoardListItemXML(userInfo.getId(), pBoardID, pStartRow, pEndRow, pSortBy, userInfo.getLang());
             }
 			
 			if (totalCount > 0) {
@@ -1042,15 +1056,15 @@ public class EzCommunityController extends EgovFileMngUtil{
         int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
         String startDateTime = "";
         String endDateTime = "";
-        
+
         if (!searchStart.equals("")) {
         	startDateTime = searchStart.split(" ")[0];
         	endDateTime = searchEnd.split(" ")[0];
         }
 
         if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
+        	totalCount = Integer.parseInt(ezCommunityService.searchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime));
             strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()));
-            totalCount = ezCommunityService.searchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime);
             
             if (totalCount > 0) {
 				if (totalCount > boardInfo.getSs_SearchBoard_MaxRows()) {
@@ -1067,19 +1081,60 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
         }
 
-        System.out.println(strXML);
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("orgBoardParameters", orgBoardParameters);
         model.addAttribute("startDateTime", startDateTime);
         model.addAttribute("endDateTime", endDateTime);
         model.addAttribute("pSortBy", pSortBy);
-        
         model.addAttribute("strXML", strXML);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("totalPage", totalPage);
+        model.addAttribute("title", title);
+        model.addAttribute("writerName", writerName);
+        model.addAttribute("abstract", abstracts);
         
 		return "/ezCommunity/communitySearchBoardItem";
+	}
+	
+	/**
+	 * 게시물 읽음표시 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/setRead.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request){
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String itemIDList = request.getParameter("itemIDList");
+		
+		try{
+			ezCommunityService.setAsRead(userInfo, boardID, itemIDList);
+			
+			return "OK";
+		} catch(Exception e) {
+			return "ERROR";
+		}
+	}
+	
+	/**
+	 * 게시물 답변 여부 체크 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/checkIfHasReply.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String checkIfHasReply (HttpServletRequest request) throws Exception {
+		String itemList = request.getParameter("itemList");
+		
+		return ezCommunityService.checkIfHasReply(itemList);
+	}
+	
+	/**
+	 * 게시물 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/deleteItem.do", method = RequestMethod.POST)
+	public void deleteItem(HttpServletRequest request) throws Exception {
+		String itemList = request.getParameter("itemList");
+		
+		ezCommunityService.deleteItem(itemList);
 	}
 	
 	/**

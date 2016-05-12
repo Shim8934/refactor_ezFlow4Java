@@ -33,14 +33,14 @@
     		var totalPage = "<c:out value='${totalPage}' />";
     		var totalCount = "<c:out value='${totalCount}' />";
     		var strListInfo = "";
-    		var	Access_FG = "<c:out value='${boardinfo.access_FG}' />";
-    		var	BoardAdmin_FG = "<c:out value='${boardinfo.boardAdmin_FG}' />";
-    		var	ListView_FG = "<c:out value='${boardinfo.listView_FG}' />";
-    		var	Read_FG = "<c:out value='${boardinfo.read_FG}' />";
-    		var	Write_FG = "<c:out value='${boardinfo.write_FG}' />";
-    		var	Reply_FG = "<c:out value='${boardinfo.reply_FG}' />";
-    		var	Delete_FG = "<c:out value='${boardinfo.delete_FG}' />";
-    		var BoardGroupAdmin_FG = "<c:out value='${boardinfo.boardGroupAdmin_FG}' />";
+    		var	Access_FG = "<c:out value='${boardInfo.access_FG}' />";
+    		var	BoardAdmin_FG = "<c:out value='${boardInfo.boardAdmin_FG}' />";
+    		var	ListView_FG = "<c:out value='${boardInfo.listView_FG}' />";
+    		var	Read_FG = "<c:out value='${boardInfo.read_FG}' />";
+    		var	Write_FG = "<c:out value='${boardInfo.write_FG}' />";
+    		var	Reply_FG = "<c:out value='${boardInfo.reply_FG}' />";
+    		var	Delete_FG = "<c:out value='${boardInfo.delete_FG}' />";
+    		var BoardGroupAdmin_FG = "<c:out value='${boardInfo.boardGroupAdmin_FG}' />";
     		var pSortBy = "<c:out value='${pSortBy}' />";
     		var url = "<c:out value='${url}' />";
     		var ShowAdjacent = "<c:out value='${showAdjacent}' />";
@@ -213,7 +213,7 @@
     				arrList = strListInfo.split(";");
     				
     				if (arrList.length > 2)  {
-    					//message 에 추가
+    					//2016-05-12 이효진 message 에 추가
     					alert("익명게시물 삭제는 한개씩만 삭제 가능합니다.");
     					return;
     				}
@@ -239,8 +239,7 @@
    		                    	
    		                    }
     		            }
-    		        }
-    		        else {
+    		        } else {
     		            alert("<spring:message code='ezCommunity.t431' />");
     		            return;
     		        }
@@ -250,6 +249,7 @@
     		        alert("<spring:message code='ezCommunity.t425' />");
                     return;
                 }
+    		    
     		    if(gubun != "2"){
     		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
     		        if (ret) {
@@ -285,14 +285,14 @@
     		    var xmlhttp = createXMLHttpRequest();
     			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
     			xmlhttp.send();	
-    			
+
     			if(xmlhttp.responseText == "FALSE") {
     				xmlhttp = null;	
-    				return false;
+    				return true;
     			}
     			
     			xmlhttp = null;
-    			return true;
+    			return false;
     		}
 
     		function DeleteItem() {
@@ -658,6 +658,8 @@
 		
 		<div id="mainmenu">
 			<ul>
+				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
+				
 				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t910' /></span></li>
 					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>

@@ -107,6 +107,10 @@ public interface EzCommunityService {
 	public String getBoardTotalItemCount(String pBoardID) throws Exception;
 
 	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception;
+	
+	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception;
+	
+	public String searchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
@@ -144,11 +148,11 @@ public interface EzCommunityService {
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
 
-	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception;
+	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception;
 
-	public int searchItemCount(String id, String boardID, String title,
-			String writerName, String abstracts, String startDateTime,
-			String endDateTime) throws Exception;
+	public void deleteItem(String itemList) throws Exception;
+
+	public String checkIfHasReply(String itemList) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
