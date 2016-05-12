@@ -53,9 +53,14 @@ public interface EzResourceService {
 
 	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id) throws Exception;
 	
-	public void delResData(String brdID, String companyID) throws Exception;
-
 	public boolean multiDelResData(String xmlStr);
-
+	
+	public boolean modifyResData(String xmlStr) throws Exception;
+	
+	public void delResData(String brdID, String companyID) throws Exception;
+	
+	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation, 
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception;
+	
 	
 }
