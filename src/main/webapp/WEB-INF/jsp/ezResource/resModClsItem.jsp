@@ -158,18 +158,18 @@
       				<table class="content">
         				<tr>
           					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${strOwnDeptID}" value="${strOwnDeptNm}" style="width: 150px"></td>
+          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 150px"></td>
           					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"><%-- <%=strMakeDate.Substring(0, 10)%> --%> ${strMakeDate} </td>
+          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"><%-- <%=strMakeDate.Substring(0, 10)%> --%> ${makeDate} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
-          					<td><input type="text" name="Owner" id="Owner" idval="${strOwnerID}" nmval="${strOwnerNm}" position="${strOwnerPosition}"
-								value="${strOwnerNm}(${strOwnerPosition})" style="width: 150" readonly>
+          					<td><input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+								value="${ownerNm}(${ownerPosition})" style="width: 150" readonly>
 								<a class="imgbtn"><span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span></a>
 							</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="width:120px;padding-right:15px; white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${strOwnerCall}" style="width: 100%"></td>
+          					<td style="width:120px;padding-right:15px; white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 100%"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
