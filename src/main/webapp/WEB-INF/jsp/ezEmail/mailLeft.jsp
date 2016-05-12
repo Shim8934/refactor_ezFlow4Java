@@ -351,7 +351,7 @@
 	            window.parent.frames["right"].MailListRefresh();
 	        }
 	        function mail_Config() {
-	            parent.frames["right"].location.href = "/myoffice/ezEmail/environ/mail_config.aspx";
+	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
 	        function Address_Menu_Click() {
 	            LoadAddressTree(true);

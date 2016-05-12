@@ -3,6 +3,7 @@
 
 <sqlMap namespace="ezEmail">
 	<typeAlias  alias="MailGeneralVO" type="egovframework.ezEKP.ezEmail.vo.MailGeneralVO"/>
+	<typeAlias  alias="MailSignatureVO" type="egovframework.ezEKP.ezEmail.vo.MailSignatureVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -16,7 +17,22 @@
  		<result property="mailSenderNm" column="MAILSENDERNM" columnIndex="9" jdbcType="CLOB" javaType="java.lang.String"/>
 	</resultMap>
 	
+	<resultMap id="mailSignature" class="MailSignatureVO">
+		<result property="useFlag" column="USEFLAG" columnIndex="1"/>
+		<result property="content1" column="CONTENT1" columnIndex="2" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="content2" column="CONTENT2" columnIndex="3" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="content3" column="CONTENT3" columnIndex="4" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailSignature" parameterClass="Map" resultMap="mailSignature">
+		{CALL EZEMAIL.EZSP_GETSIGNATURE(#v_USERID#, #v_ISUSE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailSignature" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETSIGNATURE(#v_USERID#, #v_USEFLAG#, #v_CONTENT1#, #v_CONTENT2#, #v_CONTENT3#)}
 	</procedure>
 </sqlMap>
