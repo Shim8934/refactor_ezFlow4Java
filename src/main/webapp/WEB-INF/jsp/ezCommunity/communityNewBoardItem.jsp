@@ -47,13 +47,14 @@
 		<script type="text/javascript">
 // 			변수
 			var strStartDate = "";
-			var mode = "${mode}";
-			var url = "${url}";
+			var pMode = "${mode}";
+			var pUrl = "${url}";
+			var pReservedItem = "${reservedItem}";
 			
 			var flag = false;
 
 			window.onload = function () {
-		        initKey();
+		        /* initKey(); */
 		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
 		            document.getElementById("file1").multiple = false;
 		        }

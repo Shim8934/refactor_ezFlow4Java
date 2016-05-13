@@ -663,10 +663,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		if (mode == 0 && (rtnValue.equals("1") || rtnValue.equals("2"))) {
 			result = true;
 		}
-		if (mode == 0 && rtnValue.equals("1")) {
+		if (mode == 1 && rtnValue.equals("1")) {
 			result = true;
 		}
 		if (result != true) {
+			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", new Locale(globals.getProperty("Globals.language"))));
 			response.getWriter().flush();
 		}

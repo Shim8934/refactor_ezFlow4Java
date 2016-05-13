@@ -1138,6 +1138,66 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 게시물 쓰기/수정/답변 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/newBoardItem.do")
+	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//TODO 이효진 2016-05-13 IsPostBack 검색해보고 
+		/*if (!Page.IsPostBack)
+        {
+            ezRSAEnc Rsa = new ezRSAEnc(2048);
+            publicModulus = Rsa.GetPublicPemKeys(Rsa);
+            Rsa = null;
+        }*/
+		String itemID = "", reservedItem = "", url = "", docID = "", exprieDays = "";
+		String startDateTime = "", endDateTime = "";
+		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String mode = request.getParameter("mode");
+		
+		if (request.getParameter("itemID") != null) {
+			itemID = request.getParameter("itemID");
+		}
+		if (request.getParameter("reservedItem") != null) {
+			reservedItem = request.getParameter("reservedItem");
+		}
+		if (request.getParameter("url") != null) {
+			url = request.getParameter("url");
+		}
+		if (request.getParameter("docID") != null) {
+			docID = request.getParameter("docID");
+		}
+		
+		//TODO 이효진 2016-05-13 사용안함 삭제필요
+		/*Guid gd = Guid.NewGuid();
+        NewGuid = "{" + gd.ToString().ToUpper() + "}";*/
+		
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response);
+		
+		if (!url.equals("")) {
+			startDateTime = EgovDateUtil.getToday("-");
+			endDateTime = EgovDateUtil.addDay(startDateTime, 30, "yyyy-MM-dd");
+			exprieDays = "-1";
+		} else {
+			
+		}
+		
+		
+		
+		model.addAttribute("editor", config.getProperty("config.EDITOR"));
+		model.addAttribute("reservedItem", reservedItem);
+		model.addAttribute("publicModulus", "");
+		model.addAttribute("mode", mode);
+		model.addAttribute("strNow", EgovDateUtil.getTodayTime());
+		
+		return "/ezCommunity/communityNewBoardItem";
+	}
+	
+	
+	/**
 	 * 알림마당 목록화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
@@ -1718,7 +1778,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo",loginVO);
 		model.addAttribute("pMode", pMode);
 		
-		return "/ezCommunity/board/CKEditor";
+		return "/ezCommunity/CKEditor";
 	}
 	
 	/**
