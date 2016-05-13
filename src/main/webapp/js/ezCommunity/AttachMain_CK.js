@@ -214,10 +214,8 @@ function AttachFileInfo(resultXML) {
                 alert(pAlertContent);
 
                 return;
-            }
-            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "FileOverFlowMsg") {
-
-                getNodeText(GetChildNodes(nodes[i])[2]) = ""; //filename
+            } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "FileOverFlowMsg") {
+            	setNodeText(GetChildNodes(nodes[i])[2],""); //filename               
             }
             
         }
