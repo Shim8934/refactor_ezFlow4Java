@@ -4,6 +4,7 @@
 <sqlMap namespace="ezApprovalGAdmin">
 	<typeAlias  alias="ApprGLeftVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO"/>
 	<typeAlias  alias="ApprGDocStateVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO"/>
+	<typeAlias  alias="ApprGAdminReceiveVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO"/>
 	<!--
 	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
 	<typeAlias  alias="ApprGAprLineVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO"/>
@@ -39,9 +40,45 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzApprovalGAdmin.deleteContainer" parameterClass="Map">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETECONTAINER(#v_CONTID#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo" parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.updateReceiveGroupInfo" parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, #v_MAINNAME#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.insertReceiveGroupInfo" parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.deleteReceiveGroupInfo" parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIVEGROUPINFO(#v_MAINID#)}
 		]]>	
 	</procedure>
 	

@@ -55,7 +55,7 @@ public class EzApprovalGAdminController {
 	private EgovMessageSource egovMessageSource;
 	
 	/**
-	 * 전자결재G 관리 메인화면 호출 함수
+	 * 전자결재G관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMain.do")
 	public String apprGMain() throws Exception{		
@@ -63,7 +63,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 왼쪽화면 호출 함수
+	 * 전자결재G관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGLeft.do")
 	public String apprGLeft() throws Exception{		
@@ -71,7 +71,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 메뉴 호출 함수
+	 * 전자결재G관리 문서함관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
 	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
@@ -104,7 +104,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함데이터 목록 호출 함수
+	 * 전자결재G관리 문서함관리 문서함데이터 목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -119,7 +119,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함명관리 팝업 화면 호출 함수
+	 * 전자결재G관리 문서함관리 문서함명관리 팝업 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMContType.do")
 	public String apprMContType(Model model) throws Exception{
@@ -134,7 +134,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함명관리 팝업 화면 호출 함수
+	 * 전자결재G관리 문서함관리 문서함명관리 팝업 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMLgetDoctype.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -148,7 +148,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함타입 등록 실행 함수
+	 * 전자결재G관리 문서함관리 문서함타입 등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGInsertContType.do")	
 	public void apprGInsertContType(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -160,7 +160,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함타입 삭제 실행 함수
+	 * 전자결재G관리 문서함관리 문서함타입 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGDeleteContType.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -174,7 +174,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서상태등록 팝업 호출 함수
+	 * 전자결재G관리 문서함관리 문서상태등록 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContType.do")
 	public String apprGMinsContType(HttpServletRequest request, HttpServletResponse response) throws Exception{		
@@ -182,7 +182,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서상태등록 등록된 문서함상태 호출 함수
+	 * 전자결재G관리 문서함관리 문서상태등록 등록된 문서함상태 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGGetContDocType.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -196,7 +196,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서상태등록 문서함상태 저장 실행 함수
+	 * 전자결재G관리 문서함관리 문서상태등록 문서함상태 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGUpdateContDoctype.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -210,7 +210,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 추가/수정 팝업 호출 함수
+	 * 전자결재G관리 문서함관리 문서함 추가/수정 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContMain.do")
 	public String apprMinsContMain(HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) throws Exception{
@@ -233,7 +233,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 추가/수정 팝업 공유부서 목록 호출 함수
+	 * 전자결재G관리 문서함관리 문서함 추가/수정 팝업 공유부서 목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -248,7 +248,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 추가 실행 함수
+	 * 전자결재G관리 문서함관리 문서함 추가 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -262,7 +262,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 수정 실행 함수
+	 * 전자결재G관리 문서함관리 문서함 수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMupdateCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -276,7 +276,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G 관리 문서함관리 문서함 삭제 실행 함수
+	 * 전자결재G관리 문서함관리 문서함 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMdelCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -285,6 +285,144 @@ public class EzApprovalGAdminController {
 		String companyID = request.getParameter("comID");
 				
 		String result = ezApprovalGAdminService.deleteContainer(contID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
+	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String lang = config.getProperty("config.primary");
+		String serverName = config.getProperty("config.ServerName");
+		String topID = "";
+		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topID = user.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(lang);
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j, vo);
+			}
+		}
+		model.addAttribute("companyID", user.getCompanyID());
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("topID", topID);
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezApprovalG/apprGReceiveGroup";
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 등록된 그룹데이터 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getAdminReceivGroup.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String lang = config.getProperty("config.primary");
+		String pid = doc.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pmode = doc.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String pcompanyID = user.getCompanyID();
+				
+		if (doc.getDocumentElement().getChildNodes().getLength() > 2) {
+			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
+		}
+		
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, lang);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 부서등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setGroupSubItemInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String setGroupSubItemInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String groupID = request.getParameter("node1");
+		String deptID = request.getParameter("node2");
+		String deptName = request.getParameter("node3");
+		String companyID = request.getParameter("node4");
+		String pCompanyID = request.getParameter("node5");
+		String deptName2 = request.getParameter("node6");
+		
+		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, pCompanyID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 부서삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteGroupSubiteminfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deleteGroupSubiteminfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String groupID = request.getParameter("node1");
+		String companyID = request.getParameter("node2");
+				
+		String result = ezApprovalGAdminService.deleteReceiveGroupItemInfo(groupID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/updateGroupMainInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String updateGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String groupID = request.getParameter("node1");
+		String groupName = request.getParameter("node2");
+		String companyID = request.getParameter("node3");
+		
+		String result = ezApprovalGAdminService.updateReceiveGroupInfo(groupID, groupName, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 추가 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setGroupMainInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String setGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String groupName = request.getParameter("node1");
+		String companyID = request.getParameter("node2");
+		
+		String result = ezApprovalGAdminService.insertReceiveGroupInfo(groupName, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 수신자그룹 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteGroupMainInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deleteGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String groupID = request.getParameter("node1");
+		String companyID = request.getParameter("node2");
+		
+		String result = ezApprovalGAdminService.deleteReceiveGroupInfo(groupID, companyID);
 		
 		return result;
 	}

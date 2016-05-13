@@ -33,7 +33,7 @@
 	                    url = "/admin/ezApprovalG/apprGMCont.do";
 	                    break;						
 				    case 4:
-				        url = "/myoffice/ezApprovalG/Manage/admin_receivegroup_cross.aspx";
+				        url = "/admin/ezApprovalG/apprGReceiveGroup.do";
 						break;					
 				    case 5:
 				        url = "/myoffice/ezApprovalG/ezCabinet/Manage/TaskCodeManage_cross.aspx";

@@ -22,5 +22,7 @@ public interface EzApprovalGService {
 	public String getListHeader(String listCode, String companyID, String lang) throws Exception;
 	
 	public String getCode2Name(String code1, String code2, String companyID, String lang) throws Exception;
+	
+	public String getListField(String fieldName, String fieldValue, String companyID, String userLang) throws Exception;
 
 }

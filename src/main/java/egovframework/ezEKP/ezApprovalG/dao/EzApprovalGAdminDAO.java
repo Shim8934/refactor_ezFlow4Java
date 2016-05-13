@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -31,6 +32,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGDocStateVO> getContainerToDocStateInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocStateVO>) list("EzApprovalGAdmin.getContainerToDocStateInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAdminReceiveVO> getReceiveGroupInfo(Map<String, Object> map) {
+		return (List<ApprGAdminReceiveVO>) list("EzApprovalGAdmin.getReceiveGroupInfo", map);
+	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
@@ -56,10 +62,22 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertContainerDocState", map);
 	}
 	
+	public void insertReceiveGroupItemInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalGAdmin.insertReceiveGroupItemInfo", map);
+	}
+	
+	public void insertReceiveGroupInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalGAdmin.insertReceiveGroupInfo", map);
+	}
+	
 	public void updateContainer(Map<String, Object> map) throws Exception{
 		update("EzApprovalGAdmin.updateContainer", map);
 	}
-	
+
+	public void updateReceiveGroupInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalGAdmin.updateReceiveGroupInfo", map);
+	}
+
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
@@ -71,6 +89,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteContainer(Map<String, Object> map) throws Exception{
 		delete("EzApprovalGAdmin.deleteContainer", map);
 	}
+
+	public void deleteReceiveGroupItemInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteReceiveGroupItemInfo", map);
+	}
+
+	public void deleteReceiveGroupInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteReceiveGroupInfo", map);
+	}
+
 
 
 }

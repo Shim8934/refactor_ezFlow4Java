@@ -245,7 +245,7 @@
 	    		<c:forEach var="item" items="${list}">
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
-            </select>	
+            </select>
 	    </span>
 	    <table>
 	        <tr>

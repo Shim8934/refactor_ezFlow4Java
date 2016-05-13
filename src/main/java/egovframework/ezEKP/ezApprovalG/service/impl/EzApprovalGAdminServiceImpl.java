@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
@@ -385,6 +386,179 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";
 		}		
 	}
+
+	@Override
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<LISTVIEWDATA><HEADERS>");
+		
+		if (companyID.toUpperCase().equals("TOP")) {
+			sb.append("</HEADERS><ROWS></ROWS></LISTVIEWDATA>");
+		} else {			
+			String code = "091";
+			
+			if (mode.equals("ITEM")) {
+				code = "092";
+			} 
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_LISTTYPE", code);
+			map.put("v_LANGTYPE", lang);
+			map.put("companyID", companyID);
+			
+			List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+			
+			for (int i = 0; i < listHeader.size(); i++) {
+				ApprGListHeaderVO vo = listHeader.get(i);
+				
+				sb.append("<HEADER>");
+				sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+				sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				sb.append("<COLNAME>" + commonUtil.cleanValue(vo.getColName()) + "</COLNAME>");
+				sb.append("</HEADER>");
+			}
+			
+			if (pid.equals("")){
+				pid = "0";
+			}
+			sb.append("</HEADERS><ROWS>");
+			
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			
+			map1.put("v_MAINID", pid);
+			map1.put("v_MODE", mode);
+			map1.put("companyID", companyID);
+			
+			List<ApprGAdminReceiveVO> listBody = ezApprovalGAdminDAO.getReceiveGroupInfo(map1);
+			
+			for (int i = 0; i < listBody.size(); i++) {
+				ApprGAdminReceiveVO bodyVo = listBody.get(i);
+				
+				for (int j = 0; j < listHeader.size(); j++) {	
+					ApprGListHeaderVO headerVo = listHeader.get(j);				
+					String fieldName = headerVo.getColName();
+					String fieldValue = "";
+									
+					if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")){
+						fieldName = fieldName + "2";
+					}
+					
+					for (Field field : bodyVo.getClass().getDeclaredFields()) {
+				        field.setAccessible(true);
+											
+						if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
+							fieldValue = String.valueOf(field.get(bodyVo));
+						}					   
+				    }
+					
+					sb.append("<ROW>");
+					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang) + "</VALUE>");
+					
+					if (j == 0) {
+						if (mode.equals("GROUP") || mode.equals("JOIN")) {
+							sb.append("<DATA1>" + bodyVo.getMainID() + "</DATA1>");
+						} else {
+							sb.append("<DATA1>" + bodyVo.getSubID() + "</DATA1>");
+							sb.append("<DATA2>" + bodyVo.getMainID() + "</DATA2>");
+							sb.append("<DATA3>" + bodyVo.getDeptID() + "</DATA3>");
+							sb.append("<DATA4>" + bodyVo.getCompanyID() + "</DATA4>");
+							sb.append("<DATA5>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</DATA5>");
+							sb.append("<DATA6>" + commonUtil.cleanValue(bodyVo.getDeptName2()) + "</DATA6>");
+						}
+					}					
+					sb.append("</CELL></ROW>");
+				}
+			}
+			sb.append("</ROWS></LISTVIEWDATA>");
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_MAINID", groupID);
+			map.put("v_DEPTID", deptID);
+			map.put("v_DEPTNAME", deptName);
+			map.put("v_DEPTNAME2", deptName2);
+			map.put("v_COMPANYID", pCompanyID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.insertReceiveGroupItemInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+
+	@Override
+	public String deleteReceiveGroupItemInfo(String groupID, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_SUBID", groupID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.deleteReceiveGroupItemInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+
+	@Override
+	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_MAINID", groupID);
+			map.put("v_MAINNAME", groupName);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.updateReceiveGroupInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+
+	@Override
+	public String insertReceiveGroupInfo(String groupName, String companyID) throws Exception{
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_MAINNAME", groupName);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.insertReceiveGroupInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+
+	@Override
+	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_MAINID", groupID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.deleteReceiveGroupInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+	
 	
 
 	
