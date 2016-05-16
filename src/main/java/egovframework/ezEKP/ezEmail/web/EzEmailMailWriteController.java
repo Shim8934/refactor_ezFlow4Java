@@ -1012,13 +1012,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				
 		String realPath = request.getServletContext().getRealPath("");
 		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
-		
-		// These system properties need to be set for a compatible attached filename encoding
-		// otherwise, some mailers (Daum, etc) may not understand the encoded
-		// filename based on RFC 2231.
-		System.setProperty("mail.mime.encodeparameters", "false"); 
-		System.setProperty("mail.mime.encodefilename", "true");
-		
+				
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
 		Folder folder = null;
@@ -1091,10 +1085,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 			        messageBodyPart.setDataHandler(new DataHandler(source));
 			        
-			        // MimeUtility.encodeText is necessary, otherwise filename encoding 
-			        // may be wrong on some systems(linux, etc) although it works on 
-			        // other systems.
-			        messageBodyPart.setFileName(MimeUtility.encodeText(fileName, "UTF-8", null));
+			        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
+			        // otherwise, a wrong encoding may be used on some systems(linux, etc)
+			        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+			        
+					// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
+					// and some mailers (Daum, etc) may not understand it.			        
+			        encodedFileName = MimeUtility.fold(0, encodedFileName);
+			        messageBodyPart.setHeader("Content-Disposition", "attachment;\n\tfilename=\"" + encodedFileName + "\"");
 			        
 			        String contentType = "application/octet-stream";
 			        
