@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -852,7 +856,7 @@ System.out.println("@");
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID);
 		
 		if (strProp != null) {
-	    	boardInfo.setExpireDays(strProp.getExpireDays());
+	    	boardInfo.setExpireDays(Integer.toString(strProp.getItemExpires()));
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 		    boardInfo.setBoardName(strProp.getBoardName());
 		    boardInfo.setBoardName2(strProp.getBoardName2());
@@ -1166,6 +1170,178 @@ System.out.println("@");
 			}
 		}
 		return "TRUE";
+	}
+
+	@Override
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, String multiData) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String newItem(Document xmlData, String pMode, String realPath) throws Exception {
+		String pUploadFilePath = "", pContentLocation = "", pHasAttach = "", pContent = "";
+		boolean saveMHTResult = false;
+		CommunityBoardItemVO item = new CommunityBoardItemVO();
+
+		pUploadFilePath = xmlData.getElementsByTagName("FILEPATH").item(0).getTextContent();
+		item.setItemID(xmlData.getElementsByTagName("ITEMID").item(0).getTextContent());
+		item.setBoardID(xmlData.getElementsByTagName("BOARDID").item(0).getTextContent());
+		item.setWriterID(xmlData.getElementsByTagName("WRITERID").item(0).getTextContent());
+		item.setWriterName(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		item.setWriterName2(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
+		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
+		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		item.setWriterCompanyID(xmlData.getElementsByTagName("COMPANYID").item(0).getTextContent());
+		item.setWriterCompanyName(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
+		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		item.setWriteDate(EgovDateUtil.getTodayTime());
+		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
+		item.setTitle(xmlData.getElementsByTagName("TITLE").item(0).getTextContent());
+		
+		
+		if (pMode.equals("copy")) {
+			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();
+		} else {
+			pContentLocation = config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".mht";
+		}
+		
+		item.setContentLocation(pContentLocation);
+		item.setStartDate(xmlData.getElementsByTagName("STARTDATE").item(0).getTextContent());
+
+		if (item.getStartDate().equals("")) {
+			item.setStartDate(item.getWriteDate());
+		}
+		
+		item.setEndDate(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		item.setAbsTract(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+		item.setAttachMents(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
+		
+		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
+		if (pMode.equals("reply")) {
+//			item.setUpperItemIDTree(item.getUpperItemIDTree() + GetReverseDateNow() + item.getItemID());
+		}
+		
+		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
+		
+		if (!pMode.equals("copy")) {
+			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
+			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+		} else {
+			item.setParentWriteDate(item.getWriteDate());
+		}
+
+		if (item.getParentWriteDate().equals("")) {
+			item.setParentWriteDate(item.getStartDate());
+		}
+	
+		//확장 필드, Ext1, Ext2는 integer 값을 가짐
+		if (xmlData.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().trim().equals("")) {
+			item.setExtensionAttribute1(0);
+		} else {
+			item.setExtensionAttribute1(Integer.parseInt(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().trim()));
+		}
+
+		if (xmlData.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim().equals("")) {
+			item.setExtensionAttribute2(0);
+		} else {
+			item.setExtensionAttribute2(Integer.parseInt(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim()));
+		}
+
+		item.setExtensionAttribute3(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
+		item.setExtensionAttribute32(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
+		item.setExtensionAttribute4(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
+		item.setExtensionAttribute5(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
+
+		item.setDocPassword(xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+
+		if (!pMode.equals("copy")) {
+			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
+			
+			if (saveMHTResult == false) {
+				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+			}
+		}
+    
+		if (item.getAttachMents().length() > 0) {
+			pHasAttach = "1";
+		} else {
+			pHasAttach = "0";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID", item.getItemID());
+		map.put("v_pBoardID", item.getBoardID());
+		map.put("v_pWriterID", item.getWriterID());
+		map.put("v_pWriterName", item.getWriterName());
+		map.put("v_pWriterName2", item.getWriterName2());
+		map.put("v_pWriterDeptID", item.getWriterDeptID());
+		map.put("v_pWriterDeptName", item.getWriterDeptName());
+		map.put("v_pWriterDeptName2", item.getWriterDeptName2());
+		map.put("v_pWriterCompanyID", item.getWriterCompanyID());
+		map.put("v_pWriterCompanyName", item.getWriterCompanyName());
+		map.put("v_pWriterCompanyName2", item.getWriterCompanyName2());
+		map.put("v_pWriteDate", item.getWriteDate());
+		map.put("v_pParentWriteDate", item.getParentWriteDate());
+		map.put("v_pImportance", item.getImportance());
+		map.put("v_pTitle", item.getTitle());
+		map.put("v_pContentLocation", item.getContentLocation());
+		map.put("v_pStartDate", item.getStartDate());
+		map.put("v_pEndDate", item.getEndDate());
+		map.put("v_pAbstract", item.getAbsTract());
+		map.put("v_pAttachments", pHasAttach);
+		map.put("v_pUpperItemIDTree", item.getUpperItemIDTree());
+		map.put("v_pItemLevel", item.getItemLevel());
+		map.put("v_pExtensionAttribute1", item.getExtensionAttribute1());
+		map.put("v_pExtensionAttribute2", item.getExtensionAttribute2());
+		map.put("v_pExtensionAttribute3", item.getExtensionAttribute3());
+		map.put("v_pExtensionAttribute32", item.getExtensionAttribute32());
+		map.put("v_pExtensionAttribute4", item.getExtensionAttribute4());
+		map.put("v_pExtensionAttribute5", item.getExtensionAttribute5());
+		map.put("v_pDocPassWord", item.getDocPassword());
+
+		if (pMode.equals("modify")) {
+//			ezCommunityDAO.brdUpdateItem(map);
+			return "OK";
+		} else {
+			ezCommunityDAO.brdNewItem(map);
+			return "OK";
+		}
+		
+	}
+
+	@Override
+	public boolean saveMHT(String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
+		String docPath = "";
+		String mhtFilePath = "";
+		
+		try {
+			docPath = realPath + commonUtil.separator + strFilePath + commonUtil.separator;
+			
+			
+			if (!new File(docPath + strBoardID).exists()) {
+				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "UploadFile");
+				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
+				dir1.mkdirs();
+				dir2.mkdirs();
+			}
+			
+			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
+
+			if(new File(mhtFilePath).exists()) {
+				new File(mhtFilePath).delete();
+			}
+			
+			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
+			pw.print(strHTML);
+			pw.flush();
+			pw.close();
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
 	}
 	
 /*	@Override

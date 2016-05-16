@@ -303,4 +303,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.deleteItem4", map);
 	}
 
+	public void brdNewItem(Map<String, Object> map) throws Exception{
+		insert("EzCommunityDAO.brdNewItem", map);
+		
+	}
+
 }

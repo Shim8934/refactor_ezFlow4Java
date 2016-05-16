@@ -46,13 +46,64 @@
 		
 		<script type="text/javascript">
 // 			변수
-			var strStartDate = "";
-			var pMode = "${mode}";
-			var pUrl = "${url}";
-			var pReservedItem = "${reservedItem}";
+			var userInfo = "${userInfo}";
+			var item = "${item}";
 			
-			var flag = false;
+			
+			
+			
+			
+			var pUploadFilePath = "${pUploadFilePath}";
+			var pBoardID = "${item.boardID}";
+			var pBoardName = "${item.boardName}";
+			var pMode = "${pMode}";
+			var pModeOld = "";
+			var MHTLoadComplete = "";
+			var SSUserID = "${userInfo.id}";
+		    var SSUserName = "${userInfo.displayName1}";
+		    var SSUserName2 = "${userInfo.displayName2}";
+		    var SSDeptID = "${userInfo.deptID}";
+		    var SSDeptName = "${userInfo.deptName1}";
+		    var SSDeptName2 = "${userInfo.deptName2}";
+		    var SSCompanyID = "${userInfo.companyID}";
+		    var SSCompanyName = "${userInfo.companyName1}";
+		    var SSCompanyName2 = "${userInfo.companyName2}";
 
+		    var strItemID = "${item.itemID}";
+		    var strWriterName = "${item.writerName}";
+		    var strWriterDeptName = "${item.writerDeptName}";
+		    var strWriterCompanyName = "${item.writerCompanyName}";		
+		    var strWriteDate = "${item.writeDate}";
+		    var strParentWriteDate = "${item.parentWriteDate}";
+		    var strImportance = "${item.importance}";
+		    var strStartDate = "${item.startDate}";
+		    var strEndDate = "${item.endDate}";
+		    var strAttachments = "${item.attachMents}";
+		    var strContentLocation = "${item.contentLocation}";
+		    var strUpperItemIDTree = "${item.upperItemIDTree}";
+		    var strItemLevel = "${item.itemLevel}";
+		    var strWriterTitle = "${item.extensionAttribute3}";
+		    var strWriterFakeName = "${writerFakeName}";
+
+<%--  		    var server_name = "<%=Request.ServerVariables["server_name"]%>"; --%>
+ 		    
+		    var pAttachListXml = "";
+		    var AttachLimit = "${boardInfo.attachSizeLimit}";
+		    var pReservedItem = "${pReservedItem}}";
+		    var strUserRank = "${userInfo.title1}";
+		    var strUserRank2 = "${userInfo.title2}";
+		    var strUserPhone = "${userInfo.phone}";
+		    var strNow = "${strNow}";		
+		    var ExpireDays = "${expireDays}";		
+		    var gubun = "${item.gubun}";		
+		    var pUrl = "${pUrl}";
+		    var pDocID = "${pDocID}";
+		    var unloadflag = "0";
+		    var PhotoBoard = "N";
+		    var _hasattach = "${hasAttach}";
+		    
+			var flag = false;
+			
 			window.onload = function () {
 		        /* initKey(); */
 		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
@@ -114,12 +165,9 @@
 		        	
 		        var settime;
 		        var NowDate;
-		        
-		        if(strStartDate  == "") {
-		            settime = "${startDateTime}";
-		        } else {
-		            settime = strStartDate;
-		        }
+		        		        
+	            settime = strStartDate;
+
 		        
 		        NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
@@ -170,6 +218,7 @@
 		        	
 		        	$.datepicker.setDefaults($.datepicker.regional['en']);
 				}
+		        
 			});
 			
 			if("${userInfo.lang == '1'}"){
@@ -290,7 +339,7 @@
 		        var pEndDateTime;
 		        
 		        if (document.getElementById("ChkPermanence").checked) {
-		            pEndDateTime = "9999-12-30 23:59:59"
+		            pEndDateTime = "9999-12-30 23:59:59";
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Edatepicker').val().substring(0, 4) != "9999") {
 		                pEndDateTime = $('#Edatepicker').val() + strEndDate.substring(10, 19);
@@ -445,7 +494,7 @@
 		        }
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", "");		
-		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD")
+		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD");
 		        
 		        for (i = 0; i < obj.length; i++) {
 		            if (obj[i].free == "") {
@@ -486,10 +535,11 @@
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
 		        xmlhttp.send(xmlDom);					
 
-		        if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
+		        if (xmlhttp.responseText == "OK") {
 		            xmlhttp = null;
 		            xmldom = null;
-		            if (document.getElementById("chk_reservation").checked == false) {										
+		            if (document.getElementById("chk_reservation").checked == false) {
+		            	/* 2016-05-16 이효진 메일 알림기능
 		                if (strItemID == "") {
 		                    xmlhttp = createXMLHttpRequest();
 		                    xmlhttp.open("POST", "/ezCommunity/sendPostNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
@@ -502,7 +552,7 @@
 		                    xmlhttp.open("POST", "/ezCommunity/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
-		                }
+		                } */
 		                
 		                alert("<spring:message code='ezCommunity.t282'/>");
 					} else {
@@ -516,7 +566,7 @@
 		            
 		            window.close();		
 		        } else {
-		            alert("<spring:message code='ezCommunity.t283'/>" + getNodeText(loadXMLString(xmlhttp.responseText)));
+		            alert("<spring:message code='ezCommunity.t283'/>" + xmlhttp.responseText);
 		        }
 		        
 		        xmlhttp = null;
@@ -524,10 +574,11 @@
 		    }
 	
 		    function JSleep(sTime) {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "aspx/userSleep.aspx?time=" + sTime, false);
-		        xmlhttp.send();
-		        xmlhttp = null;
+		        var start = new Date().getTime();
+		        
+		        while (new Date().getTime() < start + sTime) {
+		        	
+		        };
 		    }
 	
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
@@ -543,11 +594,7 @@
 		    }
 	
 		    function btn_PostDate_Clear() {
-		        if(strStartDate  == "") {
-		        	settime = "${startDateTime}";
-		        } else {
-		        	settime = strStartDate;
-		        }
+	        	settime = strStartDate;
 		        
 		        NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
@@ -622,7 +669,7 @@
 		    }
 	
 		    function SelectBoard() {
-		        var url	= "BoardSelect_Cross.aspx";
+		        var url	= "/ezCommunity/boardSelect.do";
 		        var feature = "status:no;dialogWidth:340px;dialogHeight:656px;help:no;scroll:no;edge:sunken";
 		        feature = feature + GetShowModalPosition(340, 656);
 		        var ret = window.showModalDialog(url, "", feature);	
@@ -746,7 +793,7 @@
 			    var xmlstring = "<DocID>" + pDocID + "</DocID>";
 			    xmlpara = loadXMLString(xmlstring);
 			    
-			    if ("${userInfo_approvalG}" == "NO") {
+			    if ("${userInfoApprovalG}" == "NO") {
 			    	xmlHTTP.open("POST", "/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
 			    } else {
 			    	xmlHTTP.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/aprattachMail.aspx", false);
@@ -862,13 +909,17 @@
             }
             
             function btn_AttachAdd_onclick() {
-                document.getElementById("boardid").value = pBoardID;
-                document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
+                document.getElementById("boardID").value = pBoardID;
+                document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
                 document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
                 var frm = document.getElementById('form');
-                frm.action = "aspx/upload.aspx";
-                frm.submit();
-                document.form.file1.value = "";
+  				
+                if( document.getElementById("cnt").value > 0) {
+                	frm.action = "/ezCommunity/upload.do";
+                    frm.submit();
+                    document.form.file1.value = "";	
+                }
+                
             }
 	
             function returnvalue(strXML) {
@@ -932,7 +983,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezCommunity.t1168'/></th>
-	                        <td id="tdBoardName">${pBoardName }</td>
+	                        <td id="tdBoardName">${boardName }</td>
 	                    </tr>
 	                    
 	                    <c:choose>
@@ -1039,13 +1090,13 @@
 	        <tr>
 	            <td style="padding-top: 10px; height: 20px; vertical-align: top;">
 	                <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	                <form method="post" id="form" name="form" enctype="multipart/form-data" action="aspx/upload.aspx" target="ifrm" style="visibility: hidden;">
-	                    <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple />
-	                    <input type="hidden" name="boardid" id="boardid" />
-	                    <input type="hidden" name="maxsize" id="maxsize" />
+	                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="visibility: hidden;">
+	                    <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="multiple" />
+	                    <input type="hidden" name="boardID" id="boardID" />
+	                    <input type="hidden" name="maxSize" id="maxSize" />
 	                    <input type="hidden" name="mode" id="mode" />
 	                    <input type="hidden" name="cnt" id="cnt" />
-	                    <input type="hidden" name="mailgubun" id="mailgubun" />
+	                    <input type="hidden" name="mailGubun" id="mailgubun" />
 	                </form>
 	                <table class="file">
 	                    <form name="multicheck">
@@ -1079,7 +1130,7 @@
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/myoffice/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

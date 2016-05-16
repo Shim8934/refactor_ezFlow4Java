@@ -2,7 +2,10 @@ package egovframework.ezEKP.ezCommunity.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
@@ -153,6 +156,12 @@ public interface EzCommunityService {
 	public void deleteItem(String itemList) throws Exception;
 
 	public String checkIfHasReply(String itemList) throws Exception;
+
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, String multiData) throws Exception;
+
+	public String newItem(Document xmlData, String pMode, String realPath) throws Exception;
+	
+	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

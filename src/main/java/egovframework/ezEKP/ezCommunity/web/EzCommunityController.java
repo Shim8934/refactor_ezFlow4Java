@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1137,7 +1139,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시물 쓰기/수정/답변 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/newBoardItem.do")
-	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, ModelMap model, CommunityBoardItemVO item, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//TODO 이효진 2016-05-13 IsPostBack 검색해보고 
 		/*if (!Page.IsPostBack)
         {
@@ -1145,53 +1147,238 @@ public class EzCommunityController extends EgovFileMngUtil{
             publicModulus = Rsa.GetPublicPemKeys(Rsa);
             Rsa = null;
         }*/
-		String itemID = "", reservedItem = "", url = "", docID = "", exprieDays = "";
-		String startDateTime = "", endDateTime = "";
+		
+		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "", gubun = "", pBoardName = "", strWriterFakeName = "";;
+		String hasAttach = "NO";
 		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String boardID = request.getParameter("boardID");
-		String mode = request.getParameter("mode");
+		
+		String pBoardID = request.getParameter("boardID");
+		String pMode = request.getParameter("mode");
 		
 		if (request.getParameter("itemID") != null) {
-			itemID = request.getParameter("itemID");
+			pItemID = request.getParameter("itemID");
 		}
 		if (request.getParameter("reservedItem") != null) {
-			reservedItem = request.getParameter("reservedItem");
+			pReservedItem = request.getParameter("reservedItem");
 		}
 		if (request.getParameter("url") != null) {
-			url = request.getParameter("url");
+			pUrl = request.getParameter("url");
 		}
 		if (request.getParameter("docID") != null) {
-			docID = request.getParameter("docID");
+			pDocID = request.getParameter("docID");
 		}
 		
 		//TODO 이효진 2016-05-13 사용안함 삭제필요
 		/*Guid gd = Guid.NewGuid();
         NewGuid = "{" + gd.ToString().ToUpper() + "}";*/
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		if (!url.equals("")) {
-			startDateTime = EgovDateUtil.getToday("-");
-			endDateTime = EgovDateUtil.addDay(startDateTime, 30, "yyyy-MM-dd");
-			exprieDays = "-1";
+		if (!pUrl.equals("")) {
+			item.setStartDate(EgovDateUtil.getToday("-"));
+			item.setStartDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+			expireDays = "-1";
 		} else {
-			
+			if (userInfo.getLang().equals("2")) {
+				item.setBoardName(boardInfo.getBoardName2());
+			} else {
+				item.setBoardName(boardInfo.getBoardName());
+			}
+
+			expireDays = boardInfo.getExpireDays();
+			if (pMode.equals("new")) {
+				if (expireDays.equals("-1")) {
+                    item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+                } else {
+                    item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
+                }
+			} else {
+				//TODO 게시판 쓰기아닐때 데이터 읽어오기
+				item = ezCommunityService.getItemXML(pBoardID, pItemID, commonUtil.getMultiData(userInfo.getLang()));
+
+                if (pMode.equals("reply")) {
+                	item.setItemLevel(item.getItemLevel()+1);
+                	item.setAbsTract("");
+                } else if (pMode.equals("modify")) {
+                	if (item.getEndDate().substring(0, 4).equals("9999")) {
+                        if (expireDays == "-1")	{
+                        	item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+                        } else {
+                            item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
+                        }
+                    }
+                	if (item.getGubun().equals("2")) {
+                		strWriterFakeName = item.getWriterName();
+                	}
+                }
+
+                if (Integer.parseInt(item.getAttachMents()) > 0) {
+                	hasAttach = "YES";
+                }
+			}
 		}
 		
 		
 		
 		model.addAttribute("editor", config.getProperty("config.EDITOR"));
-		model.addAttribute("reservedItem", reservedItem);
-		model.addAttribute("publicModulus", "");
-		model.addAttribute("mode", mode);
+		model.addAttribute("pUploadFilePath", uploadFilePath);
+		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
+		
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("item", item);
+		
+		model.addAttribute("pReservedItem", pReservedItem);
+//		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("pMode", pMode);
 		model.addAttribute("strNow", EgovDateUtil.getTodayTime());
+		model.addAttribute("expireDays", expireDays);
+		model.addAttribute("hasAttach", hasAttach);
+		model.addAttribute("strWriterFakeName", strWriterFakeName);
 		
 		return "/ezCommunity/communityNewBoardItem";
 	}
 	
+	
+	/**
+	 * 게시판 쓰기/수정/답변 실행 함수
+	 */
+	
+	@RequestMapping(value = "/ezCommunity/saveItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveItem (@RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
+		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
+		String pMode = request.getParameter("mode");
+		
+		String ret = ezCommunityService.newItem(xmlData, pMode, request.getServletContext().getRealPath(""));
+		
+		return ret;
+	}
+	
+	/**
+	 * 게시판 파일첨부 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/upload.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception { 
+		int cnt = 0, pMaxSize = 0;
+		String strXML = "";
+		
+		String pBoardID = request.getParameter("boardID");
+		String pMode = request.getParameter("mode");
+		
+		if (request.getParameter("cnt") != null) {
+			cnt = Integer.parseInt(request.getParameter("cnt"));
+		}
+		if (request.getParameter("maxSize") != null) {
+			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
+		}
+
+		
+		String userExtension = config.getProperty("config.USE_FileExtension").toString();
+		
+		List<MultipartFile> files = request.getFiles("file1");
+		
+		String pDirPath = request.getServletContext().getRealPath("") + commonUtil.separator + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String tempPath = pDirPath  + "TempUploadFile";
+		String uploadPath = pDirPath  + "uploadFile";
+		String docPath = pDirPath  + "doc";
+		
+		File tempDir = new File(tempPath);
+		
+		if (!tempDir.exists()) {
+			tempDir.mkdirs();
+		}
+		
+		File boardDir = new File(pDirPath + pBoardID);
+		File uploadDir = new File(uploadPath);
+		File docDir = new File(docPath);
+		
+		if (!boardDir.exists()) {
+			boardDir.mkdirs();
+			uploadDir.mkdirs();
+			docDir.mkdirs();
+		} else if (!uploadDir.exists()) {
+			uploadDir.mkdirs();
+		} else if (!docDir.exists()) {
+			docDir.mkdirs();
+		}
+		
+		strXML = "<ROOT><NODES>";
+		
+		for (MultipartFile file : files) {
+			String resultUpload = "false";
+			String pUploadSN = "{" + UUID.randomUUID().toString() + "}";
+			String pFileName = file.getOriginalFilename();
+			String pAttachPath = "";
+			
+			if (pFileName.indexOf(commonUtil.separator) > 0) {
+				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
+			}
+			
+			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
+			int fileSize = (int) file.getSize();
+			
+			if (fileSize > pMaxSize) {
+				resultUpload = "overflow";
+			} else {
+				if (pMode.equals("ATT")) {
+					if (userExtension.indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString()) == -1 && !userExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + "-" + pFileName;
+						file.transferTo(new File(pAttachPath));
+						resultUpload = "true";
+						strXML += "<NODE><PUPLOADSN><![CDATA[" + pUploadSN + "_" + pFileName + "]]></PUPLOADSN>";
+					}
+					//TODO 2016-05-16 이효진 포토게시판에서 쓸꺼같음
+				} else if (pMode.equals("PHOTO")) {
+					pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					file.transferTo(new File(pAttachPath));
+					
+/*					System.Drawing.Image.GetThumbnailImageAbort myCallBack = new System.Drawing.Image.GetThumbnailImageAbort(ThumbnailCallback);
+                    System.Drawing.Image image = System.Drawing.Image.FromFile(pAttachPath);
+
+                    int nImgWidth = image.Width;
+                    int nImgHeight = image.Height;
+                    int nWidth = 0, nHeight = 0;
+                    if (nImgWidth > nImgHeight)
+                    {
+                        nWidth = 200;
+                        nHeight = (image.Height * nWidth) / image.Width;
+                    }
+                    else
+                    {
+                        nHeight = 200;
+                        nWidth = (image.Width * nHeight) / image.Height;
+                    }
+                    System.Drawing.Image imageThumbnail = image.GetThumbnailImage(100, 100, myCallBack, (IntPtr)0);
+                    imageThumbnail.Save(pDirPath + "\\TempUploadFile\\s_" + pUploadSN[i] + pFileName[i].Substring(pFileName[i].LastIndexOf('.')));
+                    imageThumbnail.Dispose();
+                    image.Dispose();*/
+					
+					resultUpload = "true";
+					strXML += "<NODE><PUPLOADSN><![CDATA[" + pUploadSN + pFileName.substring(pFileName.lastIndexOf('.')) + "]]></PUPLOADSN>";
+				}
+			}
+			
+			strXML += "<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>";
+            strXML += "<PFILENAME><![CDATA[" + pFileName + "]]></PFILENAME>";
+            strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+            strXML += "<FILELOCATION><![CDATA[" + pAttachPath + "]]></FILELOCATION>";
+            strXML += "</NODE>";	
+		}
+		
+		strXML += "</NODES></ROOT>";
+		
+		System.out.println(strXML);
+		return strXML;
+	}
 	
 	/**
 	 * 알림마당 목록화면 호출 함수
@@ -1718,8 +1905,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + fileName;
             }
 
-        	String nowDate = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
-        	nowDate = EgovDateUtil.convertDate(nowDate, "", "", "");
+        	String nowDate = EgovDateUtil.getTodayTime();
         	
         	ezCommunityService.bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, loginVO.getCompanyID(), loginVO.getId(), userNm, userNm2, title, maxIdFieldName);
         	
