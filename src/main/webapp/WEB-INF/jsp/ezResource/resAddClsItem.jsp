@@ -112,7 +112,7 @@
 			var select_person_cross_dialogArguments = new Array();
 			function btnTakeOwner_Click() {
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
-				var OpenWin = window.open("UserInfo/Select_Person_cross.aspx", "Select_Person_cross", GetOpenWindowfeature(750, 550));
+				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(750, 550));
 				
 				try { 
 					OpenWin.focus(); 
