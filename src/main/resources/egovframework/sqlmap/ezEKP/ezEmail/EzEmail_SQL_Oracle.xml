@@ -4,6 +4,7 @@
 <sqlMap namespace="ezEmail">
 	<typeAlias  alias="MailGeneralVO" type="egovframework.ezEKP.ezEmail.vo.MailGeneralVO"/>
 	<typeAlias  alias="MailSignatureVO" type="egovframework.ezEKP.ezEmail.vo.MailSignatureVO"/>
+	<typeAlias  alias="MailDeleteVO" type="egovframework.ezEKP.ezEmail.vo.MailDeleteVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -24,6 +25,14 @@
 		<result property="content3" column="CONTENT3" columnIndex="4" jdbcType="CLOB" javaType="java.lang.String"/>
 	</resultMap>
 	
+	<resultMap id="mailDelete" class="MailDeleteVO">
+		<result property="itemSeq" column="ITEMSEQ" columnIndex="1"/>
+		<result property="expireTime" column="EXPIRETIME" columnIndex="2"/>
+		<result property="path" column="PATH" columnIndex="3"/>
+		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>
+		<result property="folderName" column="FOLDERNAME" columnIndex="5"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -35,4 +44,9 @@
 	<procedure id="EzEmailDAO.setMailSignature" parameterClass="Map">
 		{CALL EZEMAIL.EZSP_SETSIGNATURE(#v_USERID#, #v_USEFLAG#, #v_CONTENT1#, #v_CONTENT2#, #v_CONTENT3#)}
 	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailDelete" parameterClass="Map" resultMap="mailDelete">
+		{CALL EZEMAIL.EZSP_GETMAILDELETE(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 </sqlMap>

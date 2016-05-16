@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 
@@ -44,6 +45,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 		map.put("v_CONTENT2", pContent2);
 		map.put("v_CONTENT3", pContent3);
 		ezEmailDAO.setMailSignature(map);
+	}
+
+	@Override
+	public List<MailDeleteVO> getMailDelete(String userId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userId);
+		return ezEmailDAO.getMailDelete(map);
 	}
 	
 }

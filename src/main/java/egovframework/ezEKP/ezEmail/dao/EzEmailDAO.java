@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -23,6 +24,11 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	
 	public void setMailSignature(Map<String, Object> map) throws Exception {
 		update("EzEmailDAO.setMailSignature", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailDeleteVO> getMailDelete(Map<String, Object> map) throws Exception {
+		return (List<MailDeleteVO>)list("EzEmailDAO.getMailDelete", map);
 	}
 	
 }

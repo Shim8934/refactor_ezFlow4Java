@@ -23,6 +23,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -34,9 +35,10 @@ import egovframework.rte.fdl.string.EgovStringUtil;
  * @Description [Controller] 메일 환경설정
  * @author 오픈솔루션팀 이효민
  * @Modification Information
- *
- *               수정일 수정자 수정내용 ---------- ------ ------------------- 2016.05.10
- *               이효민 신규작성
+ * 
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.05.10    이효민    신규작성
  *
  * @see
  */
@@ -169,7 +171,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
 		
 		if (mailSignatureVO != null) {
-            signState = mailSignatureVO.getUseFlag();
+            signState = mailSignatureVO.getUseFlag().trim();
             signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent1();
             signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent2();
             signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent3();
@@ -251,4 +253,30 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		return "";
 	}
 	
+	/**
+	 * 메일 자동삭제 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoDelete.do")
+	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		List<MailDeleteVO> list = ezEmailService.getMailDelete(userId);
+		
+		for (MailDeleteVO vo : list) {
+			if (vo.getDeleteUnread().trim().equals("1")) {
+				vo.setDeleteUnread("checked");
+			}
+		}
+		
+		model.addAttribute("list", list);
+		
+		return "ezEmail/mailAutoDelete";
+	}
+	
+	/**
+	 * 메일 편지함선택 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSelectFolder.do")
+	public String mailSelectFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailSelectFolder";
+	}
 }

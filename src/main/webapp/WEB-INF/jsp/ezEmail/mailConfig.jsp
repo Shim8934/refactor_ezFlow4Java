@@ -69,7 +69,7 @@
 	                    break;
 	                case "MailEnv_div6":
 	                    if (CrossYN() || (pNoneActiveX == "YES"))
-	                        document.getElementById("MailEnv_ifrm").src = "mail_autodelete_cross.aspx";
+	                        document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
 	                    else
 	                        document.getElementById("MailEnv_ifrm").src = "mail_autodelete.aspx";
 	                    break;

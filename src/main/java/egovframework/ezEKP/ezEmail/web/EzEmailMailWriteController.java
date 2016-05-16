@@ -69,7 +69,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -109,6 +111,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
@@ -325,33 +330,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
             String resultXML = "";
-//            resultXML = GetCommentDB(userinfo.UserID, "A");
-//            XmlDocument xmlDoc = new XmlDocument();
-//            xmlDoc = GetXmlReaderString(ResultXML);
-//            if (xmlDoc.SelectSingleNode("DATA").ChildNodes.Count > 0)
-//            {
-//                mailSign1 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT1").InnerXml);
-//                mailSign2 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT2").InnerXml);
-//                mailSign3 = HttpUtility.HtmlDecode(xmlDoc.SelectSingleNode("DATA/ROW/CONTENT3").InnerXml);
-//                mailSignSel = xmlDoc.SelectSingleNode("DATA/ROW/USEFLAG").InnerText;
-//
-//                mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
-//                mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
-//                mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
-//
-//                switch (mailSignSel)
-//                {
-//                    case "1": resultXML = mailSign1; break;
-//                    case "2": resultXML = mailSign2; break;
-//                    case "3": resultXML = mailSign3; break;
-//                    default: resultXML = ""; mailSignSel = "0"; break;
-//                }
-//            }
-//            else
-//            {
+            
+            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+            
+            if (mailSignatureVO != null) {
+            	mailSign1 = mailSignatureVO.getContent1();
+                mailSign2 = mailSignatureVO.getContent2();
+                mailSign3 = mailSignatureVO.getContent3();
+                mailSignSel = mailSignatureVO.getUseFlag().trim();
+                
+                mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
+                mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
+                mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
+                
+                switch (mailSignSel) {
+                    case "1": resultXML = mailSign1; break;
+                    case "2": resultXML = mailSign2; break;
+                    case "3": resultXML = mailSign3; break;
+                    default: resultXML = ""; mailSignSel = "0"; break;
+                }
+                
+            } else {
                 mailSignSel = "0";
                 resultXML = "";
-//            }
+            }
             
             body = EgovStringUtil.getSpclStrCnvr("<DIV style='font-size:12px;'><br><br><DIV id='MailSign'>" + resultXML + "</div><br></DIV>");
         } 

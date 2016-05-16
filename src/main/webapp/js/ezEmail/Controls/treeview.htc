@@ -1,0 +1,532 @@
+﻿<public:component urn="www.asitaka.com:treeview">
+<public:property name="config" put="put_config" />
+<public:property name="source" put="put_source" />
+<public:property name="selectedIndex" get="get_selectedIndex" />
+<public:property name="selectedNode" get="get_selectedNode" />
+<public:property name="dragdrop" put="put_dragdrop" />
+<public:property name="nodecount" get="get_nodecount" />
+<public:method name="update" internalname="ex_update" />
+<public:method name="toggle" internalname="ex_toggle" />
+<public:method name="getvalue" internalname="ex_getvalue" />
+<public:method name="putvalue" internalname="ex_putvalue" />
+<public:method name="select" internalname="ex_select" />
+<public:method name="putcaption" internalname="ex_putcaption" />
+<public:method name="putstyle" internalname="ex_putstyle" />
+<public:method name="putchildxml" internalname="ex_putchildxml" />
+<public:method name="deletenode" internalname="ex_deletenode" />
+<public:method name="addnode" internalname="ex_addnode" />
+<public:method name="findindex" internalname="ex_findindex" />
+<public:method name="haschild" internalname="ex_haschild" />
+<public:event name="onnodedblclick" id="nodedblclick" />
+<public:event name="onnodeselect" id="nodeselect" />
+<public:event name="ondragdrop" id="nodedragdrop" />
+<public:event name="onrequestdata" id="noderequestdata" />
+<public:attach event="onselectstart" for="element" handler="event_onselectstart" />
+<public:attach event="onmousedown" for="element" handler="event_onmousedown" />
+<public:attach event="ondblclick" for="element" handler="event_ondblclick" />
+<public:attach event="onmouseover" for="element" handler="event_onmouseover" />
+<public:attach event="onmouseout" for="element" handler="event_onmouseout" />
+<public:attach event="ondragenter" for="element" handler="event_ondragenter" />
+<public:attach event="ondragover" for="element" handler="event_ondragover" />
+<public:attach event="ondrop" for="element" handler="event_ondrop" />
+<public:attach event="onbeforeunload" for="window" handler="event_onbeforeunload" />
+<script language="JScript">
+	var g_configXML = null;
+	var g_treeXML = null;
+	var g_nodeArray = {"nodeXML":new Array(), "depth":new Array()};
+	var g_nodeCount = 0;
+	var g_baseImage = new Array();
+	var g_baseClass = new Array();
+	var g_images = new Array();
+	var g_selectedIdx = -1;
+	var g_imageid = element.id + "_icon_";
+	var g_toggleid = element.id + "_img_";
+	var g_nodeid = element.id + "_node_";
+	var g_childid = element.id + "_child_";
+	var g_bdragdrop = false;
+	var g_imageWidth = -1;
+	var g_imageHeight = -1;
+	var g_selectedNode = null;
+	function put_source(sourceXML) {
+	    if (typeof (sourceXML) == "object")
+	        g_treeXML = sourceXML;
+	    else {
+	        g_treeXML = new ActiveXObject("Microsoft.XMLDom");
+	        g_treeXML.loadXML(sourceXML);
+	    }
+	}
+	function put_config(configXML) {
+	    g_configXML = configXML;
+	}
+	function put_dragdrop(bdragdrop) {
+	    g_bdragdrop = bdragdrop;
+	}
+	function get_selectedIndex() {
+	    return g_selectedIdx;
+	}
+	function get_nodecount()
+	{
+		return g_nodeCount;
+}
+function get_selectedNode() {
+    return g_selectedNode;
+}
+function ex_select(nodeIdx) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return;
+    if (g_selectedIdx != -1) {
+        element.all(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
+        //element.all(g_imageid + g_selectedIdx).src = g_images[ex_getvalue(g_selectedIdx, "imgidx")];
+    }
+    element.all(g_nodeid + nodeIdx).className = g_baseClass["selected"];
+    g_selectedIdx = nodeIdx;
+    g_selectedNode = element.all(g_nodeid + nodeIdx);
+    nodeselect.fire();
+}
+function ex_update() {
+    if (g_treeXML == null)
+        return;
+
+    g_nodeCount = 0;
+    g_selectedIdx = -1;
+    set_initvalue();
+    element.innerHTML = make_childHtml(0);
+}
+
+function ex_toggle(nodeIdx) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return;
+    if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
+        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) == -1 &&
+        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
+        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
+        return;
+    if (element.all(g_childid + nodeIdx).style.display == "none") {
+        element.all(g_childid + nodeIdx).style.display = "";
+        if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) >= 0)
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"];
+        else
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_end"];
+
+        if (element.all(g_childid + nodeIdx).innerHTML == "") {
+            if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length == 0) {
+                var oEvent = createEventObject();
+                oEvent.nodeIdx = nodeIdx;
+                noderequestdata.fire(oEvent);
+            }
+            else
+                element.all(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
+        }
+    }
+    else {
+        element.all(g_childid + nodeIdx).style.display = "none";
+        if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_normal"];
+        else
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_end"];
+    }
+}
+function ex_getvalue(nodeIdx, valueName) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return "";
+
+    if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
+        return "";
+
+    return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
+}
+function ex_putvalue(nodeIdx, valueName, value) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return "";
+
+    g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
+}
+function ex_putcaption(nodeIdx, caption) {
+    element.all(g_nodeid + nodeIdx).innerHTML = caption;
+}
+function ex_putchildxml(nodeIdx, childxml) {
+    if (childxml == "") {
+        element.all(g_childid + nodeIdx).style.display = "none";
+        if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_normal"];
+        else
+            element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_end"];
+    }
+    else {
+        //편지함관리에서 추가 후 해당 노드 유지 하도록 변경
+        for (var RowCnt = g_nodeArray["nodeXML"][nodeIdx].childNodes.length ; RowCnt > 0; RowCnt--) {
+            g_nodeArray["nodeXML"][nodeIdx].removeChild(g_nodeArray["nodeXML"][nodeIdx].childNodes.item(RowCnt-1));
+        }
+
+        var childXML = new ActiveXObject("Microsoft.XMLDom");
+        childXML.loadXML("<nodes>" + childxml + "</nodes>");
+
+        var childLength = childXML.documentElement.childNodes.length
+        for (var i = 0; i < childLength; i++)
+            g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement.childNodes.item(0));
+
+        childXML = null;
+        if (childLength > 0) {
+            //element.all(g_childid + nodeIdx).style.display = "inline-block";
+            if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["dot_normal"]) >= 0)
+                element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"]
+        }
+        
+        element.all(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
+    }
+}
+function ex_addnode(nodeIdx, nodeXML) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return "";
+    var depth = g_nodeArray["depth"][nodeIdx].length;
+    var node = element.all(g_nodeid + nodeIdx)
+    var childNodes = element.all(g_nodeid + nodeIdx).parentElement.parentElement.children.item(1);
+    if (childNodes.innerHTML == "") {
+        var imgnode = node.parentElement.children.item(depth - 1);
+
+        if (imgnode.src.indexOf(g_baseImage["dot_normal"]) >= 0)
+            imgnode.src = g_baseImage["plus_normal"];
+        else if (imgnode.src.indexOf(g_baseImage["dot_end"]) >= 0)
+            imgnode.src = g_baseImage["plus_end"];
+
+        imgnode = null;
+    }
+    else {
+        var childXML = new ActiveXObject("Microsoft.XMLDom");
+        childXML.loadXML(nodeXML);
+        var depth = g_nodeArray["depth"][nodeIdx].length;
+        g_nodeCount++;
+        var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+        for (var j = 0; j < depth; j++) {
+            if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
+                nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "' >");
+            else
+                nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+        }
+        if (childXML.documentElement.attributes.getNamedItem("hassub") != null)
+            nodeHtml += ("<img width='" + g_imageWidth + "' height='" + g_imageHeight + "' src='" + g_baseImage["plus_end"]);
+        else
+            nodeHtml += ("<img width='" + g_imageWidth + "' height='" + g_imageHeight + "' src='" + g_baseImage["dot_normal"]);
+
+        nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "'>");
+        nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif' width='16' height='16' style='margin-right:1px;'>");
+        nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" + g_baseClass["normal"] + "' ");
+        nodeHtml += " style='display:inline-block;' >";
+        nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").text) + "</span></div>");
+        nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
+        var nodeDIV = document.createElement("DIV");
+        nodeDIV.innerHTML = nodeHtml;
+        childNodes.children.item(0).appendChild(nodeDIV);
+        var prelastnode = childNodes.children.item(0).children.item(childNodes.children.item(0).children.length - 2);
+        if (prelastnode.children.item(0).children.item(depth).src.indexOf(g_baseImage["dot_end"]) >= 0) {
+            prelastnode.children.item(0).children.item(depth).src = g_baseImage["dot_normal"];
+        }
+        else {
+            if (prelastnode.children.item(0).children.item(depth).src.indexOf(g_baseImage["plus_end"]) >= 0)
+                prelastnode.children.item(0).children.item(depth).src = g_baseImage["plus_normal"];
+            else
+                prelastnode.children.item(0).children.item(depth).src = g_baseImage["minus_normal"];
+
+            changeRecursiveImg(prelastnode.children.item(1), false, depth, 0);
+        }
+        var depthlist = g_nodeArray["depth"][prelastnode.children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]];
+        depthlist = depthlist.substr(0, depthlist.length - 1) + "1";
+        g_nodeArray["depth"][prelastnode.children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]] = depthlist;
+        g_nodeArray["nodeXML"][g_nodeCount] = g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement);
+        g_nodeArray["depth"][g_nodeCount] = g_nodeArray["depth"][nodeIdx] + "0";
+        nodeDIV = null;
+        prelastnode = null;
+        childXML = null;
+    }
+    node = null;
+    childnodes = null;
+}
+function ex_deletenode(nodeIdx) {
+    if (nodeIdx > g_nodeCount || nodeIdx < 1)
+        return "";
+    var node = element.all(g_nodeid + nodeIdx).parentElement.parentElement;
+    var children = node.parentElement.children;
+    if (children.item(children.length - 1) == node) {
+        if (children.length > 1) {
+            var child = children.item(children.length - 2)
+            var depth = g_nodeArray["depth"][nodeIdx].length;
+            var imgnode = child.children.item(0).children.item(depth - 1);
+            if (imgnode.src.indexOf(g_baseImage["dot_normal"]) >= 0) {
+                imgnode.src = g_baseImage["dot_end"];
+            }
+            else {
+                if (imgnode.src.indexOf(g_baseImage["plus_normal"]) >= 0)
+                    imgnode.src = g_baseImage["plus_end"];
+                else
+                    imgnode.src = g_baseImage["minus_end"];
+
+                changeRecursiveImg(child.children.item(1), true, depth - 1, 0);
+            }
+            var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 1).id.split(g_nodeid)[1]];
+            depthlist = depthlist.substr(0, depthlist.length - 1) + "0";
+            g_nodeArray["depth"][child.children.item(0).children.item(depth + 1).id.split(g_nodeid)[1]] = depthlist;
+            node.parentElement.removeChild(node);
+            imgnode = null;
+            child = null;
+        }
+        else {
+            var depth = g_nodeArray["depth"][nodeIdx].length;
+            imgnode = node.parentElement.parentElement.parentElement.children.item(0).children.item(depth - 2);
+            if (imgnode.src.indexOf(g_baseImage["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImage["minus_normal"]) >= 0)
+                imgnode.src = g_baseImage["dot_normal"];
+            else
+                imgnode.src = g_baseImage["dot_end"];
+            node.parentElement.parentElement.style.display = "none";
+            node.parentElement.parentElement.innerHTML = "";
+
+            imgnode = null;
+        }
+    }
+    else
+        node.parentElement.removeChild(node);
+
+    g_nodeArray["nodeXML"][nodeIdx].parentNode.removeChild(g_nodeArray["nodeXML"][nodeIdx]);
+    g_nodeArray["nodeXML"][nodeIdx] = null;
+    g_nodeArray["depth"][nodeIdx] = "";
+    node = null;
+    children = null;
+    g_selectedIdx = -1;
+}
+function ex_putstyle(nodeIdx, style) {
+    element.all(g_nodeid + nodeIdx).style.cssText = style;
+}
+function ex_findindex(valueName, value) {
+    for (var i = 1; i <= g_nodeCount; i++) {
+        if (g_nodeArray["nodeXML"][i] != null)
+            if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
+                return i;
+    }
+
+    return -1;
+}
+function ex_haschild(nodeIdx) {
+    var depth = g_nodeArray["depth"][nodeIdx].length;
+    var src = element.all(g_nodeid + nodeIdx).parentElement.children.item(depth - 1).src;
+    if (src.indexOf(g_baseImage["plus_normal"]) > 0 ||
+        src.indexOf(g_baseImage["plus_end"]) > 0 ||
+        src.indexOf(g_baseImage["minus_normal"]) > 0 ||
+        src.indexOf(g_baseImage["minus_end"]) > 0)
+        return true;
+    else
+        return false;
+}
+function event_onselectstart() {
+    event.cancelBubble = true;
+    event.returnValue = false;
+}
+function event_onmousedown() {
+    var elementid = window.event.srcElement.id;
+    if (elementid.indexOf(g_toggleid) == 0)
+        ex_toggle(elementid.split(g_toggleid)[1]);
+    else if (elementid.indexOf(g_nodeid) == 0)
+        ex_select(elementid.split(g_nodeid)[1]);
+}
+function event_ondblclick() {
+    var elementid = window.event.srcElement.id;
+    if (elementid.indexOf(g_nodeid) == 0)
+        nodedblclick.fire();
+}
+function event_onmouseover() {
+    var elementid = window.event.srcElement.id;
+    if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+        element.all(elementid).className = g_baseClass["hover"];
+}
+function event_onmouseout() {
+    var elementid = window.event.srcElement.id;
+
+    if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
+        if (g_selectedIdx == elementid.split(g_nodeid)[1])
+            element.all(elementid).className = g_baseClass["selected"];
+        else
+            element.all(elementid).className = g_baseClass["normal"];
+    }
+}
+function event_ondragenter() {
+    if (g_bdragdrop) {
+        var elementid = window.event.srcElement.id;
+        if (elementid.indexOf(g_nodeid) == 0)
+            event.returnValue = false;
+    }
+}
+function event_ondragover() {
+    if (g_bdragdrop) {
+        var elementid = window.event.srcElement.id;
+        if (elementid.indexOf(g_nodeid) == 0)
+            event.returnValue = false;
+    }
+}
+function event_ondrop() {
+    if (g_bdragdrop) {
+        var elementid = window.event.srcElement.id;
+        if (elementid.indexOf(g_nodeid) == 0) {
+            event.returnValue = false;
+            var oEvent = createEventObject();
+            oEvent.nodeIdx = elementid.split(g_nodeid)[1];
+            oEvent.bctrl = window.event.ctrlKey;
+            oEvent.command = window.event.dataTransfer.getData("Text");
+            nodedragdrop.fire(oEvent);
+        }
+    }
+}
+function event_onbeforeunload() {
+    g_treeXML = null;
+}
+function make_childHtml(nodeIdx) {
+    if (nodeIdx == 0) {
+        var nodeXML = g_treeXML.selectSingleNode("tree/nodes").childNodes;
+        var depth = "";
+    }
+    else {
+        var nodeXML = g_nodeArray["nodeXML"][nodeIdx].childNodes;
+        var depth = g_nodeArray["depth"][nodeIdx];
+    }
+
+    var childHtml = "<div>";
+    var childLength = nodeXML.length;
+    for (var i = 0; i < childLength; i++) {
+        g_nodeCount++;
+        var mydepth = depth;
+        var childNode = nodeXML.item(i);
+        var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+
+        for (var j = 0; j < depth.length; j++) {
+            if (depth.charAt(j) == "1")
+                nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+            else
+                nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+        }
+        var bParent = (childNode.childNodes.length > 0) ? true : false;
+        var bEndNode = (i == childLength - 1) ? true : false;
+        if (childNode.attributes.getNamedItem("hassub") != null)
+            bParent = true;
+
+        nodeHtml += "<img src='";
+        if (bParent) {
+            if (!bEndNode) {
+                nodeHtml += g_baseImage["plus_normal"];
+                mydepth += "1";
+            }
+            else {
+                nodeHtml += g_baseImage["plus_end"];
+                mydepth += "0";
+            }
+
+            nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+        }
+        else {
+            if (!bEndNode) {
+                nodeHtml += g_baseImage["dot_normal"];
+                mydepth += "1";
+            }
+            else {
+                nodeHtml += g_baseImage["dot_end"];
+                mydepth += "0";
+            }
+
+            nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+        }
+        if (nodeXML[i].getAttribute("href") != null) {
+            var _foldername = nodeXML[i].getAttribute("fullcaption");
+            if (_foldername == "_INBOX") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/inbox.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else if (_foldername == "_SENT") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/outbox.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else if (_foldername == "_DRAFT") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/drafts.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else if (_foldername == "_JUNK") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/junkemail.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else if (_foldername == "_DELETE") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/deleted.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else if (_foldername == "_PERSONAL") {
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/sentitems.gif' width='16' height='16' style='margin-right:1px;'>");
+            }
+            else
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif' width='16' height='16' style='margin-right:1px;'>");
+        }
+        else
+            nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif' width='16' height='16' style='margin-right:1px;'>");
+
+        nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
+                g_baseClass["normal"] + "' ");
+        if (childNode.attributes.getNamedItem("style") != null)
+            nodeHtml += ("style='display:inline-block;" + childNode.attributes.getNamedItem("style").text + "'");
+
+        if (childNode.attributes.getNamedItem("title") != null)
+            nodeHtml += ("style='display:inline-block' title='" + childNode.attributes.getNamedItem("title").text + "'>");
+        else
+            nodeHtml += " style='display:inline-block' >";
+
+        nodeHtml += (MakeHTMLStr(childNode.attributes.getNamedItem("caption").text) + "</span></div>");
+        nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
+        nodeHtml += "</div>"
+        g_nodeArray["nodeXML"][g_nodeCount] = childNode;
+        g_nodeArray["depth"][g_nodeCount] = mydepth;
+        childHtml += nodeHtml;
+        childNode = null;
+    }
+    childHtml += "</div>"
+    nodeXML = null;
+    return childHtml;
+}
+function changeRecursiveImg(node, bspace, depth, recuringCount) {
+    if (node.innerHTML == "")
+        return;
+    for (var i = 0; i < node.children.item(0).children.length; i++) {
+        var child = node.children.item(0).children.item(i);
+        if (bspace) {
+            child.children.item(0).children.item(depth).src = g_baseImage["space"];
+            var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 3 + recuringCount).id.split(g_nodeid)[1]];
+            depthlist = depthlist.substr(0, depth) + "0" + depthlist.substr(depth + 1, depthlist.length - depth - 1);
+            g_nodeArray["depth"][child.children.item(0).children.item(depth + 3 + recuringCount).id.split(g_nodeid)[1]] = depthlist;
+            changeRecursiveImg(child.children.item(1), bspace, depth, recuringCount + 1);
+        }
+        else {
+            child.children.item(0).children.item(depth).src = g_baseImage["dot_continue"];
+            var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 3 + recuringCount).id.split(g_nodeid)[1]];
+            depthlist = depthlist.substr(0, depth) + "1" + depthlist.substr(depth + 1, depthlist.length - depth - 1);
+            g_nodeArray["depth"][child.children.item(0).children.item(depth + 3 + recuringCount).id.split(g_nodeid)[1]] = depthlist;
+            changeRecursiveImg(child.children.item(1), bspace, depth, recuringCount + 1);
+        }
+        child = null;
+    }
+}
+function set_initvalue() {
+    var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+    for (var i = 0; i < bimageNodes.length; i++)
+        g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text;
+
+    bimageNodes = null;
+
+    var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+    for (var i = 0; i < classNodes.length; i++)
+        g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+
+    classNodes = null;
+
+    var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+    for (var i = 0; i < imageNodes.length; i++)
+        g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = imageNodes.item(i).attributes.getNamedItem("path").text;
+
+    imageNodes = null;
+    g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
+    g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+}
+function MakeHTMLStr(orgStr) {
+    return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"), ">", "&gt;");
+}
+function ReplaceText(orgStr, findStr, replaceStr) {
+    var re = new RegExp(findStr, "gi");
+    return (orgStr.replace(re, replaceStr));
+}
+</script>
+</public:htc>
