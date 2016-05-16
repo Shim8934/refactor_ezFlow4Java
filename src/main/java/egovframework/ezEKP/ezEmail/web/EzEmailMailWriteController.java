@@ -1092,7 +1092,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 					// and some mailers (Daum, etc) may not understand it.			        
 			        encodedFileName = MimeUtility.fold(0, encodedFileName);
-			        messageBodyPart.setHeader("Content-Disposition", "attachment;\n\tfilename=\"" + encodedFileName + "\"");
+			        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
 			        
 			        String contentType = "application/octet-stream";
 			        
