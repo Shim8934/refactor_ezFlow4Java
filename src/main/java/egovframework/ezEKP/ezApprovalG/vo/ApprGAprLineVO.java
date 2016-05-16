@@ -61,6 +61,10 @@ public class ApprGAprLineVO {
 	private String aprMemberJobTitle2;
 	/** 결재자부서이름(다국어)*/
 	private String aprMemberDeptName2;
+	/** */
+	private String processorID;
+	/** */
+	private String receivedDeptID;
 	
 	public String getUserID() {
 		return userID;
@@ -241,5 +245,17 @@ public class ApprGAprLineVO {
 	}
 	public void setProxyUserDeptName2(String proxyUserDeptName2) {
 		this.proxyUserDeptName2 = proxyUserDeptName2;
+	}
+	public String getProcessorID() {
+		return processorID;
+	}
+	public void setProcessorID(String processorID) {
+		this.processorID = processorID;
+	}
+	public String getReceivedDeptID() {
+		return receivedDeptID;
+	}
+	public void setReceivedDeptID(String receivedDeptID) {
+		this.receivedDeptID = receivedDeptID;
 	}
 }

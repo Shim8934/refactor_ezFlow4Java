@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -208,7 +210,7 @@ public class EzApprovalGController {
 		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		String susinAdmin = "";
 		String listType = request.getParameter("listType");
-		String viewLeftCount = config.getProperty("APPROVLEFTCOUNT");
+		String viewLeftCount = config.getProperty("config.APPROVLEFTCOUNT");
 		String useMobile = config.getProperty("config.Use_Mobile");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String selMenu = "all";
@@ -348,11 +350,12 @@ public class EzApprovalGController {
 	/**
 	 * 전자결재G 결재라인리스트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLineList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/getLineList.do","/ezApprovalG/getTotalAttachInfo.do","/ezApprovalG/getReceiptinfo.do","/ezApprovalG/getOpinionInfo.do"}, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -368,12 +371,118 @@ public class EzApprovalGController {
 						Document docXML = commonUtil.convertStringToDocument(docList);
 						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-							
+							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+								String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+								
+								for (int j = 0; j < proxyUserArray.length; j++) {
+									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))){
+										checkPermission = false;
+										break;
+									}
+								}
+							}
+						}
+					}
+					if (checkPermission) {
+						String checkMode = "";
+						if (mode.toUpperCase().equals("TMP")){
+							checkMode = "TMP";
+						} else {
+							checkMode = "REC";
+						}
+						int cp = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID());
+						
+						if (cp <= 0) {
+							return "NOTPERMISSION";
 						}
 					}
 				}
+			} else if (mode.toUpperCase().equals("END")) {
+				String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+				
+				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+					return "NOTPERMISSION";
+				}
 			}
 		}
-		return "";
+		String result = "";
+		
+		if (requestURL.indexOf("getLineList") > -1) {
+			result = ezApprovalGService.getLineInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang());
+		} else if (requestURL.indexOf("getTotalAttachInfo") > -1) {
+			result = ezApprovalGService.getAttachInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang());
+		} else if (requestURL.indexOf("getReceiptinfo") > -1) {
+			result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang());
+		} else if (requestURL.indexOf("getOpinionInfo") > -1) {
+			result = ezApprovalGService.getOpinionInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 레프트메뉴카운트 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getListCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, @RequestBody String docXml) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(docXml);
+		String listType = doc.getElementsByTagName("LISTTYPE").item(0).getTextContent();
+		String mode = request.getParameter("mode");
+		String susinAdmin = "user";
+		String result = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "admin";
+		}
+		
+		if (mode != null) {
+			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "LEFT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang());
+		} else {
+			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "COUNT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기안하기 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getFormCont.do")
+	public String getFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String deptID = userInfo.getDeptID();
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang());
+		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
+		String docFileType = "";
+		
+		if (request.getParameter("fileType") != null) {
+			docFileType = request.getParameter("fileType");
+		}
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("docType", docType);
+		model.addAttribute("userForm", userForm);
+		model.addAttribute("docFileType", docFileType);
+		
+		return "ezApprovalG/apprGFormCont";
+	}
+	
+	/**
+	 * 전자결재G 기안양식 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getForm.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String id = request.getParameter("id");
+		String kind = request.getParameter("kind");
+		String searchType = request.getParameter("searchType");
+		String searchName = request.getParameter("searchName");
+		String result = ezApprovalGService.getFormInfo(id, kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
 	}
 }

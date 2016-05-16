@@ -1,14 +1,20 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
@@ -44,6 +50,51 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getAprLineInfo", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> checkPermission(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.checkPermission", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getLineInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getLineInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getAttachInfoDB(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalG.getAttachInfoDB", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiptVO> getReceiptInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiptVO>) list("EzApprovalG.getReceiptInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpinionVO> getOpinionInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGOpinionVO>) list("EzApprovalG.getOpinionInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGWebPartVO> getWebPartList(Map<String, Object> map) throws Exception{
+		return (List<ApprGWebPartVO>) list("EzApprovalG.getWebPartList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGFormVO>) list("EzApprovalG.getFormInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception{
+		return (List<String>) list("EzApprovalG.getLeftDocCount", map);
+	}
+	
 	public String getCode2Name(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getCode2Name", map);
 	}
@@ -60,8 +111,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getAprDocListReceiveSN", map);
 	}
 	
+	public String getAccessYNG(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getAccessYNG", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getWebPartListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getWebPartListCount", map);
 		return (int)map.get("v_pCount");
 	}
 

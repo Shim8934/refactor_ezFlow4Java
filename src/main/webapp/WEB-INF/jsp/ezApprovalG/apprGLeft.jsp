@@ -310,7 +310,7 @@
 		            var strQuery = "<DATA><LISTTYPE>1</LISTTYPE></DATA>";
 		            xmlhttp_total = null;
 		            xmlhttp_total = createXMLHttpRequest();
-		            xmlhttp_total.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx?mode=LEFT", true);
+		            xmlhttp_total.open("POST", "/ezApprovalG/getListCount.do?mode=LEFT", true);
 		            xmlhttp_total.onreadystatechange = getAprTotalCount_after;
 		            xmlhttp_total.send(strQuery);
 		        }
@@ -322,7 +322,7 @@
 		            if (xmlhttp_total.responseText == "") return;
 		            var ResultXML = "";
 		            ResultXML = xmlhttp_total.responseXML;
-		
+		            
 		            // 결재할 문서
 		            if (pListTypeValue != "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
@@ -390,7 +390,7 @@
 		    var xmlhttp_1 = createXMLHttpRequest();
 		    function getAprCount1() {
 		        var strQuery = "<DATA><LISTTYPE>1</LISTTYPE></DATA>";
-		        xmlhttp_1.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_1.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_1.onreadystatechange = getAprCount1_after;
 		        xmlhttp_1.send(strQuery);
 		    }
@@ -411,7 +411,7 @@
 		    var xmlhttp_2 = createXMLHttpRequest();
 		    function getAprCount2() {
 		        var strQuery = "<DATA><LISTTYPE>2</LISTTYPE></DATA>";
-		        xmlhttp_2.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_2.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_2.onreadystatechange = getAprCount2_after;
 		        xmlhttp_2.send(strQuery);
 		    }
@@ -433,7 +433,7 @@
 		    var xmlhttp_3 = createXMLHttpRequest();
 		    function getAprCount3() {
 		        var strQuery = "<DATA><LISTTYPE>3</LISTTYPE></DATA>";
-		        xmlhttp_3.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_3.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_3.onreadystatechange = getAprCount3_after;
 		        xmlhttp_3.send(strQuery);
 		    }
@@ -454,7 +454,7 @@
 		    var xmlhttp_4 = createXMLHttpRequest();
 		    function getAprCount4() {
 		        var strQuery = "<DATA><LISTTYPE>4</LISTTYPE></DATA>";
-		        xmlhttp_4.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_4.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_4.onreadystatechange = getAprCount4_after;
 		        xmlhttp_4.send(strQuery);
 		    }
@@ -475,7 +475,7 @@
 		    var xmlhttp_6 = createXMLHttpRequest();
 		    function getAprCount6() {
 		        var strQuery = "<DATA><LISTTYPE>5</LISTTYPE></DATA>";
-		        xmlhttp_6.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_6.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_6.onreadystatechange = getAprCount6_after;
 		        xmlhttp_6.send(strQuery);
 		    }
@@ -496,7 +496,7 @@
 		    var xmlhttp_7 = createXMLHttpRequest();
 		    function getAprCount7() {
 		        var strQuery = "<DATA><LISTTYPE>7</LISTTYPE></DATA>";
-		        xmlhttp_7.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_7.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_7.onreadystatechange = getAprCount7_after;
 		        xmlhttp_7.send(strQuery);
 		    }
@@ -517,7 +517,7 @@
 		    var xmlhttp_99 = createXMLHttpRequest();
 		    function getAprCount99() {
 		        var strQuery = "<DATA><LISTTYPE>99</LISTTYPE></DATA>";
-		        xmlhttp_99.open("POST", "/myoffice/ezApprovalG/aspx/getListCount.aspx", true);
+		        xmlhttp_99.open("POST", "/ezApprovalG/getListCount.do", true);
 		        xmlhttp_99.onreadystatechange = getAprCount99_after;
 		        xmlhttp_99.send(strQuery);
 		    }

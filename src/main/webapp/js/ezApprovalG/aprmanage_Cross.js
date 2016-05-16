@@ -601,61 +601,51 @@ function getAprLine(tr) {
     
 }
 
-function getAprovSub_after() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        try {
-            if (xmlhttp.responseText == "") return;
-            if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-            if (xmlhttp.responseText == "NOTPERMISSTION") {
-                document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
-                document.getElementById("lvAprLine").style.textAlign = "center";
-                return;
-            }
+function getAprovSub_after(xml) {
+    if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
+    if (xml == "NOTPERMISSTION") {
+        document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+        document.getElementById("lvAprLine").style.textAlign = "center";
+        return;
+    }
 
 
-            var listNode = SelectSingleNodeNew(xmlhttp.responseXML, "LISTVIEWDATA");
+    var listNode = SelectSingleNodeNew(xml, "LISTVIEWDATA");
 
-            var xmlDoc;
-            if (CrossYN()) {
-                var xmlLIST = createXmlDom();
-                var nodeToImport = xmlLIST.importNode(listNode, true);
-                xmlLIST.appendChild(nodeToImport);
+    var xmlDoc;
+    if (CrossYN()) {
+        var xmlLIST = createXmlDom();
+        var nodeToImport = xmlLIST.importNode(listNode, true);
+        xmlLIST.appendChild(nodeToImport);
 
-                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-            }
-            else {
-                xmlDoc = createXmlDom();
-                xmlDoc.appendChild(listNode);
-            }
+        xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+    }
+    else {
+        xmlDoc = createXmlDom();
+        xmlDoc.appendChild(listNode);
+    }
 
-            var AprLine = new ListView();
-            AprLine.SetID("AprLine");
-            AprLine.SetMulSelectable(false);
-            AprLine.SetTitleIdx(arrySubTab[1]);
-            AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
-            AprLine.SetRowOnClick("lvAprLine_SelChange");
-            AprLine.DataSource(xmlDoc);
-            AprLine.DataBind("lvAprLine");
+    var AprLine = new ListView();
+    AprLine.SetID("AprLine");
+    AprLine.SetMulSelectable(false);
+    AprLine.SetTitleIdx(arrySubTab[1]);
+    AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+    AprLine.SetRowOnClick("lvAprLine_SelChange");
+    AprLine.DataSource(xmlDoc);
+    AprLine.DataBind("lvAprLine");
 
-            if (AprLine.GetRowCount() > 0) {
-                //document.getElementById("tbtnUserInfo").style.display = "";
-                //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
+    if (AprLine.GetRowCount() > 0) {
+        //document.getElementById("tbtnUserInfo").style.display = "";
+        //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
 
-                if (USE_OCS == "YES") {
-                    check_presence();
-                }
-            }
-            else {
-                //document.getElementById("tbtnUserInfo").style.display = "none";
-                //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
-            }
-        }
-        catch (e) {
-            alert(e.description);
+        if (USE_OCS == "YES") {
+            check_presence();
         }
     }
-    else
-        return;
+    else {
+        //document.getElementById("tbtnUserInfo").style.display = "none";
+        //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
+    }
 }
 
 function openUserInfo() {
@@ -892,29 +882,16 @@ function openForm() {
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
 
-    var url = "/myoffice/ezApprovalG/formContainer/getformcont_Cross.aspx";
+    var url = "/ezApprovalG/getFormCont.do";
     var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(713, 570);
 
-    var ret;
+    getformcont_cross_dialogArguments[0] = parameter;
+    getformcont_cross_dialogArguments[1] = openForm_Complete;
 
-    if (CrossYN() || NonActiveX == "YES") {
-        getformcont_cross_dialogArguments[0] = parameter;
-        getformcont_cross_dialogArguments[1] = openForm_Complete;
-
-        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
-        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
-    }
-    else {
-        ret = window.showModalDialog(url, parameter, feature);
-        formURL = ret[0];
-        formDocType = ret[1];
-        formExt = ret[2];
-
-        if (formURL != "cancel") {
-            openDraftUI("DRAFT", "");
-        }
-    }
+    getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+    
+    try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
 }
 
 function openForm_Complete(ret) {
@@ -1300,60 +1277,84 @@ function setHeSongDocInfo(pCurSelRow) {
 
 function getAprDocAproveInfo(tr) {
     var pDocID;
+    var pFlag;
+    var RtnVal = "";
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
         pDocID = GetAttribute(tr, "DATA7");
     else
         pDocID = GetAttribute(tr, "DATA1");
 
-    var xmlhttp = createXMLHttpRequest();
-    var RtnVal = createXmlDom();
-
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "ASSIGN");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-
     if (pDocInfoValue == "4") {
-        
-        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
-        else if (pListTypeValue == "21")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
-        else
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
+        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
+        	pFlag = "END";
+    	} else if (pListTypeValue == "21") {
+        	pFlag = "TMP";
+        } else {
+        	pFlag = "APR";
+        }
 
-        xmlhttp.open("POST", "aspx/getTotalAttachInfo.aspx", false);
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getTotalAttachInfo.do",
+    		data : {
+    				docID : pDocID,
+    				mode  : pFlag
+    				},
+    		success: function(xml){
+    			RtnVal = xml;
+    		}        			
+    	});
     }
     else if (pDocInfoValue == "3") {
-        
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
+        	pFlag = "END";
         else if (pListTypeValue == "21")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+        	pFlag = "TMP";
         else
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
+        	pFlag = "APR";
 
-        xmlhttp.open("POST", "aspx/getOpinionInfo.aspx", false); 
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getOpinionInfo.do",
+    		data : {
+    				docID : pDocID,
+    				mode  : pFlag
+    				},
+    		success: function(xml){
+    			RtnVal = xml;
+    		}
+    	});
     }
     else if (pDocInfoValue == "2") {
-        
         if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
+        	pFlag = "END";
         else if (pListTypeValue == "21")
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+        	pFlag = "TMP";
         else
-            createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
+        	pFlag = "APR";
 
-        xmlhttp.open("POST", "aspx/getReceiptinfo.aspx", false); 
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getReceiptinfo.do",
+    		data : {
+    				docID : pDocID,
+    				mode  : pFlag
+    				},
+    		success: function(xml){
+    			RtnVal = xml;
+    		}
+    	});
     }
 
-    xmlhttp.send(xmlpara);
-
-    RtnVal = xmlhttp.responseXML;
     if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
 
-    if (xmlhttp.responseText == "NOTPERMISSTION") {
+    if (RtnVal == "NOTPERMISSTION") {
         document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
         document.getElementById("lvAprLine").style.textAlign = "center";
         return;

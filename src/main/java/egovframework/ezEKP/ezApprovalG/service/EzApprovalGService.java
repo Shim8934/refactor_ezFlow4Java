@@ -15,7 +15,7 @@ public interface EzApprovalGService {
 
 	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData) throws Exception;
 
-	public String getProxyUser(String id, String string) throws Exception;
+	public String getProxyUser(String id, String lang) throws Exception;
 
 	public String getAprLineInfo(String docID, String flag, String userID, String formID, String companyID) throws Exception;
 	
@@ -25,4 +25,21 @@ public interface EzApprovalGService {
 	
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang) throws Exception;
 
+	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang) throws Exception;
+
+	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+
+	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang) throws Exception;
+
+	public String getDocType(String selected, String companyID, String lang) throws Exception;
+	
+	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang) throws Exception;
+
+	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 }
