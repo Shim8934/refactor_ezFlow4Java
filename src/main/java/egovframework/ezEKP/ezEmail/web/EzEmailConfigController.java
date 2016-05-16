@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -279,4 +280,45 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailSelectFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailSelectFolder";
 	}
+	
+	/**
+	 * 메일 자동삭제 조건추가 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
+	@ResponseBody
+	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		
+		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
+		String expireTimeStr = request.getParameter("expiretime") == null ? "" : request.getParameter("expiretime");
+		int expireTime = expireTimeStr.equals("") ? 0 : Integer.parseInt(expireTimeStr);
+		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
+		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
+		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
+		
+		ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
+		
+		response.sendRedirect("/ezEmail/mailAutoDelete.do");
+		return "";
+	}
+	
+	/**
+	 * 메일 자동삭제 조건추가 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
+	@ResponseBody
+	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		
+		String itemSeqStr = request.getParameter("itemseq") == null ? "" : request.getParameter("itemseq");
+		int itemSeq = itemSeqStr.equals("") ? 0 : Integer.parseInt(itemSeqStr);
+		
+		ezEmailService.deleteMailDelete(userId, itemSeq);
+		
+		response.sendRedirect("/ezEmail/mailAutoDelete.do");
+		return "";
+	}
+	
 }

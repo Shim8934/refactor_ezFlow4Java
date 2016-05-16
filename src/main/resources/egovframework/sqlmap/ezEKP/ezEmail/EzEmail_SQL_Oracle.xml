@@ -49,4 +49,12 @@
 		{CALL EZEMAIL.EZSP_GETMAILDELETE(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.setMailDelete" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILDELETE(#v_PUSERID#, #v_PPATH#, #v_PEXPIRETIME#, #v_PFOLDERNAME#, #v_PDELETEUNREAD#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.deleteMailDelete" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_DELETEMAILDELETE(#v_PUSERID#, #v_PITEMSEQ#)}
+	</procedure>
+	
 </sqlMap>

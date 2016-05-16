@@ -1330,7 +1330,7 @@
                 }
 
                 imageNodes = null;
-
+                
                 g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
                 g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
         	}
@@ -1359,7 +1359,7 @@
             
         }).call(this);
     }
-
+    
     function MakeHTMLStr(orgStr) {
         return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "&", "&amp;"), "\"", "&quot;"), "<", "&lt;"), ">", "&gt;");
     }

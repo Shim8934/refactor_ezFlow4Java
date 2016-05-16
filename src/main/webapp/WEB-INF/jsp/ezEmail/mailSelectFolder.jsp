@@ -51,7 +51,7 @@
 	            PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
 	
 	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
+	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
 	            xmlHTTP.send();
 	            var treeconfig;
 	            if (navigator.userAgent.indexOf('MSIE') == -1) {
@@ -100,7 +100,7 @@
 	            inputNameDlg_cross_dialogArguments[0] = "";
 	            inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
 	            inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden_sub;
-	            DivPopUpShow_sub(330, 150, "/myoffice/ezEmail/htm/inputNameDlg_Cross.aspx");
+	            DivPopUpShow_sub(330, 150, "/ezEmail/inputNameDlg.do");
 	        }
 	        function add_onclick_Complete(szName) {
 	            DivPopUpHidden_sub();
@@ -175,7 +175,7 @@
 	            createNodeAndInsertText(xmlDOM, objNode, "CMD", "NEW");
 	
 	
-	            xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_makeFolder.aspx", false);
+	            xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 	
 	            xmlHTTP.send(xmlDOM);
 	

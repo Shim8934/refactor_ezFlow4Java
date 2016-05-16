@@ -31,4 +31,11 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		return (List<MailDeleteVO>)list("EzEmailDAO.getMailDelete", map);
 	}
 	
+	public void setMailDelete(Map<String, Object> map) throws Exception {
+		update("EzEmailDAO.setMailDelete", map);
+	}
+	
+	public void deleteMailDelete(Map<String, Object> map) throws Exception {
+		delete("EzEmailDAO.deleteMailDelete", map);
+	}
 }

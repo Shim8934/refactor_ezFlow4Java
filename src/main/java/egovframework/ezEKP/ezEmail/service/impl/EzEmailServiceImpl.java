@@ -53,5 +53,25 @@ public class EzEmailServiceImpl implements EzEmailService {
 		map.put("v_PUSERID", userId);
 		return ezEmailDAO.getMailDelete(map);
 	}
+
+	@Override
+	public void setMailDelete(String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PPATH", pPath);
+		map.put("v_PEXPIRETIME", pExpireTime);
+		map.put("v_PDELETEUNREAD", pDeleteUnread);
+		map.put("v_PFOLDERNAME", pFolderName);
+		ezEmailDAO.setMailDelete(map);
+	}
+
+	@Override
+	public void deleteMailDelete(String pUserID, int pItemSeq) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PITEMSEQ", pItemSeq);
+		ezEmailDAO.deleteMailDelete(map);
+	}
 	
 }

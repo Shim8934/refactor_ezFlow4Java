@@ -27,7 +27,7 @@
 		        if (!confirm("<spring:message code='ezEmail.t113' />"))
 		            return;
 		
-		        window.location.href = "mail_autodelete_delete.aspx?itemseq=" + escape(seqno);
+		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + escape(seqno);
 		    }
 		    function add_condition() {
 		        if (document.getElementById("folderpath").value == "") {
@@ -43,9 +43,9 @@
 		            return;
 		        }
 		        if (document.getElementById("deleteunread").checked == true)
-		            window.location.href = "mail_autodelete_add.aspx?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + escape(document.getElementById("expiretime").value) + "&unread=1" + "&foldername=" + escape(document.getElementById("folderpath").value);
+		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + escape(document.getElementById("expiretime").value) + "&unread=1" + "&foldername=" + escape(document.getElementById("folderpath").value);
 		        else
-		            window.location.href = "mail_autodelete_add.aspx?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + escape(document.getElementById("expiretime").value) + "&unread=0" + "&foldername=" + escape(document.getElementById("folderpath").value);
+		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + escape(document.getElementById("expiretime").value) + "&unread=0" + "&foldername=" + escape(document.getElementById("folderpath").value);
 		    }
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function getFolder() {
@@ -103,11 +103,11 @@
 				
 				<c:forEach var="item" items="${list}">
 					<tr> 
-						<td>&nbsp;&nbsp;</td> 
-						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"> <spring:message code='ezEmail.t127' /></td> 
-						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled name="checkbox2"></td> 
+						<td>&nbsp;&nbsp;${item.folderName}</td> 
+						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">${item.expireTime} <spring:message code='ezEmail.t127' /></td> 
+						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
-							<a class="imgbtn"><span onClick="delete_condition('')"><spring:message code='ezEmail.t95' /></span></a>
+							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}')"><spring:message code='ezEmail.t95' /></span></a>
 						</td> 
 					</tr>
 				</c:forEach>
