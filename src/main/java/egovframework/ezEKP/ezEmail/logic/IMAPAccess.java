@@ -494,15 +494,15 @@ public class IMAPAccess {
 		private int getPriority(Message msg) {
 			String[] headers = null;
 			try {
-				headers = msg.getHeader("importance");
+				headers = msg.getHeader("X-Priority");
 			} catch (MessagingException e) {
 			}
 			String header = headers != null ? headers[0] : "normal";
 			int importance = 1;
-			if (header.equalsIgnoreCase("high")) {
+			if (header.equals("1")) {
 				importance = 2;
 			}
-			else if (header.equalsIgnoreCase("low")) {
+			else if (header.equals("5")) {
 				importance = 0;
 			}			
 			

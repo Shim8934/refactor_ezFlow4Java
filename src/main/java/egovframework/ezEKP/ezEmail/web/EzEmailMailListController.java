@@ -194,7 +194,7 @@ public class EzEmailMailListController {
 					|| sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
@@ -202,7 +202,7 @@ public class EzEmailMailListController {
 			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);
 				fp.add(FetchProfile.Item.FLAGS);				
@@ -211,7 +211,7 @@ public class EzEmailMailListController {
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);				
@@ -220,16 +220,16 @@ public class EzEmailMailListController {
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);				
 			}
-			// importance
+			// importance (X-Priority)
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);
@@ -239,7 +239,7 @@ public class EzEmailMailListController {
 			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.FLAGS);				
@@ -249,7 +249,7 @@ public class EzEmailMailListController {
 					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(FetchProfile.Item.SIZE);
@@ -257,7 +257,7 @@ public class EzEmailMailListController {
 			}
 			else {
 				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("importance");
+				fp.add("X-Priority");
 				fp.add(FetchProfile.Item.CONTENT_INFO);
 				fp.add(FetchProfile.Item.ENVELOPE);
 				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
@@ -276,13 +276,13 @@ public class EzEmailMailListController {
 			sb.append("<fromemail><![CDATA[]]></fromemail>");
 			
 			// importance
-			String[] headers = message.getHeader("importance");
+			String[] headers = message.getHeader("X-Priority");
 			String header = headers != null ? headers[0] : "normal";
 			int importance = 1;
-			if (header.equalsIgnoreCase("high")) {
+			if (header.equals("1")) {
 				importance = 2;
 			}
-			else if (header.equalsIgnoreCase("low")) {
+			else if (header.equals("5")) {
 				importance = 0;
 			}
 			sb.append(String.format("<importance><![CDATA[%d]]></importance>", importance));	
