@@ -1153,88 +1153,117 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     var length;
 
     nLen = mailArr.length;
-    var i = 0
-    mailName = TrimText(mailArr[i]);
-    if (mailName == "") {
-        if (iType == 0)
-            CompletToCnt++;
-        else if (iType == 1)
-            CompletCcCnt++;
-        else if (iType == 2)
-            CompletBccCnt++;
-
-        ToTalCompletEmailAddress();
+    for (var i = 0; i < nLen; i++) {
+	    mailName = TrimText(mailArr[i]);
+	    if (mailName == "") {
+	        if (iType == 0)
+	            CompletToCnt++;
+	        else if (iType == 1)
+	            CompletCcCnt++;
+	        else if (iType == 2)
+	            CompletBccCnt++;
+	
+	        ToTalCompletEmailAddress();
+	    }
+	    
+        if (mailName.indexOf("<") > -1 && mailName.indexOf(">") > 0) {
+            var reg_email = /^[<][-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}[>]$/;
+            var preTag = mailName.indexOf("<");
+            var endTag = mailName.indexOf(">");
+            var mailTagNM;
+            var mailTagAddress;
+            if (reg_email.test(mailName.substring(preTag))) {
+                if (preTag > 0) {
+                    mailTagNM = TrimText(mailName.substring(0, preTag).replace(/"/g, ""));
+                    mailTagAddress = mailName.substring(preTag + 1, endTag);
+                }
+                else {
+                    mailTagNM = mailName.substring(preTag + 1, endTag);
+                    mailTagAddress = mailName.substring(preTag + 1, endTag);
+                }
+                newElem = PrepareMailTag(iType, "email", mailTagNM, mailTagAddress, "");
+                var IsInsert = CheckMailReceiver(newElem);
+                if (!IsInsert) {
+                    validDIV.appendChild(newElem);
+                }
+                continue;
+            }
+        }
+        
+	    GetMailAddresses(mailName);
+	    if (isEmailFormat(mailName) == true) {
+	        result = findAddress(mailName, m_addrBook);
+	
+	        if (result != null) {
+	            newElem = PrepareMailTag(iType, result["type"], result["name"], result["email"], result["href"]);
+	        } else {
+	            newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
+	        }
+	
+	        var IsInsert = CheckMailReceiver(newElem);
+	        if (!IsInsert) {
+	            validDIV.appendChild(newElem);
+	        }
+	        var szFromName = "";
+	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	            szFromName += mailArr[count1];
+	            if (count1 != mailArr.length - 1) szFromName += ";";
+	        }
+	        formName.value = szFromName;
+	        CompleteEmailAddress(formName, validDIV, iType);
+	        return;
+	    }
+	    userAddr = GetEmailAddressByName(m_addrBook, mailName);
+	    var emailExitsCnt = userAddr["name"].length;
+	    if (userAddr["name"].length == 1 && trim(userAddr["email"][0]) == "" && userAddr["email"][0].lastIndexOf("@") < 2) {
+	        emailExitsCnt = 0;
+	    }
+	
+	    if (emailExitsCnt == 1) {
+	        newElem = PrepareMailTag(iType, userAddr["type"][0], userAddr["name"][0], userAddr["email"][0], userAddr["href"][0]);
+	        var IsInsert = CheckMailReceiver(newElem);
+	
+	        if (!IsInsert) {
+	            validDIV.appendChild(newElem);
+	        }
+	
+	        var szFromName = "";
+	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	            szFromName += mailArr[count1];
+	            if (count1 != mailArr.length - 1) szFromName += ";";
+	        }
+	        formName.value = szFromName;
+	        CompleteEmailAddress(formName, validDIV, iType);
+	    }
+	    else {
+	        rgParams = new Array();
+	        rgParams["recipientTDData"] = null;
+	        rgParams["returnedRecipientName"] = "";
+	        rgParams["returnedRecipientType"] = "";
+	        rgParams["returnedRecipientEmail"] = "";
+	        rgParams["returnedRecipientHref"] = "";
+	        rgParams["g_EditNameDialog"] = "";
+	        rgParams["g_DisplayName"] = mailName;
+	        rgParams["cmd"] = "JustThis"
+	        rgParams["addrBook"] = m_addrBook;
+	        rgParams["g_EmailAddress"] = "";
+	        if (userAddr["name"].length == 0) {
+	            rgParams["cmd"] = "showAll";
+	        }
+	        checkname_cross_dialogArguments = new Array();
+	        checkname_cross_dialogArguments[0] = rgParams;
+	        checkname_cross_dialogArguments[1] = CompleteEmailAddress_Complete;
+	        checkname_cross_dialogArguments[2] = DivPopUpHidden;
+	        checkname_cross_dialogArguments[3] = mailArr;
+	        checkname_cross_dialogArguments[4] = iType;
+	        checkname_cross_dialogArguments[5] = validDIV;
+	        checkname_cross_dialogArguments[6] = formName;
+	        DivPopUpShow(625, 410, "htm/checkName_cross.aspx");
+	    }
     }
-    GetMailAddresses(mailName);
-    if (isEmailFormat(mailName) == true) {
-        result = findAddress(mailName, m_addrBook);
-
-        if (result != null) {
-            newElem = PrepareMailTag(iType, result["type"], result["name"], result["email"], result["href"]);
-        } else {
-            newElem = PrepareMailTag(iType, "email", mailName, mailName, "");
-        }
-
-        var IsInsert = CheckMailReceiver(newElem);
-        if (!IsInsert) {
-            validDIV.appendChild(newElem);
-        }
-        var szFromName = "";
-        for (count1 = 1; count1 < mailArr.length; count1++) {
-            szFromName += mailArr[count1];
-            if (count1 != mailArr.length - 1) szFromName += ";";
-        }
-        formName.value = szFromName;
-        CompleteEmailAddress(formName, validDIV, iType);
-        return;
-    }
-    userAddr = GetEmailAddressByName(m_addrBook, mailName);
-    var emailExitsCnt = userAddr["name"].length;
-    if (userAddr["name"].length == 1 && trim(userAddr["email"][0]) == "" && userAddr["email"][0].lastIndexOf("@") < 2) {
-        emailExitsCnt = 0;
-    }
-
-    if (emailExitsCnt == 1) {
-        newElem = PrepareMailTag(iType, userAddr["type"][0], userAddr["name"][0], userAddr["email"][0], userAddr["href"][0]);
-        var IsInsert = CheckMailReceiver(newElem);
-
-        if (!IsInsert) {
-            validDIV.appendChild(newElem);
-        }
-
-        var szFromName = "";
-        for (count1 = 1; count1 < mailArr.length; count1++) {
-            szFromName += mailArr[count1];
-            if (count1 != mailArr.length - 1) szFromName += ";";
-        }
-        formName.value = szFromName;
-        CompleteEmailAddress(formName, validDIV, iType);
-    }
-    else {
-        rgParams = new Array();
-        rgParams["recipientTDData"] = null;
-        rgParams["returnedRecipientName"] = "";
-        rgParams["returnedRecipientType"] = "";
-        rgParams["returnedRecipientEmail"] = "";
-        rgParams["returnedRecipientHref"] = "";
-        rgParams["g_EditNameDialog"] = "";
-        rgParams["g_DisplayName"] = mailName;
-        rgParams["cmd"] = "JustThis"
-        rgParams["addrBook"] = m_addrBook;
-        rgParams["g_EmailAddress"] = "";
-        if (userAddr["name"].length == 0) {
-            rgParams["cmd"] = "showAll";
-        }
-        checkname_cross_dialogArguments = new Array();
-        checkname_cross_dialogArguments[0] = rgParams;
-        checkname_cross_dialogArguments[1] = CompleteEmailAddress_Complete;
-        checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = mailArr;
-        checkname_cross_dialogArguments[4] = iType;
-        checkname_cross_dialogArguments[5] = validDIV;
-        checkname_cross_dialogArguments[6] = formName;
-        DivPopUpShow(625, 410, "htm/checkName_cross.aspx");
-    }
+    
+    formName.value = "";
+    return true;    
 }
 
 function CompleteEmailAddress_Complete(rgParams) {
