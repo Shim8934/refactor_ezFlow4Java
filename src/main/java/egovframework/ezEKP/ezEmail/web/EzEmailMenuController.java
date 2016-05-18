@@ -11,6 +11,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +38,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
 public class EzEmailMenuController {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzEmailMenuController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -118,7 +122,7 @@ public class EzEmailMenuController {
 				rootFolderXML.append("></node>");
 			}
 		} catch (MessagingException e) {
-			System.out.println("Error get unread message count: " + e.getMessage());
+			logger.error("Error get unread message count: " + e.getMessage());
 			e.printStackTrace();
 		}
 		ia.close();
@@ -241,7 +245,7 @@ public class EzEmailMenuController {
 			ia.close();
 			response.getWriter().print(subFolderXML.toString());
 		} catch (IOException e) {
-			System.out.println("Error IO: " + e.getMessage());
+			logger.error("Error IO: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -272,9 +276,9 @@ public class EzEmailMenuController {
 			
 			response.getWriter().print(unreadCountXML);
 		} catch (IOException e) {
-			System.out.println("Error IO: " + e.getMessage());
+			logger.error("Error IO: " + e.getMessage());
 			e.printStackTrace();
-		} 
+		}
 	}
 
 }

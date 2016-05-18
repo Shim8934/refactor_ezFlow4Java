@@ -443,7 +443,7 @@
 	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
 	            <li id="mailexportall" style="display: none;"><span style="width: 100%; display: inline-block;" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span></li>
 	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
-	            <li><span onclick="Open_Restore()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000016" /></span></li>
+	            <!-- <li><span onclick="Open_Restore()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000016" /></span></li> -->
 	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
 	        </ul>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>

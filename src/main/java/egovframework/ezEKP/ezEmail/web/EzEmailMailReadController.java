@@ -133,6 +133,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String pReadFlag = "Y";
 		boolean isSentItems = false;
 		String pIsCCFg = "Y";
+		String useEzKMS = config.getProperty("config.Use_ezKMS") == null ? "" : config.getProperty("config.Use_ezKMS");
 		
 		if(f != null){
 			f.open(Folder.READ_WRITE);
@@ -326,7 +327,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);
-		System.out.println(pIsCCFg);
+		model.addAttribute("useEzKMS", useEzKMS);
 		return "ezEmail/mailRead";
 	}
 	

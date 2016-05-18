@@ -399,11 +399,10 @@
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
-		                    <%-- if (_Use_ezKMS == "YES") {--%>
-		                    <li><span ID='btn_KMS' onclick='ToKMS()'>KMS</span></li>
-		                    <%--}--%>
-				  
-		                    <li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li>
+							<c:if test="${useEzKMS == 'YES'}">
+								<li><span ID='btn_KMS' onclick='ToKMS()'>KMS</span></li>
+							</c:if>
+							<li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li>
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>

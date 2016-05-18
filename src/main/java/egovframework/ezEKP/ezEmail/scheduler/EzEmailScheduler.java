@@ -89,7 +89,7 @@ public class EzEmailScheduler {
 				}
 				ia.close();
 			} catch (Exception e) {
-				System.out.println("Exception has occurred.");
+				logger.error("Exception has occurred.");
 			}
 		}
 	}
