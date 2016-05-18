@@ -542,6 +542,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 
+		ia.close();
 	}
 
 	/**
