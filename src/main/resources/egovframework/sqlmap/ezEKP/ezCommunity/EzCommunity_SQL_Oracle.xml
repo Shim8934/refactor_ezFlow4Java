@@ -11,6 +11,7 @@
 	<typeAlias alias="CommunityBoardItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO"/>	
 	<typeAlias alias="CommunityBoardListVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO"/>	
 	<typeAlias alias="CommunityBoardPropertyVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO"/>	
+	<typeAlias alias="CommunityBoardItemAttachmentVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO"/>	
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"						column="NO"							columnIndex="1"/>
@@ -32,6 +33,35 @@
 		<result property="boardColor"				column="BoardColor"					columnIndex="5"/>
 		<result property="c_ClubNo"					column="C_ClubNo"					columnIndex="6"/>
 		<result property="gubun"					column="Gubun"						columnIndex="7"		nullValue="0"/>
+	</resultMap>
+	
+	<resultMap class="CommunityBoardItemVO" id="CommunityBoardItem">
+		<result property="itemID"					column="ItemID"						columnIndex="1"/>
+		<result property="writerID"					column="WriterID"					columnIndex="2"/>
+		<result property="writerName"				column="WriterName"					columnIndex="3"/>
+		<result property="writerName2"				column="WriterName2"				columnIndex="4"/>
+		<result property="writerDeptName"			column="WriterDeptName"				columnIndex="5"/>
+		<result property="writerDeptName2"			column="WriterDeptName2"			columnIndex="6"/>
+		<result property="writerCompanyName"		column="WriterCompanyName"			columnIndex="7"/>
+		<result property="writerCompanyName2"		column="WriterCompanyName2"			columnIndex="8"/>
+		<result property="writeDate"				column="WriteDate"					columnIndex="9"/>
+		<result property="parentWriteDate"			column="ParentWriteDate"			columnIndex="10"/>
+		<result property="importance"				column="Importance"					columnIndex="11"/>
+		<result property="title"					column="Title"						columnIndex="12"/>
+		<result property="contentLocation"			column="ContentLocation"			columnIndex="13"/>
+		<result property="startDate"				column="StartDate"					columnIndex="14"/>
+		<result property="endDate"					column="EndDate"					columnIndex="15"/>
+		<result property="absTract"					column="Abstract"					columnIndex="16"/>
+		<result property="attachments"				column="Attachments"				columnIndex="17"/>
+		<result property="upperItemIDTree"			column="UpperItemIDTree"			columnIndex="18"	javaType="String" jdbcType="CLOB"/>
+		<result property="itemLevel"				column="ItemLevel"					columnIndex="19"/>
+		<result property="copiedItem"				column="copiedItem"					columnIndex="20"/>
+		<result property="extensionAttribute1"		column="ExtensionAttribute1"		columnIndex="21"/>
+		<result property="extensionAttribute2"		column="ExtensionAttribute2"		columnIndex="22"/>
+		<result property="extensionAttribute3"		column="ExtensionAttribute3"		columnIndex="23"/>
+		<result property="extensionAttribute32"		column="ExtensionAttribute32"		columnIndex="24"/>
+		<result property="extensionAttribute4"		column="ExtensionAttribute4"		columnIndex="25"/>
+		<result property="extensionAttribute5"		column="ExtensionAttribute5"		columnIndex="26"/>
 	</resultMap>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO">
@@ -92,6 +122,22 @@
 	
 	<procedure id="EzCommunityDAO.searchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getItemXML"					parameterClass="Map"		resultMap="CommunityBoardItem">
+		{CALL EZCOMMUNITY.EZSP_BRDGETITEMINFO(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getAdjacentItemGet1"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET1(#v_PPARENTWRITEDATE#, #v_PUPPERITEMIDTREE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getAdjacentItemGet2"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET2(#v_PPARENTWRITEDATE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getAdjacentItemGet3"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET3(#v_PBOARDID#, #v_PPARENTWRITEDATE#, #v_PITEMID#, #v_PUPPERITEMIDTREE#, #v_PREVIOUSITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true">
@@ -174,6 +220,18 @@
 		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.checkIfHasReply"				parameterClass="String" 	resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getVersionInfo"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_MODIFYVERSIONCOPY_GET4(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
+		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -236,10 +294,6 @@
 	
 	<procedure id="EzCommunityDAO.setAsRead"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
-	</procedure>
-	
-	<procedure id="EzCommunityDAO.checkIfHasReply"				parameterClass="String" 	resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
@@ -368,6 +422,17 @@
 		]]>
 	</update>
 	
+	<update id="EzCommunityDAO.updateAttachInfo"				parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZCOMMUNITY.TBL_BOARD_ITEM
+        	SET
+        		EXTENSIONATTRIBUTE5 = #filePath#,
+       		WHERE 
+       			ITEMID = #itemID#
+		]]>
+	</update>
+	
 	<delete id="EzCommunityDAO.deleteItem1"						parameterClass="String">
 		<![CDATA[
 			DELETE 
@@ -405,6 +470,16 @@
         		EZCOMMUNITY.TBL_BOARD_DELETERESERVEDITEM
        		VALUES
        			(#boardID#, #itemID#)
+		]]>		
+	</delete>
+	
+	<delete id="EzCommunityDAO.insertAttachInfo"				parameterClass="Map">
+		<![CDATA[
+			INSERT
+        	INTO
+        		EZCOMMUNITY.TBL_Board_Item_Attachments
+       		VALUES
+       			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#)
 		]]>		
 	</delete>
 	

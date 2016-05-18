@@ -421,7 +421,6 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 
 	@Override
 	public Integer getAnsCnt(int brdID, int itemNo, int quesNo) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);

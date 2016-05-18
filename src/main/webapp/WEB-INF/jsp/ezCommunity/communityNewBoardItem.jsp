@@ -78,7 +78,7 @@
 		    var strImportance = "${item.importance}";
 		    var strStartDate = "${item.startDate}";
 		    var strEndDate = "${item.endDate}";
-		    var strAttachments = "${item.attachMents}";
+		    var strAttachments = "${item.attachments}";
 		    var strContentLocation = "${item.contentLocation}";
 		    var strUpperItemIDTree = "${item.upperItemIDTree}";
 		    var strItemLevel = "${item.itemLevel}";
@@ -915,8 +915,28 @@
                 var frm = document.getElementById('form');
   				
                 if( document.getElementById("cnt").value > 0) {
-                	frm.action = "/ezCommunity/upload.do";
-                    frm.submit();
+                	var formData = new FormData();
+                	 $.each($('#file1')[0].files, function(i, file) {          
+                		 formData.append('file-' + i, file);
+                     });
+                	formData.append('mode',  document.getElementById('mode').value);
+                	formData.append("boardID", document.getElementById("boardID").value);
+                	formData.append("maxSize", document.getElementById("maxSize").value);
+                	formData.append("cnt", document.getElementById("cnt").value);
+                	
+    				$.ajax({
+    					url : "/ezCommunity/upload.do",
+						type : "POST",
+						processData : false,
+						contentType : false,
+						data : formData,
+						success : function(data){
+							returnvalue(data);
+						}
+	 				});
+                	
+//                 	frm.action = "/ezCommunity/upload.do";
+//                     frm.submit();
                     document.form.file1.value = "";	
                 }
                 
@@ -928,18 +948,19 @@
                 var extFlag = false;
                 
                 for (var i = 0; i < nodes.length; i++) {
-                    if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-                        if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-                            alert(getNodeText(GetChildNodes(nodes[i])[2]) + strLang6);
+                    if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "true") {
+                        if (SelectSingleNodeValue(nodes[i], "FILESIZE") == 0) {
+                            alert(SelectSingleNodeValue(nodes[i], "PFILENAME") + strLang6);
                             return;
                         }
-                    } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+                    } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {
                         alert(strLang27 + AttachLimit + "MB" + strLang28);
                         return;
-                    } else if(getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
+                    } else if(SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "denied") {
                         extFlag = true;                            
                     } else {
-                        alert(getNodeText(GetChildNodes(nodes[i])[2]) + strLang6 + "\n\n" + result);
+//                         alert(getNodeText(GetChildNodes(nodes[i])[2]) + strLang6 + "\n\n" + result);
+                        alert(SelectSingleNodeValue(nodes[i], "PFILENAME") + strLang6 + "\n\n");
                         return;
                     }
                 }
@@ -947,7 +968,7 @@
                 if(extFlag) {
                 	alert(strLang75);
                 }
-
+                
                 AttachFileInfo(strXML);
 
                 document.getElementById("file1").type = "text";

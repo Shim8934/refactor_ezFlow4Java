@@ -46,7 +46,7 @@ public class CommunityBoardItemVO {
 	/** 게시요약*/
 	String absTract;
 	/** 첨부여부*/
-	String attachMents;
+	String attachments;
 	/** CLOB 게시물트리정보(답변쓰레드정보를담고있음)*/
 	String upperItemIDTree;
 	/** 게시물레벨(사용안함)*/
@@ -203,11 +203,11 @@ public class CommunityBoardItemVO {
 	public void setAbsTract(String absTract) {
 		this.absTract = absTract;
 	}
-	public String getAttachMents() {
-		return attachMents;
+	public String getAttachments() {
+		return attachments;
 	}
-	public void setAttachMents(String attachMents) {
-		this.attachMents = attachMents;
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
 	}
 	public String getUpperItemIDTree() {
 		return upperItemIDTree;

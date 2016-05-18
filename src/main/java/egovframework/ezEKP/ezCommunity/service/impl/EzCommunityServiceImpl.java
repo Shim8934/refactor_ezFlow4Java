@@ -12,6 +12,9 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -699,7 +703,6 @@ System.out.println("@");
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {
         	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim());
-        	//TODO 여기서 트리가 나와야하는데 size가 0이네
         	brdBoardTreeList = brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), "", "", pMode, pSelectBy, pExcludeBoardID, pClubNo);
         	
 			if (boardTreeList.size() > 0) {
@@ -939,7 +942,7 @@ System.out.println("@");
 				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
 				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
 				sb.append("<Title>" + itemList.getTitle() + "</Title>");
-				sb.append("<Attachments>" + itemList.getAttachMents() + "</Attachments>");
+				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
 				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
 				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
 				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
@@ -1173,9 +1176,12 @@ System.out.println("@");
 	}
 
 	@Override
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, String multiData) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pItemID", pItemID);
+		
+		return ezCommunityDAO.getItemXML(map);
 	}
 
 	@Override
@@ -1216,7 +1222,7 @@ System.out.println("@");
 		
 		item.setEndDate(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent());
 		item.setAbsTract(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent());
-		item.setAttachMents(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		item.setAttachments(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
@@ -1265,7 +1271,10 @@ System.out.println("@");
 			}
 		}
     
-		if (item.getAttachMents().length() > 0) {
+		if (item.getAttachments().length() > 0) {
+			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
+				return "ERROR:첨부 파일 정보를 저장하는데 실패 하였습니다.";
+			}
 			pHasAttach = "1";
 		} else {
 			pHasAttach = "0";
@@ -1309,7 +1318,91 @@ System.out.println("@");
 			ezCommunityDAO.brdNewItem(map);
 			return "OK";
 		}
+	}
+
+	//TODO 추가작업필요
+	@Override
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception {
+		String fileSize = "";
+		String filePath = "";
+		String[] temps = null;
+		String fileName = "";
+		Map<String, Object> map;
 		
+		try {
+			if (!attachments.substring(attachments.length() - 1).equals(";")) {
+				attachments += ";";
+			}
+			
+			for (int i = 0; i < attachments.split(";").length; i++) {
+				map = new HashMap<String, Object>();
+				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
+				fileSize = Integer.toString((int) file.length());
+				
+				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
+					FileUtils.moveFile(file, destFile);
+					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
+				}
+				
+				temps = attachments.split(";")[i].split("_");
+				fileName = temps[temps.length-1];
+				
+				if (!thumbPath.equals("")) {
+					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";"));
+					map.put("itemID", itemID);
+					
+					if (thumbPath.indexOf("TempUpload") > -1) {
+						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						FileUtils.moveFile(thumbnailFile, destThumbFile);
+						map.put("filePath", boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+					} else {
+						map.put("filePath", thumbPath.split(";")[i]);
+					}
+					
+					ezCommunityDAO.updateAttachInfo(map);
+				}
+				
+				map = new HashMap<String, Object>();
+				map.put("itemID", itemID);
+				map.put("fileSize", fileSize);
+				map.put("fileName", fileName);
+				
+				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
+					map.put("filePath", boardID + commonUtil.separator + "UploadFile" + filePath);
+				} else {
+					map.put("filePath", filePath);
+				}
+				
+				ezCommunityDAO.insertAttachInfo(map);
+			}
+			
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public String getItemAttachmentXML(String itemID) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(itemID);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardItemAttachmentVO attach : list) {
+			sb.append("<NODE>");
+			sb.append("<ItemID>" + attach.getItemID() + "</ItemID>");
+			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
+			sb.append("<FilePath>" + attach.getFilePath() + "</FilePath>");
+			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
+			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
+			sb.append("</NODE>");
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
 	}
 
 	@Override
@@ -1343,7 +1436,92 @@ System.out.println("@");
 			return false;
 		}
 	}
-	
+
+	@Override
+	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception {
+		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
+		Map<String, Object> map;
+		List<CommunityBoardItemVO> list;
+		
+		map = new HashMap<String, Object>();
+		map.put("v_PPARENTWRITEDATE", pItemID);
+		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+		map.put("v_PBOARDID", pBoardID);
+		
+		list = ezCommunityDAO.getAdjacentItemsGet1(map);
+		
+		for (CommunityBoardItemVO item : list) {
+			if (item.getItemID().equals(pItemID)) {
+				previousItemID = tempItemID;
+				previousTitle = tempTitle;
+			}
+			
+			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size()-1) {
+				nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
+				nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
+			}
+			
+			tempItemID = item.getItemID().trim();
+			tempTitle = item.getTitle().trim();
+		}
+		
+		if ( previousItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			map.put("v_PPARENTWRITEDATE", parentWriteDate);
+			map.put("v_PBOARDID", pBoardID);
+			
+			list = ezCommunityDAO.getAdjacentItemGet2(map);
+			
+			for (CommunityBoardItemVO item : list) {
+				if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size()-1) {
+					previousItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
+					previousTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
+				}
+			}
+		}
+		
+		
+		if (nextItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			map.put("v_PBOARDID", pBoardID);
+			map.put("v_PPARENTWRITEDATE", parentWriteDate);
+			map.put("v_PITEMID", pItemID);
+			map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+			map.put("v_PREVIOUSITEMID", previousItemID);
+			
+			CommunityBoardItemVO item = ezCommunityDAO.getAdjacentItemGet3(map);
+			
+			if (item != null) {
+				nextItemID = item.getItemID();
+				nextTitle = item.getTitle();
+			}
+		}
+		
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("previousItemID", previousItemID);
+		ret.put("previousTitle", previousTitle);
+		ret.put("nextItemID", nextItemID);
+		ret.put("nextTitle", nextTitle);
+		
+		return ret;
+	}
+
+	@Override
+	public String getVersionInfo(String pBoardID) throws Exception {
+		return ezCommunityDAO.getVersionInfo(pBoardID);
+	}
+
+	@Override
+	public String getProperSizeDisplay(int pSize) throws Exception {
+		if (pSize > 1048576) {
+			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
+		} else if (pSize > 1024) {
+			return Integer.toString((int) (pSize / 102.4)) + " KB";
+		} else {
+			return Integer.toString(pSize) + " Byte";
+		}
+	}
+		
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);

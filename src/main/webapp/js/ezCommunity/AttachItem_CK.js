@@ -24,30 +24,30 @@ function APRAttachXMLParsing()
     var i;
     var j;
     var strXML;
-     
-	var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
-	Rtnxml.loadXML(pAttachListXml);
-	var objAttachNodes = Rtnxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
+
+    var Rtnxml = createXmlDom();
+    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+    var objAttachNodes = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
 	
 	var pTotalRowsLen = objAttachNodes.length;
 	
     var re = /&/g
 	
     strXML = "<LISTVIEWDATA><HEADERS>";
-    strXML = strXML + "<HEADER><NAME>" + strLang22 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-    strXML = strXML + "<HEADER><NAME>" + strLang23 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    strXML = strXML + "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+    strXML = strXML + "<HEADER><NAME>" + strLang2 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     strXML = strXML + "</HEADERS><ROWS>";
 	
     for( i = 0 ; i < pTotalRowsLen ; i++)
     {
-      strXML = strXML + "<ROW><CELL><VALUE>" + objAttachNodes(i).childNodes.item(0).childNodes.item(0).text.replace(re,"&amp;") + "</VALUE>";     
-      strXML = strXML + "<DATA1>" + objAttachNodes(i).childNodes.item(0).childNodes.item(1).text.replace(re,"&amp;") + "</DATA1>";
-      strXML = strXML + "<DATA2>" + objAttachNodes(i).childNodes.item(0).childNodes.item(2).text.replace(re,"&amp;") + "</DATA2>";
-      strXML = strXML + "<DATA3>" + objAttachNodes(i).childNodes.item(0).childNodes.item(3).text + "</DATA3>";
-      strXML = strXML + "<DATA4>" + objAttachNodes(i).childNodes.item(0).childNodes.item(4).text + "</DATA4>";
-      strXML = strXML + "<DATA5>" + objAttachNodes(i).childNodes.item(0).childNodes.item(5).text + "</DATA5>";
-      strXML = strXML + "<DATA6>"+  objAttachNodes(i).childNodes.item(0).childNodes.item(6).text   + "</DATA6></CELL>";
-      strXML = strXML + "<CELL><VALUE>" + objAttachNodes(i).childNodes.item(1).childNodes.item(0).text  + "</VALUE></CELL></ROW>";
+        strXML = strXML + "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(re, "&amp;") + "</VALUE>";
+        strXML = strXML + "<DATA1>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]).replace(re, "&amp;") + "</DATA1>";
+        strXML = strXML + "<DATA2>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]).replace(re, "&amp;") + "</DATA2>";
+        strXML = strXML + "<DATA3>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[3]) + "</DATA3>";
+        strXML = strXML + "<DATA4>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[4]) + "</DATA4>";
+        strXML = strXML + "<DATA5>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "</DATA5>";
+        strXML = strXML + "<DATA6>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]) + "</DATA6></CELL>";
+        strXML = strXML + "<CELL><VALUE>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[1])[0]) + "</VALUE></CELL></ROW>";
     }
 	strXML = strXML + "</ROWS></LISTVIEWDATA>";
 	
@@ -74,83 +74,199 @@ function DelAttachFileAtList(pNewNodeName)
 
 	var pDelCount = pDelAttachRow.length;
 	
-	var objXML = new ActiveXObject("Microsoft.XMLDOM");
-	objXML.loadXML(pAttachListXml);
-	var objAttachNodes = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+	var objXML = createXmlDom();
 	
+	//objXML = pAttachListXml;
+	objXML = loadXMLString(getXmlString(pAttachListXml));
+	
+	var objAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	
+	var totalcnt = objAttachNodes.length;
 
-	for (var i = 0 ; i < objAttachNodes.length ; i++)
-	{
-		var realFileNM = objAttachNodes(i).childNodes.item(0).childNodes.item(2).text;
-		var DelFileSize = objAttachNodes(i).childNodes.item(0).childNodes.item(6).text;
-		var objSelectedNode = objAttachNodes.item(i);
-		var is_newfile = objAttachNodes(i).childNodes.item(0).childNodes.item(5).text;
+	for (var i = 0; i < objAttachNodes.length; i++) {	    
 		
-		for (var k = 0; k < pDelCount-1; k++)
-		{
+		for (var k = 0; k < pDelCount-1; k++) {
+
+		    var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
+
+		    var DelFileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
+		    var objSelectedNode = objAttachNodes[i];
+		    var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
+
+		
 			var tempName = pDelAttachRow[k]
 			tempName = ReplaceText(tempName, "&apos;", "'");
 
-			if (tempName == realFileNM)
+			if (tempName == realFileNM) 
 			{
-				objXML.childNodes.item(0).childNodes.item(1).removeChild(objSelectedNode);
-				pAttachListXml = objXML.xml
+			    GetChildNodes(GetChildNodes(objXML)[0])[1].removeChild(objSelectedNode);
+			    pAttachListXml = objXML;	    
+				
 			}
 			
 		}
 	}
+
   }catch(ErrMsg){
   
     alert(ErrMsg.description);
   }
 }
 
-// 201007 : Drag&Drop 실행, pAttatchFilePath
-function AddAttachFileInfoXmlParsing(pfilename, pSaveFileName, pfilesize, pfilelocation, pAttachAddFileSize, pAttatchFilePath) {
+/*
+// 2010.07.06 : Drag&Drop 실행, pAttatchFilePath
+function AddAttachFileInfoXmlParsing(pfilename, pSaveFileName, pfilesize)
+{
+  try{
+  
+	var pstrXML;
+	var re = /&/g;
+	var objXML = createXmlDom();
+	var Rtnxml = createXmlDom();
+
+	
+	//Rtnxml = loadXMLString(getXmlString(pAttachListXml));	
+	//var objAttachNodes = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
+	
+	pstrXML = "<LISTVIEWDATA><HEADERS>";
+	pstrXML = pstrXML + "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+	pstrXML = pstrXML + "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	pstrXML = pstrXML + "</HEADERS><ROWS><ROW><CELL>";
+	pstrXML = pstrXML + "<VALUE>"+ pfilename.replace(re,"&amp;") +"</VALUE>";
+	pstrXML = pstrXML + "<DATA1>" + pfilename.replace(re, "&amp;") + "</DATA1>";
+	pstrXML = pstrXML + "<DATA2>" + pSaveFileName.replace(re, "&amp;") + "</DATA2>";
+	pstrXML = pstrXML + "<DATA3></DATA3>";
+	pstrXML = pstrXML + "<DATA4></DATA4>";
+	pstrXML = pstrXML + "<DATA5>Y</DATA5>";
+	pstrXML = pstrXML + "<DATA6>" + pfilesize + "</DATA6>";
+	pstrXML = pstrXML + "</CELL><CELL>";
+	pstrXML = pstrXML + "<VALUE>" + pfilesize +" Bytes" + "</VALUE>";
+	pstrXML = pstrXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
+
+	//objXML.loadXML(pstrXML);
+	objXML = loadXMLString(pstrXML);
+
+	//if (objAttachNodes.length == 0)
+	if (document.getElementById('mode').value == "PHOTO") {
+	    pAttachListXml = objXML;
+	}
+	else {
+	    if (pAttachListXml == "") {
+	        //pAttachListXml = objXML.xml;
+	        pAttachListXml = objXML; //objXML.xml;
+	    }
+	    else {
+	        if (typeof (pAttachListXml) == "string")
+	            Rtnxml = loadXMLString(pAttachListXml);
+	        else
+	            Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+	        var objNewAttachNodes = objXML.documentElement.getElementsByTagName("ROW")[0]; // Resultxml.documentElement.getElementsByTagName("ROW")[0];
+	        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+
+	        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(Node);
+	        pAttachListXml = Rtnxml;
+	    }
+	}
+      
+	AppendFileAttachInfo(pAttachListXml);
+	
+    return;
+
+  }catch(ErrMsg){
+  
+    alert(ErrMsg.description);
+  }
+}
+*/
+function AddAttachFileInfoXmlParsing(resultXML) {
+    
     try {
-
-        var pstrXML;
+        var xml = loadXMLString(resultXML);
+        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+        var pstrXML="";
         var re = /&/g;
-        var objXML = new ActiveXObject("Microsoft.XMLDOM");
-        var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
+        var objXML = createXmlDom();
+        var Rtnxml = createXmlDom();
+        var filenm="";
+        
+        pstrXML += "<LISTVIEWDATA><HEADERS>";
+        pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+        pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+        pstrXML += "</HEADERS><ROWS>";
+        for (i = 0; i < nodes.length; i++) {
+            if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") != "denied") {
+                pstrXML += "<ROW><CELL><VALUE>" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "</VALUE>";//파일명
+                pstrXML += "<DATA1>" + SelectSingleNodeValue(nodes[i], "PFILENAME") + "</DATA1>"; //파일명
+                pstrXML += "<DATA2>" + SelectSingleNodeValue(nodes[i], "PUPLOADSN").replace(re, "&amp;") + "</DATA2>"; //저장될 파일명
+                pstrXML += "<DATA3></DATA3>";
+                pstrXML += "<DATA4></DATA4>";
+                pstrXML += "<DATA5>Y</DATA5>";
+                pstrXML += "<DATA6>" + SelectSingleNodeValue(nodes[i], "FILESIZE") + "</DATA6>";//파일크기
+                pstrXML += "</CELL><CELL>";
+                pstrXML += "<VALUE>" + SelectSingleNodeValue(nodes[i], "FILESIZE") + " Bytes" + "</VALUE>";//파일크기
+                pstrXML += "</CELL></ROW>";
+            }
+        }
+        pstrXML += "</ROWS></LISTVIEWDATA>";
+        //Rtnxml = loadXMLString(getXmlString(pAttachListXml));	
+        //var objAttachNodes = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
+        
+        //objXML.loadXML(pstrXML);
+        objXML = loadXMLString(pstrXML);
 
-        Rtnxml.loadXML(pAttachListXml);
-        var objAttachNodes = Rtnxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
-
-        pstrXML = "<LISTVIEWDATA><HEADERS>";
-        pstrXML = pstrXML + "<HEADER><NAME>" + strLang22 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-        pstrXML = pstrXML + "<HEADER><NAME>" + strLang24 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-        pstrXML = pstrXML + "</HEADERS><ROWS><ROW><CELL>";
-        pstrXML = pstrXML + "<VALUE>" + pfilename.replace(re, "&amp;") + "</VALUE>";
-        pstrXML = pstrXML + "<DATA1>" + pfilename.replace(re, "&amp;") + "</DATA1>";
-        pstrXML = pstrXML + "<DATA2>" + pSaveFileName.replace(re, "&amp;") + "</DATA2>";
-        pstrXML = pstrXML + "<DATA3></DATA3>";
-        pstrXML = pstrXML + "<DATA4></DATA4>";
-        pstrXML = pstrXML + "<DATA5>Y</DATA5>";
-        pstrXML = pstrXML + "<DATA6>" + pAttachAddFileSize + "</DATA6>";
-        pstrXML = pstrXML + "</CELL><CELL>";
-        pstrXML = pstrXML + "<VALUE>" + pfilesize + "</VALUE>";
-        pstrXML = pstrXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
-
-        objXML.loadXML(pstrXML);
-        if (objAttachNodes.length == 0) {
-            pAttachListXml = objXML.xml;
+        //if (objAttachNodes.length == 0)
+        if (document.getElementById('mode').value == "PHOTO") {
+            pAttachListXml = objXML;
         }
         else {
-            var objNewAttachNodes = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
-            var objSelectedNode = objNewAttachNodes.item(0);
-            Rtnxml.childNodes.item(0).childNodes.item(1).appendChild(objSelectedNode);
-            pAttachListXml = Rtnxml.xml
+            if (pAttachListXml == "") {
+                //pAttachListXml = objXML.xml;
+                pAttachListXml = objXML; //objXML.xml;
+            }
+            else {
+                if (typeof (pAttachListXml) == "string")
+                    Rtnxml = loadXMLString(pAttachListXml);
+                else
+                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+             
+                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+                    try {
+                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(Node);
+                    } catch (e) {
+                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+                    }
+                }
+                pAttachListXml = Rtnxml;	
+            }
         }
 
-        document.all.EzHTTPTrans.InsertFileList(pfilename, pAttatchFilePath, "N", "N", pAttachAddFileSize);
-        document.all.EzHTTPTrans.InsertFileInfo(pSaveFileName);
-        AppendFileAttachInfo_List(pAttachListXml);
+        AppendFileAttachInfo(pAttachListXml);
         return;
 
     } catch (ErrMsg) {
 
         alert(ErrMsg.description);
+    }
+}
+function importNode(node, allChildren) {
+    switch (node.nodeType) {
+        case document.ELEMENT_NODE:
+            var newNode = document.createElementNS(node.namespaceURI, node.nodeName);
+            if (node.attributes && node.attributes.length > 0)
+                for (var i = 0, il = node.attributes.length; i < il; i++)
+                    newNode.setAttribute(node.attributes[i].nodeName, node.getAttribute(node.attributes[i].nodeName));
+            if (allChildren && node.childNodes && node.childNodes.length > 0)
+                for (var i = 0, il = node.childNodes.length; i < il; i++)
+                    newNode.appendChild(importNode(node.childNodes[i], allChildren));
+            return newNode;
+            break;
+        case document.TEXT_NODE:
+        case document.CDATA_SECTION_NODE:
+        case document.COMMENT_NODE:
+            return document.createTextNode(node.nodeValue);
+            break;
     }
 }
 
@@ -160,16 +276,14 @@ function AttachRemoveAll()
   
     var objRoot;
     var objNode;
-    
-    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-    var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");  
-    
-    objRoot = xmlpara.createNode(1,"PARAMETER","");	// Root Node " + strLang25 + "
-	  xmlpara.appendChild(objRoot);
 
-	  objNode = xmlpara.createNode(1, "pBoardID", "");	// " + strLang26 + "
-	  objNode.text = pBoardID;
-	  xmlpara.documentElement.appendChild(objNode);
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objNode;
+
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID);
   
     xmlhttp.open ("Post","/ezflow/ezAPRATTACH/AttachRemove.aspx",false);
     xmlhttp.send(xmlpara);
@@ -184,72 +298,37 @@ function AttachRemoveAll()
   
 }
 
-function DeleteFileAtServer( pAttachDelFileName )
-{
-  try{
-    var objRoot;
+function DeleteFileAtServer(pAttachDelFileName) {
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
     var objNode;
-    
-    var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-      
-    objRoot = xmlpara.createNode(1,"PARAMETER","");	
-    xmlpara.appendChild(objRoot);
-  
-	objNode = xmlpara.createNode(1, "pFileName", "");
-	objNode.text = pAttachDelFileName;
-	xmlpara.documentElement.appendChild(objNode);
-	
-	objNode = xmlpara.createNode(1, "pCompanyID", "");
-	objNode.text = pCompanyID;
-	xmlpara.documentElement.appendChild(objNode);
-	
-	objNode = xmlpara.createNode(1, "pBoardID", "");
-	objNode.text = pBoardID;
-	xmlpara.documentElement.appendChild(objNode);
-	
-    xmlhttp.open ("Post","DeleteServerFile.aspx",false);
-    xmlhttp.send(xmlpara);
-  
-    return xmlhttp.responseText;
 
-  }catch(ErrMsg){
-  
-    alert(ErrMsg.description);
-  
-  }
-  
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pFileName", pAttachDelFileName);
+    createNodeAndInsertText(xmlpara, objNode, "pCompanyID", pCompanyID);
+    createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID);
+
+    xmlhttp.open("Post", "DeleteServerFile.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    return xmlhttp.responseText;
 }
 
 
 function DeleteSaveFileAtServer( pAttachDelFileName, pBoard, pItemID )
 {
-  try{
-  
-    var objRoot;
+    try {
+
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
     var objNode;
+
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pFileName", pAttachDelFileName);
+    createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID);
+    createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
+    createNodeAndInsertText(xmlpara, objNode, "pCompanyID", pCompanyID);
     
-    var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-      
-    objRoot = xmlpara.createNode(1,"PARAMETER","");	
-    xmlpara.appendChild(objRoot);
-  
-	objNode = xmlpara.createNode(1, "pFileName", "");
-	objNode.text = pAttachDelFileName;
-	xmlpara.documentElement.appendChild(objNode);
-	
-	objNode = xmlpara.createNode(1, "pBoard", "");	
-	objNode.text = pBoard;
-	xmlpara.documentElement.appendChild(objNode);
-	
-	objNode = xmlpara.createNode(1, "pItemID", "");	
-	objNode.text = pItemID;
-	xmlpara.documentElement.appendChild(objNode);
-	
-	objNode = xmlpara.createNode(1, "pCompanyID", "");	
-	objNode.text = pCompanyID;
-	xmlpara.documentElement.appendChild(objNode);
 	
     xmlhttp.open ("Post","DeleteServerSaveFile.aspx",false);
     xmlhttp.send(xmlpara);
@@ -267,8 +346,8 @@ function OpenInformationUI(pInformationContent)
 {
   var parameter = pInformationContent;
 	
-	//[070511_1508_/myoffice/ezCommunity/htm/ezAPROPINION.htm가 아닌지 의문
 	//var url = "/ezflow/ezAPROPINION.htm";
+	//var url = "/ezflow/ezAPROPINION.aspx";
 	var url = "/myoffice/ezCommunity/htm/ezAPROPINION.aspx";
 	var feature = "status:no;dialogWidth:235px;dialogHeight:175px;help:no;scroll:no";
 	
@@ -276,4 +355,3 @@ function OpenInformationUI(pInformationContent)
 
   return RtnVal;
 }
-

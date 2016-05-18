@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -98,6 +99,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityBoardListVO>) list("EzCommunityDAO.searchItemXML", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> getAdjacentItemsGet1(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemGet1", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> getAdjacentItemGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemGet2", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -132,6 +143,14 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public CommunityClubVO aspCommInfoGet1(Map<String, Object> map) throws Exception {
 		return (CommunityClubVO) select("EzCommunityDAO.aspCommInfoGet1", map);
+	}
+	
+	public CommunityBoardItemVO getItemXML(Map<String, Object> map) throws Exception {
+		return (CommunityBoardItemVO) select("EzCommunityDAO.getItemXML", map);
+	}
+
+	public CommunityBoardItemVO getAdjacentItemGet3(Map<String, Object> map) throws Exception {
+		return (CommunityBoardItemVO) select("EzCommunityDAO.getAdjacentItemGet3", map);
 	}
 	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
@@ -208,6 +227,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public String checkIfHasReply(String v_pItemID) throws Exception {
 		return (String) select("EzCommunityDAO.checkIfHasReply", v_pItemID);
+	}
+	
+	public String getVersionInfo(String v_PBOARDID) throws Exception {
+		return (String) select("EzCommunityDAO.getVersionInfo", v_PBOARDID);
 	}
 	
 	public int checkIfLeafBoardGet(Map<String, Object> map) throws Exception {
@@ -303,9 +326,21 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.deleteItem4", map);
 	}
 
-	public void brdNewItem(Map<String, Object> map) throws Exception{
+	public void brdNewItem(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.brdNewItem", map);
-		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemAttachmentVO> getItemAttachmentXML(String v_pItemID) throws Exception {
+		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.getItemAttachmentXML", v_pItemID);
+	}
+
+	public void updateAttachInfo(Map<String, Object> map) {
+		update("EzCommunityDAO.updateAttachInfo", map);
+	}
+
+	public void insertAttachInfo(Map<String, Object> map) {
+		insert("EzCommunityDAO.insertAttachInfo", map);
 	}
 
 }

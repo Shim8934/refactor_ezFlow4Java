@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommunity.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -157,11 +158,21 @@ public interface EzCommunityService {
 
 	public String checkIfHasReply(String itemList) throws Exception;
 
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, String multiData) throws Exception;
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception;
 
 	public String newItem(Document xmlData, String pMode, String realPath) throws Exception;
 	
 	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
+
+	public String getVersionInfo(String pBoardID) throws Exception;
+
+	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
+
+	public String getItemAttachmentXML(String itemID) throws Exception;
+	
+	public String getProperSizeDisplay(int pSize) throws Exception;
+	
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
