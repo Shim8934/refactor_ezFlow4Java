@@ -270,6 +270,13 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzResourceDAO.addResData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_ADDRESDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
+			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
+		]]>
+	</procedure>
+	
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
