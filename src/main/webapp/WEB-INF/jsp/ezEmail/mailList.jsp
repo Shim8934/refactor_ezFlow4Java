@@ -190,7 +190,7 @@
 		    }
 		    var Save_unloadSave = false;
 		    function Window_onunload() {
-		        if (window_onunload_Event && !Save_unloadSave) {
+		        if (window_onunload_Event && !Save_unloadSave) {		        	
 		            var _pPreview;
 		            if (g_bPrevShow)
 		                _pPreview = pPreviewShow_HOW;
@@ -215,7 +215,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
 		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
 		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
-		            xmlhttp.open("POST", "/myoffice/Common/mail_general_save.aspx", false);
+		            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
 		            xmlhttp.send(xmlpara);
 		            Save_unloadSave = true;
 		        }
@@ -305,11 +305,11 @@
                 <th><spring:message code="ezEmail.t179" /></th>
                 <td> 
                    <select id="listcount" style="WIDTH:40px;height:20px;" onChange="ListCount(this.value);">
-                        <option value=10 <c:if test="${listCount == '10'}">selected</c:if>>10</option>
-                        <option value=20 <c:if test="${listCount == '20'}">selected</c:if>>20</option>
-                        <option value=30 <c:if test="${listCount == '30'}">selected</c:if>>30</option>
-                        <option value=40 <c:if test="${listCount == '40'}">selected</c:if>>40</option>
-                        <option value=50 <c:if test="${listCount == '50'}">selected</c:if>>50</option>
+                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
+                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
+                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>
+                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
+                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
                     </select>
 	        </td>
               </tr>

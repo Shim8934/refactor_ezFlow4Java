@@ -22,11 +22,47 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	@Override
 	public List<MailGeneralVO> getMailGeneral(String userId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_PUSERID", userId);
-		return ezEmailDAO.getMailGeneral(map);
+		
+		List<MailGeneralVO> mailGeneralList = ezEmailDAO.getMailGeneral(map);
+		
+		// set the defaults if there is no record in DB.
+		if (mailGeneralList.size() == 0) {
+			MailGeneralVO mailGeneral = new MailGeneralVO();
+			mailGeneral.setListCount("30");
+			mailGeneral.setRefreshInterval("300");
+			mailGeneral.setKeepDeleteLength("0");
+			mailGeneral.setPreviewMode("OFF");
+			mailGeneral.setPreviewWList("50");
+			mailGeneral.setPreviewWContent("50");
+			mailGeneral.setPreviewHList("50");
+			mailGeneral.setPreviewHContent("50");	
+			mailGeneral.setMailSenderNm("");
+			
+			mailGeneralList.add(mailGeneral);
+		}
+		
+		return mailGeneralList;
 	}
 
+	@Override
+	public void setMailGeneral(String userId, MailGeneralVO mailGeneral) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userId);
+		map.put("v_PLISTCNT", mailGeneral.getListCount());
+		map.put("v_PREFRESHINTERVAL", mailGeneral.getRefreshInterval());
+		map.put("v_PKEEPDELETELENGTH", mailGeneral.getKeepDeleteLength());
+		map.put("v_PREVIEWMODE", mailGeneral.getPreviewMode());
+		map.put("v_PREVIEWWLIST", mailGeneral.getPreviewWList());
+		map.put("v_PREVIEWWCONTENT", mailGeneral.getPreviewWContent());
+		map.put("v_PREVIEWHLIST", mailGeneral.getPreviewHList());
+		map.put("v_PREVIEWHCONTENT", mailGeneral.getPreviewHContent());
+		
+		ezEmailDAO.setMailGeneral(map);		
+	}
+	
 	@Override
 	public MailSignatureVO getMailSignature(String pUserID, String pIsUse) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

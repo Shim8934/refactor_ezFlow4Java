@@ -49,6 +49,8 @@ public class MailGeneralVO {
 	}
 	
 	public void setPreviewMode(String previewMode) {
+		previewMode = previewMode != null ? previewMode.trim() : previewMode;
+		
 		this.previewMode = previewMode;
 	}
 	

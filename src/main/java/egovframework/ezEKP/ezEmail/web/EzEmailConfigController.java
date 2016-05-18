@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -114,24 +117,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String keepDeleteLength = "";
 		String mailSendObject = "";
 		
-		if (mailGeneralVO == null) {
-			listCount = "30";
-			refreshInterval = "300";
-			keepDeleteLength = "0";
-		} else {
-			listCount = EgovStringUtil.isEmpty(mailGeneralVO.getListCount()) ? "30" : mailGeneralVO.getListCount();
-			previewMode = EgovStringUtil.isEmpty(mailGeneralVO.getPreviewMode()) ? "OFF" : mailGeneralVO.getPreviewMode();
-			previewHListSize = EgovStringUtil.isEmpty(mailGeneralVO.getPreviewHList()) ? "50" : mailGeneralVO.getPreviewHList();
-			previewHContentSize = EgovStringUtil.isEmpty(mailGeneralVO.getPreviewHContent()) ? "50" : mailGeneralVO.getPreviewHContent();
-			previewWListSize = EgovStringUtil.isEmpty(mailGeneralVO.getPreviewWList()) ? "50" : mailGeneralVO.getPreviewWList();
-			previewWContentSize = EgovStringUtil.isEmpty(mailGeneralVO.getPreviewWContent()) ? "50" : mailGeneralVO.getPreviewWContent();
-			refreshInterval = EgovStringUtil.isEmpty(mailGeneralVO.getRefreshInterval()) ? "300" : mailGeneralVO.getRefreshInterval();
-			keepDeleteLength = EgovStringUtil.isEmpty(mailGeneralVO.getKeepDeleteLength()) ? "0" : mailGeneralVO.getKeepDeleteLength();
-			mailSendObject = "";
-			
-			if (keepDeleteLength.equals("30")) {
-				keepDeleteLength = "60";
-			}
+		listCount = mailGeneralVO.getListCount();
+		previewMode = mailGeneralVO.getPreviewMode();
+		previewHListSize = mailGeneralVO.getPreviewHList();
+		previewHContentSize = mailGeneralVO.getPreviewHContent();
+		previewWListSize = mailGeneralVO.getPreviewWList();
+		previewWContentSize = mailGeneralVO.getPreviewWContent();
+		refreshInterval = mailGeneralVO.getRefreshInterval();
+		keepDeleteLength = mailGeneralVO.getKeepDeleteLength();
+		mailSendObject = "";
+		
+		if (keepDeleteLength.equals("30")) {
+			keepDeleteLength = "60";
 		}
 		
 		//TODO: userinfo.DisplayName2 가져오기.
@@ -154,6 +151,69 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("mailSendObject", mailSendObject);
 		
 		return "ezEmail/mailGeneral";
+	}
+	
+	/**
+	 * 메일 환경 설정 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGeneralSave.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailGeneralSave(@CookieValue("loginCookie") String loginCookie,
+			@RequestParam(value = "MODE", required = false) String mode,
+			@RequestBody String bodyData, 
+			Locale locale, 
+			Model model) throws Exception {
+		logger.debug("mailGeneralSave started");		
+		logger.debug("bodyData=" + bodyData);
+				
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String userId = doc.getElementsByTagName("USERID").item(0).getTextContent();
+		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
+		String refreshInterval = doc.getElementsByTagName("REFRESHINTERVAL").item(0).getTextContent();
+		String keepDeleteLength = doc.getElementsByTagName("KEEPDELETELENGTH").item(0).getTextContent();
+		String previewMode = doc.getElementsByTagName("PREVIEWMODE").item(0).getTextContent();
+		String previewWList = doc.getElementsByTagName("PREVIEWWLIST").item(0).getTextContent();
+		String previewWContent = doc.getElementsByTagName("PREVIEWWCONTENT").item(0).getTextContent();
+		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
+		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
+		String mailSenderNm = "";
+		
+		if (mode != null && mode.equals("ALL")) {
+			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
+		}
+		
+		logger.debug("userId=" + userId + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
+						+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
+						+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
+						+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
+						+ ",mailSenderNm=" + mailSenderNm
+						);
+		
+		String rtnValue= "OK";
+		
+		try {
+			MailGeneralVO mailGeneral = new MailGeneralVO();
+			
+			mailGeneral.setListCount(listCount);
+			mailGeneral.setRefreshInterval(refreshInterval);
+			mailGeneral.setKeepDeleteLength(keepDeleteLength);
+			mailGeneral.setPreviewMode(previewMode);
+			mailGeneral.setPreviewWList(previewWList);
+			mailGeneral.setPreviewWContent(previewWContent);
+			mailGeneral.setPreviewHList(previewHList);
+			mailGeneral.setPreviewHContent(previewHContent);	
+			mailGeneral.setMailSenderNm(mailSenderNm);
+			
+			ezEmailService.setMailGeneral(userId, mailGeneral);
+		}
+		catch (Exception e) {
+			rtnValue = "ERROR:" + e.getMessage();
+		}
+		
+		logger.debug("rtnValue=" + rtnValue);
+		
+		return rtnValue;
 	}
 	
 	/**

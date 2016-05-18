@@ -43,6 +43,10 @@
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+
+	<procedure id="EzEmailDAO.setMailGeneral" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILGENERAL(#v_PUSERID#, #v_PLISTCNT#, #v_PREFRESHINTERVAL#, #v_PKEEPDELETELENGTH#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
+	</procedure>
 	
 	<procedure id="EzEmailDAO.getMailSignature" parameterClass="Map" resultMap="mailSignature">
 		{CALL EZEMAIL.EZSP_GETSIGNATURE(#v_USERID#, #v_ISUSE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
