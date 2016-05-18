@@ -229,25 +229,27 @@ function organtreeview(thisobjid, elobjid) {
             var childel = document.getElementById(g_childid + nodeIdx);
             if (childel.style.display == "none") {
                 childel.style.display = "inline-block";
-                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0)
-                    toggleel.src = g_baseImage["minus_normal"];
-                else
-                    toggleel.src = g_baseImage["minus_end"];
-
+                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
+                	toggleel.src = g_baseImage["minus_normal"];
+                } else {
+                	toggleel.src = g_baseImage["minus_end"];
+                }
+                    
                 if (childel.innerHTML == "") {
                     var oEvent = {}; //createEventObject();
                     oEvent.nodeIdx = nodeIdx;
                     //noderequestdata.fire(oEvent);
                     this.onrequestdata(oEvent);
+
                     if (getNodeText(childel.childNodes[0]).trim() == "") childel.childNodes[0].style.display = "none";
                 }
-            }
-            else {
+            } else {
                 childel.style.display = "none";
-                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0)
-                    toggleel.src = g_baseImage["plus_normal"];
-                else
-                    toggleel.src = g_baseImage["plus_end"];
+                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
+                	toggleel.src = g_baseImage["plus_normal"];
+                } else {
+                	toggleel.src = g_baseImage["plus_end"];
+                }
             }
         }).call(this, nodeIdx) :
         (function(nodeIdx) {
@@ -265,24 +267,25 @@ function organtreeview(thisobjid, elobjid) {
             var childel = document.getElementById(g_childid + nodeIdx);
             if (childel.style.display == "none") {
                 childel.style.display = "inline-block";
-                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0)
-                    toggleel.src = g_baseImage["minus_normal"];
-                else
-                    toggleel.src = g_baseImage["minus_end"];
-
+                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
+                	toggleel.src = g_baseImage["minus_normal"];
+                } else {
+                	toggleel.src = g_baseImage["minus_end"];
+                }
+                    
                 if (childel.innerHTML == "") {
                     var oEvent = document.createEventObject();
                     oEvent.nodeIdx = nodeIdx;
                     //noderequestdata.fire(oEvent);
                     this.onrequestdata(oEvent);
                 }
-            }
-            else {
+            } else {
                 childel.style.display = "none";
-                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0)
-                    toggleel.src = g_baseImage["plus_normal"];
-                else
-                    toggleel.src = g_baseImage["plus_end"];
+                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
+                	toggleel.src = g_baseImage["plus_normal"];
+                } else {
+                	toggleel.src = g_baseImage["plus_end"];
+                }
             }
         }).call(this, nodeIdx);
     }
@@ -374,12 +377,13 @@ function organtreeview(thisobjid, elobjid) {
     
     this.putchildxml = ex_putchildxml;
     function ex_putchildxml(nodeIdx, childxml) {
+
         return (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function(nodeIdx, childxml) {
             // safari
-            if (typeof (childxml) == "object")
-                var childXML = childxml;
-            else {
+            if (typeof (childxml) == "object") {
+            	var childXML = childxml;
+            } else {
                 var childXML = new DOMParser().parseFromString(childxml, 'text/xml');
             }
 
@@ -444,14 +448,12 @@ function organtreeview(thisobjid, elobjid) {
 
                     if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0) {
                         imgnode.src = g_baseImage["dot_end"];
-                    }
-                    else {
-                        if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0)
-                            imgnode.src = g_baseImage["plus_end"];
-                        else
-                            imgnode.src = g_baseImage["minus_end"];
-
-                        //changeRecursiveImg(child, true, depth-1, 0);
+                    } else {
+                        if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
+                        	imgnode.src = g_baseImage["plus_end"];
+                        } else {
+                        	imgnode.src = g_baseImage["minus_end"];
+                        }
                     }
 
                     var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 1).children.item(0).id.split(g_nodeid)[1]];
@@ -462,23 +464,22 @@ function organtreeview(thisobjid, elobjid) {
 
                     imgnode = null;
                     child = null;
-                }
-                else {
+                } else {
                     var depth = g_nodeArray["depth"][nodeIdx].length;
 
                     imgnode = node.parentElement.parentElement.parentElement.parentElement.children.item(0).children.item(depth - 2);
-                    if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImageName["minus_normal"]) >= 0)
-                        imgnode.src = g_baseImage["dot_normal"];
-                    else
-                        imgnode.src = g_baseImage["dot_end"];
+                    if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
+                    	imgnode.src = g_baseImage["dot_normal"];
+                    } else {
+                    	imgnode.src = g_baseImage["dot_end"];
+                    }
 
                     node.parentElement.parentElement.parentElement.style.display = "none";
                     node.parentElement.parentElement.parentElement.innerHTML = "";
 
                     imgnode = null;
                 }
-            }
-            else {
+            } else {
                 node.parentElement.parentElement.removeChild(node.parentElement);
             }
 
@@ -504,14 +505,12 @@ function organtreeview(thisobjid, elobjid) {
 
                     if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0) {
                         imgnode.src = g_baseImage["dot_end"];
-                    }
-                    else {
-                        if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0)
-                            imgnode.src = g_baseImage["plus_end"];
-                        else
-                            imgnode.src = g_baseImage["minus_end"];
-
-                        //changeRecursiveImg(child, true, depth-1, 0);
+                    } else {
+                        if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
+                        	imgnode.src = g_baseImage["plus_end"];
+                        } else {
+                        	imgnode.src = g_baseImage["minus_end"];
+                        }
                     }
 
                     var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 1).children.item(0).id.split(g_nodeid)[1]];
@@ -522,23 +521,22 @@ function organtreeview(thisobjid, elobjid) {
 
                     imgnode = null;
                     child = null;
-                }
-                else {
+                } else {
                     var depth = g_nodeArray["depth"][nodeIdx].length;
 
                     imgnode = node.parentElement.parentElement.parentElement.parentElement.children.item(0).children.item(depth - 2);
-                    if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImageName["minus_normal"]) >= 0)
-                        imgnode.src = g_baseImage["dot_normal"];
-                    else
-                        imgnode.src = g_baseImage["dot_end"];
+                    if (imgnode.src.indexOf(g_baseImageName["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
+                    	imgnode.src = g_baseImage["dot_normal"];
+                    } else {
+                    	imgnode.src = g_baseImage["dot_end"];
+                    }
 
                     node.parentElement.parentElement.parentElement.style.display = "none";
                     node.parentElement.parentElement.parentElement.innerHTML = "";
 
                     imgnode = null;
                 }
-            }
-            else {
+            } else {
                 node.parentElement.parentElement.removeChild(node.parentElement);
             }
 
@@ -567,15 +565,14 @@ function organtreeview(thisobjid, elobjid) {
                 var imgnode = node.parentElement.parentElement.children.item(depth - 1);
 
                 if (imgnode != null) {
-                    if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0)
-                        imgnode.src = g_baseImage["plus_normal"];
-                    else if (imgnode.src.indexOf(g_baseImageName["dot_end"]) >= 0)
-                        imgnode.src = g_baseImage["plus_end"];
-
+                    if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0) {
+                    	imgnode.src = g_baseImage["plus_normal"];
+                    } else if (imgnode.src.indexOf(g_baseImageName["dot_end"]) >= 0) {
+                    	imgnode.src = g_baseImage["plus_end"];
+                    }
                     imgnode = null;
                 }
-            }
-            else {
+            } else {
                 var childXML = createXmlDom();
                 childXML.loadXML(nodeXML);
 
@@ -585,20 +582,22 @@ function organtreeview(thisobjid, elobjid) {
 
                 var nodeHtml = "<span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
                 for (var j = 0; j < depth; j++) {
-                    if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
-                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-                    else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1") {
+                    	nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    } else {
+                    	nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    }
                 }
 
                 nodeHtml += ("<img src='" + g_baseImage["dot_end"]);
                 nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
 
-                if (childXML.documentElement.selectSingleNode("SETNODEICONBYNAME") != null)
-                    nodeHtml += ("<img src='" + g_images[childXML.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
-                else
-                    nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
-
+                if (childXML.documentElement.selectSingleNode("SETNODEICONBYNAME") != null) {
+                	nodeHtml += ("<img src='" + g_images[childXML.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
+                } else {
+                	nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+                }
+                    
                 nodeHtml += ("<a href='#" + g_nodeCount + "'><span id='" + g_nodeid + g_nodeCount + "' class='" +
 					g_baseClass["normal"] + "' style='display:inline-block;'>");
 
@@ -606,10 +605,10 @@ function organtreeview(thisobjid, elobjid) {
 
                 g_nodeArray["nodeXML"][g_nodeCount] = new Array();
                 for (var j = 0; j < childNode.childNodes.length; j++) {
-                    if (childNode.childNodes.item(j).nodeName != "NODES")
-                        g_nodeArray["nodeXML"][g_nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+                    if (childNode.childNodes.item(j).nodeName != "NODES") {
+                    	g_nodeArray["nodeXML"][g_nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+                    }
                 }
-
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
 
                 var nodeDIV = document.createElement("SPAN");
@@ -620,14 +619,12 @@ function organtreeview(thisobjid, elobjid) {
                 var prelastnode = childNodes.children.item(0).children.item(0).children.item(childNodes.children.item(0).children.item(0).children.length - 2);
                 if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["dot_end"]) >= 0) {
                     prelastnode.children.item(depth).src = g_baseImage["dot_normal"];
-                }
-                else {
-                    if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["plus_end"]) >= 0)
-                        prelastnode.children.item(depth).src = g_baseImage["plus_normal"];
-                    else
-                        prelastnode.children.item(depth).src = g_baseImage["minus_normal"];
-
-                    //changeRecursiveImg(prelastnode.parentNode, false, depth, 0);
+                } else {
+                    if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["plus_end"]) >= 0) {
+                    	prelastnode.children.item(depth).src = g_baseImage["plus_normal"];
+                    } else {
+                    	prelastnode.children.item(depth).src = g_baseImage["minus_normal"];
+                    }
                 }
 
                 var depthlist = g_nodeArray["depth"][prelastnode.children.item(depth + 2).children.item(0).id.split(g_nodeid)[1]];
@@ -656,15 +653,14 @@ function organtreeview(thisobjid, elobjid) {
                 var imgnode = node.parentElement.parentElement.children.item(depth - 1);
 
                 if (imgnode != null) {
-                    if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0)
-                        imgnode.src = g_baseImage["plus_normal"];
-                    else if (imgnode.src.indexOf(g_baseImageName["dot_end"]) >= 0)
-                        imgnode.src = g_baseImage["plus_end"];
-
+                    if (imgnode.src.indexOf(g_baseImageName["dot_normal"]) >= 0) {
+                    	imgnode.src = g_baseImage["plus_normal"];
+                    } else if (imgnode.src.indexOf(g_baseImageName["dot_end"]) >= 0) {
+                    	imgnode.src = g_baseImage["plus_end"];
+                    }
                     imgnode = null;
                 }
-            }
-            else {
+            } else {
                 var childXML = new ActiveXObject("Microsoft.XMLDom");
                 childXML.loadXML(nodeXML);
 
@@ -674,19 +670,21 @@ function organtreeview(thisobjid, elobjid) {
 
                 var nodeHtml = "<span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
                 for (var j = 0; j < depth; j++) {
-                    if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
-                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-                    else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1") {
+                    	nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    } else {
+                    	nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    }
                 }
 
                 nodeHtml += ("<img src='" + g_baseImage["dot_end"]);
                 nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
 
-                if (childXML.documentElement.selectSingleNode("SETNODEICONBYNAME") != null)
-                    nodeHtml += ("<img src='" + g_images[childXML.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
-                else
-                    nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+                if (childXML.documentElement.selectSingleNode("SETNODEICONBYNAME") != null) {
+                	nodeHtml += ("<img src='" + g_images[childXML.selectSingleNode("SETNODEICONBYNAME").text] + "'>");
+                } else {
+                	nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+                }
 
                 nodeHtml += ("<a href='#" + g_nodeCount + "'><span id='" + g_nodeid + g_nodeCount + "' class='" +
 					g_baseClass["normal"] + "' style='display:inline-block;'>");
@@ -694,9 +692,11 @@ function organtreeview(thisobjid, elobjid) {
                 nodeHtml += (childXML.documentElement.selectSingleNode("VALUE").text + "</span></a></span>");
 
                 g_nodeArray["nodeXML"][g_nodeCount] = new Array();
+                
                 for (var j = 0; j < childNode.childNodes.length; j++) {
-                    if (childNode.childNodes.item(j).nodeName != "NODES")
-                        g_nodeArray["nodeXML"][g_nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+                    if (childNode.childNodes.item(j).nodeName != "NODES") {
+                    	g_nodeArray["nodeXML"][g_nodeCount][childNode.childNodes.item(j).nodeName] = childNode.childNodes.item(j).text;
+                    }
                 }
 
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
@@ -709,14 +709,12 @@ function organtreeview(thisobjid, elobjid) {
                 var prelastnode = childNodes.children.item(0).children.item(0).children.item(childNodes.children.item(0).children.item(0).children.length - 2);
                 if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["dot_end"]) >= 0) {
                     prelastnode.children.item(depth).src = g_baseImage["dot_normal"];
-                }
-                else {
-                    if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["plus_end"]) >= 0)
-                        prelastnode.children.item(depth).src = g_baseImage["plus_normal"];
-                    else
-                        prelastnode.children.item(depth).src = g_baseImage["minus_normal"];
-
-                    //changeRecursiveImg(prelastnode.parentNode, false, depth, 0);
+                } else {
+                    if (prelastnode.children.item(depth).src.indexOf(g_baseImageName["plus_end"]) >= 0) {
+                    	prelastnode.children.item(depth).src = g_baseImage["plus_normal"];
+                    } else {
+                    	prelastnode.children.item(depth).src = g_baseImage["minus_normal"];
+                    }
                 }
 
                 var depthlist = g_nodeArray["depth"][prelastnode.children.item(depth + 2).children.item(0).id.split(g_nodeid)[1]];
@@ -1053,7 +1051,6 @@ function organtreeview(thisobjid, elobjid) {
                     bParent = false;
                 }
 
-
                 nodeHtml += "<img src='";
                 if (bParent) {
                     if (!bEndNode) {
@@ -1126,19 +1123,21 @@ function organtreeview(thisobjid, elobjid) {
                     if (node.nodeName != 'NODES') {
                         g_nodeArray["nodeXML"][nodeCount][node.nodeName] = node.firstChild.nodeValue;
                     }
-                    if (node.nodeName == 'NODES') {
+                    if (node.parentNode.parentNode.nodeName == 'NODES') {
                         hasnodes = true;
+alert("hasnodes:"+hasnodes);
                         subnode = node;
                     }
                 });
-
+alert("hasnodes:"+hasnodes);
                 g_nodeArray["depth"][nodeCount] = mydepth;
-
+alert("hasnodes:"+hasnodes);
                 if (hasnodes) {
+alert("3");
                     nodeHtml += ("<span id='" + g_childid + nodeCount + "' style='display:inline-block;'>" + make_childHtml(nodeCount, subnode) + "</span>");
                     nodeHtml += "</span>"
-                }
-                else {
+                } else {
+alert("4");
                     nodeHtml += ("<span style='display:none' id='" + g_childid + nodeCount + "'></span>");
                     nodeHtml += "</span>"
                 }
@@ -1271,7 +1270,6 @@ function organtreeview(thisobjid, elobjid) {
         return (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function() {
             // safari
-
             var protocol = window.location.protocol;
             var serverName = window.location.hostname;
 
@@ -1309,7 +1307,7 @@ function organtreeview(thisobjid, elobjid) {
                     g_baseClass[nodename.toLowerCase()] = nodenamevalue;
                 }
             );
-
+            
             (function() {
                 var sizenode = g_configXML.getElementsByTagName('size')[0];
                 g_imageWidth = sizenode.attributes.getNamedItem("width").value;
@@ -1317,6 +1315,7 @@ function organtreeview(thisobjid, elobjid) {
             })();
 
         }).call(this) :
+        		
         (function() {
             // IE
             var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;

@@ -1,6 +1,5 @@
 ﻿// p_Flag: USER
-function initTreeInfo(p_Flag, p_UserID, p_DeptID)
-{
+function initTreeInfo(p_Flag, p_UserID, p_DeptID) {
 	g_DeptBoardYN = false;
    	var xmlhttp = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
@@ -28,8 +27,7 @@ function initTreeInfo(p_Flag, p_UserID, p_DeptID)
 }
 
 // 선택된 게시판을 Main화면에 게시물LIST 보여주는 함수
-function GetTreeBrdsInfo() 
-{
+function GetTreeBrdsInfo() {
 	var selnode = TreeView.selectedIndex();
 	nodeIdx = selnode;
 
@@ -39,13 +37,12 @@ function GetTreeBrdsInfo()
 
 	var brdGubun = TreeView.getvalue(nodeIdx, "DATA7");
 	
-	if (brdGubun == 1)	// 1: 자원구분 2: 자원
-	{
+	if (brdGubun == 1)	{ // 1: 자원구분 2: 자원
 		var brd_url = TreeView.getvalue(nodeIdx, "DATA8");					// 게시판 URL
 	
-		if( brd_url != "" && brd_url != document.location.protocol+"//"){
+		if ( brd_url != "" && brd_url != document.location.protocol+"//") {
 			strUrl = brd_url;
-			if( strUrl.indexOf(document.location.protocol+"//") == -1 ){
+			if ( strUrl.indexOf(document.location.protocol+"//") == -1 ) {
 				strUrl = document.location.protocol+"//" + strUrl;
 			}
 
@@ -53,12 +50,11 @@ function GetTreeBrdsInfo()
 				var strTarget = "";
 				strTarget = strUrl.substr(strUrl.indexOf("target=")+7);
 				window.open(strUrl, strTarget);
-			}else{
+			} else {
 				window.open(strUrl);
 			}
 			
-		}else{
-alert("!!");
+		} else {
 			var rep = new RegExp( "&", "gi" );				// 정규식을 쓴이유는 ??????
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
 			var brd_nm = brd_nm.replace(rep, "chr(38)");	

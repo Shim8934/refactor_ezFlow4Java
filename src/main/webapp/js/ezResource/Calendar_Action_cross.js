@@ -840,27 +840,23 @@ function tableListControl_today()
                     document.getElementById(pObjectId + "_" + pObjectSP).onmouseover = function (event) { onmouse_over_today(this, event); };// new Function("onmouse_over_today(this);");
                     document.getElementById(pObjectId + "_" + pObjectSP).onmouseout = new Function("onmouse_out_today(this);");
                     document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                }
-                else {
+                } else {
                     var alldayevent = getNodeText(xmldom.getElementsByTagName("alldayevent")[j]);
                     if (alldayevent != "1") {
 
                         if (TodayDatename == pObjectSPDay) {
                             pObjectEP = 48;
-                        }
-                        else if (TodayDatename == pObjectEPDay) {
+                        } else if (TodayDatename == pObjectEPDay) {
                             pObjectSP = 1;
                         } else if (TodayDatename != pObjectSPDay && TodayDatename != pObjectEPDay) {
                             pObjectSP = 1;
                             pObjectEP = 48;
                         }
 
-
                         for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
                             if (TCnt != pObjectSP) {
                                 document.getElementById(pObjectId + "_" + TCnt).remove();
-                            }
-                            else {
+                            } else {
                                 //tooltip 추가
                                 document.getElementById(pObjectId + "_" + TCnt).setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
                                 document.getElementById(pObjectId + "_" + TCnt).setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
@@ -885,7 +881,6 @@ function tableListControl_today()
                                 document.getElementById(pObjectId + "_" + TCnt).setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                                 document.getElementById(pObjectId + "_" + TCnt).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-
                                 document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "#0090d0";
                                 document.getElementById(pObjectId + "_" + TCnt).style.border = "1px solid #0090d0";
                                 document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
@@ -895,8 +890,7 @@ function tableListControl_today()
                                 document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
                             }
                         }
-                    }
-                    else {
+                    } else {
                         //tooltip 추가
                         document.getElementById(pObjectId + "_1").setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
                         document.getElementById(pObjectId + "_1").setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
@@ -934,7 +928,6 @@ function tableListControl_today()
         }
         var dateresult = "";
         TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "ADD");
-
 
         // 비승인 처리
         headerweek = "";
@@ -1005,7 +998,6 @@ function tableListControl_today()
                                 //출력할 값
                                 var d3 = (d2 - d1) / 1800000;
 
-
                                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
 
@@ -1062,16 +1054,13 @@ function tableListControl_today()
                                     _TD.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                                     _TD.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-
-
                                     _TD.onmouseover = function (event) { onmouse_over_today(this, event); };
                                     _TD.onmouseout = new Function("onmouse_out_today(this);");
                                     _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                                     _TD.colSpan = d3;
                                     _Tr2.appendChild(_TD);
                                     //i = i + (d3 - 1);
-                                }
-                                else {
+                                } else {
                                     var _TD = document.createElement("TD");
                                     _TD.align = "center";
                                     _TD.setAttribute("class", "todaytd_02");
@@ -1080,8 +1069,7 @@ function tableListControl_today()
                                     
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             var _TD = document.createElement("TD");
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
@@ -1128,7 +1116,6 @@ function tableListControl_today()
             }
         }
 
-
         document.getElementById("approval").style.display = "";
         document.getElementById("noapproval").style.display = "";
 
@@ -1142,8 +1129,7 @@ function tableListControl_today()
                 document.getElementById("idCalendarViewer2").removeChild(document.getElementById("idCalendarViewer2").childNodes.item(0))
             document.getElementById("idCalendarViewer2").appendChild(_table);
 
-        }
-        else {
+        } else {
             document.getElementById("noapproval").style.display = "none";
             document.getElementById("idCalendarViewer2").innerHTML = "";
         }
@@ -1153,22 +1139,18 @@ function tableListControl_today()
     }
 }
 
-
 //화면에서 더블클릭했을때 창뛰우기 : 메인에서 넘겨준부분
 function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start, sz_End, sz_BrdName, sz_WriterID) {
-
     var p_url = "";
-
-
     var c_Width = "";
 
-    if (CrossYN())
-        c_Width = 820;
-    else
-        c_Width = 770;
+    if (CrossYN()) {
+    	c_Width = 820;
+    } else {
+    	c_Width = 770;
+    }
 
     var c_Height = 700;
-
 
     //스크린의 크기
     var s_Width = screen.availWidth;
@@ -1186,52 +1168,43 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
         //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 
         window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-    }
-    else if (p_Type != "MAIN") {
+    } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
             window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        }
-        else {
+        } else {
             if (pUse_Editor == "" || pUse_Editor == "CK") {
                 window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-            }
-            else {
+            } else {
                 window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
             }
         }
     }
-        
 }
 
-function onmouse_over_resource(td)
-{
+function onmouse_over_resource(td) {
     td.style.backgroundColor = "#e8f7fe";
     td.style.cursor = "pointer";
 }
 
-function onmouse_out_resource(td)
-{
+function onmouse_out_resource(td) {
     td.style.backgroundColor = "white";
 }
 //일보기 마우스임팩트
-function onmouse_over_today(td, event)
-{
+function onmouse_over_today(td, event) {
     td.style.cursor = "pointer";
     td.style.backgroundColor = "#2876b6";
 
     showTooltip_MouseOver(td, event);
 }
 //일보기 마우스임팩트
-function onmouse_out_today(td)
-{
+function onmouse_out_today(td) {
     td.style.backgroundColor = "#0090d0";
 
     hideTooltip();
 }
 //일보기 마우스임팩트
-function onmouse_over(td, event)
-{
+function onmouse_over(td, event) {
     td.style.cursor = "pointer";
     td.style.textDecoration = "underline";
     td.style.color = "#0090d0";
@@ -1239,8 +1212,7 @@ function onmouse_over(td, event)
     showTooltip_MouseOver(td, event);
 }
 //일보기 마우스임팩트
-function onmouse_out(td)
-{
+function onmouse_out(td) {
     td.style.textDecoration = "none";
     td.style.color = "black";
 
@@ -1262,10 +1234,7 @@ function onmouse_out_Week(td) {
     }
 }
 
-
-
-function MemberInfo_onClick(pSelUserID)
-{
+function MemberInfo_onClick(pSelUserID) {
     var c_Width = 420;
     var c_Height = 438;
 
@@ -1277,8 +1246,9 @@ function MemberInfo_onClick(pSelUserID)
     var px = (s_Width - c_Width) / 2;
     var py = (s_Height - c_Height) / 2;
 
-	if (pSelUserID != "")
-		window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	if (pSelUserID != "") {
+		window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");		
+	}
 }
 
 function showTooltip_MouseOver(obj, e) {
@@ -1321,15 +1291,13 @@ function showTooltip_MouseOver(obj, e) {
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
-    }
-    else {
+    } else {
         _img.src = "/images/calendar/icon_resource_no.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
     }
-
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
 
@@ -1412,8 +1380,9 @@ function getMouseXLocation(e) {
     if (E.clientX > 1000) {
         var tTip = document.getElementById("tooltip");
         var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
-    } else
-        var locationX = E.clientX + document.body.scrollLeft + 20;
+    } else {
+    	var locationX = E.clientX + document.body.scrollLeft + 20;
+    }
 
     return locationX
 }
@@ -1428,8 +1397,7 @@ function getMouseYLocation(e) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
-        }
-        else {
+        } else {
             if (document.documentElement.scrollTop > 0) {
                 //var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
                 var locationY
@@ -1439,17 +1407,14 @@ function getMouseYLocation(e) {
                 } else {
                     locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
                 }
-            }
-            else {
+            } else {
                 var locationY = E.clientY + document.documentElement.scrollTop;
             }
         }
-    }
-    else {
+    } else {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
-        }
-        else {
+        } else {
             if (document.body.scrollTop > 0) {
                 var locationY
                 //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면 - 메디톡스 수정
@@ -1458,8 +1423,7 @@ function getMouseYLocation(e) {
                 } else {
                     locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
                 }
-            }
-            else {
+            } else {
                 var locationY = E.clientY + document.body.scrollTop;
             }
         }
