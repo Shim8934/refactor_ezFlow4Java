@@ -78,7 +78,7 @@
 		        g_SelTree = TreeView;
 		        var selNode = TreeView.selectedIndex();
 		        if (selNode == null) {
-            		var strUrl = "nonResList.do";
+            		var strUrl = "/ezResource/nonResList.do";
             		locationInfo(RealPath);
             		Navigate(strUrl);
         		} else {
