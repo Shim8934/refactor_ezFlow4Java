@@ -1,0 +1,179 @@
+﻿/* 달력디자인 추가 css */
+
+/* 월보기 */
+.calendar_month_navi{table-layout:fixed; border:1px solid #9b9b9b; border-bottom:1px solid #9b9b9b;}
+.calendar_month_navi th{height:29px; line-height:29px; padding:0; margin:0; color:#333333; font-size:13px;}
+.calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
+.calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
+.calendar_month{table-layout:fixed; vertical-align:top;}
+.calendar_month th{height:26px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0;}
+.calendar_month th.sun{color:#ee1c25;}
+.calendar_month th.sat{color:#0032cf;}
+.calendar_month td{width:14.2%; border:1px solid #b5b5b5;}
+.calendar_month td.gray{background:#F6F6F6;}
+.calendar_month td.today{background:#eaf2f5;}
+.calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
+.calendar_month .td_day td {height:22px; line-height:22px; border:0 none; padding:0px 0px 0px 7px; margin:0; color:#333333;}
+.calendar_month .click{background:#b6b6b6;} /* 날자클릭시 백그라운드 처리 */
+.calendar_month .gray td{color:#aaa;}
+.calendar_month .sun td{color:#ee1c25;}
+.calendar_month .sat td{color:#0032cf;}
+.calendar_month .span_list{display:block; height:73px; overflow:auto;}
+.calendar_month .td_list{table-layout:fixed; display:block; width:100%; overflow:hidden;}
+.calendar_month .td_list td{height:20px; line-height:20px; border:0 none; padding:0px 0px 0px 7px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;}
+
+/* 개인,부서,회사 색상 */
+.calendar_month .td_list td.individual{color:#666666;}
+.calendar_month .td_list td .individual{display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 개인 */
+.calendar_month .td_list td.department{color:#666666;}
+.calendar_month .td_list td .department{display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
+.calendar_month .td_list td.company{color:#666666;}
+.calendar_month .td_list td .company{display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 회사 */
+/* //개인,부서,회사 색상 */
+
+.icon_h{display:inline-block; width:13px; height:13px; background:url(images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+.icon_l{display:inline-block; width:13px; height:13px; background:url(images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
+
+
+
+
+/* 자원관리 승인,비승인아이콘 */
+.calendar_month .td_list td.resource_ok{color:#666666;}
+.calendar_month .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_month .td_list td.resource_no{color:#666666;}
+.calendar_month .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+/* //월보기 */
+
+
+/* //월보기 */
+
+/* 주보기 */
+.calendar_week_navi{table-layout:fixed; border:1px solid #9b9b9b; border-bottom:1px solid #9b9b9b;}
+.calendar_week_navi th{height:29px; line-height:29px; padding:0; margin:0; color:#333333; font-size:13px;}
+.calendar_week_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
+.calendar_week_navi th .btn_next{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
+.calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid #9b9b9b;}
+.calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #b6b6b6; border-left:1px solid #cbcbcb; padding:0; margin:0;}
+.calendar_week_title .calendar_th_time{width:69px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_list{background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_last{width:16px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
+.calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
+.calendar_week_title .sun{color:#ee1c25; }
+.calendar_week_title .sat{color:#0032cf;}
+.calendar_week_title .today{background:#eaf2f5;}
+.calendar_week_title .calendar_time{width:69px; border-top:0 none; border-right:1px solid #b6b6b6; border-left:1px solid #b6b6b6; background:#eaeaea; vertical-align: top;}
+.calendar_week_title .calendar_time .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:69px; }
+.calendar_week_title .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
+.calendar_week_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
+.calendar_week_title .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
+.calendar_week_title .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #b6b6b6; overflow:hidden; position:relative;}
+.calendar_week_title .td_list .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:100% ; }
+.calendar_week_title .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer; white-space:nowrap;}
+.calendar_week_title .td_list .calendar_row .calendar_t_time{height:21px;  vertical-align:top;}
+.calendar_week_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
+
+.calendar_week{width:100%; table-layout:fixed;}
+.calendar_week .calendar_time{width:69px; border-top:0 none; border-right:1px solid #b6b6b6; border-left:1px solid #b6b6b6; background:#eaeaea; vertical-align: top;}
+.calendar_week .calendar_time .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #9b9b9b;}
+.calendar_week .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
+.calendar_week .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #eaeaea;}
+.calendar_week .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
+.calendar_week .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #b6b6b6; overflow:hidden; position:relative;}
+.calendar_week .td_list .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:100% ;border-bottom:1px solid #9b9b9b; }
+.calendar_week .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer; white-space:nowrap;}
+.calendar_week .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
+.calendar_week .td_list .calendar_row .calendar_t_text{vertical-align:top;}
+/*.calendar_week .td_list .calendar_t_time table{margin:0px 2px 0px 1px;} */
+/*.calendar_week .td_list .calendar_t_text table{margin:0px 2px 0px 1px;} */
+.calendar_week .td_list .today td{background:#eaf2f5;}/* 오늘의 일 표시배경 */
+
+
+.calendar_data_ok{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
+.calendar_data_ok table td{background:#818f98 !important;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_no{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
+.calendar_data_no table td{background:#818f98 !important; color:#fff;} /* 20130418_임의로 작업 추후변경 */
+/* //주보기 */
+
+/* 일보기 */
+.calendar_day_title{vertical-align:top;}
+.calendar_day_title th{height:26px; line-height:26px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:1px solid #9b9b9b; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0; color:#333;}
+.calendar_day_title th .btn_prev{display: inline-block; vertical-align: top; margin: 4px 0px 0px;cursor:pointer; height:17px;}
+.calendar_day_title th .btn_next{display: inline-block; vertical-align: top; margin: 4px 0px 0px;cursor:pointer; height:17px;}
+.calendar_day_title .calendar_time{width:61px; border:1px solid #9b9b9b; border-right:1px solid #b6b6b6; border-top:0 none; background:#eaeaea;vertical-align: top;}
+.calendar_day_title .td_list{border:1px solid #9b9b9b; border-left:0 none; border-top:0 none; vertical-align:top;}
+.calendar_day_title .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; }
+.calendar_day_title .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
+.calendar_day_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
+.calendar_day_title .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
+.calendar_day_title .td_list .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:100%; }
+.calendar_day_title .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer;}
+.calendar_day_title .td_list .calendar_row .calendar_t_time{height:21px;  vertical-align:top;}
+.calendar_day_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
+.calendar_day_title .td_list .today td{background:#eaf2f5;}
+.calendar_day{vertical-align:top;}
+.calendar_day .calendar_time{width:61px; border:1px solid #9b9b9b; border-right:1px solid #b6b6b6; border-top:0 none; background:#eaeaea;vertical-align: top;}
+.calendar_day .td_list{width:100%; border:1px solid #9b9b9b; border-left:0 none; border-top:0 none; vertical-align:top;}
+.calendar_day .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #9b9b9b;}
+.calendar_day .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
+.calendar_day .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #eaeaea;}
+.calendar_day .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
+.calendar_day .td_list .calendar_row{vertical-align:top; margin:0; padding:0; width:100%; border-bottom:1px solid #9b9b9b;}
+.calendar_day .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer;}
+.calendar_day .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
+.calendar_day .td_list .calendar_row .calendar_t_text{vertical-align:top;}
+.calendar_day .td_list .today td{background:#eaf2f5;}
+
+/* //일보기 */
+
+/* 미니달력 */
+.calendar_mini_title{table-layout:fixed; text-align:center; border:1px solid #a6a6a6; border-bottom:0 none;}
+.calendar_mini_title td{vertical-align:middle;}
+.calendar_mini_title .btn_pprev{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title .btn_prev{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title .calendar_mini_day{width:100%; height:30px;}
+.calendar_mini_title .btn_next{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title .btn_nnext{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title span{display:inline-block;}
+.calendar_mini{table-layout:fixed; border:1px solid #a6a6a6; border-top:0 none;}
+.calendar_mini th{width:14.2%; height:28px; background:url(images/calendar/bg_calendar_mini_title.gif) repeat-x; margin:0; padding:0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:11px; font-family:Arial, Helvetica, sans-serif; color:#ffffff;}
+.calendar_mini th.sun{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
+.calendar_mini th.sat{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:#0032cf;} */
+.calendar_mini td{width:14.2%; height:30px; text-align:center; cursor:pointer;}
+.calendar_mini td div{height:30px; line-height:30px; cursor:pointer;}
+.calendar_mini td.sun{color:#ee1c25;}
+.calendar_mini td.sat{color:#0032cf;}
+.calendar_mini td.gray{color:#aaa;}
+.calendar_mini td.today{background:#c0cae5;}
+/* //미니달력 */
+
+
+/* //달력디자인 추가 css */
+
+/* 달력layer 팝업 */
+.calendar_layer{width:200px; table-layout:fixed; border:1px solid #4e4e46; border-collapse:separate; border-spacing:0; overflow:hidden;}
+.calendar_layer th{margin:0; padding:8px 10px; border:0; font-size:13px; color:#383838; white-space:normal; text-align:left;word-break:break-all;}
+.calendar_layer td{margin:0; padding:0;}
+.calendar_layer .text{padding:10px; border:1px solid #e5e5e5; border-bottom:0 none; overflow:hidden;}
+.calendar_layer .text .td_list{border:0 none; overflow:hidden;}
+.calendar_layer .text .td_list td{padding:3px 0px; color:#393939;}
+.calendar_layer .btn{background:#fff; border:1px solid #e5e5e5; border-top:1px solid #dedede; padding:10px 0px 9px 0px; margin:0 auto; text-align:center;}
+.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
+.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
+.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
+
+
+/* 자원관리 승인,비승인아이콘 */
+.calendar_layer .text .td_list td.resource_ok{color:#00b43b;}
+.calendar_layer .text .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_layer .text .td_list td.resource_no{color:#999999;}
+.calendar_layer .text .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+.calendar_layer .text .td_list td .width_16{display:inline-block; width:16px; height:16px; background:transparent; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 공백width */
+/* //달력layer 팝업 */
+
+
+
+/* //달력디자인 추가 css */
+
+
