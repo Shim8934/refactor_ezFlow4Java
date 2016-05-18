@@ -12,7 +12,7 @@ function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName)
 	    createNodeAndInsertText(xmlpara, objNode, "TOPID", TopDeptID);
 	    createNodeAndInsertText(xmlpara, objNode, "PROP",  tProperty);		
 
-		xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", false);
+		xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		xmlHTTP.send(xmlpara);
 		//alert("1::"+xmlHTTP.responseText);
 		xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -74,12 +74,12 @@ function GetDeptSubTreeInfo(deptID, TreeIdx)
 	var objNode;		
 	    createNodeInsert(xmlpara, objNode, "DATA"); 
 	    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-	    createNodeAndInsertText(xmlpara, objNode, "PROP",  "extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName");	
+	    createNodeAndInsertText(xmlpara, objNode, "PROP",  "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");	
     // 수정(2007.06.18) : multidata 기능 추가
 	//var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName</PROP></DATA>";
 	
 	
-	xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	xmlHTTP.send(xmlpara);
 	
 	//alert("1xmlpara::"+xmlpara.xml);
