@@ -38,4 +38,10 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public void deleteMailDelete(Map<String, Object> map) throws Exception {
 		delete("EzEmailDAO.deleteMailDelete", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailDeleteVO> getMailDeleteList() throws Exception {
+		return (List<MailDeleteVO>)list("EzEmailDAO.getMailDeleteList");
+	}
+	
 }

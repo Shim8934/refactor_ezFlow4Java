@@ -14,5 +14,6 @@ public interface EzEmailService {
 	public List<MailDeleteVO> getMailDelete(String userId) throws Exception;
 	public void setMailDelete(String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(String pUserID, int pItemSeq) throws Exception;
+	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	
 }

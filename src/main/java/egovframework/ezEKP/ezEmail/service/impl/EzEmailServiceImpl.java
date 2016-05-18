@@ -73,5 +73,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 		map.put("v_PITEMSEQ", pItemSeq);
 		ezEmailDAO.deleteMailDelete(map);
 	}
+
+	@Override
+	public List<MailDeleteVO> getMailDeleteList() throws Exception {
+		return ezEmailDAO.getMailDeleteList();
+	}
 	
 }

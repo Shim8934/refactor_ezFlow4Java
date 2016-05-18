@@ -297,6 +297,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
 		
+		System.out.println(folderName);
+		
 		ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
 		
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");

@@ -33,6 +33,13 @@
 		<result property="folderName" column="FOLDERNAME" columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap id="mailDelete2" class="MailDeleteVO">
+		<result property="userId" column="USERID" columnIndex="1"/>
+		<result property="expireTime" column="EXPIRETIME" columnIndex="2"/>
+		<result property="path" column="PATH" columnIndex="3"/>
+		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -55,6 +62,10 @@
 	
 	<procedure id="EzEmailDAO.deleteMailDelete" parameterClass="Map">
 		{CALL EZEMAIL.EZSP_DELETEMAILDELETE(#v_PUSERID#, #v_PITEMSEQ#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailDeleteList" parameterClass="Map" resultMap="mailDelete2">
+		{CALL EZEMAIL.EZSP_GETMAILDELETELIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 </sqlMap>

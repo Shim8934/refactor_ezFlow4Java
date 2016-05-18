@@ -1,12 +1,20 @@
 package egovframework.ezEKP.ezEmail.vo;
 
 public class MailDeleteVO {
+	
+	private String userId;
 	private int itemSeq;
 	private int expireTime;
 	private String path;
 	private String deleteUnread;
 	private String folderName;
 	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public int getItemSeq() {
 		return itemSeq;
 	}
@@ -40,8 +48,8 @@ public class MailDeleteVO {
 	
 	@Override
 	public String toString() {
-		return "MailDeleteVO [itemSeq=" + itemSeq + ", expireTime=" + expireTime + ", path=" + path + ", deleteUnread="
-				+ deleteUnread + ", folderName=" + folderName + "]";
+		return "MailDeleteVO [userId=" + userId + ", itemSeq=" + itemSeq + ", expireTime=" + expireTime + ", path="
+				+ path + ", deleteUnread=" + deleteUnread + ", folderName=" + folderName + "]";
 	}
 	
 }
