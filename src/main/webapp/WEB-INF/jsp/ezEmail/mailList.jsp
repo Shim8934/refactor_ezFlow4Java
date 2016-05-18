@@ -46,7 +46,7 @@
 		    var p_ListOrderOption = "DESC";
 		    var p_ListorderType = "";
 		    var p_ListorderValue = "";
-		    var pListCount = "${listCount}";
+		    var pListCount = "${mailGeneral.listCount}";
 		    var pFolderTotalCount;
 		    var pFolderUnReadCount;
 		    var CopyMsg = "<spring:message code="ezEmail.t635" />";
@@ -347,7 +347,7 @@
             <table style="width:100%;border:1px solid #B6B6B6;" id="MailHeader" class="mainlist" >               
             </table>
             <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur  onscroll="ContextMenuHidden()">
-                <table class="mainlist" style="width:100%;" id="MailList"  listpageCount="${listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
+                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">
                 </table>
             </div>
             <div id="tblPageRayer"  style="width:450px; margin:6px auto;"></div>

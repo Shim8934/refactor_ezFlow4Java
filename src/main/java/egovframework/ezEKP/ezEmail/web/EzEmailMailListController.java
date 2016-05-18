@@ -118,9 +118,25 @@ public class EzEmailMailListController {
 		// retrieve the mail general settings from db.
 		MailGeneralVO mailGeneral = null;
 		List<MailGeneralVO> mailGeneralList = ezEmailService.getMailGeneral(userId);
+		
 		if (mailGeneralList.size() > 0) {
 			mailGeneral = mailGeneralList.get(0);
 		}
+		// set the defaults if there is no record in db.
+		else {			
+			mailGeneral = new MailGeneralVO();
+			mailGeneral.setListCount("30");
+			mailGeneral.setRefreshInterval("300");
+			mailGeneral.setKeepDeleteLength("0");
+			mailGeneral.setPreviewMode("OFF");
+			mailGeneral.setPreviewWList("50");
+			mailGeneral.setPreviewWContent("50");
+			mailGeneral.setPreviewHList("50");
+			mailGeneral.setPreviewHContent("50");
+			
+			logger.debug("mailGeneral has been set to defaults");
+		}
+		
 		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral);		
 		
 		// set model
@@ -128,7 +144,6 @@ public class EzEmailMailListController {
 		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", true);
-		model.addAttribute("listCount", "30");
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("userId", userId);
 		model.addAttribute("domainName", domainName);
