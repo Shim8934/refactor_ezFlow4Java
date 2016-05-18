@@ -189,7 +189,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 	
 	@Override
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-			String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -208,6 +208,30 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_P_OwnerNm2", ownerNm2);
 		map.put("v_P_OwnerPos2", ownerPos2);
 		ezResourceDAO.modifyResData(map);
+	}
+	
+	@Override
+	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_ClassGB", classGB);
+		map.put("v_P_ODeptID", deptID);
+		map.put("v_P_ODeptNm", deptNm);
+		map.put("v_P_OwnerID", ownerID);
+		map.put("v_P_OwnerNm", ownerNm);
+		map.put("v_P_OwnerPos", ownerPos);
+		map.put("v_P_OwnerCall", ownerCall);
+		map.put("v_P_Brd_NM", brdNm);
+		map.put("v_P_ResLocation", resLocation);
+		map.put("v_P_Brd_Explain", brdExplain);
+		map.put("v_P_CompanyID", companyID);
+		map.put("v_P_Approve", approve);
+		map.put("v_P_Brd_NM2", brdNm2);
+		map.put("v_P_ODeptNm2", deptNm2);
+		map.put("v_P_OwnerNm2", ownerNm2);
+		map.put("v_P_OwnerPos2", ownerPos2);
+		ezResourceDAO.addResData(map);
+		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1769,7 +1793,7 @@ public class EzResourceServiceImpl implements EzResourceService{
         	}
         	returnXML += "</NODES>";
         }
-System.out.println(returnXML);
+
 		return returnXML;
 	}
 	
@@ -1802,7 +1826,8 @@ System.out.println(returnXML);
         String strData13 = xmlRes.getElementsByTagName("SUBRESCNT").item(0).getTextContent();
         String strData14 = xmlRes.getElementsByTagName("ACCESSLVL").item(0).getTextContent();
         String strData15 = xmlRes.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
-        
+  System.out.println(strData12);
+  System.out.println(strData13);
         intSubCnt = Integer.parseInt(strData12.trim()) + Integer.parseInt(strData13.trim());
         String strValue = strData2;
         String strStyle = "font-weight:normal;height:10px;";
@@ -1923,6 +1948,53 @@ System.out.println(returnXML);
 		}
 		return true;
 	}
+
+	public boolean addResData(String xmlStr) {
+		String strClassGB = "";
+		String strODeptID = "";
+		String strODeptNm = "";
+		String strOwnerID = "";
+		String strOwnerNm = "";
+		String strOwnerPos = "";
+	    String strOwnerCall = "";
+	    String strBrdNm = "";
+	    String strResLocation = "";
+	    String strBrdExplain = "";
+	    String strCompanyID = "";
+	    String strApprove = "";
+	    String strBrdNm2 = "";
+	    String strODeptNm2 = "";
+	    String strOwnerNm2 = "";
+	    String strOwnerPos2 = "";
+	    
+	    try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
+			strODeptID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
+			strODeptNm = xmlRes.getElementsByTagName("DATA").item(2).getTextContent().trim();
+			strOwnerID = xmlRes.getElementsByTagName("DATA").item(3).getTextContent().trim();
+			strOwnerNm = xmlRes.getElementsByTagName("DATA").item(4).getTextContent().trim();
+			strOwnerPos = xmlRes.getElementsByTagName("DATA").item(5).getTextContent().trim();
+			strOwnerCall = xmlRes.getElementsByTagName("DATA").item(6).getTextContent().trim();
+			strBrdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent().trim();
+			strResLocation = xmlRes.getElementsByTagName("DATA").item(8).getTextContent().trim();
+			strBrdExplain = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
+			strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
+			strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
+			strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
+			strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+			strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+			strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+			
+			addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	
+	
 	
 }
 
