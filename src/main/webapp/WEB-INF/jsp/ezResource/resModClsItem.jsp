@@ -112,7 +112,7 @@
 			
 			function btnTakeOwner_Click() {
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
-				var OpenWin = window.open("UserInfo/Select_Person_cross.aspx", "Select_Person_cross", GetOpenWindowfeature(750, 550));
+				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(750, 550));
 				try { 
 					OpenWin.focus(); 
 				} catch (e) {
@@ -160,7 +160,7 @@
           					<th> <spring:message code="ezResource.t151"/></th>
           					<td><input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 150px"></td>
           					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"><%-- <%=strMakeDate.Substring(0, 10)%> --%> ${makeDate} </td>
+          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"> ${makeDate} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
@@ -196,8 +196,12 @@
 								<c:if test="${approveFlag eq 1}">
 									<input type="radio" name="approve" id="approve1" value="1"  checked/>
 									<spring:message code="ezResource.t156"/>
+									<input type="radio" name="approve" id="approve0" value="0" />
+									<spring:message code="ezResource.t157"/>
 								</c:if>
-								<c:if test="${approveFlag eq 2}">
+								<c:if test="${approveFlag eq 0}">
+									<input type="radio" name="approve" id="approve1" value="1"/>
+									<spring:message code="ezResource.t156"/>
 									<input type="radio" name="approve" id="approve0" value="0"  checked/>
 									<spring:message code="ezResource.t157"/>
 								</c:if>
