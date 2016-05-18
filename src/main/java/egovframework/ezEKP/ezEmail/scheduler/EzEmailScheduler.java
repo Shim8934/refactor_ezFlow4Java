@@ -41,7 +41,7 @@ public class EzEmailScheduler {
 	@Autowired
 	private EzEmailService ezEmailService;
 	
-	@Scheduled(cron = "00 48 17 * * *")
+	@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
 		logger.debug("오전 05:00:00에 호출이 됩니다.");
 		Locale locale = Locale.getDefault();
@@ -55,6 +55,7 @@ public class EzEmailScheduler {
 					userId = userId.substring(0, index);
 				}
 				
+				//TODO: 비밀번호 setting...
 				String password = "1234!";
 				String path = vo.getPath();
 				String deleteUnread = vo.getDeleteUnread();
