@@ -15,9 +15,13 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
+import javax.mail.search.FromStringTerm;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -100,6 +104,7 @@ public class EzEmailMailListController {
 		String userLang = "1";
 		String domainName = config.getProperty("config.DomainName");
 		String useEditor = config.getProperty("config.EDITOR");
+		boolean isSentItems = false;
 		
 		if (dispname != null) {
 			folderName = dispname;
@@ -107,6 +112,7 @@ public class EzEmailMailListController {
 		
 		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
 			folderType = "sent";
+			isSentItems = true;
 		}
 		else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
 			folderType = "draft";
@@ -127,7 +133,7 @@ public class EzEmailMailListController {
 		model.addAttribute("folderName", folderName);
 		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
-		model.addAttribute("isSentItems", true);
+		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("userId", userId);
 		model.addAttribute("domainName", domainName);
@@ -175,7 +181,113 @@ public class EzEmailMailListController {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
-		Message[] messages = folder.getMessages();
+		
+		Message[] messages = folder.getMessages(); 
+				
+		if (!search.equals("")) {
+			int index = search.indexOf("=");
+			if (index >= 0) {
+				String searchField = search.substring(0, index);
+				final String searchValue = search.substring(index + 1);
+				
+				logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
+				
+				SearchTerm sTerm = null; 
+						
+				if (searchField.equalsIgnoreCase("SUBJECT")) {
+					sTerm = new SearchTerm() {
+					    public boolean match(Message message) {
+					        try {
+					        	String subject = message.getSubject();
+					        	
+					        	
+					            if (subject != null && subject.toLowerCase().contains(searchValue.toLowerCase())) {
+					                return true;
+					            }
+					        } 
+					        catch (MessagingException e) {
+					        }
+					        
+					        return false;
+					    }
+					};					
+				}
+				else if (searchField.equalsIgnoreCase("FROM")) {
+					sTerm = new SearchTerm() {
+					    public boolean match(Message message) {
+				        	String from = ezEmailUtil.getFullFromAddressOfMessage(message);
+				            if (from != null & from.toLowerCase().contains(searchValue.toLowerCase())) {
+				                return true;
+				            }
+					        
+					        return false;
+					    }
+					};					
+				}
+				else if (searchField.equalsIgnoreCase("RECEIVE")) {
+					sTerm = new SearchTerm() {
+					    public boolean match(Message message) {
+					    	if (",<>@".contains(searchValue)) {
+					    		return false;
+					    	}
+					    	
+					    	try {
+						    	StringBuilder sb = new StringBuilder();
+						    	
+						    	// retrieve the TO addresses from the message.
+								Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+								String to = ezEmailUtil.getStringListOfAddresses(addresses);
+								
+								if (!to.equals("")) {
+									sb.append(to);
+								}
+								
+								// retrieve the CC addresses from the message.
+								addresses = message.getRecipients(Message.RecipientType.CC);
+								String cc = ezEmailUtil.getStringListOfAddresses(addresses);
+								
+								if (!cc.equals("")) {
+									if (!to.equals("")) {
+										sb.append(",");
+									}
+									
+									sb.append(cc);
+								}
+								
+								// retrieve the BCC addresses from the message.
+								addresses = message.getRecipients(Message.RecipientType.BCC);
+								String bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+	
+								if (!bcc.equals("")) {
+									if (!to.equals("") || !cc.equals("")) {
+										sb.append(",");
+									}
+									
+									sb.append(bcc);
+								}							
+						    	
+					            if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
+					                return true;
+					            }
+					    	}
+					    	catch (MessagingException e) {					    		
+					    	}
+					        
+					        return false;
+					    }
+					};					
+				}
+				
+				if (sTerm != null) {
+					// pre-fetch fields needed for searching
+					FetchProfile fp = new FetchProfile();
+					fp.add(FetchProfile.Item.ENVELOPE);
+					folder.fetch(messages, fp);
+					
+					messages = folder.search(sTerm);
+				}
+			}
+		}
 		
 		// sort the messages
 		sortMessages(imapAccess, folder, messages, sortType);
@@ -370,7 +482,7 @@ public class EzEmailMailListController {
 			sb.append("</response>");
 		}
 		sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
-				start, end, folder.getMessageCount(), folder.getMessageCount(), folder.getUnreadMessageCount()));
+				start, end, messages.length, messages.length, folder.getUnreadMessageCount()));
 		sb.append("</maillist>");
 	      
 		folder.close(false);
