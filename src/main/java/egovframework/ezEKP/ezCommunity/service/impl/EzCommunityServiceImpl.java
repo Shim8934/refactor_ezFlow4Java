@@ -976,7 +976,6 @@ System.out.println("@");
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_PENDROW", pEndRow);
 		
-		///////////////////////////////
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
 		
 		sb.append("<NODES>");
@@ -1451,6 +1450,7 @@ System.out.println("@");
 		list = ezCommunityDAO.getAdjacentItemsGet1(map);
 		
 		for (CommunityBoardItemVO item : list) {
+			System.out.println(item.getTitle());
 			if (item.getItemID().equals(pItemID)) {
 				previousItemID = tempItemID;
 				previousTitle = tempTitle;

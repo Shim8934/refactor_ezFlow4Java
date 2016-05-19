@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -413,7 +415,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int openSex = 1;
 		int openBirth = 0;
 		
-		ezCommunityService.commMakeOkInsert2(clubNo, EgovDateUtil.getTodayTime(), clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[1].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID());
+		ezCommunityService.commMakeOkInsert2(clubNo, EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""), clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[1].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID());
 		
 		//TODO 2016-05-03 이효진 Email부분 
 /*		ezCommunityService.commMakeOkGet5()
@@ -742,7 +744,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String strVisit = ezCommunityService.commHomeGet1(userInfo.getId(), code);
 		
 		if (strVisit == null || strVisit.substring(0, 10).equals(EgovDateUtil.getToday("-"))) {
-			ezCommunityService.updateLastDate(EgovDateUtil.getTodayTime(), code, userInfo.getId());
+			ezCommunityService.updateLastDate(EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""), code, userInfo.getId());
 		}
 		
 		String copType = ezCommunityService.commHomeGet4(code);
@@ -931,7 +933,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		String pBoardName = request.getParameter("boardName");
-		
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
@@ -1150,7 +1151,7 @@ public class EzCommunityController extends EgovFileMngUtil{
             Rsa = null;
         }*/
 		
-		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "", gubun = "", pBoardName = "", strWriterFakeName = "";;
+		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "", pBoardName = "", strWriterFakeName = "";;
 		String hasAttach = "NO";
 		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
@@ -1225,22 +1226,17 @@ public class EzCommunityController extends EgovFileMngUtil{
                 }
 			}
 		}
-		
-		
-		
+		System.out.println(EgovDateUtil.convertDate("2016-05-19 9:1:10", "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""));
 		model.addAttribute("editor", config.getProperty("config.EDITOR"));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
 		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
-		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("item", item);
-		
 		model.addAttribute("pReservedItem", pReservedItem);
 //		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("pMode", pMode);
-		model.addAttribute("strNow", EgovDateUtil.getTodayTime());
-		model.addAttribute("expireDays", expireDays);
+		model.addAttribute("strNow", EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""));
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("strWriterFakeName", strWriterFakeName);
 		
@@ -1474,6 +1470,7 @@ public class EzCommunityController extends EgovFileMngUtil{
             pVersionUse = ezCommunityService.getVersionInfo(pBoardID); 
 		}
 		
+		//TODO 2016-05-19 이효진 
 //		int copMaster = ezCommunityService.boardItemViewGet();
 		if (boardInfo.getGubun() != null) {
 			if (boardInfo.getGubun().equals("2")) {
@@ -1646,7 +1643,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 			}
 			
-			String nowDate = EgovDateUtil.getTodayTime();
+			String nowDate = EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
@@ -2050,7 +2047,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + fileName;
             }
 
-        	String nowDate = EgovDateUtil.getTodayTime();
+        	String nowDate = EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
         	
         	ezCommunityService.bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, loginVO.getCompanyID(), loginVO.getId(), userNm, userNm2, title, maxIdFieldName);
         	

@@ -48,11 +48,7 @@
 // 			변수
 			var userInfo = "${userInfo}";
 			var item = "${item}";
-			
-			
-			
-			
-			
+
 			var pUploadFilePath = "${pUploadFilePath}";
 			var pBoardID = "${item.boardID}";
 			var pBoardName = "${item.boardName}";
@@ -94,8 +90,8 @@
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
 		    var strNow = "${strNow}";		
-		    var ExpireDays = "${expireDays}";		
-		    var gubun = "${item.gubun}";		
+		    var ExpireDays = "${boardInfo.expireDays}";		
+		    var gubun = "${boardInfo.gubun}";		
 		    var pUrl = "${pUrl}";
 		    var pDocID = "${pDocID}";
 		    var unloadflag = "0";
@@ -165,10 +161,9 @@
 		        	
 		        var settime;
 		        var NowDate;
-		        		        
+
 	            settime = strStartDate;
 
-		        
 		        NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
 
@@ -594,7 +589,7 @@
 		    }
 	
 		    function btn_PostDate_Clear() {
-	        	settime = strStartDate;
+	        	settime = strNow;
 		        
 		        NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
@@ -824,7 +819,8 @@
 			}
 						
             function InitializeSettings() {
-                document.getElementById('tdBoardName').innerHTML = pBoardName;
+            	
+                document.getElementById('tdBoardName').innerHTML = "${item.boardName}";
 	
                 if (ExpireDays == "-1") {
                     document.getElementById('ChkPermanence').checked = true;
@@ -1004,11 +1000,11 @@
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezCommunity.t1168'/></th>
-	                        <td id="tdBoardName">${boardName }</td>
+	                        <td id="tdBoardName">${item.boardName }</td>
 	                    </tr>
 	                    
 	                    <c:choose>
-	                    	<c:when test="${(mode == 'new' || reservedItem == 'true' || url != '') && gubun != '2' }">
+	                    	<c:when test="${(mode == 'new' || reservedItem == 'true' || url != '') && boardInfo.gubun != '2' }">
 	                    		<tr id="tdReservationDate">
 	                    	</c:when>
 	                    	<c:otherwise>
@@ -1051,7 +1047,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezCommunity.t1171'/></th>
 	                        <c:choose>
-	                        	<c:when test="${strImportance == '1' }">
+	                        	<c:when test="${item.importance == '1' }">
 	                        		<td><input type="checkbox" id="chkEmergent" checked><spring:message code='ezCommunity.t1172'/></td>
 	                        	</c:when>
 	                        	<c:otherwise>
@@ -1060,11 +1056,11 @@
 	                        </c:choose>
 	                    </tr>
 	                    
-	                    <c:if test="${gubun == '2' }">
+	                    <c:if test="${boardInfo.gubun == '2' }">
 	                    	<tr>
 		                        <th><spring:message code='ezCommunity.t1173'/></th>
 		                        <td>
-		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="${strWriterName }">&nbsp;&nbsp;(<spring:message code='ezCommunity.t1174'/>
+		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="${item.writerName }">&nbsp;&nbsp;(<spring:message code='ezCommunity.t1174'/>
 		                        </td>
 		                    </tr>
 		                    <tr>
@@ -1142,7 +1138,7 @@
 	    <input id="publicModulus" value="${publicModulus }" type="hidden"/>
 	    
 	    <script type="text/javascript">
-	        if("${gubun != '2'}") {
+	        if("${boardInfo.gubun != '2'}") {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
 	        } else {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 355 + "PX";

@@ -60,6 +60,10 @@ public interface EzCommunityService {
 
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception;
+	
+	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
+	
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
 
 	public String leftCommunityGet2(String code) throws Exception;
@@ -115,6 +119,16 @@ public interface EzCommunityService {
 	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception;
 	
 	public String searchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
+	
+	public String checkIfHasReply(String itemList) throws Exception;
+
+	public String newItem(Document xmlData, String pMode, String realPath) throws Exception;
+	
+	public String getVersionInfo(String pBoardID) throws Exception;
+	
+	public String getItemAttachmentXML(String itemID) throws Exception;
+	
+	public String getProperSizeDisplay(int pSize) throws Exception;
 
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
@@ -128,6 +142,10 @@ public interface EzCommunityService {
 	
 	public int commHomeGet2(String code) throws Exception;
 
+	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
+
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception;
+	
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception;
 
 	public void bbsEditOkSet1(String bName, String title, String gant, String code, String attachList, String textContent) throws Exception;
@@ -155,24 +173,6 @@ public interface EzCommunityService {
 	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception;
 
 	public void deleteItem(String itemList) throws Exception;
-
-	public String checkIfHasReply(String itemList) throws Exception;
-
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception;
-
-	public String newItem(Document xmlData, String pMode, String realPath) throws Exception;
-	
-	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
-
-	public String getVersionInfo(String pBoardID) throws Exception;
-
-	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
-
-	public String getItemAttachmentXML(String itemID) throws Exception;
-	
-	public String getProperSizeDisplay(int pSize) throws Exception;
-	
-	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

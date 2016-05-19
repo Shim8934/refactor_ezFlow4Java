@@ -2,71 +2,67 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezCommunity">
-	<typeAlias alias="CommunityClubVO" 				type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
-	<typeAlias alias="CommunityLeftCommunityVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
-	<typeAlias alias="CommunityCBoardVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
-	<typeAlias alias="CommunityCCategoryVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO"/>
-	<typeAlias alias="CommunityBoardTreeVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO"/>	
-	<typeAlias alias="CommunityBoardInfoVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO"/>	
-	<typeAlias alias="CommunityBoardItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO"/>	
-	<typeAlias alias="CommunityBoardListVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO"/>	
-	<typeAlias alias="CommunityBoardPropertyVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO"/>	
+	<typeAlias alias="CommunityClubVO" 					type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
+	<typeAlias alias="CommunityLeftCommunityVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
+	<typeAlias alias="CommunityCBoardVO" 				type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
+	<typeAlias alias="CommunityCCategoryVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO"/>
+	<typeAlias alias="CommunityBoardTreeVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO"/>	
+	<typeAlias alias="CommunityBoardInfoVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO"/>	
+	<typeAlias alias="CommunityBoardItemVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO"/>	
+	<typeAlias alias="CommunityBoardListVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO"/>	
+	<typeAlias alias="CommunityBoardPropertyVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO"/>	
 	<typeAlias alias="CommunityBoardItemAttachmentVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO"/>	
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
-		<result property="no"						column="NO"							columnIndex="1"/>
-		<result property="title"					column="TITLE"						columnIndex="2"/>
+		<result property="no"							column="NO"							columnIndex="1"/>
+		<result property="title"						column="TITLE"						columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="CommunityCCategoryVO" id="CategoryValue">
-		<result property="c_Code"					column="C_CODE"						columnIndex="1"/>
-		<result property="c_Cat"					column="C_CAT"						columnIndex="2"/>
-		<result property="c_Name"					column="C_NAME"						columnIndex="3"/>
-		<result property="c_Order"					column="C_ORDER"					columnIndex="4"/>
+		<result property="c_Code"						column="C_CODE"						columnIndex="1"/>
+		<result property="c_Cat"						column="C_CAT"						columnIndex="2"/>
+		<result property="c_Name"						column="C_NAME"						columnIndex="3"/>
+		<result property="c_Order"						column="C_ORDER"					columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="CommunityBoardTreeVO" id="BoardTreeList">
-		<result property="boardID"					column="BoardID"					columnIndex="1"/>
-		<result property="boardName"				column="BoardName"					columnIndex="2"/>
-		<result property="boardName2"				column="BoardName2"					columnIndex="3"/>
-		<result property="treeViewOrder"			column="TreeViewOrder"				columnIndex="4"/>
-		<result property="boardColor"				column="BoardColor"					columnIndex="5"/>
-		<result property="c_ClubNo"					column="C_ClubNo"					columnIndex="6"/>
-		<result property="gubun"					column="Gubun"						columnIndex="7"		nullValue="0"/>
+		<result property="boardID"						column="BoardID"					columnIndex="1"/>
+		<result property="boardName"					column="BoardName"					columnIndex="2"/>
+		<result property="boardName2"					column="BoardName2"					columnIndex="3"/>
+		<result property="treeViewOrder"				column="TreeViewOrder"				columnIndex="4"/>
+		<result property="boardColor"					column="BoardColor"					columnIndex="5"/>
+		<result property="c_ClubNo"						column="C_ClubNo"					columnIndex="6"/>
+		<result property="gubun"						column="Gubun"						columnIndex="7"		nullValue="0"/>
 	</resultMap>
 	
 	<resultMap class="CommunityBoardItemVO" id="CommunityBoardItem">
-		<result property="itemID"					column="ItemID"						columnIndex="1"/>
-		<result property="writerID"					column="WriterID"					columnIndex="2"/>
-		<result property="writerName"				column="WriterName"					columnIndex="3"/>
-		<result property="writerName2"				column="WriterName2"				columnIndex="4"/>
-		<result property="writerDeptName"			column="WriterDeptName"				columnIndex="5"/>
-		<result property="writerDeptName2"			column="WriterDeptName2"			columnIndex="6"/>
-		<result property="writerCompanyName"		column="WriterCompanyName"			columnIndex="7"/>
-		<result property="writerCompanyName2"		column="WriterCompanyName2"			columnIndex="8"/>
-		<result property="writeDate"				column="WriteDate"					columnIndex="9"/>
-		<result property="parentWriteDate"			column="ParentWriteDate"			columnIndex="10"/>
-		<result property="importance"				column="Importance"					columnIndex="11"/>
-		<result property="title"					column="Title"						columnIndex="12"/>
-		<result property="contentLocation"			column="ContentLocation"			columnIndex="13"/>
-		<result property="startDate"				column="StartDate"					columnIndex="14"/>
-		<result property="endDate"					column="EndDate"					columnIndex="15"/>
-		<result property="absTract"					column="Abstract"					columnIndex="16"/>
-		<result property="attachments"				column="Attachments"				columnIndex="17"/>
-		<result property="upperItemIDTree"			column="UpperItemIDTree"			columnIndex="18"	javaType="String" jdbcType="CLOB"/>
-		<result property="itemLevel"				column="ItemLevel"					columnIndex="19"/>
-		<result property="copiedItem"				column="copiedItem"					columnIndex="20"/>
-		<result property="extensionAttribute1"		column="ExtensionAttribute1"		columnIndex="21"/>
-		<result property="extensionAttribute2"		column="ExtensionAttribute2"		columnIndex="22"/>
-		<result property="extensionAttribute3"		column="ExtensionAttribute3"		columnIndex="23"/>
-		<result property="extensionAttribute32"		column="ExtensionAttribute32"		columnIndex="24"/>
-		<result property="extensionAttribute4"		column="ExtensionAttribute4"		columnIndex="25"/>
-		<result property="extensionAttribute5"		column="ExtensionAttribute5"		columnIndex="26"/>
+		<result property="itemID"						column="ItemID"						columnIndex="1"/>
+		<result property="writerID"						column="WriterID"					columnIndex="2"/>
+		<result property="writerName"					column="WriterName"					columnIndex="3"/>
+		<result property="writerName2"					column="WriterName2"				columnIndex="4"/>
+		<result property="writerDeptName"				column="WriterDeptName"				columnIndex="5"/>
+		<result property="writerDeptName2"				column="WriterDeptName2"			columnIndex="6"/>
+		<result property="writerCompanyName"			column="WriterCompanyName"			columnIndex="7"/>
+		<result property="writerCompanyName2"			column="WriterCompanyName2"			columnIndex="8"/>
+		<result property="writeDate"					column="WriteDate"					columnIndex="9"/>
+		<result property="parentWriteDate"				column="ParentWriteDate"			columnIndex="10"/>
+		<result property="importance"					column="Importance"					columnIndex="11"/>
+		<result property="title"						column="Title"						columnIndex="12"/>
+		<result property="contentLocation"				column="ContentLocation"			columnIndex="13"/>
+		<result property="startDate"					column="StartDate"					columnIndex="14"/>
+		<result property="endDate"						column="EndDate"					columnIndex="15"/>
+		<result property="absTract"						column="Abstract"					columnIndex="16"/>
+		<result property="attachments"					column="Attachments"				columnIndex="17"/>
+		<result property="upperItemIDTree"				column="UpperItemIDTree"			columnIndex="18"	javaType="String" jdbcType="CLOB"/>
+		<result property="itemLevel"					column="ItemLevel"					columnIndex="19"/>
+		<result property="copiedItem"					column="copiedItem"					columnIndex="20"/>
+		<result property="extensionAttribute1"			column="ExtensionAttribute1"		columnIndex="21"/>
+		<result property="extensionAttribute2"			column="ExtensionAttribute2"		columnIndex="22"/>
+		<result property="extensionAttribute3"			column="ExtensionAttribute3"		columnIndex="23"/>
+		<result property="extensionAttribute32"			column="ExtensionAttribute32"		columnIndex="24"/>
+		<result property="extensionAttribute4"			column="ExtensionAttribute4"		columnIndex="25"/>
+		<result property="extensionAttribute5"			column="ExtensionAttribute5"		columnIndex="26"/>
 	</resultMap>
-	
-	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO">
-		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
 	
 	<procedure id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList">
 		{CALL EZCOMMUNITY.EZSP_BRDBOARDTREE(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -74,10 +70,6 @@
 	
 	<procedure id="EzCommunityDAO.getLeftBoardList"											resultMap="LeftBBSList">
 		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.getBBSListGet2"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
@@ -140,6 +132,14 @@
 		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET3(#v_PBOARDID#, #v_PPARENTWRITEDATE#, #v_PITEMID#, #v_PUPPERITEMIDTREE#, #v_PREVIOUSITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO">
+		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true">
 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -150,6 +150,10 @@
 	
 	<procedure id="EzCommunityDAO.copHomeBoardItemGet"			parameterClass="String"		resultClass="CommunityBoardItemVO">
 		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARDITEM_GET(#v_BOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
+		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
@@ -226,10 +230,6 @@
 	
 	<procedure id="EzCommunityDAO.getVersionInfo"				parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_MODIFYVERSIONCOPY_GET4(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
-		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
