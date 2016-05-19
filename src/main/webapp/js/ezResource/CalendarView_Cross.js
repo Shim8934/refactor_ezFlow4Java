@@ -131,7 +131,7 @@ function CalendarView(pTagetID) {
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_prev";
             var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_prev.gif");
+            mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
             mImg.setAttribute("border", "0");
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "preMonth()");
@@ -147,7 +147,7 @@ function CalendarView(pTagetID) {
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_next.gif");
+            mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
             mImg.setAttribute("border", "0");
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "nextMonth()");
@@ -672,7 +672,7 @@ function GetWeekBodyObj() {
     var mSpan = document.createElement("SPAN");
     mSpan.className = "btn_prev";
     var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_prev.gif");
+    mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
     mImg.setAttribute("border", "0");
     mImg.setAttribute("onclick", "preWeek()");
     mSpan.appendChild(mImg);
@@ -683,7 +683,7 @@ function GetWeekBodyObj() {
     var mSpan = document.createElement("SPAN");
     mSpan.className = "btn_next";
     var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_next.gif");
+    mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
     mImg.setAttribute("border", "0");
     mImg.setAttribute("onclick", "nextWeek()");
     mSpan.appendChild(mImg);
