@@ -43,6 +43,7 @@ function GetTreeBrdsInfo() {
 	
 		if( brd_url != "" && brd_url != document.location.protocol+"//"){
 			strUrl = brd_url;
+
 			if ( strUrl.indexOf(document.location.protocol+"//") == -1 ) {
 				strUrl = document.location.protocol+"//" + strUrl;
 			}
@@ -90,7 +91,6 @@ function displayBrdTree(p_UserID, p_DeptID, event) {
 }
 
 function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx) {
-    try{   
 		var xmlhttp = createXMLHttpRequest();
 		var xmlpara = createXmlDom();
 		var xmlRtn = createXmlDom(); 
@@ -109,7 +109,7 @@ function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx) {
 		xmlhttp.send(xmlpara);
 		
 		xmlRtn = xmlhttp.responseXML;
-alert(xmlhttp.responseText);	
+	
 		//if(xmlRtn.selectNodes("NODES/NODE").length
 
 	    //if(SelectNodes(xmlRtn, "NODES/NODE/SELECT").length > 0)
@@ -125,8 +125,4 @@ alert(xmlhttp.responseText);
 	    //}
         //미리 생성된 TreeView의 ID로 TreeView 개체 생성
         TreeView.putchildxml(nodeIdx, xmlRtn);
-	}
-	catch(Err_Msg) {
-		alert(Err_Msg);
-	}	
 }
