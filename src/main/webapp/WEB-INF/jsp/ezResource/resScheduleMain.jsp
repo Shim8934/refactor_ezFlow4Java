@@ -13,17 +13,17 @@
 		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezResource/CalendarDataPro_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/CalendarView_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/CalendarMini_cross.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarDataPro_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarMini_Cross.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/calendar_cross.js"></script>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
 	    var pAdminFg = "${adminFg}";
 	    var pBrd_Access = "${brdAccess}";
-	    if(pAdminFg == "")
-	    {
+	    
+	    if(pAdminFg == "") {
 	        window.location.href = "/ezResource/nonResList.do?msg=" + pBrd_Access;
 	    }
 	    var pUserID    = "${userID}";
@@ -423,8 +423,8 @@
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
-    			<li style="background:none;cursor:default"><img src="calendar/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
-				<li style="background:none;cursor:default"><img src="calendar/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
+    			<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
+				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
   			</ul>
 		</div>
 		<script type="text/javascript">
