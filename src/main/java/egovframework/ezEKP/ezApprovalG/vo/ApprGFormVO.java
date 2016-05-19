@@ -19,6 +19,16 @@ public class ApprGFormVO {
 	private String formConnFlag;
 	/** 양식순서*/
 	private String formOrder;
+	/** 양식함이름*/
+	private String formContName;
+	/** 양식함이름(다국어)*/
+	private String formContName2;
+	/** 양식함관리부서아이디*/
+	private String formContOwnDepID;
+	/** 상위양식함아이디*/
+	private String formContParents;
+	/** 양식함설명*/
+	private String formContDescription;
 	
 	public String getFormContID() {
 		return formContID;
@@ -73,6 +83,36 @@ public class ApprGFormVO {
 	}
 	public void setFormOrder(String formOrder) {
 		this.formOrder = formOrder;
+	}
+	public String getFormContName() {
+		return formContName;
+	}
+	public void setFormContName(String formContName) {
+		this.formContName = formContName;
+	}
+	public String getFormContName2() {
+		return formContName2;
+	}
+	public void setFormContName2(String formContName2) {
+		this.formContName2 = formContName2;
+	}
+	public String getFormContOwnDepID() {
+		return formContOwnDepID;
+	}
+	public void setFormContOwnDepID(String formContOwnDepID) {
+		this.formContOwnDepID = formContOwnDepID;
+	}
+	public String getFormContParents() {
+		return formContParents;
+	}
+	public void setFormContParents(String formContParents) {
+		this.formContParents = formContParents;
+	}
+	public String getFormContDescription() {
+		return formContDescription;
+	}
+	public void setFormContDescription(String formContDescription) {
+		this.formContDescription = formContDescription;
 	}
 
 }

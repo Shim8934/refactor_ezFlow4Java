@@ -17,7 +17,7 @@ public interface EzApprovalGService {
 
 	public String getProxyUser(String id, String lang) throws Exception;
 
-	public String getAprLineInfo(String docID, String flag, String userID, String formID, String companyID) throws Exception;
+	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID) throws Exception;
 	
 	public String getListHeader(String listCode, String companyID, String lang) throws Exception;
 	
@@ -41,5 +41,23 @@ public interface EzApprovalGService {
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang) throws Exception;
 
+	public String getFormContainerInfo(String id, String deptID, String companyID) throws Exception;
+	
+	public String setUserFormInfo(String formID, String userID, String companyID) throws Exception;
+	
+	public String delUserFormInfo(String formID, String userID, String companyID) throws Exception;
+	
+	public String getApprovalPWD(String userID) throws Exception;
+	
+	public String getSecurityType(String selected, String companyID, String lang) throws Exception;
+	
+	public String getAprType(String companyID, String lang) throws Exception;
+	
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang) throws Exception;
+	
+	public String getTempList(String userID, String formID, String companyID, String lang) throws Exception;
+	
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
+
+
 }

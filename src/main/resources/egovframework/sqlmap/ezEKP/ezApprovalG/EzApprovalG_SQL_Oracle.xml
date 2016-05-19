@@ -11,6 +11,7 @@
 	<typeAlias  alias="ApprGWebPartVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO"/>
 	<typeAlias  alias="ApprGAttachInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO"/>
 	<typeAlias  alias="ApprGListHeaderVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO"/>
+	<typeAlias  alias="ApprGLineTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO"/>
 	
 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -49,7 +50,23 @@
 	</procedure>
 	
 	<procedure id="EzApprovalG.getFormInfo" parameterClass="Map" resultClass="ApprGFormVO">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMINFO(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_LISTCOUNT#, #v_BASICORDER#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMINFO(#v_FORMCONTID#, #v_USERID#, #v_FORMKIND#, #v_LANGTYPE#, #v_SEARCHTYPE#, #v_SEARCHNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getFormContainerInfo" parameterClass="Map" resultClass="ApprGFormVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONTAINERINFO(#v_DEPTID#, #v_ID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getAprType" parameterClass="Map" resultClass="ApprGLeftVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getTempList" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLINETEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
@@ -74,6 +91,18 @@
 	
 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getCountChildFormCont" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONTAINER_CNTCHILD(#v_PID#, #v_PDEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.setUserFormInfo" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_SETUSERFORMINFO(#v_FORMID#, #v_USERID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.delUserFormInfo" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DELUSERFORMINFO(#v_FORMID#, #v_USERID#)}
 	</procedure>
 	
 	<select id="EzApprovalG.getUseContInfo1" parameterClass="Map" resultClass="ApprGLeftVO">
@@ -173,6 +202,17 @@
        			docid = #v_DOCID#
             AND 
             	receiveddeptid = #v_RECEIVEDDEPTID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getApprovalPWD" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				flag 
+      		FROM 
+      			EZCOMMON.TBPWDINFO
+      		WHERE  
+      			userid = #v_PUSERID#
         ]]>
 	</select>
 </sqlMap>

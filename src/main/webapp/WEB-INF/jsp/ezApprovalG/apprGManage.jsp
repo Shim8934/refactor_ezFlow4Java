@@ -415,7 +415,7 @@
 		                        else
 		                            openLocation = "./formContainer/contDocView_IE.aspx";
 		                    }
-		                    openLocation = openLocation + "?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
+		                    openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&ListSusin=";
 		                }
 		                openwindow(openLocation, "", 880, 570);
 		            }
@@ -514,7 +514,7 @@
 		                        openLocation = "./formContainer/contDocView_IE.aspx";
 		                }
 		            }
-		            openLocation = openLocation + "?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
+		            openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&ListSusin=";
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
@@ -616,7 +616,7 @@
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
-		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                }
 		                else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
 		                    if (CrossYN() || NonActiveX == "YES") {
@@ -624,18 +624,18 @@
 		                        return;
 		                    }
 		                    else {
-		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                }
 		                else {
 		                    if (CrossYN() || NonActiveX == "YES") {
-		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                    else {
 		                        if (pUse_Editor == "TAGFREE")
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_TFI.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_TFI.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                        else
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pURL);
+		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                }
 		                openwindow(openLocation, "enforce", 880, 550);
@@ -917,7 +917,7 @@
 		    }
 		    function btnAddJob_onclick() {
 		        var parameter = "";
-		        var url = "ezDocInfo/ezSubTitle_Cross.aspx?id=" + escape(pUserID);
+		        var url = "ezDocInfo/ezSubTitle_Cross.aspx?id=" + encodeURI(pUserID);
 		        var feature = "status:no;dialogWidth:270px;dialogHeight:250px;help:no;scroll:no;edge:sunken";
 		        feature = feature + GetShowModalPosition(270, 250);
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1003,7 +1003,7 @@
 		                }
 		            }
 		        }
-		        openLocation = openLocation + "?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref) + "&orgDocid=" + escape(pOrgDocID);
+		        openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pHref) + "&orgDocid=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }

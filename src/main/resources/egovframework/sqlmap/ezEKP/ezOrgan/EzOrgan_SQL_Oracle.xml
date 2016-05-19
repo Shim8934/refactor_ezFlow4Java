@@ -64,7 +64,7 @@
 		<result property="positionCD" 							column="positionCD" 					columnIndex="42"/>
 	</resultMap>
 		
-	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String">
+	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	

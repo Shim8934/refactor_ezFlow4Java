@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -86,6 +87,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormContainerInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGFormVO>) list("EzApprovalG.getFormContainerInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getSecurityType(Map<String, Object> map) throws Exception{
+		return (List<ApprGLeftVO>) list("EzApprovalG.getSecurityType", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getAprType(Map<String, Object> map) throws Exception{
+		return (List<ApprGLeftVO>) list("EzApprovalG.getAprType", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLineTempletVO> getTempList(Map<String, Object> map) throws Exception{
+		return (List<ApprGLineTempletVO>) list("EzApprovalG.getTempList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -115,6 +136,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getAccessYNG", map);
 	}
 	
+	public String getApprovalPWD(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getApprovalPWD", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
@@ -123,6 +148,19 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public int getWebPartListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getWebPartListCount", map);
 		return (int)map.get("v_pCount");
+	}
+
+	public int getCountChildFormCont(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getCountChildFormCont", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public void setUserFormInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.setUserFormInfo", map);
+	}
+
+	public void delUserFormInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.delUserFormInfo", map);
 	}
 
 }

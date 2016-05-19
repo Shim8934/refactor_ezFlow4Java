@@ -1,23 +1,27 @@
 ﻿
 function GetFormInfo(ID, KIND, searchtype, searchname) {
-    var xmlpara = createXmlDom();
     var xmlRtn = createXmlDom();
-    var objNode;
 
     if (searchtype == undefined)
         searchtype = "";
     if (searchname == undefined)
         searchname = "";
 
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-    createNodeAndInsertText(xmlpara, objNode, "KIND", KIND);
-    createNodeAndInsertText(xmlpara, objNode, "SEARCHTYPE", searchtype);
-    createNodeAndInsertText(xmlpara, objNode, "SEARCHNAME", searchname);
-    xmlhttp.open("POST", "aspx/getForm.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    xmlRtn = loadXMLString(xmlhttp.responseText);
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getForm.do",
+		data : {
+				id : ID,
+				kind  : KIND,
+				searchType : searchtype,
+				searchName : searchname
+				},
+		success: function(xml){
+			xmlRtn = xml;
+		}        			
+	});
 
     document.getElementById('divlvtForm').innerHTML = "";
 
@@ -41,29 +45,31 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
 
 
 function GetFormContInfo(ID, DeptID, eventflag) {
-    var xmlpara = createXmlDom();
     var xmlRtn = createXmlDom(); 
-    var objNode;
+    var result = "";
 
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-    createNodeAndInsertText(xmlpara, objNode, "DeptID", DeptID);
-    xmlhttp.open("POST", "aspx/getFormContainer.aspx", false);
-    xmlhttp.send(xmlpara);
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getFormContainer.do",
+		data : {
+				id : ID,
+				deptID  : DeptID
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    xmlRtn = loadXMLString(xmlhttp.responseText);
+    xmlRtn = loadXMLString(result);
 
-    if (xmlhttp.responseText == "") return;
+    if (result == "") return;
 
     if (SelectNodes(xmlRtn, "NODES/NODE/SELECT").length > 0) {
-        if (CrossYN()) {
-            xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].removeChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("SELECT")[0]);
-        }
-        else {
-            xmlRtn.selectNodes("NODES/NODE")[0].removeChild(xmlRtn.selectNodes("NODES/NODE/SELECT")[0]);
-        }
+        xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].removeChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("SELECT")[0]);
     }
-
 
     var treeView = new TreeView();      
     treeView.LoadFromID("FormTreeView");
@@ -72,50 +78,38 @@ function GetFormContInfo(ID, DeptID, eventflag) {
 }
 
 function InitFormCont() {
-    var xmlpara = createXmlDom();
-    var xmlTree = createXmlDom(); 
+    var xmlTree = createXmlDom();
+    var result = "";
 
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", "ROOT"); 
-    createNodeAndInsertText(xmlpara, objNode, "DeptID", pDeptID);
-
-    xmlhttp.open("POST", "aspx/getFormContainer.aspx", false);
-    xmlhttp.send(xmlpara);
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getFormContainer.do",
+		data : {
+				id : "ROOT",
+				deptID  : pDeptID
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
     xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
 
-    if (xmlhttp.responseText != "") {
-
-        if (CrossYN()) {
-            var xmlRtns = xmlhttp.responseXML.documentElement;
-            var xmlRtn = xmlhttp.responseXML;
-            for (var i = 0; i < SelectNodes(xmlRtn, "NODES/NODE").length ; i++) {
-                if (i == 0) {
-                    setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[1], "FALSE");
-                }
-                else {
-                    setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[0], "FALSE");
-                }
+    if (result != "") {
+        var xmlRtns = result.documentElement;
+        var xmlRtn = result;
+        for (var i = 0; i < SelectNodes(xmlRtn, "NODES/NODE").length ; i++) {
+            if (i == 0) {
+                setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[1], "FALSE");
             }
-            var Node = xmlTree.importNode(xmlRtns, true);
-            xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(Node);
-        }
-        else {
-            var xmlRtn = xmlhttp.responseXML.documentElement;
-            for (var i = 0; i < SelectNodes(xmlRtn, "NODES/NODE").length ; i++) {
-                if (i == 0) {
-                    setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[1], "FALSE");
-                }
-                else {
-                    setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[0], "FALSE");
-                }
+            else {
+                setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[0], "FALSE");
             }
-            xmlTree.childNodes[0].childNodes[0].appendChild(xmlRtn);
         }
-
-
+        var Node = xmlTree.importNode(xmlRtns, true);
+        xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(Node);
     }
 
     document.getElementById('TreeView').innerHTML = "";
@@ -133,7 +127,7 @@ function InitFormCont() {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAPRALERT.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;

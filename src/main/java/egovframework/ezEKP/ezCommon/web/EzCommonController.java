@@ -21,6 +21,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,7 +201,15 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-        strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6,strHTML.indexOf("</BODY>")));
+        if (strHTML.indexOf("error") > -1) {
+        	strHTML = commonUtil.cleanValue(strHTML);
+        } else {
+        	if (strHTML.indexOf("<BODY") > -1) {
+        		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6, strHTML.indexOf("</BODY>")));
+        	} else {
+        		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
+        	}
+        }
         
 		return "<BODYDATA>" + strHTML + "</BODYDATA>";
 	}
@@ -1088,5 +1097,17 @@ public class EzCommonController extends EgovFileMngUtil{
         model.addAttribute("LiteralInfo", literalInfo);
        
         return "/ezCommon/showPersonInfo";
+	}
+	
+	@RequestMapping(value = "/ezCommon/downloadAttach.do")
+	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String filePath = request.getParameter("filePath");
+		String fileName = "";
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		}
+		
+		ezCommonService.responseAttach(filePath, fileName, true, request, response);
 	}
 }

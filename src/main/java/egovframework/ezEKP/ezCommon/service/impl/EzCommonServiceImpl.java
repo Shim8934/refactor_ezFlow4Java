@@ -120,7 +120,7 @@ public class EzCommonServiceImpl implements EzCommonService {
         }
                 
         try {
-	        filepath = request.getServletContext().getRealPath("") +filepath;
+	        filepath = request.getServletContext().getRealPath("") + filepath;
 	        File file = new File(filepath);
 	        is = new FileInputStream(file);
 	        
