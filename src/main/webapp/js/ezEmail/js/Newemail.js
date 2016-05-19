@@ -696,10 +696,27 @@ function event_xmlhttp_mailPreview_Complete() {
                     }
 
                 }
-                if (pPreviewShow_HOW == "H")
+                if (pPreviewShow_HOW == "H") {
+                	// added the following code to solve a layout problem in Preview : dhlee - 2016.05.19
+                	document.getElementById("Preview_HeaderH").style.paddingBottom = "";
+                	
                     document.getElementById("PreH_CCMain").style.display = "";
-                else
+                }
+                else {
+                	// added the following code to solve a layout problem in Preview : dhlee - 2016.05.19
+                	document.getElementById("Preview_HeaderW").style.paddingBottom = "";
+                	
                     document.getElementById("PreW_CCMain").style.display = "";
+                }
+            }
+            // added the following code to solve a layout problem in Preview : dhlee - 2016.05.19
+            else {
+            	if (pPreviewShow_HOW == "H") {
+            		document.getElementById("Preview_HeaderH").style.paddingBottom = "20px";
+            	}
+            	else {
+            		document.getElementById("Preview_HeaderW").style.paddingBottom = "20px";
+            	}
             }
 
             ///
