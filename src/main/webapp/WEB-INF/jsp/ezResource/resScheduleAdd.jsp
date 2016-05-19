@@ -408,7 +408,7 @@
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
           							
           							<c:if test="${typeVal ne 'Instance'}" >
-          								<c:if test=""${typeVal ne 'Instance' && typeVal ne 'Readonly'} >
+          								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
           									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
           								</c:if>
           							</c:if>
