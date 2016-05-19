@@ -88,6 +88,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		update("EzResourceDAO.modifyResData", map);
 	}
 	
+	public void updateScheduleDateTime(Map<String, Object> map) {
+		update("EzResourceDAO.updateScheduleDateTime", map);
+	}
+	
 	public void delResData(Map<String, Object> map) {
 		delete("EzResourceDAO.delResData", map);
 	}

@@ -233,6 +233,17 @@ public class EzResourceServiceImpl implements EzResourceService{
 		ezResourceDAO.addResData(map);
 		
 	}
+	
+	@Override
+	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", num);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pStartDate", startDate);
+		map.put("v_pEndDate", endDate);
+		ezResourceDAO.updateScheduleDateTime(map);
+	}
 
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
@@ -259,6 +270,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 				String loc = scheRSDom.getElementsByTagName("location").item(i).getTextContent();
 				String startDateTime = scheRSDom.getElementsByTagName("startDate").item(i).getTextContent();
 				String endDateTime = scheRSDom.getElementsByTagName("endDate").item(i).getTextContent();
+System.out.println(startDateTime);
+System.out.println(endDateTime);
 				String reFlag = scheRSDom.getElementsByTagName("reFlag").item(i).getTextContent();
 				String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
 				String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
@@ -273,8 +286,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 				if (app.equals("0")) {
 					returnStr.append("<appointment>");
 					
-					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
-					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
+					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
+					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
 					returnStr.append("<alldayevent>"+allDay+"</alldayevent>");
 					
 					String timeDisplay = scheRSDom.getElementsByTagName("timeDisplay").item(i).getTextContent(); 
@@ -316,8 +329,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 						loc = "";
 					}
 					returnStr.append("<location><![CDATA[" + loc + "]]></location>");
-					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
-					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
+					returnStr.append("<dtstart>"+EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss","")+"</dtstart>");
+					returnStr.append("<dtend>"+EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss","")+"</dtend>");
 					returnStr.append("<dstartTime>"+(format.parse(startDateTime).getHours()*60 +format.parse(startDateTime).getMinutes())+"</dstartTime>");
 					returnStr.append("<dendTime>"+(format.parse(endDateTime).getHours()*60 +format.parse(endDateTime).getMinutes())+"</dendTime>");
 					returnStr.append("<dsDaytype>"+(int)format.parse(startDateTime).getDay()+"</dsDaytype>");
@@ -521,6 +534,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 								returnStr.append("<location>" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "</location>");
 								returnStr.append("<timeDisplay>" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "</timeDisplay>");
 								returnStr.append("<startDate>" + returnRepetitionDom.getElementsByTagName("STARTDATE").item(i).getTextContent() + "</startDate>");
+System.out.println(returnRepetitionDom.getElementsByTagName("STARTDATE").item(i).getTextContent());
+System.out.println(returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).getTextContent());
 								returnStr.append("<endDate>" + returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).getTextContent() + "</endDate>");
 								returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
 								returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
@@ -1568,10 +1583,12 @@ public class EzResourceServiceImpl implements EzResourceService{
 			//String pOffset = "+09:00";
 			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
 			strDateTime = EgovDateUtil.convertDate(addMinutes(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
-			
+	
 			if (pDateTime.length() < 19) {
 				strDateTime = strDateTime.substring(0, pDateTime.length());
 			}
+System.out.println("pDateTime:"+pDateTime);
+System.out.println("strDateTime:"+strDateTime);
 			return strDateTime;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1625,7 +1642,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 	public String convertToUTC(String pDate) {
 		try {
 			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			String utcDate = (date.parse(pDate).getYear()+1900) + "-" + fedLeft(date.parse(pDate).getMonth()) + "-" + fedLeft(date.parse(pDate).getDate()) + "T" + fedLeft(date.parse(pDate).getHours()) + ":" + fedLeft(date.parse(pDate).getMinutes()) + ":01.000Z";  
+			String utcDate = (date.parse(pDate).getYear()+1900) + "-" + fedLeft(date.parse(pDate).getMonth()+1) + "-" + fedLeft(date.parse(pDate).getDate()) + "T" + fedLeft(date.parse(pDate).getHours()) + ":" + fedLeft(date.parse(pDate).getMinutes()) + ":01.000Z";
+System.out.println("pDate:"+pDate);
+System.out.println("utcDate:"+utcDate);
 			return utcDate;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1766,7 +1785,6 @@ public class EzResourceServiceImpl implements EzResourceService{
         	strTreeStyle.append("<PROOTNODEICON>/images/left/03_plus.gif</PROOTNODEICON>");
         	strTreeStyle.append("<LASTNODEICON>/images/left/03.gif</LASTNODEICON>");
         	strTreeStyle.append("<MLASTNODEICON>/images/left/03_minus.gif</MLASTNODEICON>");
-        	strTreeStyle.append("<PLASTNODEICON>/images/left/03_plus.gif</PLASTNODEICON>");
         	strTreeStyle.append("<FIRSTROOTNODEICON>/images/left/02.gif</FIRSTROOTNODEICON>");
         	strTreeStyle.append("<MFIRSTROOTNODEICON>/images/left/02_minus.gif</MFIRSTROOTNODEICON>");
         	strTreeStyle.append("<PFIRSTROOTNODEICON>/images/left/02_plus.gif</PFIRSTROOTNODEICON>");
@@ -1790,10 +1808,11 @@ public class EzResourceServiceImpl implements EzResourceService{
         } else {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
         		returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+
         	}
+
         	returnXML += "</NODES>";
         }
-
 		return returnXML;
 	}
 	
@@ -1826,9 +1845,9 @@ public class EzResourceServiceImpl implements EzResourceService{
         String strData13 = xmlRes.getElementsByTagName("SUBRESCNT").item(0).getTextContent();
         String strData14 = xmlRes.getElementsByTagName("ACCESSLVL").item(0).getTextContent();
         String strData15 = xmlRes.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
-  System.out.println(strData12);
-  System.out.println(strData13);
+  
         intSubCnt = Integer.parseInt(strData12.trim()) + Integer.parseInt(strData13.trim());
+        
         String strValue = strData2;
         String strStyle = "font-weight:normal;height:10px;";
         
@@ -1993,8 +2012,15 @@ public class EzResourceServiceImpl implements EzResourceService{
 		return true;
 	}
 
-	
-	
-	
+	public String updateScheduleDateTime(String xmlStr, String companyID) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
+		String ownerID = xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent();
+		String sDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+		String eDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+
+		updateScheduleDateTime(Integer.parseInt(num), ownerID, companyID, sDate, eDate);
+		return xmlStr;
+	}
 }
 

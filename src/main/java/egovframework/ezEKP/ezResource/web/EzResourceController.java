@@ -199,6 +199,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
 			NodeList nodes9 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
 			NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+			NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+			NodeList nodes12 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
 			
 			if(nodes.getLength() != 0) {
 				for(int i=0; i<nodes.getLength(); i++) {
@@ -217,6 +219,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					if(nodes7.item(i).getTextContent().equals("")) {
 						nodes7.item(i).setTextContent("<![CDATA[]]>");
 					}
+			
 					
 					if(selectFlag.equals("SELECT_NO")) {
 						if(nodes2.item(i) != null) {
@@ -226,13 +229,18 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 				}
 			}
+			
 
-//System.out.println(nodes8.item(0).getTextContent());
-			if (nodes8 != null) {
+			if (nodes8 != null && nodes10 != null) {
 				for (int i=0; i<nodes8.getLength(); i++) {
 					nodes8.item(i).setTextContent("TRUE");
-					//nodes9.item(i).removeChild((Node)nodes10.item(0));
-					//nodes9.item(i).removeChild((Node)nodes10.item(0));
+					nodes9.item(i).removeChild((Node)nodes10.item(i));
+					if(nodes11.item(i).getTextContent().equals("")) {
+						nodes11.item(i).setTextContent("<![CDATA[]]>");
+					}
+					if(nodes12.item(i).getTextContent().equals("")) {
+						nodes12.item(i).setTextContent("<![CDATA[]]>");
+					}
 				}
 			}
 			return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
@@ -298,8 +306,8 @@ public class EzResourceController extends EgovFileMngUtil {
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
 					} else {
-						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, ""), "yyyyMMdd", "yyyy-MM-dd","");
-						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, ""), "yyyyMMdd", "yyyy-MM-dd","");
+						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, ""), "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","");
+						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, ""), "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","");
 						
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
@@ -312,7 +320,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
 					String sDate = ezResourceService.getLocalTime(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent().replace("T","").substring(0, 16));
 					String eDate = ezResourceService.getLocalTime(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent().replace("T","").substring(0, 16));
-					
+
 					sDate = ezResourceService.convertToUTC(sDate);
 					eDate = ezResourceService.convertToUTC(eDate);
 					
@@ -321,7 +329,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				}
 				
 				reVal = commonUtil.convertDocumentToString(xmlDom2);
-			
+
 				if (viewType.equals("list")) {
 					String ownerNm = "owner_nm";
 					String deptName = "dept_name";
@@ -334,8 +342,16 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 					
 					int listCnt = xmlDom2.getElementsByTagName("appointment").getLength();
+
+				} else {
 					
 				}
+			} else if (cmd.equals("update")) {
+				reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID());
+			}
+			
+			if (!reVal.equals("")) {
+				return reVal.toString();
 			}
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -429,7 +445,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			curPage = req.getParameter("goToPage");
 		}
 		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId());
-System.out.println("brdNm:"+brdNm);
+
 		//brdNm = brdNm.replace(String.valueOf(38), "&");
 		
 		if (curPage.equals("") || Integer.parseInt(curPage.trim()) < 1) {
@@ -849,7 +865,8 @@ System.out.println("brdNm:"+brdNm);
 	 * 자원관리 자원 일정 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleMain.do")
-	public String scheduleMain() throws Exception {
+	public String scheduleMain(Model model) throws Exception {
+		model.addAttribute("adminFg", "Y");
 		return "/ezResource/resScheduleMain";
 	}
 	
@@ -857,7 +874,15 @@ System.out.println("brdNm:"+brdNm);
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRead.do")
-	public String scheduleRead() throws Exception {
+	public String scheduleRead(Model model) throws Exception {
 		return "/ezResource/resScheduleRead";
+	}
+	
+	/**
+	 * 자원관리 자원 예약 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleAdd.do")
+	public String scheduleAdd(Model model) throws Exception {
+		return "/ezResource/resScheduleAdd";
 	}
 }
