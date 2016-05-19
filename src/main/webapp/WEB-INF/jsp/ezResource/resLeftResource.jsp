@@ -91,7 +91,7 @@
                 		var brdNm = TreeView.getvalue(nodeIdx, "DATA2");
                 		var boardGubun = TreeView.getvalue(nodeIdx, "DATA7");
 		
-        		        if (boardGubun.equals("1")) {
+        		        if (boardGubun == "1") {
                     		if ((!chkVal && i == 2) || (chkVal && i == 3)) {
                         		RealPath = "&nbsp;<a href=" + "listResource.do?brdID=" + brdID + "&brdNm=" + escape(brdNm) + "&AccessCode=" + g_AccessCode + " target='right' class='n'>" + brdNm + "</a>" + RealPath;
                     		} else {
