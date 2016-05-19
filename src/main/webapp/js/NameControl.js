@@ -2590,17 +2590,17 @@ function getPropertiesBySIPURI(pSipUri) {
     var objNode;
     createNodeInsert(xmlDOM, objNode, "DATA");
     createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "EXACT_SIPURI::" + pSipUri);
-    createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayname;title;mobile;telephonenumber;homephone;mail");
+    createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName;title;mobile;telephoneNumber;homePhone;mail");
     createNodeAndInsertText(xmlDOM, objNode, "PROP", "");
     createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
     createNodeAndInsertText(xmlDOM, objNode, "LANG", displaylang);
 
     try {
         if(bGroupwarePresence) {
-            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
+            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
         }
         else {
-            xmlHTTP.open("POST", "/myoffice/ezOCS/OrganInfo/ezOrgan/GetSearchList.aspx", false);
+            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
         }
         xmlHTTP.send(xmlDOM);
 
