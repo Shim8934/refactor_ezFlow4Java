@@ -271,7 +271,7 @@ function CalendarMiniDataSource() {
     createNodeAndInsertText(xmlpara, objNode, "ENDDATETIME", sEndDate);
     createNodeAndInsertText(xmlpara, objNode, "APP", "0");
 
-    xmlhttpmini.open("POST", "/myoffice/ezResource/ResSch/Schedule_Get.aspx?cmd=get&ResID=" + ResID, true);
+    xmlhttpmini.open("POST", "/ezResource/scheduleGet.do?cmd=get&resID=" + ResID, true);
     xmlhttpmini.onreadystatechange = getCalendarMiniDataSource_after;
     xmlhttpmini.send(xmlpara);
 
