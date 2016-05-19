@@ -5,6 +5,7 @@
 	<typeAlias  alias="MailGeneralVO" type="egovframework.ezEKP.ezEmail.vo.MailGeneralVO"/>
 	<typeAlias  alias="MailSignatureVO" type="egovframework.ezEKP.ezEmail.vo.MailSignatureVO"/>
 	<typeAlias  alias="MailDeleteVO" type="egovframework.ezEKP.ezEmail.vo.MailDeleteVO"/>
+	<typeAlias  alias="MailReservationVO" type="egovframework.ezEKP.ezEmail.vo.MailReservationVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -40,6 +41,18 @@
 		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>
 	</resultMap>
 	
+	<resultMap id="mailReservation" class="MailReservationVO">
+		<result property="messageId" column="MESSAGEID" columnIndex="1"/>
+		<result property="sendDate" column="SENDDATE" columnIndex="2"/>
+		<result property="subject" column="SUBJECT" columnIndex="3"/>
+		<result property="modify" column="MODIFY" columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation2" class="MailReservationVO">
+		<result property="messageId" column="MESSAGEID" columnIndex="1"/>
+		<result property="connUrl" column="CONNURL" columnIndex="2"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -68,8 +81,30 @@
 		{CALL EZEMAIL.EZSP_DELETEMAILDELETE(#v_PUSERID#, #v_PITEMSEQ#)}
 	</procedure>
 	
-	<procedure id="EzEmailDAO.getMailDeleteList" parameterClass="Map" resultMap="mailDelete2">
+	<procedure id="EzEmailDAO.getMailDeleteList" resultMap="mailDelete2">
 		{CALL EZEMAIL.EZSP_GETMAILDELETELIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.getMailReserved" parameterClass="Map" resultMap="mailReservation">
+		{CALL EZEMAIL.EZSP_GETRESERVEDMAIL(#v_PURL#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailReserved" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETRESERVEDMAIL(#v_PMESSAGEID#, #v_PSUBJECT#, #v_PSENDDATE#, #v_PCONNURL#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.deleteMailReserved" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_DELETERESERVEDMAIL(#v_PMESSAGEID#)}
+	</procedure>
+	
+	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
+		<![CDATA[
+			SELECT 
+				messageid, connurl
+	        FROM 
+	        	ezEmail.TBLRESERVEDMAIL 
+	       	WHERE  
+	       		senddate <= (SELECT SYSDATE FROM DUAL)
+       	]]>
+	</select>
 </sqlMap>

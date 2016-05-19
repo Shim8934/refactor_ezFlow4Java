@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 
 @Service("EzEmailService")
@@ -113,6 +114,36 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Override
 	public List<MailDeleteVO> getMailDeleteList() throws Exception {
 		return ezEmailDAO.getMailDeleteList();
+	}
+
+	@Override
+	public List<MailReservationVO> getMailReserved(String pEmail) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PURL", pEmail);
+		return ezEmailDAO.getMailReserved(map);
+	}
+	
+	@Override
+	public List<MailReservationVO> getMailReserved2() throws Exception {
+		return ezEmailDAO.getMailReserved2();
+	}
+	
+	@Override
+	public void setMailReserved(String pMessageId, String pSubject, String pSendDate, String pConnUrl)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMESSAGEID", pMessageId);
+		map.put("v_PSUBJECT", pSubject);
+		map.put("v_PSENDDATE", pSendDate);
+		map.put("v_PCONNURL", pConnUrl);
+		ezEmailDAO.setMailReserved(map);
+	}
+
+	@Override
+	public void deleteMailReserved(String pMessageId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMESSAGEID", pMessageId);
+		ezEmailDAO.deleteMailReserved(map);
 	}
 	
 }

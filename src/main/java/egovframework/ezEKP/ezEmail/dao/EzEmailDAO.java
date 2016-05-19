@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -36,7 +37,7 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	}
 	
 	public void setMailDelete(Map<String, Object> map) throws Exception {
-		update("EzEmailDAO.setMailDelete", map);
+		insert("EzEmailDAO.setMailDelete", map);
 	}
 	
 	public void deleteMailDelete(Map<String, Object> map) throws Exception {
@@ -46,6 +47,24 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MailDeleteVO> getMailDeleteList() throws Exception {
 		return (List<MailDeleteVO>)list("EzEmailDAO.getMailDeleteList");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailReservationVO> getMailReserved(Map<String, Object> map) throws Exception {
+		return (List<MailReservationVO>)list("EzEmailDAO.getMailReserved", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailReservationVO> getMailReserved2() throws Exception {
+		return (List<MailReservationVO>)list("EzEmailDAO.getMailReserved2");
+	}
+	
+	public void setMailReserved(Map<String, Object> map) throws Exception {
+		insert("EzEmailDAO.setMailReserved", map);
+	}
+	
+	public void deleteMailReserved(Map<String, Object> map) throws Exception {
+		delete("EzEmailDAO.deleteMailReserved", map);
 	}
 	
 }

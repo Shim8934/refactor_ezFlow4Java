@@ -299,7 +299,7 @@
 	                window.showModalDialog("/myoffice/ezEmail/mail_reservation.aspx", "", feature);
 	            }
 	            else {
-	                var OpenWin = window.open("/myoffice/ezEmail/mail_reservation_cross.aspx", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+	                var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	        }

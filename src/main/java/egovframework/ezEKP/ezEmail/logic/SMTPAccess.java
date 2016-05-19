@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.logic;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -52,6 +54,11 @@ public class SMTPAccess {
 	
 	public MimeMessage createMimeMessage(){
 		MimeMessage message = new MimeMessage(getSession());
+		return message;
+	}
+	
+	public MimeMessage readMimeMessage(InputStream is) throws Exception{
+		MimeMessage message = new MimeMessage(getSession(), is);
 		return message;
 	}
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 
 public interface EzEmailService {
@@ -16,5 +17,8 @@ public interface EzEmailService {
 	public void setMailDelete(String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(String pUserID, int pItemSeq) throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
-	
+	public List<MailReservationVO> getMailReserved(String pEmail) throws Exception;
+	public List<MailReservationVO> getMailReserved2() throws Exception;
+	public void setMailReserved(String pMessageId, String pSubject, String pSendDate, String pConnUrl) throws Exception;
+	public void deleteMailReserved(String pMessageId) throws Exception;
 }

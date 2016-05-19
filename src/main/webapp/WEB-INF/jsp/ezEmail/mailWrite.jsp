@@ -15,8 +15,8 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <SCRIPT type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></SCRIPT>
-	    <SCRIPT type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></SCRIPT>
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";

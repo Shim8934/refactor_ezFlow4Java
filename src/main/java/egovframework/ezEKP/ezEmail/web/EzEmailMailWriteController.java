@@ -1204,6 +1204,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String replySendTime = "";
 		String replyReadTime = "";
 		String isEachMail = "";
+		String isReserve = "";
+		
+		String realPath = request.getServletContext().getRealPath("");
+		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
 		
@@ -1327,6 +1331,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			tempNode = root.getElementsByTagName("ISEACHMAIL").item(0);
 			if (tempNode != null) {
 				isEachMail = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("ISRESERVE") != null) {
+			tempNode = root.getElementsByTagName("ISRESERVE").item(0);
+			if (tempNode != null) {
+				isReserve = tempNode.getTextContent();
 			}
 		}
 		
@@ -1520,7 +1530,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	                	}
 	                	content.setContent(strContent, "text/html; charset=utf-8");
 	                	
-	                	String realPath = request.getServletContext().getRealPath("");
 	                	imagePath = new URL(imagePath).getPath();
 	                	String pDirPath = realPath + imagePath;
 	                	
@@ -1685,68 +1694,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
         }        
         
-//        //발송전 처리 부분- 내용 , 첨부,본문, 임시저장
-//        String htmlbody = null;
-//        switch (message.Body.BodyType)
-//        {
-//            case BodyType.HTML:
-//                if (message.ExtendedProperties != null && message.ExtendedProperties.Count > 1)
-//                {
-//                    htmlbody = Encoding.GetEncoding((int)(message.ExtendedProperties[1].Value)).GetString((byte[])(message.ExtendedProperties[0].Value));
-//                }
-//                else
-//                    htmlbody = message.Body.Text;
-//                break;
-//            case BodyType.Text:
-//                htmlbody = message.Body.Text == null ? string.Empty : message.Body.Text;
-//                    //.Replace("\r\n", "<br />")
-//                    //.Replace("\r", "<br />")
-//                    //.Replace("\n", "<br />");
-//                break;
-//            default:
-//                break;
-//        }
-//        string tmpbody0 = this.MailItemRead_0(htmlbody);
-//        //string tmpbody1 = this.MailItemRead_1(tmpbody0);
-//        string tmpbody2 = this.MailItemRead_2(tmpbody0);
-//
-//
-//
-//        //tmpbody2 = Regex.Replace(tmpbody2, "<!--.*?-->", String.Empty, RegexOptions.Singleline);
-//        message.Body.Text = tmpbody2;
-//        //////////////////////////
-//        removeInline(ref message); // 20110907 주석, 일단은 삭제하지 않는다.
-//
-//        if (cmd.Equals("SAVE"))
-//        {
-//            if (string.IsNullOrEmpty(messageid))
-//            {
-//                message.Save(WellKnownFolderName.Drafts); // 임시보관함에 저장
-//                pMessageID = message.Id.UniqueId;
-//            }
-//            else
-//            {
-//                message.Update(ConflictResolutionMode.AlwaysOverwrite);
-//                pMessageID = message.Id.UniqueId;
-//            }
-//
-//            //저장시 내용은?
-//            {
-//                message.Load(new PropertySet(ItemSchema.MimeContent));
-//            }
-//
-//            return "OK";
-//        }
-//        else if (cmd.Equals("SEND"))
-//        {
-//            // 20110809_SSG
-//            // 편지함 용량 초과 메세지 확인을 위해 임시저장
-//            if (string.IsNullOrEmpty(messageid))
-//            {
-//                message.Save(WellKnownFolderName.Drafts);
-//                pMessageID = message.Id.UniqueId;
-//            }
-//        }
         long draftUID = 0;
         if (cmd.equalsIgnoreCase("SAVE")) {
         	logger.debug("Saving the message");
@@ -1779,7 +1726,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 	        if (!delaySendTime.equals("")) {
 	        	//예약발송
-	            //do_delaysend(xmldom, message);
+	            doDelaySend(message, isReserve, subject, delaySendTime, userId, realPath);
 	        	
 	            // this deletion code block has been moved here because
 	            // it needs to be kept in Drafts if an error occurs during the above process.
@@ -1876,9 +1823,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         ia.close();
         
         // sendmail_2010변환 끝
-		//rtnStatus = sendmail_2010(esb, xmldom, out pMessageID);
         
-        //서버에 업로드된 inline image 파일 삭제
+        //file system의 inline image 파일 삭제
         NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
         if (imagePathList != null && imagePathList.getLength() > 0) {
             String imagePath = "";
@@ -1891,7 +1837,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
             	imagePath = imagePathList.item(i).getTextContent();
             	
             	if (!imagePath.trim().equals("")) {
-            		String realPath = request.getServletContext().getRealPath("");
+            		
                 	imagePath = new URL(imagePath).getPath();
                 	String pDirPath = realPath + imagePath;
             		File f = new File(pDirPath);
@@ -2335,6 +2281,48 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			e.printStackTrace();
 		} catch (MessagingException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 메일 예약발송 처리 함수
+	 */
+	private void doDelaySend(Message message, String isReserve, String subject, String sendDate, String userId, String realPath) throws Exception {
+		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
+			
+		} else {
+			String messageId = UUID.randomUUID().toString();
+			String email = userId + "@" + config.getProperty("config.DomainName");
+			ezEmailService.setMailReserved(messageId, subject, sendDate, email);
+			
+			File f = null;
+			String pDirPath = config.getProperty("upload_mail.ROOT");
+			pDirPath = realPath + pDirPath;
+			f = new File(pDirPath);
+			if (!f.exists()) {
+				f.mkdir();
+			}
+			
+			pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+			pDirPath = realPath + pDirPath;
+			f = new File(pDirPath);
+			if (!f.exists()) {
+				f.mkdir();
+			}
+			
+			f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+        	FileOutputStream fos = null;
+        	try {
+        		fos = new FileOutputStream(f);
+        		message.writeTo(fos);
+        	} catch (IOException e) {
+        		logger.error("IOException has occurred");
+        		e.printStackTrace();
+        	} finally {
+        		if (fos != null) {
+        			fos.close();
+        		}
+        	}
 		}
 	}
 	
