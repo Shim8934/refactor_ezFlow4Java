@@ -115,7 +115,6 @@
 	    	function btnView_Resource() {
 		        var strUrl = "/ezResource/viewResList.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdNm=" + encodeURI(pBrdnm);
-alert(encodeURI(pBrdnm));
 	    	    window.open(strUrl, 'right');
 	    	}
 
