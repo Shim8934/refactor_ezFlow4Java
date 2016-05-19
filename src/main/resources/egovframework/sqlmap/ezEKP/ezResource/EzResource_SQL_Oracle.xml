@@ -187,11 +187,11 @@
 		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="17"/>
 	</resultMap>
 	
-	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
+	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" remapResults="true">
 		{CALL EZRESOURCE.EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
+	<procedure id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" remapResults="true">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #v_P_USERID#, #v_PCOMID#, #v_PDEPTID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -274,6 +274,12 @@
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_ADDRESDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
 			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
 		]]>
 	</procedure>
 	
