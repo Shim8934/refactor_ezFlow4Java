@@ -827,10 +827,11 @@ function organtreeview(thisobjid, elobjid) {
 	        var targetEl = event.target;
 	        var elementid = targetEl.id;
 	        //var elementid = window.event.srcElement.id;
-	        if (elementid.indexOf(g_toggleid) == 0)
-	            ex_toggle.call(this, elementid.split(g_toggleid)[1]);
-	        else if (elementid.indexOf(g_nodeid) == 0)
-	            ex_select.call(this, elementid.split(g_nodeid)[1]);
+	        if (elementid.indexOf(g_toggleid) == 0) {
+	        	ex_toggle.call(this, elementid.split(g_toggleid)[1]);
+	        } else if (elementid.indexOf(g_nodeid) == 0) {
+	        	ex_select.call(this, elementid.split(g_nodeid)[1]);
+	        }
 	    }).call(this, event) :
 	    (function() { // IE
 	        var elementid = window.event.srcElement.id;
@@ -1120,24 +1121,23 @@ function organtreeview(thisobjid, elobjid) {
                 var hasnodes = false;
                 var subnode = null;
                 iterator(childNode, function(node) {
+
                     if (node.nodeName != 'NODES') {
                         g_nodeArray["nodeXML"][nodeCount][node.nodeName] = node.firstChild.nodeValue;
                     }
-                    if (node.parentNode.parentNode.nodeName == 'NODES') {
+                    if (node.nodeName == 'NODES') {
                         hasnodes = true;
-alert("hasnodes:"+hasnodes);
+
                         subnode = node;
                     }
                 });
-alert("hasnodes:"+hasnodes);
+
                 g_nodeArray["depth"][nodeCount] = mydepth;
-alert("hasnodes:"+hasnodes);
+
                 if (hasnodes) {
-alert("3");
                     nodeHtml += ("<span id='" + g_childid + nodeCount + "' style='display:inline-block;'>" + make_childHtml(nodeCount, subnode) + "</span>");
                     nodeHtml += "</span>"
                 } else {
-alert("4");
                     nodeHtml += ("<span style='display:none' id='" + g_childid + nodeCount + "'></span>");
                     nodeHtml += "</span>"
                 }
