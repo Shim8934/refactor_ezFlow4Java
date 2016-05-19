@@ -602,10 +602,11 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseover = function (event) { onmouse_over(this, event); };
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
-    if (CrossYN())
-        pResourceName = selObj.parentNode.childNodes[0].textContent.trim();
-    else
-        pResourceName = selObj.parentNode.childNodes[0].innerText.trim();
+    if (CrossYN()) {
+    	pResourceName = selObj.parentNode.childNodes[0].textContent.trim();
+    } else {
+    	pResourceName = selObj.parentNode.childNodes[0].innerText.trim();
+    }
     _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     _span.textContent = getNodeText(xmldom.getElementsByTagName("subject")[pNum]);
     _td.appendChild(_span);
@@ -620,8 +621,7 @@ function newSchedule_onclick(e) {
 
     if (CrossYN()) {
         srcEl = e.currentTarget;
-    }
-    else {
+    } else {
         srcEl = window.event.srcElement;
     }
     var selsd = "", seled = "";
@@ -632,8 +632,7 @@ function newSchedule_onclick(e) {
             selsd = srcEl.getAttribute("dispTime");
             seled = selsd.replace(":00:", ":30:");
         }
-    }
-    else {
+    } else {
         selsd = srcEl.getAttribute("dispDate");
         seled = srcEl.getAttribute("dispDate");
     }
@@ -641,19 +640,15 @@ function newSchedule_onclick(e) {
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
         window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-    }
-    else {
+    } else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
             var feature = GetOpenPosition(770, 700);
             window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-        }
-        else {
+        } else {
             var feature = GetOpenPosition(770, 700);
             window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + escape(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
-
-
 }
 
 function GetOpenPosition(popUpW, popUpH) {
@@ -675,55 +670,49 @@ function GetOpenPosition(popUpW, popUpH) {
 
     return feature
 }
-function dataSetChange(strdate)
-{
+function dataSetChange(strdate) {
     var date = strdate.replace(/-/gi, "");
-    
     return date;
 }
 
-function DateTrueFalse(s_Date, e_Date, fs_Date, fe_Date, writeDate, pdateType)
-{
-
+function DateTrueFalse(s_Date, e_Date, fs_Date, fe_Date, writeDate, pdateType) {
     if (pdateType == "WEEK") {
         if ((s_Date <= fs_Date && fs_Date <= e_Date) || (s_Date <= fe_Date && fe_Date <= fe_Date)) {
-
-            if (writeDate == fs_Date || writeDate == fe_Date || fs_Date <= writeDate && writeDate <= fe_Date)
-                return true;
-            else
-                return false;
+            if (writeDate == fs_Date || writeDate == fe_Date || fs_Date <= writeDate && writeDate <= fe_Date) {
+            	return true;
+            } else {
+            	return false;
+            }
+        } else if ((fs_Date < s_Date && s_Date < fe_Date) || (fs_Date < e_Date && fe_Date < fe_Date)) {
+            if (writeDate == fs_Date || writeDate == fe_Date || fs_Date <= writeDate && writeDate <= fe_Date) {
+            	return true;
+            } else {
+            	return false;
+            }
+        } else {
+        	return false;
         }
-        else if ((fs_Date < s_Date && s_Date < fe_Date) || (fs_Date < e_Date && fe_Date < fe_Date)) {
-
-            if (writeDate == fs_Date || writeDate == fe_Date || fs_Date <= writeDate && writeDate <= fe_Date)
-                return true;
-            else
-                return false;
+    } else if (pdateType == "TODAY") {
+        if (fs_Date <= writeDate && writeDate <= fe_Date && fs_Date != fe_Date) {
+        	return true;
+        } else if(writeDate == fs_Date || writeDate == fe_Date) {
+        	return true;
+        } else {
+        	return false;
         }
-        else
-            return false;
-    }
-    else if (pdateType == "TODAY")
-    {
-        if (fs_Date <= writeDate && writeDate <= fe_Date && fs_Date != fe_Date)
-            return true;
-        else if(writeDate == fs_Date || writeDate == fe_Date)
-            return true;
-        else
-            return false;
     }
 }
 
 function DataSetRemove(fs_Date, fe_Date) {
 
-    if (fs_Date == fe_Date)
-        return true;
-    else
-        return false;
+    if (fs_Date == fe_Date) {
+    	return true;
+    } else {
+    	return false;
+    }
 }
 
-function tableListControl_today()
-{
+function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
 
         //c_xmlhttp.onreadystatechange = onAbort;
@@ -1007,8 +996,7 @@ function tableListControl_today()
                                     s_Enddt[0] = 24;
                                     d2 = new Date(sz_Year, sz_Month, sz_Date, s_Enddt[0], 00);
                                     width_td = ((d2 - d1) / 1800000);
-                                }
-                                else if (TodayDatename == pObjectEPDay) {
+                                } else if (TodayDatename == pObjectEPDay) {
                                     s_Startdt[0] = 0;
                                     d1 = new Date(sz_Year, sz_Month, sz_Date, s_Startdt[0], 00);
                                     width_td = ((d2 - d1) / 1800000);
