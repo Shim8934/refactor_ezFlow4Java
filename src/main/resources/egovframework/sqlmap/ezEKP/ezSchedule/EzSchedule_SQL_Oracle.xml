@@ -2,10 +2,23 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezSchedule">
+	<typeAlias  alias="ScheGetHolidayVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO"/>
 	
+	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
+		<result property="holidayID"				column="HOLIDAYID"				columnIndex="1"/>
+		<result property="holidayName"			column="HOLIDAYNAME"		columnIndex="2"/>
+		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
+		<result property="holidayDate"			column="HOLIDAYDATE"			columnIndex="4"/>
+		<result property="isSolar"					column="ISSOLAR"					columnIndex="5"/>
+		<result property="isRepeat"				column="ISREPEAT"					columnIndex="6"/>
+		<result property="isRest"					column="ISREST"						columnIndex="7"/>
+		<result property="isUse"					column="ISUSE"						columnIndex="8"/>
+		<result property="useCompany"			column="USECOMPANY"			columnIndex="9"/>
+	</resultMap>
 	
-	
-	
+	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
+		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 	
 </sqlMap>
 
