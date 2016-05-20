@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
-public class getHolidayVO {
+public class ScheGetHolidayVO {
 	/** 기념일ID*/
 	private int holidayID;
 	/** 기념일 이름*/
