@@ -1047,8 +1047,8 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/Myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:15px; height:16px;}
-.icon_02{background:url(/Myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
+.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:15px; height:16px;}
+.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
 
 
 /* 자원관리 테이블 */
