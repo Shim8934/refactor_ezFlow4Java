@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezCommunity.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.w3c.dom.Document;
@@ -173,6 +172,10 @@ public interface EzCommunityService {
 	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception;
 
 	public void deleteItem(String itemList) throws Exception;
+
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
+
+	public int getReservedItemListCount(String id) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

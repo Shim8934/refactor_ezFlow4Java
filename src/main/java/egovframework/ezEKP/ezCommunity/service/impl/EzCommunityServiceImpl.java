@@ -1271,6 +1271,7 @@ System.out.println("@");
 		}
     
 		if (item.getAttachments().length() > 0) {
+			//TODO
 			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
 				return "ERROR:첨부 파일 정보를 저장하는데 실패 하였습니다.";
 			}
@@ -1311,7 +1312,7 @@ System.out.println("@");
 		map.put("v_pDocPassWord", item.getDocPassword());
 
 		if (pMode.equals("modify")) {
-//			ezCommunityDAO.brdUpdateItem(map);
+			ezCommunityDAO.brdUpdateItem(map);
 			return "OK";
 		} else {
 			ezCommunityDAO.brdNewItem(map);
@@ -1319,7 +1320,6 @@ System.out.println("@");
 		}
 	}
 
-	//TODO 추가작업필요
 	@Override
 	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception {
 		String fileSize = "";
@@ -1337,6 +1337,8 @@ System.out.println("@");
 				map = new HashMap<String, Object>();
 				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
 				fileSize = Integer.toString((int) file.length());
+				
+				filePath = attachments.split(";")[i];
 				
 				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
 					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
@@ -1372,6 +1374,7 @@ System.out.println("@");
 				} else {
 					map.put("filePath", filePath);
 				}
+				
 				
 				ezCommunityDAO.insertAttachInfo(map);
 			}
@@ -1521,7 +1524,67 @@ System.out.println("@");
 			return Integer.toString(pSize) + " Byte";
 		}
 	}
+
+	@Override
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
 		
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PENDROW", pEndRow);
+		map.put("v_STRLANG", commonUtil.getMultiData(lang));
+		map.put("v_PUSERID", id);
+		map.put("v_PSORTBY", pSortBy);
+		
+		List<CommunityBoardListVO> list = ezCommunityDAO.getReservedItemListXML(map);
+
+		sb.append("<NODES>");
+		
+		int count = 0;
+		for (CommunityBoardListVO boardList : list) {
+			count ++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<BoardID>" + boardList.getBoardID() + "</BoardID>");
+				sb.append("<BoardName>" + boardList.getBoardName() + "</BoardName>");
+				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				
+				if (boardList.getAttachments() != null) {
+					sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
+				} else {
+					sb.append("<Attachments></Attachments>");
+				}
+				
+				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
+				sb.append("<StartDate>" + boardList.getStartDate() + "</StartDate>");
+				sb.append("<EndDate>" + boardList.getEndDate() + "</EndDate>");
+				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+
+		return sb.toString();
+	}
+
+	@Override
+	public int getReservedItemListCount(String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUserID", id);
+		map.put("v_pNow", EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", ""));
+		
+		String result = ezCommunityDAO.getReservedItemListCount(map); 
+		
+		if (result == null) {
+			result = "0";
+		}
+		
+		return Integer.parseInt(result);
+	}
+		
+	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
 		int pos1 = pSource.indexOf(pStarts);

@@ -46,6 +46,12 @@ public class CommunityBoardListVO {
 	String absTract;
 	/** 읽은 여부*/
 	String readFlag;
+	/** 게시판아이디*/
+	String boardID;
+	/** 게시판이름*/
+	String boardName;
+	/** 만료일자*/
+	String endDate;
 
 	public String getC_ClubGubun() {
 		return c_ClubGubun;
@@ -214,4 +220,29 @@ public class CommunityBoardListVO {
 	public void setReadFlag(String readFlag) {
 		this.readFlag = readFlag;
 	}
+
+	public String getBoardID() {
+		return boardID;
+	}
+
+	public void setBoardID(String boardID) {
+		this.boardID = boardID;
+	}
+
+	public String getBoardName() {
+		return boardName;
+	}
+
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	
 }

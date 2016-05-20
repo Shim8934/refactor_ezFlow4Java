@@ -41,6 +41,7 @@ import org.w3c.dom.Node;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -55,6 +56,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 커뮤니티
@@ -78,6 +80,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EgovFileScrty egovFileScrty;
 	
 	@Resource(name="EzCommunityService")
 	private EzCommunityService ezCommunityService;
@@ -286,14 +291,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commMake(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		String userInfoUserID = "", userInfoDisplayName = "";
 		String langPrimary="", langSecondary="";
-		//TODO 2016-05-02 이효진 사용하는곳 없음
-//		String flag = "";
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		
-		//TODO 2016-05-02 이효진 사용하는곳 없음		
-//		if (request.getParameter("flag") != null) {
-//			flag = request.getParameter("flag");
-//		}
 		
 		userInfoUserID = loginVO.getId();
 		langPrimary = config.getProperty("config.lang_Primary"+loginVO.getLang());
@@ -513,7 +511,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			onlyFileName = attachFile.substring(iStart);
 			iStart = onlyFileName.lastIndexOf(".");
 			extName = onlyFileName.substring(iStart);
-			//원본파일 생성
+
 			File file = new File(logoPath + fileName + "_logo" + "." + extName);
 			cClubLogo.transferTo(file);
 			
@@ -521,7 +519,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			BufferedImage inputImage = ImageIO.read(file);
 			BufferedImage outputImage = null;
 			Graphics2D saveImage = null;
-			//로고파일 생성			
+			
 			outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
@@ -651,19 +649,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 
 	 */
-	//TODO 2016-04-26 이효진 주석처리된부분 검토 후 삭제필요
 	@RequestMapping(value = "/ezCommunity/checkCommHome.do")
 	public String checkCommHome(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		String codeName = "", userLevel = "";
-		//TODO 사용하는곳 없음
-		/*int newMemberConfirmtype = 0;
-		String pRootBoardID = "top";
-		String pSubFlag = "0";
-		int pSelectBy = 0;
-		String pExcludeBoardID = "";
-        boolean checkSysop = false;
-        Document xmlret;*/
-//        boolean joinFlag = false;
         
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
@@ -986,7 +974,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 					if(totalCount % boardInfo.getSs_Board_MaxRows() > 0) {
 						totalPage = totalCount / boardInfo.getSs_Board_MaxRows() + 1;
 					} else {
-						totalPage = 1;
+						totalPage = totalCount / boardInfo.getSs_Board_MaxRows();
 					}
 				} else {
 					totalPage = 1;
@@ -1019,11 +1007,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/searchBoardItem.do")
 	public String searchBoardItem(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		int pPage = 1, totalPage = 1, totalCount = 0;
-		String title = "", writerName = "", abstracts = "", searchStart = "", searchEnd = "";
+		String title = "", writerName = "", abstracts = "", searchStart = "", searchEnd = "", pSortBy = "";
 		String strXML="";
 		
 		//TODO 이효진 2016-05-11 정렬에 필요한 변수. 추가 작업 필요
-		String pSortBy = "";
 		
 		String boardID = request.getParameter("boardID");
 		String orgBoardParameters = request.getParameter("orgBoardParameters");
@@ -1046,6 +1033,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		if (request.getParameter("searchEnd") != null) {
 			searchEnd = request.getParameter("searchEnd");
+		}
+		if (request.getParameter("pSortBy") != null) {
+			pSortBy = request.getParameter("pSortBy");
 		}
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1072,7 +1062,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 					if(totalCount % boardInfo.getSs_SearchBoard_MaxRows() > 0) {
 						totalPage = totalCount / boardInfo.getSs_SearchBoard_MaxRows() + 1;
 					} else {
-						totalPage = 1;
+						totalPage = totalCount / boardInfo.getSs_SearchBoard_MaxRows();
 					}
 				} else {
 					totalPage = 1;
@@ -1143,21 +1133,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/newBoardItem.do")
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, ModelMap model, CommunityBoardItemVO item, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//TODO 이효진 2016-05-13 IsPostBack 검색해보고 
-		/*if (!Page.IsPostBack)
-        {
-            ezRSAEnc Rsa = new ezRSAEnc(2048);
-            publicModulus = Rsa.GetPublicPemKeys(Rsa);
-            Rsa = null;
-        }*/
-		
-		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "", pBoardName = "", strWriterFakeName = "";;
+		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "", strWriterFakeName = "";;
 		String hasAttach = "NO";
 		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		String publicModulus = egovFileScrty.getPbm();
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		
 		String pBoardID = request.getParameter("boardID");
 		String pMode = request.getParameter("mode");
@@ -1201,10 +1183,8 @@ public class EzCommunityController extends EgovFileMngUtil{
                     item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
                 }
 			} else {
-				//TODO 게시판 쓰기아닐때 데이터 읽어오기
-				//lang 따라서 1 2 구분해서 뽑아써야함
 				item = ezCommunityService.getItemXML(pBoardID, pItemID);
-
+				
                 if (pMode.equals("reply")) {
                 	item.setItemLevel(item.getItemLevel()+1);
                 	item.setAbsTract("");
@@ -1216,8 +1196,11 @@ public class EzCommunityController extends EgovFileMngUtil{
                             item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
                         }
                     }
-                	if (item.getGubun().equals("2")) {
-                		strWriterFakeName = item.getWriterName();
+                	
+                	if (boardInfo.getGubun() != null) {
+	                	if (boardInfo.getGubun().equals("2")) {
+	                		strWriterFakeName = item.getWriterName();
+	                	}
                 	}
                 }
 
@@ -1226,7 +1209,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 }
 			}
 		}
-		System.out.println(EgovDateUtil.convertDate("2016-05-19 9:1:10", "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""));
+		
 		model.addAttribute("editor", config.getProperty("config.EDITOR"));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
 		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
@@ -1234,15 +1217,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("item", item);
 		model.addAttribute("pReservedItem", pReservedItem);
-//		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("pDocID", pDocID);
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("strNow", EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss", ""));
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("strWriterFakeName", strWriterFakeName);
+		model.addAttribute("pUrl", pUrl);
 		
 		return "/ezCommunity/communityNewBoardItem";
 	}
-	
 	
 	/**
 	 * 게시판 쓰기/수정/답변 실행 함수
@@ -1253,7 +1237,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String saveItem (@RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
-		
+
 		String ret = ezCommunityService.newItem(xmlData, pMode, request.getServletContext().getRealPath(""));
 		
 		return ret;
@@ -1399,13 +1383,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/boardItemView.do")
 	public String boardItemView(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		/*NoneActiveX = GetSystemConfigValue("NONEACTIVEX");
-        Use_Editor = GetSystemConfigValue("EDITOR").ToString();
-        if (!Page.IsPostBack)
-        {
-            ezRSAEnc Rsa = new ezRSAEnc(2048);
-            publicModulus = Rsa.GetPublicPemKeys(Rsa);
-            Rsa = null;
-        }*/		
+        Use_Editor = GetSystemConfigValue("EDITOR").ToString();*/
+		
 		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
 		String cAdmin = "", gcAdmin = "", pVersionUse = "";
 		String pReservedItem = "";
@@ -1418,6 +1397,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String oneLineReplyFlag = config.getProperty("config.ONELINE_REPLY_ENABLE");
         String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
         String useKMS = config.getProperty("config.Use_ezKMS");
+        String publicModulus = egovFileScrty.getPbm();
         
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1425,7 +1405,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		//왜 안나옴
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);
 
@@ -1470,7 +1449,7 @@ public class EzCommunityController extends EgovFileMngUtil{
             pVersionUse = ezCommunityService.getVersionInfo(pBoardID); 
 		}
 		
-		//TODO 2016-05-19 이효진 
+		//TODO 2016-05-19 이효진 사용안함
 //		int copMaster = ezCommunityService.boardItemViewGet();
 		if (boardInfo.getGubun() != null) {
 			if (boardInfo.getGubun().equals("2")) {
@@ -1501,9 +1480,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gcAdmin", gcAdmin);
 		model.addAttribute("pVersionUse", pVersionUse);
 		model.addAttribute("ch_CommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
+		model.addAttribute("publicModulus", publicModulus);
 		
 		return "/ezCommunity/communityBoardItemView";
 	}
+	
+	//TODO 2016-05-19 이효진  만들어야함
+	/**
+	 * checkPassword
+	 */
+
 	
 	/**
 	 * 게시판 첨부파일 목록 호출 함수
@@ -1521,6 +1507,78 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return strXML;
 	}
+	
+	
+	/**
+	 * 게시판 예약게시목록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardReservedItemList.do")
+	public String boardReservedItemList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		String pSortBy = "";
+		int pPage = 1, totalPage = 1;
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pOrgBoardParameters = request.getParameter("orgBoardParameters");
+		
+		if (request.getParameter("page") != null) {
+			pPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		if (request.getParameter("sortBy") != null) {
+			pSortBy = request.getParameter("sortBy");
+		}
+		
+		String boardName = egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language")));
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, "");
+		
+		boardInfo.setSs_Board_MaxRows(10);
+		
+		int pStartRow =  (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
+		int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
+
+		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang());
+		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId());
+		
+		if (totalCount > 0) {
+			if (totalCount > boardInfo.getSs_Board_MaxRows()) {
+				if(totalCount % boardInfo.getSs_Board_MaxRows() > 0) {
+					totalPage = totalCount / boardInfo.getSs_Board_MaxRows() + 1;
+				} else {
+					totalPage = totalCount / boardInfo.getSs_Board_MaxRows();
+				}
+			} else {
+				totalPage = 1;
+			}
+		} else {
+			totalPage = 1;
+		}
+		
+		model.addAttribute("pOrgBoardParameters", pOrgBoardParameters);
+		model.addAttribute("pPage", pPage);
+		model.addAttribute("pSortBy", pSortBy);
+		model.addAttribute("boardName", boardName);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("strXML", strXML);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		
+		return "/ezCommunity/communityBoardReservedItemList";
+	}
+	
+	/**
+	 * 게시판 첨부파일 다운로드 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do")
+	public void getCommunityAttachInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String pFileName = request.getParameter("fileName");
+		String pFilePath = request.getParameter("filePath");
+		
+		System.out.println(pFilePath);
+		
+		ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+	}
+	
 	
 	/**
 	 * 알림마당 목록화면 호출 함수

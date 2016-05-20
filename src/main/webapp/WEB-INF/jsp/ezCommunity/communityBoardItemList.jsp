@@ -48,6 +48,7 @@
     		var UserLevel = "<c:out value='${userLevel}' />";
     		var code = "<c:out value='${code}' />";
     		var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
+    		var ListInfo = "";
     		
     		$(function () {
     			var xmldoc = loadXMLString('${strXML}');
@@ -183,13 +184,13 @@
     		function checkBox_checkAll() {
     			var i=0;
     			
-    			for(i=1;i<document.frmOutbox.length;i++) {
-    				if(document.frmOutbox[i].type == 'checkbox') {
-    					if(document.frmOutbox.checkbox.checked) {
-    					    document.frmOutbox[i].checked = true;
-                            strListInfo = ListInfo.textContent;
+    			for(i=0;i<$("input[name='chk']").length;i++) {
+    				if($("input[name='chk']")[i].type == 'checkbox') {
+    					if($("input[name='checkbox']")[0].checked) {
+    					$("input[name='chk']")[i].checked = true;
+                            strListInfo = ListInfo;
                         } else {
-    						document.frmOutbox[i].checked = false;
+                        	$("input[name='chk']")[i].checked = false;
     						strListInfo = "";
     					}				
     				}
@@ -297,6 +298,7 @@
 
     		function DeleteItem() {
     		    var xmlhttp = createXMLHttpRequest();
+    		    
     			xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
     			xmlhttp.send();
     			xmlhttp = null;

@@ -33,10 +33,10 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 
 		<c:choose>
-			<c:when test="${mode == 'new' || url != ''}">
+			<c:when test="${pMode == 'new' || pUrl != ''}">
 				<title><spring:message code='ezCommunity.t1128'/></title>
 			</c:when>
-			<c:when test="${mode == 'reply' }">
+			<c:when test="${pMode == 'reply' }">
 				<title><spring:message code='ezCommunity.t1129'/></title>
 			</c:when>
 			<c:otherwise>
@@ -50,8 +50,8 @@
 			var item = "${item}";
 
 			var pUploadFilePath = "${pUploadFilePath}";
-			var pBoardID = "${item.boardID}";
-			var pBoardName = "${item.boardName}";
+			var pBoardID = "${boardInfo.boardID}";
+			var pBoardName = "${boardInfo.boardName}";
 			var pMode = "${pMode}";
 			var pModeOld = "";
 			var MHTLoadComplete = "";
@@ -64,7 +64,6 @@
 		    var SSCompanyID = "${userInfo.companyID}";
 		    var SSCompanyName = "${userInfo.companyName1}";
 		    var SSCompanyName2 = "${userInfo.companyName2}";
-
 		    var strItemID = "${item.itemID}";
 		    var strWriterName = "${item.writerName}";
 		    var strWriterDeptName = "${item.writerDeptName}";
@@ -80,12 +79,9 @@
 		    var strItemLevel = "${item.itemLevel}";
 		    var strWriterTitle = "${item.extensionAttribute3}";
 		    var strWriterFakeName = "${writerFakeName}";
-
-<%--  		    var server_name = "<%=Request.ServerVariables["server_name"]%>"; --%>
- 		    
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-		    var pReservedItem = "${pReservedItem}}";
+		    var pReservedItem = "${pReservedItem}";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
@@ -122,19 +118,18 @@
 		            	$("#Sdatepicker").datepicker('setDate', "");
 		            }
 		        }
-							
-							
+												
 		        if (ExpireDays == -1) {
 		        	document.getElementById('Makedate').style.display = "none";
 		        }
 							
 		        if( pMode == "modify") {												
-		            document.getElementById("txtTitle").value  = "${strTitle}";
-		            document.getElementById("txtAbstract").value = "${strAbstract}";
+		            document.getElementById("txtTitle").value  = "${item.title}";
+		            document.getElementById("txtAbstract").value = "${item.absTract}";
 		        }
 							
 		        if (pMode == "reply") {
-		            document.getElementById("txtTitle").value = "${strTitle}";
+		            document.getElementById("txtTitle").value = "${item.title}";
 		        }
 		        
 		        ChkPermanent();
@@ -348,6 +343,7 @@
 	
 		    function SaveItem() {
 		        unloadflag ="1";
+		        
 		        if(MHTLoadComplete != "true") {
 		            alert("<spring:message code='ezCommunity.t1138'/>");		
 		            return;
@@ -526,7 +522,7 @@
 		        } else {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");
 		        }
-												
+				
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
 		        xmlhttp.send(xmlDom);					
 
@@ -636,7 +632,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 							
-		        window.open("BoardItemPreView.aspx?gubun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");	
+		        window.open("/ezCommunity/boardItemPreView.do?gubun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");	
 		    }
 					
 		    function AddDate(pDate,  pDays) {
@@ -771,7 +767,7 @@
 			    pBoardID = ret;
 			    GetBoardInfo();
 			    InitializeSettings();
-			
+				
 			    if (pUrl.toLowerCase().indexOf(".mht") > -1) {
 			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/common/downloadattach.aspx?filepath=" + escape(pUrl) + "&filename=test.mht";
 			        document.getElementById('docContent').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
@@ -820,7 +816,7 @@
 						
             function InitializeSettings() {
             	
-                document.getElementById('tdBoardName').innerHTML = "${item.boardName}";
+                document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
 	
                 if (ExpireDays == "-1") {
                     document.getElementById('ChkPermanence').checked = true;
@@ -861,7 +857,7 @@
 	                    message.SetEditorContent("");
 	                } else {
 						if (pUrl == "") {
-	                        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+	                        var fullPath = strContentLocation;
 	                        
 	                        if (pMode == "reply") {
 	                            var htmlData = message.SetEditorContentURL2(fullPath);
@@ -891,8 +887,7 @@
 	                        }
 	                    }
 	                }
-	                
-                    MHTLoadComplete = "true";
+	                MHTLoadComplete = "true";
                 }
 			}
 	
@@ -1000,7 +995,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezCommunity.t1168'/></th>
-	                        <td id="tdBoardName">${item.boardName }</td>
+	                        <td id="tdBoardName">${boardInfo.boardName }</td>
 	                    </tr>
 	                    
 	                    <c:choose>

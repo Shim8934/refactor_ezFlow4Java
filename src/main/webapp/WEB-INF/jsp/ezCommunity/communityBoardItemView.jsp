@@ -61,7 +61,24 @@
 	    	
 	    	window.onload = function () {
 	    	    try {
-// 	    	        initKey();
+	    	    	var html = "";
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type	:	"COMMUNITYCONTENT", 
+								 itemID	:	pItemID
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});
+					var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+                	 
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();
 	    	        
@@ -76,33 +93,6 @@
 	    	    catch (e) {
 	    	        alert(e.description);
 	    	    }
-	    	}
-	    	
-	    	function MhtConvert() {
-	    	    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYCONTENT&DOCID=" + pItemID;
-	    	    objMHT.sync = true;
-	    	    var strMht = objMHT.DownloadURL(fullPath);
-	    	    if (strMht.length > 200000) {
-	    	        g_progresswin = window.showModelessDialog("showProgress.do?fileInfo=" + escape("게시물을 읽고 있는 중입니다."), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
-	    	    }
-	    	    
-	    	    objMHT.mhtData = strMht;
-	    	    alert(objMHT.mhtData);
-	    	    objMHT.filterIn();
-	    	    var ret = objMHT.htmlData;
-	    	    if (window.location.protocol.toLowerCase() == "https:") {
-	    	        var idx = 0; var start = 0;
-	    	        while (ret.indexOf("src=\"", start) > 0) {
-	    	            start = ret.indexOf("src=\"", start);
-	    	            var end = ret.indexOf("\"", start + 5);
-	    	            var link = ImageUrl(strContentLocation, idx);
-	    	            ret = ret.substring(0, start + 5) + link + ret.substring(end);
-
-	    	            idx = idx + 1;
-	    	            start = end;
-	    	        }
-	    	    }
-	    	    return ret;
 	    	}
 
 	        function AddLinkTarget() {
@@ -123,6 +113,7 @@
 	            return link;
 	        }
 
+	        var checkpassword_dialogArguments = new Array();
 	        function btn_Delete_Onclick() {
 	            if (Delete_FG != "true") {
 	                alert("<spring:message code='ezCommunity.t901'/>");
@@ -131,38 +122,59 @@
 
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 	                if (gubun == "2") {
-	                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-	                    feature = feature + GetShowModalPosition(330, 200);
-	                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
-	                    if (typeof (ret) == "undefined") {
-	                        alert("<spring:message code='ezCommunity.t901'/>");
-						    return;
-						}
-
-	                    if (ret != "OK") {
-	                        alert("<spring:message code='ezCommunity.t901'/>");
-						    return;
-						}
+                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
+                        var OpenWin = window.open("/ezComunity/checkPassword.do?itemID=" + pItemID, "checkPassWord", GetOpenWindowfeature(340, 200));
+                        try {
+                        	OpenWin.focus();
+                        } catch (e) { }
+	                } else {
+	                	alert("<spring:message code='ezCommunity.t901'/>");
+	                	return;
 	                }
-	                else {
-	                    alert("<spring:message code='ezCommunity.t901'/>");
-					    return;
-					}
+	            } else {
+	            	 if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
+	            		 return;
+	            	 }
 
+	 			    var xmlhttp = createXMLHttpRequest();
+	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	 			    xmlhttp.send();
+	 			    xmlhttp = null;
+	 			    
+	 			    try {
+	 			        window.opener.refresh_onclick();
+	 			    } catch (e) {
+	 			    }
+	 			    window.close();
+	            }
+	        }
+	        
+	        function btn_Delete_Onclick_Complete(ret) {
+	            if (typeof (ret) == "undefined") {
+	            	alert("<spring:message code='ezCommunity.t901'/>");
+	                return;
 	            }
 
-	            if (!confirm("<spring:message code='ezCommunity.t426'/>")) return;
+	            if (ret != "OK") {
+	            	alert("<spring:message code='ezCommunity.t901'/>");
+	                return;
+	            }
 
-			    var xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
-			    xmlhttp.send();
-			    xmlhttp = null;
-			    try {
-			        window.opener.refresh_onclick();
-			    } catch (e) {
-			    }
-			    window.close();
-			}
+	            if (!confirm("<spring:message code='ezCommunity.t426'/>")) { 
+	            	return;
+	            }
+
+	            var xmlhttp = createXMLHttpRequest();
+	            xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	            xmlhttp.send();
+	            xmlhttp = null;
+	            try {
+	                window.opener.refresh_onclick();
+	            } catch (e) {
+	            }
+	            window.close();
+	        }
+	        
 
 			function btn_Reply_Onclick() {
 			    if (ch_CommunityAdmin < 0 && Write_FG != "true") {
@@ -192,27 +204,39 @@
 	            }
 
 	            if (gubun == "2") {
-	                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-	                feature = feature + GetShowModalPosition(330, 200);
-	                var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
+					checkpassword_dialogArguments = new Array();
+                    checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
+                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+                    try { OpenWin.focus(); } catch (e) { }
+	            	
+					window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	            } else {
+// 	            	if (${pModify == 'ON'}) {
+// 	                    alert("<spring:message code='ezCommunity.t941'/>");
+// 	                    return;
+// 	                }
 	                
-	                if (typeof (ret) == "undefined") {
-	                    alert("<spring:message code='ezCommunity.t939'/>");
-					    return;
-					}
-	                
-	                if (ret != "OK") {
-	                    alert("<spring:message code='ezCommunity.t939'/>");
-					    return;
-					}
+	                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	            }
+	        }
+	        
+	        function btn_Modify_Onclick_Complete(ret){
+	            if (typeof (ret) == "undefined") {
+	            	alert("<spring:message code='ezCommunity.t939'/>");
+	                return;
 	            }
 	            
-	            <%-- if ("<%= pModify %>" == "ON") {
-			        alert("<spring:message code='ezCommunity.t941'/>");
-				    return;
-				} --%>
-	            
-                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	            if (ret != "OK") {
+	            	alert("<spring:message code='ezCommunity.t939'/>");
+	                return;
+	            }
+
+// 	            if (${pModify == 'ON'}) {
+// 	            	alert("<spring:message code='ezCommunity.t941'/>");
+// 	                return;
+// 	            }
+
+                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;	            
 	        }
 
 	        function btn_Copy_Onclick() {
@@ -260,7 +284,7 @@
 	                filename = filepath.substr(89, filepath.length - 88);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
-	                filepath = "/Upload_Community/" + filepath;
+	                filepath = "/files/upload_community/" + filepath;
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -294,8 +318,8 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITY&ATTID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))  + "\">";
-	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=\"" + protocol + "//" + serverName + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITY&ATTID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "\">";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + filename + "&filePath=" + filepath  + "\">";
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + filename + "&filePath=" + filepath + ">";
 	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 	            }
 	            document.getElementById('lstAttachLink').innerHTML = strAttach;
@@ -320,14 +344,11 @@
 	                    count++;
 	                }
 	            }
+	            
 	            if (count == 0) {
 	                alert("<spring:message code='ezCommunity.t184'/>");
 				    return;
 	            }
-	            var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-	            ezUtil.UseUTF8 = true;
-	            var folderpath = ezUtil.BrowseFolder();
-	            param["folderpath"] = folderpath;
 
 	            var feature = "dialogWidth:430px; dialogHeight:170px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
 	            feature = feature + GetShowModalPosition(430, 170);
@@ -376,6 +397,13 @@
 	        
 	        <%-- function btn_SaveToPC_Onclick() {
 	            var fPath;
+	            var objMHT = new ActiveXObject("MhtFormat.Convert");
+	            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+	            objMHT.sync = true;
+	            var strMht = objMHT.DownloadURL(fullPath);
+	
+	            objMHT.mhtData = strMht;
+	            objMHT.filterIn();
 	            var objSave = new ActiveXObject("EzUtil.MiscFunc");
 	            objSave.UseUTF8 = true;
 	            var strFilter;
@@ -385,12 +413,12 @@
 	                var cnt = arryFileNM.length;
 	                var FileExtensionNM = arryFileNM[cnt - 1].toLowerCase();
 	                if (FileExtensionNM == "mht") {
-	                    objSave.SaveTextToFile(strFilter, message.objMHT.mhtData);
+	                    objSave.SaveTextToFile(strFilter, objMHT.mhtData);
 	                }
 	                else {
-	                    objSave.SaveTextToFile(strFilter, message.objMHT.htmlData);
+	                    objSave.SaveTextToFile(strFilter, objMHT.htmlData);
 	                }
-	                alert("<spring:message code='ezCommunity.t282'/>");
+	                alert("<%=RM.GetString("t282")%>");
 	            }
 	        } --%>
 
@@ -402,51 +430,35 @@
 	        }
 
 	        function mail_boarditem() {
-	            var pheight = window.screen.availHeight;
+	        	var pheight = window.screen.availHeight;
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 
-	            var szUrl = "";
-	            if (CrossYN()) {
-	                szUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?boardid=" + pBoardID + "&itemid=" + pItemID + "&cmd=Community";
-	            }
-	            else {
-	                if (pUse_Editor == "TAGFREE")
-	                    szUrl = "/myoffice/ezEmail/mail_write_IE.aspx?boardid=" + pBoardID + "&itemid=" + pItemID + "&cmd=Community";
-	                else
-	                    szUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?boardid=" + pBoardID + "&itemid=" + pItemID + "&cmd=Community";
-	            }
+                var szUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?boardid=" + pBoardID + "&itemid=" + pItemID + "&cmd=Community";
 
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
 	        }
 
 	        function ReaderList() {
-	            var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes"
-
-	            var feature = "width=520, height=400, resizable=yes, scrollbars=0";
-	            feature = feature + GetOpenPosition(520, 400);
-	            window.open(szHref, "", feature);
+	        	var szHref = "Item_ReadList.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID;
+	            GetOpenWindow(szHref, "", 520, 400);
 	        }
 
 	        function btn_Print_Onclick() {
-	            var url = window.location.href;
-	            url = url.replace(".aspx", "_Print.aspx");
-
+	        	var url = window.location.href;
+	            url = url.replace(".do", "Print.do");
 	            var feature = "height=720px, width=640px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1";
 	            feature = feature + GetOpenPosition(640, 720);
 	            window.open(url, "", feature);
 	        }
 
 	        function OpenUserInfo(pUserID) {
-	            var heigth = window.screen.availHeight;
-	            var width = window.screen.availWidth;
-	            var left = (width - 500) / 2;
-	            var top = (heigth - 400) / 2;
-	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 	        }
 
 	        function OneLineReply_onkeydown() {
@@ -498,7 +510,7 @@
 	            strXML += "</DATA>";
 
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "aspx/SaveOneLineReply.aspx", false);
+	            xmlhttp.open("POST", "/ezCommunity/saveOneLineReply.do", false);
 	            xmlhttp.send(strXML);
 
 	            if (xmlhttp.status == 200) {
@@ -516,27 +528,21 @@
 	            xmlhttp = null;
 	        }
 
+	        var checkreplypassword_dialogArguments = new Array();
 	        function delete_onelinereply(pReplyID) {
 	            var xmlhttp = createXMLHttpRequest();
 
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 
 	                if (gubun == "2") {
-	                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-	                    feature = feature + GetShowModalPosition(330, 200);
-	                    var ret = window.showModalDialog("aspx/CheckReplyPassWord.aspx?ItemID=" + pItemID + "&ReplyID=" + pReplyID, "", feature);
-	                    if (ret == "NO") {
-	                        alert("<spring:message code='ezCommunity.t921'/>");
-					        return;
-					    } else if (ret == "cancel") {
-					        alert("<spring:message code='ezCommunity.t60'/>");
-						        return;
-						    }
-	                }
-	                else {
-
-
-	                    xmlhttp.open("POST", "aspx/CheckOneLineOwner.aspx?ReplyID=" + pReplyID, false);
+                        checkreplypassword_dialogArguments = new Array();
+                        checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
+                        var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));
+                        try {
+                        	OpenWin.focus();
+                        } catch (e) { }
+	                } else {
+	                    xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + pReplyID, false);
 	                    xmlhttp.send();
 
 	                    if (xmlhttp.responseText.substr(0, 2) != "OK") {
@@ -544,15 +550,38 @@
 				            return;
 				        }
 
-	                    if (!confirm("<spring:message code='ezCommunity.t945'/>")) return;
+	                    if (!confirm("<spring:message code='ezCommunity.t945'/>")) {
+	                    	return;
+	                    }
+
+	                    xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	                    xmlhttp.send();
+	                    getOneLineReply();
+	                    xmlhttp = null;
 			        }
 	            } else {
 
-	                if (!confirm("<spring:message code='ezCommunity.t945'/>")) return;
+                    if (!confirm("<spring:message code='ezCommunity.t945'/>")) {
+                    	return;
+                    }
+
+	                xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	                xmlhttp.send();
+	                getOneLineReply();
+	                xmlhttp = null;
 				}
+	        }
+	        
+	        function delete_onelinereply_Complete(ret) {
+	            if (ret == "NO") {
+	            	alert("<spring:message code='ezCommunity.t921'/>");
+	                return;
+	            } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
+	                return;
+	            }
 
-
-	            xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	            xmlhttp.open("POST", "ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
 	            xmlhttp.send();
 	            getOneLineReply();
 	            xmlhttp = null;
@@ -606,7 +635,9 @@
 	        }
 
 	        function OpenItem(strItemID) {
-	            if (strItemID != "") window.location.href = window.location.href.replace(pItemID, strItemID);
+	            if (strItemID != "") {
+	            	window.location.href = window.location.href.replace(pItemID, strItemID);
+	            }
 	        }
 
 	        function history_list() {
@@ -624,18 +655,16 @@
 	            var pTop = (pheight - 520) / 2;
 	            var pLeft = (pwidth - 400) / 2;
 
-	            var strUrl = "UpdateUserList.aspx?itemID=" + pItemID + "&pBoardID=" + pBoardID;
+	            var strUrl = "/ezCommunity/updateUserList.do?itemID=" + pItemID + "&pBoardID=" + pBoardID;
 	            var strstate = "status:no;dialogHeight: 390px;dialogWidth: 520px;help: no;resizable:no"
 
 	            window.open(strUrl, "", "width=400, height=400, resizable=yes, scrollbars=yes , top=" + pTop + ", left=" + pLeft, "");
 	        }
 
 	        function ToKMS() {
-
-	            var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert.aspx?node=new&flag=cop&itemID=" + pItemID + "&boardID=" + pBoardID + "&url=" + strContentLocation + "&clubID=" + SSUserID;
-	            var feature = "status:no;dialogWidth:780px;dialogHeight:800px;help:no;scroll:no;edge:sunken";
-	            feature = feature + GetShowModalPosition(780, 800);
-	            var RtnVal = window.showModalDialog(url, "", feature);
+	        	var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert_Cross.aspx?Mode=new&Flag=cop&ItemID=" + pItemID + "&boardid=" + pBoardID + "&url=" + strContentLocation + "&clubid=" + SSUserID;
+	            var OpenWin = window.open(url, "KAssetConvert_Cross", GetOpenWindowfeature(780, 800));
+	            try { OpenWin.focus(); } catch (e) { }
 	        }
 
 	        function trim(parm_str) {

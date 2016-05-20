@@ -32,9 +32,14 @@
 			    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 			    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 			    CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
-			    for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
-			        BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
+			    
+			    //2016-05-20 이효진 BODYATTS 없을때 에러나서 if문 추가
+			    if (GetElementsByTagName(tempXML, 'BODYATTS')[0] != null ) {
+				    for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+				        BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
+				    }
 			    }
+			    
 			}
 			
 			function BodySetAttribute(name, Value) {
