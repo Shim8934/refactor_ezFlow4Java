@@ -482,7 +482,7 @@ public class EzEmailMailListController {
 			sb.append("</response>");
 		}
 		sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
-				start, end, messages.length, messages.length, folder.getUnreadMessageCount()));
+				start, end, messages.length, folder.getMessageCount(), folder.getUnreadMessageCount()));
 		sb.append("</maillist>");
 	      
 		folder.close(false);
