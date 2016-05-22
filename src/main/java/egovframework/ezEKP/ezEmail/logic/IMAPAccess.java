@@ -232,7 +232,7 @@ public class IMAPAccess {
 		
 	}
 	
-	public boolean hasAttachment(Part part) {
+	public static boolean hasAttachment(Part part) {
 		boolean isAttached = false;
 		
 		try {
@@ -402,17 +402,11 @@ public class IMAPAccess {
 	}	
 	
 	public static class MessageAttachmentComparator implements Comparator<Message> {
-		
-		IMAPAccess imapAccess;
-		
-		public MessageAttachmentComparator(IMAPAccess imapAccess) {
-			this.imapAccess = imapAccess;
-		}
-		
+				
 		@Override
 		public int compare(Message m1, Message m2) {
-			int attached1 = imapAccess.hasAttachment(m1) ? 1 : 0;
-			int attached2 = imapAccess.hasAttachment(m2) ? 1 : 0;
+			int attached1 = hasAttachment(m1) ? 1 : 0;
+			int attached2 = hasAttachment(m2) ? 1 : 0;
 						
 			int rc = attached1 - attached2;
 			if (rc == 0) {

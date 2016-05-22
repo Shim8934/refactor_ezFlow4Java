@@ -4,14 +4,23 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.Address;
 import javax.mail.BodyPart;
+import javax.mail.FetchProfile;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -19,10 +28,19 @@ import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
+import javax.mail.search.AndTerm;
+import javax.mail.search.BodyTerm;
+import javax.mail.search.DateTerm;
+import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.SearchTerm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.sun.mail.imap.IMAPFolder;
+
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -66,7 +84,7 @@ public class EzEmailUtil {
 		try {
 			Address[] addresses = message.getFrom();
 			
-			if (addresses != null) {
+			if (addresses != null && addresses.length > 0) {
 				addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
 				if (addressStr == null) {
 					addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
@@ -93,6 +111,22 @@ public class EzEmailUtil {
 		return addressStr;
 	}
 	
+	public String getFromEmailAddressOfMessage(Message message) {
+		String addressStr = "";
+		
+		try {
+			Address[] addresses = message.getFrom();
+			
+			if (addresses != null && addresses.length > 0) {
+				addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
+			}			
+		} 
+		catch (MessagingException e) {			
+		}
+		
+		return addressStr;
+	}
+	
 	public String getFullFromAddressOfMessage(Message message) {
 		String fullFromAddressStr = "";
 		
@@ -100,7 +134,7 @@ public class EzEmailUtil {
 			Address[] addresses = message.getFrom();			
 			StringBuilder addressBuilder = new StringBuilder();
 			
-			if (addresses != null) {
+			if (addresses != null && addresses.length > 0) {
 				Address address = addresses[0];
 				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
 				String name = ((InternetAddress)address).getPersonal(); // name part
@@ -128,6 +162,35 @@ public class EzEmailUtil {
 		}		
 		
 		return fullFromAddressStr;
+	}
+	
+	public String getStringListOfNameOrAddressOfAddresses(Address[] addresses) {
+		String stringList = "";
+		
+		if (addresses != null) {
+			StringBuilder addressBuilder = new StringBuilder();
+			
+			for (Address address : addresses) {
+				String addressStr = ((InternetAddress)address).getPersonal(); // name part
+				if (addressStr == null) {
+					addressStr = ((InternetAddress)address).getAddress(); // email address part
+				}
+				else {
+					// decoding is needed for the name part
+					try {
+						addressStr = MimeUtility.decodeText(addressStr);
+					} catch (UnsupportedEncodingException e) {
+					}
+				}						
+				addressBuilder.append(addressStr);
+				addressBuilder.append("; ");
+			}
+			
+			stringList = addressBuilder.toString();
+			stringList = stringList.substring(0, stringList.length() - 2);	
+		}
+		
+		return stringList;
 	}
 	
 	/**
@@ -356,6 +419,156 @@ public class EzEmailUtil {
 		return resultList;
 	}
 	
+	/**
+	 * searches an open folder for messages matching the specified criterion. 
+	 */
+	public Message[] searchFolder(
+			Folder folder, 
+			String searchField, 
+			final String searchValue,
+			Date startDate,
+			Date endDate,
+			boolean searchSubFolder,
+			SearchTerm existingSearchTerm
+			) throws Exception {
+		Message[] messages = folder.getMessages();
+		
+		SearchTerm sTerm = existingSearchTerm; 
+		
+		if (sTerm == null) {
+			if (searchField.equalsIgnoreCase("SUBJECT")) {
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = message.getSubject();
+				        	
+				        	
+				            if (subject != null && subject.toLowerCase().contains(searchValue.toLowerCase())) {
+				                return true;
+				            }
+				        } 
+				        catch (MessagingException e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
+			else if (searchField.equalsIgnoreCase("FROM")) {
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+			        	String from = getFullFromAddressOfMessage(message);
+			            if (from != null & from.toLowerCase().contains(searchValue.toLowerCase())) {
+			                return true;
+			            }
+				        
+				        return false;
+				    }
+				};					
+			}
+			else if (searchField.equalsIgnoreCase("RECEIVE")) {
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				    	if (",<>@".contains(searchValue)) {
+				    		return false;
+				    	}
+				    	
+				    	try {
+					    	StringBuilder sb = new StringBuilder();
+					    	
+					    	// retrieve the TO addresses from the message.
+							Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+							String to = getStringListOfAddresses(addresses);
+							
+							if (!to.equals("")) {
+								sb.append(to);
+							}
+							
+							// retrieve the CC addresses from the message.
+							addresses = message.getRecipients(Message.RecipientType.CC);
+							String cc = getStringListOfAddresses(addresses);
+							
+							if (!cc.equals("")) {
+								if (!to.equals("")) {
+									sb.append(",");
+								}
+								
+								sb.append(cc);
+							}
+							
+							// retrieve the BCC addresses from the message.
+							addresses = message.getRecipients(Message.RecipientType.BCC);
+							String bcc = getStringListOfAddresses(addresses);
+	
+							if (!bcc.equals("")) {
+								if (!to.equals("") || !cc.equals("")) {
+									sb.append(",");
+								}
+								
+								sb.append(bcc);
+							}							
+					    	
+				            if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
+				                return true;
+				            }
+				    	}
+				    	catch (MessagingException e) {					    		
+				    	}
+				        
+				        return false;
+				    }
+				};					
+			}
+			else if (searchField.equalsIgnoreCase("CONTENT")) {
+				sTerm = new BodyTerm(searchValue);
+			}
+		}
+		
+		if (sTerm != null) {
+			// pre-fetch fields needed for searching
+			if (!searchField.equalsIgnoreCase("CONTENT")) {
+				FetchProfile fp = new FetchProfile();
+				fp.add(FetchProfile.Item.ENVELOPE);
+				folder.fetch(messages, fp);
+			}
+			
+			if (startDate != null) {
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GE, startDate));
+			}
+
+			if (endDate != null) {
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.LT, endDate));
+			}
+			
+			messages = folder.search(sTerm);
+			
+			Folder[] subFolders = folder.list();
+			
+			// search the sub folders and combine the results.			
+			if (searchSubFolder) {
+				for (Folder subFolder : subFolders) {
+					subFolder.open(Folder.READ_ONLY);
+					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm);
+					
+					if (subMessages.length > 0) {
+					   int mainLen = messages.length;
+					   int subLen = subMessages.length;
+					   Message[] combined = new Message[mainLen + subLen];
+					   System.arraycopy(messages, 0, combined, 0, mainLen);
+					   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
+					   
+					   messages = combined;
+					}
+				}
+			}
+		}		
+		else {
+			return null;
+		}
+		
+		return messages;
+	}
+	
 	public boolean copyInlineParts(Part src, Multipart dest) throws MessagingException, IOException {
 		if (src.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)src.getContent();
@@ -389,6 +602,142 @@ public class EzEmailUtil {
 		return false;
 	}
 	
+	/**
+	 * 메일 리스트 정렬 실행 함수
+	 */
+	public void sortMessages(Folder folder, Message[] messages, String sortTypeSpecifier, boolean isAscending) throws Exception {
+		logger.debug("sortTypeSpecifier=" + sortTypeSpecifier + ",isAscending=" + isAscending);
+		
+		Comparator<Message> comparator = null;
+		
+		// subject
+		if (sortTypeSpecifier.equals("subject")) {
+			comparator = new IMAPAccess.MessageSubjectComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);			
+		}
+		// sender
+		else if (sortTypeSpecifier.equals("sender")) {
+			comparator = new IMAPAccess.MessageAddressComparator(true);
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);
+		}		
+		// recipient
+		else if (sortTypeSpecifier.equals("recipient")) {
+			comparator = new IMAPAccess.MessageAddressComparator(false);
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.ENVELOPE);
+			folder.fetch(messages, fp);
+		}				
+		// attachment
+		else if (sortTypeSpecifier.equals("attachment")) {
+			comparator = new IMAPAccess.MessageAttachmentComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.CONTENT_INFO);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}				
+		// read/unread
+		else if (sortTypeSpecifier.equals("readFlag")) {
+			comparator = new IMAPAccess.MessageUnreadComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.FLAGS);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}		
+		// bookmark
+		else if (sortTypeSpecifier.equals("flag")) {
+			comparator = new IMAPAccess.MessageFlaggedComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.FLAGS);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}								
+		// importance
+		else if (sortTypeSpecifier.equals("importance")) {
+			comparator = new IMAPAccess.MessagePriorityComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+								
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(IMAPFolder.FetchProfileItem.HEADERS);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}								
+		// size
+		else if (sortTypeSpecifier.equals("size")) {
+			comparator = new IMAPAccess.MessageSizeComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(FetchProfile.Item.SIZE);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}			
+		// received date
+		else if (sortTypeSpecifier.equals("receivedDate")) {
+			comparator = new IMAPAccess.MessageReceivedDateComparator();
+			
+			if (!isAscending) {
+				comparator = Collections.reverseOrder(comparator);
+			}
+			
+			// pre-fetch fields needed for sorting
+			FetchProfile fp = new FetchProfile();
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			folder.fetch(messages, fp);
+		}			
+		
+		if (comparator != null) {			
+			Arrays.sort(messages, comparator);
+		}
+	}
+	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
 		if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
@@ -403,6 +752,24 @@ public class EzEmailUtil {
 		} 
 		
 		return false;
+	}
+	
+	/**
+	 * returns an array of long of size 2.
+	 * first element is hour of time offset and
+	 * second element is minute of time offset
+	 */
+	public long[] getTimeOffsetInHourAndMinute() {
+		TimeZone tz = TimeZone.getDefault();
+		long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
+						- TimeUnit.HOURS.toMinutes(hours);	
+		
+		long[] timeOffset = new long[2];
+		timeOffset[0] = hours;
+		timeOffset[1] = minutes;
+		
+		return timeOffset;
 	}
 	
 	/**

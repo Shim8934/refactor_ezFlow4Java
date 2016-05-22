@@ -288,7 +288,7 @@
 	        function Open_Search() {
 	            try {
 	                var url;
-	                url = "/myoffice/ezEmail/mail_search_cross.aspx";
+	                url = "/ezEmail/mailSearchView.do";
 	                window.open(url, "right");
 	            } catch (e) { }
 	        }
