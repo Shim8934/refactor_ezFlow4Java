@@ -343,7 +343,7 @@ function GetMonthBodyObj() {
     if (oBeforeMaxDay != 0) {
         oThisDate = oBeforeDate;
     }
-    sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+    sStartDate = oThisDate.getFullYear() + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     
     //Month Start
     var TDIndex = 0;
@@ -360,7 +360,7 @@ function GetMonthBodyObj() {
     }
     //Month End
     oThisDate.setDate(oThisDate.getDate());
-    sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+    sEndDate = oThisDate.getFullYear() + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     objTr = null;
 
     return oTbody;
@@ -558,14 +558,14 @@ function Write() {
 
     var feature = GetOpenPosition(820, 700);
     if (CrossYN() || pNoneActiveX == "YES") {
-        window.open("Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
-            window.open("Schedule_Add.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
         else {
-            window.open("Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/ScheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 
@@ -654,7 +654,7 @@ function GetWeekBodyObj() {
     var startMonth = startOfWeek.getMonth();
     var startDate = startOfWeek.getDate();
 
-    sStartDate = startYear + "-" + (startMonth + 1) + "-" + startDate
+    sStartDate = startYear + "-" + leadingZeros((startMonth + 1), 2) + "-" + leadingZeros(startDate, 2)
     endOfWeek = new Date(sDate);
     endOfWeek.setDate(sDate.getDate() + (6 - sDate.getDay()) + DefaultView);
 
@@ -662,7 +662,7 @@ function GetWeekBodyObj() {
     var endMonth = endOfWeek.getMonth();
     var endDate = endOfWeek.getDate();
 
-    sEndDate = endYear + "-" + (endMonth + 1) + "-" + (endDate + 1);
+    sEndDate = endYear + "-" + leadingZeros((endMonth + 1), 2) + "-" + leadingZeros((endDate + 1), 2);
     var oTbody = document.createElement("TBODY");
     var oTr = document.createElement("TR");
     var oTD = document.createElement("TD");

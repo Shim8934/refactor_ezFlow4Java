@@ -12,10 +12,11 @@ function CalViewSource() {
     createNodeAndInsertText(xmlpara, objNode, "ENDDATETIME", sEndDate);
     createNodeAndInsertText(xmlpara, objNode, "APP", "1");
 
-    if (!delFlag)
-        xmlhttp.open("POST", "/myoffice/ezResource/ResSch/Schedule_Get.aspx?cmd=get&ResID=" + ResID, true);
-    else
-        xmlhttp.open("POST", "/myoffice/ezResource/ResSch/Schedule_Get.aspx?cmd=get&ResID=" + ResID, false);
+    if (!delFlag) {
+    	xmlhttp.open("POST", "/ezResource/scheduleGet.do?cmd=get&resID=" + ResID, true);
+    } else {
+    	xmlhttp.open("POST", "/ezResource/scheduleGet.do?cmd=get&resID=" + ResID, false);
+    }
 
     if (typeCal == 0) {
         if (!delFlag) {
@@ -210,6 +211,7 @@ function getCalWeekViewSource_after() {
 //일보기
 function getCalDayViewSource_after() {
 
+	
     var tempData = new Array();
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 

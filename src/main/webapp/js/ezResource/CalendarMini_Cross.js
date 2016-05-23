@@ -173,8 +173,7 @@ function GetTableMiniBodyObj() {
     if (oBeforeMaxDay != 0) {
         oThisDate = oBeforeDate;
     }
-    sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
-
+    sStartDate = oThisDate.getFullYear() + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     //Month Start
     for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
@@ -189,7 +188,7 @@ function GetTableMiniBodyObj() {
     }
     //Month End
     oThisDate.setDate(oThisDate.getDate());
-    sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+    sEndDate = oThisDate.getFullYear() + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     objTr = null;
 
     return oTbody;
