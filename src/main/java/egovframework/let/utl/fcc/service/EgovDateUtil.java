@@ -449,7 +449,9 @@ public class EgovDateUtil {
 			
 			strDate = Integer.toString(year) + "-" + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month)) + "-"
 					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date)) + " " 
-					  + hour + ":" + min + ":" + sec;
+					  + ((hour < 10) ? "0" + Integer.toString(hour) : Integer.toString(hour)) + ":" 
+					  + ((min < 10) ? "0" + Integer.toString(min) : Integer.toString(min)) + ":" 
+					  + ((sec < 10) ? "0" + Integer.toString(sec) : Integer.toString(sec));
 		}else{
 			strDate = Integer.toString(year) + dateType + ((month < 10) ? "0" + Integer.toString(month) : Integer.toString(month)) + dateType
 					  + ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));

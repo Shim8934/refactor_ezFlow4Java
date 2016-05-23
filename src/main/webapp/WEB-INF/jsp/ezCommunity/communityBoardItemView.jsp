@@ -24,40 +24,40 @@
 			window.offscreenBuffering = true;
 	        var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 	        var curFontSize = 1;
-	        var pItemID = "${itemID}";
-			var pBoardID = "${boardID}";
-	        var pBoardName = "${boardInfo.boardName}";
-	        var strWriterID = "${item.writerID}";
-	        var strWriterName = "${item.writerName}";
-	        var strWriterDeptName = "${item.writerDeptName}";
-	        var strWriterCompanyName = "${item.writerCompanyName}";
-	        var strWriteDate = "${item.writeDate}";
-	        var strImportance = "item.importance}";
-	        var strEndDate = "${item.endDate}";
-	        var strContentLocation = "${item.contentLocation}";
-	        var strAttachList = "${item.attachments}";
-	        var SSUserID = "${userInfo.id}";
-	        var SSUserName = "${userInfo.displayName1}";
-	        var Access_FG = "${boardInfo.access_FG}";
-	        var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}>";
-	        var ListView_FG = "${boardInfo.listView_FG}";
-	        var Read_FG = "${boardInfo.read_FG}";
-	        var Write_FG = "${boardInfo.write_FG}";
-	        var Reply_FG = "${boardInfo.reply_FG}";
-	        var Delete_FG = "${boardInfo.delete_FG}";
-	        var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-	        var pReservedItem = "${pReservedItem}";
+	        var pItemID = "<c:out value='${itemID}' />";
+			var pBoardID = "<c:out value='${boardID}' />";
+	        var pBoardName = "<c:out value='${boardInfo.boardName}' />' />";
+	        var strWriterID = "<c:out value='${item.writerID}' />' />";
+	        var strWriterName = "<c:out value='${item.writerName}' />' />";
+	        var strWriterDeptName = "<c:out value='${item.writerDeptName}' />";
+	        var strWriterCompanyName = "<c:out value='${item.writerCompanyName}' />";
+	        var strWriteDate = "<c:out value='${item.writeDate}' />";
+	        var strImportance = "<c:out value='item.importance}' />";
+	        var strEndDate = "<c:out value='${item.endDate}' />";
+	        var strContentLocation = "<c:out value='${item.contentLocation}' />";
+	        var strAttachList = "<c:out value='${item.attachments}' />";
+	        var SSUserID = "<c:out value='${userInfo.id}' />";
+	        var SSUserName = "<c:out value='${userInfo.displayName1}' />";
+	        var Access_FG = "<c:out value='${boardInfo.access_FG}' />";
+	        var BoardAdmin_FG = "<c:out value='${boardInfo.boardAdmin_FG}>' />";
+	        var ListView_FG = "<c:out value='${boardInfo.listView_FG}' />";
+	        var Read_FG = "<c:out value='${boardInfo.read_FG}' />";
+	        var Write_FG = "<c:out value='${boardInfo.write_FG}' />";
+	        var Reply_FG = "<c:out value='${boardInfo.reply_FG}' />";
+	        var Delete_FG = "<c:out value='${boardInfo.delete_FG}' />";
+	        var BoardGroupAdmin_FG = "<c:out value='${boardInfo.boardGroupAdmin_FG}' />";
+	        var pReservedItem = "<c:out value='${pReservedItem}' />";
 	        var g_progresswin;
-	        var OneLineReplyFlag = "${oneLineReplyFlag}";
-			var gubun = "${boardInfo.gubun}";
-	        var userlang = "${userInfo.lang}";
-	        var cadmin = "${cAdmin}";
-	        var gcadmin = "${gcAdmin}";
-	        var code = "${code}";
-	        var ch_CommunityAdmin = "${chCommunityAdmin}";
-	        var userinfo_lang = "${strUserLang}";
+	        var OneLineReplyFlag = "<c:out value='${oneLineReplyFlag}' />";
+			var gubun = "<c:out value='${boardInfo.gubun}' />";
+	        var userlang = "<c:out value='${userInfo.lang}' />";
+	        var cadmin = "<c:out value='${cAdmin}' />";
+	        var gcadmin = "<c:out value='${gcAdmin}' />";
+	        var code = "<c:out value='${code}' />";
+	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
+	        var userinfo_lang = "<c:out value='${strUserLang}' />";
 	    	var objMHT = new ActiveXObject("MhtFormat.Convert");
-	    	var pUse_Editor = "${useEditor}";
+	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	
 	    	window.onload = function () {
 	    	    try {
@@ -81,7 +81,7 @@
                 	 
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();
-	    	        
+
 	    	        if (OneLineReplyFlag == "1") {
 	    	        	getOneLineReply();
 	    	        }
@@ -443,7 +443,7 @@
 	        }
 
 	        function ReaderList() {
-	        	var szHref = "Item_ReadList.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID;
+	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
 	            GetOpenWindow(szHref, "", 520, 400);
 	        }
 
@@ -472,7 +472,6 @@
 	                alert("<spring:message code='ezCommunity.t938'/>");
 				    return;
 				}
-
 
 	            if (OneLineReplyFlag == "1") {
 	                if (document.getElementById('onelinereply').value == "") {
@@ -508,24 +507,24 @@
 	                strXML += "<PASSWORD>" + Crypt_Encrytion(document.getElementById('txtPassWord').value) + "</PASSWORD>";
 	            }
 	            strXML += "</DATA>";
-
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/saveOneLineReply.do", false);
-	            xmlhttp.send(strXML);
-
-	            if (xmlhttp.status == 200) {
-	                xmlhttp = null;
-	                alert("<spring:message code='ezCommunity.t943'/>");
-					document.getElementById('onelinereply').value = "";
-					
-					if (gubun == "2") {
-						document.getElementById('txtPassWord').value = "";
+	            
+	            $.ajax({
+					type : "POST",
+					async : false,
+					url : "/ezCommunity/saveOneLineReply.do",
+					data : { "strXML"	:	strXML, 
+						   },
+					success: function(){
+						alert("<spring:message code='ezCommunity.t943'/>");
+						document.getElementById('onelinereply').value = "";
+						
+						if (gubun == "2") {
+							document.getElementById('txtPassWord').value = "";
+						}
+						    
+						getOneLineReply();
 					}
-					    
-					getOneLineReply();
-	            }
-
-	            xmlhttp = null;
+	            });
 	        }
 
 	        var checkreplypassword_dialogArguments = new Array();
@@ -538,6 +537,7 @@
                         checkreplypassword_dialogArguments = new Array();
                         checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
                         var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));
+                        
                         try {
                         	OpenWin.focus();
                         } catch (e) { }
@@ -549,7 +549,7 @@
 	                        alert("<spring:message code='ezCommunity.t944'/>");
 				            return;
 				        }
-
+	                    
 	                    if (!confirm("<spring:message code='ezCommunity.t945'/>")) {
 	                    	return;
 	                    }
@@ -560,7 +560,6 @@
 	                    xmlhttp = null;
 			        }
 	            } else {
-
                     if (!confirm("<spring:message code='ezCommunity.t945'/>")) {
                     	return;
                     }
@@ -588,37 +587,42 @@
 	        }
 
 	        function getOneLineReply() {
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-	            xmlhttp.send();
-
-	            var xmldom = createXmlDom();
-	            xmldom = loadXMLString(xmlhttp.responseText);
-	            xmlhttp = null;
-
-	            strHTML = "";
-	            var temp;
-
-	            for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-	                temp = i + 1;
-	                if (gubun != "2" && userinfo_lang == "")
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-	                else if (gubun == "2" && userinfo_lang == "")
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-	                else if (gubun != "2" && userinfo_lang != "1")
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME2").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-	                else if (gubun == "2" && userinfo_lang != "1")
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME2").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-
-	            }
-
-	            if (i == 0)
-	                strHTML = "<spring:message code='ezCommunity.t946'/>";
-	            try {
-	                document.getElementById('onelinereplylist').innerHTML = strHTML;
-	            }
-	            catch (e) {
-	            }
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCommunity/readOneLineReply.do",
+					data : { boardID	:	pBoardID, 
+							 itemID		:	pItemID
+						   },
+					success: function(result){
+						strHTML = "";
+		 	            var temp = 0;
+		 	            
+		 	           $.each(result["oneLineReplyList"], function(idx, item){
+		 	            	temp = temp+1;
+		 	            	if (gubun != "2" && userinfo_lang == "") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	} else if (gubun == "2" && userinfo_lang == "") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	} else if (gubun != "2" && userinfo_lang != "1") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName2 + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	} else if (gubun == "2" && userinfo_lang != "1") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + item.userName2 + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	}
+		 	           });
+		 	           
+		 	           if (temp == 0){
+		 	        	  strHTML = "<spring:message code='ezCommunity.t946'/>";
+		 	           }
+		 	                
+		 	           try {
+		 	               document.getElementById('onelinereplylist').innerHTML = strHTML;
+		 	           }
+		 	           catch (e) {
+		 	           }
+					}
+				});
 	        }
 
 	        function ReplaceText(orgStr, findStr, replaceStr) {
@@ -664,18 +668,24 @@
 	        function ToKMS() {
 	        	var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert_Cross.aspx?Mode=new&Flag=cop&ItemID=" + pItemID + "&boardid=" + pBoardID + "&url=" + strContentLocation + "&clubid=" + SSUserID;
 	            var OpenWin = window.open(url, "KAssetConvert_Cross", GetOpenWindowfeature(780, 800));
-	            try { OpenWin.focus(); } catch (e) { }
+	            
+	            try {
+	            	OpenWin.focus();
+	            } catch (e) {
+	            }
 	        }
 
 	        function trim(parm_str) {
-	            if (parm_str == "")
+	            if (parm_str == "") {
 	                return ""
-	            else
+	            } else {
 	                return rtrim(ltrim(parm_str));
+	            }
 	        }
 
 	        function ltrim(parm_str) {
 	            var str_temp = parm_str;
+	            
 	            while (str_temp.length != 0) {
 	                if (str_temp.substring(0, 1) == " ") {
 	                    str_temp = str_temp.substring(1, str_temp.length);
@@ -683,12 +693,14 @@
 	                    return str_temp;
 	                }
 	            }
+	            
 	            return str_temp;
 	        }
 
 
 	        function rtrim(parm_str) {
 	            var str_temp = parm_str;
+	            
 	            while (str_temp.length != 0) {
 	                int_last_blnk_pos = str_temp.lastIndexOf(" ");
 	                if ((str_temp.length - 1) == int_last_blnk_pos) {
@@ -697,6 +709,7 @@
 	                    return str_temp;
 	                }
 	            }
+	            
 	            return str_temp;
 	        }
 		</script>
@@ -823,19 +836,19 @@
 	                        <c:choose>
 	                        	<c:when test="${boardInfo.gubun != '2' }">
 	                        		<td id="WriteUserNM" style="white-space: nowrap">
-	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}")'>${item.writerName}</div>
+	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}")'><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
 	                        		<td id="Td7" style="white-space: nowrap">
-	                            		<div id="Div2" style="vertical-align: middle; height: 16px; overflow-y: auto;">${item.writerName}</div>
+	                            		<div id="Div2" style="vertical-align: middle; height: 16px; overflow-y: auto;"><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        
 	                        <th><spring:message code='ezCommunity.t209'/></th>
-	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap"><div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;">${item.writeDate}</div></td>
+	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap"><div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate}' /></div></td>
 	                        <th><spring:message code='ezCommunity.t931'/></th>
 	                        
 	                        <c:set var="t930" value="<spring:message code='ezCommunity.t930'/>" />
@@ -849,7 +862,7 @@
 	                        	
 	                        	<c:otherwise>
 	                        		<td id="Td8" style="padding-right: 15px; white-space: nowrap; width: 100%;">
-	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;">${item.endDate}</div>
+	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate}' /></div>
 	                        		</td>
 	                        	</c:otherwise>
 	                        </c:choose>
@@ -863,7 +876,7 @@
 		                        
 		                        <c:choose>
 		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td1" style="white-space: nowrap; width: 100px;"><span>${item.writerDeptName}</span></td>
+		                        		<td id="Td1" style="white-space: nowrap; width: 100px;"><span><c:out value='${item.writerDeptName}' /></span></td>
 		                        	</c:when>
 		                        	
 		                        	<c:otherwise>
@@ -875,7 +888,7 @@
 		                        
 		                        <c:choose>
 		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td3"><span>${item.extensionAttribute3}</span></td>
+		                        		<td id="Td3"><span><c:out value='${item.extensionAttribute3}' /></span></td>
 		                        	</c:when>
 		                        	
 		                        	<c:otherwise>
@@ -887,7 +900,7 @@
 		                        
 		                        <c:choose>
 		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td5" style="padding-right: 15px; white-space: nowrap; width: 100%;"><span>${item.extensionAttribute4}</span></td>
+		                        		<td id="Td5" style="padding-right: 15px; white-space: nowrap; width: 100%;"><span><c:out value='${item.extensionAttribute4}' /></span></td>
 		                        	</c:when>
 		                        	
 		                        	<c:otherwise>
@@ -901,7 +914,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezCommunity.t210'/></th>
 	                        <td id="cTitle" colspan="6">
-	                            <div id="title" style="WORD-WRAP: break-word; word-break: break-all; OVERFLOW-Y: auto; WIDTH: 100%;">${item.title}</div>
+	                            <div id="title" style="WORD-WRAP: break-word; word-break: break-all; OVERFLOW-Y: auto; WIDTH: 100%;"><c:out value='${item.title}' /></div>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -1038,14 +1051,14 @@
 		                        	</c:otherwise>
 		                        </c:choose>
 		                        
-		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')">${previousTitle}</div>
+		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')"><c:out value='${previousTitle}' /></div>
 		                        </td>
 		                    </tr>
 		                    <tr>
 		                        <th><spring:message code='ezCommunity.t192'/></th>
 		                        
 		                        <td>
-		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')">${nextTitle}</div>
+		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')"><c:out value='${nextTitle}' /></div>
 		                        </td>
 		                    </tr>
 		                </table>

@@ -45,10 +45,8 @@
 		</c:choose>
 		
 		<script type="text/javascript">
-// 			변수
 			var userInfo = "${userInfo}";
 			var item = "${item}";
-
 			var pUploadFilePath = "${pUploadFilePath}";
 			var pBoardID = "${boardInfo.boardID}";
 			var pBoardName = "${boardInfo.boardName}";
@@ -293,7 +291,7 @@
 	            for(i=0;i<xmldomNodes.length;i++) {
 	                filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
 	                filename = filepath.substr(89, filepath.length - 88);
-	                filepath = "/Upload_Community/" + filepath;		
+	                filepath = "/upload_community/" + filepath;
 	                str += "<ROW><CELL>";	
 	                str += "<VALUE>" + filename + "</VALUE>";
 	                str += "<DATA1>" + filepath + "</DATA1>";
@@ -523,6 +521,7 @@
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");
 		        }
 				
+		        
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
 		        xmlhttp.send(xmlDom);					
 
@@ -632,7 +631,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 							
-		        window.open("/ezCommunity/boardItemPreView.do?gubun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");	
+		        window.open("/ezCommunity/boardItemPreview.do?gubun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");	
 		    }
 					
 		    function AddDate(pDate,  pDays) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -15,6 +16,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommunityDAO")
@@ -152,6 +154,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public CommunityBoardItemVO getItemXML(Map<String, Object> map) throws Exception {
 		return (CommunityBoardItemVO) select("EzCommunityDAO.getItemXML", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> getReservedItemListXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.getReservedItemListXML", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityOneLineReplyVO> readOneLineReply(Map<String, Object> map) throws Exception {
+		return (List<CommunityOneLineReplyVO>) list("EzCommunityDAO.readOneLineReply", map);
 	}
 
 	public CommunityBoardItemVO getAdjacentItemGet3(Map<String, Object> map) throws Exception {
@@ -335,17 +347,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.brdNewItem", map);
 	}
 
-	public void updateAttachInfo(Map<String, Object> map) {
+	public void updateAttachInfo(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.updateAttachInfo", map);
 	}
 
-	public void insertAttachInfo(Map<String, Object> map) {
+	public void insertAttachInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.insertAttachInfo", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardListVO> getReservedItemListXML(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardListVO>) list("EzCommunityDAO.getReservedItemListXML", map);
 	}
 
 	public String getReservedItemListCount(Map<String, Object> map) throws Exception {
@@ -354,6 +361,28 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void brdUpdateItem(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.brdUpdateItem", map);
+	}
+
+	public void saveOneLineReply(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.saveOneLineReply", map);		
+	}
+
+	public String checkReplyPassword(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.checkReplyPassword", map);
+	}
+
+	public int checkOneLineOwner(Map<String, Object> map) throws Exception {
+		select("EzCommunity.checkOneLineOwner", map);
+		return (int) map.get("v_pCount");
+	}
+
+	public String deleteOneLineReply(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.deleteOneLineReply", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemReadVO> getReaderList(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemReadVO>) list("EzCommunityDAO.getReaderList", map);
 	}
 
 }

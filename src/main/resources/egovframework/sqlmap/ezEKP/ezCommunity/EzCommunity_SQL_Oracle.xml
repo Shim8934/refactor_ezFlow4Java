@@ -12,6 +12,8 @@
 	<typeAlias alias="CommunityBoardListVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO"/>	
 	<typeAlias alias="CommunityBoardPropertyVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO"/>	
 	<typeAlias alias="CommunityBoardItemAttachmentVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO"/>	
+	<typeAlias alias="CommunityOneLineReplyVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO"/>	
+	<typeAlias alias="CommunityBoardItemReadVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO"/>	
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -136,6 +138,14 @@
 		{CALL EZCOMMUNITY.EZSP_GETRESERVEDITEMLISTXML(#v_PENDROW#, #v_STRLANG#, #v_PUSERID#, #v_PSORTBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"	resultClass="CommunityOneLineReplyVO">
+		{CALL EZCOMMUNITY.EZSP_READONELINEREPLY(#v_USERINFO_LANG#, #v_PBOARDID#, #v_PITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.getReaderList"				parameterClass="Map"	resultClass="CommunityBoardItemReadVO">
+		{CALL EZCOMMUNITY.EZSP_BRDGETREADERLIST(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -222,6 +232,18 @@
 	
 	<procedure id="EzCommunityDAO.getReservedItemListCount"		parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_BRDRESERVEDITEMCOUNT(#v_pUserID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.checkReplyPassword"			parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_CHECKREPLYPASSWORD(#v_PITEMID#, #v_REPLYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.deleteOneLineReply"			parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.checkOneLineOwner"				parameterClass="Map"		resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_CHECKONELINEOWNER(#v_REPLYID#, #v_USERINFO_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
@@ -315,6 +337,11 @@
 	<procedure id="EzCommunityDAO.brdUpdateItem"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_BRDUPDATEITEM(#v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterName2#, #v_pWriterDeptID#, #v_pWriterDeptName#, #v_pWriterDeptName2#, #v_pWriterCompanyID#, #v_pWriterCompanyName#, #v_pWriterCompanyName2#, #v_pWriteDate#, #v_pParentWriteDate#, #v_pImportance#, #v_pTitle#, #v_pContentLocation#, #v_pStartDate#, #v_pEndDate#, #v_pAbstract#, #v_pAttachments#, #v_pUpperItemIDTree#, #v_pItemLevel#, #v_pExtensionAttribute1#, #v_pExtensionAttribute2#, #v_pExtensionAttribute3#, #v_pExtensionAttribute32#, #v_pExtensionAttribute4#, #v_pExtensionAttribute5#, #v_pDocPassWord#)}
 	</procedure>
+	
+	<procedure id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_SAVEONELINEREPLY(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_PCONTENT#, #v_PPASSWORD#)}
+	</procedure>
+	
 	
 	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
 		<![CDATA[
@@ -439,7 +466,7 @@
 			UPDATE 
 				EZCOMMUNITY.TBL_BOARD_ITEM
         	SET
-        		EXTENSIONATTRIBUTE5 = #filePath#,
+        		EXTENSIONATTRIBUTE5 = #filePath#
        		WHERE 
        			ITEMID = #itemID#
 		]]>

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -15,6 +16,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
@@ -38,6 +40,8 @@ public interface EzCommunityService {
 	public List<CommunityBoardInfoVO> copHomeBoardGet(String code) throws Exception;
 	
 	public List<CommunityBoardItemVO> copHomeBoardItemGet(String boardID) throws Exception;
+	
+	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -128,6 +132,8 @@ public interface EzCommunityService {
 	public String getItemAttachmentXML(String itemID) throws Exception;
 	
 	public String getProperSizeDisplay(int pSize) throws Exception;
+	
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
 
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
@@ -140,6 +146,8 @@ public interface EzCommunityService {
 	public int commMakeOkGet4() throws Exception;
 	
 	public int commHomeGet2(String code) throws Exception;
+	
+	public int getReservedItemListCount(String id) throws Exception;
 
 	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 
@@ -173,9 +181,15 @@ public interface EzCommunityService {
 
 	public void deleteItem(String itemList) throws Exception;
 
-	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
+	public void saveOneLineReply(String pItemID, String pReplyID, String pBoardID, String userID, String userName, String userName2, String pContent, String pPassword) throws Exception;
 
-	public int getReservedItemListCount(String id) throws Exception;
+	public String checkReplyPassword(String pItemID, String pReplyID) throws Exception;
+
+	public int checkOneLineOwner(String pReplyID, String id) throws Exception;
+
+	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception;
+
+	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

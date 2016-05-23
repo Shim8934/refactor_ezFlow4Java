@@ -13,8 +13,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +21,11 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -36,6 +34,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1271,7 +1270,6 @@ System.out.println("@");
 		}
     
 		if (item.getAttachments().length() > 0) {
-			//TODO
 			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
 				return "ERROR:첨부 파일 정보를 저장하는데 실패 하였습니다.";
 			}
@@ -1360,7 +1358,6 @@ System.out.println("@");
 					} else {
 						map.put("filePath", thumbPath.split(";")[i]);
 					}
-					
 					ezCommunityDAO.updateAttachInfo(map);
 				}
 				
@@ -1371,12 +1368,11 @@ System.out.println("@");
 				
 				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
 					map.put("filePath", boardID + commonUtil.separator + "UploadFile" + filePath);
+					ezCommunityDAO.insertAttachInfo(map);
 				} else {
 					map.put("filePath", filePath);
+					ezCommunityDAO.updateAttachInfo(map);
 				}
-				
-				
-				ezCommunityDAO.insertAttachInfo(map);
 			}
 			
 			return true;
@@ -1446,14 +1442,13 @@ System.out.println("@");
 		List<CommunityBoardItemVO> list;
 		
 		map = new HashMap<String, Object>();
-		map.put("v_PPARENTWRITEDATE", pItemID);
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
 		map.put("v_PBOARDID", pBoardID);
 		
 		list = ezCommunityDAO.getAdjacentItemsGet1(map);
 		
 		for (CommunityBoardItemVO item : list) {
-			System.out.println(item.getTitle());
 			if (item.getItemID().equals(pItemID)) {
 				previousItemID = tempItemID;
 				previousTitle = tempTitle;
@@ -1467,8 +1462,8 @@ System.out.println("@");
 			tempItemID = item.getItemID().trim();
 			tempTitle = item.getTitle().trim();
 		}
-		
-		if ( previousItemID.equals("")) {
+
+		if (previousItemID.equals("")) {
 			map = new HashMap<String, Object>();
 			map.put("v_PPARENTWRITEDATE", parentWriteDate);
 			map.put("v_PBOARDID", pBoardID);
@@ -1583,7 +1578,70 @@ System.out.println("@");
 		
 		return Integer.parseInt(result);
 	}
+
+	@Override
+	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_PITEMID", pItemID);
 		
+		return ezCommunityDAO.readOneLineReply(map);
+	}
+
+	@Override
+	public void saveOneLineReply(String pItemID, String pReplyID, String pBoardID, String userID, String userName, String userName2, String pContent, String pPassword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PITEMID", pItemID);
+		map.put("v_PREPLYID", pReplyID);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_USERID", userID);
+		map.put("v_USERNAME", userName);
+		map.put("v_USERNAME2", userName2);
+		map.put("v_PCONTENT", pContent);
+		map.put("v_PPASSWORD", pPassword);
+		
+		ezCommunityDAO.saveOneLineReply(map);
+	}
+
+	@Override
+	public String checkReplyPassword(String pItemID, String pReplyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PItemID", pItemID);
+		map.put("v_REPLYID", pReplyID);
+		
+		return ezCommunityDAO.checkReplyPassword(map);
+	}
+
+	@Override
+	public int checkOneLineOwner(String pReplyID, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_REPLYID", pReplyID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.checkOneLineOwner(map);
+	}
+
+	@Override
+	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_REPLYID", pReplyID);
+		map.put("v_GUBUN", gubun);
+		
+		return ezCommunityDAO.deleteOneLineReply(map);
+	}
+
+	@Override
+	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pItemID", pItemID);
+		
+		return ezCommunityDAO.getReaderList(map);
+	}
+	
 	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
