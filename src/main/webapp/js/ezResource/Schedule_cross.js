@@ -907,7 +907,7 @@ function SaveSchedule_onClick( cmd , resItem)
 	createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23); //승인여부
 	
 	// 위에 노드 22까지 값을 받아 처리부분으로 넘겨준다.
-	xmlHttp.open("POST","/myoffice/ezResource/ResSch/Schedule_Add_Ok.aspx?cmd="+cmd+"&type="+typeVal,false);
+	xmlHttp.open("POST","/ezResource/scheduleAddOk.do?cmd="+cmd+"&type="+typeVal,false);
 	xmlHttp.send(getXmlString(xmlDoc));
 	
 	var returnStr, p_num, p_ownerID;
@@ -922,11 +922,11 @@ function SaveSchedule_onClick( cmd , resItem)
 	    if(cmd == "add" && objNode23 == "0")
 	    {
 	        xmlHttp = createXMLHttpRequest();
-			xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Sendmail.aspx", false);
+			xmlHttp.open("POST", "/ezResource/sendmail.do", false);
 			xmlHttp.send(xmlDoc);				        
 			var ResponseXML = xmlHttp.responseXML;
 			xmlHttp = createXMLHttpRequest();
-			xmlHttp.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
+			xmlHttp.open("POST", "/ezEmail/remote/mailSendNoti.do", false);
 			xmlHttp.send(ResponseXML);
 			xmlHttp = null;
 
@@ -1075,7 +1075,7 @@ function OnlySaveSchedule(resItem) {
     }
     createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23);
 
-    xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Schedule_Add_Ok.aspx?cmd=" + cmd + "&type=" + typeVal, false);
+    xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=" + cmd + "&type=" + typeVal, false);
     xmlHttp.send(getXmlString(xmlDoc));
 
     var returnStr, p_num, p_ownerID;
@@ -1087,11 +1087,11 @@ function OnlySaveSchedule(resItem) {
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
             xmlHttp = createXMLHttpRequest();
-            xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Sendmail.aspx", false);
+            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
             xmlHttp.send(xmlDoc);
             var ResponseXML = xmlHttp.responseXML;
             xmlHttp = createXMLHttpRequest();
-            xmlHttp.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
+            xmlHttp.open("POST", "/ezEmail/remote/mailSendNoti.do", false);
             xmlHttp.send(ResponseXML);
             xmlHttp = null;
 
@@ -2251,11 +2251,11 @@ function SetApproval_onClick(pCmd, pFlag)
 	        // 2009.11.26 - 자원승인시 사용자에게 자원승인 알림메일 발송	        
 	        	        
 	        xmlHTTP = createXMLHttpRequest();
-			xmlHTTP.open("POST", "/myoffice/ezResource/ResSch/SendmailToUser.aspx", false);
+			xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 			xmlHTTP.send(xmlDOM);				        
 			var ResponseXML = xmlHTTP.responseXML;
 			xmlHTTP = createXMLHttpRequest();
-			xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
+			xmlHTTP.open("POST", "/ezEmail/remote/mailSendNoti.do", false);
 			xmlHTTP.send(ResponseXML);
 			xmlHTTP = null;
     	         
