@@ -33,7 +33,8 @@
 	    var ResID = "${resID}";
 	    var pDisplaySTime = "${displaySTIME}";
 	    var pDisplayETime = "${displayETIME}";
-			    var uselang = "${userLang}";    var folder_Url = "/ezResource/scheduleGet.do";
+		var uselang = "${userLang}";  
+		var folder_Url = "/ezResource/scheduleGet.do";
 	    var p_Type = "";
 	    var pBrdid = "${resID}";
 	    var title_name = new Array();
@@ -95,7 +96,7 @@
 	        createNodeInsert(xmlDom, objNode, "DATA");
 	        createNodeAndInsertText(xmlDom, objNode, "COMPANYID", "VIEW");
 
-	        xmlhttp2.open("POST", "/ezSchedule/Admin/scheduleGetHoliday.do", true);
+	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do", true);
 	        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 	        xmlhttp2.send(xmlDom);
 	    }
