@@ -6,7 +6,7 @@
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
-.calendar_month th{height:26px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0;}
+.calendar_month th{height:26px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0;}
 .calendar_month th.sun{color:#ee1c25;}
 .calendar_month th.sat{color:#0032cf;}
 .calendar_month td{width:14.2%; border:1px solid #b5b5b5;}
@@ -54,9 +54,9 @@
 .calendar_week_navi th .btn_next{display: inline-block; vertical-align: top; margin: 6px 0px 0px; height:17px;cursor:pointer;}
 .calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid #9b9b9b;}
 .calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #b6b6b6; border-left:1px solid #cbcbcb; padding:0; margin:0;}
-.calendar_week_title .calendar_th_time{width:69px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
-.calendar_week_title .calendar_th_list{background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0; text-align:left;}
-.calendar_week_title .calendar_th_last{width:16px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
+.calendar_week_title .calendar_th_time{width:69px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_list{background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_last{width:16px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
 .calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
 .calendar_week_title .sun{color:#ee1c25; }
 .calendar_week_title .sat{color:#0032cf;}
@@ -98,7 +98,7 @@
 
 /* 일보기 */
 .calendar_day_title{vertical-align:top;}
-.calendar_day_title th{height:26px; line-height:26px; background:url(images/calendar/bg_calendar_title.gif) repeat-x; border-top:1px solid #9b9b9b; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0; color:#333;}
+.calendar_day_title th{height:26px; line-height:26px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:1px solid #9b9b9b; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0; color:#333;}
 .calendar_day_title th .btn_prev{display: inline-block; vertical-align: top; margin: 4px 0px 0px;cursor:pointer; height:17px;}
 .calendar_day_title th .btn_next{display: inline-block; vertical-align: top; margin: 4px 0px 0px;cursor:pointer; height:17px;}
 .calendar_day_title .calendar_time{width:61px; border:1px solid #9b9b9b; border-right:1px solid #b6b6b6; border-top:0 none; background:#eaeaea;vertical-align: top;}
@@ -137,7 +137,7 @@
 .calendar_mini_title .btn_nnext{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
 .calendar_mini_title span{display:inline-block;}
 .calendar_mini{table-layout:fixed; border:1px solid #a6a6a6; border-top:0 none;}
-.calendar_mini th{width:14.2%; height:28px; background:url(images/calendar/bg_calendar_mini_title.gif) repeat-x; margin:0; padding:0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:11px; font-family:Arial, Helvetica, sans-serif; color:#ffffff;}
+.calendar_mini th{width:14.2%; height:28px; background:url(/images/calendar/bg_calendar_mini_title.gif) repeat-x; margin:0; padding:0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:11px; font-family:Arial, Helvetica, sans-serif; color:#ffffff;}
 .calendar_mini th.sun{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
 .calendar_mini th.sat{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:#0032cf;} */
 .calendar_mini td{width:14.2%; height:30px; text-align:center; cursor:pointer;}
