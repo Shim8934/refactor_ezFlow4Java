@@ -267,6 +267,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String writerDept = "";
 		String gubun = "P";
 		String groupID = "";
+		String startDate = "";
+		String endDate = "";
 		//int page = 0;
 		
 		try {
@@ -289,8 +291,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 			if (cmd.equals("get")) {
-				String startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
-				String endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+				startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+System.out.println("startDate:"+startDate);
+				endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 
 				if (viewType.equals("list")) {
 					approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
@@ -865,8 +868,13 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 일정 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleMain.do")
-	public String scheduleMain(Model model) throws Exception {
+	public String scheduleMain(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String resID = req.getParameter("resID");
+		
+		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("adminFg", "Y");
+		model.addAttribute("resID", resID);
 		return "/ezResource/resScheduleMain";
 	}
 	
@@ -884,5 +892,13 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleAdd.do")
 	public String scheduleAdd(Model model) throws Exception {
 		return "/ezResource/resScheduleAdd";
+	}
+	
+	/**
+	 * 자원관리 자원 양식 등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleManageForm.do")
+	public String scheduleManageForm(Model model) throws Exception {
+		return "/ezResource/resScheduleManageForm";
 	}
 }

@@ -270,8 +270,6 @@ public class EzResourceServiceImpl implements EzResourceService{
 				String loc = scheRSDom.getElementsByTagName("location").item(i).getTextContent();
 				String startDateTime = scheRSDom.getElementsByTagName("startDate").item(i).getTextContent();
 				String endDateTime = scheRSDom.getElementsByTagName("endDate").item(i).getTextContent();
-System.out.println(startDateTime);
-System.out.println(endDateTime);
 				String reFlag = scheRSDom.getElementsByTagName("reFlag").item(i).getTextContent();
 				String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
 				String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
