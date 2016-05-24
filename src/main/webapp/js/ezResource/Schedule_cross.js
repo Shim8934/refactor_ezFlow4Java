@@ -232,8 +232,7 @@ function Schedule_Repetition_onclick()
 //	g_data["endTime"] = idDatepicker.vtLocalEndDate;	// 종료시간
 	
     // 071204 - 반복예약시 끝날짜 표시
-	if( endDateTimeRepeat!="" )
-	{
+	if (endDateTimeRepeat !="" ) {
 		var startYearNum = Number(startDateTimeRepeat.substring(0, 4));
 		var startMonthNum = Number(startDateTimeRepeat.substring(5, 7))-1;
 		var startDayNum = Number(startDateTimeRepeat.substring(8, 10));
@@ -251,15 +250,11 @@ function Schedule_Repetition_onclick()
 	
 		g_data["startTime"] = startDateRepeat;		// 시작시간
 		g_data["endTime"] = endDateRepeat;	// 종료시간
-	} else 
-	{
-	    if (repetitionFlag)
-	    {
+	} else {
+	    if (repetitionFlag) {
 	        g_data["startTime"] = reStartDate;		// 시작시간
 	        g_data["endTime"] = reEndDate;	// 종료시간
-	    }
-	    else
-	    {
+	    } else {
 	        g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();		// 시작시간
 	        g_data["endTime"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();	// 종료시간
 	    }
@@ -267,22 +262,22 @@ function Schedule_Repetition_onclick()
 	
 	g_data["ftDay"] = "";
 	 
-	
 	// 하루종일 체크 여부
 	var pAlldaycheck = "";
-	if (document.getElementById("AllDay").checked == true)
+	if (document.getElementById("AllDay").checked == true) {
 		pAlldaycheck = "1";
-	else
+	} else {
 		pAlldaycheck = "0";
+	}
 			
 	g_data["alldaycheck"] = pAlldaycheck;				// 하루종일유무
 	
 	schedule_repetition_cross_dialogArguments[0] = g_data;
 	schedule_repetition_cross_dialogArguments[1] = Schedule_Repetition_onclick_Complete;
 
-	DivPopUpShow(450, 550, "Schedule_Repetition_cross.aspx");
-	
+	DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
 }
+
 function Schedule_Repetition_onclick_Complete(retVal) {
 
     if (typeof (retVal) == "undefined" || (typeof (retVal) == "number" && retVal == -1)) {
@@ -340,8 +335,8 @@ function Schedule_Repetition_onclick_Complete(retVal) {
 var repetitionFlag = false;
 var reStartDate;
 var reEndDate;
-function show_repetition_info()
-{
+
+function show_repetition_info() {
 	var repeatinfo = "" + strLang122 + "";
 	
 	xmlinDoc = createXmlDom();
@@ -351,8 +346,7 @@ function show_repetition_info()
 	//szType = SelectSingleNodeValueNew(xmlinDoc, "frequency");//xmlinDoc.getElementsByTagName( "frequency" ).item(0).text;
 	szType = getNodeText(SelectNodes(xmlinDoc,"recurrence/frequency")[0]);
 	
-	switch (szType)
-	{
+	switch (szType) {
 		case "4":
 			repeatinfo += "" + strLang123 + "";
 			break;
@@ -371,8 +365,7 @@ function show_repetition_info()
 	
 	if (document.getElementById("AllDay").checked == true) {
 	    repeatinfo += "" + strLang126 + "";
-	}
-	else {
+	} else {
 	    var sdate, edate, tempstr;
 	    sdate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 	    edate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
@@ -478,7 +471,7 @@ function SaveRepetition( org_num, org_ownerID )
 
 	if( reFlagVal == "1" && tmpReFlag.value == "3" )
 	{
-		xmlHttp.open("POST","Schedule_Repetition_Proc.aspx?cmd=del",false);
+		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=del",false);
 		xmlHttp.send( g_data["recur_del"] );
 		
 		var res = xmlHttp.responseText;
@@ -492,7 +485,7 @@ function SaveRepetition( org_num, org_ownerID )
 	}
 	else if( reFlagVal == "1" && document.getElementById("tmpReFlag").value == "2")
 	{
-		xmlHttp.open("POST","Schedule_Repetition_Proc.aspx?cmd=mod&num="+org_num+"&ownerID="+org_ownerID,false);
+		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=mod&num="+org_num+"&ownerID="+org_ownerID,false);
 		xmlHttp.send( g_data["recurrence"] );
 	
 		var res = xmlHttp.responseText;
@@ -504,7 +497,7 @@ function SaveRepetition( org_num, org_ownerID )
 	}
 	else if( (reFlagVal == "0" || reFlagVal == "") && document.getElementById("tmpReFlag").value == "1" )
 	{
-		xmlHttp.open("POST","Schedule_Repetition_Proc.aspx?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
+		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
 		xmlHttp.send( g_data["recurrence"] );
 
 		var res = xmlHttp.responseText;
@@ -517,7 +510,7 @@ function SaveRepetition( org_num, org_ownerID )
 	}
 	else if( reFlagVal == "2" && document.getElementById("tmpReFlag").value == "1")		// 기념일 수정하기
 	{
-		xmlHttp.open("POST","Schedule_Repetition_Proc.aspx?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
+		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
 		xmlHttp.send( g_data["recurrence"] );
 	
 		var res = xmlHttp.responseText;
@@ -529,31 +522,25 @@ function SaveRepetition( org_num, org_ownerID )
 	}
 }
 
-function invite_onclick()
-{
-	if (invite.style.display == "none")
-	{
+function invite_onclick() {
+	if (invite.style.display == "none") {
 		invite.style.display = "block";
 		inviteView.style.display = "block";
 		menuTable1.style.display = "none";
 		menuTable2.style.display = "block";
 		//td_content.style.height = "80";
 		
-		if( gresFlag.value == "0" || gresFlag.value == "" )
-		{
+		if( gresFlag.value == "0" || gresFlag.value == "" ) {
 			gresFlag.value = "1";
 		}
-	}
-	else
-	{
+	} else {
 		invite.style.display = "none";
 		inviteView.style.display = "none";
 		menuTable1.style.display = "block";
 		menuTable2.style.display = "none";
 		//td_content.style.height = "130";
 		
-		if( gresFlag.value > "0" || gresFlag.value == "" )
-		{
+		if( gresFlag.value > "0" || gresFlag.value == "" ) {
 			gresFlag.value = "0";
 		}
 	}
@@ -571,7 +558,7 @@ function Schedule_Entry_onclick() {
 
     var feature = "dialogHeight:450px; dialogWidth:740px; status:no; help:no;edge:sunken";
     feature = feature + GetShowModalPosition(740, 450);
-    var reParam = window.showModalDialog("Schedule_Add_user.aspx?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, g_param, feature);
+    var reParam = window.showModalDialog("/ezResource/scheduleAddUser.do?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, g_param, feature);
 
     if (typeof (reParam) != "undefined" && reParam != null) {
         $("#Sdatepicker").datepicker('setDate', reParam["startTime"]);
@@ -585,8 +572,7 @@ function Schedule_Entry_onclick() {
     }
 }
 
-function GetUserID( userName )
-{
+function GetUserID( userName ) {
 	var returnVal = "";
 	
 	var xmlhttp = createXMLHttpRequest();
@@ -627,8 +613,7 @@ function GetUserID( userName )
 	var Clength = xmlRtn.documentElement.childNodes(1).childNodes.length;
 	var params = new Array();
 	
-	if(Clength == 1)
-	{
+	if(Clength == 1) {
 		params = new Array();
 		
 		params["s_proc"] = "select";
@@ -643,8 +628,7 @@ function GetUserID( userName )
 		
 		returnVal = params;
 	}
-	else if(Clength > 1)
-	{
+	else if(Clength > 1) {
 		params["Kind"] = "Duplicate";
 		params["UserName"] = userName;
 		params["UserListXml"] = xmlRtn.xml;
@@ -659,30 +643,22 @@ function GetUserID( userName )
 	return returnVal;
 }
 
-function alertCheck_onClink()
-{
-	if( alertCheck.checked == true )
-	{
+function alertCheck_onClink() {
+	if( alertCheck.checked == true ) {
 		alertTime.disabled = false;
-	}
-	else
-	{
+	} else {
 		alertTime.disabled = true;
 	}
 }
 
-function AllDay_onClick()
-{
+function AllDay_onClick() {
 	 
-	if( document.getElementById("AllDay").checked == true )
-	{
+	if( document.getElementById("AllDay").checked == true ) {
 		document.getElementById("SD_Font").style.display = "none";
 		document.getElementById("ED_Font").style.display = "none";
 		document.getElementById("_T1").style.display = "none";
 		document.getElementById("img_StartTime").style.display = "none";
-	}
-	else
-	{
+	} else {
 		document.getElementById("SD_Font").style.display = "block";
 		document.getElementById("ED_Font").style.display = "block";
 		document.getElementById("_T2").style.display = "block";
@@ -690,8 +666,7 @@ function AllDay_onClick()
 	}
 }
 
-function replaceSingleQuotation( reStr )
-{
+function replaceSingleQuotation( reStr ) {
 	reStr = reStr.replace(/'/g, "''");
 	
 	return reStr;
@@ -702,7 +677,7 @@ function replaceSingleQuotation( reStr )
 function CheckTimeRevision(szTime){
 	if( parseInt(szTime) == 0 )	{
 		szTime = "00";
-	}else if( parseInt(szTime) > 0 && parseInt(szTime) < 10){
+	} else if( parseInt(szTime) > 0 && parseInt(szTime) < 10){
 		szTime = "0"+szTime;
 	}
 	
@@ -712,27 +687,27 @@ function CheckTimeRevision(szTime){
 // 리소스
 // 저장버튼 누를때..사용됨...
 // 시작일시와 종료일시 Chk
-function CheckStartEndDateTime()
-{
+function CheckStartEndDateTime() {
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
     var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 	
-	if( start >= end )
+	if( start >= end ) {
 		return false;
-	else
+	} else {
 		return true;
+	}
 }
 
 // 하루종일 체크시 시작시간 종료시간 체크
-function AllDayCheckStartEndDateTime()
-{
+function AllDayCheckStartEndDateTime() {
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
     var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
 	
-	if( start > end )
+	if( start > end ) {
 		return false;
-	else
+	} else {
 		return true;
+	}
 }
 
 // 리소스에서 사용
@@ -743,7 +718,6 @@ function SessionCheck(){
 		window.opener.parent.document.location.href = "/login.asp";
 		window.close();
 	}
-	
 }
 
 //******************************************************************
@@ -759,10 +733,8 @@ function SessionCheck(){
 // 리소스에서 사용 : 이승엽
 //******************************************************************
 // 2011-04 : 자원관리 중복 등록 관련 작업 진행
-function SaveSchedule_onClick( cmd , resItem)
-{
-	if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod")
-	{
+function SaveSchedule_onClick( cmd , resItem) {
+	if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod") {
 		alert("" + strLang132 + "");
 		return;
 	}
@@ -784,35 +756,28 @@ function SaveSchedule_onClick( cmd , resItem)
 	// 이거때문에 다 팅긴다 그래서 주석.
 	SessionCheck();
 	
-	if( trim_Cross(document.getElementById("title").value) == "" ){
+	if(trim_Cross(document.getElementById("title").value) == "" ) {
 		alert("" + strLang138 + "");
 		return;
 	}
 	
 	// 일반/하루종일
-	if(!document.getElementById("AllDay").checked)
-	{
-		if( !CheckStartEndDateTime() )
-		{
+	if(!document.getElementById("AllDay").checked) {
+		if( !CheckStartEndDateTime() ) {
 			alert("" + strLang139 + "");			
 			return;
 		}
-	}
-	else
-	{
-		if (!AllDayCheckStartEndDateTime())
-		{
+	} else {
+		if (!AllDayCheckStartEndDateTime()) {
 			alert("" + strLang139 + "");			
 			return;
 		}
 	}
 	
 	// 자신의 일정인지 체크
-	if ( cmd == "mod" )
-	{
+	if ( cmd == "mod" ) {
 		// 관리자가 아닌 경우
-		if (CheckAdmin() == false && OwnerCheck() == false)
-		{
+		if (CheckAdmin() == false && OwnerCheck() == false) {
 			alert("" + strLang140 + "");
 			return;
 		}
@@ -834,11 +799,11 @@ function SaveSchedule_onClick( cmd , resItem)
    
     var objNode4,objNode5,objNode6;
 	//하루종일이면 시간을 디폴트로 저장하고 그렇지 안으면 설정하여 저장
-	if( document.getElementById("AllDay").checked == true ){
+	if (document.getElementById("AllDay").checked == true) {
 	    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 	    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:01";
 		objNode6 = "1";
-	}else{
+	} else {
 	    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		objNode6 = "0";
@@ -850,9 +815,9 @@ function SaveSchedule_onClick( cmd , resItem)
     createNodeAndInsertText(xmlDoc, objNode, "ALLDAY", objNode6);
 	
 	var objNode7;
-	if( alertCheck.checked == true ){
+	if (alertCheck.checked == true) {
 		objNode7 =  "30";	// 항상 30분 전 알림
-	}else{
+	} else {
 		objNode7 = "";
 	}
 	createNodeAndInsertText(xmlDoc, objNode, "ALERT", objNode7);
@@ -862,9 +827,9 @@ function SaveSchedule_onClick( cmd , resItem)
 	createNodeAndInsertText(xmlDoc, objNode, "CONTENT", content);
 	
     var objNode9; 
-    if( writerID.value == "" ){
+    if (writerID.value == "") {
 		objNode9 = s_userID;	// 현재 사용자ID
-	}else{
+	} else {
 		objNode9 = document.getElementById("writerID").value;
 	}
     createNodeAndInsertText(xmlDoc, objNode, "WRITERID", objNode9);
@@ -887,21 +852,18 @@ function SaveSchedule_onClick( cmd , resItem)
 	// 수정시엔 DB에 저장되어 있는 값으로 저장
 	
 	var objNode23;
-	if (ApproveFlag == "1")
-	{
-		if (cmd == "add")
+	if (ApproveFlag == "1") {
+		if (cmd == "add") {
 			objNode23 = "0";
-		else
-		{
+		} else {
 			// 수정(2007.03.28) : 반복예약 기능
-			if( reFlagVal == "1" && document.getElementById("iReFlag").value == "0" )
+			if( reFlagVal == "1" && document.getElementById("iReFlag").value == "0" ) {
 				objNode23 = "0";
-			else
+			} else {
 				objNode23 = SavedApproveFlag;
+			}
 		}
-	}
-	else
-	{
+	} else {
 		objNode23 = "1";
 	}
 	createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23); //승인여부
@@ -1061,16 +1023,16 @@ function OnlySaveSchedule(resItem) {
 
     var objNode23;
     if (ApproveFlag == "1") {
-        if (cmd == "add")
-            objNode23 = "0";
-        else {
-            if (reFlagVal == "1" && document.getElementById("iReFlag").value == "0")
-                objNode23 = "0";
-            else
-                objNode23 = SavedApproveFlag;
+        if (cmd == "add") {
+        	objNode23 = "0";
+        } else {
+            if (reFlagVal == "1" && document.getElementById("iReFlag").value == "0") {
+            	objNode23 = "0";
+            } else {
+            	objNode23 = SavedApproveFlag;
+            }
         }
-    }
-    else {
+    } else {
         objNode23 = "1";
     }
     createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23);
@@ -1103,47 +1065,37 @@ function OnlySaveSchedule(resItem) {
 
             SaveRepetition(p_num, resItem);
         }
-
     } else {
         alert("" + strLang145 + "");
     }
-
 }
 // 2011-04 : 자원관리 중복 등록 관련 작업 진행
-function DupCheck(resItemID)
-{
+function DupCheck(resItemID) {
     //================================================================================
 	// 자원사용 중복체크
 	var STime = "";
 	var ETime = "";
 		
 	// 하루종일
-	if (document.getElementById("AllDay").checked == true)
-	{
+	if (document.getElementById("AllDay").checked == true) {
 	    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 	    ETime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-	}
-	else
-	{
+	} else {
 	    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	    ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 	}
 	
 	// Parameter: 자원번호, 시작시간, 종료시간, 회사ID, 글번호, 저장Flag(add, mod)		
 	var bUsingResource = isUsingResource(resItemID, STime, ETime, ss_companyID, num.value, cmd, document.getElementById("AllDay").checked);
-	if (bUsingResource)
-	{
+	if (bUsingResource) {
 	    // 2011-05 : 개별체크로 인한 중복 알림 제거
 		//alert("" + strLang141 + "");
 		return false;
-	}
-	else
-	{
+	} else {
 	    return true;
 	}
 	//================================================================================
 }
-
 
 //******************************************************************
 //* Function 명   : delSchedule_onClick( num, ownerID )
@@ -1158,20 +1110,16 @@ function DupCheck(resItemID)
 var schedule_repetition_del_cross_dialogArguments = new Array();
 var m_num;
 var m_ownerID;
-function delSchedule_onClick( num, ownerID )
-{
+function delSchedule_onClick( num, ownerID)  {
     var isRepetition = false;
 
-	if( num != "" && ownerID != "" )
-	{
-		if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod")
-		{
+	if( num != "" && ownerID != "" ) {
+		if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod") {
 			alert("" + strLang148 + "");
 			return;
 		}
 
-		if (CheckAdmin() == false && OwnerCheck() == false)
-		{
+		if (CheckAdmin() == false && OwnerCheck() == false) {
 			alert("" + strLang94 + "");
 			return;
 		}
@@ -1195,12 +1143,11 @@ function delSchedule_onClick( num, ownerID )
 		            schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 		            schedule_repetition_del_cross_dialogArguments[1] = delSchedule_onClick_Complete;
 
-		            DivPopUpShow(390, 260, "Schedule_Repetition_Del_cross.aspx");
-		        }
-		        else {
+		            DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+		        } else {
 		            var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
 		            feature = feature + GetShowModalPosition(390, 260);
-		            var hWin = window.showModalDialog("Schedule_Repetition_Del_cross.aspx", rgParams, feature);
+		            var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
 
 		            if (false != rgParams["CancelOpen"]) return (false);
 		            var szType = rgParams["InstanceType"];
@@ -1212,8 +1159,7 @@ function delSchedule_onClick( num, ownerID )
 		                    num = "0";
 		                    reFlagVal = "3";
 		                }
-		            }
-		            else if (parseInt(reFlagVal) == 3) {
+		            } else if (parseInt(reFlagVal) == 3) {
 		                if (szType == "Master") {
 		                    num = pnumVal;
 		                    ownerID = writerIDVal;
@@ -1240,7 +1186,7 @@ function delSchedule_onClick( num, ownerID )
 		        createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
 		        createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
 
-		        xmlHttp.open("POST", "Schedule_Add_Ok.aspx?cmd=del", false);
+		        xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
 		        xmlHttp.send(xmlDoc);
 
 		        var res = xmlHttp.responseText;
@@ -1249,15 +1195,12 @@ function delSchedule_onClick( num, ownerID )
 		            window.close();
 
 		            window_onUnload();
-		        }
-		        else {
+		        } else {
 		            alert("" + strLang149 + "");
 		        }
 		    }
 		}
-	}
-	else
-	{
+	} else {
 		window.close();
 	}
 }
@@ -1276,8 +1219,7 @@ function delSchedule_onClick_Complete(retVal) {
             m_num = "0";
             reFlagVal = "3";
         }
-    }
-    else if (parseInt(reFlagVal) == 3) {
+    } else if (parseInt(reFlagVal) == 3) {
         if (szType == "Master") {
             m_num = pnumVal;
             m_ownerID = writerIDVal;
@@ -1301,7 +1243,7 @@ function delSchedule_onClick_Complete(retVal) {
     createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
     createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
 
-    xmlHttp.open("POST", "Schedule_Add_Ok.aspx?cmd=del", false);
+    xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
     xmlHttp.send(xmlDoc);
 
     var res = xmlHttp.responseText;
@@ -1309,8 +1251,7 @@ function delSchedule_onClick_Complete(retVal) {
     if (trim(res) == "OK") {
         window.close();
         window_onUnload();
-    }
-    else {
+    } else {
         alert("" + strLang149 + "");
     }
     DivPopUpHidden();
@@ -1373,8 +1314,7 @@ function GetOpenPosition(popUpW, popUpH) {
     return feature
 }
 
-function printpr()
-{
+function printpr() {
           var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
 			ezUtil.PrintPreview(document);
 			ezUtil = null;
@@ -1390,8 +1330,7 @@ function printpr()
 //* 수정내용      : 
 //******************************************************************
 //window.onbeforeprint = function ()
-function onbeforeprint()
-{
+function onbeforeprint() {
     g_documentTitle = document.title;
     document.title = title.value;
 
@@ -1414,31 +1353,27 @@ function onbeforeprint()
 
     document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
 
-    if (importance1.value == 1)		// 중요도 낮음	importance1.value의 값음 schedule_add.asp 화면에서 직접가지고 온다.
-    {
+    //중요도 낮음	importance1.value의 값음 schedule_add.asp 화면에서 직접가지고 온다.
+    if (importance1.value == 1) {
         printImportance.textContent = "" + strLang161 + "" + " ";	// 중요도
     }
 
-    if (importance1.value == 2)		// 중요도 보통
-    {
+    //	중요도 보통
+    if (importance1.value == 2) {
         printImportance.textContent = "" + strLang163 + "" + " ";
     }
 
-    if (importance1.value == 3)		// 중요도 높음
-    {
+    //중요도 높음
+    if (importance1.value == 3) {
         printImportance.textContent = "" + strLang165 + "" + " ";
     }
 
-
     if (tr_Recur.style.display != "none") {
         document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
-
-    }
-    else {
+    } else {
         if (!AllDay.checked) {
             document.getElementById("printDate").textContent = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + strLang126 + ")";
-        }
-        else {
+        } else {
             document.getElementById("printDate").textContent = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
         }
     }
@@ -1451,8 +1386,7 @@ function onbeforeprint()
     //printDocument.appendChild(divTag);
 }
 
-window.onafterprint = function ()
-{
+window.onafterprint = function () {
 	document.getElementById("normalScreen").style.display = "block";
 	document.getElementById("printScreen").style.display = "none";
 	document.getElementById("mainbodytag").className ="popup";
@@ -1473,32 +1407,28 @@ window.onafterprint = function ()
 var g_progresswin;
 var g_fileList;
 
-function AttachAdd_onClick()
-{
+function AttachAdd_onClick() {
 	var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 	var file = ezUtil.OpenLoadDlgMulti("", "");
 
-	if (!file)
+	if (!file) {
 		return;
+	}
 
 	g_fileList = file.split(";");
 	var fileSize = 0;
 
-	for (var i=0; i<g_fileList.length-1; i++)
-	{
-		if (ezUtil.GetFileSize(g_fileList[i]) == 0)
-		{
+	for (var i=0; i<g_fileList.length-1; i++) {
+		if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
 			alert("" + strLang166 + "");
 			return;
 		}
-
 		fileSize += ezUtil.GetFileSize(g_fileList[i]); 			
 	}
 
 	ezUtil = null;
 
-	if (fileSize > 2 * 1024 * 1024)
-	{
+	if (fileSize > 2 * 1024 * 1024) {
 		alert("" + strLang167 + "");
 		return;
 	}
@@ -1510,10 +1440,9 @@ function AttachAdd_onClick()
 
 }
 
-function show_progress(fileinfo)
-{
+function show_progress(fileinfo) {
     var feature = GetShowModalPosition(390, 160);
-    g_progresswin = window.showModelessDialog("/myoffice/ezEmail/show_progress.asp?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:160px; center:yes; status:no; help:no; edge:sunken" + feature);
+    g_progresswin = window.showModelessDialog("/ezEmail/showProgress.do?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:160px; center:yes; status:no; help:no; edge:sunken" + feature);
 
 	//Dialog 창이 완전히 Loding 되기까지 대기한다.
 	//for( ;window.g_progresswin.document.readyState!="complete";) ;//IE 9 지원안함.
@@ -1522,21 +1451,20 @@ function show_progress(fileinfo)
 }
 
 //--실제로 파일첨부를 하는 함수
-function beginAttachAdd()
-{
-	for (var i=0; i<g_fileList.length-1; i++)
-	{
+function beginAttachAdd() {
+	for (var i=0; i<g_fileList.length-1; i++) {
 		try {
-			if (i > 0)
+			if (i > 0) {
 				status_change(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1) + "" + strLang168 + "" + (i+1) + "/" + (g_fileList.length-1));
-
+			}
 			oPoster.Clear();
 			
 			//https 사용
-			if(window.location.protocol.toLowerCase() == "http:") 
-			    oPoster.Protocol = 0; 
-			else 
-			    oPoster.Protocol = 1; 
+			if(window.location.protocol.toLowerCase() == "http:") {
+				oPoster.Protocol = 0; 
+			}  else {
+				oPoster.Protocol = 1; 
+			} 
 			
 			oPoster.AddFormData("mode", "send");
 			oPoster.AddFormData("cmd", "add");
@@ -1546,30 +1474,28 @@ function beginAttachAdd()
 			oPoster.AddFormData("gresFlag", gFlagVal);
 			oPoster.AddFile("attachFile", g_fileList[i], 0);
 			oPoster.Host = server_name;
-			oPoster.PostURL = "/myoffice/ezSchedule/Schedule_Attach.asp";
+			oPoster.PostURL = "/ezSchedule/scheduleAttach.do";
 			oPoster.Post();
 
-			if (oPoster.Response.substr(0, 2) != "OK")
-			{
+			if (oPoster.Response.substr(0, 2) != "OK") {
 				try {
 					g_progresswin.close();
 				} catch(e) {}
 				alert(g_fileList[i] + " " + strLang169 + "");
 				return;
-			}
-			else
+			} else {
 				NotifyResult(oPoster.Response.substr(3, oPoster.Response.length-3), "add", g_fileList[i], 0); 
+			}
 		} 
-		catch (e) 
-		{
+		catch (e) {
 			try {
 				g_progresswin.close();
 			} catch(e) {}
-			if (e.number == -2147352567)
+			if (e.number == -2147352567) {
 				alert("" + strLang170 + "");
-			else 
+			} else {
 				alert(g_fileList[i] + " " + strLang171 + "" + "\n\n" + e.number + " - " + e.description);
-
+			} 
 			return;
 		}	
 	}
@@ -1579,13 +1505,11 @@ function beginAttachAdd()
 	} catch(e) {}
 }
 
-function status_change(fileinfo)
-{
+function status_change(fileinfo) {
 	try {
 		window.g_progresswin.document.Script.fileinfo_change(fileinfo);
 	} catch(e) {}
 }
-
 
 //******************************************************************
 //* Function 명   : AttachFileList()
@@ -1597,18 +1521,14 @@ function status_change(fileinfo)
 //* 수정일자      : 2002년 5월 12일                                                       
 //* 수정내용      : 
 //******************************************************************
-function AttachFileList()
-{
+function AttachFileList() {
 	var fileListStr = "";
-	
 	var childCnt = attachedFile.childNodes.length;
 	
-	for( var i = 0 ; i < childCnt ; i++ )
-	{
+	for( var i = 0 ; i < childCnt ; i++ ) {
 		var objChild = attachedFile.childNodes(i);
 		
-		if( objChild.value != 'delete' )
-		{
+		if( objChild.value != 'delete' ) {
 			fileListStr += trim(objChild.org_filename);
 			fileListStr += "<";
 			fileListStr += objChild.filesize;
@@ -1629,8 +1549,7 @@ function AttachFileList()
 //* 수정일자      : 2002년 5월 12일                                                       
 //* 수정내용      : 
 //******************************************************************	
-function AttachDel_onClick()
-{	
+function AttachDel_onClick() {	
 	try {
 		var totLen = divBody.childNodes(0).childNodes(0).childNodes.length;
 	} catch(e) {
@@ -1639,20 +1558,16 @@ function AttachDel_onClick()
 	
 	var del_Idx = 0;
 	
-	for( var i = 0; i < totLen; i++ )
-	{
+	for( var i = 0; i < totLen; i++ ) {
 		var objTRNode = divBody.childNodes(0).childNodes(0).childNodes(del_Idx);
 		
-		if( objTRNode.childNodes(0).childNodes(0).checked )
-		{
+		if( objTRNode.childNodes(0).childNodes(0).checked ) {
 			var childCnt = attachedFile.childNodes.length;
 			
-			for( var j = 0 ; j < childCnt ; j++ )
-			{
+			for( var j = 0 ; j < childCnt ; j++ ) {
 				var objChild = attachedFile.childNodes(j);
 				
-				if( objChild.id == objTRNode.parentID )
-				{
+				if( objChild.id == objTRNode.parentID ) {
 					objChild.value = 'delete';
 				}
 			}
@@ -1661,16 +1576,13 @@ function AttachDel_onClick()
 			
 			var divHeight = divBody.style.height;
 			
-			if( parseInt(divHeight) != 27 )
-			{
+			if( parseInt(divHeight) != 27 ) {
 				divHeight = parseInt(divHeight) - 27;
 				//divBody.style.height = divHeight;
 				
 				//window.resizeBy(0, -27);
 			}
-		}
-		else
-		{
+		} else {
 			del_Idx++;
 		}
 	}
@@ -1686,20 +1598,17 @@ function AttachDel_onClick()
 //* 수정일자      : 2002년 5월 12일                                                       
 //* 수정내용      : 
 //******************************************************************
-function SaveOrDeleteAttachFile()
-{
+function SaveOrDeleteAttachFile() {
 	var xmlhttp = createXMLHttpRequest();
 	
 	var childCnt = attachedFile.childNodes.length;
 	
-	if( attachSave )	// 저장인 경우
-	{
-		for( var i = 0 ; i < childCnt ; i++ )
-		{
+	// 저장인 경우
+	if( attachSave ) {
+		for( var i = 0 ; i < childCnt ; i++ ) {
 			var objChild = attachedFile.childNodes(i);
 			
-			if( objChild.value == 'delete' )
-			{
+			if( objChild.value == 'delete' ) {
 				var xmlpara = createXmlDom();
 				
 				var objRoot = xmlpara.createNode(1,"PARAMETER","");
@@ -1734,23 +1643,17 @@ function SaveOrDeleteAttachFile()
 				
 				var re = xmlhttp.responseText;
 
-				if( re != "OK" )
-				{
+				if( re != "OK" ) {
 					alert("" + strLang173 + "");
-					
 					return;
 				}
 			}
 		}
-	}
-	else				// 취소의 경우
-	{
-		for( var i = 0 ; i < childCnt ; i++ )
-		{
+	} else	 {			// 취소의 경우
+		for( var i = 0 ; i < childCnt ; i++ ) {
 			var objChild = attachedFile.childNodes(i);
 			
-			if( (objChild.value == 'delete' && objChild.isOriginal == 'no') || objChild.value == 'insert' )
-			{
+			if( (objChild.value == 'delete' && objChild.isOriginal == 'no') || objChild.value == 'insert' ) {
 				var xmlpara = createXmlDom();
 				
 				var objRoot = xmlpara.createNode(1,"PARAMETER","");
@@ -1785,10 +1688,8 @@ function SaveOrDeleteAttachFile()
 				
 				var re = xmlhttp.responseText;
 				
-				if( re != "OK" )
-				{
+				if( re != "OK" ) {
 					alert("" + strLang173 + "");
-					
 					return;
 				}
 			}
@@ -1796,34 +1697,26 @@ function SaveOrDeleteAttachFile()
 	}
 }
 
-function NotifyResult( filename, attachMode, param1, filesize )
-{
+function NotifyResult( filename, attachMode, param1, filesize ) {
 	restore_button();
 	
-	if( attachMode == "add" )
-	{
+	if( attachMode == "add" ) {
 		handleAttachDiv( "add", filename, param1, filesize );
-	}
-	else if( attachMode == "del" )
-	{
+	} else if( attachMode == "del" ) {
 		handleAttachDiv( "del", filename, param1, filesize );
 	}
-	
 	showAttachFile();
 }
 	
-function restore_button()
-{
+function restore_button() {
 	btn_AttachAdd.disabled = false;
 }
 
-function handleAttachDiv( mCmd, mFile, mClientPath, mFilesize )
-{
+function handleAttachDiv( mCmd, mFile, mClientPath, mFilesize ) {
 	var elem;
 	var i;
 
-	if( mCmd == "add" )
-	{
+	if( mCmd == "add" ) {
 		var tmpFileName;
 		
 		tmpFileName = mFile.substring(mFile.indexOf("_")+1, mFile.length);
@@ -1831,17 +1724,13 @@ function handleAttachDiv( mCmd, mFile, mClientPath, mFilesize )
 		
 	    //attachedFile.innerHTML += "<div id='attachpak" + parseInt( ( Math.random() * 100000 ).toString() ) + "' filesize='" + mFilesize + "' org_filename='" + mFile + "' value='insert' isOriginal='no'><input type='checkbox'><img src='/pims/img/form-freedoc.gif'><a href='" + mClientPath + "' target='file'>" + tmpFileName + "</a></div>";
 		attachedFile.innerHTML += "<div id='attachpak" + parseInt((Math.random((new Date).getMilliseconds()) * 100000).toString()) + "' filesize='" + mFilesize + "' org_filename='" + mFile + "' value='insert' isOriginal='no'><input type='checkbox'><img src='/images/ghost.gif'><a href='" + mClientPath + "' target='file'>" + tmpFileName + "</a></div>";
-	}
-	else if (mCmd == "del") {
-		for( i = 0; i < attachedFile.childNodes.length; i ++ )
-		{
+	} else if (mCmd == "del") {
+		for( i = 0; i < attachedFile.childNodes.length; i ++ ) {
 			elem = attachedFile.childNodes.item(i);
 			
-			if( elem.id == mClientPath )
-			{
+			if( elem.id == mClientPath ) {
 				elem.value = 'delete';
 				//attachedFile.removeChild( elem );
-				
 				break;
 			}
 		}
@@ -1858,8 +1747,7 @@ function handleAttachDiv( mCmd, mFile, mClientPath, mFilesize )
 //* 수정일자      : 2002년 5월 12일                                                       
 //* 수정내용      : 
 //******************************************************************
-function showAttachFile()
-{
+function showAttachFile() {
 	var elem = new Array(), i, k;
 	var delElem;
 	var childElem;
@@ -1878,26 +1766,20 @@ function showAttachFile()
 	
 	var eIdx = 0;
 	
-	for( i = 0; i < tab_attachedFile.childNodes.length; i++ )
-	{
-		if( tab_attachedFile.childNodes.item(i).value != 'delete' )
-		{
+	for( i = 0; i < tab_attachedFile.childNodes.length; i++ ) {
+		if( tab_attachedFile.childNodes.item(i).value != 'delete' ) {
 			elem[eIdx] = tab_attachedFile.childNodes.item(i);
 			
 			eIdx++;
 		}
 	}
 	
-	for( i = 0; i < elem.length; i ++ )
-	{
-		if( elem[i].tagName == "DIV" )
-		{
-			for( k = 0; k < elem[i].childNodes.length; k ++ )
-			{
+	for( i = 0; i < elem.length; i ++ ) {
+		if( elem[i].tagName == "DIV" ) {
+			for( k = 0; k < elem[i].childNodes.length; k ++ ) {
 				childElem = elem[i].childNodes.item(k);
 					
-				if( childElem.tagName == "A" )
-				{
+				if( childElem.tagName == "A" ) {
 					childElem.id = "URL";
 					//childElem.onclick = "return false;";
 				}
@@ -1910,10 +1792,8 @@ function showAttachFile()
 	
 	var h_Val = 27;
 	
-	for( i = 0; i < elem.length; i ++ )
-	{
+	for( i = 0; i < elem.length; i ++ ) {
 		//divBody.style.height = 100;
-		
 		row = attachbody.insertRow();
 		//row.onmouseover = overEffect;
 		//row.onmouseout = outEffect;
@@ -1928,8 +1808,7 @@ function showAttachFile()
 		tdElem = row.insertCell();
 		tdElem.innerHTML = elem[i].innerHTML;
 		
-		if( h_Val != 27 )
-		{
+		if( h_Val != 27 ) {
 			//window.resizeBy(0, 27);
 		}
 		
@@ -1939,26 +1818,22 @@ function showAttachFile()
 
 var selectTR = null;
 
-function deselectAll()
-{
+function deselectAll() {
 	var row, tdElem;
 	var i;
 	var childlength = attachbody.children.length;
 	
-	for( i = 0; i < childlength; i ++ )
-	{
+	for( i = 0; i < childlength; i ++ ) {
 		deselect( attachbody.children.item(i) );
 	}
 }
 
-function deselect( elem )
-{
+function deselect( elem ) {
 	elem.style.color = "";
 	elem.style.backgroundColor = "";
 }
 
-function onselect()
-{
+function onselect() {
 	deselectAll();
 		
 	selectTR = this;
@@ -1967,26 +1842,21 @@ function onselect()
 	this.style.backgroundColor = "#D3E8FC";
 }
 
-function outEffect()
-{
-	if( selectTR != this )
-	{
+function outEffect() {
+	if( selectTR != this ) {
 		this.style.color = "";
 		this.style.backgroundColor = "";
 	}
 }
 
-function overEffect()
-{
-	if( selectTR != this )
-	{
+function overEffect() {
+	if( selectTR != this ) {
 		this.style.color = "blue";
 		this.style.backgroundColor = "#E3EEF5";
 	}
 }
 
-function onFileSelect()
-{
+function onFileSelect() {
 	var openFile = eval(this.parentID);	
 	
 	openFile.children(1).onclick();
@@ -2002,15 +1872,13 @@ function onFileSelect()
 //* 수정일자      : 2002년 5월 12일                                                       
 //* 수정내용      : 
 //******************************************************************
-function windows_close()
-{
+function windows_close() {
 	window.close();
 }
 
 
 // 자원예약시간 중복 체크
-function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay)
-{ // 20080123 ryujh, pAllDay 추가 - 반복예약시 하루종일 판단필요
+function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay) { // 20080123 ryujh, pAllDay 추가 - 반복예약시 하루종일 판단필요
 	var xmlHTTP = createXMLHttpRequest();
 	var xmlDOM = createXmlDom();
 	var objNode ;
@@ -2024,27 +1892,22 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	createNodeAndInsertText(xmlDOM, objNode, "CMD", pCmd);
 	createNodeAndInsertText(xmlDOM, objNode, "APPROVE", ApproveFlag);
 	
-	
-	
 	// 20080116 ryujh, 반복예약값이 있을때만
-	if ( g_data["recurrence"] != null && g_data["recurrence"] != "" )
-	{
+	if ( g_data["recurrence"] != null && g_data["recurrence"] != "" ) {
 		var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
 				
-		if(pAllDay)
-		   createNodeAndInsertText(xmlDOMrec, objNode, "allday", "true");
-		else
-		   createNodeAndInsertText(xmlDOMrec, objNode, "allday", "false");
+		if(pAllDay) {
+			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "true");
+		} else {
+			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "false");
+		}
 		
-		if(CrossYN())
-	    { 
+		if(CrossYN()) { 
 	        var xmlRtn = xmlDOMrec.documentElement;
 	        var Node = xmlDOM.importNode(xmlRtn,true);
             xmlDOM.documentElement.appendChild(Node);
-	    }
-	    else
-	    {
+	    } else {
 	         var xmlRtn = xmlDOMrec.documentElement;
              xmlDOM.documentElement.appendChild(xmlRtn);
 	    }
@@ -2054,10 +1917,9 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 		xmlDOMrec.documentElement.appendChild(alldaynode); // 20080123 ryujh, 하루종일 조건 추가 (xmlns: -1(true), 0(false))
 		xmlDOM.documentElement.appendChild(xmlDOMrec.documentElement); 
 		xmlDOMrec = null;*/
-		
 	}
     
-	xmlHTTP.open("POST", "ezResource_TimeDupCheck.aspx", false);
+	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
 	xmlHTTP.send(xmlDOM);
 	
 	var rtnValue = xmlHTTP.responseText;
@@ -2066,12 +1928,11 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	xmlHTTP = null;
 	
 	// true:중복, false:중복안됨
-	if (rtnValue == "False")
+	if (rtnValue == "False") {
 		return false;
-	else
+	} else {
 		return true;
-
-
+	}
 }
 
 //// 자원예약시간 중복 체크
@@ -2127,28 +1988,27 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 //}
 
 // 자신의 일정인지 체크
-function OwnerCheck()
-{
+function OwnerCheck() {
 	// 수정(2007.03.28) : 반복예약 기능
 	//if (writerIDVal == org_ownerID)
-	if (writerIDVal == s_userID)
+	if (writerIDVal == s_userID) {
 		return true;
-	else
+	} else {
 		return false;
+	}
 }
 
 // 관리자 여부 체크
-function CheckAdmin()
-{
-	if (pAdminFg == "Y")
+function CheckAdmin() {
+	if (pAdminFg == "Y") {
 		return true;
-	else
+	} else {
 		return false;
+	}
 }
 
 // 현재일과 예약시작일의 차이를 계산
-function CheckInterval()
-{
+function CheckInterval() {
 	var ms24Hours = 86400000;   // 1일의 ms
 	var DiffCnt   = 0;
 	var d         = nowDate.split("-");
@@ -2161,8 +2021,7 @@ function CheckInterval()
 }
 
 // 예약 시작일과 종료일의 차이를 계산
-function CheckUseInterval()
-{
+function CheckUseInterval() {
 	var ms24Hours = 86400000;   // 1일의 ms
 	var DiffCnt   = 0;
 	
@@ -2175,48 +2034,41 @@ function CheckUseInterval()
 
 // 자원예약에 대한 사용허가 및 취소
 var setApprovFlag = false;
-function SetApproval_onClick(pCmd, pFlag)
-{
+
+function SetApproval_onClick(pCmd, pFlag) {
     if (pFlag == "1") {
         setApprovFlag = true;
         var result = btn_Save();
-        if (!result)
-            return;
+        if (!result) {
+        	return;
+        }
     }
 	var msg = ""
-	if (pFlag == "1")
+	if (pFlag == "1") {
 		msg = "" + strLang176 + "";
-	else
+	} else {
 		msg = "" + strLang177 + "";
+	}
 	
-	
-
 	var result = confirm(msg);
-	if (result)
-	{
+	if (result) {
 		// 자원사용 중복체크
-		if (bDupCheck == true && pFlag == "1")
-		{
+		if (bDupCheck == true && pFlag == "1") {
 			var STime = "";
 			var ETime = "";
 			
 			// 하루종일
-			if (document.getElementById("AllDay").checked == true)
-			{
+			if (document.getElementById("AllDay").checked == true) {
 			    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 			    ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-			
-			}
-			else
-			{
+			} else {
 			    STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 			    ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 			}
 			
 			// Parameter: 자원번호, 시작시간, 종료시간, 회사ID, 글번호, 저장Flag(add, mod)
 			var bUsingResource = isUsingResource(ownerID.value, STime, ETime, ss_companyID, num.value, pCmd, document.getElementById("AllDay").checked);
-			if (bUsingResource)
-			{
+			if (bUsingResource) {
 				alert("" + strLang141 + "");
 				return;
 			}
@@ -2225,7 +2077,6 @@ function SetApproval_onClick(pCmd, pFlag)
 		for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		    OnlySaveSchedule(ItemArray[0][i]);
 		}
-
 
 		var xmlHTTP = createXMLHttpRequest();
 		var xmlDOM = createXmlDom();
@@ -2237,16 +2088,14 @@ function SetApproval_onClick(pCmd, pFlag)
 	    createNodeAndInsertText(xmlDOM, objNode, "NUM", document.getElementById("num").value);
 	    createNodeAndInsertText(xmlDOM, objNode, "APPROVE", pFlag);
 	    
-		xmlHTTP.open("POST", "ezResource_UpdateApprovalFlag.aspx", false);
+		xmlHTTP.open("POST", "/ezResource/updateApprovalFlag.do", false);
 		xmlHTTP.send(xmlDOM);
 		
 		var rtnValue = xmlHTTP.responseText;
 		
-		
 		xmlHTTP = null;
 		
-		if (rtnValue == "True")
-		{
+		if (rtnValue == "True") {
 		    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
 	        // 2009.11.26 - 자원승인시 사용자에게 자원승인 알림메일 발송	        
 	        	        
@@ -2259,29 +2108,26 @@ function SetApproval_onClick(pCmd, pFlag)
 			xmlHTTP.send(ResponseXML);
 			xmlHTTP = null;
     	         
-	        
 	        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
 			alert("" + strLang33 + "");
-		}
-		else
+		} else {
 			alert("" + strLang178 + "");
+		}
 		
 		xmlDOM = null;
 		// 부모창의 예약목록을 새로고침
-		if(window.opener != null)
-		    window.opener.btnRefresh_onclick();
+		if(window.opener != null) {
+			window.opener.btnRefresh_onclick();
+		}
 			
 		window.close();
 	}
 }
 
-
-
 //20070517
-function TimeRevision(szTime)
-{
-	if(parseInt(szTime) == 0)
+function TimeRevision(szTime) {
+	if(parseInt(szTime) == 0) {
 		return szTime = "00";
-		
+	}
 	return szTime
 }
