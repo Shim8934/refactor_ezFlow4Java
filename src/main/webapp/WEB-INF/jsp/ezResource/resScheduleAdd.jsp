@@ -182,7 +182,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/imgicon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
 	        	$("#Edatepicker").datepicker({
@@ -190,7 +190,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/imgicon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
 	        	var SDate = new Date("${startDateTime2}");
@@ -590,7 +590,7 @@
            									<iframe id="Iframe1" class="viewbox"  name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
            								</c:when>
            								<c:otherwise>
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="CK_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
            								</c:otherwise>
            							</c:choose>
            						</div>
