@@ -215,7 +215,6 @@
 	            printWindow.document.write(strContent);
 	            printWindow.document.close();
 	            printWindow.focus();
-
 	        }
 
 	        function onbeforeprint2() {
@@ -225,13 +224,13 @@
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
 	        }
 
-
 	        function SetApproval_onClick2(pCmd, pFlag) {
 	            var msg = ""
-	            if (pFlag == "1")
+	            if (pFlag == "1") {
 	                msg = "" + strLang176 + "";
-	            else
+	            } else {
 	                msg = "" + strLang177 + "";
+	            }
 
 	            var result = confirm(msg);
 	            if (result) {
@@ -244,9 +243,7 @@
 	                        STime = startDateVal + " 00:00:01";
 	                        ETime = endDateVal + " 23:59:59";
 	                        AllDayCheck = true;
-
-	                    }
-	                    else {
+	                    } else {
 	                        AllDayCheck = false;
 	                    }
 
@@ -285,14 +282,15 @@
 	                    xmlHTTP.send(ResponseXML);
 	                    xmlHTTP = null;
 	                    alert("" + strLang33 + "");
-	                }
-	                else
+	                } else {
 	                    alert("" + strLang178 + "");
+	                }
 
 	                xmlDOM = null;
-	                if (window.opener != null)
+	                
+	                if (window.opener != null) {
 	                    window.opener.btnRefresh_onclick();
-
+	                }
 	                window.close();
 	            }
 	        }
@@ -309,8 +307,9 @@
 	            var px = (s_Width - c_Width) / 2;
 	            var py = (s_Height - c_Height) / 2;
 
-	            if (pSelUserID != "")
+	            if (pSelUserID != "") {
 	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	            }
 	        }  
 		</script>
 	</head>

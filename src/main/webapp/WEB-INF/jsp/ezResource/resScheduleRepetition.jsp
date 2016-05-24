@@ -74,7 +74,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/imgicon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
 	        	$("#Edatepicker").datepicker({
@@ -82,7 +82,7 @@
 		            changeYear: true,
 	    	        autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/imgicon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
 
