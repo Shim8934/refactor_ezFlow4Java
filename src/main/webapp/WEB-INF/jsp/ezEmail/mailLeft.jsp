@@ -192,8 +192,8 @@
 	                    }
 	                    else {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "(" + unreadcount + ")");
-	                        try { parent.frames["right"].mailBoxInfo.childNodes.item(1).innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
+                        try { parent.frames["right"].mailBoxInfo.childNodes.item(1).innerText = " " + unreadcount + " "; } catch (e) { }	                    
 	                    xmlDom = null;
 	                }
 	            }
