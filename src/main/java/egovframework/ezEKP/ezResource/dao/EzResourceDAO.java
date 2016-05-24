@@ -14,6 +14,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
@@ -40,6 +42,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(Map<String, Object> map){
+		return  (List<ResGetScheduleRepetitionVO>) list("EzResourceDAO.getScheduleRepetition", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ResGetScheduleListMainVO> getScheduleListMain(Map<String, Object> map){
 		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListMain", map);
 	}
@@ -59,6 +66,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return  (List<ResBrdListVO>) list("EzResourceDAO.getBrdList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getScheduleInfo(Map<String, Object> map) {
+		return (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleInfo", map);
+	}
+	
 	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
 		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
@@ -75,6 +87,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResBrdVO) select("EzResourceDAO.getBrd", map);
 	}
 	
+	public ResGetScheduleVO getSchedule(Map<String, Object> map) {
+		return (ResGetScheduleVO) select("EzResourceDAO.getSchedule", map);
+	}
+	
 	public int getBrdCnt(Map<String , Object> map) {
 		select("EzResourceDAO.getBrdCnt", map);
 		return (int)map.get("v_pCount");
@@ -83,7 +99,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void addResData(Map<String, Object> map) {
 		insert("EzResourceDAO.addResData", map);
 	}
-
+	
+	public void insertScheduleRepetition(Map<String, Object> map) {
+		insert("EzResourceDAO.insertScheduleRepetition", map);
+	}
+	
 	public void modifyResData(Map<String, Object> map) {
 		update("EzResourceDAO.modifyResData", map);
 	}
@@ -92,8 +112,17 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		update("EzResourceDAO.updateScheduleDateTime", map);
 	}
 	
+	public void updateScheduleRepetition(Map<String, Object> map) {
+		update("EzResourceDAO.updateScheduleRepetition", map);
+	}
+	
 	public void delResData(Map<String, Object> map) {
 		delete("EzResourceDAO.delResData", map);
 	}
+	
+	public void deleteRepetition(Map<String, Object> map) {
+		delete("EzResourceDAO.deleteRepetition", map);
+	}
+	
 }
 

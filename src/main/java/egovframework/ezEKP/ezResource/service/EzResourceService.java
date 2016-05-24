@@ -11,6 +11,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 
 public interface EzResourceService {
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType) throws Exception;
@@ -28,6 +30,10 @@ public interface EzResourceService {
 	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate) throws Exception;
 	
 	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm) throws Exception;
+
+	public List<ResGetScheduleVO> getScheduleInfo(int pNum, String entryID, String ownerID, String companyID) throws Exception;
+	
+	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID) throws Exception;
 	
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID) throws Exception; 
 	
@@ -37,11 +43,15 @@ public interface EzResourceService {
 	
 	public ResBrdVO getBrd(int brdID, String companyID) throws Exception;
 	
+	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID) throws Exception;
+	
 	public int getBrdCnt(int brdID, String companyID) throws Exception;
 
 	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept) throws Exception;
 
 	public String getLocalTime(String substring) throws Exception;
+	
+	public String getDBTime(String pDateTime) throws Exception;
 
 	public String convertToUTC(String sDate) throws Exception;
 
@@ -55,11 +65,20 @@ public interface EzResourceService {
 	
 	public String updateScheduleDateTime(String xmlDom, String companyID) throws Exception;
 	
+	public String getRepetition(String xmlStr) throws Exception;
+	
+	public boolean deleteRepetition(String xmlStr) throws Exception;
+	
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception;
+	
 	public boolean multiDelResData(String xmlStr);
 	
 	public boolean modifyResData(String xmlStr) throws Exception;
 	
 	public boolean addResData(String xmlStr) throws Exception;
+	
+	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
 	
 	public void delResData(String brdID, String companyID) throws Exception;
 	
@@ -70,4 +89,9 @@ public interface EzResourceService {
 	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2) throws Exception;
 	
 	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate) throws Exception;
+	
+	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
+	
+	public void deleteRepetition(String ownerID, int pNum) throws Exception;
 }

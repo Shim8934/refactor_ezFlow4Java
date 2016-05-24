@@ -30,6 +30,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -243,6 +245,84 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_pStartDate", startDate);
 		map.put("v_pEndDate", endDate);
 		ezResourceDAO.updateScheduleDateTime(map);
+	}
+	
+	@Override
+	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", pNum);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pCompanyID", companyID);
+		return ezResourceDAO.getSchedule(map);
+	}
+	
+	
+
+	@Override
+	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+			String reOrd, String endFlag, String reCount, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", pNum);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pStartDateTime", startDateTime);
+		map.put("v_pEndDateTime", endDateTime);
+		map.put("v_pReWay", reWay);
+		map.put("v_pReDay", reDay);
+		map.put("v_pReNum", reNum);
+		map.put("v_pReYoil", reYoil);
+		map.put("v_pReMonth", reMonth);
+		map.put("v_pReOrd",  reOrd);
+		map.put("v_pEndFlag", endFlag);
+		map.put("v_pReCount", reCount);
+		map.put("v_pCompanyID", companyID);
+		ezResourceDAO.insertScheduleRepetition(map);
+	}
+	
+	@Override
+	public List<ResGetScheduleVO> getScheduleInfo(int pNum, String entryID, String ownerID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", pNum);
+		map.put("v_pEntryID", entryID);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pCompanyID", companyID);
+		return ezResourceDAO.getScheduleInfo(map);
+	}
+	
+	@Override
+	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+			String reOrd, String endFlag, String reCount, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", pNum);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pStartDateTime", startDateTime);
+		map.put("v_pEndDateTime", endDateTime);
+		map.put("v_pReWay", reWay);
+		map.put("v_pReDay", reDay);
+		map.put("v_pReNum", reNum);
+		map.put("v_pReYoil", reYoil);
+		map.put("v_pReMonth", reMonth);
+		map.put("v_pReOrd", reOrd);
+		map.put("v_pEndFlag", endFlag);
+		map.put("v_pReCount", reCount);
+		map.put("v_pCompanyID", companyID);
+		ezResourceDAO.updateScheduleRepetition(map);
+	}
+	
+	@Override
+	public void deleteRepetition(String ownerID, int pNum) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pNum", pNum);
+		ezResourceDAO.deleteRepetition(map);
+	}
+	
+	@Override
+	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pNum", pNum);
+		map.put("v_pOwnerID", ownerID);
+		map.put("v_pCompanyID", companyID);
+		return ezResourceDAO.getScheduleRepetition(map);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1594,6 +1674,22 @@ System.out.println("strDateTime:"+strDateTime);
 		}
 	}
 	
+	public String getDBTime(String pDateTime) {
+		String strDateTime = "";
+		
+		if (pDateTime.equals("")) {
+			return strDateTime;
+		}
+		try {
+			String pOffset = "+09:00";
+			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, (Integer.parseInt(pOffset.split(":")[0])*-1)+9, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
+			strDateTime = EgovDateUtil.convertDate(addMinutes(pDateTime, (Integer.parseInt(pOffset.split(":")[1])*-1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pDateTime;
+	}
+	
 	public static String addHours(String sDate, int hour, String dateFormat) {		
 		Calendar cal = Calendar.getInstance();
 		
@@ -2019,6 +2115,273 @@ System.out.println("utcDate:"+utcDate);
 
 		updateScheduleDateTime(Integer.parseInt(num), ownerID, companyID, sDate, eDate);
 		return xmlStr;
+	}
+	
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception {
+		try {
+			String interval = "";
+			String daysOfWeek = "";
+			String daysOfMonth = "";
+			String byPosition = "";
+			String monthsOfYear = "";
+			String instances = "";
+			String reWay = "";
+			String reDay = "";
+			String reNum = "";
+			String reYoil = "";
+			String reMonth = "";
+			String reOrd = "";
+			String endFlag = "";
+			String reCount = "";
+			
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			String frequency = xmlRes.getElementsByTagName("frequency").item(0).getTextContent().trim();
+			String selType = xmlRes.getElementsByTagName("selType").item(0).getTextContent();
+			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent();
+			String startDateTime = xmlRes.getElementsByTagName("startDateTime").item(0).getTextContent();
+			startDateTime = EgovDateUtil.convertDate(startDateTime, "", "yyyy-MM-dd HH:mm:ss", "");
+			String endDateTime = xmlRes.getElementsByTagName("endDateTime").item(0).getTextContent();
+			endDateTime = EgovDateUtil.convertDate(endDateTime, "", "yyyy-MM-dd HH:mm:ss", "");
+			
+			if (frequency.equals("4")) {
+				interval = xmlRes.getElementsByTagName("interval").item(0).getTextContent();
+				daysOfWeek = "";
+				daysOfMonth = "";
+				byPosition = "";
+				monthsOfYear = "";
+			} else if (frequency.equals("5")) {
+				interval = xmlRes.getElementsByTagName("interval").item(0).getTextContent();
+				daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent();
+				daysOfMonth = "";
+				byPosition = "";
+				monthsOfYear = "";
+			} else if (frequency.equals("6")) {
+				if (selType.equals("0")) {
+					interval = xmlRes.getElementsByTagName("interval").item(0).getTextContent();
+					daysOfMonth = xmlRes.getElementsByTagName("daysOfMonth").item(0).getTextContent();
+					daysOfWeek = "";
+					byPosition = "";
+				} else {
+					interval = xmlRes.getElementsByTagName("interval").item(0).getTextContent(); 
+					byPosition = xmlRes.getElementsByTagName("byPosition").item(0).getTextContent();
+					daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent();
+					daysOfMonth = "";
+				}
+				monthsOfYear = "";
+			} else if (frequency.equals("7")) {
+				if (selType.equals("0")) {
+					monthsOfYear = xmlRes.getElementsByTagName("monthsOfYear").item(0).getTextContent();
+					daysOfMonth = xmlRes.getElementsByTagName("daysOfMonth").item(0).getTextContent();
+					daysOfWeek = "";
+					byPosition = "";
+				} else {
+					monthsOfYear = xmlRes.getElementsByTagName("monthsOfYear").item(0).getTextContent();
+					byPosition = xmlRes.getElementsByTagName("byPosition").item(0).getTextContent();
+					daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent();
+					daysOfMonth = "";
+				}
+				interval = "";
+			}
+			
+			if (endRecurType.trim().equals("1")) {
+				instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent();
+			} else {
+				instances = "";
+			}
+			reWay = frequency.trim() + selType.trim();
+			reDay = daysOfMonth.trim();
+			reNum = interval.trim();
+			reYoil = daysOfWeek.trim();
+			reMonth = monthsOfYear.trim();
+			reOrd = byPosition.trim();
+			endFlag = endRecurType.trim();
+			reCount = instances.trim();
+			
+			String orgGresFlag = "";
+			String orgEntryList = "";
+			String numStr = "";
+			String numVal = "";
+			String orgNumVal = "";
+			
+			ResGetScheduleVO resGetSchedule = new ResGetScheduleVO();
+			try {
+				resGetSchedule = getSchedule(Integer.parseInt(num), ownerID, companyID);
+			} catch (Exception e) {
+				
+			}
+			if (resGetSchedule != null) {
+				orgGresFlag = resGetSchedule.getGresFlag();
+				orgEntryList = resGetSchedule.getEntryList();
+			} else {
+				orgGresFlag = "0";
+				orgEntryList = "";
+			}
+			
+			String[] entry;
+			int entryNum = 0;
+			String[] entryArr;
+			String[] entryEmail;
+			String entryID = "";
+			String entryName = "";
+			
+			if (cmd.equals("add")) {
+				if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
+					insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+					
+					entry = orgEntryList.split(">");
+					entryNum = entry.length;
+					
+					for (int i=0; i<entryNum; i++) {
+						entryArr = entry[i].split("<");
+						entryName = entryArr[0];
+						entryEmail = entryArr[1].split("@");
+						entryID = entryEmail[0];
+						
+						List<ResGetScheduleVO> resGetScheduleInfo = getScheduleInfo(Integer.parseInt(num), entryID, ownerID, companyID);
+						
+						for (ResGetScheduleVO list : resGetScheduleInfo) {
+							insertScheduleRepetition((list.getNum()), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+						}
+					}
+				} else {
+					insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+				}
+			} else if (cmd.equals("mod")) {
+				if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
+					entry = orgEntryList.split(">");
+					entryNum = entry.length;
+					for (int i=0; i<entryNum; i++) {
+						entryArr = entry[i].split("<");
+						entryName = entryArr[0];
+						entryEmail = entryArr[1].split("@");
+						entryID = entryEmail[0];
+						
+						List<ResGetScheduleVO> resGetScheduleInfo = getScheduleInfo(Integer.parseInt(num), entryID, ownerID, companyID);
+						
+						for (ResGetScheduleVO list : resGetScheduleInfo) {
+							 List<ResGetScheduleRepetitionVO> getScheduleRepetition =  getScheduleRepetition(list.getNum(), entryID, companyID);
+							 
+							 if (getScheduleRepetition != null) {
+								 for (ResGetScheduleRepetitionVO list1 : getScheduleRepetition) {
+									 updateScheduleRepetition(list1.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+								 }
+							 } else {
+								 insertScheduleRepetition(list.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+							 }
+						}
+					}
+				}
+				updateScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID);
+			}
+			
+		} catch (Exception e) {
+			
+		}
+		
+		return true;
+	}
+	
+	public boolean deleteRepetition(String xmlStr) throws Exception {
+		String num = "";
+		String ownerID = "";
+		
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
+			ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
+			deleteRepetition(ownerID, Integer.parseInt(num));
+		} catch (Exception e) {
+			 
+		}
+		return true;
+	}
+	
+	public String getRepetition(String xmlStr) throws Exception {
+		String num = "";
+		String ownerID = "";
+		String companyID = "";
+		StringBuilder resultXml = new StringBuilder();
+		
+		try {
+			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+			num = xmlRes.getElementsByTagName("NUM").item(0).getTextContent().trim();
+			ownerID = xmlRes.getElementsByTagName("OWNERID").item(0).getTextContent().trim();
+			companyID = xmlRes.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+			
+			List<ResGetScheduleRepetitionVO> getScheduleRepetition = getScheduleRepetition(Integer.parseInt(num), ownerID, companyID);
+			
+			if (getScheduleRepetition != null) {
+				String startDateTime = "";
+				String endDateTime = "";
+				String reWay = "";
+				String reDay = "";
+				String reNum = "";
+				String reYoil = "";
+				String reMonth = "";
+				String reOrd = "";
+				String endFlag = "";
+				String reCount = "";
+				String freq = "";
+				String sel = "";
+				
+				for (ResGetScheduleRepetitionVO list : getScheduleRepetition) {
+					startDateTime = list.getStartDateTime();
+					endDateTime = list.getEndDateTime();
+					reWay = list.getReWay();
+					reNum = list.getReNum();
+					reYoil = list.getReYoil();
+					reMonth = list.getReMonth();
+					reOrd = list.getReOrd();
+					endFlag = list.getEndFlag();
+					reCount = list.getEndFlag();
+				}
+				
+				freq = reWay.substring(0, 1);
+				sel = reWay.substring(reWay.length()-1, 1);
+				
+				resultXml.append("<recurrence>");
+				resultXml.append("<frequency>"+freq+"</frequency>");
+				resultXml.append("<selType>"+sel+"</selType>");
+				resultXml.append("<endRecurType>"+endFlag+"</endRecurType>");
+				resultXml.append("<startDateTime>"+startDateTime+"</startDateTime>");
+				resultXml.append("<endDateTime>"+endDateTime+"</endDateTime>");
+				
+				if (freq.equals("4")) {
+					if (sel.equals("0")) {
+						resultXml.append("<interval>"+reNum+"</interval>");
+					}
+				} else if (freq.equals("5")) {
+					resultXml.append("<interval>"+reNum+"</interval>");
+					resultXml.append("<daysOfWeek>"+reYoil+"</daysOfWeek>");
+				} else if (freq.equals("6")) {
+					if (sel.equals("0")) {
+						resultXml.append("<interval>"+reNum+"</interval>");
+						resultXml.append("<daysOfWeek>"+reDay+"</daysOfWeek>");
+					} else {
+						resultXml.append("<interval>"+reNum+"</interval>");
+						resultXml.append("<byPosition>"+reOrd+"</byPosition>");
+						resultXml.append("<daysOfWeek>"+reYoil+"</daysOfWeek>");
+					}
+				} else if (freq.equals("7")) {
+					if (sel.equals("0")) {
+						resultXml.append("<monthsOfYear>"+reMonth+"</monthsOfYear>");
+						resultXml.append("<daysOfMonth>"+reDay+"</daysOfMonth>");
+					} else {
+						resultXml.append("<monthsOfYear>"+reMonth+"</monthsOfYear>");
+						resultXml.append("<byPosition>"+reOrd+"</byPosition>");
+						resultXml.append("<daysOfWeek>"+reYoil+"</daysOfWeek>");
+					}
+				}
+				if (endFlag.equals("1")) {
+					resultXml.append("<instances>"+reCount+"</instances>");
+				}
+				resultXml.append("</recurrence>");
+				
+			}
+		} catch (Exception e) {
+			
+		}
+		return resultXml.toString();
 	}
 }
 
