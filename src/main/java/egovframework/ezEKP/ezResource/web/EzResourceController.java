@@ -979,4 +979,13 @@ System.out.println("startDate:"+startDate);
 		
 		return "/ezResource/resCKEditor";
 	}
+	
+	/**
+	 * 자원관리 X-FreeEditor 호출 Method
+	 */
+	@RequestMapping(value = "/ezResource/scheduleGetForm.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetForm() throws Exception {
+		return "";
+	}
 }
