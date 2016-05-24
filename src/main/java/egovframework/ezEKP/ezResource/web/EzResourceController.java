@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezResource.web;
 
-import java.awt.SecondaryLoop;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -8,8 +7,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -891,6 +888,7 @@ System.out.println("startDate:"+startDate);
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAdd.do")
 	public String scheduleAdd(Model model) throws Exception {
+		model.addAttribute("userLang", "1");
 		return "/ezResource/resScheduleAdd";
 	}
 	
@@ -900,5 +898,85 @@ System.out.println("startDate:"+startDate);
 	@RequestMapping(value = "/ezResource/scheduleManageForm.do")
 	public String scheduleManageForm(Model model) throws Exception {
 		return "/ezResource/resScheduleManageForm";
+	}
+	
+	/**
+	 * 자원관리 자원 반복 등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleRepetition.do")
+	public String scheduleRepetition(Model model) throws Exception {
+		return "/ezResource/resScheduleRepetition";
+	}
+	
+	/**
+	 * 자원관리 자원 반복 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleRepetitionProc.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8") 
+	@ResponseBody
+	public String scheduleRepetitionProc(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,@RequestBody String xmlStr) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = "";
+		String cmd = "";
+		try {
+			companyID = userInfo.getCompanyID();
+			
+			if (req.getParameter("cmd") != null) {
+				cmd = req.getParameter("cmd");
+			}
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			
+			if (cmd.equals("get")) {
+				String ret = ezResourceService.getRepetition(xmlStr);
+				Document xmlRet = commonUtil.convertStringToDocument(ret);
+				String startDate = xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent();
+				String endDate = xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent();
+				
+				xmlRet.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(startDate, "", "yyyy-MM-dd HH:mm:ss", "")));
+				xmlRet.getElementsByTagName("endDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(endDate, "", "yyyy-MM-dd HH:mm:ss", "")));
+				
+				return commonUtil.convertDocumentToString(xmlRet);
+				
+			} else if (cmd.equals("add") || cmd.equals("mod")) {
+				String startDate = xmlDom.getElementsByTagName("startDateTime").item(0).getTextContent();
+				String endDate = xmlDom.getElementsByTagName("endDateTime").item(0).getTextContent();
+				
+				xmlDom.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getDBTime(EgovDateUtil.convertDate(startDate, "", "yyyy-MM-dd HH:mm:ss", "")));
+				xmlDom.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getDBTime(EgovDateUtil.convertDate(endDate, "", "yyyy-MM-dd HH:mm:ss", "")));
+				
+				String num = req.getParameter("num") != null ? req.getParameter("num").trim() : "";
+				String ownerID = req.getParameter("ownerID") != null ? req.getParameter("ownerID").trim() : "";
+				
+				boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, commonUtil.convertDocumentToString(xmlDom), cmd);
+				
+				if (ret == true) {
+					return "OK";
+				} else {
+					return "NO";
+				}
+			} else if (cmd.equals("del")) {
+				boolean ret = ezResourceService.deleteRepetition(commonUtil.convertDocumentToString(xmlDom));
+				
+				if (ret == true) {
+					return "OK";
+				} else {
+					return "NO";
+				}
+			}
+		} catch (Exception e) {
+			
+		}
+		return "";
+	}
+	
+	/**
+	 * 자원관리 ckEditor 호출 Method
+	 */
+	@RequestMapping(value = "/ezResource/ckEditor.do")
+	public String ckEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo",userInfo);
+		
+		return "/ezResource/resCKEditor";
 	}
 }
