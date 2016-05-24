@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>Editor</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />                
+        
+        <script src="../config/editor_crossdomain_config.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <link href="../css_dev/editor.css?ver=3.5.1056405.2143.01" rel="stylesheet" type="text/css" />
+        <script src="../js_dev/editor.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_api.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_context.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_findreplace.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_undo.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-core.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-textrange.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-util.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-commands.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-exec.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/rangy-cssclassapplier.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_src.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_tablehandler.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/jscolor/jscolor.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_topmenu.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_docprop.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_resizebar.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_htmlparser.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_formdesigner.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script src="../js_dev/editor_dragresize.js?ver=3.5.1056405.2143.01" type="text/javascript"></script>
+        <script type="text/javascript">
+            document.write('<link href="../css_dev/editor_' + DEXTTOP.DEXT5.config.IconName + '.css?ver=' + DEXTTOP.DEXT5.ReleaseVer + '" rel="stylesheet" type="text/css" />');
+        </script>
+		<script type="text/javascript">
+
+			var local_frame = null;
+
+			function dext_frame_loaded_event(_editor_id, _config, _frame) {
+
+				local_frame = _frame;
+
+				function loadJavascript(url, callback) {
+				    var head = document.getElementsByTagName("head")[0];
+				    var script = document.createElement("script");
+				    script.type = "text/javascript";
+
+				    var loaded = false;
+				    var _error = false;
+				    script.onreadystatechange = function () { if (this.readyState == 'loaded' || this.readyState == 'complete') { if (loaded || _error) { return; } loaded = true; callback(); } }
+				    script.onload = function () { if (loaded || _error) { return; } loaded = true; callback(); }
+				    // script.onerror = function () { _error = true; alert('ERROR : Cannot load the [' + url + ']'); }
+				    script.onerror = function () { _error = true; }
+				    script.src = url;
+				    head.appendChild(script);
+				}
+
+				if (_config.plugInUse == "1") {
+
+					if (DEXTTOP.DEXT5.browser.ie) {
+
+					    var cabFileName = 'dext5editor.cab';
+
+						if (navigator.userAgent.search('x64') > -1) {
+						    cabFileName = 'dext5editor_x64.cab';
+							//alert("Your browser doesn't support DEXT5 Editor Plug-In");
+						}
+						//alert("server domain : [" + _config.serverDomain + "] / post url : [" + _config.post_url + "]");
+			            var divDummy = document.createElement("div");
+			            divDummy.style.display = "none";
+                        
+						var str = '<object id="dext5plugin" classid="CLSID:2A28D4A1-467B-48C7-AF21-51F6D88456BD" codebase="' + _config.plugin_root + cabFileName + '#version=' + _config.plugin_version + '" width="0" height="0">';
+						str += '<param name="saveFileType" value="">';
+						str += '<param name="serverDomain" value="' + _config.serverDomain + '">';
+						str += '<param name="toSavePathUrl" value="' + _config.toSavePathURL + '">';
+						str += '<param name="saveFolderNameRule" ' + 'value="' + _config.saveFolderNameRule + '">';
+						str += '<param name="saveFileNameRule" ' + 'value="' + _config.saveFileNameRule + '">';
+						str += '<param name="productKey" ' + 'value="' + _config.productKey + '">';
+						str += '<param name="licenseKeyUrl" ' + 'value="' + _config.plugin_root + '">';
+						str += '<param name="postPageURL" ' + 'value="' + _config.post_url + '">';
+						str += '<param name="accessibility" ' + 'value="' + _config.accessibility + '">';
+						str += '<param name="trustSites" ' + 'value="' + _config.trustSites + '">';
+						str += '<param name="licenseKey" ' + 'value="' + _config.LicenseKey + '">';
+						str += '<param name="openDialogTitle" ' + 'value="' + _config.userOpenDlgTitle + '">';
+						str += '<param name="mimeBaseURL" ' + 'value="' + _config.mimeBaseURL + '">';
+						str += '<param name="openDialogType" ' + 'value="' + _config.userOpenDlgType + '">';
+						str += '<param name="openDialogInitDir" ' + 'value="' + _config.userOpenDlgInitDir + '">';
+						str += '<param name="imagePropStyle" ' + 'value="' + _config.userImageDlgStyle + '">';
+						str += '<param name="imgDefaultWidth" ' + 'value="' + _config.imgDefaultWidth + '">';
+						str += '<param name="imgDefaultHeight" ' + 'value="' + _config.imgDefaultHeight + '">';
+						str += '<param name="officeLineFix" ' + 'value="' + _config.officeLineFix + '">';
+						str += '<param name="systemTitle" ' + 'value="' + _config.system_title + '">';
+						str += '<param name="useLog" ' + 'value="' + _config.useLog + '">';
+						str += '<param name="editphotouse" ' + 'value="' + _config.imageEditorUse + '">';
+						if (DEXTTOP.DEXT5.cabVersion <= "3,5,0,23") {
+						    var userLang = "";
+						    if (_config.lang.indexOf("ko") > -1) {
+						        userLang = "ko";
+						    } else if (_config.lang.indexOf("en") > -1) {
+						        userLang = "en";
+						    } else if (_config.lang.indexOf("ja") > -1) {
+						        userLang = "ja";
+						    } else {
+						        userLang = _config.lang;
+						    }
+						    str += '<param name="sLang" ' + 'value="' + userLang + '">';
+						} else {
+						    str += '<param name="sLang" ' + 'value="' + _config.lang + '">';
+						}
+						str += '<param name="skinName" ' + 'value="' + _config.style.skinName + '">';
+						str += '<param name="sFileDataID" ' + 'value="' + _config.fileFieldID + '">';
+						str += '<param name="sUserFieldID" ' + 'value="' + _config.userFieldID + '">';
+						str += '<param name="sUserFieldValue" ' + 'value="' + _config.userFieldValue + '">';
+						if (_config.limitPasteHtmlLength.value == "1" && _config.limitPasteHtmlLength.length > 0) {
+						    str += '<param name="nLimitPasteLength" ' + 'value="' + _config.limitPasteHtmlLength.length + '">';
+						} else {
+						    str += '<param name="nLimitPasteLength" ' + 'value="0">';
+						}
+						str += '<param name="sMaxWordFileSize" ' + 'value="' + _config.openDocument.word.maxSize + '">';
+						str += '<param name="nMaxWordPageSize" ' + 'value="' + _config.openDocument.word.maxPage + '">';
+						str += '<param name="sMaxExcelFileSize" ' + 'value="' + _config.openDocument.excel.maxSize + '">';
+						str += '<param name="nMaxExcelSheetSize" ' + 'value="' + _config.openDocument.excel.maxSheet + '">';
+						str += '<param name="sMaxPowerPointFileSize" ' + 'value="' + _config.openDocument.powerpoint.maxSize + '">';
+						str += '<param name="nMaxPowerPointSlideSize" ' + 'value="' + _config.openDocument.powerpoint.maxSlide + '">';
+						str += '</object>';
+						divDummy.innerHTML = str;
+
+						document.body.appendChild(divDummy);
+					}
+					else { }
+				}
+
+	            try {
+	                loadJavascript("../js_dev/lang/" + _config.lang + ".js?ver=" + DEXTTOP.DEXT5.ReleaseVer, function () {
+	                    _dext_editor = new DEXT5_EDITOR(_editor_id, _config, _frame); _frame.editor = _dext_editor; _dext_editor.start();
+	                    DEXT5_CONTEXT._config = _config;
+	                });	                
+                }
+                catch (e) { alert("ErrCode : 1002"); }
+			}
+
+			function dext5_unloaded_event() {
+
+				try {
+					//alert(local_frame.editor.ID);
+				}
+				catch (e) {}
+
+			}
+			
+		</script>
+	</head>
+	<body style="margin:0px; padding:0px;" onunload="javascript:dext5_unloaded_event()">
+		<div></div>
+	</body>
+
+</html>

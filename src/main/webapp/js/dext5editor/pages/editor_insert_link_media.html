@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Media</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <script type="text/javascript">
+        document.write('<scr' + 'ipt type="text/javascript" src="../config/editor_crossdomain_config.js?t=' + (new Date).getTime() + '"><\/scr' + 'ipt>');
+    </script>
+
+    <script type="text/javascript">
+        var DEXTTOP = parent;
+        var Dext5LayerFrame = DEXTTOP.DEXTDOC.getElementById("dext_frame_" + DEXTTOP.G_CURREDITOR.ID);
+        var Dext5LayerWin = Dext5LayerFrame.contentWindow;
+
+        document.write('<link href="' + Dext5LayerWin._dext_editor._config.popupCssUrl + '?ver=' + DEXTTOP.DEXT5.ReleaseVer + '" rel="stylesheet" type="text/css" />');
+        document.write('<scr' + 'ipt src="' + Dext5LayerWin._dext_editor._config.dialogJSUrl + '?ver=' + DEXTTOP.DEXT5.ReleaseVer + '" type="text/javascript"><\/scr' + 'ipt>');
+    </script>
+
+	<script type="text/javascript">
+	    function page_loaded_event() {
+	        var _skin_name = LayerWin._dext_editor._config.style.skinName;
+	        document.getElementById("dext_dialog_box").className = 'DEXT_fiVe_ED_Popup_Type02 DEXT_fiVe_PUi_' + _skin_name;
+
+	        document.getElementById('span_title').innerHTML = LayerWin.dext5_lang.insert_link_media.title_link_media;
+	        document.getElementById('div_desc').innerHTML = LayerWin.dext5_lang.insert_link_media.desc_link_media;
+	        document.getElementById('label_tag_insert').innerHTML = LayerWin.dext5_lang.insert_link_media.tag;
+	        document.getElementById('btn_ok').innerHTML = LayerWin.dext5_lang.ok_cancel.ok;
+	        document.getElementById('btn_cancel').innerHTML = LayerWin.dext5_lang.ok_cancel.cancel;
+
+            var btn_ok_a = document.getElementById('btn_ok_a');
+            DEXTTOP.DEXT5.util.addEvent(btn_ok_a, 'click', function () { dext_insert_link_media(); });
+
+	        var header = LayerWin.getElementsByClass('EdiTor_Popup_header', document);
+	        header[0].onselectstart = function () { return false; };
+
+	        setCursorPos(document.getElementById('ta_media_tag'), true, false);
+	        LayerWin.setFocusFirstAndLast(document, document.getElementById("ta_media_tag"));
+	    }
+    </script>
+</head>
+<body style="margin:0px; padding:0px;" onload="page_loaded_event()" >
+	<div class="DEXT_fiVe_ED_Popup_Type02 DEXT_fiVe_PUi_blue" id="dext_dialog_box">
+		<!-- Header -->
+		<div class="EdiTor_Popup_header">
+			<span class="subject" id="span_title">Insert Media</span><span class="text">DEXT5 Editor</span>
+			<div class="close">
+				<a href="javascript:event_dext_flash_upload_cancel();" title="close"></a>
+			</div>
+		</div>
+		<!-- // Header -->
+
+		<!-- Contents / general -->
+		<div class="EdiTor_Popup_contents view">
+            <div class="contents"  style="height: 265px;">
+                <div class="con border">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div id="div_desc"></div>
+                                <div id="" style="margin:4px 0 0 0; text-align:center;">
+                                    <img src="../images/editor/dialog/media_logo.gif" alt="" style="width:328px; height:16px;"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="con">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <label style="vertical-align: middle;" for="cb_tag_insert" id="label_tag_insert">태그 입력</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="height: 95px;">
+                                <textarea id="ta_media_tag" name="ta_media_tag" cols="87" rows="16" spellcheck="false" style="width: 455px; height: 120px;"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+		<!-- // Contents -->
+
+		<!-- Footer -->
+		<div class="EdiTor_Popup_footer">
+			<a href="javascript:void(0);" class="confirm" id="btn_ok_a"><span id="btn_ok">확인</span></a>
+			<a href="javascript:event_dext_flash_upload_cancel();"  class="cancel" id="abtn_cancel"><span id="btn_cancel">취소</span></a>
+		</div>
+		<!-- // Footer -->
+	</div>
+</body>
+</html>
