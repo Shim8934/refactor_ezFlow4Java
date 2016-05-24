@@ -5,10 +5,12 @@
 	<typeAlias  alias="ResGetAdmSubClsTreeVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO"/>
 	<typeAlias  alias="ResGetAdminFlagVO" 							type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
 	<typeAlias  alias="ResGetItemListVO" 								type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
+	<typeAlias  alias="ResGetScheduleVO" 							type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	<typeAlias  alias="ResGetScheduleListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
 	<typeAlias  alias="ResGetScheduleListMainVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO"/>
 	<typeAlias  alias="ResGetRepDateTimesVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
 	<typeAlias  alias="ResGetScheduleListTermVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
+	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 										type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	
@@ -187,6 +189,50 @@
 		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="17"/>
 	</resultMap>
 	
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2"  		nullValue=""/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="7"/>
+		<result property="title"						column="TITLE"						columnIndex="8"/>
+		<result property="location"				column="LOCATION"				columnIndex="9" 		nullValue=""/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="10"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="11"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="12"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="13"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="14"		nullValue=""/>
+		<result property="content"				column="CONTENT"				columnIndex="15"		nullValue=""/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="16"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="17"		nullValue=""/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="18"		nullValue=""/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="19"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="20"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="21"		nullValue=""/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
+		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
+		<result property="scheduleID"			column="SCHEDULEID"			columnIndex="25"		nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetScheduleRepetitionVO">
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
+		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
+		<result property="reWay"					column="REWAY"					columnIndex="6"/>
+		<result property="reNum"					column="RENUM"					columnIndex="7"/>
+		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue=""/>
+		<result property="reYoil"					column="REYOIL"					columnIndex="9" 		nullValue=""/>
+		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue=""/>
+		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue=""/>
+		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
+	</resultMap>
+	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
 		{CALL EZRESOURCE.EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -280,6 +326,38 @@
 	<procedure id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#, 
+			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETSCHEDULE(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_INSERTSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#,
+			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETSCHEDULEINFO(#v_pNum#, #v_pEntryID#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.deleteRepetition" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DELETEREPETITION(#v_pOwnerID#, #v_pNum#)}
 		]]>
 	</procedure>
 	
