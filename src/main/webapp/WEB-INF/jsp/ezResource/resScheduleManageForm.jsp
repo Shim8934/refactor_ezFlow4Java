@@ -178,13 +178,13 @@
  			
 			<c:choose>
 				<c:when test="${editor eq 'TAGFREE'}">
-					<iframe id="message" class="viewbox"  name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
+					<iframe id="message" class="viewbox"  name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
 				</c:when>
 				<c:when test="${editor eq 'DEXT'}">
-					<iframe id="message" class="viewbox"  name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
+					<iframe id="message" class="viewbox"  name="message" src="/ezResource/dextEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
 				</c:when>
 				<c:otherwise>
-					<iframe id="message" class="viewbox"  name="message" src="CK_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
+					<iframe id="message" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
 				</c:otherwise>
 			</c:choose>            
        </div>

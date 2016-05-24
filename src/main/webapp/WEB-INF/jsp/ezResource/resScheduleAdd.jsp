@@ -584,10 +584,10 @@
            						<div id="divCross" style="height: 100%;">
            							<c:choose>
            								<c:when test="${editor eq 'TAGFREE'}" >
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
            								</c:when>
            								<c:when test="${editor eq 'DEXT'}" >
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/dextEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
            								</c:when>
            								<c:otherwise>
            									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
