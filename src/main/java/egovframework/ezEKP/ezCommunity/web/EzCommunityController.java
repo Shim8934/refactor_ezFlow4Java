@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -316,7 +317,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commMakeOk.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void commMakeOk(@CookieValue("loginCookie")String loginCookie, Locale locale, CommunityClubVO clubVO, ModelMap model, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void commMakeOk(@CookieValue("loginCookie")String loginCookie, CommunityClubVO clubVO, ModelMap model, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
 		String clubName2 = "";
 		MultipartFile cClubLogo = null, cClubBanner = null;
 		String cCateA = "", cCateB = "", cCateC = "";
@@ -360,8 +361,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			clubName2 = clubName;
 		}
 		
-		String[] bBoardName = egovMessageSource.getMessage("ezCommunity.t1492", locale).split(";");
-		String[] bNotiName = egovMessageSource.getMessage("ezCommunity.t1493", locale).split(";");
+		String[] bBoardName = egovMessageSource.getMessage("ezCommunity.t1492", new Locale(globals.getProperty("Globals.language"))).split(";");
+		String[] bNotiName = egovMessageSource.getMessage("ezCommunity.t1493", new Locale(globals.getProperty("Globals.language"))).split(";");
 		//10MB 제한
 		String comatt = "10";
 		
@@ -382,7 +383,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (clubVO != null) {
 			response.getWriter().write("<script language='javascript'>");
-			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", locale) + "');");
+			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", new Locale(globals.getProperty("Globals.language"))) + "');");
 			response.getWriter().write("history.back();");			
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -555,7 +556,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", locale) + "');\n");
+			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", new Locale(globals.getProperty("Globals.language"))) + "');\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -1178,7 +1179,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 if (pMode.equals("reply")) {
                 	item.setItemLevel(item.getItemLevel()+1);
                 	item.setAbsTract("");
-                	item.setTitle("[re] " + item.getTitle());
+                	item.setTitle(item.getTitle());
                 } else if (pMode.equals("modify")) {
                 	if (item.getEndDate().substring(0, 4).equals("9999")) {
                         if (expireDays == "-1")	{
@@ -1710,10 +1711,77 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 게시판 복사화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/copyBoardItem.do")
+	public String copyBoardItem(ModelMap model, HttpServletRequest request) {
+		String pItemIDList = request.getParameter("itemIDList");
+		String pBoardID = request.getParameter("boardID");
+		String code = request.getParameter("code");
+		
+		model.addAttribute("itemIdList", pItemIDList);
+		model.addAttribute("boardID", pBoardID);
+		model.addAttribute("code", code);
+		return "/ezCommunity/communityCopyBoardItem";
+	}
+	
+	/**
+	 * 게시판 복사 권한 검사
+	 */
+	@RequestMapping(value = "/ezCommunity/getACL.do", method = RequestMethod.POST)
+	public String getACL(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		CommunityBoardPropertyVO boardInfo;
+		
+		if(request.getParameter("comID") != null) {
+			String pComID = request.getParameter("comID");
+			String strACLXML = ezCommunityService.getACL(userInfo.getId(), pComID);
+			
+			model.addAttribute("WRITE", strACLXML);
+		} else if (request.getParameter("boardID") != null) {
+			String pBoardID = request.getParameter("boardID");
+			String userDeptPath = userInfo.getDeptPathCode();
+			
+			for(String pAccessID : userDeptPath.split(",")) {
+				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID);
+				
+				if (boardInfo != null) {
+					model.addAttribute("boardInfo", boardInfo);
+					break;
+				}
+			}
+		}
+		
+		return "json";
+	}
+	
+	/**
+	 * 게시판 복사 실행 함수
+	 */
+	//TODO 2016-05-24 이효진 다른게시판 만들고나서 구현가능
+	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST)
+	public String copyItem(ModelMap model, HttpServletRequest request) throws Exception {
+		String pOrgItemIDList = request.getParameter("orgItemIDList");
+		String pOrgBoardID = request.getParameter("orgBoardID");
+		String pDestItemIDList = request.getParameter("destItemIDList");
+		String pDestBoardID = request.getParameter("destBoardID");
+		String pUploadFilePath = config.getProperty("upload_community.ROOT");
+		String ret = "";
+		
+		int i = 0;
+		for(String pOrgItemID : pOrgItemIDList.split(";")) {
+			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, pUploadFilePath);
+		}
+		
+		model.addAttribute("RESULT", ret);
+		
+		return "json";
+	}
+	/**
 	 * 알림마당 목록화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
-	public String bbsList(@CookieValue("loginCookie")String loginCookie, Locale locale, HttpServletRequest request, ModelMap model) throws Exception {
+	public String bbsList(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		String bName = "c_Board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
 		String pKeyword = "", titleName = "";
 		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
@@ -1770,16 +1838,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		strHTML.append("<tr>");
-		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", locale) + "</th>");
-		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", locale) + "</th>");
-		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", locale) + "</th>");
-		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", locale) + "</th>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", new Locale(globals.getProperty("Globals.language"))) + "</th>");
 		
 		if (iColSpan == 6) {
-			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", locale) + "</th>");
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", new Locale(globals.getProperty("Globals.language"))) + "</th>");
 		}
 		
-		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", locale) + "</th>");
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", new Locale(globals.getProperty("Globals.language"))) + "</th>");
 		strHTML.append("</tr>");
 		
 		int iOutputCount = 1;
@@ -2381,6 +2449,61 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "OK";
 		}
 		return "ERROR";
+	}
+	
+	/**
+	 * 방명록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commHome/guest/guestOne.do")
+	public String guestOne(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mode = "", keyword = "", sRadio = "", content = "";
+		int totalPage = 0, curPage = 0, nowBlock = 0, myChoice = 0, comNoPerPage = 5;
+		
+		String code = request.getParameter("code");
+		
+		if (request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
+		if (request.getParameter("keyword") != null) {
+			keyword = request.getParameter("keyword");
+		}
+		if (request.getParameter("sRadio") != null) {
+			sRadio = request.getParameter("sRadio");
+		}
+		if (request.getParameter("gotoPage") != null) {
+			curPage = Integer.parseInt(request.getParameter("gotoPage"));
+		} else {
+			curPage = 1;
+		}
+		if (request.getParameter("block") != null) {
+			nowBlock = Integer.parseInt(request.getParameter("block"));
+		}
+		
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		
+		int keywordCount = Integer.parseInt(ezCommunityService.guestOneGet1(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang())));
+		totalPage = keywordCount / comNoPerPage;
+
+        if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
+            totalPage = totalPage + 1;
+        }
+//        XmlDataBind(CreateData(true));
+        
+        //TODO 여기 할 차례
+        String strXML = ezCommunityService.guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		model.addAttribute("code", code);
+		model.addAttribute("mode", mode);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("sRadio", sRadio);
+		model.addAttribute("curPage", curPage);
+		model.addAttribute("nowBlock", nowBlock);
+		model.addAttribute("totalPage", totalPage);	
+		model.addAttribute("keywordCount", keywordCount);
+		
+		return "/ezCommunity/communityGuestOne";
 	}
 
 }

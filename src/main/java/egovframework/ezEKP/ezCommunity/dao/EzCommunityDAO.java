@@ -140,8 +140,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityBoardListVO) select("EzCommunityDAO.boardItemListGet1", map);
 	}
 
-	public CommunityBoardPropertyVO getACL(Map<String, Object> map) throws Exception {
-		return (CommunityBoardPropertyVO) select("EzCommunityDAO.getACL", map);
+	public CommunityBoardPropertyVO brdGetACL(Map<String, Object> map) throws Exception {
+		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetACL", map);
 	}
 
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) {
@@ -383,6 +383,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CommunityBoardItemReadVO> getReaderList(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardItemReadVO>) list("EzCommunityDAO.getReaderList", map);
+	}
+
+	public String getACL(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommunityDAO.getACL", map);
+	}
+
+	public CommunityBoardItemVO copyItemGet1(Map<String, Object> map) throws Exception {
+		return (CommunityBoardItemVO) select("EzCommunityDAO.copyItemGet1", map);
+	}
+
+	public String guestOneGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.guestOneGet1", map);
 	}
 
 }

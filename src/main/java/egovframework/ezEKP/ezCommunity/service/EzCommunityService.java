@@ -59,7 +59,7 @@ public interface EzCommunityService {
 	
 	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id) throws Exception;
 	
-	public CommunityBoardPropertyVO getACL(String pBoardID, String pAccessID) throws Exception;
+	public CommunityBoardPropertyVO brdGetACL(String pBoardID, String pAccessID) throws Exception;
 
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
@@ -190,6 +190,14 @@ public interface EzCommunityService {
 	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception;
 
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
+
+	public String getACL(String id, String pComID) throws Exception;
+
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception;
+
+	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
+
+	public String guestOneGet2(String sRadio, String keyword, String code, String multiData) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

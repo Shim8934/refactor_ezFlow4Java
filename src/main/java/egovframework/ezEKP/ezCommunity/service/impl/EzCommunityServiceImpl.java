@@ -807,7 +807,7 @@ System.out.println("@");
 		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
 		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			CommunityBoardPropertyVO boardInfoTemp = getACL(pBoardID, userDeptPath.split(",")[i].trim());
+			CommunityBoardPropertyVO boardInfoTemp = brdGetACL(pBoardID, userDeptPath.split(",")[i].trim());
 			
 			if (boardInfoTemp == null) {
 				break;
@@ -894,12 +894,12 @@ System.out.println("@");
 	}
 	
 	@Override
-	public CommunityBoardPropertyVO getACL(String pBoardID, String pAccessID) throws Exception {
+	public CommunityBoardPropertyVO brdGetACL(String pBoardID, String pAccessID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pAccessID", pAccessID);
 		
-		return ezCommunityDAO.getACL(map);
+		return ezCommunityDAO.brdGetACL(map);
 	}
 	
 	@Override
@@ -1223,7 +1223,6 @@ System.out.println("@");
 		item.setAttachments(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
-		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
 		if (pMode.equals("reply")) {
 //			item.setUpperItemIDTree(item.getUpperItemIDTree() + GetReverseDateNow() + item.getItemID());
 		}
@@ -1454,7 +1453,8 @@ System.out.println("@");
 				previousTitle = tempTitle;
 			}
 			
-			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size()-1) {
+			System.out.println(item.getTitle());
+			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size() - 1) {
 				nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
 				nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
 			}
@@ -1471,9 +1471,9 @@ System.out.println("@");
 			list = ezCommunityDAO.getAdjacentItemGet2(map);
 			
 			for (CommunityBoardItemVO item : list) {
-				if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size()-1) {
-					previousItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
-					previousTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
+				if (item.getItemID().equals(pItemID) && list.indexOf(item) > 0) {
+					previousItemID = list.get(list.indexOf(item) - 1).getItemID().trim();
+					previousTitle = list.get(list.indexOf(item) - 1).getTitle().trim();
 				}
 			}
 		}
@@ -1488,7 +1488,7 @@ System.out.println("@");
 			map.put("v_PREVIOUSITEMID", previousItemID);
 			
 			CommunityBoardItemVO item = ezCommunityDAO.getAdjacentItemGet3(map);
-			
+	
 			if (item != null) {
 				nextItemID = item.getItemID();
 				nextTitle = item.getTitle();
@@ -1641,6 +1641,54 @@ System.out.println("@");
 		
 		return ezCommunityDAO.getReaderList(map);
 	}
+
+	@Override
+	public String getACL(String id, String pComID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_PCOMID", pComID);
+		
+		if (ezCommunityDAO.getACL(map) != null) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+
+	@Override
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pOrgItemID", pOrgItemID);
+		map.put("v_pOrgBoardID", pOrgBoardID);
+		
+		CommunityBoardItemVO item = ezCommunityDAO.copyItemGet1(map);
+		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID, pDestBoardID));
+		
+		System.out.println(item.getContentLocation());
+		
+		return null;
+	}
+
+	@Override
+	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.guestOneGet1(map);
+	}
+
+	@Override
+	public String guestOneGet2(String sRadio, String keyword, String code, String multiData) throws Exception {
+		
+		return null;
+	}
+	
+	
 	
 	
 /*	@Override

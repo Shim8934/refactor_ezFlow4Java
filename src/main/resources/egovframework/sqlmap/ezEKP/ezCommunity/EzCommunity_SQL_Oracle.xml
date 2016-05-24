@@ -13,8 +13,9 @@
 	<typeAlias alias="CommunityBoardPropertyVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO"/>	
 	<typeAlias alias="CommunityBoardItemAttachmentVO" 	type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO"/>	
 	<typeAlias alias="CommunityOneLineReplyVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO"/>	
-	<typeAlias alias="CommunityBoardItemReadVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO"/>	
-	
+	<typeAlias alias="CommunityBoardItemReadVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO"/>
+	<typeAlias alias="CommunityCClubGuestVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO"/>
+		
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
 		<result property="title"						column="TITLE"						columnIndex="2"/>
@@ -134,16 +135,20 @@
 		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET3(#v_PBOARDID#, #v_PPARENTWRITEDATE#, #v_PITEMID#, #v_PUPPERITEMIDTREE#, #v_PREVIOUSITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getReservedItemListXML"		parameterClass="Map"	resultClass="CommunityBoardListVO">
+	<procedure id="EzCommunityDAO.getReservedItemListXML"		parameterClass="Map"		resultClass="CommunityBoardListVO">
 		{CALL EZCOMMUNITY.EZSP_GETRESERVEDITEMLISTXML(#v_PENDROW#, #v_STRLANG#, #v_PUSERID#, #v_PSORTBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"	resultClass="CommunityOneLineReplyVO">
+	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO">
 		{CALL EZCOMMUNITY.EZSP_READONELINEREPLY(#v_USERINFO_LANG#, #v_PBOARDID#, #v_PITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getReaderList"				parameterClass="Map"	resultClass="CommunityBoardItemReadVO">
+	<procedure id="EzCommunityDAO.getReaderList"				parameterClass="Map"		resultClass="CommunityBoardItemReadVO">
 		{CALL EZCOMMUNITY.EZSP_BRDGETREADERLIST(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.copyItemGet1"					parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		{CALL EZCOMMUNITY.EZSP_COPYITEM_GET1(#v_pOrgItemID#, #v_pOrgBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
@@ -169,7 +174,7 @@
 	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
 		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-		
+			
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -242,8 +247,8 @@
 		{CALL EZCOMMUNITY.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunity.checkOneLineOwner"				parameterClass="Map"		resultClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_CHECKONELINEOWNER(#v_REPLYID#, #v_USERINFO_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	<procedure id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET1(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
@@ -264,6 +269,10 @@
 	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.checkOneLineOwner"				parameterClass="Map"		resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_CHECKONELINEOWNER(#v_REPLYID#, #v_USERINFO_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"		resultClass="Integer">
@@ -326,10 +335,6 @@
 		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.commMakeOkInsert1">
-		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
-	</procedure>
-	
 	<procedure id="EzCommunityDAO.brdNewItem" 					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_BRDNEWITEM(#v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterName2#, #v_pWriterDeptID#, #v_pWriterDeptName#, #v_pWriterDeptName2#, #v_pWriterCompanyID#, #v_pWriterCompanyName#, #v_pWriterCompanyName2#, #v_pWriteDate#, #v_pParentWriteDate#, #v_pImportance#, #v_pTitle#, #v_pContentLocation#, #v_pStartDate#, #v_pEndDate#, #v_pAbstract#, #v_pAttachments#, #v_pUpperItemIDTree#, #v_pItemLevel#, #v_pExtensionAttribute1#, #v_pExtensionAttribute2#, #v_pExtensionAttribute3#, #v_pExtensionAttribute32#, #v_pExtensionAttribute4#, #v_pExtensionAttribute5#, #v_pDocPassWord#)}
 	</procedure>
@@ -340,6 +345,10 @@
 	
 	<procedure id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_SAVEONELINEREPLY(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_PCONTENT#, #v_PPASSWORD#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.commMakeOkInsert1">
+		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
 	</procedure>
 	
 	
@@ -398,7 +407,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getACL"							parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
+	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
 				*
@@ -421,6 +430,19 @@
 	        	ezCommunity.TBL_Board_BoardInfo
 			WHERE  
 	       		BOARDID = #pBoardID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.getACL"							parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT 
+				C_ID
+			FROM 
+	        	ezCommunity.C_CLUBUSER
+			WHERE  
+	       		C_CLUBNO = #v_PCOMID#
+	       	AND
+	       		C_ID = #v_USERINFO_USERID#;
 		]]>
 	</select>
 	
