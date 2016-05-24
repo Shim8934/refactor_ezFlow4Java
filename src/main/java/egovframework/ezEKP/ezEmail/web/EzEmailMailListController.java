@@ -462,7 +462,9 @@ public class EzEmailMailListController {
 			folderId = uniqueId;
 		}
 		else {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+			if (uniqueId.endsWith(",")) {
+				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+			}
 			String[] folderAndMsgIdArray = uniqueId.split(",");
 			folderId = folderAndMsgIdArray[0].split("/")[0];			
 			uids = new long[folderAndMsgIdArray.length];

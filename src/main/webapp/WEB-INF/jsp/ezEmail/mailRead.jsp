@@ -46,7 +46,7 @@
 			var ReadCountCheck ="${pReadFlag}";
 		    var IsAttach = "${pIsAttach}";
 		    var pUse_Editor = "${Use_Editor}";
-		    var pisDelete = "${ isDelete}";
+		    var pisDelete = "${isDelete}";
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
 		    window.onresize = window_onresize;

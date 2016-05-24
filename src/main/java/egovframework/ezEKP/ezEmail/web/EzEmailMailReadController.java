@@ -131,6 +131,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String dateStr = null;
 		String title = null;
 		String pReadFlag = "Y";
+		String isDelete = "BMOVE";
 		boolean isSentItems = false;
 		String pIsCCFg = "Y";
 		String useEzKMS = config.getProperty("config.Use_ezKMS") == null ? "" : config.getProperty("config.Use_ezKMS");
@@ -305,6 +306,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
 					isSentItems = true;
 				}
+				
+				if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
+					isDelete = "BDELETE";
+				}				
 			}
 			f.close(true);
 		}
@@ -324,6 +329,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("folderPath", folderPath);
 		model.addAttribute("uid", uid);
 		model.addAttribute("pReadFlag", pReadFlag);
+		model.addAttribute("isDelete", isDelete);
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);

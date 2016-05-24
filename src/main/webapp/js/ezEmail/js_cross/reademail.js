@@ -190,7 +190,7 @@ function delete_mail() {
         createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", g_paramURL);
         createNodeAndInsertText(xmlDOM, objNode, "FOLDERID", "");
 
-        g_deleteHttp.open("POST", "/myoffice/ezEmail/remote/mail_delete.aspx?cmd=" + pisDelete, true);
+        g_deleteHttp.open("POST", "/ezEmail/mailDelete.do?cmd=" + pisDelete, true);
         g_deleteHttp.onreadystatechange = event_deletemail_end;
         g_deleteHttp.send(xmlDOM);
 
