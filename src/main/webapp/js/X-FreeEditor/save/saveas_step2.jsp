@@ -15,7 +15,7 @@
 	outs.write(0xEF);
 	outs.write(0xBB);
 	outs.write(0xBF);
-	String sContent
+	String sContent;
 	if(request.getParameter("mime_contents") != null)
 		sContent = request.getParameter("mime_contents");
 	else
