@@ -1,0 +1,177 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>기본 콘트롤 박스 레이아웃</title>
+<link rel="stylesheet" href="control.css" type="text/css">
+<!--script src="../../config/crossdomain.js" type="text/javascript" language="javascript"></script-->
+<script src="dialog_event.js" type="text/javascript" language="javascript"></script>
+<script src="../script/tseinsertflash.js" type="text/javascript" language="javascript"></script>
+</head>
+
+<body onload="javascript:getSelectRng();">
+<!-- 플래시 삽입 시작 -->
+
+<form method="post" enctype="multipart/form-data">
+<div class="control_boxline" style="width:275px;">
+		<div class="control_boxline_bg">
+		 
+		 		<!-- 타이틀 -->
+				<script language="JavaScript">
+				document.write("<div class='control_title' style='background:url(" + getSkinPath('title_bg.gif') + ");'>");				</script>
+					<div class="control_title_name" style="font-family:simsun;">插入Flash</div>
+				</div>
+				<!-- 타이틀 -->
+				
+				<div class="inside_box1">
+
+					<!-- 레이아웃 테이블 -->
+                                        <div class="sp_10px"></div>
+					<table width="250" border="0" cellspacing="0" cellpadding="0" align="center">
+					  <tr>
+						<td class="control_Not_Selelct"  width="67" style="font-family:simsun;">Flash路径</td>
+						<td>
+							
+								<!-- 찾아보기 테이블 -->
+								<table border="0" cellspacing="0" cellpadding="0">
+								  <tr>
+									<td><input id="url" type="text" class="text_field" style="width:110px;" value="" readonly></td>
+									<td>
+										<div style="overflow:hidden; position:relative; margin-right:0px; width:66px; height:21px; background-image:url(images/btn_find.gif);">
+											<input class="control_Not_Selelct"  type="file" id="FILE_PATH" name="FILE_PATH" style="padding-right:0; FILTER:alpha(opacity=0); opacity:0; position:absolute; right:0px; cursor:pointer" onchange="FileCheck();">
+										</div>
+									</td>
+								  </tr>
+								</table>
+								<!-- 찾아보기 테이블 -->
+
+						</td>
+					  </tr>
+					</table>
+					<!-- 레이아웃 테이블 -->
+                                        <div class="sp_10px"></div>
+
+				</div>
+				
+				<div class="inside_box2" >
+					<div class="inside_box2_line" >
+
+					<!-- 레이아웃 테이블 -->
+                                        <div class="sp_10px"></div>
+					<table width="256" border="0" cellspacing="0" cellpadding="0" align="center">
+					  <tr>
+						<td class="control_Not_Selelct"  width="66" style="font-family:simsun;">边框</td>
+						<td>
+											<!-- 스핀핸들러 -->
+											<table border="0" cellspacing="0" cellpadding="0" height="21"><tr>
+												<td rowspan="2" height="21"><input id="border" type="text" class="spin_field" style="width:30px" value="0" ></td>
+												<td height="11" valign="bottom"><input type=button onClick="javascript:tseSpinUp('border');" class="btn_spin_handler_up"></td></tr><tr>
+												<td height="10" valign="top"><input type=button onClick="javascript:tseSpinDown('border');" class="btn_spin_handler_down"></a></td></tr>
+											</table>
+											<!-- 스핀핸들러 -->
+						</td>
+						<td width="5"></td>
+						<td class="control_Not_Selelct"  width="66" style="font-family:simsun;">对齐</td>
+						<td>
+						<select id="align" class="combobox">
+                          <option value="top">上</option>
+                          <option value="middle">中</option>
+                          <option value="bottom">下</option>
+                          <option value="left">左</option>
+                          <option value="right">右</option>
+                        </select>
+						</td>
+					  </tr>
+					   <tr>
+						<td class="td_hspace2" colspan="5"></td>
+					  </tr>
+					  <tr>
+						<td class="control_Not_Selelct" style="font-family:simsun;"  >宽度</td>
+						<td>
+											<!-- 스핀핸들러 -->
+											<table border="0" cellspacing="0" cellpadding="0" height="21"><tr>
+												<td rowspan="2" height="21"><input id="width" type="text" class="spin_field" style="width:30px" value="100" ></td>
+												<td height="11" valign="bottom"><input type=button onClick="javascript:tseSpinUp('width');" class="btn_spin_handler_up"></td></tr><tr>
+												<td height="10" valign="top"><input type=button onClick="javascript:tseSpinDown('width');" class="btn_spin_handler_down"></a></td></tr>
+											</table>
+											<!-- 스핀핸들러 -->
+						</td>
+						<td></td>
+						<td class="control_Not_Selelct" style="font-family:simsun;"  >高度</td>
+						<td>
+											<!-- 스핀핸들러 -->
+											<table border="0" cellspacing="0" cellpadding="0" height="21"><tr>
+												<td rowspan="2" height="21"><input id="height" type="text" class="spin_field" style="width:30px" value="100" ></td>
+												<td height="11" valign="bottom"><input type=button onClick="javascript:tseSpinUp('height');" class="btn_spin_handler_up"></td></tr><tr>
+												<td height="10" valign="top"><input type=button onClick="javascript:tseSpinDown('height');" class="btn_spin_handler_down"></a></td></tr>
+											</table>
+											<!-- 스핀핸들러 -->
+						</td>
+					  </tr>
+					  <tr>
+						<td class="td_hspace2" colspan="5"></td>
+					  </tr>
+					  <tr>
+						<td class="control_Not_Selelct" style="font-family:simsun;"  >横向页边距</td>
+						<td>
+											<!-- 스핀핸들러 -->
+											<table border="0" cellspacing="0" cellpadding="0" height="21"><tr>
+												<td rowspan="2" height="21"><input id="hspace" type="text" class="spin_field" style="width:30px" value="0" ></td>
+												<td height="11" valign="bottom"><input type=button onClick="javascript:tseSpinUp('hspace');" class="btn_spin_handler_up"></td></tr><tr>
+												<td height="10" valign="top"><input type=button onClick="javascript:tseSpinDown('hspace');" class="btn_spin_handler_down"></a></td></tr>
+											</table>
+											<!-- 스핀핸들러 -->
+						</td>
+						<td></td>
+						<td class="control_Not_Selelct" style="font-family:simsun;"  >纵向页边距</td>
+						<td>
+											<!-- 스핀핸들러 -->
+											<table border="0" cellspacing="0" cellpadding="0" height="21"><tr>
+												<td rowspan="2" height="21"><input id="vspace" type="text" class="spin_field" style="width:30px" value="0" ></td>
+												<td height="11" valign="bottom"><input type=button onClick="javascript:tseSpinUp('vspace');" class="btn_spin_handler_up"></td></tr><tr>
+												<td height="10" valign="top"><input type=button onClick="javascript:tseSpinDown('vspace');" class="btn_spin_handler_down"></a></td></tr>
+											</table>
+											<!-- 스핀핸들러 -->
+						</td>
+					  </tr>
+					</table>
+					<!-- 레이아웃 테이블 -->
+                                        <div class="sp_10px"></div>
+					
+					</div>					
+				</div>
+				
+					<!-- 확인버튼 레이아웃 테이블 -->
+					<table border="0" cellspacing="0" cellpadding="0" class="button_layout" align="center">
+					  <tr>
+						<td class="control_Not_Selelct"  ><a href="javascript:AddEmbedObject();">
+						<script language="JavaScript">
+							document.write("<img src='" + getSkinPath('btn_ok.gif.gif') + "' alt='确认'>");
+						</script></a></td>
+						<td width="10"></td>
+						<td class="control_Not_Selelct"  ><a href="javascript:onCancel();">
+						<script language="JavaScript">
+							document.write("<img src='" + getSkinPath('btn_cancel.gif') + "' alt='取消'>");
+						</script></a></td>
+					  </tr>
+					</table>
+					<!-- 확인버튼 레이아웃 테이블 -->
+    </div>
+</div>
+<input type="hidden" id="content_type" name="content_type" value="flash">
+<input type="hidden" id="html_holder" name="html_holder">
+</form>
+
+<div id="progress_div" style="position:absolute; left:11px; top:151px; width:255px; height:16px; font-family:Arial; font-size:12px; display:none">
+	<table class="control_Not_Selelct" width="240" border="0" cellspacing="0" cellpadding="0" align="center">
+		<tr><td colspan="2"><img id="progress_img"/></td></tr>
+	</table>
+</div>
+
+<!-- 플래시삽입 끝 -->
+</body>
+
+</html>
+
+

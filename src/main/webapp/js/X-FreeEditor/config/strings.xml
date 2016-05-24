@@ -1,0 +1,127 @@
+﻿<?xml version="1.0"?>
+<strings>
+	<string id="STRID">
+		<kor>한글</kor>
+		<eng>English</eng>
+		<ChineseS>Chinese_Simplified</ChineseS>
+		<ChineseT>Chinese_Traditional</ChineseT>
+	</string>
+	<string id="STRID_TOO_BIG_TO_BE_UPLOADED">
+		<kor>파일이 너무 커서 업로드할 수 없습니다.
+
+(파일크기:%.1fMB / 제한:%.1fMB)</kor>
+		<eng>The file is too big to be uploaded.
+
+(file size:%.1fMB / limit:%.1fMB)</eng>
+		<ChineseS>文件太大无法上传。
+
+(文件大小:%.1fMB / 限制:%.1fMB)</ChineseS>
+		<ChineseT>文件太大無法上傳。
+
+(文件大小:%.1fMB / 限制:%.1fMB)</ChineseT>
+	</string>
+	<string id="STRID_CANNOT_MERGE">
+		<kor>병합을 진행할 수 없습니다.</kor>
+		<eng>You cannot merge cells without selection.</eng>
+		<ChineseS>无法合并。</ChineseS>
+		<ChineseT>无法合并。</ChineseT>
+	</string>
+	<string id="STRID_URL_NEED_FILLED">
+		<kor>주소(URL) 입력란은 반드시 채워야 합니다. </kor>
+		<eng>The URL field must be filled in.</eng>
+		<ChineseS>请一定填写地址输入栏(URL)。</ChineseS>
+		<ChineseT>請一定填寫地址輸入欄(URL)。</ChineseT>
+	</string>
+	<string id="STRID_IMAGE_NEEDED_SELECTED">
+		<kor>이미지 파일을 선택해야 합니다.</kor>
+		<eng>An image file should be selected.</eng>
+		<ChineseS>应选择图片文件。</ChineseS>
+		<ChineseT>應選擇圖片文件。</ChineseT>
+	</string>
+	<string id="STRID_FLASH_NEEDED_SELECTED">
+		<kor>플래시 파일을 선택해야 합니다.</kor>
+		<eng>A flash movie file should be selected.</eng>
+		<ChineseS>应选择Flash文件。</ChineseS>
+		<ChineseT>應選擇Flash文件。</ChineseT>
+	</string>
+	<string id="STRID_UPLOAD_NOT_SUPPORTED_IMAGE">
+		<kor>현재 JPEG, GIF, PNG 파일만 지원됩니다.</kor>
+		<eng>Only JPEG, GIF and PNG images are supported.</eng>
+		<ChineseS>当前仅支持JPEG, GIF, PNG文件。</ChineseS>
+		<ChineseT>當前僅支持JPEG, GIF, PNG文件。</ChineseT>
+	</string>
+	<string id="STRID_NOT_FLASH_MOVIE">
+		<kor>선택하신 파일은 플래시 파일이 아닙니다.</kor>
+		<eng>This is not a flash movie.</eng>
+		<ChineseS>所选文件不是Flash文件。</ChineseS>
+		<ChineseT>所選文件不是Flash文件。</ChineseT>
+	</string>
+	<string id="STRID_CANNOT_CUT_NOR_COPY">
+		<kor>브라우저의 보안설정이 클립보드 접근을 허용하지 않고 있습니다.
+
+보안설정을 변경하시거나 키보드 명령(%s)을 사용하시기 바랍니다.</kor>
+		<eng>It is not permitted to access the clipboard data in the security setting of this browser.
+
+You can use the keyboard command(%d) instead.</eng>
+		<ChineseS>浏览器安全设置不支持剪贴板。
+
+请更改安全设置或使用键盘命令(%s)。</ChineseS>
+		<ChineseT>流覽器安全設置不支持剪貼板。
+
+請更改安全設置或使用鍵盤命令(%s)。</ChineseT>
+	</string>
+	<string id="STRID_FINDSTR_NEEDED">
+		<kor>찾을 내용을 입력해주세요.</kor>
+		<eng>Search string needed.</eng>
+		<ChineseS>请输入要查找的内容。</ChineseS>
+		<ChineseT>請輸入要查找的內容。</ChineseT>
+	</string>
+	<string id="STRID_CANNOT_SEARCH">
+		<kor>검색하신 내용을 찾을 수 없습니다.</kor>
+		<eng>Search string not found.</eng>
+		<ChineseS>无法找到要查找的内容。</ChineseS>
+		<ChineseT>無法找到要查找的內容。</ChineseT>
+	</string>
+	<string id="STRID_CANNOT_REPLACE">
+		<kor>일치하는 내용이 없습니다.</kor>
+		<eng>Search string not found.</eng>
+		<ChineseS>没有相同的内容。</ChineseS>
+		<ChineseT>沒有相同的內容。</ChineseT>
+	</string>
+	<string id="STRID_REPLACE_SUCCEEDED">
+		<kor>일치하는 내용이 %d회 바뀌었습니다.</kor>
+		<eng>String was replaced %s.</eng>
+		<ChineseS>相同的内容变更%d次。</ChineseS>
+		<ChineseT>相同的內容變更%d次。</ChineseT>
+	</string>
+	<string id="STRID_PROMPT_INIT_DOCUMENT">
+		<kor>문서를 초기화합니다.
+진행하시겠습니까?</kor>
+		<eng>The document will be initialized.
+Proceed?</eng>
+		<ChineseS>初始化文件。
+要进行初始化？</ChineseS>
+		<ChineseT>初始化文件。
+要進行初始化？</ChineseT>
+	</string>
+	<string id="STRID_PROMPT_SAVE_AND_INIT_DOCUMENT">
+		<kor>문서 내용이 변경되어, 저장하고 초기화합니다.
+진행하시겠습니까?</kor>
+		<eng>Because the document has been modified, it will be saved and initialized.
+Proceed?</eng>
+		<ChineseS>变更文件内容，保存并初始化。
+要进行吗？</ChineseS>
+		<ChineseT>變更文件內容，保存並初始化。
+要進行嗎？</ChineseT>
+	</string>
+	<string id="STRID_OFFICE_STYLE">
+		<kor>해당 작업은 문서의 스타일에 변경이 발생할 수 있습니다.
+진행하시겠습니까?</kor>
+		<eng>해당 작업은 문서의 스타일에 변경이 발생할 수 있습니다.
+			진행하시겠습니까?</eng>
+		<ChineseS>해당 작업은 문서의 스타일에 변경이 발생할 수 있습니다.
+			진행하시겠습니까?</ChineseS>
+		<ChineseT>해당 작업은 문서의 스타일에 변경이 발생할 수 있습니다.
+			진행하시겠습니까?</ChineseT>
+	</string>
+</strings>

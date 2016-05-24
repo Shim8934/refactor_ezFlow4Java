@@ -1,0 +1,72 @@
+﻿<?xml version="1.0"?>
+
+<menu>
+	<newfile visible="none">새 문서</newfile>
+	<openfile visible="none">파일 열기</openfile>
+	<savefile visible="none">파일 저장</savefile>
+	<print visible="none">인쇄</print>
+	<Cut visible="visible">잘라 내기</Cut>
+	<Copy visible="visible">복사</Copy>
+	<paste visible="visible">붙여 넣기</paste>
+	<Undo visible="visible">실행 취소</Undo>
+	<Redo visible="visible">다시 실행</Redo>
+	<InsertHyperlink visible="visible">하이퍼 링크 삽입</InsertHyperlink>
+	<RemoveHyperlink visible="visible">하이퍼 링크 제거</RemoveHyperlink>
+	<InsertImage visible="visible">이미지 삽입</InsertImage>
+	<ImageProperty visible="visible">이미지 편집</ImageProperty>
+	<InsertFlash visible="none">플래쉬 삽입</InsertFlash>
+	<InsertSymbol visible="visible">기호 삽입</InsertSymbol>
+	<HorizontalRule visible="visible">가로줄 삽입</HorizontalRule>
+	<insertrowabove visible="visible">위에 행 추가</insertrowabove>
+	<insertrowbelow visible="visible">아래에 행 추가</insertrowbelow>
+	<insertcolumnleft visible="visible">왼쪽에 열 추가</insertcolumnleft>
+	<insertcolumnright visible="visible">오른쪽에 열 추가</insertcolumnright>
+	<deleterow visible="visible">행 삭제</deleterow>
+	<deletecolumn visible="visible">열 삭제</deletecolumn>
+	<mergecell visible="visible">셀 병합</mergecell>
+	<splitcell visible="visible">셀 분할</splitcell>
+	<inserttable visible="visible">테이블 삽입</inserttable>
+	<tableproperty visible="visible">테이블 속성</tableproperty>
+	<cellproperty visible="visible">셀 속성</cellproperty>
+	<cellverttop visible="visible">위쪽 맞춤</cellverttop>
+	<cellvertcenter visible="visible">가운데 맞춤</cellvertcenter>
+	<cellvertbottom visible="visible">아래쪽 맞춤</cellvertbottom>
+	<abouttse visible="none">제품 정보</abouttse>
+	<tseformat visible="visible">서식 스타일</tseformat>
+	<tsefontface visible="visible">폰트 종류</tsefontface>
+	<tsefontsize visible="visible">폰트 크기</tsefontsize>
+	<Bold visible="visible">굵게</Bold>
+	<Italic visible="visible">기울임꼴</Italic>
+	<Underline visible="visible">밑줄</Underline>
+	<Strikethrough visible="visible">취소선</Strikethrough>
+	<RemoveFormatting visible="visible">서식 제거</RemoveFormatting>
+	<SelectAll visible="visible">전체 선택</SelectAll>
+	<tsefontcolor visible="visible">글자 색</tsefontcolor>
+	<tsefontbgcolor visible="visible">글자 배경색</tsefontbgcolor>
+	<AlignLeft visible="visible">왼쪽 정렬</AlignLeft>
+	<AlignCenter visible="visible">가운데 정렬</AlignCenter>
+	<AlignRight visible="visible">오른쪽 정렬</AlignRight>
+	<Justify visible="none">양쪽 정렬</Justify>
+	<Numbering visible="visible">번호 매기기</Numbering>
+	<Bullets visible="visible">글머리 기호</Bullets>
+	<DecreaseIndent visible="visible">내어쓰기</DecreaseIndent>
+	<IncreaseIndent visible="visible">들여쓰기</IncreaseIndent>
+	<Superscript visible="none">위 첨자</Superscript>
+	<Subscript visible="none">아래 첨자</Subscript>
+	<selecttableCell visible="visible">셀 선택</selecttableCell>
+	<selecttable visible="visible">표 선택</selecttable>
+	<Search visible="visible">찾기</Search>
+	<Replace visible="visible">바꾸기</Replace>
+	<AdminLock title="쓰기영역 설정" visible="visible">쓰기영역 설정</AdminLock>
+	<AdminUnlock title="쓰기영역 해제" visible="visible">쓰기영역 해제</AdminUnlock>
+	<Userguide title="사용자 도움말" visible="none">사용자 도움말</Userguide>
+	<TagDiet title="서식 정리" visible="none">서식 정리</TagDiet>
+	<LineHeight title="줄 간격" visible="visible">줄 간격</LineHeight>
+	<LetterSpacing title="글자 간격" visible="visible">글자 간격</LetterSpacing>
+	<deletetable title="테이블 삭제" visible="visible">테이블 삭제</deletetable>
+	<eq_columnW title="셀 너비 같게" visible="visible">셀 너비 같게</eq_columnW>
+	<eq_columnH title="셀 높이 같게" visible="visible">셀 높이 같게</eq_columnH>
+	<FullScreen title="전체화면" visible="none">전체화면</FullScreen>
+	<Design>디자인</Design>
+	<Preview>미리보기</Preview>
+</menu>

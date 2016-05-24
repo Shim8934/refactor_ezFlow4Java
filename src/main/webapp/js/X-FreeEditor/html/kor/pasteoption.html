@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>X-Free Paste Option Dialog</title>
+<link rel="stylesheet" href="control.css" type="text/css">
+<script src="../../js/sprintf.js" type="text/javascript" language="javascript"></script>
+<script src="dialog_event.js" type="text/javascript" language="javascript"></script>
+<!--script src="../../config/crossdomain.js" type="text/javascript" language="javascript"></script-->
+<script src="../script/tsepasteoption.js" type="text/javascript" language="javascript"></script>
+</head>
+<body>
+<!-- 셀정보 삽입 시작 -->
+<form onsubmit="return false;">
+	<div class="control_boxline" style="width:230px;">
+		<div class="control_boxline_bg">
+	<script language="JavaScript">
+		document.write("<div class='control_title' style='background:url(" + getSkinPath('title_bg.gif') + ");'>");
+	</script>
+	 <span class="control_title_name">옵션</span>	
+	</div>			
+	<table  width="100%">
+		<tr height="5" style="cursor: pointer;">
+						<td>
+		<input type="radio"name="table" id="radio_Text" value="Text" checked="checked"/> 
+    <label for="radio_Text">텍스트 붙여넣기</label>
+    <br />
+	 <input type="radio" name="table" id="radio_Table" value="Table"  /> 
+    <label for="radio_Table">테이블 붙여넣기</label>
+    <br />
+  </td>
+</tr>
+   </table>
+   <table border="0" cellspacing="0" cellpadding="0" class="button_layout" align="center">
+											  <tr>
+												<td class="control_Not_Selelct"><a href="javascript:pasteOptionOk();">
+												<script language="JavaScript">
+													document.write("<img src='" + getSkinPath('btn_ok.gif.gif') + "' alt='OK'>");
+												</script></a></td>
+												<td width="10"></td>
+												<td class="control_Not_Selelct"><a href="javascript:pasteOptionCancel();">
+												<script language="JavaScript">
+													document.write("<img src='" + getSkinPath('btn_cancel.gif') + "' alt='Cancel'>");
+												</script></a></td>
+											  </tr>
+											</table>
+										</div>
+									</div>
+
+</form>
+</body>
+
+</html>
+
+
