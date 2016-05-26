@@ -26,14 +26,14 @@
 	    if(pAdminFg == "") {
 	        window.location.href = "/ezResource/nonResList.do?msg=" + pBrd_Access;
 	    }
-	    var pUserID    = "${userID}";
-	    var pCompanyID = "${companyID}";
+	    var pUserID    = "${userInfo.id}";
+	    var pCompanyID = "${userInfo.companyID}";
 	    var ApproveFlag     = "${approveFlag}";
 	    var brd_NM = "${brdNm}";
 	    var ResID = "${resID}";
 	    var pDisplaySTime = "${displaySTIME}";
 	    var pDisplayETime = "${displayETIME}";
-		var uselang = "${userLang}";  
+		var uselang = "${userInfo.lang}";  
 		var folder_Url = "/ezResource/scheduleGet.do";
 	    var p_Type = "";
 	    var pBrdid = "${resID}";
@@ -451,7 +451,7 @@
 											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t153'/></b> :<a href="#" onClick="MemberInfo_onClick('${ownerID}')"> ${ownerNm}(${ownerPosition}) </a> </td>
 										</tr>
 										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t151'/></b> :  ${deptNm} </td>
+											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t151'/></b> :  ${userInfo.deptName1} </td>
 										</tr>
 										<tr>
 											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t148'/></b></td>
