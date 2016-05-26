@@ -829,7 +829,52 @@ public class EgovStringUtil {
 
 		return rtnStr;
 	}
-
+	
+	/**
+     * 특수문자를 웹 브라우저에서 정상적으로 보이기 위해 특수문자를 처리('<' -> & lT)하는 기능이다
+     * @param 	srcString 		- '<'
+     * @return 	변환문자열('<' -> "&lt"
+     * @exception MyException
+     * @see
+     */
+	public static String getSpclStrCnvr2(String srcString) {
+	
+		String rtnStr = null;
+	
+		try {
+			StringBuffer strTxt = new StringBuffer("");
+	
+			char chrBuff;
+			int len = srcString.length();
+	
+			for (int i = 0; i < len; i++) {
+				chrBuff = (char) srcString.charAt(i);
+	
+				switch (chrBuff) {
+					case '<':
+						strTxt.append("&lt;");
+						break;
+					case '>':
+						strTxt.append("&gt;");
+						break;
+					case '"':
+						strTxt.append("&quot;");
+						break;
+					default:
+						strTxt.append(chrBuff);
+				}
+			}
+	
+			rtnStr = strTxt.toString();
+	
+		} catch (Exception e) {
+			LOGGER.debug("{}", e);
+		}
+	
+		return rtnStr;
+	}
+	
+	
 	/**
 	 * 응용어플리케이션에서 고유값을 사용하기 위해 시스템에서17자리의TIMESTAMP값을 구하는 기능
 	 *

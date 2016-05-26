@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<language>
+	<item>
+		<displayname>UTF-8</displayname>
+		<description>유니코드서버로 메일을 보낼 때 쓰임</description>
+		<charset>UTF-8</charset>
+		<content-transfer-encoding>BASE64</content-transfer-encoding>
+		<font>굴림</font>
+		<simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+		<show-displayname>1</show-displayname>
+		<show-english-displayname>0</show-english-displayname>
+	</item>
+	<item>
+		<displayname>한글 인코딩</displayname>
+		<description>한글 메일서버로 메일을 보낼 때 쓰임</description>
+		<charset>ks_c_5601-1987</charset>
+		<content-transfer-encoding>BASE64</content-transfer-encoding>
+		<font>굴림</font>
+		<simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+		<show-displayname>1</show-displayname>
+		<show-english-displayname>0</show-english-displayname>
+	</item>
+	<item>
+		<displayname>영어권 인코딩</displayname>
+		<description>영어권 메일서버로 메일을 보낼 때 쓰임</description>
+		<charset>iso-8859-1</charset>
+		<content-transfer-encoding>BASE64</content-transfer-encoding>
+		<font>System</font>
+		<simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+		<show-displayname>1</show-displayname>
+		<show-english-displayname>1</show-english-displayname>
+	</item>
+	<item>
+		<displayname>일어권 인코딩</displayname>
+		<description>일어권 메일서버로 메일을 보낼 때 쓰임</description>
+		<charset>sjis</charset>
+		<content-transfer-encoding>BASE64</content-transfer-encoding>
+		<font>System</font>
+		<simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+		<show-displayname>1</show-displayname>
+		<show-english-displayname>0</show-english-displayname>
+	</item>
+	<item>
+		<displayname>중국어권 간체</displayname>
+		<description>중국어권 메일서버로 메일을 보낼 때 쓰임</description>
+		<charset>gb2312</charset>
+		<content-transfer-encoding>BASE64</content-transfer-encoding>
+		<font>System</font>
+		<simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+		<show-displayname>1</show-displayname>
+		<show-english-displayname>0</show-english-displayname>
+	</item>
+  <item>
+    <displayname>중국어권 번체</displayname>
+    <description>중국어권 메일서버로 메일을 보낼 때 쓰임</description>
+    <charset>big5</charset>
+    <content-transfer-encoding>BASE64</content-transfer-encoding>
+    <font>System</font>
+    <simple-mime-content-transfer-encoding>7bit</simple-mime-content-transfer-encoding>
+    <show-displayname>1</show-displayname>
+    <show-english-displayname>0</show-english-displayname>
+  </item>
+</language>

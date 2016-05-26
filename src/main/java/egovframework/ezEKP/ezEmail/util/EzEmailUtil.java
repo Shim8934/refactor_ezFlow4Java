@@ -144,7 +144,7 @@ public class EzEmailUtil {
 					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
 				else {
-					addressBuilder.append("<" + addressStr + ">");
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
 				}				
 				
 				fullFromAddressStr = addressBuilder.toString();
@@ -213,7 +213,7 @@ public class EzEmailUtil {
 					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
 				else {
-					addressBuilder.append("<" + addressStr + ">");
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
 				}
 				
 				addressBuilder.append(",");

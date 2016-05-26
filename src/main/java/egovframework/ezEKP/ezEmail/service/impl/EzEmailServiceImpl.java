@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
@@ -144,6 +145,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PMESSAGEID", pMessageId);
 		ezEmailDAO.deleteMailReserved(map);
+	}
+
+	@Override
+	public MailReservationVO getMailReservedTime(String pMessageId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_MESSAGEID", pMessageId);
+		return ezEmailDAO.getMailReservedTime(map);
+	}
+
+	@Override
+	public MailColorVO getMailColor() throws Exception {
+		return ezEmailDAO.getMailColor();
+	}
+
+	@Override
+	public MailReservationVO checkReservedMail(String pMessageId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_MESSAGEID", pMessageId);
+		return ezEmailDAO.checkReservedMail(map);
+	}
+
+	@Override
+	public void updateReservedMail(String pMessageId, String pSubject, String pSendDate) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_MESSAGEID", pMessageId);
+		map.put("v_SUBJECT", pSubject);
+		map.put("v_SENDDATE", pSendDate);
+		ezEmailDAO.updateReservedMail(map);
 	}
 	
 }

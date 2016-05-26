@@ -6,6 +6,7 @@
 	<typeAlias  alias="MailSignatureVO" type="egovframework.ezEKP.ezEmail.vo.MailSignatureVO"/>
 	<typeAlias  alias="MailDeleteVO" type="egovframework.ezEKP.ezEmail.vo.MailDeleteVO"/>
 	<typeAlias  alias="MailReservationVO" type="egovframework.ezEKP.ezEmail.vo.MailReservationVO"/>
+	<typeAlias  alias="MailColorVO" type="egovframework.ezEKP.ezEmail.vo.MailColorVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -53,6 +54,20 @@
 		<result property="connUrl" column="CONNURL" columnIndex="2"/>
 	</resultMap>
 	
+	<resultMap id="mailReservation3" class="MailReservationVO">
+		<result property="sendDate" column="SENDDATE" columnIndex="1"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation4" class="MailReservationVO">
+		<result property="subject" column="SUBJECT" columnIndex="1"/>
+	</resultMap>
+	
+	<resultMap id="mailColor" class="MailColorVO">
+		<result property="importanceColor" column="IMPORTANCECOLOR" columnIndex="1"/>
+		<result property="inmailColor" column="INMAILCOLOR" columnIndex="2"/>
+		<result property="outmailColor" column="OUTMAILCOLOR" columnIndex="3"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -95,6 +110,22 @@
 	
 	<procedure id="EzEmailDAO.deleteMailReserved" parameterClass="Map">
 		{CALL EZEMAIL.EZSP_DELETERESERVEDMAIL(#v_PMESSAGEID#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReservedTime" parameterClass="Map" resultMap="mailReservation3">
+		{CALL EZEMAIL.EZSP_GETRESERVERDMAILTIME(#v_MESSAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailColor" resultMap="mailColor">
+		{CALL EZEMAIL.EZSP_GETCOLOR(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.checkReservedMail" parameterClass="Map" resultMap="mailReservation4">
+		{CALL EZEMAIL.EZSP_CHECKRESERVEDMAIL(#v_MESSAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.updateReservedMail" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_UPDATERESERVERDMAIL(#v_MESSAGEID#, #v_SUBJECT#, #v_SENDDATE#)}
 	</procedure>
 	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">

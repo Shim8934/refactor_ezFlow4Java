@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
@@ -21,4 +22,8 @@ public interface EzEmailService {
 	public List<MailReservationVO> getMailReserved2() throws Exception;
 	public void setMailReserved(String pMessageId, String pSubject, String pSendDate, String pConnUrl) throws Exception;
 	public void deleteMailReserved(String pMessageId) throws Exception;
+	public MailReservationVO getMailReservedTime(String pMessageId) throws Exception;
+	public MailColorVO getMailColor() throws Exception;
+	public MailReservationVO checkReservedMail(String pMessageId) throws Exception;
+	public void updateReservedMail(String pMessageId, String pSubject, String pSendDate) throws Exception;
 }

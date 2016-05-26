@@ -149,7 +149,7 @@
 		<script type="text/javascript">
 		    if (parent.document.location.href.toLowerCase().indexOf("mail_outofoffice_ck.aspx") > -1)
 		        CKEDITOR.config.toolbar = 'NOIMAGE';
-		    if (!CrossYN() && parent.document.location.href.toLowerCase().indexOf("/ezEmail/mailSignatureCK.do") > -1)
+		    if (!CrossYN() && parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1)
 		        CKEDITOR.config.toolbar = 'NODRAGIMAGE';
 		
 		    if("${userInfo.lang}" == "1"){

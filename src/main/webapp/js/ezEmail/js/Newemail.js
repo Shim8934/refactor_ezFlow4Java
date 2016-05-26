@@ -442,7 +442,7 @@ function receiveCheck_onClick() {
     else {
         url = document.getElementById(listSubContentArry[0]).getAttribute("_href");
     }
-    var OpenWin = window.open("mail_readerlist.aspx?url=" + encodeURIComponent(url), "mail_readerlist", GetOpenWindowfeature(620, 500));
+    var OpenWin = window.open("/ezEmail/mailReaderList.do?url=" + encodeURIComponent(url), "mail_readerlist", GetOpenWindowfeature(620, 500));
     try { OpenWin.focus(); } catch (e) { }
 }
 function ListCount(pCount) {

@@ -22,17 +22,16 @@
 			var g_cmd = "${cmd}";
 		    var Org_cmd = "${cmd}";
 			var g_servername = document.location.hostname;
-			var g_myemail = "${userinfo.Email}";
-			var g_szUserID = "${userinfo.EmailID}";
-			var g_companyID = "${userinfo.CompanyID}";
+			var g_myemail = "${userInfo.mail}";
+			var g_szUserID = "${userInfo.cn}";
+			var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 			var g_senderinfo = "${senderInfo}";
 			var g_eImportance = "${importance}";                                      
 			var g_ePostType = "${postType}";                                          
 			var g_url = "${url}";
 			var g_unread = "${unread}";
 			var m_rgParams4PostOption = new Array();
-			var g_myname = "${userinfo.DisplayName}";
-			var g_myemail = "${userinfo.Email}";
+			var g_myname = "${userInfo.displayName}";
 			var g_bDirty = false;
 			var m_addrBook = null;
 			var g_bSended = false;
@@ -217,7 +216,7 @@
 			function delDrafts()
 			{
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("GET", "remote/mail_del_drafts.aspx?itemid=" + encodeURIComponent(g_url), false);
+				xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url), false);
 				xmlhttp.send();
 				xmlhttp = null;
 			}
@@ -233,7 +232,7 @@
 			function LoadLanguageConfig()
 			{
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("GET", "controls/" + charsetControlFlag +"/language_config.xml", false);
+				xmlhttp.open("GET", "/js/ezEmail/Controls/" + charsetControlFlag +"/language_config.xml", false);
 				xmlhttp.send();
 				g_xmldoc = loadXMLString(xmlhttp.responseText);
 				xmlhttp = null;
@@ -462,7 +461,7 @@
 		    {
 		            var xmlhttp_1 = createXMLHttpRequest();
 		            var strQuery = "<DATA><MESSAGEID>"+pCDOMessageId+"</MESSAGEID></DATA>";
-		            xmlhttp_1.open("POST", "/myoffice/ezEmail/remote/ReservedMailCheck.aspx", false);
+		            xmlhttp_1.open("POST", "/ezEmail/reservedMailCheck.do", false);
 		            xmlhttp_1.send(strQuery);
 		            if(xmlhttp_1.responseText == "<DATA>MAIL-EXISTS</DATA>")
 		                Send_onClick();
@@ -548,7 +547,7 @@
 		            }
 		        }
 		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_interattach_CK.aspx", false);
+		        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
 		        xmlhttp.send(xmlDoc);
 		        var aitem;
 		        var xmlReturnValue = createXmlDom();
@@ -659,7 +658,8 @@
 		          <tr id="MsgCC_TR">
 		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
-		                <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
+		                	<img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
+		                </div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" TABINDEX="2" style="WIDTH:100%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
@@ -690,13 +690,13 @@
 		        <xmp id="xmpBcc" style="DISPLAY:none">${bcc}</xmp>
 		        <xmp id="xmpFrom" style="DISPLAY:none">${from}</xmp>
 		        <xmp id="xmpSubject" style="DISPLAY:none">${subject}</xmp>
-		        <xmp id="xmpMailSign1" style="DISPLAY:none">${mailSign1}</xmp>
-		        <xmp id="xmpMailSign2" style="DISPLAY:none">${mailSign2}</xmp>
-		        <xmp id="xmpMailSign3" style="DISPLAY:none">${mailSign3}</xmp>
+		        <xmp id="xmpMailSign1" style="DISPLAY:none"></xmp>
+		        <xmp id="xmpMailSign2" style="DISPLAY:none"></xmp>
+		        <xmp id="xmpMailSign3" style="DISPLAY:none"></xmp>
 		      </td>
 		    </tr>
 		    <tr>
-		      <td height="100%" >
+		      <td style="height:450px;" >
 			  <table width="100%" height="100%"> 
 		          <tr> 
 		            <td>
@@ -713,7 +713,7 @@
 						</c:choose>
 		            </td> 
 		          </tr> 
-		          <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
+		          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
 		            <tr> 
 		                <td height="150">
 		                    <div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
@@ -721,9 +721,9 @@
 		                    </div>
 		                </td> 
 		            </tr> 
-		          </asp:PlaceHolder> 
-		        </table>
-		        </td>
+		          </asp:PlaceHolder>  -->
+		      </table>
+		      </td>
 		    </tr>
 		      <tr style="display:none;">
 		        <td style="padding-top: 0px">
@@ -788,10 +788,10 @@
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.7);display:none;" id="mailPanel">&nbsp;</div>
 		<span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right" style="display: inline-block;"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t679' /><spring:message code='ezEmail.t680' /></span></span>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
-		<form id="Form1" name="form1" runat="server" style="display:none;"></form>
-	
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
+			<form id="Form1" name="form1" runat="server" style="display:none;"></form>
+		</div>
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">
 	    ${attachCK}

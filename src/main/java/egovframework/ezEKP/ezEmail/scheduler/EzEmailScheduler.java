@@ -52,7 +52,10 @@ public class EzEmailScheduler {
 
 	@Autowired
 	private EzEmailService ezEmailService;
-
+	
+	/**
+	 * 환경설정 - 자동삭제 스케줄러
+	 */
 	@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
 		logger.debug("오전 05:00:00에 호출이 됩니다.");
@@ -105,8 +108,11 @@ public class EzEmailScheduler {
 			}
 		}
 	}
-
-	@Scheduled(cron = "0 0/10 * * * *")
+	
+	/**
+	 * 메일 예약발송 스케줄러
+	 */
+	@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
 		logger.debug("10분 주기로 호출이 됩니다.");
 		Locale locale = Locale.getDefault();

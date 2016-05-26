@@ -497,7 +497,7 @@ function write_mail(userinfo) {
     window.close();
 }
 function receiveCheck_onClick() {
-    var OpenWin = window.open("mail_readerlist.aspx?url=" + encodeURIComponent(g_paramURL), "mail_readerlist", GetOpenWindowfeature(620, 500));
+    var OpenWin = window.open("/ezEmail/mailReaderList.do?url=" + encodeURIComponent(g_paramURL), "mail_readerlist", GetOpenWindowfeature(620, 500));
     try { OpenWin.focus(); } catch (e) { }
 }
 function view_original() {

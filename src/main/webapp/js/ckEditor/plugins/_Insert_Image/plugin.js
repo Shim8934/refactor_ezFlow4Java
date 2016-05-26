@@ -18,7 +18,6 @@ function Insert_ImageCmd_Complete(rtn) {
 		exec : function( editor )
 		{
 		    var selection = editor.getSelection();
-		    
 		    if (!CrossYN()) {
 		        var rtn = showModalDialog("/ezCommon/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
 		        if (rtn == undefined)
@@ -27,6 +26,12 @@ function Insert_ImageCmd_Complete(rtn) {
 		        var imgWidth = rtn[1];
 		        var imgHeight = rtn[2];
 		        CKEDITOR.instances.editor1.insertHtml('<img src=\"' + imgSrc + '\" width=\"' + imgWidth + '\"  height=\"' + imgHeight + '\" />')
+		    }
+		    else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
+		    	if (parent.document.getElementById("mailPanel") != null)
+		            parent.DivPopUpShow(470, 400, "/ezEmail/ckImageUpload.do");
+		        else
+		            parent.parent.DivPopUpShow(470, 400, "/ezEmail/ckImageUpload.do");
 		    }
 		    else {
 		        if (parent.document.getElementById("mailPanel") != null)

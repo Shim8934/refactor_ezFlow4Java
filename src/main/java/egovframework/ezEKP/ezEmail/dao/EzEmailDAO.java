@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
@@ -65,6 +66,22 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	
 	public void deleteMailReserved(Map<String, Object> map) throws Exception {
 		delete("EzEmailDAO.deleteMailReserved", map);
+	}
+	
+	public MailReservationVO getMailReservedTime(Map<String, Object> map) throws Exception {
+		return (MailReservationVO)select("EzEmailDAO.getMailReservedTime", map);
+	}
+	
+	public MailColorVO getMailColor() throws Exception {
+		return (MailColorVO)select("EzEmailDAO.getMailColor");
+	}
+	
+	public MailReservationVO checkReservedMail(Map<String, Object> map) throws Exception {
+		return (MailReservationVO)select("EzEmailDAO.checkReservedMail", map);
+	}
+	
+	public void updateReservedMail(Map<String, Object> map) throws Exception {
+		update("EzEmailDAO.updateReservedMail", map);
 	}
 	
 }

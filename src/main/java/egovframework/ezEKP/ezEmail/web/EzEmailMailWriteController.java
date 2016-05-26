@@ -71,6 +71,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -228,22 +229,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
 
 
-//        //DB에서 importance color 가져오기
-//        XmlDocument ColorXml = new XmlDocument();
-//        ColorXml = GetXmlReaderString(GetImportanceColor());
-//
-//        if (ColorXml.GetElementsByTagName("DATA").Count > 0)
-//        {
-//            _inMailColor = ColorXml.GetElementsByTagName("INMAILCOLOR").Item(0).InnerText.Trim();
-//            _outMailColor = ColorXml.GetElementsByTagName("OUTMAILCOLOR").Item(0).InnerText.Trim();
-//        }
-//        else
-//        {
-		inMailColor = "black";
-		outMailColor = "black";
-//        }
-
-
+        //DB에서 importance color 가져오기
+		MailColorVO vo = ezEmailService.getMailColor();
+		if (vo != null) {
+			inMailColor = vo.getInmailColor();
+			outMailColor = vo.getOutmailColor();
+		} else {
+			inMailColor = "black";
+			outMailColor = "black";
+		}
+		
 		userPrimary = config.getProperty("config.primary");
 		userLang = "1"; // 추후 수정(DB에서 가져와야함.)
 		//userTimeset = userInfo.getOffset();
@@ -426,7 +421,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 						
 		                attachXmlList.append("</NODES></ROOT>");						
 		                attach = attachXmlList.toString();	
-					}									
+					}
+					
+					MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+					if (mailSignatureVO != null) {
+	                	mailSign1 = mailSignatureVO.getContent1();
+	                    mailSign2 = mailSignatureVO.getContent2();
+	                    mailSign3 = mailSignatureVO.getContent3();
+	                    mailSignSel = mailSignatureVO.getUseFlag().trim();
+	                    
+	                } else {
+	                    mailSignSel = "0";
+	                }
+					
 	        	}
 	        	// in case of replying
 	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
@@ -483,7 +490,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 						// retrieve the TO addresses from the reply message.
 						addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 						to = ezEmailUtil.getStringListOfAddresses(addresses);
-						
+
 						// retrieve the CC addresses from the reply message.
 						addresses = replyMessage.getRecipients(Message.RecipientType.CC);
 						cc = ezEmailUtil.getStringListOfAddresses(addresses);
@@ -532,7 +539,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
 					String tmphtmlbody = bodyInfoList.get(0);
 		            
-		            bodyValue = sb.toString() + tmphtmlbody;		            
+		            bodyValue = sb.toString() + tmphtmlbody;
 	    			
 		            if (_cmd.equals("FORWARD")) {
 						if (attachedFileList.size() > 0) {
@@ -570,6 +577,39 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		logger.debug("draftUID=" + draftUID);
 	        		
 	        		draftsFolder.close(true);
+	                
+	                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+	                
+	                if (mailSignatureVO != null) {
+	                	mailSign1 = mailSignatureVO.getContent1();
+	                    mailSign2 = mailSignatureVO.getContent2();
+	                    mailSign3 = mailSignatureVO.getContent3();
+	                    mailSignSel = mailSignatureVO.getUseFlag().trim();
+	                    
+	                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
+	                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
+	                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
+	                    
+	                } else {
+	                    mailSignSel = "0";
+	                }
+	                
+	                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
+	                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
+	                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
+	                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
+	                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
+	                }
+	                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
+	                bodyValue = bodyValue.replaceAll("DIV id='MailSign'", "DIV ");
+	                
+	                bodyValue = bodyValue.replaceAll("id=msgbody", "");
+
+	                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
+	                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
+	                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
+	                	bodyValue = "<body free>" + bodyValue + "</body>";
+	                }
 	        	}
 			}
         	        	
@@ -651,7 +691,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //                MailMessage_Send(_cmd, _url, _attach, esb, orgmesg); return;
 //            }
 //        }
-        
+		
         int pBigAttachDownloadDaynum = 0;
         if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
         	pBigAttachDownloadDay = config.getProperty("config.BigSizeMailAttachDelDay");
@@ -659,7 +699,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         }
         
         pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), pBigAttachDownloadDaynum, "yyyy/MM/dd");
-
+        
+        //TODO: message쪽으로 옮겨서 읽어오기.
 		if (userLang.equals("1")) {
 			pAttachWarning = "일반첨부파일은 총 " + mailAttachLimit + "MB까지 가능하며, 대용량첨부는 " + totBigSizeMailAttachLimit + "MB까지 가능(" + pBigAttachDownloadDay + "일후 자동삭제) ";
 		} else if (userLang.equals("2")) {
@@ -1205,7 +1246,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String replyReadTime = "";
 		String isEachMail = "";
 		String isReserve = "";
-		
+		String reservedId = "";
 		String realPath = request.getServletContext().getRealPath("");
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
@@ -1337,6 +1378,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			tempNode = root.getElementsByTagName("ISRESERVE").item(0);
 			if (tempNode != null) {
 				isReserve = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("RESERVEDID") != null) {
+			tempNode = root.getElementsByTagName("RESERVEDID").item(0);
+			if (tempNode != null) {
+				reservedId = tempNode.getTextContent();
 			}
 		}
 		
@@ -1726,7 +1773,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 	        if (!delaySendTime.equals("")) {
 	        	//예약발송
-	            doDelaySend(message, isReserve, subject, delaySendTime, userId, realPath);
+	            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
 	        	
 	            // this deletion code block has been moved here because
 	            // it needs to be kept in Drafts if an error occurs during the above process.
@@ -1787,6 +1834,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		draftMessage.setFlag(Flags.Flag.DELETED, true);	        		
 	            }
 	            
+	            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
+	            logger.debug("reservedId=" + reservedId);
+	            if (reservedId != null && !reservedId.trim().equals("")) {
+		            ezEmailService.deleteMailReserved(reservedId);
+		            String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+		    		pDirPath = realPath + pDirPath;
+		            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
+					if (f.exists()) {
+						f.delete();
+					}
+	            }
+	            
 	            // set the ANSWERED flag of the original message to indicate it has been replied.
 	            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
 	    			int index = orgUrl.lastIndexOf("/");			
@@ -1824,7 +1883,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
         // sendmail_2010변환 끝
         
-        //file system의 inline image 파일 삭제
+        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
         NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
         if (imagePathList != null && imagePathList.getLength() > 0) {
             String imagePath = "";
@@ -1836,8 +1895,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
             	
             	imagePath = imagePathList.item(i).getTextContent();
             	
-            	if (!imagePath.trim().equals("")) {
-            		
+            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
                 	imagePath = new URL(imagePath).getPath();
                 	String pDirPath = realPath + imagePath;
             		File f = new File(pDirPath);
@@ -2287,43 +2345,46 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 메일 예약발송 처리 함수
 	 */
-	private void doDelaySend(Message message, String isReserve, String subject, String sendDate, String userId, String realPath) throws Exception {
+	private void doDelaySend(Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
+		String messageId = "";
+		
 		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
-			
-		} else {
-			String messageId = UUID.randomUUID().toString();
+			messageId = reservedId;
+			ezEmailService.updateReservedMail(messageId, subject, sendDate);
+		} else { //예약메일 생성
+			messageId = UUID.randomUUID().toString();
 			String email = userId + "@" + config.getProperty("config.DomainName");
 			ezEmailService.setMailReserved(messageId, subject, sendDate, email);
-			
-			File f = null;
-			String pDirPath = config.getProperty("upload_mail.ROOT");
-			pDirPath = realPath + pDirPath;
-			f = new File(pDirPath);
-			if (!f.exists()) {
-				f.mkdir();
-			}
-			
-			pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
-			pDirPath = realPath + pDirPath;
-			f = new File(pDirPath);
-			if (!f.exists()) {
-				f.mkdir();
-			}
-			
-			f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
-        	FileOutputStream fos = null;
-        	try {
-        		fos = new FileOutputStream(f);
-        		message.writeTo(fos);
-        	} catch (IOException e) {
-        		logger.error("IOException has occurred");
-        		e.printStackTrace();
-        	} finally {
-        		if (fos != null) {
-        			fos.close();
-        		}
-        	}
 		}
+		
+		File f = null;
+		String pDirPath = config.getProperty("upload_mail.ROOT");
+		pDirPath = realPath + pDirPath;
+		f = new File(pDirPath);
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		
+		pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+		pDirPath = realPath + pDirPath;
+		f = new File(pDirPath);
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		
+		f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+    	FileOutputStream fos = null;
+    	try {
+    		fos = new FileOutputStream(f);
+    		message.writeTo(fos);
+    	} catch (IOException e) {
+    		logger.error("IOException has occurred");
+    		e.printStackTrace();
+    	} finally {
+    		if (fos != null) {
+    			fos.close();
+    		}
+    	}
 	}
 	
 }
