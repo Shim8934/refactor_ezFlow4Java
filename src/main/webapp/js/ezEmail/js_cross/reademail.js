@@ -541,7 +541,7 @@ function toggle_flag() {
     createNodeAndInsertText(xmlDom, objNode, "ENDDATE", pEDate);
 
     try {
-        flagXmlHttp.open("POST", "/myoffice/ezEmail/remote/mail_set_flag.aspx", true);
+        flagXmlHttp.open("POST", "/ezEmail/mailSetFlag.do", true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }
