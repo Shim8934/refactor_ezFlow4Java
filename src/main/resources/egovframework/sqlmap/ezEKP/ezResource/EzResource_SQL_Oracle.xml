@@ -14,6 +14,7 @@
 	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 										type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	<typeAlias  alias="ResSelectFormIDVO" 							type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
+	<typeAlias  alias="ResGetScheduleListRepetitionVO" 			type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -240,6 +241,36 @@
 		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""/>
 	</resultMap>
 	
+	<resultMap class="ResGetScheduleListRepetitionVO" 		id="resGetScheduleListRepetitionVO">
+		<result property="num"					column="NUM"						columnIndex="1"/>
+		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
+		<result property="title"						column="TITLE"						columnIndex="4"/>
+		<result property="location"				column="LOCATION"				columnIndex="5"/>
+		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
+		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
+		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
+		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
+		<result property="gResFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
+		<result property="content"				column="CONTENT"				columnIndex="13"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="15"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="16"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="17"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="18"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="19"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="20"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="21"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="22"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="23"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="24"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="25"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="26"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="27"/>
+	</resultMap>
+	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
 		{CALL EZRESOURCE.EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -268,9 +299,9 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListVO">
+	<procedure id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#)}
 		]]>
 	</procedure>
 	
