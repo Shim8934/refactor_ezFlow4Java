@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
@@ -111,7 +112,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 	}
 
 	@Override
-	public List<ResGetScheduleListVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept) throws Exception {
+	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
 		map.put("v_PCOMPANYID", companyID);
@@ -495,17 +496,20 @@ public class EzResourceServiceImpl implements EzResourceService{
 			try {
 				if (pType.equals("")) {
 					List<ResGetScheduleListVO> getScheduleList = getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+					returnSchedule += "<DATA>";
 					for (int i=0; i<getScheduleList.size(); i++) {
 						returnSchedule += commonUtil.getQueryResult(getScheduleList.get(i));
 					}
+					returnSchedule += "</DATA>";
 					
 				} else if (pType.equals("MAIN")) {
 	
 					List<ResGetScheduleListMainVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr);
-
+					returnSchedule += "<DATA>";
 					for (int i=0; i<getScheduleListMain.size(); i++) {
 						returnSchedule += commonUtil.getQueryResult(getScheduleListMain.get(i));
 					}
+					returnSchedule += "</DATA>";
 				}
 			
 				Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
@@ -552,8 +556,12 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String returnRepetition = "";
 			
 			if (pType.equals("")) {
-				List<ResGetScheduleListVO> getScheduleListRept= getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
-				returnRepetition += commonUtil.getQueryResult(getScheduleListRept);
+				List<ResGetScheduleListRepetitionVO> getScheduleListRept= getScheduleListRepetiti(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept);
+				returnRepetition = "<DATA>";
+				for(int j=0; j<getScheduleListRept.size(); j++) {
+					returnRepetition += commonUtil.getQueryResult(getScheduleListRept.get(j));
+				}
+				returnRepetition += "</DATA>";
 			} else {
 				List<ResGetScheduleListMainVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, todayStartStr);
 
@@ -565,7 +573,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			}
 			
 			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
-
+System.out.println("returnRepetition:"+returnRepetition);
 			if (returnRepetitionDom != null) {
 				for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 					 reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
