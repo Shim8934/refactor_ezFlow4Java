@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -31,6 +32,7 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
+import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -867,11 +869,103 @@ System.out.println("startDate:"+startDate);
 	@RequestMapping(value = "/ezResource/scheduleMain.do")
 	public String scheduleMain(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String resID = req.getParameter("resID");
+		String useEditor = config.getProperty("config.EDITOR");
+		String resID = "";
+		String strBrdNm = "";
+		String strOwnDeptNm = "";
+		String strOwnerNm = "";
+		String strOwnerPosition = "";
+		String cUserIDStr = "";
+		String currentUserID = "";
 		
+		if (req.getParameter("resID") != null) {
+			resID = req.getParameter("resID");
+		}
+		
+		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID());
+		
+		if (userInfo.getLang().equals("1")) {
+			strBrdNm = resBrd.getBrdNm().trim();
+			strOwnDeptNm = resBrd.getOwnDeptNm();
+			strOwnerNm = resBrd.getOwnerNm();
+			strOwnerPosition = resBrd.getOwnerPosition();
+		} else {
+			strBrdNm = resBrd.getBrdNm2().trim();
+			strOwnDeptNm = resBrd.getOwnDeptNm2();
+			strOwnerNm = resBrd.getOwnerNm2();
+			strOwnerPosition = resBrd.getOwnerPosition2();
+		}
+		
+		String strBrdID = resBrd.getBrdID();
+		String strBrdExplain = resBrd.getBrdExplain();
+		String strResLocation = resBrd.getResLocation();
+		String strOwnDeptID = resBrd.getOwnDeptID();
+		String strOwnerID = resBrd.getOwnerID();
+		String strOwnerCall = resBrd.getOwnerCall();
+		String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
+		String strApproveFlag = resBrd.getApproveFlag();
+		String strBrdAccess = resBrd.getBrdAccess();
+		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone");
+		StringBuilder iYear = new StringBuilder();
+		StringBuilder iMonth = new StringBuilder();
+		
+		if (req.getParameter("cuid") != null) {
+			cUserIDStr = req.getParameter("cuid");
+		}
+		
+		if (cUserIDStr.equals("")) {
+			currentUserID = userInfo.getId();
+		} else {
+			currentUserID = cUserIDStr;
+		}
+		
+		String displaySTime = "9";
+		String displayETime = "18";
+		
+		String pOffset = "+09:00";
+		int timeZoneStr = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
+		
+		Date date = new Date();
+		@SuppressWarnings("deprecation")
+		int curYear = date.getYear()-100;
+System.out.println("curYear:"+curYear);
+		for (int i=curYear; i>=curYear-6; i--) {
+			if((curYear-3) == i) {
+				iYear.append("<Option Value=\"" + String.valueOf(i) + "\" selected>" + String.valueOf(i) + "</Option>" );
+			} else {
+				iYear.append("<Option Value=\"" + String.valueOf(i) + "\">" + String.valueOf(i) + "</Option>" );
+			}
+		}
+		
+		
+		@SuppressWarnings("deprecation")
+		int curMonth = date.getMonth()+1;
+System.out.println("curMonth:"+curMonth);
+		for (int j=1; j<= 12; j++) {
+			if (curMonth == j) {
+				iMonth.append("<Option Value=\"" + String.valueOf(j) + "\" selected>" + String.valueOf(j) + "</Option>" );
+			} else {
+				iMonth.append("<Option Value=\"" + String.valueOf(j) + "\">" + String.valueOf(j) + "</Option>" );
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("adminFg", "Y");
 		model.addAttribute("resID", resID);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("brdNm", strBrdNm);
+		model.addAttribute("displaySTime", displaySTime);
+		model.addAttribute("displayETime", displayETime);
+		model.addAttribute("nonActiveX", "YES");
+		model.addAttribute("adminFg", pAdminFg);
+		model.addAttribute("resLocation", strResLocation);
+		model.addAttribute("brdExplain", strBrdExplain);
+		model.addAttribute("timeZoneStr", timeZoneStr);
+		
+		
 		return "/ezResource/resScheduleMain";
 	}
 	
@@ -981,11 +1075,35 @@ System.out.println("startDate:"+startDate);
 	}
 	
 	/**
-	 * 자원관리 X-FreeEditor 호출 Method
+	 * 자원관리 스케줄 폼 호출 Method
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGetForm.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleGetForm() throws Exception {
-		return "";
+	public String scheduleGetForm(@RequestBody String xmlStr) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+			ResSelectFormIDVO selectFormID = ezResourceService.selectFormID(resID);
+			
+			if (selectFormID == null) {
+				return "FALSE";
+			} else {
+				return selectFormID.getFormText();
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+	
+	/**
+	 * 자원관리 승인요청 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleApprovList.do")
+	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo",userInfo);
+		
+		return "/ezResource/resScheduleApprovList";
 	}
 }

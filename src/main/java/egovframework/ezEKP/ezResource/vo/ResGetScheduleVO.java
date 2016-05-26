@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezResource.vo;
 
 public class ResGetScheduleVO {
-	/** 자원예약게시파ID*/
+	/** 자원예약게시판ID*/
 	private String ownerID;
 	/** 순번*/
 	private int num;

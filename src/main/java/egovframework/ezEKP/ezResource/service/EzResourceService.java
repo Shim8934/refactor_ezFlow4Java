@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
 public interface EzResourceService {
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType) throws Exception;
@@ -45,6 +46,8 @@ public interface EzResourceService {
 	
 	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID) throws Exception;
 	
+	public ResSelectFormIDVO selectFormID(String resID) throws Exception;
+	
 	public int getBrdCnt(int brdID, String companyID) throws Exception;
 
 	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept) throws Exception;
@@ -66,6 +69,10 @@ public interface EzResourceService {
 	public String updateScheduleDateTime(String xmlDom, String companyID) throws Exception;
 	
 	public String getRepetition(String xmlStr) throws Exception;
+	
+	public String getAclTblBrd(String companyID, String brdID, String userID, String mode) throws Exception;
+	
+	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode) throws Exception;
 	
 	public boolean deleteRepetition(String xmlStr) throws Exception;
 	

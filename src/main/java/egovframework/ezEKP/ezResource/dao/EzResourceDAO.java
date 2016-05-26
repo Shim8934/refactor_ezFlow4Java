@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
@@ -89,6 +90,14 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public ResGetScheduleVO getSchedule(Map<String, Object> map) {
 		return (ResGetScheduleVO) select("EzResourceDAO.getSchedule", map);
+	}
+	
+	public ResSelectFormIDVO selectFormID(Map<String, Object> map) {
+		return (ResSelectFormIDVO) select("ResSelectFormIDVO", map);
+	}
+	
+	public String getAclTblBrd(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getAclTblBrd", map);
 	}
 	
 	public int getBrdCnt(Map<String , Object> map) {

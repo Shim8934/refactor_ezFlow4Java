@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -323,6 +324,23 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pCompanyID", companyID);
 		return ezResourceDAO.getScheduleRepetition(map);
+	}
+	
+	@Override
+	public ResSelectFormIDVO selectFormID(String resID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pRESID", resID);
+		return ezResourceDAO.selectFormID(map);
+	}
+	
+	@Override
+	public String getAclTblBrd(String companyID, String brdID, String userID, String mode) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PBRDID", brdID);
+		map.put("iv_PUSERID", userID);
+		map.put("v_PMODE", mode);
+		return ezResourceDAO.getAclTblBrd(map);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -2382,6 +2400,17 @@ System.out.println("utcDate:"+utcDate);
 			
 		}
 		return resultXml.toString();
+	}
+	
+	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode) throws Exception {
+		String aclTblBrd = "";
+		try {
+			 aclTblBrd = getAclTblBrd(pCompanyID, pBrdID, pUserID, pMode);
+			
+		} catch (Exception e) {
+			 
+		}
+		return aclTblBrd;
 	}
 }
 
