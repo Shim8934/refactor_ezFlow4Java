@@ -13,6 +13,7 @@
 	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 										type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
+	<typeAlias  alias="ResSelectFormIDVO" 							type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -233,6 +234,12 @@
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
 	</resultMap>
 	
+	<resultMap class="ResSelectFormIDVO" 		id="resSelectFormIDVO">
+		<result property="resID"					column="RESID"						columnIndex="1"/>
+		<result property="brdNm"					column="BRDNM"					columnIndex="2"/>
+		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""/>
+	</resultMap>
+	
 	<procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
 		{CALL EZRESOURCE.EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -358,6 +365,18 @@
 	<procedure id="EzResourceDAO.deleteRepetition" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_DELETEREPETITION(#v_pOwnerID#, #v_pNum#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_SELECT_FORMID(#v_pRESID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getAclTblBrd" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETACLTBLBRD(#v_PCOMPANYID#, #v_PBRDID#, #iv_PUSERID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
