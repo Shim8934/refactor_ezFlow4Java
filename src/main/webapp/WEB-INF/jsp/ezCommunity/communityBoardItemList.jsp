@@ -214,8 +214,7 @@
     				arrList = strListInfo.split(";");
     				
     				if (arrList.length > 2)  {
-    					//2016-05-12 이효진 message 에 추가
-    					alert("익명게시물 삭제는 한개씩만 삭제 가능합니다.");
+    					alert("<spring:message code='ezCommunity.lhj01' />");
     					return;
     				}
     			}

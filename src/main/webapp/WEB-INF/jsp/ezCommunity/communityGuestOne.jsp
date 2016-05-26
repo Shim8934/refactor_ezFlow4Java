@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -10,6 +11,7 @@
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
@@ -38,10 +40,13 @@
 		</script>
 		
 		<script type="text/javascript">
-			var CurPage = "${curpage}";
-			var totalPage = "${totalPage}";
-		    var totalCount = "${keywordCount}";
-		    var code = "${code}";
+			var CurPage = '<c:out value="${curpage}" />';
+			var totalPage = '<c:out value="${totalPage}" />';
+		    var totalCount = '<c:out value="${keywordCount}" />';
+		    var code = '<c:out value="${code}" />';
+		    var strXML = "${strXML}";
+		    var lang = '<c:out value="${lang}" />';
+		    var xmlDoc = loadXMLString(strXML);
 		    
 		    document.onselectstart = function () {
 		    	return false;
@@ -57,6 +62,33 @@
 		        }
 		        
 		        makePageSelPage();
+		        
+		        var html = "";
+		        
+		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
+		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid none;border-right:1px solid none;\">";
+		        	html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\" >";
+		        	html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>";
+		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid none;border-right:1px solid none;\" >";
+		        	
+		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
+		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
+		        	}
+		        		
+					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+lang);
+					html += "<spring:message code='ezCommunity.t587' />";
+					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
+					html += "<spring:message code='ezCommunity.t588' /></th>";
+					html += "</tr>";
+					html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\">";
+					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;\">";
+					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT") + "</textarea></td>";
+					html += "</tr>";
+					html += "</table>";
+		        }
+		        
+		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
 		    }
 		    
 			function search() {
@@ -73,7 +105,7 @@
 				}
 				
 				strSearch = strSearch + "&key=" + document.getElementById("keyword").value;
-				window.location.href = "/ezCommunity/commHome/guest/guestOne.do?code=" + code + "&" + encodeURI(strSearch);
+				window.location.href = "/ezCommunity/guestOne.do?code=" + code + "&" + encodeURI(strSearch);
 			}
 
 			function comm_searchCheck() {
@@ -109,16 +141,16 @@
 			}
 			
 			function gopage() {
-				document.location.href="/ezCommunity/commHome/guest/guestOne.do?mode=list&code=" + code + "&goToPage=" + document.page.sel.value;
+				document.location.href="/ezCommunity/guestOne.do?mode=list&code=" + code + "&goToPage=" + document.page.sel.value;
 			}
 			
 			function mo_onclick() {
 				var count = 0;
-				var ingDog;
+				var ingNo;
 
 				for(var i = 0; i < del.elements.length; i++ ) {
-					if ( del.elements[i].name == "dog" && del.elements[i].checked == true) {
-						ingDog = del.elements[i].value;
+					if ( del.elements[i].name == "c_no" && del.elements[i].checked == true) {
+						ingNo = del.elements[i].value;
 						count++;
 					}
 				}
@@ -128,15 +160,15 @@
 				} else if( count >= 2 ) {
 					alert("<spring:message code='ezCommunity.t584' />");
 				} else {
-					document.location.href = "/ezCommunity/commHome/guest/guestEdit.do?code=" + code + "&mode=edit&dog="+ingDog;
+					document.location.href = "/ezCommunity/guestEdit.do?code=" + code + "&mode=edit&no="+ingNo;
 				}
 			}
 			
 		    function delete1() {
 		        var count = 0;
 		        for (var i = 0; i < del.elements.length; i++) {
-		            if (del.elements[i].name == "dog" && del.elements[i].checked == true) {
-		                ingDog = del.elements[i].value;
+		            if (del.elements[i].name == "c_no" && del.elements[i].checked == true) {
+		                ingNo = del.elements[i].value;
 		                count++;
 		            }
 		        }
@@ -150,7 +182,6 @@
 		        result = confirm("<spring:message code='ezCommunity.t136' />");
 		        
 		        if (result) {
-		            var ingDog;
 		            document.del.submit();
 		        }
 		    }
@@ -285,7 +316,7 @@
 	        function movePage(newPage) {	
 	            // 20060628 준호수정
 	            // 숫자 아닌 문자 들어갔을 경우 에러 남.
-	    		var href = "/ezCommunity/commHome/guest/guestOne.do?bName=" + escape("${mode}")
+	    		var href = "/ezCommunity/guestOne.do?bName=" + escape("${mode}")
 				            + "&sRadio=" + escape("${sRadio}")
 				            + "&code=" + escape("${code}")
 				            + "&keyword=" + "${keyword}"
@@ -298,11 +329,11 @@
 	        
 	        //########################################페이지네이션 변경 ##############################################
 		    function gopage() {
-		        document.location.href = "/ezCommunity/commHome/guest/guestOne.do?mode=list&code=" + code + "&goTopage=" + document.page.sel.value;
+		        document.location.href = "/ezCommunity/guestOne.do?mode=list&code=" + code + "&goTopage=" + document.page.sel.value;
 		    }
 
 		    function goToPage(page) {
-		        var href = "/ezCommunity/commHome/guest/guestOne.do?bName=" + escape("${mode}")
+		        var href = "/ezCommunity/guestOne.do?bName=" + escape("${mode}")
 					+ "&sRadio=" + escape("${sRadio}")
 					+ "&code=" + escape("${code}")
 					+ "&keyword=" + "${keyword}"
@@ -336,10 +367,10 @@
 		        
 		        switch (idx) {
 		            case 1:
-		                url = "/ezCommunity/commHome/guest/guestEdit.do?mode=write&code=" + code;
+		                url = "/ezCommunity/guestEdit.do?mode=write&code=" + code;
 		                break;
 		            case 2:
-		                url = "/ezCommunity/commHome/guest/guestOne.do?mode=list&code=" + code;
+		                url = "/ezCommunity/guestOne.do?mode=list&code=" + code;
 		                break;
 		        }
 		        
@@ -390,39 +421,10 @@
 			</tr>
 		</table>
 		
-		<form name="del" action = "/ezCommunity/commHome/guest/guestEditOk.do" method = "post">
-			<input type=hidden name=code value="${code}">
+		<form name="del" id= "formDel" action = "/ezCommunity/guestEditOk.do" method = "post">
+			<input type=hidden name=code value="<c:out value='${code}' />">
 			<input type=hidden name=mode value=delete>
 
-<!-- <asp:repeater id="listResult" runat="server"> -->
-<!-- <ItemTemplate> -->
-<!-- <table class="content" style="margin-top:10px;border-left:1px solid none;border-right:1px solid none; "  > -->
-<!-- 	<tr style="border-left:1px solid none;border-right:1px solid none;" > -->
-<%-- 		<th style="border-left:1px solid none;border-right:1px solid none;width:20px;" nowrap><input type="checkbox" name="dog" value="<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("C_NO").InnerText %>"></th> --%>
-<%-- 		<th style="border-left:1px solid none;border-right:1px solid none;width:50px;" nowrap><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("C_NO").InnerText %></th> --%>
-<!-- 		<th style="width:100%; text-align:left;border-left:1px solid none;border-right:1px solid none;" > -->
-<%-- 			<% --%>
-<!--                 // 20060614 준호수정 -->
-<!--                 // 모든 글에 New 이미지 붙는것 수정 -->
-<!--  			if(GetLocalTime(xmldom2.SelectNodes("DATA/ROW/WRITEDAY").Item(increaseNum).InnerText)=="NEW")  -->
-<!--  			{ -->
-<!--  			%> -->
-<!-- 				<img src="/images/i_new.gif" border="0" hspace="5" align="absmiddle"> -->
-<%-- 			<% --%>
-<!-- // 			} -->
-<!-- //             			increaseNum++; -->
-<!-- 			%> -->
-<%-- 			<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("USERNAME" + GetMultiData(userinfo.lang)).InnerText%><%=RM.GetString("t587")%> --%>
-<%-- 			<%# GetLocalTime(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("WRITEDAY").InnerText) %><%=RM.GetString("t588")%>		</th> --%>
-<!-- 	</tr> -->
-
-<!-- 	<tr style="border-left:1px solid none;border-right:1px solid none;" > -->
-<!-- 		<td  colspan="3" style="word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;""> -->
-<%-- 		<textarea style="height:100px;width:98%; border:0; overflow-y:auto; " readonly id=textarea1 name=textarea1><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("CONTENT").InnerText %></textarea>		</td> --%>
-<!-- 	</tr> -->
-<!-- </table> -->
-<!-- </ItemTemplate> -->
-<!-- </asp:repeater> -->
 		</form>
 <div id="tblPageRayer"></div>
 	</body>

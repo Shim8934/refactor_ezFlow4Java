@@ -99,7 +99,7 @@
 	        }
 			
 			function back() {
-	            if ("${flag }" == "1"){
+	            if ("${flag == '1'}"){
 	                window.open("/ezCommunity/mainPage.do", "right");
 	            }else{
 	                history.back(-1);
@@ -161,7 +161,7 @@
 	
 	    <table class="content">
 	        <form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
-	            <input type="hidden" name="makeID" value=<c:out value="${userInfoUserID }"/>>
+	            <input type="hidden" name="makeID" value="<c:out value='${userInfoUserID }' />">
 	            <input type="hidden" name="hiddenClubName">
 	            <input type="hidden" name="hiddenClubName2">
 	            <input type="hidden" name="hiddenIntro">
@@ -170,19 +170,19 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
-	                    <input type="text" name="userName" value=<c:out value="${userInfoDisplayName }"/> readonly="true" size="40"></td>
+	                    <input type="text" name="userName" value="<c:out value='${userInfoDisplayName }' />" readonly="true" size="40"></td>
 	            </tr>
 	            <tr>
 	                <th>Community <spring:message code='ezCommunity.t10' /></th>
 	                <td colspan="2" style="padding: 0">
 	                    <table style="width:100%">
 	                        <tr class="primary">
-	                            <th><c:out value="${langPrimary }"/></th>
+	                            <th><c:out value='${langPrimary }' /></th>
 	                            <td>
 	                                <input type="text" name="clubName" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 	                        </tr>
 	                        <tr class="secondary">
-	                            <th><c:out value="${langSecondary }"/></th>
+	                            <th><c:out value='${langSecondary ' /></th>
 	                            <td>
 	                                <input type="text" name="clubName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 	                        </tr>
@@ -191,7 +191,7 @@
 	            </tr>
 	            <tr>
 	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
-	                <td style="white-space:nowrap"><span id="idSpan">${idSpanValue }</span></td>
+	                <td style="white-space:nowrap"><span id="idSpan"><c:out value = '${idSpanValue }' /></span></td>
 	                <td style="padding: 5px;white-space:nowrap">
 	                	<span>
 	                		<spring:message code='ezCommunity.t1013' /><br>

@@ -276,7 +276,7 @@
 		    function go_menu(btn) {
 		        if (chCommunityAdmin < 0 && (userLevel == "0" || userLevel == "9")) {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -312,7 +312,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/commHome/guest/guestOne.do?code=" + code, "right";
+		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -374,7 +374,7 @@
 		            }
 		        } else {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -390,7 +390,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commHome/commViewMember.do?code=" + code + "&codeName=" + codeName, "right";
+		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code + "&codeName=" + codeName, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -436,7 +436,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/commHome/guest/guestOne.do?code=" + code, "right";
+		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -853,8 +853,8 @@
 		</script>
 	</head>
 	
-	<body class="cmhomebg_<c:out value="${copType }"/>">
-		<div id ="cmhome_<c:out value="${copType }"/>">
+	<body class="cmhomebg_<c:out value='${copType }'/>">
+		<div id ="cmhome_<c:out value='${copType }'/>">
 			<div class="cmhome_top" onclick="reload()" style="cursor:pointer;">
    	  			<div class="homeimg" id="homeimg" style="width:894px;height:100px;"></div>   	  
       			<h1 id="copname" class="homename"></h1>

@@ -17,9 +17,9 @@
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
       		var selectedBoard = "";
-      		var ItemIDList = "${itemIDList}";
-			var BoardID = "${boardID}";
-			var code = "${code}";
+      		var ItemIDList = "<c:out value = '${itemIDList}' />";
+			var BoardID = "<c:out value = '${boardID}' />";
+			var code = "<c:out value = '${code}' />";
 			var xmlDom_treeview = createXmlDom();
 
 			function Select() {

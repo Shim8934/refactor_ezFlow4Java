@@ -36,18 +36,18 @@
         	    		<c:choose>
         	    			<c:when test="${userInfo.lang=='1' }">
         	    				<tr>
-			        	   			<td style="white-space:nowrap">[${item.readDate}]</td>
-				                    <td style="cursor: pointer;white-space:nowrap" onclick="show_info('${item.userID}');"><font color="black"><b>${item.userName}</b>(${item.userID})</font></td>
-				                    <td style="white-space:nowrap"><font color="#168501">${item.userDeptName}</font></td>
-				                    <td style="width:100%;white-space:nowrap;"><font color="#737373">${item.userTitle}</font></td>
+			        	   			<td style="white-space:nowrap">[<c:out value = '${item.readDate}' />]</td>
+				                    <td style="cursor: pointer;white-space:nowrap" onclick="show_info('${item.userID}');"><font color="black"><b><c:out value = '${item.userName}' /></b>(<c:out value = '${item.userID}' />)</font></td>
+				                    <td style="white-space:nowrap"><font color="#168501"><c:out value = '${item.userDeptName}' /></font></td>
+				                    <td style="width:100%;white-space:nowrap;"><font color="#737373"><c:out value = '${item.userTitle}' /></font></td>
 				                </tr>
         	    			</c:when>
         	    			<c:otherwise>
         	    				<tr>
-			        	   			<td style="white-space:nowrap">[${item.readDate}]</td>
-				                    <td style="cursor: pointer;white-space:nowrap" onclick="show_info('${item.userID}');"><font color="black"><b>${item.userName2}</b>(${item.userID})</font></td>
-				                    <td style="white-space:nowrap"><font color="#168501">${item.userDeptName2}</font></td>
-				                    <td style="width:100%;white-space:nowrap;"><font color="#737373">${item.userTitle2}</font></td>
+			        	   			<td style="white-space:nowrap">[<c:out value = '${item.readDate}' />]</td>
+				                    <td style="cursor: pointer;white-space:nowrap" onclick="show_info('${item.userID}');"><font color="black"><b><c:out value = '${item.userName2}' /></b>(<c:out value = '${item.userID}' />)</font></td>
+				                    <td style="white-space:nowrap"><font color="#168501"><c:out value = '${item.userDeptName2}' /></font></td>
+				                    <td style="width:100%;white-space:nowrap;"><font color="#737373"><c:out value = '${item.userTitle2}' /></font></td>
 				                </tr>
         	    			</c:otherwise>
         	    		</c:choose>

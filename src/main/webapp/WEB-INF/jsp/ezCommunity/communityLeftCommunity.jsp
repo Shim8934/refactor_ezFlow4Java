@@ -462,7 +462,7 @@
                 master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
                 
                 master = master.toLowerCase();
-                UserID = "${userInfoUserID}";
+                UserID = "<c:out value = '${userInfoUserID}' />'";
 			    UserID = UserID.toLowerCase();
 			
 			    try {

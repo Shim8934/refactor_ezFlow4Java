@@ -33,34 +33,34 @@
         </style>
         
 		<script type="text/javascript">
-	        var pOrgBoardParameters = "${orgBoardParameters}";
-		    var searchStart = "${searchStart}";
-		    var searchEnd = "${searchEnd}";
-		    var pBoardID = "${boardInfo.boardID}";
+	        var pOrgBoardParameters = "<c:out value='${orgBoardParameters}' />'";
+		    var searchStart = "<c:out value='${searchStart}' />";
+		    var searchEnd = "<c:out value='${searchEnd}' />";
+		    var pBoardID = "<c:out value='${boardInfo.boardID}' />";
 		    var pBoardName = "";
-		    var SSUserID = "${userInfo.id}";
-		    var SSUserName = "${userInfo.displayName1}";
-		    var CurPage = "${pPage}";
-		    var totalPage = "${totalPage}";
-	        var totalCount = "${totalCount}";
+		    var SSUserID = "<c:out value='${userInfo.id}' />";
+		    var SSUserName = "<c:out value='${userInfo.displayName1}' />";
+		    var CurPage = "<c:out value='${pPage}' />";
+		    var totalPage = "<c:out value='${totalPage}' />";
+	        var totalCount = "<c:out value='${totalCount}' />";
 		    var strListInfo = "";
-		    var	Access_FG = "${boardInfo.access_FG}";
-		    var	BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
-		    var	ListView_FG = "${boardInfo.listView_FG}";
-		    var	Read_FG = "${boardInfo.read_FG}";
-		    var	Write_FG = "${boardInfo.write_FG}";
-		    var	Reply_FG = "${boardInfo.reply_FG}";
-		    var	Delete_FG = "${boardInfo.delete_FG}";
-		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var code = "${code}";
-		    var pSortBy = "${pSortBy}";
+		    var	Access_FG = "<c:out value='${boardInfo.access_FG}' />";
+		    var	BoardAdmin_FG = "<c:out value='${boardInfo.boardAdmin_FG}' />";
+		    var	ListView_FG = "<c:out value='${boardInfo.listView_FG}' />";
+		    var	Read_FG = "<c:out value='${boardInfo.read_FG}' />";
+		    var	Write_FG = "<c:out value='${boardInfo.write_FG}' />";
+		    var	Reply_FG = "<c:out value='${boardInfo.reply_FG}' />";
+		    var	Delete_FG = "<c:out value='${boardInfo.delete_FG}' />";
+		    var BoardGroupAdmin_FG = "<c:out value='${boardInfo.boardGroupAdmin_FG}' />";
+		    var code = "<c:out value='${code}' />";
+		    var pSortBy = "<c:out value='${pSortBy}' />";
 		    var xmlhttp = createXMLHttpRequest();
-		    var gubun = "${boardInfo.gubun}";
+		    var gubun = "<c:out value='${boardInfo.gubun}' />";
 		    
 		    if ("${userInfo.lang == '1'}") {
-		    	pBoardName = "${boardInfo.boardName}";
+		    	pBoardName = "<c:out value='${boardInfo.boardName}' />";
 		    } else {
-		    	pBoardName = "${boardInfo.boardName2}";
+		    	pBoardName = "<c:out value='${boardInfo.boardName2}' />";
 		    }
 		    
 		    window.onload = function() {
@@ -265,10 +265,10 @@
 		        var pLeft = (pwidth - 765) / 2;
 		        
 		        if (CrossYN()) {
-		            GetOpenWindow("/ezCommunity/boardItemView.do?ItemID=" + pItemID + "&boardID=" + pItemBoardID, "", 720, 765);
+		            GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID, "", 720, 765);
 		        }
 		        else {
-	                window.open("/ezCommunity/boardItemView.do?ItemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
 			
@@ -317,8 +317,8 @@
 					alert("<spring:message code='ezCommunity.t431' />");
 					return;
 				}
-				
-				if(CheckIfHasReplies()) {
+
+				if(!CheckIfHasReplies()) {
 					alert("<spring:message code='ezCommunity.t425' />");
 					return;
 				}
@@ -346,7 +346,7 @@
 
 			function DeleteItem() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "do/deleteItem.do?itemList=" + strListInfo, false);
+				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
 				xmlhttp.send();
 				xmlhttp = null;
 

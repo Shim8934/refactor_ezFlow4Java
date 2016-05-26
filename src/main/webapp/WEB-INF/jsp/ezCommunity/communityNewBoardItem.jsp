@@ -45,52 +45,52 @@
 		</c:choose>
 		
 		<script type="text/javascript">
-			var userInfo = "${userInfo}";
-			var item = "${item}";
-			var pUploadFilePath = "${pUploadFilePath}";
-			var pBoardID = "${boardInfo.boardID}";
-			var pBoardName = "${boardInfo.boardName}";
-			var pMode = "${pMode}";
+			var userInfo = "<c:out value = '${userInfo}' />";
+			var item = "<c:out value = '${item}' />";
+			var pUploadFilePath = "<c:out value = '${pUploadFilePath}' />";
+			var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
+			var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
+			var pMode = "<c:out value = '${pMode}' />";
 			var pModeOld = "";
 			var MHTLoadComplete = "";
-			var SSUserID = "${userInfo.id}";
-		    var SSUserName = "${userInfo.displayName1}";
-		    var SSUserName2 = "${userInfo.displayName2}";
-		    var SSDeptID = "${userInfo.deptID}";
-		    var SSDeptName = "${userInfo.deptName1}";
-		    var SSDeptName2 = "${userInfo.deptName2}";
-		    var SSCompanyID = "${userInfo.companyID}";
-		    var SSCompanyName = "${userInfo.companyName1}";
-		    var SSCompanyName2 = "${userInfo.companyName2}";
-		    var strItemID = "${item.itemID}";
-		    var strWriterName = "${item.writerName}";
-		    var strWriterDeptName = "${item.writerDeptName}";
-		    var strWriterCompanyName = "${item.writerCompanyName}";		
-		    var strWriteDate = "${item.writeDate}";
-		    var strParentWriteDate = "${item.parentWriteDate}";
-		    var strImportance = "${item.importance}";
-		    var strStartDate = "${item.startDate}";
-		    var strEndDate = "${item.endDate}";
-		    var strAttachments = "${item.attachments}";
-		    var strContentLocation = "${item.contentLocation}";
-		    var strUpperItemIDTree = "${item.upperItemIDTree}";
-		    var strItemLevel = "${item.itemLevel}";
-		    var strWriterTitle = "${item.extensionAttribute3}";
-		    var strWriterFakeName = "${writerFakeName}";
+			var SSUserID = "<c:out value = '${userInfo.id}' />";
+		    var SSUserName = "<c:out value = '${userInfo.displayName1}' />";
+		    var SSUserName2 = "<c:out value = '${userInfo.displayName2}' />";
+		    var SSDeptID = "<c:out value = '${userInfo.deptID}' />";
+		    var SSDeptName = "<c:out value = '${userInfo.deptName1}' />";
+		    var SSDeptName2 = "<c:out value = '${userInfo.deptName2}' />";
+		    var SSCompanyID = "<c:out value = '${userInfo.companyID}' />";
+		    var SSCompanyName = "<c:out value = '${userInfo.companyName1}' />";
+		    var SSCompanyName2 = "<c:out value = '${userInfo.companyName2}' />";
+		    var strItemID = "<c:out value = '${item.itemID}' />";
+		    var strWriterName = "<c:out value = '${item.writerName}' />";
+		    var strWriterDeptName = "<c:out value = '${item.writerDeptName}' />";
+		    var strWriterCompanyName = "<c:out value = '${item.writerCompanyName}' />";		
+		    var strWriteDate = "<c:out value = '${item.writeDate}' />";
+		    var strParentWriteDate = "<c:out value = '${item.parentWriteDate}' />";
+		    var strImportance = "<c:out value = '${item.importance}' />";
+		    var strStartDate = "<c:out value = '${item.startDate}' />";
+		    var strEndDate = "<c:out value = '${item.endDate}' />";
+		    var strAttachments = "<c:out value = '${item.attachments}' />";
+		    var strContentLocation = "<c:out value = '${item.contentLocation}' />";
+		    var strUpperItemIDTree = "<c:out value = '${item.upperItemIDTree}' />";
+		    var strItemLevel = "<c:out value = '${item.itemLevel}' />";
+		    var strWriterTitle = "<c:out value = '${item.extensionAttribute3}' />";
+		    var strWriterFakeName = "<c:out value = '${writerFakeName}' />";
 		    var pAttachListXml = "";
-		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-		    var pReservedItem = "${pReservedItem}";
-		    var strUserRank = "${userInfo.title1}";
-		    var strUserRank2 = "${userInfo.title2}";
-		    var strUserPhone = "${userInfo.phone}";
-		    var strNow = "${strNow}";		
-		    var ExpireDays = "${boardInfo.expireDays}";		
-		    var gubun = "${boardInfo.gubun}";		
-		    var pUrl = "${pUrl}";
-		    var pDocID = "${pDocID}";
+		    var AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
+		    var pReservedItem = "<c:out value = '${pReservedItem}' />";
+		    var strUserRank = "<c:out value = '${userInfo.title1}' />";
+		    var strUserRank2 = "<c:out value = '${userInfo.title2}' />";
+		    var strUserPhone = "<c:out value = '${userInfo.phone}' />";
+		    var strNow = "<c:out value = '${strNow}' />";		
+		    var ExpireDays = "<c:out value = '${boardInfo.expireDays}' />";		
+		    var gubun = "<c:out value = '${boardInfo.gubun}' />";		
+		    var pUrl = "<c:out value = '${pUrl}' />";
+		    var pDocID = "<c:out value = '${pDocID}' />";
 		    var unloadflag = "0";
 		    var PhotoBoard = "N";
-		    var _hasattach = "${hasAttach}";
+		    var _hasattach = "<c:out value = '${hasAttach}' />";
 		    
 			var flag = false;
 			
@@ -122,8 +122,8 @@
 		        }
 							
 		        if( pMode == "modify") {												
-		            document.getElementById("txtTitle").value  = "${item.title}";
-		            document.getElementById("txtAbstract").value = "${item.absTract}";
+		            document.getElementById("txtTitle").value  = "<c:out value = '${item.title}' />";
+		            document.getElementById("txtAbstract").value = "<c:out value = '${item.absTract}' />";
 		        }
 							
 		        if (pMode == "reply") {
