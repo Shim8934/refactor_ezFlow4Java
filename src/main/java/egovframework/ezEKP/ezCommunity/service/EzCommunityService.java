@@ -14,6 +14,8 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -42,6 +44,10 @@ public interface EzCommunityService {
 	public List<CommunityBoardItemVO> copHomeBoardItemGet(String boardID) throws Exception;
 	
 	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID) throws Exception;
+	
+	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
+	
+	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -64,6 +70,8 @@ public interface EzCommunityService {
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception;
 	
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception;
+	
+	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id) throws Exception;
 	
 	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
 	
@@ -135,6 +143,16 @@ public interface EzCommunityService {
 	
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
 
+	public String checkReplyPassword(String pItemID, String pReplyID) throws Exception;
+
+	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception;
+
+	public String getACL(String id, String pComID) throws Exception;
+
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception;
+
+	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -148,6 +166,8 @@ public interface EzCommunityService {
 	public int commHomeGet2(String code) throws Exception;
 	
 	public int getReservedItemListCount(String id) throws Exception;
+	
+	public int checkOneLineOwner(String pReplyID, String id) throws Exception;
 
 	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 
@@ -182,22 +202,20 @@ public interface EzCommunityService {
 	public void deleteItem(String itemList) throws Exception;
 
 	public void saveOneLineReply(String pItemID, String pReplyID, String pBoardID, String userID, String userName, String userName2, String pContent, String pPassword) throws Exception;
+	
+	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception;
 
-	public String checkReplyPassword(String pItemID, String pReplyID) throws Exception;
+	public void guestEditOkDelete(String no, String code) throws Exception;
 
-	public int checkOneLineOwner(String pReplyID, String id) throws Exception;
+	public void guestEditOkUpdate(String no, String code, String memo, String id) throws Exception;
+	
+	public String pollMainGet1(String id, String code) throws Exception;
 
-	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception;
+	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception;
 
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
+	public String pollMainGet3(String managerID) throws Exception;
 
-	public String getACL(String id, String pComID) throws Exception;
-
-	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception;
-
-	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
-
-	public String guestOneGet2(String sRadio, String keyword, String code, String multiData) throws Exception;
+	public String pollMainGet4(String strQuestionID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

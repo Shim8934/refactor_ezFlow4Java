@@ -32,6 +32,8 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -1683,11 +1685,89 @@ System.out.println("@");
 	}
 
 	@Override
-	public String guestOneGet2(String sRadio, String keyword, String code, String multiData) throws Exception {
+	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		return null;
+		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.guestOneGet2(map);
 	}
-	
+
+	@Override
+	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_DOG", no);
+		map.put("v_USERINFO_USERID", id);
+		
+		return ezCommunityDAO.guestEditGet(map);
+	}
+
+	@Override
+	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", userInfo.getId());
+		map.put("v_USERINFO_DISPLAYNAME1", userInfo.getDisplayName1());
+		map.put("v_USERINFO_DISPLAYNAME2", userInfo.getDisplayName2());
+		map.put("v_USERINFO_COMPANYID", userInfo.getCompanyID());
+		map.put("v_MEMO", memo);
+		
+		ezCommunityDAO.guestEditOkInsert(map);
+	}
+
+	@Override
+	public void guestEditOkDelete(String no, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_NO", no);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.guestEditOkDelete(map);
+	}
+
+	@Override
+	public void guestEditOkUpdate(String no, String code, String memo, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_NO", no);
+		map.put("v_CODE", code);
+		map.put("v_MEMO", memo);
+		map.put("v_USERINFO_USERID", id);
+		
+		ezCommunityDAO.guestEditOkUpdate(map);
+	}
+
+	@Override
+	public String pollMainGet1(String id, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.pollMainGet1(map);
+	}
+
+	@Override
+	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception {
+		return ezCommunityDAO.pollMainGet2(code);
+	}
+
+	@Override
+	public String pollMainGet3(String managerID) throws Exception {
+		return ezCommunityDAO.pollMainGet3(managerID);
+	}
+
+	@Override
+	public String pollMainGet4(String strQuestionID) throws Exception {
+		return ezCommunityDAO.pollMainGet4(strQuestionID);
+	}
 	
 	
 	
