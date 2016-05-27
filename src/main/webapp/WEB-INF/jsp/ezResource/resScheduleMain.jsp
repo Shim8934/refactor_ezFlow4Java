@@ -305,12 +305,12 @@
 	        function btnform_onclick() {
 	            var feature = GetOpenPosition(700, 700);
 	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + escape("${brdNm}"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            } else {
 	                if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + escape("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                } else {
-	                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + escape("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                }
 	            }
 	        }

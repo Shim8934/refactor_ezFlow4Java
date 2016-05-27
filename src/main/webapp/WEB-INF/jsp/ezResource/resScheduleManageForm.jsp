@@ -56,7 +56,7 @@
 	    	    apropinion_cross_dialogArguments[0] = pAlertContent;
 	        	apropinion_cross_dialogArguments[1] = idDocSaveBtn_onclick_Complete
 
-		        DivPopUpShow(330, 205, "/ezResource/resApropinion.do");
+		        DivPopUpShow(330, 205, "/ezResource/apropinion.do");
 	        
 		    }
 	    	function idDocSaveBtn_onclick_Complete(retVal) {
@@ -108,7 +108,7 @@
 	        	apropinion_cross_dialogArguments[0] = pAlertContent;
 	        	apropinion_cross_dialogArguments[1] = idDelBtn_onclick_Complete
 
-	        	DivPopUpShow(330, 205, "/ezResource/resApropinion.do");
+	        	DivPopUpShow(330, 205, "/ezResource/apropinion.do");
 	        
 	    	}
 	    	function idDelBtn_onclick_Complete(retVal) {
