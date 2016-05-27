@@ -237,8 +237,8 @@
 	
 	<resultMap class="ResSelectFormIDVO" 		id="resSelectFormIDVO">
 		<result property="resID"					column="RESID"						columnIndex="1"/>
-		<result property="brdNm"					column="BRDNM"					columnIndex="2"/>
-		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""/>
+		<result property="brdNm"					column="BRDNM"					columnIndex="2"			nullValue=""/>
+		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""   	jdbcType="CLOB" 		javaType="java.lang.String"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleListRepetitionVO" 		id="resGetScheduleListRepetitionVO">
@@ -408,6 +408,24 @@
 	<procedure id="EzResourceDAO.getAclTblBrd" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETACLTBLBRD(#v_PCOMPANYID#, #v_PBRDID#, #iv_PUSERID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETBRDAPPROVEFLAG(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.insertForm" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_INSERT_FORM(#v_RESID#, #v_BRDNM#, #v_FORMTEXT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.delFormID" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DEL_FORMID(#v_DELCODE#)}
 		]]>
 	</procedure>
 	
