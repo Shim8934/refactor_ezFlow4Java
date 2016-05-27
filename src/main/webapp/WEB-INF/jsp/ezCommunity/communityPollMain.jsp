@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -32,7 +31,6 @@
 				var navigation_info = "<a href='/ezCommunity/indexMain.do' target='main'><spring:message code='ezCommunity.t577' /></a> > <a href='/ezCommunity/commHome/commHome.do?code=<c:out value='${code}' />' target='right' class='n'><spring:message code='ezCommunity.t578' /></a> > <spring:message code='ezCommunity.t598' />";
 				
 				$("#tblList").html($("#tblList").html() + '${strXML}'); 
-				alert($("#tblList").html());
 			}
 		    
 		    function alertMessage() {
@@ -100,7 +98,7 @@
 			<tr>
 				<th style="width:40px;"><spring:message code='ezCommunity.t32' /></th>
 			    <th style="width:150px;"><spring:message code='ezCommunity.t672' /></th>
-			    <th ><spring:message code='ezCommunity.t673' /></th>
+			    <th><spring:message code='ezCommunity.t673' /></th>
 			    <th style="width:50px;"><spring:message code='ezCommunity.t674' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
 			    <th style="width:100px;"><spring:message code='ezCommunity.t676' /></th>

@@ -2715,8 +2715,73 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 전자설문 등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAdd.do")
-	public String pollAdd(HttpServletRequest request) {
+	public String pollAdd(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pState = "", pSubject = "", pStartDate = "", pEndDate = "", pSelType = "", pSelRes1 = "", pSelRes2 = "";
+		
 		String code = request.getParameter("code");
+		
+		if (request.getParameter("state") != null) {
+			pState = request.getParameter("state");
+		}
+		
+		if (pState.equals("PREV")) {
+			if (request.getParameter("subject") != null) {
+				pSubject = request.getParameter("subject");
+			}
+			
+			if (request.getParameter("startDate") != null){
+				pStartDate = request.getParameter("startDate");
+			}
+			
+			if (request.getParameter("endDate") != null) {
+				pEndDate = request.getParameter("endDate");
+			}
+			
+			if (request.getParameter("selType") != null) {
+				pSelType = request.getParameter("selType");
+			}
+			
+			if (request.getParameter("selRes1") != null) {
+				pSelRes1 = request.getParameter("selRes1");
+			}
+			
+			if (request.getParameter("selRes2") != null) {
+				pSelRes2 = request.getParameter("selRes2");
+			}
+		} else {
+			pStartDate = EgovDateUtil.getToday("-");
+			pEndDate = EgovDateUtil.getToday("-");
+		}
+		
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
+		
+		String expireDays = "-1";
+		
+		model.addAttribute("code", code);
+		model.addAttribute("expireDays", expireDays);
+		model.addAttribute("pState", pState);
+		model.addAttribute("pSelType", pSelType);
+		model.addAttribute("pSelRes1", pSelRes1);
+		model.addAttribute("pSelRes2", pSelRes2);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("startDate", pStartDate);
+		model.addAttribute("endDate", pEndDate);
+		
+		return "/ezCommunity/communityPollAdd";
+	}
+	
+	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
+	public String pollAddOk (HttpServletRequest request) {
+
+		String code = request.getParameter("code");
+		String mode = request.getParameter("mode");
+		String startDate = request.getParameter("startPollYear") + "-" + request.getParameter("startPollMonth") + "-" + request.getParameter("startPollDay");
+		String endDate = request.getParameter("endPollYear") + "-" + request.getParameter("endPollMonth") + "-" + request.getParameter("endPollDay");
+		String subject = request.getParameter("pollSubject");
+		String selType = request.getParameter("selType");
+		String selRes1 = request.getParameter("selRes1");
+		String selRes2 = request.getParameter("selRes2");
 		
 		return "";
 	}
