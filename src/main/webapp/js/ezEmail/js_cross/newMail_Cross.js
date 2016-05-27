@@ -1745,22 +1745,24 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
     for (var i = 0; i < imgColl.length; i++) {
         if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0) {
             var imagePath = imgColl.item(i).src;
-            var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1)
-
-            var XmlHtml = getNodeText(SelectNodes(xmlDoc, "DATA/HTMLBODY")[0]);
-            var OrgHteml = imgColl.item(i).outerHTML;
-
-            imgColl.item(i).setAttribute("src", formname);
-            imgColl.item(i).removeAttribute("embedding");
-            imgColl.item(i).outerHTML = imgColl.item(i).outerHTML.replace("src=\"" + formname + "\"", "src=\"" + formname + "\" embedding=\"1\" ")
-
-            XmlHtml = XmlHtml.replace(OrgHteml, imgColl.item(i).outerHTML);
-            if (CrossYN())
-                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].textContent = XmlHtml;
-            else
-                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].text = XmlHtml;
-            createNodeAndInsertText(xmlDoc, rootNode, "IMAGENAME", formname);
-            createNodeAndInsertText(xmlDoc, rootNode, "IMAGEPATH", imagePath);
+            if (imagePath.substr(0, 4) != "http") {
+	            var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1)
+	
+	            var XmlHtml = getNodeText(SelectNodes(xmlDoc, "DATA/HTMLBODY")[0]);
+	            var OrgHteml = imgColl.item(i).outerHTML;
+	
+	            imgColl.item(i).setAttribute("src", formname);
+	            imgColl.item(i).removeAttribute("embedding");
+	            imgColl.item(i).outerHTML = imgColl.item(i).outerHTML.replace("src=\"" + formname + "\"", "src=\"" + formname + "\" embedding=\"1\" ")
+	
+	            XmlHtml = XmlHtml.replace(OrgHteml, imgColl.item(i).outerHTML);
+	            if (CrossYN())
+	                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].textContent = XmlHtml;
+	            else
+	                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].text = XmlHtml;
+	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGENAME", formname);
+	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGEPATH", imagePath);
+            }
         }
         if (imgColl.item(i).src.toLowerCase().indexOf("ezcommon_interface.aspx") > -1) {
             var encodedText = GetEncodeTextNew(imgColl.item(i).src, '1');
@@ -1885,10 +1887,12 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
             imgColl.item(i).removeAttribute("srcorgEmbedImage");
         }//20131220 image
         else if (imgColl.item(i).src.toLowerCase().indexOf("upload_personal/mailsignimage") > -1 || imgColl.item(i).src.toLowerCase().indexOf("upload_common") > -1) {
-            var pos = imgColl.item(i).src.lastIndexOf("/");
-            var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
-            imgColl.item(i).src = rePath;
-            imgColl.item(i).setAttribute("embedding", "1");
+        	if (imgColl.item(i).src.substr(0, 4) != "http") {
+	            var pos = imgColl.item(i).src.lastIndexOf("/");
+	            var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
+	            imgColl.item(i).src = rePath;
+	            imgColl.item(i).setAttribute("embedding", "1");
+        	}
         }//20140801 mailsign sec
         else if (imgColl.item(i).src.toLowerCase().indexOf("ezcommon_interface.aspx") > -1) {
             var pos = imgColl.item(i).src.indexOf("FILENAME=");

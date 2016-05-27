@@ -1569,28 +1569,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
 	                	//TODO: embedding제거
 	            		
-	                	String cid = imageName + "@12345678.87654321";
-	                	String strContent = content.getContent().toString();
-	                	int index = strContent.indexOf("src=\"" + imageName);
-	                	if (index != -1) {
-	                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
-	                	}
-	                	content.setContent(strContent, "text/html; charset=utf-8");
-	                	
 	                	imagePath = new URL(imagePath).getPath();
 	                	String pDirPath = realPath + imagePath;
 	                	
-	                	MimeBodyPart messageBodyPart = new MimeBodyPart();
 	        	        File f = new File(pDirPath);
-	        	        
-	        	        if (f.exists()) {
+	        	        if (f.exists()) {	            		
+		                	String cid = imageName + "@12345678.87654321";
+		                	String strContent = content.getContent().toString();
+		                	int index = strContent.indexOf("src=\"" + imageName);
+		                	if (index != -1) {
+		                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
+		                	}
+		                	content.setContent(strContent, "text/html; charset=utf-8");
+	                		        	        
+		                	MimeBodyPart messageBodyPart = new MimeBodyPart();
+		                	
 		        	        FileDataSource source = new FileDataSource(f);
 		        	        messageBodyPart.setDataHandler(new DataHandler(source));
 		        	        messageBodyPart.setFileName(imageName);
+		        	        
 		        	        String contentType = "application/octet-stream";
+		        	        
 		        	        if (Files.probeContentType(f.toPath()) != null) {
 		        	        	contentType = Files.probeContentType(f.toPath());
 		        	        }
+		        	        
 		        	        messageBodyPart.setHeader("Content-Type", contentType);
 		        	        messageBodyPart.setContentID("<" + cid + ">");
 		        	        messageBodyPart.setDisposition(Part.INLINE);
