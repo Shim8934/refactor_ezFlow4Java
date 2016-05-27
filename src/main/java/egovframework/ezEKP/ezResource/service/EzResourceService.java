@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezResource.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -75,6 +76,8 @@ public interface EzResourceService {
 	
 	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode) throws Exception;
 	
+	public String getBrdApproveFlag(int brdID, String companyID) throws Exception;
+	
 	public boolean deleteRepetition(String xmlStr) throws Exception;
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception;
@@ -87,6 +90,8 @@ public interface EzResourceService {
 	
 	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
+	
+	public void insertForm(String resID, String brdNm, String formText) throws Exception;
 	
 	public void delResData(String brdID, String companyID) throws Exception;
 	
@@ -102,4 +107,6 @@ public interface EzResourceService {
 	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
 	
 	public void deleteRepetition(String ownerID, int pNum) throws Exception;
+	
+	public void delFormID(String delCode) throws Exception;
 }

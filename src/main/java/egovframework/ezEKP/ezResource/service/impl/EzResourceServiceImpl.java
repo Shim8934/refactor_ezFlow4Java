@@ -343,6 +343,30 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_PMODE", mode);
 		return ezResourceDAO.getAclTblBrd(map);
 	}
+	
+	@Override
+	public String getBrdApproveFlag(int brdID, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDID", brdID);
+		map.put("v_PCOMPANYID", companyID);
+		return ezResourceDAO.getBrdApproveFlag(map);
+	}
+	
+	@Override
+	public void insertForm(String resID, String brdNm, String formText) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_RESID", resID);
+		map.put("v_BRDNM", brdNm);
+		map.put("v_FORMTEXT", formText);
+		ezResourceDAO.insertForm(map);
+	}
+	
+	@Override
+	public void delFormID(String delCode) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_DELCODE", delCode);
+		ezResourceDAO.delFormID(map);
+	}
 
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
@@ -546,8 +570,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 							returnStr.append("<jobtitle2><![CDATA["+returnDom1.getElementsByTagName("ROW").item(m).getChildNodes().item(24).getTextContent()+"]]></jobtitle2>");
 						}
 						returnStr.append("</ROW>");
+						
 					}
-					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -668,6 +692,7 @@ System.out.println(returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).g
 				}
 			}
 			returnStr.append("</DATA>");
+System.out.println("returnStr:"+returnStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

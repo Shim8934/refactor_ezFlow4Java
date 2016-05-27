@@ -94,11 +94,15 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	public ResSelectFormIDVO selectFormID(Map<String, Object> map) {
-		return (ResSelectFormIDVO) select("ResSelectFormIDVO", map);
+		return (ResSelectFormIDVO) select("EzResourceDAO.selectFormID", map);
 	}
 	
 	public String getAclTblBrd(Map<String, Object> map) {
 		return (String) select("EzResourceDAO.getAclTblBrd", map);
+	}
+	
+	public String getBrdApproveFlag(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getBrdApproveFlag", map);
 	}
 	
 	public int getBrdCnt(Map<String , Object> map) {
@@ -112,6 +116,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void insertScheduleRepetition(Map<String, Object> map) {
 		insert("EzResourceDAO.insertScheduleRepetition", map);
+	}
+	
+	public void insertForm(Map<String, Object> map) {
+		insert("EzResourceDAO.insertForm", map);
 	}
 	
 	public void modifyResData(Map<String, Object> map) {
@@ -132,6 +140,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void deleteRepetition(Map<String, Object> map) {
 		delete("EzResourceDAO.deleteRepetition", map);
+	}
+	
+	public void delFormID(Map<String, Object> map) {
+		delete("EzResourceDAO.delFormID", map);
 	}
 	
 }
