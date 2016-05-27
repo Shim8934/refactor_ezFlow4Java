@@ -1744,8 +1744,10 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
         if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0) {
-            var imagePath = imgColl.item(i).src;
-            if (imagePath.substr(0, 4) != "http") {
+            var imagePath = imgColl.item(i).src;            
+        	var srcValue = imgColl.item(i).getAttribute("src");
+
+        	if (srcValue.substr(0, 4) != "http") {
 	            var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1)
 	
 	            var XmlHtml = getNodeText(SelectNodes(xmlDoc, "DATA/HTMLBODY")[0]);
@@ -1887,7 +1889,9 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
             imgColl.item(i).removeAttribute("srcorgEmbedImage");
         }//20131220 image
         else if (imgColl.item(i).src.toLowerCase().indexOf("upload_personal/mailsignimage") > -1 || imgColl.item(i).src.toLowerCase().indexOf("upload_common") > -1) {
-        	if (imgColl.item(i).src.substr(0, 4) != "http") {
+        	var srcValue = imgColl.item(i).getAttribute("src");
+
+        	if (srcValue.substr(0, 4) != "http") {
 	            var pos = imgColl.item(i).src.lastIndexOf("/");
 	            var rePath = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(imgColl.item(i).src.substr(pos + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D");
 	            imgColl.item(i).src = rePath;
