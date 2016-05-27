@@ -4,20 +4,78 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Insert title here</title>
+		<title>poll_add_ok</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		
+		<script type="text/javascript">
+			document.onselectstart = function () { return false; };
+	        
+		    window.onload = function () {
+		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            document.body.style.MozUserSelect = 'none';
+		            document.body.style.WebkitUserSelect = 'none';
+		            document.body.style.khtmlUserSelect = 'none';
+		            document.body.style.oUserSelect = 'none';
+		            document.body.style.UserSelect = 'none';
+		        }
+		    }
+		    
+		    function sendIt() {
+				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {
+					alert("<spring:message code='ezCommunity.t614' />");
+					return;		
+				}
+				
+				document.getElementsByTagName("form")[0].submit();
+			}
+	
+			function ByteLength(str) {
+				var i = 0;
+				var strlen = 0;
+					
+				for ( i = 0 ; i < str.length ; i ++ ) {
+					//if ( str.charCodeAt(i) > 255)
+					//{
+					//	strlen = strlen + 2;
+					//}
+					//else
+					//{
+						strlen = strlen + 1;
+					//}
+				}
+					
+				return(strlen);
+			}
+				
+			function cancel_click() {
+				window.location.href = "/ezCommunity/pollMain.do?code=<c:out value = '${code}' />";
+			}
+				
+			function fun_Prev() {
+				var stringHTML = "";
+				stringHTML += '<form id="poll_add_prev" action="/ezCommunity/pollAdd.do?state=PREV" method="POST" >';			
+				stringHTML += '<INPUT type="hidden" name="code" value="${code}">';
+				stringHTML += '<INPUT type="hidden" name="selType" value="${selType}">';
+				stringHTML += '<INPUT type="hidden" name="selRes1" value="${selRes1}">';
+				stringHTML += '<INPUT type="hidden" name="selRes2" value="${selRes2}">';
+				stringHTML += '<INPUT type="hidden" name="startDate" value="${startDate}">';
+				stringHTML += '<INPUT type="hidden" name="endDate" value="${endDate}">';	
+				stringHTML += '<INPUT type="hidden" name="pSub" value="' + escape(document.getElementById("pollSubject").value) + '" >';
+				stringHTML += '</form>';			
+					
+				document.body.innerHTML += stringHTML;
+				document.getElementById("poll_add_prev").submit();
+			}
+		</script>
 	</head>
 	<body class="mainbody">
-		<form name="poll_add" action="poll_add_ok_go.aspx" method="POST" runat="server">
-			<input type="hidden" name="mode"			value="<c:out value = '${mode}' />">;
+		<form name="poll_add" action="/ezCommunity/pollAddOkGo.do" method="POST">
+			<input type="hidden" name="mode"			value="<c:out value = '${mode}' />">
 			<input type="hidden" name="code"			value="<c:out value = '${code}' />">
-			<input type="hidden" name="startPollYear"	value="<c:out value = '${startPollYear}' />">
-			<input type="hidden" name="startPollMonth"	value="<c:out value = '${startPollMonth}' />">
-			<input type="hidden" name="startPollDay"	value="<c:out value = '${startPollDay}' />">
-			<input type="hidden" name="endPollYear"		value="<c:out value = '${endPollYear}' />">
-			<input type="hidden" name="endPollMonth"	value="<c:out value = '${endPollMonth}' />">
-			<input type="hidden" name="endPollDay"		value="<c:out value = '${endPollDay}' />">
+			<input type="hidden" name="startDate"	value="<c:out value = '${startDate}' />">
+			<input type="hidden" name="endDate"		value="<c:out value = '${endDate}' />">
 			<input type="hidden" name="selRes"			value="<c:out value = '${selRes}' />">
 			<input type="hidden" name="answerCount"		value="<c:out value = '${answerCount}' />">
 			<input type="hidden" name="sel"				value="<c:out value = '${sel}' />">
@@ -26,25 +84,25 @@
 			<input type="hidden" name="selJU"			value="<c:out value = '${selJU}' />">
 			<input type="hidden" name="answerViewType"	value="<c:out value = '${answerViewType}' />">
 			
-<%-- 			<h1><%=RM.GetString("t598")%></h1> --%>
-<!-- 			<br> -->
-<!-- 			<br> -->
+			<h1><spring:message code='ezCommunity.t598' /></h1>
+			<br>
+			<br>
 			
-<!-- 			<table class="content"> -->
-<!-- 				<tr> -->
-<%-- 					<th><%=RM.GetString("t599")%></th> --%>
-<!-- 					<td><textarea id="pollSubject" name="pollSubject" style="width: 100%;height:130px" runat="server"></textarea></td> -->
-<!-- 				</tr> -->
-<!-- 				<tr> -->
-<%-- 					<th><%=RM.GetString("t600")%></th> --%>
-<!-- 					<td><span id="idSpan" runat=server></span> </td> -->
-<!-- 				</tr> -->
-<!-- 			</table> -->
+			<table class="content">
+				<tr>
+					<th><spring:message code='ezCommunity.t598' /></th>
+					<td><textarea id="pollSubject" name="pollSubject" style="width: 100%;height:130px"></textarea></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCommunity.t600' /></th>
+					<td><span id="idSpan">${idSpanValue }</span></td>
+				</tr>
+			</table>
 			  
-<!-- 			<div class="btnposition"> -->
-<%-- 				<a class="imgbtn" name="Submit2" onClick="fun_Prev();"><span><%=RM.GetString("t616")%></span></a> --%>
-<%-- 				<a class="imgbtn" name="Submit" onClick="sendIt();"><span><%=RM.GetString("t680")%></span></a> --%>
-<%-- 				<a class="imgbtn"  name="Submit2" onclick="cancel_click()" ><span><%=RM.GetString("t246")%></span></a> --%>
+			<div class="btnposition">
+				<a class="imgbtn" name="Submit2" onClick="fun_Prev();"><span><spring:message code='ezCommunity.t616' /></span></a>
+				<a class="imgbtn" name="Submit" onClick="sendIt();"><span><spring:message code='ezCommunity.t680' /></span></a>
+				<a class="imgbtn"  name="Submit2" onclick="cancel_click()" ><span><spring:message code='ezCommunity.t246' /></span></a>
 			</div>
 		</form>
 	</body>

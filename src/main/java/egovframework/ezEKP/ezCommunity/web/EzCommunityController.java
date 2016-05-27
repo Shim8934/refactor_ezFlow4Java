@@ -2712,7 +2712,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 등록 화면 호출 함수
+	 * 전자설문 등록 화면1 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAdd.do")
 	public String pollAdd(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2771,19 +2771,170 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityPollAdd";
 	}
 	
+	/**
+	 * 전자설문 등록 화면2 호출 함수
+	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
-	public String pollAddOk (HttpServletRequest request) {
-
+	public String pollAddOk (ModelMap model, HttpServletRequest request) {
+		String selRes = "", answerViewType = "", selRes1 = "", selRes2 = "";
+		int sel = 0, answerCount = 0, selectedNo = 0;
+		StringBuilder sb = new StringBuilder();
+		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startPollYear") + "-" + request.getParameter("startPollMonth") + "-" + request.getParameter("startPollDay");
 		String endDate = request.getParameter("endPollYear") + "-" + request.getParameter("endPollMonth") + "-" + request.getParameter("endPollDay");
 		String subject = request.getParameter("pollSubject");
 		String selType = request.getParameter("selType");
-		String selRes1 = request.getParameter("selRes1");
-		String selRes2 = request.getParameter("selRes2");
 		
-		return "";
+		if (request.getParameter("selRes1") != null) {
+			selRes1 = request.getParameter("selRes1");
+		}
+		
+		if (request.getParameter("selRes2") != null) {
+			selRes2 = request.getParameter("selRes2");
+		}
+		
+		if (subject != null) {
+			if (selRes1.equals("0")) {
+				selRes = selRes2;
+				answerViewType = "0";
+				sel = 1;
+			} else {
+				selRes = selRes1;
+				answerViewType = selRes;
+				sel = 0;
+			}
+		}
+		
+		if (sel == 0 && !selType.equals("3")) {
+			sb.append("<select size=\"5\" style=\"Width:367px; Height:160px\" id=select1 name=select1>");
+			
+			switch (selRes) {
+				case "1" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t617", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t618", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t619", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t620", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t621", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t622", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t623", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t624", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t625", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t626", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 1;
+					answerCount = 5;
+					
+					break;
+					
+				case "2" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t628", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t629", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t636", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t637", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 2;
+					answerCount = 5;
+					
+					break;
+					
+				case "3" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t638", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t639", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t640", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t641", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t642", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t643", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t644", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t645", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 3;
+					answerCount = 5;
+					
+					break;
+					
+				case "11" :
+					sb.append("<option value = \"1. Yes.\">1. Yes.</option>");
+					sb.append("<option value = \"2. No.\">2. No.</option>");
+					
+					selectedNo = 4;
+					answerCount = 2;
+					
+					break;
+					
+				case "12" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t646", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t647", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t648", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t649", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 5;
+					answerCount = 2;
+					
+					break;
+					
+				case "13" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t650", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t651", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t652", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t653", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 6;
+					answerCount = 2;
+					
+					break;
+					
+				case "14" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 7;
+					answerCount = 2;
+					
+					break;
+			}
+			
+			if (selType.equals("2")) {
+				answerCount++;
+				sb.append("<option value = \"3\">3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+			}
+			
+			sb.append("</select>");
+		} else {
+			if (sel == 1 && !selType.equals("3")) {
+				selectedNo = 8;
+				
+				if(!selType.equals("2")){
+					for(int i=1; i <= Integer.parseInt(selRes); i++) {
+						sb.append(i + ". <input type\"text\" name = \"selNO_" + i + "\"><br>");
+					}
+					
+					answerCount = Integer.parseInt(selRes);
+				} else {
+					selectedNo = 9;
+					
+					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
+						sb.append(i + ". <input type\"text\" name = \"selNO_" + i + "\"><br>");
+					}
+					
+					answerCount = Integer.parseInt(selRes);
+					sb.append(selRes + ". " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))));
+				}
+			} else {
+				if (selType.equals("3")) {
+					answerCount = 1;
+					selectedNo = 10;
+					sb.append(egovMessageSource.getMessage("ezCommunity.t654", new Locale(globals.getProperty("Globals.language"))) + "<input type = \"text\" name = \"selJU\">");
+				}
+			}
+		}
+		
+		model.addAttribute("mode", mode);
+		model.addAttribute("code", code);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("selRes", selRes);
+		model.addAttribute("answerCount", answerCount);
+		model.addAttribute("sel", sel);
+		model.addAttribute("selType", selType);
+		model.addAttribute("selectedNo", selectedNo);
+		model.addAttribute("selJU", 0);
+		model.addAttribute("answerViewType", answerViewType);
+		
+		model.addAttribute("subject", subject);
+		model.addAttribute("idSpanValue", sb.toString());
+		
+		return "/ezCommunity/communityPollAddOk";
 	}
 	
 	/**

@@ -6,7 +6,7 @@
 	<head>
 
 		
-		<title>Poll-Add</title>
+		<title>poll_add</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
