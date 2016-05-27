@@ -6,16 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -39,7 +36,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import com.sun.mail.imap.IMAPFolder;
@@ -425,11 +421,27 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 				if(part != null){
 					response.setContentType(part.getContentType());
-					response.addHeader("content-disposition", "attachment; filename=" + URLEncoder.encode(filename,"UTF-8"));
+					
+					// in case of IE
+					// the filename needs to be UTF-8 and URL-encoded.
+					// URI class is more appropriate than URLEncoder class for this purpose.
+					if (request.getHeader("User-Agent").contains("Trident")) {
+						URI uri = new URI(null, null, filename, null);
+						filename = uri.toASCIIString();
+					}
+					// in case of Chrome, Safari
+					// the filename consists of UTF-8 encoded bytes.
+					else {
+						filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+					}
+					
+					response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
+					
 					InputStream input = part.getInputStream();
 					OutputStream output = response.getOutputStream();
 					byte[] buffer = new byte[4096];
 					int byteRead;
+					
 					try{
 						while ((byteRead = input.read(buffer)) != -1) {
 							output.write(buffer, 0, byteRead);
@@ -442,6 +454,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						ia.close();
 						return;
 					}
+					
 					output.flush();
 					output.close();
 				}
