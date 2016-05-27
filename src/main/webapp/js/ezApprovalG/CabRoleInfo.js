@@ -1,7 +1,7 @@
 ﻿function OpenAlertUI(pAlertContent)
 {
 	var parameter = pAlertContent;
-	var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+	var url = "/ezApprovalG/ezAprAlert.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	//2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.	
 	feature =  feature + GetShowModalPosition(330, 205);

@@ -290,7 +290,7 @@
 	                }
 	            }
 	            catch (e)
-	            { }
+	            {alert(e.message); }
 	        }
 	
 	        var BODYTag;

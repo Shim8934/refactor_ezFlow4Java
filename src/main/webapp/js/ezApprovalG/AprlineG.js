@@ -3133,7 +3133,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction)
 {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;
@@ -3158,7 +3158,7 @@ function OpenInformationUI_Complete() {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;

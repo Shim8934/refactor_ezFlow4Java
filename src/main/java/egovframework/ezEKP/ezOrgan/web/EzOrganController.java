@@ -1,12 +1,13 @@
 package egovframework.ezEKP.ezOrgan.web;
 
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +16,7 @@ import org.w3c.dom.Element;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -221,6 +223,34 @@ public class EzOrganController {
 		result = result.replaceAll("null", "");
 		
 		return result;
+	}
+	
+	/**
+	 * 조직도 트리정보  함수
+	 */
+	@RequestMapping(value = "/ezApprovalG/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getOrganTreeInfo() throws Exception{
+		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
+		int intScope = 1;
+		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
+		//TODO LDAP 이라 보류중
+		return "";
+	}
+	
+	/**
+	 * 조직도 부서 및 사원정보 함수
+	 */
+	@RequestMapping(value = "/ezOrgan/getADInfos.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getADInfos(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = request.getParameter("cn");
+		String propName = request.getParameter("prop");
+		String infoXML = ezOrganService.getPropertyList(cn, propName, userInfo.getPrimary());
+		
+		return infoXML;
 	}
 
 }

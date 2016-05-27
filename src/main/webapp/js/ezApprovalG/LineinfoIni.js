@@ -3,8 +3,7 @@ function Lineinfo_ini() {
     if (!Lineinfoini) {
         Tree_setconfig();
         Lineinfoini = true;
-        TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
-        displayUserList(DeptID);
+        TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
         InitListView();
         ChangeLineTab("Organ");
     }
@@ -252,10 +251,10 @@ function InitListView() {
         if (pReDraftFlag != "HAPYUI" && pReDraftFlag != "HABYUI") {
             for (var i = 0; i < pAPRLINE.GetRowCount() ; i++) {
                 if (pAPRLINE.GetDataRows()[i].getAttribute("DATA8") == "Y") {
-                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "★" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML
+                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "★" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
                 }
                 if (pAPRLINE.GetDataRows()[i].getAttribute("DATA9") == "Y") {
-                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "⊙" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML
+                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "⊙" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
                 }
             }
         }
@@ -306,11 +305,11 @@ function displayUserList(DeptID) {
 		type : "POST",
 		dataType : "xml",
 		async : true,
-		url : "/ezOrgan/GetDeptMemberList.do",
+		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
-				cell 	 : "displayname;Description;Title;telephonenumber",
-				prop     : "Department;DisplayName;Description;Title",
+				cell 	 : "displayName;description;title;telephoneNumber",
+				prop     : "department;displayName;description;title",
 				type 	 : "user"
 				},
 		success: function(xml){

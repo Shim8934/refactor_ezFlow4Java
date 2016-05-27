@@ -57,6 +57,20 @@ public interface EzApprovalGService {
 	
 	public String getTempList(String userID, String formID, String companyID, String lang) throws Exception;
 	
+	public String updateLineInfo(String ret, String companyID, String lang) throws Exception;
+	
+	public String updateReceiptInfo(String ret2, String companyID, String lang) throws Exception;
+	
+	public String getLineTempletInfo(String formID, String userID, String companyID) throws Exception;
+	
+	public String getLineTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang) throws Exception;
+	
+	public String getFormInfoDetail(String formID, String companyID) throws Exception;
+	
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang) throws Exception;
+	
+	public String createNewDoc(String formID, String companyID) throws Exception;
+	
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 

@@ -10,10 +10,12 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -974,8 +976,8 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		rtnXML.append("<USERTYPES>");
 
 		for (int k = 0; k < dlength; k++) {
-            if (!docXML.getElementsByTagName("CODE2").item(k).getTextContent().equals(staATBuSeuSoonChaHyubJo) && !docXML.getElementsByTagName("CODE2").item(k).getTextContent().equals(staATBuSeuByungRyulHyubJo)) {
-                rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent()));
+            if (!docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuSoonChaHyubJo) && !docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuByungRyulHyubJo)) {
+                rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim()));
                 rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
                 rtnXML.append("</NAME></APRTYPE>");
             }
@@ -985,8 +987,8 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		rtnXML.append("<DEPTTYPES>");
 		
         for (int k = 0; k < dlength; k++) {
-            if (docXML.getElementsByTagName("CODE2").item(k).getTextContent().equals(staATBuSeuSoonChaHyubJo) || docXML.getElementsByTagName("CODE2").item(k).getTextContent().equals(staATBuSeuByungRyulHyubJo)) {
-                rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent()));
+            if (docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuSoonChaHyubJo) || docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuByungRyulHyubJo)) {
+                rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim()));
                 rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
                 rtnXML.append("</NAME></APRTYPE>");
             }
@@ -1115,6 +1117,485 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		}
 		
 		return returnValue.toString();
+	}
+
+	@Override
+	public String updateLineInfo(String ret, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		Document docXML = commonUtil.convertStringToDocument(ret);
+		NodeList nList = docXML.getElementsByTagName("ROW");
+		String strDocID = nList.item(0).getChildNodes().item(8).getTextContent();
+		String rtnVal = "";
+		
+		strSQL.append("DELETE FROM TBEXPAPRLINE WHERE DocID = '" + strDocID + "';\n");
+		strSQL.append("DELETE FROM TBAPRLINEINFO WHERE DocID = '" + strDocID + "';\n");
+		
+		String recDate = "";
+		String procDate = "";
+		
+		for (int k = 0; k < nList.getLength(); k++) {
+			if (nList.item(k).getChildNodes().item(7).getTextContent().trim().equals("")) {
+				recDate = "NULL";
+			} else {
+				if (nList.item(k).getChildNodes().item(7).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace("오전", "").trim() + "AM'";
+				} else if (nList.item(k).getChildNodes().item(7).getTextContent().replace("오후", "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace("오후", "").trim() + "PM'";
+				} else {
+					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().trim() + "'";
+				}
+			}
+			
+			if (nList.item(k).getChildNodes().item(6).getTextContent().trim().equals("")) {
+				procDate = "NULL";
+			} else {
+				if (nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() + "AM'";
+				} else if (nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace("오후", "").trim() + "PM'";
+				} else {
+					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().trim() + "'";
+				}
+			}
+			
+			strSQL.append("INSERT INTO TBAPRLINEINFO (DocID, AprMemberSN, AprType, AprState, ");
+            strSQL.append("AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, ");
+            strSQL.append("AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ");
+			strSQL.append("ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN) VALUES ('");
+			strSQL.append(strDocID + "', '" + nList.item(k).getChildNodes().item(0).getTextContent() + "', '");
+            strSQL.append(nList.item(k).getChildNodes().item(16).getTextContent() + "', '");          //AprType
+            strSQL.append(nList.item(k).getChildNodes().item(17).getTextContent() + "', '");          //AprState
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(9).getTextContent()) + "', '");
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(10).getTextContent()) + "', N'");//AprMemberIsDeptYN
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(18).getTextContent()) + "', N'");//AprMemberName
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(19).getTextContent()) + "', N'");//AprMemberName2
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(22).getTextContent()) + "', N'"); //AprMemberJobTitle
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(23).getTextContent()) + "', N'");//AprMemberJobTitle2
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(11).getTextContent()) + "', N'");
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(20).getTextContent()) + "', '");
+            strSQL.append(makeRightField(nList.item(k).getChildNodes().item(21).getTextContent()) + "', '"); 
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(15).getTextContent()) + "', ");
+			strSQL.append(recDate + ", " + procDate + ", '");
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(12).getTextContent()) + "', '");
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(13).getTextContent()) + "', '");
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(14).getTextContent()) + "');\n");
+
+			strSQL.append("INSERT INTO TBEXPAPRLINE (docid, aprmemberSN, orguserid, proxyuserid, ");
+            strSQL.append("proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2) ");
+			strSQL.append("VALUES ('" + strDocID + "', '" + makeRightField(nList.item(k).getChildNodes().item(0).getTextContent()));
+			strSQL.append("', '" + makeRightField(nList.item(k).getChildNodes().item(9).getTextContent()));
+            strSQL.append("', '', '', '', '', '', '', '', '');\n");
+		}
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sqlString", strSQL.toString());
+			map.put("companyID", companyID);
+			
+			ezApprovalGDAO.transactionSQL(map);
+			
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		return rtnVal;
+	}
+
+	@Override
+	public String updateReceiptInfo(String ret2, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		Document docXML = commonUtil.convertStringToDocument(ret2);
+		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang);
+		String susinGroupUseFlag = getCode2Name("A53", "002", companyID, lang);
+		
+		NodeList rowNode = docXML.getElementsByTagName("ROW");
+		
+		String strDocID = rowNode.item(0).getChildNodes().item(2).getTextContent();
+		String rtnVal = deleteReceiptInfo(strDocID, companyID);
+		
+		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
+			String receiptPointID = "";
+			int j = 1;
+			
+			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
+				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
+				
+				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
+					strSQL.append("INSERT INTO TBRECEIPTPOINTINFO (DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ");
+                    strSQL.append("ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ");
+                    strSQL.append("ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN) VALUES ('");
+					strSQL.append(strDocID + "', '" + rowNode.item(k).getChildNodes().item(3).getTextContent() + "', N'");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()) + "', N'");
+                    // ReceiptPointName2
+                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()) + "', '");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(4).getTextContent()) + "', '");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()) + "', '1', '");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()) + "', '");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()) + "', '");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()) + "', N'");
+                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()) + "', N'");
+                    // ReceiptMemberName2
+                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()) + "', NULL, N'");
+					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()) + "', N'");
+                    // ReceiptMemberJobTitle2
+                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()) + "', '");
+					strSQL.append(j + "');\n");
+					
+					j += 1;
+				} else {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
+					map.put("companyID", companyID);
+					
+					List<ApprGAdminReceiveVO> apprGAdminReceiveVOList = ezApprovalGDAO.getReceiptGroupInfo(map);
+					
+					StringBuffer sb = new StringBuffer();
+			        sb.append("<DATA>");
+			        
+			        for (int i = 0; i < apprGAdminReceiveVOList.size(); i++) {
+						sb.append(commonUtil.getQueryResult(apprGAdminReceiveVOList.get(i)));
+					}
+					sb.append("</DATA>");
+					
+					Document receiptGroupXML = commonUtil.convertStringToDocument(sb.toString());
+					int dlength = receiptGroupXML.getElementsByTagName("ROW").getLength();
+					
+					for (int p = 0; p < dlength; p++) {
+						strSQL.append("INSERT INTO TBRECEIPTPOINTINFO (DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ");
+						strSQL.append("ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ");
+                        strSQL.append("ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN) VALUES ('");
+						strSQL.append(strDocID + "', '" + receiptGroupXML.getElementsByTagName("DEPTID").item(p).getTextContent() + "', N'");
+						strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME").item(p).getTextContent()) + "', N'");
+                        strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME2").item(p).getTextContent()) + "', '");
+						strSQL.append("N', 'N', '1', 'N', '");
+						strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("COMPANYID").item(p).getTextContent()) + "', '");
+						strSQL.append("', N'', N'', NULL, N'', N'', '" + j + "');\n");
+
+						j += 1;
+					}
+				}
+			}
+			
+			try {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("sqlString", strSQL.toString());
+				map.put("companyID", companyID);
+				
+				ezApprovalGDAO.transactionSQL(map);
+				
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				rtnVal = "<RESULT>FALSE</RESULT>";
+			}
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String getLineTempletInfo(String formID, String userID, String companyID) throws Exception {
+		StringBuilder rtnVal = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMID", formID);
+		map.put("v_USERID", userID);
+		map.put("companyID", companyID);
+		
+		List<ApprGLineTempletVO> apprGLineTempletVOList = ezApprovalGDAO.getLineTempletInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGLineTempletVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGLineTempletVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		for (int k = 0; k < dlength; k++) {
+			rtnVal.append("<DATA>");
+			rtnVal.append("<COLUMN>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("APRTEMPLETNAME").item(k).getTextContent())) + "</COLUMN>");
+			rtnVal.append("<COLUMN>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("APRLINESN").item(k).getTextContent())) + "</COLUMN>");
+			rtnVal.append("</DATA>");
+		}
+		
+        rtnVal.append("</APRTEMP>");
+        
+		return rtnVal.toString();
+	}
+
+	@Override
+	public String getLineTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang) throws Exception {
+		//TODO
+		StringBuffer resultXML = new StringBuffer();
+		String listString = "";
+		
+		listString = getListHeader("100", companyID, lang);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		if (aprSN.trim().equals("")) {
+			aprSN = "0";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMID", formID);
+		map.put("v_USERID", userID);
+		map.put("v_APRLINESN", aprSN);
+		map.put("companyID", companyID);
+		
+		List<ApprGLineTempletVO> apprGLineTempletVOList = ezApprovalGDAO.getLineTempletDetailInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGLineTempletVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGLineTempletVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, lang)) + "</VALUE>");
+			if (lang.equals("1")) {
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "</VALUE>");
+			}
+			resultXML.append("</CELL>");
+			resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA1>");
+			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA2>");
+			resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("APRLINESN").item(k).getTextContent()) + "</DATA3>");
+			resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang) + "</DATA4>");
+			resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA5>");
+			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent()) + "</DATA6>");
+			resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "</DATA7>");
+			resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "</DATA8>");
+			resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("MEMBERDEPTNAME").item(k).getTextContent()) + "</DATA9>");
+			resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "</DATA10>");
+			resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("MEMBERDEPTNAME2").item(k).getTextContent()) + "</DATA11>");
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getFormInfoDetail(String formID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMID", formID);
+		map.put("companyID", companyID);
+		
+		List<ApprGFormVO> apprGFormVOList = ezApprovalGDAO.getFormInfoDetail(map);
+
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGFormVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGFormVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+        StringBuilder rtnXML = new StringBuilder();
+        String subSQL = "";
+        String rtnVal = "";
+        
+        strSQL.append("DELETE FROM TBRECEIPTPOINTINFO WHERE DocID = '" + docID.trim() + "';\n");
+        
+        String docList = getFormRecvAprDB(formID.trim(), userID.trim(), "1", companyID);
+        Document docXML = commonUtil.convertStringToDocument(docList);
+        Document deptXML = null;
+
+        int dlength = docXML.getElementsByTagName("ROW").getLength();
+        String extYN = "";
+        
+        rtnXML.append("<ROWS>");
+        
+        for (int k = 0; k < dlength; k++) {
+        	subSQL = ezOrganService.getPropertyList(docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim(), "displayName;extensionAttribute2", lang);
+        	
+        	deptXML = commonUtil.convertStringToDocument(subSQL);
+        	
+        	if (deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().toLowerCase().equals(companyID.toLowerCase())) {
+        		extYN = "N";
+        	} else {
+        		extYN = "Y";
+        	}
+        	
+        	strSQL.append("INSERT INTO TBRECEIPTPOINTINFO (DocID, ReceiptPointID, ");
+            strSQL.append("ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ");
+            strSQL.append("ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ");
+            strSQL.append("ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN) VALUES ('" + docID.trim());
+			strSQL.append("', '" + docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim());
+			strSQL.append("', N'" + makeRightField(deptXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent()));
+            strSQL.append("', N'" + makeRightField(deptXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent()));
+			strSQL.append("', '" + extYN + "', 'N', '1', 'N', '" + deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+            strSQL.append("', '', '', '', NULL, '', '', '" + docXML.getElementsByTagName("DEPTSN").item(k).getTextContent().trim() + "');\n");
+
+            rtnXML.append("<ROW><NAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + commonUtil.getMultiData(lang)).item(0).getTextContent()));
+            rtnXML.append("</NAME><DEPTID>" + docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim());
+            rtnXML.append("</DEPTID><DEPTNAME>" + docID + "</DEPTNAME><EXTRECEPTYN>" + extYN);
+			rtnXML.append("</EXTRECEPTYN><PROCESSYN>N</PROCESSYN><CANEDITYN>N</CANEDITYN><EMAIL>");
+            rtnXML.append(deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "</EMAIL>");
+            rtnXML.append("<DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + commonUtil.getMultiData(lang)).item(0).getTextContent()) + "</DISPLAYNAME>");
+            rtnXML.append("<JOBTITLE></JOBTITLE><JOBTITLE2></JOBTITLE2></ROW>");
+        }
+        if (rtnXML.toString().trim().equals("<ROWS>") && !userID.trim().equals("")) {
+        	String isUse = getCode2Name("A44", "002", companyID, lang);
+        	
+        	if (isUse.equals("1")) {
+        		docList = getFormRecvAprDB(formID, userID, "2", companyID);
+        		docXML = commonUtil.convertStringToDocument(docList);
+        		dlength = docXML.getElementsByTagName("ROW").getLength();
+        		
+        		for (int p = 0; p < dlength; p++) {
+        			strSQL.append("INSERT INTO TBRECEIPTPOINTINFO (DocID, ReceiptPointID, ");
+                    strSQL.append("ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ");
+                    strSQL.append("ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ");
+                    strSQL.append("ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN) VALUES ('" + docID);
+					strSQL.append("', '" + docXML.getElementsByTagName("RECEIPTPOINTID").item(p).getTextContent());
+					strSQL.append("', N'" + makeRightField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(p).getTextContent()));
+                    strSQL.append("', N'" + makeRightField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(p).getTextContent()));
+					strSQL.append("', '" + makeRightField(docXML.getElementsByTagName("EXTRECEPTYN").item(p).getTextContent()));
+					strSQL.append("', 'N', '" + makeRightField(docXML.getElementsByTagName("PROCESSSN").item(p).getTextContent()));
+					strSQL.append("', '" + makeRightField(docXML.getElementsByTagName("CANEDITYN").item(p).getTextContent()));
+					strSQL.append("', '" + makeRightField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(p).getTextContent()));
+					strSQL.append("', '" + makeRightField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(p).getTextContent()));
+					strSQL.append("', N'" + makeRightField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(p).getTextContent()));
+                    strSQL.append("', N'" + makeRightField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(p).getTextContent()));
+					strSQL.append("', NULL, N'" + makeRightField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent()));
+                    strSQL.append("', N'" + makeRightField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent()));
+                    strSQL.append("', '" + makeRightField(docXML.getElementsByTagName("DEPTMEMBERSN").item(p).getTextContent()) + "');\n");
+
+                    rtnXML.append("<ROW><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("RECEIPTPOINTNAME" + commonUtil.getMultiData(lang)).item(p).getTextContent()));
+                    rtnXML.append("</NAME><DEPTID>" + docXML.getElementsByTagName("RECEIPTPOINTID").item(p).getTextContent().trim());
+                    rtnXML.append("</DEPTID><DEPTNAME>" + docID + "</DEPTNAME><EXTRECEPTYN>" + docXML.getElementsByTagName("EXTRECEPTYN").item(p).getTextContent().trim());
+					rtnXML.append("</EXTRECEPTYN><PROCESSYN>N</PROCESSYN><CANEDITYN>N</CANEDITYN><EMAIL>");
+					rtnXML.append(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(p).getTextContent().trim() + "</EMAIL>");
+//                    rtnXML.append("</DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + commonUtil.getMultiData(lang)).item(0).getTextContent()) + "</DISPLAYNAME><JOBTITLE>");
+                    rtnXML.append("</DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE>");
+                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "</JOBTITLE><JOBTITLE2>");
+                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "</JOBTITLE2></ROW>");
+        		}
+        	}
+        }
+        rtnXML.append("</ROWS>");
+        
+        try {
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	map.put("sqlString", strSQL.toString());
+        	map.put("companyID", companyID);
+        	
+        	ezApprovalGDAO.transactionSQL(map);
+        	
+        	rtnVal = rtnXML.toString();;
+        } catch (Exception e) {
+        	rtnVal = "<ROWS/>";
+        }
+        
+		return rtnVal;
+	}
+
+	@Override
+	public String createNewDoc(String formID, String companyID) throws Exception {
+		String tmpDocID = getNewID(companyID);
+		String returnVal = "";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", tmpDocID.trim());
+		map.put("v_FORMID", formID);
+		map.put("v_COMPANYID", companyID);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGDAO.createNewDoc(map);
+			returnVal = tmpDocID.trim();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			returnVal = "";
+		}
+		
+		return returnVal;
+	}
+
+	public String getNewID(String companyID) throws Exception{
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		
+		rtnVal = ezApprovalGDAO.aprGetNewID(map);
+		
+		int strLen = 20 - rtnVal.length();
+		
+		for (int k = 0; k < strLen; k++) {
+			rtnVal = "0" + rtnVal;
+		}
+		
+		return rtnVal;
+	}
+
+	public String getFormRecvAprDB(String formID, String userID, String flag, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMID", formID);
+		map.put("v_USERID", userID);
+		map.put("v_FLAG", flag);
+		map.put("companyID", companyID);
+		
+		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.getFormRecvAprDB(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGReceiptVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGReceiptVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	public String deleteReceiptInfo(String strDocID, String companyID) {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_DOCID", strDocID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGDAO.deleteReceiptInfo(map);
+			
+			return "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
+		}
 	}
 
 	public int getCountChildFormCont(String id, String deptID, String companyID) throws Exception{

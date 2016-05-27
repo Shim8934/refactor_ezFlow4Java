@@ -9,23 +9,27 @@
         retvalue[3] = "";
 
         var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-
-
-        xmlhttp.open("Post", "../ezaprline/aspx/AprLineRequest.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+        var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/aprLineRequest.do",
+    		data : {
+    				docID    : pDocID, 
+    				userID 	 : pUserID,
+    				formID   : pFormID
+    				},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
         if (NodeList.length > 0) {
-            var Resultxml = APRLINEXMLParsing(xmlhttp.responseXML);
-            xmlhttp.open("Post", "../ezaprline/aspx/aprlinesave.aspx", false);
+            var Resultxml = APRLINEXMLParsing(result);
+            xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
             xmlhttp.send(Resultxml);
 
             var ret = SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
@@ -168,15 +172,21 @@ function getGyulJeDate() {
 
 
 function getFormRecv() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
+	var result = "";
 
-    xmlhttp.open("Post", "../FormContainer/aspx/getFormRecv.aspx", false);
-    xmlhttp.send(xmlpara);
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getFormRecv.do",
+		data : {
+				docID    : pDocID, 
+				formID   : pFormID
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    setRecevInfo(xmlhttp.responseText);
+    setRecevInfo(result);
 }

@@ -60,47 +60,40 @@ function lvAPRTEMPLIST_onSel_Click() {
 //#############################################################################################################################################즐겨찾기 리스트 세부리스트 로드
 var xmlHTTPLineTempletInfo;
 function GetAprLineTempletInfo(p_AprLineTempletID) {
-
-    var xmlpara = createXmlDom();
-    xmlHTTPLineTempletInfo = createXMLHttpRequest();
-
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "pAprLineSN", p_AprLineTempletID);
-
-    xmlHTTPLineTempletInfo = createXMLHttpRequest();
-    xmlHTTPLineTempletInfo.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AprLineTempletListInfo.aspx", true);
-    xmlHTTPLineTempletInfo.onreadystatechange = event_GetAprLineTempletInfo;
-    xmlHTTPLineTempletInfo.send(xmlpara);
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezApprovalG/aprLineTempletListInfo.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprLineSN: p_AprLineTempletID
+				},
+		success: function(text){
+			event_GetAprLineTempletInfo(text);
+		}        			
+	});
 }
-function event_GetAprLineTempletInfo()
+function event_GetAprLineTempletInfo(text)
 {
-    if (xmlHTTPLineTempletInfo != null && xmlHTTPLineTempletInfo.readyState == 4) 
-    {
-        if (xmlHTTPLineTempletInfo.statusText == "OK") 
-        {
-            try
-            {
-                //Resultxml = loadXMLString(xmlHTTPLineTempletInfo.responseXML);
-                if (document.getElementById("APRTEMP").innerHTML != "")
-                    document.getElementById("APRTEMP").innerHTML = "";
-                var pAPRTEMP = new ListView();     
-                pAPRTEMP.SetID("lvAPRTEMP");
-                pAPRTEMP.SetMulSelectable(false);   
-                pAPRTEMP.SetHeightFree(true);
-                pAPRTEMP.SetSelectFlag(false);
-                pAPRTEMP.DataSource(loadXMLString(xmlHTTPLineTempletInfo.responseText));
-                pAPRTEMP.DataBind("APRTEMP");
-                xmlHTTPLineTempletInfo = null;
-            }
-            catch (ErrMsg) {
-                alert(" GetAprLineTempletInfo : " + ErrMsg.description);
-            }
-        }
-    }
+	try
+	{
+	    //Resultxml = loadXMLString(xmlHTTPLineTempletInfo.responseXML);
+	    if (document.getElementById("APRTEMP").innerHTML != "")
+	        document.getElementById("APRTEMP").innerHTML = "";
+	    var pAPRTEMP = new ListView();     
+	    pAPRTEMP.SetID("lvAPRTEMP");
+	    pAPRTEMP.SetMulSelectable(false);   
+	    pAPRTEMP.SetHeightFree(true);
+	    pAPRTEMP.SetSelectFlag(false);
+	    pAPRTEMP.DataSource(loadXMLString(text));
+	    pAPRTEMP.DataBind("APRTEMP");
+	    xmlHTTPLineTempletInfo = null;
+	}
+	catch (ErrMsg) {
+	    alert(" GetAprLineTempletInfo : " + ErrMsg.description);
+	}
 }
 //#############################################################################################################################################즐겨찾기 관련 소스
 //#############################################################################################################################################즐겨찾기 저장
@@ -114,7 +107,7 @@ function btn_SaveAprLineTemplet_onclick()
 	
 	if(ListViewLen.length != "0")
 	{
-	    var windowName = "/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/AprLineTempletName_Cross.aspx";
+	    var windowName = "/ezApprovalG/aprLineTempletName.do";
 	    var dialogValue = new Array();
 	    dialogValue[0] = pUserID;
 	    dialogValue[1] = pFormID;

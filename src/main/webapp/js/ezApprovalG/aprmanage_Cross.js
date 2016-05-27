@@ -1374,7 +1374,7 @@ function getAprDocAproveInfo(tr) {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction, type) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -1411,7 +1411,7 @@ function OpenAlertUI_Complete() {
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;

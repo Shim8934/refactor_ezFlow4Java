@@ -185,7 +185,7 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAttachAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;

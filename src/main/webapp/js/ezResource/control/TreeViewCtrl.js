@@ -14,7 +14,7 @@ function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName)
 
 		xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		xmlHTTP.send(xmlpara);
-		//alert("1::"+xmlHTTP.responseText);
+//alert("1::"+xmlHTTP.responseText);
 		xmlTree = loadXMLString(xmlHTTP.responseText);
 		//alert("2::"+xmlTree.xml);
 	    //alert(xmlTree.childNodes.length);

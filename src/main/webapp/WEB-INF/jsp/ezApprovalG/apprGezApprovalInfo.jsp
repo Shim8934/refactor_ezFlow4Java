@@ -183,7 +183,6 @@
             if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
                 document.getElementById("deptaddbtn").style.display = "none";
             }
-alert(100);
             CheckGubunInit();
 
             if (pReDraftFlag == "DRAFT") {
@@ -230,7 +229,6 @@ alert(100);
                     RetValue = window.dialogArguments;
                 }
             }
-            
             pDocID = RetValue[0];        //문서ID
             pFormID = RetValue[1];        //FormID
             pSignCount = RetValue[2];        //사인칸 수

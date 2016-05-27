@@ -128,7 +128,6 @@ function OnSelChange_onclick() {
 }
 //#############################################################################################################################################결재선 추가 함수 APRLINEATTENDADDFunction()
 function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
-
     var pAPRLINE = new ListView();     
     pAPRLINE.LoadFromID("lvAPRLINE");
     
@@ -165,7 +164,7 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
 		if( p_PrevRow != null)
 		{
 			var p_PrevAprStat = p_PrevRow[5].innerText;
-			p_PrevAprStat = ConvertAprLineState(p_PrevAprStat , "Code");			
+			p_PrevAprStat = ConvertAprLineState(p_PrevAprStat , "code");			
 		}
 	}
 	if(p_PrevAprStat == "003" && pReDraftFlag == "DRAFT")   
@@ -179,7 +178,7 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
 		{
 			AprLineChangeType();
 			AprLineAddUser(Mode,pCurSelRow , pCurSelectedRow);
-			pReDraftAprLineChangeFlag = true; 
+			pReDraftAprLineChangeFlag = true;
 		}else{
 			AprLineAddUser(Mode,pCurSelRow , pCurSelectedRow);
 		}	
@@ -598,21 +597,25 @@ function AprLineChangeType() {
 }
 //############################################################################################################################################# 부서에 사용자가 존재 여부 확인
 function isgetUser(DeptID) {	
-    var rtnVal = true;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;telephonenumber;extensionattribute1");
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "Department");
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+				deptID   : DeptID, 
+				cell 	 : "displayName;description;title;telephoneNumber;extensionAttribute1",
+				prop     : "department",
+				type 	 : "user"
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (getXmlString(xmlhttp.responseXML) == "") rtnVal = false;
-    var nodes = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+    if (getXmlString(result) == "") rtnVal = false;
+    var nodes = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (rtnVal) {
         nodeCnt = nodes.length;
 

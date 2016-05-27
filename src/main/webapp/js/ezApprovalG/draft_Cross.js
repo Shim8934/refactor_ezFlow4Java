@@ -329,11 +329,10 @@ function setRecevInfo(ret) {
     var recipflag = true;
     var mailList = "";
     var mailcnt = 0;
-
     var xmldom = createXmlDom();
-
     xmldom.async = false;
     xmldom = loadXMLString(ret);
+
     if (getXmlString(xmldom) == "") {
         var field = message.GetListItem(fields, "hrecipients");
         if (field) {
@@ -385,7 +384,6 @@ function setRecevInfo(ret) {
     btnReceivLineEnable = true;
 
     var rows = SelectNodes(xmldom, "ROWS/ROW");
-
     var field = message.GetListItem(fields, "hrecipients");
     if (field) {
         field.textContent = "";
@@ -956,8 +954,8 @@ function openFormUI_Complete(ret) {
             AppendFileAttach = "";
             AppenAprDocAttachList = "";
             window_onbeforeunload();
-            pFormID = ""
-            pDocID = ""
+            pFormID = "";
+            pDocID = "";
             pDraftFlag = "DRAFT";
 
             pSummery = "";
@@ -985,15 +983,15 @@ function openFormUI_Complete(ret) {
         if (pFormHref != "cancel") {
             pReadPC = false;
 
-            pFormID = ""
-            pDocID = ""
+            pFormID = "";
+            pDocID = "";
             SetBtnStateTrue();
             lstAttachLink.innerHTML = "";
             AppendFileAttach = "";
             AppenAprDocAttachList = "";
             window_onbeforeunload();
-            pFormID = ""
-            pDocID = ""
+            pFormID = "";
+            pDocID = "";
             pDraftFlag = "DRAFT";
             pSummery = "";
             pSpecialRecordCode = "";
@@ -1023,7 +1021,7 @@ function Form_check() {
     try {
         form_check_ui_cross_dialogArguments[0] = "";
         form_check_ui_cross_dialogArguments[1] = Form_check_Complete;
-        DivPopUpShow(330, 205, "/myoffice/ezApprovalG/DraftUI/Form_check_ui_Cross.aspx");
+        DivPopUpShow(330, 205, "/ezApprovalG/formCheckUI.do");
     } catch (e) {
         alert("openFormUI()" + e.description);
     }
@@ -1067,7 +1065,7 @@ function SetBtnStateTrue() {
         setMenuBar("btnFileAttach", true);
         setMenuBar("btnAprDocAttach", true);
         setMenuBar("btnOpinion", true);
-        btnClose.style.diplay = ""
+        btnClose.style.diplay = "";
         setMenuBar("btnPrint", true);
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
@@ -1087,24 +1085,25 @@ function SetBtnStateTrue() {
 }
 function createNewDoc() {
     try {
-        var NewDocID;
-        var objRoot;
-        var objNode;
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
-        createNodeAndInsertText(xmlpara, objNode, "xdocid", "");
-
-        xmlhttp.open("POST", "../aspx/createnewdoc.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        if (xmlhttp.responseText == "False") {
+    	var result = "";
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/createNewDoc.do",
+    		data : {
+    			formID : pFormID,
+    			xdocID : ""
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
+        if (result == "False") {
             var pAlertContent = strLang131 + "<br> " + strLang132;
             OpenAlertUI(pAlertContent);
         } else {
-            return xmlhttp.responseText;
+            return result;
         }
     } catch (e) {
         alert("createNewDoc()" + e.description);
@@ -1112,20 +1111,20 @@ function createNewDoc() {
 }
 function getDraftUserInfo() {
     try {
-        var objNode, objRoot;
-
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "CN", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "DisplayName;mail;Description;Company;facsimileTelephoneNumber;TelephoneNumber;streetaddress;postalcode");
-        createNodeAndInsertText(xmlpara, objNode, "CATE", "user");
-
-        xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        xmluserInfo = xmlhttp.responseXML;
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezOrgan/getADInfos.do",
+    		data : {
+    			cn : pUserID,
+    			prop : "displayName;mail;description;company;facsimileTelephoneNumber;telephoneNumber;streetaddress;postalcode",
+    			cate  : "user"
+    		},
+    		success: function(xml){
+    			xmluserInfo = xml;
+    		}        			
+    	});
     } catch (e) {
         alert("getDraftUserInfo()" + e.description);
     }
@@ -1141,7 +1140,6 @@ function SetAutoPropertyValue() {
         var pSusinNextSN;
         var objNodes;
         var CurrentDate;
-
         var tmpdocNum = message.DocumentBodyGetAttribute("orgdocnum");
 
         if (!tmpdocNum) {
@@ -1156,7 +1154,6 @@ function SetAutoPropertyValue() {
 
         objNodes = xmluserInfo.documentElement;
 
-        
         var FullDate = getGyulJeFullDate();
         CurrentDate = getGyulJeDate();
         var SendName = getDeptSendName(arr_userinfo[4]);
@@ -1165,8 +1162,7 @@ function SetAutoPropertyValue() {
         hapyuiCount = 0;
         SignCount = 0;
         gamsaCount = 0;
-
-        for (i = 0 ; i < fields.length ; i++) {
+        for (var i = 0 ; i < fields.length ; i++) {
             var field = fields[i];
 
             if (!fields) return;
@@ -1325,7 +1321,6 @@ function SetAutoPropertyValue() {
             if (field.id.substr(0, 7) == "gongram") {
                 gongramCount = gongramCount + 1;
             }
-            
             if (pDraftFlag == "SUSIN" || pSusinSN != "0") {
                 var pSignInfoSusin = pSusinSN + "jikwe";
 
@@ -1369,7 +1364,6 @@ function SetAutoPropertyValue() {
 
         fieldname = pSusinNextSN + "sign1";
         field = message.GetListItem(fields, fieldname);
-
         if (field) {
             pSuSinFlag = "Y";
 
@@ -1385,7 +1379,6 @@ function SetAutoPropertyValue() {
             }
         }
         RtnVal = message.GetListItem(fields, "refer");
-
         if (RtnVal != null) {
             pChamJoFlag = "Y";
         } else {
@@ -1946,7 +1939,7 @@ function setInitLoadDocCellInfo() {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -1971,7 +1964,7 @@ function OpenAlertUI_Complete() {
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;

@@ -5,7 +5,7 @@
         var strQuery = "<DATA><DEPTID>" + targetDeptID + "</DEPTID><TOPID>" + TopDeptID + "</TOPID><PROP>" + tProperty + "</PROP></DATA>";
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(strQuery);
-
+        
         var xmlDom = createXmlDom();
         xmlDom = loadXMLString(xmlHTTP.responseText);
 

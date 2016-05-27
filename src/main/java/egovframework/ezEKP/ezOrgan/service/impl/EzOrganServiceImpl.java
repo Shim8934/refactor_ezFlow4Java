@@ -777,7 +777,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return strXML;
 	}
-	
-	
+
+	@Override
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
+		//TODO LDAP 으로 되어있어서 보류
+		return null;
+	}
 
 }

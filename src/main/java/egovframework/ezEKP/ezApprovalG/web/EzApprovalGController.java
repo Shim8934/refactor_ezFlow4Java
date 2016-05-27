@@ -136,7 +136,7 @@ public class EzApprovalGController {
 	/**
 	 * 전자결재G 서브타이틀 실행 Method
 	 */
-	private void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
+	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
 		String propList = "extensionAttribute4;department;description;title;title2;description2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
 		String myDept = "";
@@ -536,7 +536,7 @@ public class EzApprovalGController {
 	/**
 	 * 전자결재G 얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAPRALERT.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAlert.do")
 	public String ezAPRALERT() throws Exception{
 		return "ezApprovalG/apprGezAPRALERT";
 	}
@@ -571,7 +571,7 @@ public class EzApprovalGController {
 			}
 		}
 		
-		String dirPath = "/upload_ApprovalG" + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime() + commonUtil.separator;
+		String dirPath = "/upload_ApprovalG" + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
@@ -761,5 +761,97 @@ public class EzApprovalGController {
 		String headerXML = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t379", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
 		
 		return headerXML;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/formCheckUI.do")
+	public String formCheckUI(){
+		return "ezApprovalG/apprGFormCheckUI";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinion.do")
+	public String ezAprOpinion(){
+		return "ezApprovalG/apprGezAprOpinion";
+	}
+
+	@RequestMapping(value = "/ezApprovalG/aprLineSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprLineSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String ret) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = ezApprovalGService.updateLineInfo(ret, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprDeptSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String ret2) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = ezApprovalGService.updateReceiptInfo(ret2, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
+	public String aprLineTempletName(){
+		return "ezApprovalG/apprGaprLineTempletName";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = request.getParameter("userID");
+		String formID = request.getParameter("formID");
+		String result = ezApprovalGService.getLineTempletInfo(formID, userID, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletListInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprLineTempletListInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String formID = request.getParameter("formID");
+		String aprSN = request.getParameter("aprLineSN");
+		String result = ezApprovalGService.getLineTempletDetailInfo(formID, userID, aprSN, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFormDetail.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormDetail(HttpServletRequest request) throws Exception{
+		String formID = request.getParameter("formID");
+		String companyID = request.getParameter("companyID");
+		String resultXML = ezApprovalGService.getFormInfoDetail(formID, companyID);
+		
+		return resultXML;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFormRecv.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String getFormRecv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String formID = request.getParameter("formID");
+		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang());
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/createNewDoc.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String createNewDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String formID = request.getParameter("formID");
+		String result = ezApprovalGService.createNewDoc(formID, userInfo.getCompanyID());
+		
+		return result;
 	}
 }

@@ -12,6 +12,7 @@
 	<typeAlias  alias="ApprGAttachInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO"/>
 	<typeAlias  alias="ApprGListHeaderVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO"/>
 	<typeAlias  alias="ApprGLineTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO"/>
+	<typeAlias  alias="ApprGAdminReceiveVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO"/>
 	
 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -69,6 +70,26 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLINETEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getReceiptGroupInfo" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIPTGROUPINFO_SUB(#v_MAINID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getLineTempletInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLINETEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getLineTempletDetailInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLINETEMPLETDETAILINFO(#v_FORMID#, #v_USERID#, #v_APRLINESN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMINFODETAIL(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMRECVAPR(#v_FORMID#, #v_USERID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -89,6 +110,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLEFTDOCCOUNT(#v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.aprGetNewID" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.APRGETNEWID(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
@@ -101,8 +126,20 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_SETUSERFORMINFO(#v_FORMID#, #v_USERID#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.createNewDoc" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_CREATENEWDOC(#v_DOCID#, #v_FORMID#, #v_COMPANYID#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.delUserFormInfo" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DELUSERFORMINFO(#v_FORMID#, #v_USERID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.deleteReceiptInfo" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIPTINFO(#v_DOCID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.TRANSACTIONSQL(#sqlString#)}
 	</procedure>
 	
 	<select id="EzApprovalG.getUseContInfo1" parameterClass="Map" resultClass="ApprGLeftVO">

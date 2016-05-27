@@ -199,19 +199,37 @@ public class EzCommonController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
-
+        
+        String result = "";
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
         } else {
         	if (strHTML.indexOf("<BODY") > -1) {
         		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6, strHTML.indexOf("</BODY>")));
+        		result = "<BODYDATA>" + strHTML + "</BODYDATA>";
         	} else {
         		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
+        		
+        		String attribute = "orgdocnum";
+				StringBuffer sb = new StringBuffer();
+				
+				sb.append("<NODE>");
+				sb.append("<NODENAME>" + attribute + "</NODENAME>");
+				sb.append("<NODEVALUE>" + strHTML.substring(strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1, strHTML.indexOf("\"", strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1)) + "</NODEVALUE>");
+				
+				attribute = "formid";
+				
+				sb.append("<NODENAME>" + attribute + "</NODENAME>");
+				sb.append("<NODEVALUE>" + strHTML.substring(strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1, strHTML.indexOf("\"", strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1)) + "</NODEVALUE>");
+				sb.append("</NODE>");
+				
+        		result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
         	}
         }
         
-		return "<BODYDATA>" + strHTML + "</BODYDATA>";
+		return result;
 	}
 	
 	/**

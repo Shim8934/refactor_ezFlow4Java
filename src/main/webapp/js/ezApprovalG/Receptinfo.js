@@ -1567,7 +1567,7 @@ var xmlhttp2;
 //############################################################################################################################################# 외부 수신처 그룹 로딩
 function liniReceptOuter() {
     xmlhttp2 = createXMLHttpRequest();
-    xmlhttp2.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrganTreeInfo.aspx", true);
+    xmlhttp2.open("POST", "/ezApprovalG/getOrganTreeInfo.do", true);
     xmlhttp2.onreadystatechange = event_GetReceptOuterTempletList;
     xmlhttp2.send();
 }

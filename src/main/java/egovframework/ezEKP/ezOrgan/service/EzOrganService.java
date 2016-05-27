@@ -26,6 +26,8 @@ public interface EzOrganService {
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception;	
 	
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;

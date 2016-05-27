@@ -36,6 +36,10 @@ public class ApprGReceiptVO {
 	private String receiptMemberName2;
 	/** */
 	private String routeYN;
+	/** */
+	private String deptID;
+	/** */
+	private String deptSN;
 	
 	public String getDocid() {
 		return docid;
@@ -139,6 +143,16 @@ public class ApprGReceiptVO {
 	public void setRouteYN(String routeYN) {
 		this.routeYN = routeYN;
 	}
-	
-	
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
+	public String getDeptSN() {
+		return deptSN;
+	}
+	public void setDeptSN(String deptSN) {
+		this.deptSN = deptSN;
+	}
 }
