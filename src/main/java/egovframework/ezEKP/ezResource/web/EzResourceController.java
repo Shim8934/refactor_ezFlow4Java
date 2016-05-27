@@ -965,7 +965,6 @@ System.out.println("curMonth:"+curMonth);
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		
-		
 		return "/ezResource/resScheduleMain";
 	}
 	
@@ -990,7 +989,24 @@ System.out.println("curMonth:"+curMonth);
 	 * 자원관리 자원 양식 등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleManageForm.do")
-	public String scheduleManageForm(Model model) throws Exception {
+	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,HttpServletRequest req,Model model) throws Exception {
+		String resID = "";
+		String brdName = "";
+		
+		if (req.getParameter("resID") != null) {
+			resID = req.getParameter("resID");
+		}
+		if (req.getParameter("brdName") != null) {
+			brdName = req.getParameter("brdName");
+		}
+		
+		String companyID = userInfo.getCompanyID();
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone");
+		
+		model.addAttribute("resID", resID);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("brdName", brdName);
+		model.addAttribute("adminFg", adminFg);
 		return "/ezResource/resScheduleManageForm";
 	}
 	
@@ -1083,8 +1099,11 @@ System.out.println("curMonth:"+curMonth);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+
 			ResSelectFormIDVO selectFormID = ezResourceService.selectFormID(resID);
-			
+			String temp = commonUtil.getQueryResult(selectFormID);
+			Document docXML = commonUtil.convertStringToDocument(temp);
+
 			if (selectFormID == null) {
 				return "FALSE";
 			} else {
@@ -1105,5 +1124,43 @@ System.out.println("curMonth:"+curMonth);
 		model.addAttribute("userInfo",userInfo);
 		
 		return "/ezResource/resScheduleApprovList";
+	}
+	
+	/**
+	 * 자원관리 양식등록 저장 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/apropinion.do")
+	public String apropinion() throws Exception {
+		
+		return "/ezResource/resApropinion";
+	}
+	
+	/**
+	 * 자원관리 양식등록 실행  함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleSaveForm.do")
+	public void scheduleSaveForm(@RequestBody String xmlStr) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String brdNm = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String formText = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		ezResourceService.insertForm(resID, brdNm, formText);
+		
+	}
+	
+	/**
+	 * 자원관리 양식삭제 실행  함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleDelForm.do")
+	@ResponseBody
+	public String scheduleDelForm(@RequestBody String xmlStr) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String delCode = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
+			ezResourceService.delFormID(delCode);
+			return "OK";
+		} catch (Exception e) {
+			return "FALSE";
+		}
 	}
 }
