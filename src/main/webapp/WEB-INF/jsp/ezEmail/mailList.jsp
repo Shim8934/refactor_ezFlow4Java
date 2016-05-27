@@ -70,7 +70,8 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
 		    
-		    document.onselectstart = function () { return false; };
+		    // commented out to allow users to be able to select text in the preview : dhlee
+//		    document.onselectstart = function () { return false; };
 		    window.onresize = Window_resize;
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;

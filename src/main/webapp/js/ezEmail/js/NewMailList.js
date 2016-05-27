@@ -773,7 +773,9 @@ function MailListRefresh() {
             on_changeView(document.getElementById("select").value);
         }
     }
-    prevShow_Clear();
+    
+    // commented out to maintain the current preview content when the mail list is refreshed : dhlee
+//    prevShow_Clear();
 }
 function BasicViewHeaderChange(pGubun) {
     if (pGubun) {
