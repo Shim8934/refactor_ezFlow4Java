@@ -503,10 +503,10 @@ function receiveCheck_onClick() {
 function view_original() {
 
     if (navigator.appVersion.indexOf("MSIE 6") > -1) {
-        MM_openBrWindow('mail_readoriginal.aspx?url=' + encodeURIComponent(g_paramURL), 800, 660);
+        MM_openBrWindow('/ezEmail/mailReadOriginal.do?url=' + encodeURIComponent(g_paramURL), 800, 660);
     }
     else {
-        MM_openBrWindow('mail_readoriginal.aspx?url=' + encodeURIComponent(g_paramURL), 850, 650);
+        MM_openBrWindow('/ezEmail/mailReadOriginal.do?url=' + encodeURIComponent(g_paramURL), 850, 650);
     }
 }
 function MM_openBrWindow(url, w, h) {
@@ -516,7 +516,7 @@ function MM_openBrWindow(url, w, h) {
     var pLeft = (pwidth - w) / 2;
 
     var opwin = window.open(url, "oWin"
-      , "width=" + w + ",height=" + h + ",status = no,resizable=no, toolbar=no, menubar=no,location=no,top=" + pTop + ",left = " + pLeft);
+      , "width=" + w + ",height=" + h + ",status=no,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,top=" + pTop + ",left = " + pLeft);
 }
 
 

@@ -377,6 +377,56 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 메일 웹페이지로 보기 수행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailReadOriginal.do")
+	public String readMailOriginal(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		// get user credentials
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password = userInfo.get(1);
+
+		// retrieve the passed in parameters
+		String url = request.getParameter("url");
+		long uid = 0;
+		String folderPath = null;
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+			
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		Folder f = ia.getFolder(folderPath);
+
+		List<String> bodyInfoList = null;
+		
+		if (f != null) {
+			f.open(Folder.READ_ONLY);
+			Message message = null;
+			
+			if (f.isOpen() && f instanceof IMAPFolder){
+				message = ((IMAPFolder)f).getMessageByUID(uid);
+			}
+			
+			if (message != null) {
+				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+			}
+		}
+		
+		ia.close();
+		
+		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		
+		return "ezEmail/mailReadOriginal";
+	}
+	
+	/**
 	 * 메일 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttach.do")
