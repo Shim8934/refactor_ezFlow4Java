@@ -1084,7 +1084,9 @@ function callMsgDlg(szContentClass, Href) {
         var pURI;
         pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
         newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        newwin.focus();
+        if (newwin != null) {
+        	newwin.focus();
+        }
     }
     else {
         var newwin;
@@ -1098,7 +1100,10 @@ function callMsgDlg(szContentClass, Href) {
             else
                 newwin = window.open("mail_write_IE.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
         } */
-        newwin.focus();
+            
+        if (newwin != null) {            
+        	newwin.focus();
+        }
     }
 }
 var PcSaveArrayList = new Array();
