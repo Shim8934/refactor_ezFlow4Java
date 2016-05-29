@@ -22,13 +22,13 @@ function get_mail(flag) {
                 }
                 else {
                     window.close();
-                    opener.ReadMailOpenNewWin.focus();
+//                    opener.ReadMailOpenNewWin.focus();
                 }
             }
             else {
                 var Rtn = opener.PopUpNextMail();
                 if (Rtn == "NEXTEND") {
-                    alert(strLang184);
+                    alert(strLang185);
                 }
                 else if (Rtn == "NEXTMOVE") {
                     alert(strLang306);
@@ -36,7 +36,7 @@ function get_mail(flag) {
                 }
                 else {
                     window.close();
-                    opener.ReadMailOpenNewWin.focus();
+//                    opener.ReadMailOpenNewWin.focus();
                 }
             }
         }
