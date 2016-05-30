@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -82,6 +84,16 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	
 	public void updateReservedMail(Map<String, Object> map) throws Exception {
 		update("EzEmailDAO.updateReservedMail", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailReadVO> getMailReadList(Map<String, Object> map) throws Exception {
+		return (List<MailReadVO>)list("EzEmailDAO.getMailReadList");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailCancelVO> getMailCancelList(Map<String, Object> map) throws Exception {
+		return (List<MailCancelVO>)list("EzEmailDAO.getMailCancelList");
 	}
 	
 }

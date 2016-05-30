@@ -85,7 +85,7 @@
 	            xmlhttp_MailReceiverList = null;
 	            var strQuery = "<MESSAGEID>" + decodeURIComponent(_url) + "</MESSAGEID>";
 	            xmlhttp_MailReceiverList = createXMLHttpRequest();
-	            xmlhttp_MailReceiverList.open("POST", "/myoffice/ezEmail/remote/Mail_Get_ReceiveList.aspx", true);
+	            xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
 	            xmlhttp_MailReceiverList.onreadystatechange = event_xmlhttp_MailReceiverList_Complete;
 	            xmlhttp_MailReceiverList.send(strQuery);
 	        }

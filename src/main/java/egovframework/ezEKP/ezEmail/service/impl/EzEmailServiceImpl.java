@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 
@@ -173,6 +175,24 @@ public class EzEmailServiceImpl implements EzEmailService {
 		map.put("v_SUBJECT", pSubject);
 		map.put("v_SENDDATE", pSendDate);
 		ezEmailDAO.updateReservedMail(map);
+	}
+
+	@Override
+	public List<MailReadVO> getMailReadList(String pUserId, String pUserId2, String pMessageId, String pMessageId2)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserId);
+		map.put("v_PUSERID2", pUserId2);
+		map.put("v_PMESSAGEID", pMessageId);
+		map.put("v_PMESSAGEID2", pMessageId2);
+		return ezEmailDAO.getMailReadList(map);
+	}
+
+	@Override
+	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMESSAGE", pMessage);
+		return ezEmailDAO.getMailCancelList(map);
 	}
 	
 }

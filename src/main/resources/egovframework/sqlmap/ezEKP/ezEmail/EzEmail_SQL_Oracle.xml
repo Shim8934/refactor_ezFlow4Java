@@ -7,6 +7,8 @@
 	<typeAlias  alias="MailDeleteVO" type="egovframework.ezEKP.ezEmail.vo.MailDeleteVO"/>
 	<typeAlias  alias="MailReservationVO" type="egovframework.ezEKP.ezEmail.vo.MailReservationVO"/>
 	<typeAlias  alias="MailColorVO" type="egovframework.ezEKP.ezEmail.vo.MailColorVO"/>
+	<typeAlias  alias="MailReadVO" type="egovframework.ezEKP.ezEmail.vo.MailReadVO"/>
+	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -68,6 +70,17 @@
 		<result property="outmailColor" column="OUTMAILCOLOR" columnIndex="3"/>
 	</resultMap>
 	
+	<resultMap id="mailRead" class="MailReadVO">
+		<result property="readDate" column="READDATE" columnIndex="1"/>
+		<result property="readerEmail" column="READEREMAIL" columnIndex="2"/>
+		<result property="readerName" column="READERNAME" columnIndex="3"/>
+	</resultMap>
+	
+	<resultMap id="mailCancel" class="MailCancelVO">
+		<result property="readerEmail" column="READEREMAIL" columnIndex="1"/>
+		<result property="status" column="STATUS" columnIndex="2"/>
+	</resultMap>
+	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
 		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -126,6 +139,14 @@
 	
 	<procedure id="EzEmailDAO.updateReservedMail" parameterClass="Map">
 		{CALL EZEMAIL.EZSP_UPDATERESERVERDMAIL(#v_MESSAGEID#, #v_SUBJECT#, #v_SENDDATE#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReadList" parameterClass="Map" resultMap="mailRead">
+		{CALL EZEMAIL.EZSP_GETMAILREADLIST(#v_PUSERID#, #v_PUSERID2#, #v_PMESSAGEID#, #v_PMESSAGEID2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailCancelList" parameterClass="Map" resultMap="mailCancel">
+		{CALL EZEMAIL.EZSP_GETMAILCANCELLIST(#v_PMESSAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
