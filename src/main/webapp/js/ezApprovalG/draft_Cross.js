@@ -1804,15 +1804,10 @@ function rtrim(parm_str) {
 //서버시간
 function getGyulJeDate() {
     try {
-        var objNode;
-        var xmlpara = createXmlDom();
         var xmlhttp = createXMLHttpRequest();
 
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-        xmlhttp.open("POST", "../aspx/GetDate.aspx", false);
-        xmlhttp.send(xmlpara);
+        xmlhttp.open("POST", "/ezApprovalG/getDate.do", false);
+        xmlhttp.send();
 
         return xmlhttp.responseText;
 
@@ -1822,17 +1817,11 @@ function getGyulJeDate() {
 }
 function getGyulJeFullDate() {
     try {
-        var objRoot;
-        var objNode;
 
-        var xmlpara = createXmlDom();
         var xmlhttp = createXMLHttpRequest();
 
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-        xmlhttp.open("POST", "../aspx/GetFullDate.aspx", false);
-        xmlhttp.send(xmlpara);
+        xmlhttp.open("POST", "/ezApprovalG/getFullDate.do", false);
+        xmlhttp.send();
 
         return xmlhttp.responseText;
 
@@ -2204,37 +2193,43 @@ function removeDocInfo() {
     xmlhttp.send(xmlpara);
 }
 function CheckMem(DeptID) {
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "displayName",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "DisplayName");
-    createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
-
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return getXmlString(xmlhttp.reponseXML);
+    return getXmlString(result);
 }
 function getDeptSymbol(DeptID, DeptName) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute6");
-    createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
-
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML.documentElement);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "extensionAttribute6",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(result.documentElement);
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
@@ -2245,20 +2240,24 @@ function getDeptSymbol(DeptID, DeptName) {
     }
 }
 function getDeptSendName(DeptID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute5");
-    createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
-
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return trim(SelectSingleNodeValue(xmlhttp.responseXML, "EXTENSIONATTRIBUTE5"));
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "extensionAttribute5",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    return trim(SelectSingleNodeValue(result, "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
     var strCmd, display_Value
@@ -2425,14 +2424,17 @@ function putSignXML(SignXML) {
     return retVal;
 }
 function UndoDoc() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-    xmlhttp.open("POST", "../aspx/UndoDoc.aspx", false);
-    xmlhttp.send(xmlpara);
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/undoDoc.do",
+		data : {
+			docID  : pDocID
+		},
+		success: function(xml){
+		}        			
+	});
 }
 function getSignDate() {
     var GyulJeDate;

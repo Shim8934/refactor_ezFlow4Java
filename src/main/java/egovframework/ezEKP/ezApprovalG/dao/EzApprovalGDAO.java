@@ -133,6 +133,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> addToAprLineDB(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.addToAprLineDB", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -185,6 +190,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int getLineTempletSN(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getLineTempletSN", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -203,6 +213,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
+	}
+
+	public void deleteLineTempletDetailInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteLineTempletDetailInfo", map);
 	}
 
 }

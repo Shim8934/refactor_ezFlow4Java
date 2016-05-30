@@ -90,6 +90,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMRECVAPR(#v_FORMID#, #v_USERID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.addToAprLineDB" parameterClass="Map" resultClass="ApprGAprLineVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_ADDTOAPRLINE(#v_FORMID#, #v_USERID#, #v_APRLINESN#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -122,6 +126,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONTAINER_CNTCHILD(#v_PID#, #v_PDEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getLineTempletSN" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLINETEMPLETSN(#v_FORMID#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.setUserFormInfo" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_SETUSERFORMINFO(#v_FORMID#, #v_USERID#)}
 	</procedure>
@@ -136,6 +144,10 @@
 	
 	<procedure id="EzApprovalG.deleteReceiptInfo" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIPTINFO(#v_DOCID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.deleteLineTempletDetailInfo" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DELETELINETEMPLETDETAILIF(#v_FORMID#, #v_USERID#, #v_APRLINESN#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">

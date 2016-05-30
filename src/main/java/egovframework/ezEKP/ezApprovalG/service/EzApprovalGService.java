@@ -71,6 +71,14 @@ public interface EzApprovalGService {
 	
 	public String createNewDoc(String formID, String companyID) throws Exception;
 	
+	public String deleteDocInfo(String docID, String mode, String companyID) throws Exception;
+	
+	public String updateLineTempletDetailInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	
+	public String deleteLineTempletDetailInfo(String formID, String userID, String aprLineSN, String companyID) throws Exception;
+	
+	public String addToAprLine(String userID, String formID, String aprSN, String companyID, String lang) throws Exception;
+	
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 

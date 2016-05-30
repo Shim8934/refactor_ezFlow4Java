@@ -854,4 +854,70 @@ public class EzApprovalGController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String getFullDate(){
+		String fullDate = EgovDateUtil.getTodayTime();
+		fullDate = fullDate.substring(0, 16).replace("-", "."); 
+		
+		return fullDate;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String getDate(){
+		String fullDate = EgovDateUtil.getTodayTime();
+		fullDate = fullDate.substring(0, 10).replace("-", ".");
+		
+		return fullDate;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/undoDoc.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String undoDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/createAprLineTemplet.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String createAprLineTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String aprLineXml) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
+		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang());
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/delAprLineTempletList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delAprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String formID = request.getParameter("formID");
+		String aprLineSN = request.getParameter("aprLineSN");
+		String result = ezApprovalGService.deleteLineTempletDetailInfo(formID, userID, aprLineSN, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/addToAprLine.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String addToAprLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String formID = request.getParameter("formID");
+		String aprSN = request.getParameter("aprSN");
+		String result = ezApprovalGService.addToAprLine(userID, formID, aprSN, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
 }

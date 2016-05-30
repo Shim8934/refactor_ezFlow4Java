@@ -165,7 +165,7 @@ function CreateNewAprLineTemplet(p_AprLineTempletName) {
         AprLineInfo.documentElement.appendChild(xmlRtn);
     }
 
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/CreateAprLineTemplet.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/createAprLineTemplet.do", false);
     xmlhttp.send(AprLineInfo);
 
     var dataNodes = GetChildNodes(xmlhttp.responseXML);
@@ -237,20 +237,23 @@ function btn_DelAprLineTemplet_onclick_Complete(Ans) {
 }
 //#############################################################################################################################################즐겨찾기 삭제
 function DelAprLineTempletList(p_SelAprLineTempletSN) {
-
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "pAprLineSN", p_SelAprLineTempletSN);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/DelAprLineTempletList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/delAprLineTempletList.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprLineSN: p_SelAprLineTempletSN
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(result);
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal != "TRUE") {
@@ -279,7 +282,7 @@ function btn_ModifyToAprLine_onclick() {
         return;
     }
     else {
-        var windowName = "/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/AprLineTempletName_Cross.aspx";
+        var windowName = "/ezApprovalG/aprLineTempletName.do";
         var dialogValue = new Array();
         dialogValue[0] = pUserID;
         dialogValue[1] = pFormID;
@@ -350,20 +353,24 @@ function btn_AddToAprLine_onclick()
 }
 //#############################################################################################################################################즐겨찾기 적용
 function AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/addToAprLine.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprSN	 : p_CheckAprLineTempletSN
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "p_AprLineTempletIndex", p_CheckAprLineTempletSN);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AddToAprLine.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    Resultxml = xmlhttp.responseXML;
+    Resultxml = result;
     if (document.getElementById("APRLINE").innerHTML != "")
         document.getElementById("APRLINE").innerHTML = "";
 
@@ -379,14 +386,9 @@ function AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN) {
     var pDraftWriterID;
     var pDraftDepteID;
 
-    if (CrossYN()) {
-        pDraftWriterID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[1].childNodes[9]);
-        pDraftDepteID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[1].childNodes[13]);
-    }
-    else {
-        pDraftWriterID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[4]);
-        pDraftDepteID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[6]);
-    }
+    pDraftWriterID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[4]);
+    pDraftDepteID = getNodeText(lastlineRows[lastlineRows.length - 1].childNodes[0].childNodes[6]);
+    
     if (pUserID == pDraftWriterID && pDraftDepteID == arr_userinfo[4]) {
         aprlinecount = 0;
         pAPRLINE.DataSource(Resultxml);

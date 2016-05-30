@@ -159,14 +159,11 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 function getGyulJeDate() {
     var GyulJeDate;
     var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
 
-    xmlhttp.open("POST", "../aspx/GetDate.aspx", false);
-    xmlhttp.send(xmlpara);
+    xmlhttp.open("POST", "/ezApprovalG/getDate.do", false);
+    xmlhttp.send();
     GyulJeDate = xmlhttp.responseText;
+    
     return GyulJeDate;
 }
 

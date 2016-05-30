@@ -559,15 +559,10 @@
 
     function getGyulJeDateDB() {
         try {
-            var objNode;
-            var xmlpara = createXmlDom();
             var xmlhttp = createXMLHttpRequest();
-
-            createNodeInsert(xmlpara, objNode, "PARAMETER");
-            createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/GetDateDB.aspx", false);
-            xmlhttp.send(xmlpara);
+ 
+            xmlhttp.open("POST", "/ezApprovalG/getDate.do", false);
+            xmlhttp.send();
 
             return xmlhttp.responseText;
         }

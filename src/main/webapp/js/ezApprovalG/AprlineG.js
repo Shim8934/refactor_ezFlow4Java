@@ -3056,22 +3056,18 @@ function CheckDraftUser(pFlag)
 function getGyulJeDate()
 {
     var GyulJeDate;
-	var xmlpara = createXmlDom();
-	var objNode ;
 	
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);      
-	
-	xmlhttp.open("POST","../aspx/GetDate.aspx",false);
-	xmlhttp.send(xmlpara);
+	xmlhttp.open("POST","/ezApprovalG/getDate.do",false);
+	xmlhttp.send();
 	GyulJeDate = xmlhttp.responseText;
+	
 	return GyulJeDate;
 }
 
 //결재상태변경
 function AprLineChangeType()
 {
-  try{
+//  try{
     var i;
     var pAPRLINE = new ListView();      //// ListView 선언
     pAPRLINE.LoadFromID("pAPRLINE");
@@ -3093,9 +3089,9 @@ function AprLineChangeType()
     pTmpAprLineStateName = strLangAprState2;
     SetAttribute(pTotalRows[i],"DATA12", pTmpAprLineState);//pTotalRows.item(i).cells(0).DATA12 = pTmpAprLineState;
     pTotalRows[i].cells[5].innerHTML = pTmpAprLineStateName;//pTotalRows.item(i).cells(5).innerText = pTmpAprLineStateName;
-  }catch(e){
-    alert("AprLineChangeType :: " + e.description);
-  }
+//  }catch(e){
+//    alert("AprLineChangeType :: " + e.description);
+//  }
 }
 
 // 결재선 결재상태를 반송 --> 진행  재기안 경우
@@ -3290,20 +3286,24 @@ function RefreshSN()
 
 function getDeptInfo_nodName(pDeptID,NodeName)
 {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var xmlRtn = createXmlDom(); 
+	var result = "";
 	
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "DATA");
-	createNodeAndInsertText(xmlpara, objNode, "CN", pDeptID);      
-	createNodeAndInsertText(xmlpara, objNode, "PROP", NodeName);
-	createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : pDeptID,
+			prop : NodeName,
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 	
-	xmlhttp.open("POST","/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx",false);
-	xmlhttp.send(xmlpara);
-	
-	var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var dataNodes = GetChildNodes(result);
 	var Rtnval = getNodeText(dataNodes[0]);
 				
 	return Rtnval;
