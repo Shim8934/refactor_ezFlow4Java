@@ -37,12 +37,12 @@
 		</script>
 	</head>
 	<body class = "cmhome_body">
-		<form name = "poll_res_ok" action = "poll_res_ok.do" method = "post">
+		<form name = "poll_res_ok" action = "/ezCommunity/pollResOk.do" method = "post">
 			<input type = "hidden" name = "code" value = "${code}" />
 			<h1 class = "type1_h1"><spring:message code = 'ezCommunity.t598' /></h1>
 			<div id = "mainmenu">
 				<ul>
-					<c:set var="t679" value="<spring:message code='ezCommunity.t679'/>" />
+					<c:set var="t679"><spring:message code='ezCommunity.t679'/></c:set>
 					<c:if test="${pollState == t679 }">
 						<c:choose>
 							<c:when test="${isSave == 0 }">
@@ -65,10 +65,10 @@
 			
 			<span id = "idSpan">${idSpanValue }</span>
 
-			<c:if test="${pollState == t679 }">
+			<c:if test="${pollState != t679 }">
 				<div class = "subtxt" style = "margin:20px 0 0 20px" ><spring:message code = 'ezCommunity.t683' /></div>
 			</c:if>
-			<c:if test="${pollState == t679 }">
+			<c:if test="${pollState == t679 && isSave == 1}">
 				<div class = "subtxt" style = "margin:20px 0 0 20px" ><spring:message code = 'ezCommunity.t684' /></div>
 			</c:if>
 			

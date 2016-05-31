@@ -404,6 +404,7 @@
 	        <form action="/ezCommunity/pollAddOk.do" method="post" name="poll_add" id="polladd">
 	            <input type="hidden" name="mode" value="write">
 	            <input type="hidden" name="code" value="<c:out value = '${code }' />">
+	            <input type="hidden" name="answerViewType" value="<c:out value = '${answerViewType }' />">
 	            <input type="hidden" name="startPollYear" id="startPollYear" value="">
 	            <input type="hidden" name="startPollMonth" id="startPollMonth" value="">
 	            <input type="hidden" name="startPollDay" id="startPollDay" value="">

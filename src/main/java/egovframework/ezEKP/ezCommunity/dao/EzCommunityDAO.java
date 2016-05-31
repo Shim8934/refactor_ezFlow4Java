@@ -526,4 +526,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public String pollResGet4(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.pollResGet4", map);
 	}
+
+	public void pollResOkSet(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollResOkSet", map);
+	}
 }

@@ -1946,16 +1946,23 @@ System.out.println("@");
 		return ezCommunityDAO.pollResGet4(map);
 	}
 
-	
+	@Override
+	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_POLLSELECT", pollSelect);
+		map.put("v_ANSWERETC", answerETC);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_ISSAVE", isSave);
+		map.put("v_ANSWERTYPE", answerType);
+		map.put("v_ANSWERCOUNT", answerCount);
+		
+		ezCommunityDAO.pollResOkSet(map);
+		
+	}
 
-	
-	
-	
-	
-	
-	
-	
-	
 	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {

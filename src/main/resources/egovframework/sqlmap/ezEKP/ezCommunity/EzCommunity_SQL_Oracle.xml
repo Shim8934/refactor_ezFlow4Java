@@ -211,7 +211,7 @@
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollResGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET2(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET2(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollResGet3"					parameterClass="String"		resultClass="CommunityCPollQuestionVO">
@@ -311,7 +311,7 @@
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET1(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET4(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
@@ -452,6 +452,10 @@
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL1(#v_QUESTIONID#, #v_ANSWERID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollResOkSet"					parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_OK_SET(#v_QUESTIONID#, #v_POLLSELECT#, #v_ANSWERETC#, #v_USERINFO_USERID#, #v_USERINFO_COMPANYID#, #v_ISSAVE#, #v_ANSWERTYPE#, #v_ANSWERCOUNT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">

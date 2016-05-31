@@ -2647,8 +2647,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		boolean disable = false;
 		String pollState = "", pollManager = "";
 		String code = request.getParameter("code");
-		//TODO 안쓰나
-		String codeName = request.getParameter("codeName");
 		String userLevel = request.getParameter("userLevel");
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
@@ -2778,7 +2776,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
 	public String pollAddOk (ModelMap model, HttpServletRequest request) {
-		String selRes = "", answerViewType = "", selRes1 = "", selRes2 = "";
+		String selRes = "", answerViewType = "", selRes1="0";
 		int sel = 0, answerCount = 0, selectedNo = 0;
 		StringBuilder sb = new StringBuilder();
 		
@@ -2788,14 +2786,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String endDate = request.getParameter("endPollYear") + "-" + request.getParameter("endPollMonth") + "-" + request.getParameter("endPollDay");
 		String subject = request.getParameter("pollSubject");
 		String selType = request.getParameter("selType");
+		String selRes2 = request.getParameter("selRes2");
 		
 		if (request.getParameter("selRes1") != null) {
 			selRes1 = request.getParameter("selRes1");
 		}
 		
-		if (request.getParameter("selRes2") != null) {
-			selRes2 = request.getParameter("selRes2");
-		}
 		
 		if (subject != null) {
 			if (selRes1.equals("0")) {
@@ -2971,8 +2967,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				
 				questionID = ezCommunityService.pollAddOkGoGet3(managerID);
 				
-				int[] selNo = new int [10];
-				String[] answerContent = new String [10];
+				int[] selNo = new int [100];
+				String[] answerContent = new String [100];
 				
 				switch (selectedNo) {
 					case "1":
@@ -3130,8 +3126,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		//get4(manager.pollreg)
-		
 		response.getWriter().write("<script language='javascript'>\n");
 		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 		response.getWriter().write("</script>");
@@ -3145,7 +3139,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String poll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		int isSave = 0;
+		int isSave = 0, responseCount = 0;
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
@@ -3160,7 +3154,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
 		
 		CommunityCPollManagerVO managerVO = ezCommunityService.pollResGet2(pollManagerID);
-		//pollreguser, pollsubject
 		CommunityCPollQuestionVO questionVO = ezCommunityService.pollResGet3(pollManagerID);
 		
 		StringBuilder sb = new StringBuilder();
@@ -3176,7 +3169,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			if (responseVO != null) {
 				isSave = 1;
 			}
-			
+
 			int allResponseCount = ezCommunityService.pollResGetAllCount(questionVO.getQuestionID());
 			
 			sb.append("</table><br>");
@@ -3191,7 +3184,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
 						
 						if (isSave == 1) {
-							if (answerVO.getAnswerNo().equals(responseVO.getAnswerNo())) {
+							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
 								sb.append(" checked");
 							}
 						}
@@ -3199,7 +3192,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 						sb.append("></td>");
 						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
 						
-						int responseCount = ezCommunityService.pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID());
+						responseCount = ezCommunityService.pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID());
 						int percent = 0;
 						
 						if (allResponseCount != 0) {
@@ -3221,12 +3214,52 @@ public class EzCommunityController extends EgovFileMngUtil{
 						sb.append("</tr>");
 
 						break;
+						
 					case 2 :
-						//TODO 여기 할차례
+						sb.append("<tr><td class=\"t2\" width=\"50\" align=\"center\">");
+						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
+						
+						if (isSave == 1) {
+							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
+								sb.append("checked");
+							}
+						}
+						
+						sb.append("></td><td class=\"t2\">");
+						
+						if (answerVO.getAnswerNo().equals(Integer.toString(questionVO.getAnswerCount()))) {
+							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+						} else {
+							sb.append(commonUtil.cleanValue(answerVO.getAnswerContent()));
+						}
+						
+						sb.append("</td>");
+						
+						responseCount = ezCommunityService.pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID());
+						
+						if (allResponseCount != 0) {
+                            percent = responseCount * 100 / allResponseCount;
+                        } else {
+                            percent = 0;
+                        }
+						
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
+						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
+						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						
+						if (percent == 0) {
+                            sb.append("0");
+                        } else {
+                        	sb.append("10");
+                        }
+						
+						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td></tr>");
+						
 						break;
+						
 					case 3 :
-						sb.append("<tr>");
-						sb.append("<td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
+						sb.append("<tr><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
 						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", new Locale(globals.getProperty("Globals.language"))) + "</span></a>");
 						sb.append("</td>");
 						sb.append("</tr>");
@@ -3234,22 +3267,102 @@ public class EzCommunityController extends EgovFileMngUtil{
 						break;
 				}
 			}
-			
 		}
 		
-		String strHTML = "";
-		String name = ezCommunityService.pollResGet4(userInfo.getLang(), managerVO.getPollRegUser());
-		//TODO 여기할 차례
+		StringBuilder strHTML = new StringBuilder();
+		String name = ezCommunityService.pollResGet4(commonUtil.getMultiData(userInfo.getLang()), managerVO.getPollRegUser());
+		
+		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
+		
+		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+		} else {
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + managerVO.getPollSubject() + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + name + "</th>");
+		}
+		
+		strHTML.append("</tr>");
+		strHTML.append(sb.toString());
+		strHTML.append("</table>");
 		
 		model.addAttribute("code", code);
 		model.addAttribute("pollState", pollState);
 		model.addAttribute("isSave", isSave);
-		model.addAttribute("idSpanValue", strHTML + sb.toString());
+		model.addAttribute("idSpanValue", strHTML.toString());
 		
 		return "/ezCommunity/communityPollRes";
 	}
 	
-	
+	/**
+	 * 전자설문 응답 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/pollResOk.do", method = RequestMethod.POST)
+	public void pollResOk(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int notResponse = 0;
+		
+		String code = request.getParameter("code");
+		String answerType = request.getParameter("answerType_1");
+		String answerETC = request.getParameter("answerETC");
+		String pollSelect = request.getParameter("pollSelect_1");
+		String answerCount = request.getParameter("answerCount_1");
+		String isSave = request.getParameter("isSave");
+		String questionID = request.getParameter("questionID_1");
+		
+		if (answerType.equals("3")) {
+			if(answerETC.equals("")) {
+				notResponse = 2;
+			}
+		} else {
+			if (answerType.equals("2")) {
+				if (pollSelect.equals("")) {
+					notResponse = 1;
+				} else {
+					if (pollSelect.equals(answerCount) && answerETC.equals("")) {
+						notResponse = 2;
+					}
+				}
+			} else {
+				if (pollSelect.equals("")) {
+					notResponse = 1;
+				}
+			}
+		}
+		
+		if (notResponse == 0) {
+			if (answerType.equals("3")) {
+				pollSelect = "1";
+			} else {
+				if (answerType.equals("2")) {
+					if (!pollSelect.equals(answerETC)) {
+						answerETC = ""; 
+					}
+				}
+			}
+			
+			ezCommunityService.pollResOkSet(questionID, pollSelect, answerETC, userInfo.getId(), userInfo.getCompanyID(), isSave, answerType, answerCount);
+		}
+		
+		if (notResponse == 0) {
+			response.getWriter().write("<script language='javascript'>\n");
+			response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			response.getWriter().write("</script>");
+			response.getWriter().flush();
+		} else {
+			if (notResponse == 1) {
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(" + egovMessageSource.getMessage("ezCommunity.t691", new Locale(globals.getProperty("Globals.language"))) + ")");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			} else {
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(" + egovMessageSource.getMessage("ezCommunity.t692", new Locale(globals.getProperty("Globals.language"))) + ")");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			}
+		}
+	}
 	
 	/**
 	 * 전자설문 날짜변경화면 호출함수

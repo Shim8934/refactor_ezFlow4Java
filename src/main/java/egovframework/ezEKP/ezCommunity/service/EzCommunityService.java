@@ -261,6 +261,8 @@ public interface EzCommunityService {
 	public int pollResGetCount(int questionID, int answerID) throws Exception;
 
 	public String pollResGet4(String lang, String pollRegUser) throws Exception;
+
+	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

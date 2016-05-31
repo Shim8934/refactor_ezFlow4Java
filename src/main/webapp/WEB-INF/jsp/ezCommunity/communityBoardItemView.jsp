@@ -851,7 +851,7 @@
 	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap"><div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate}' /></div></td>
 	                        <th><spring:message code='ezCommunity.t931'/></th>
 	                        
-	                        <c:set var="t930" value="<spring:message code='ezCommunity.t930'/>" />
+	                        <c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
 	                        
 	                        <c:choose>
 	                        	<c:when test="${item.endDate == t930}">
