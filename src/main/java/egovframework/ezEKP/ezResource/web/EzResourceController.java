@@ -1089,7 +1089,7 @@ public class EzResourceController extends EgovFileMngUtil {
                  title = title.replace("\"", "&quot;");
 			}
 			loc = getSchedule.getLocation();
-System.out.println("loc:"+loc);
+
 			if (loc != null) {
 				loc = title.replace("'", "&#39;");
                 loc = title.replace("\"", "&quot;");
@@ -1100,7 +1100,6 @@ System.out.println("loc:"+loc);
 			alertTime = getSchedule.getAlertTime();
 			reFlag = getSchedule.getReFlag();
 			gresFlag = getSchedule.getGresFlag();
-System.out.println("gresFlag:"+gresFlag);
 			content = getSchedule.getContent();
 			importance = getSchedule.getImportance();
 			
@@ -1132,7 +1131,6 @@ System.out.println("gresFlag:"+gresFlag);
 			if (req.getParameter("selsd") != null) {
 				selSd = req.getParameter("selsd");
 			}
-System.out.println("selSD:"+selSd);
 			if (req.getParameter("seled") != null) {
 				selEd = req.getParameter("seled");
 			}
@@ -1151,9 +1149,6 @@ System.out.println("selSD:"+selSd);
 				}
 				cDate = cDate.substring(0, 10);
 				endDateTime = cDate + " " + cTime + ":30:00";
-System.out.println("cDate:"+cDate);
-System.out.println("startDateTime:"+startDateTime);
-System.out.println("endDateTime:"+endDateTime);
 			} else {
 				if (selSd.length() == 10) {
 					cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
@@ -1202,11 +1197,10 @@ System.out.println("endDateTime:"+endDateTime);
 		
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
-	System.out.println(startDateTime);
-	System.out.println(endDateTime);
+
 		startDateTime2 = ezResourceService.isoUTFDate(startDateTime);
 		endDateTime2 = ezResourceService.isoUTFDate(endDateTime);
-System.out.println("startDateTime2:"+startDateTime2);		
+
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		
