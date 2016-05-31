@@ -5,10 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
@@ -37,6 +40,7 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl implements EzResourceService{
@@ -45,6 +49,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -597,7 +604,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			}
 			
 			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
-System.out.println("returnRepetition:"+returnRepetition);
+
 			if (returnRepetitionDom != null) {
 				for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 					 reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
@@ -662,8 +669,6 @@ System.out.println("returnRepetition:"+returnRepetition);
 								returnStr.append("<location>" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "</location>");
 								returnStr.append("<timeDisplay>" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "</timeDisplay>");
 								returnStr.append("<startDate>" + returnRepetitionDom.getElementsByTagName("STARTDATE").item(i).getTextContent() + "</startDate>");
-System.out.println(returnRepetitionDom.getElementsByTagName("STARTDATE").item(i).getTextContent());
-System.out.println(returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).getTextContent());
 								returnStr.append("<endDate>" + returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).getTextContent() + "</endDate>");
 								returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
 								returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
@@ -692,7 +697,6 @@ System.out.println(returnRepetitionDom.getElementsByTagName("ENDDATE").item(i).g
 				}
 			}
 			returnStr.append("</DATA>");
-System.out.println("returnStr:"+returnStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1716,8 +1720,7 @@ System.out.println("returnStr:"+returnStr);
 			if (pDateTime.length() < 19) {
 				strDateTime = strDateTime.substring(0, pDateTime.length());
 			}
-System.out.println("pDateTime:"+pDateTime);
-System.out.println("strDateTime:"+strDateTime);
+
 			return strDateTime;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1788,8 +1791,7 @@ System.out.println("strDateTime:"+strDateTime);
 		try {
 			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String utcDate = (date.parse(pDate).getYear()+1900) + "-" + fedLeft(date.parse(pDate).getMonth()+1) + "-" + fedLeft(date.parse(pDate).getDate()) + "T" + fedLeft(date.parse(pDate).getHours()) + ":" + fedLeft(date.parse(pDate).getMinutes()) + ":01.000Z";
-System.out.println("pDate:"+pDate);
-System.out.println("utcDate:"+utcDate);
+
 			return utcDate;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2444,6 +2446,82 @@ System.out.println("utcDate:"+utcDate);
 			 
 		}
 		return aclTblBrd;
+	}
+	
+	public String isoUTFDate(String dateTimeStr) throws Exception{
+        String timeSetStr = "";
+        String resultStr = "";
+
+        if (!dateTimeStr.trim().equals("")){
+            if (dateTimeStr.indexOf(" ") != -1){
+                if ((dateTimeStr.split(" ")[1].equals("오후") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                    timeSetStr = String.valueOf(Integer.parseInt((dateTimeStr.split(" ")[2].split(":")[0]))+ 12);
+                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                }
+                else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))){
+                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
+                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
+                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    }
+                    else{
+                        timeSetStr = dateTimeStr.split(" ")[2];
+                    }
+                }
+                else{
+                    timeSetStr = dateTimeStr.split(" ")[2];
+                }
+                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
+            }
+            else{
+                resultStr = dateTimeStr + "T00:00:00.000Z";
+            }
+        }
+        else{
+            resultStr = "";
+        }
+        return resultStr;
+    }
+	
+	public  String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) {
+		SimpleDateFormat simpledateformat = null;
+		Date date = null;
+		String _fromDateFormat = "";
+		String _toDateFormat = "";
+
+		if (EgovStringUtil.isNullToString(strSource).trim().equals("")) {
+			return "";
+		}
+		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals("")) {
+			_fromDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		} else {
+			_fromDateFormat = fromDateFormat;
+		}
+		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals("")) {
+			_toDateFormat = "yyyy-MM-dd aa h:mm:ss"; // default값
+		} else {
+			_toDateFormat = toDateFormat;
+		}
+		
+		try {
+			simpledateformat = new SimpleDateFormat(_fromDateFormat, Locale.getDefault());
+			date = simpledateformat.parse(strSource);
+			
+			if (!EgovStringUtil.isNullToString(strTimeZone).trim().equals("")) {
+				simpledateformat.setTimeZone(TimeZone.getTimeZone(strTimeZone));
+			}
+			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
+		} catch (ParseException exception) {
+			
+		}
+		if (simpledateformat != null && simpledateformat.format(date) != null) {
+
+			return simpledateformat.format(date);
+		} else {
+			return "";
+		}
+
 	}
 }
 

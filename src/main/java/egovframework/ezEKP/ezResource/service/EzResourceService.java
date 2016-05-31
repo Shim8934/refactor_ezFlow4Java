@@ -78,6 +78,10 @@ public interface EzResourceService {
 	
 	public String getBrdApproveFlag(int brdID, String companyID) throws Exception;
 	
+	public String isoUTFDate(String dateTimeStr) throws Exception;
+	
+	public String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) throws Exception;
+	
 	public boolean deleteRepetition(String xmlStr) throws Exception;
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception;
