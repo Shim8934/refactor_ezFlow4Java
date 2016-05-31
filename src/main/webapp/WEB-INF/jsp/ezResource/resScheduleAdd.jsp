@@ -27,17 +27,18 @@
 	    	var reFlag;
 	    	var importanceVal;
 	    	var g_fromStr		= "${fromStr}";
-	    	var s_userID		= "${userID}";
-	    	var ss_companyID	= "${companyID}";
+	    	var s_userID		= "${userInfo.id}";
+	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
 	    	var ss_ownerNM		= "";
+	    	var lang = "${userInfo.lang}";
 	    	
-	    	if("${primary}" == '2') {
-	        	ss_deptNM		= "${deptName2}"; 
-	        	ss_ownerNM		= "${displayName2}";
+	    	if(lang == '2') {
+	        	ss_deptNM		= "${userInfo.deptName2}"; 
+	        	ss_ownerNM		= "${userInfo.displayName2}";
 	    	} else  {
-	        	ss_deptNM		= "${deptName1}"; 
-	        	ss_ownerNM		= "${displayName1}";
+	        	ss_deptNM		= "${userInfo.deptName1}"; 
+	        	ss_ownerNM		= "${userInfo.displayName1}";
 	    	}
 	    	
 	    	var org_deptNM      = "${deptNm}";
@@ -45,7 +46,7 @@
 	    	var org_num			= "${num}";
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
-	    	var writerIDVal		= <%-- '<%=Trim(writerID)%>'; --%> "${writerID}";
+	    	var writerIDVal		= "${userInfo.deptName1}";
 	    	var cmd				= "${cmdStr}";
 	    	var typeVal			= "${typeVal}";
 	    	var startDateVal	= "${startDateVal}";
@@ -57,7 +58,7 @@
 	    	var nowDate         = "${nowDate}";
 	    	var ApproveFlag     = "${approveFlag}";
 	    	var SavedApproveFlag= "${saveApproveFlag}";
-	    	reFlagVal		= "${reFlag}";
+	    	var reFlagVal		= "${reFlag}";
 	        var server_name = "${serverName}";
 		    var allday_chk, onck = "1";	
 	    	var sDT				="${startDateTime}";
@@ -65,6 +66,8 @@
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
+	    	var brdName = "${brdName}";
+	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
 	    	var msgRtn = "";
@@ -134,7 +137,7 @@
 	            	show_repetition_info();
 	        	}
 
-		        if ("${brdName}" != "" && "${resID}" != "") {
+		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
 	    	        ItemArray[1] = Array("${brdName}");
 
@@ -193,25 +196,28 @@
 	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
+//2016-05-30T16:00:00:000Z
 	        	var SDate = new Date("${startDateTime2}");
+	        	//var SDate = new Date("2016-05-28T17:00:00:000Z");
 	        	SDate.setHours(SDate.getHours() - 9);
 	        	var EDate = new Date("${endDateTime2}");
+	        	//var EDate = new Date("2016-05-28T17:30:00:000Z");
 	        	EDate.setHours(EDate.getHours() - 9);
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
-	    	    $('#Stimepicker').timepicker();
+	    	   	$('#Stimepicker').timepicker();
 	        	$('#Stimepicker').timepicker('setTime', SDate);
-	        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	$('#Stimepicker').timepicker({ 'timeFormat': 'H: i' });
 
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', EDate);
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
-	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H: i' });
 	     	});
 		    
-		    if(${userLang} == 1) {
+		    if(lang == 1) {
 		    	$(function () {
 		        	$.datepicker.regional['ko'] = {
 			            closeText: '닫기',
@@ -373,21 +379,6 @@
 	    	}
 		</script>
 	</head>
-	<%-- <% 
-    string strDspMod_1 = "";
-    string strDspMod_2 = "";
-
-    if (pnum == "" && gresFlag != "0")
-    {
-        strDspMod_1 = "";
-        strDspMod_2 = "style='display:none'";
-    }
-    else
-    {
-        strDspMod_1 = "";
-        strDspMod_2 = "style='display:none'";
-    }
-	%> --%>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
 	<body id="mainbodytag" class="popup" style="height: 98%;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
@@ -402,7 +393,7 @@
         					
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
-        							<div id="menuTable1"  ${strDspMod1}>
+        							<div id="menuTable1" >
           							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
           							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
@@ -412,32 +403,30 @@
           									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
           								</c:if>
           							</c:if>
-          							<!-- cmdStr 에 LowerCase붙이기 -->		
+          								
        								<c:if test="${strApproveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
        									<c:choose>
        										<c:when test="${savedApproveFlag eq '1'}">
-       											${approvalMenu} = <spring:message code="ezResource.t190"/>
-				    							${reverseFlag} = "0";
+				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
        										</c:when>
        										<c:otherwise>
-       											${approvalMenu} = <spring:message code="ezResource.t191"/>
-				    							${reverseFlag} = "1";
+				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
        										</c:otherwise>
        									</c:choose>
         									
-          								<li><span  onClick="SetApproval_onClick('${cmdStr}', '${reverseFlag}')">${approvalMenu}</span></li>
+          								<%-- <li><span  onClick="SetApproval_onClick('${cmdStr}', '${reverseFlag}')">${approvalMenu}</span></li> --%>
         					 		</c:if> 
           							
           						</div>          
-          						<div id="menuTable2" ${strDspMod2}>
+          						<div id="menuTable2" style='display:none'>								
           							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
           							<li><span  onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
           						</div>
         						</c:when>
         						<c:otherwise>
-        							<li id="Table1"  ${strDspMod1}><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>          
-          							<li id="Table2"  ${strDspMod2}><span onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
+        							<li id="Table1" ><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>          
+          							<li id="Table2"  style='display:none'><span onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
         						</c:otherwise>
         					</c:choose>
         				</ul>
@@ -453,24 +442,6 @@
           					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
         				</tr>
         				
-        				<%-- 서버단에서 처리 --%>
-        			<%-- 			<%
-							string strTimeDisplay_1 = "";
-							string strTimeDisplay_2 = "";
-							string strTimeDisplay_3 = "";
-							string strTimeDisplay_4 = "";
-
-						if (timeDisplay == "1") {
-							strTimeDisplay_1 = "selected";
-						} else if (timeDisplay == "2") {
-							strTimeDisplay_2 = "selected";
-						} else if (timeDisplay == "3") {
-							strTimeDisplay_3 = "selected";
-						} else if (timeDisplay == "4") {
-							strTimeDisplay_4 = "selected";
-						} 
-						%> --%>
-						
 						<c:choose>
 							<c:when test="${reFlag ne '1'}">
 								<tr id="tr_Recur" style="display: none">
@@ -480,24 +451,46 @@
           							<th> <spring:message code="ezResource.t197"/></th>
           							<td colspan="3"><span id="AllDayDisplay"></span>
             							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
-              								<option value="1" ${strTimeDisplay1}><spring:message code="ezResource.t198"/></option>
-              								<option value="2" ${strTimeDisplay2}><spring:message code="ezResource.t199"/></option>
-              								<option value="3" ${strTimeDisplay3}><spring:message code="ezResource.t200"/></option>
-              								<option value="4" ${strTimeDisplay4}><spring:message code="ezResource.t201"/></option>
+            								<c:choose>
+            									<c:when test="${timeDisplay eq '1'}">
+													<option value="1" selected><spring:message code="ezResource.t198"/></option>
+              										<option value="2" ><spring:message code="ezResource.t199"/></option>
+              										<option value="3" ><spring:message code="ezResource.t200"/></option>
+              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            									</c:when>
+            									<c:when test="${timeDisplay eq '2'}">
+													<option value="1" ><spring:message code="ezResource.t198"/></option>
+              										<option value="2" selected><spring:message code="ezResource.t199"/></option>
+              										<option value="3" ><spring:message code="ezResource.t200"/></option>
+              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            									</c:when>
+            									<c:when test="${timeDisplay eq '3'}">
+													<option value="1" ><spring:message code="ezResource.t198"/></option>
+              										<option value="2" ><spring:message code="ezResource.t199"/></option>
+              										<option value="3" selected><spring:message code="ezResource.t200"/></option>
+              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            									</c:when>
+            									<c:when test="${timeDisplay eq '4'}">
+													<option value="1" ><spring:message code="ezResource.t198"/></option>
+              										<option value="2" ><spring:message code="ezResource.t199"/></option>
+              										<option value="3" ><spring:message code="ezResource.t200"/></option>
+              										<option value="4" selected><spring:message code="ezResource.t201"/></option>            												
+            									</c:when>
+            								</c:choose>
             							</select>        
             			  			</td>
         						</tr>
 							</c:otherwise>
 						</c:choose>
-					
-        		<%-- 	<%  if (reFlag == "1") {
-                			strDspMod_1 = "style='display:none'";
-                			strDspMod_2 = "";
-            			} else {
-                			strDspMod_1 = "";
-                			strDspMod_2 = "style='display:none'";
-            			}	
-					%> --%>
+				<!-- 		<script>
+        		 	  		if (reFlagVal == "1") {
+	                			strDspMod_1 = "style='display:none'";
+                				strDspMod_2 = "";
+            				} else {
+	                			strDspMod_1 = "";
+                				strDspMod_2 = "style='display:none'";
+            				}	
+            			</script> -->
 					
         			<tr id="tr_STime" ${strDspMod1}>
           				<th> <spring:message code="ezResource.t197"/></th>
@@ -512,7 +505,7 @@
            						~
            					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
           				</td>
-					  </td>
+					</td>
         				</tr>
 				        <tr>
           					<th> <spring:message code="ezResource.t213"/></th>
@@ -521,11 +514,17 @@
           							<c:choose>
           								<c:when test="${importance eq '1'}">
           									<option value="1" selected><spring:message code="ezResource.t214"/></option>
+          									<option value="2"><spring:message code="ezResource.t215"/></option>
+          									<option value="3"><spring:message code="ezResource.t216"/></option>
           								</c:when>
           								<c:when test="${importance eq '2'}">
+          									<option value="1" ><spring:message code="ezResource.t214"/></option>
           									<option value="2" selected><spring:message code="ezResource.t215"/></option>
+          									<option value="3"><spring:message code="ezResource.t216"/></option>
           								</c:when>
           								<c:when test="${importance eq '3'}">
+          									<option value="1"><spring:message code="ezResource.t214"/></option>
+          									<option value="2"><spring:message code="ezResource.t215"/></option>
           									<option value="3" selected><spring:message code="ezResource.t216"/></option>
           								</c:when>
           							</c:choose>
@@ -560,7 +559,7 @@
             						</c:otherwise>
             					</c:choose>
             				</th>
-            				<td colspan="7" id = "itemList" style="padding-left:4px;"></td>
+            				<td colspan="7" id ="itemList" style="padding-left:4px;"></td>
 						</tr>     
 						<tr>
           					<th> <spring:message code="ezResource.t224"/></th>
@@ -596,21 +595,9 @@
            						</div>
 				          </td>
         				</tr>
-        			<%-- 	<%
-						if (reFlag == "1") {
-							strTmpReFlag = "2";
-						} else {
-							strTmpReFlag = "0";
-						}
 
-						if (reFlag == "") {
-							strIReFlagVal = "0";
-						} else {
-							strIReFlagVal = reFlag;
-						}
-					%> --%>
 				        <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-        				<input type="hidden" id="tmpReFlag" value="${strTmpReFlag}" />
+        				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
         				<input type="hidden" id="gresFlag" value="${gresFlag}" />
         				<input type="hidden" id="num" value="${num}" />
         				<input type="hidden" id="pnum" value="${pNum}" />
