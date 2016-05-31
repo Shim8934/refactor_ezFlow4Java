@@ -13,9 +13,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -33,7 +35,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -1768,6 +1773,187 @@ System.out.println("@");
 	public String pollMainGet4(String strQuestionID) throws Exception {
 		return ezCommunityDAO.pollMainGet4(strQuestionID);
 	}
+
+	@Override
+	public String pollAddOkGoGet1(String code) throws Exception {
+		return ezCommunityDAO.pollAddOkGoGet1(code);
+	}
+
+	@Override
+	public void pollAddOkGoInsert1(String code, int maxNo, String subject, String startDate, String endDate, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_MAXNO", maxNo);
+		map.put("v_SUBJECT", subject);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
+		map.put("v_USERINFO_USERID", id);
+		
+		ezCommunityDAO.pollAddOkGoInsert1(map);
+	}
+
+	@Override
+	public String pollAddOkGoGet2(String code, int maxNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_MAXNO", maxNo);
+		
+		return ezCommunityDAO.pollAddOkGoGet2(map);
+	}
+
+	@Override
+	public void pollAddOkGoInsert2(String managerID, String subject, String answerCount, String selType, String answerViewType) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_MANAGERID", managerID);
+		map.put("v_SUBJECT", subject);
+		map.put("v_ANSWERCOUNT", answerCount);
+		map.put("v_SELTYPE", selType);
+		map.put("v_ANSWERVIEWTYPE", answerViewType);
+		
+		ezCommunityDAO.pollAddOkGoInsert2(map);
+	}
+
+	@Override
+	public String pollAddOkGoGet3(String managerID) throws Exception {
+		return ezCommunityDAO.pollAddOkGoGet3(managerID);
+	}
+
+	@Override
+	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_POLLQUESTIONID", questionID);
+		map.put("v_ANSWERNO", answerNo);
+		map.put("v_ANSWERCONTENT", answerContent);
+		
+		ezCommunityDAO.pollAddOkGoInsert3(map);
+	}
+
+	@Override
+	public String pollDeleteGet1(String managerID) throws Exception {
+		return ezCommunityDAO.pollDeleteGet1(managerID);
+	}
+
+	@Override
+	public String pollDeleteGet3(String code) throws Exception {
+		return ezCommunityDAO.pollDeleteGet3(code);
+	}
+
+	@Override
+	public List<CommunityCPollQuestionVO> pollDeleteGet2(String managerID) throws Exception {
+		return ezCommunityDAO.pollDeleteGet2(managerID);
+	}
+
+	@Override
+	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception {
+		return ezCommunityDAO.pollDeleteGet4(questionID);
+	}
+
+	@Override
+	public void pollDeleteDel1(int questionID, int answerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_ANSWERID", answerID);
+		
+		ezCommunityDAO.pollDeleteDel1(map);
+	}
+
+	@Override
+	public void pollDeleteDel2(int questionID) throws Exception {
+		ezCommunityDAO.pollDeleteDel2(questionID);
+	}
+
+	@Override
+	public void pollDeleteDel3(String managerID) throws Exception {
+		ezCommunityDAO.pollDeleteDel3(managerID);
+	}
+
+	@Override
+	public String pollResGet1(String id, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_CODE",  code);
+		
+		return ezCommunityDAO.pollResGet1(map);
+	}
+
+	@Override
+	public CommunityCPollManagerVO pollResGet2(String pollManagerID) throws Exception {
+		return ezCommunityDAO.pollResGet2(pollManagerID);
+	}
+
+	@Override
+	public CommunityCPollQuestionVO pollResGet3(String pollManagerID) throws Exception {
+		return ezCommunityDAO.pollResGet3(pollManagerID);
+	}
+
+	@Override
+	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		
+		return ezCommunityDAO.pollResGet5(map);
+	}
+
+	@Override
+	public int pollResGetAllCount(int questionID) throws Exception {
+		Integer temp = ezCommunityDAO.pollResGetAllCount(questionID);
+		
+		if (temp != null) {
+			return temp;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public List<CommunityCPollAnswerVO> pollResGet6(int questionID) throws Exception {
+		return ezCommunityDAO.pollResGet6(questionID);
+	}
+
+	@Override
+	public int pollResGetCount(int questionID, int answerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_ANSWERID", answerID);
+		
+		
+		Integer temp = ezCommunityDAO.pollResGetCount(map);
+		
+		if (temp != null) {
+			return temp;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public String pollResGet4(String lang, String pollRegUser) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_POLLREGUSER", pollRegUser);
+		
+		return ezCommunityDAO.pollResGet4(map);
+	}
+
+	
+
+	
+	
+	
+	
+	
+	
 	
 	
 	

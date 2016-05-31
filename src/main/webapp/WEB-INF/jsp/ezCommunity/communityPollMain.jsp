@@ -38,15 +38,15 @@
 			}	  
 
 			function poll_edit(pClubNo, managerID) {
-				window.location.href = "/ezCommunity/pollEdit.do?pClubNo=" + escape(pClubNo) + "&managerID=" + escape(managerID);
+				window.location.href = "/ezCommunity/pollEdit.do?pClubNo=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);
 			}
 
 			function poll_Delete(pClubNo, managerID) {
-				window.location.href = "/ezCommunity/pollDelete.do?code=" + escape(pClubNo) + "&managerID=" + escape(managerID);
+				window.location.href = "/ezCommunity/pollDelete.do?code=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);
 			}
 					
 			function poll_add() {
-				window.location.href = "/ezCommunity/pollAdd.do?code=" + escape(code);
+				window.location.href = "/ezCommunity/pollAdd.do?code=" + encodeURIComponent(code);
 			}
 					
 			function poll_chManage(strMsg) {

@@ -7,6 +7,7 @@
 		<title>poll_add_ok</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<link rel="stylesheet" type="text/css" href="/css/community.css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		
 		<script type="text/javascript">
@@ -91,7 +92,7 @@
 			<table class="content">
 				<tr>
 					<th><spring:message code='ezCommunity.t598' /></th>
-					<td><textarea id="pollSubject" name="pollSubject" style="width: 100%;height:130px"></textarea></td>
+					<td><textarea id="pollSubject" name="pollSubject" style="width: 98.5%;height:130px">${subject }</textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>

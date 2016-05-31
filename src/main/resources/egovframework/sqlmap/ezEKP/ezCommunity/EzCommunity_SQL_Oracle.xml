@@ -16,6 +16,9 @@
 	<typeAlias alias="CommunityBoardItemReadVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO"/>
 	<typeAlias alias="CommunityCClubGuestVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO"/>
 	<typeAlias alias="CommunityCPollManagerVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO"/>
+	<typeAlias alias="CommunityCPollQuestionVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO"/>
+	<typeAlias alias="CommunityCPollAnswerVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO"/>
+	<typeAlias alias="CommunityCPollResponseVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -202,6 +205,22 @@
 	<procedure id="EzCommunityDAO.pollMainGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteGet2"				parameterClass="String"		resultClass="CommunityCPollQuestionVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET2(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollResGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET2(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollResGet3"					parameterClass="String"		resultClass="CommunityCPollQuestionVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET3(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 			
 	<procedure id="EzCommunityDAO.leftCommunityGet1" 			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -283,6 +302,18 @@
 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzcommunityDAO.pollAddOkGoGet2"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET2(#v_CODE#, #v_MAXNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollResGet1"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET1(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET2(#CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -305,6 +336,22 @@
 	
 	<procedure id="EzCommunityDAO.pollMainGet4"					parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET4(#v_STRQUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollAddOkGoGet1"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollAddOkGoGet3"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET3(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteGet1"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteGet3"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
@@ -395,9 +442,82 @@
 		{CALL EZCOMMUNITY.EZSP_GUEST_EDIT_OK_UPDATE(#v_C_NO#, #v_CODE#, #v_MEMO#, #v_USERINFO_USERID#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT1(#v_CODE#, #v_MAXNO#, #v_SUBJECT#, #v_STARTDATE#, #v_ENDDATE# ,#v_USERINFO_USERID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT2(#v_MANAGERID#, #v_SUBJECT#, #v_ANSWERCOUNT#, #v_SELTYPE#, #v_ANSWERVIEWTYPE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL1(#v_QUESTIONID#, #v_ANSWERID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL2(#v_QUESTIONID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollDeleteDel3"				parameterClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL3(#v_MANAGERID#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
 	</procedure>
+	
+	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+	        	ezCommunity.TBL_Board_BoardManage
+			WHERE  
+	       		BOARDID = #v_pBoardID# 
+			AND 
+	       		ACCESSID = #v_pAccessID# 
+			AND 
+	       		rownum <= 1
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.pollResGet5"						parameterClass="Map"		resultClass="CommunityCPollResponseVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+	        	EZCOMMUNITY.C_POLLRESPONSE
+			WHERE  
+	       		QUESTIONID = #v_QUESTIONID#
+	       	AND
+	       		USERID = #v_USERINFO_USERID#
+	       	AND
+	       		COMPANYID = #v_USERINFO_COMPANYID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="String"		resultClass="CommunityBoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+	        	EZCOMMUNITY.TBL_BOARD_BOARDINFO
+			WHERE  
+	       		BOARDID = #pBoardID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.pollResGet6"						parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+	        	EZCOMMUNITY.C_POLLANSWER
+			WHERE  
+	       		POLLQUESTIONID = #v_QUESTIONID#
+	       	ORDER BY ANSWERNO
+		]]>
+	</select>
 	
 	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
 		<![CDATA[
@@ -454,32 +574,6 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				*
-			FROM 
-	        	ezCommunity.TBL_Board_BoardManage
-			WHERE  
-	       		BOARDID = #v_pBoardID# 
-			AND 
-	       		ACCESSID = #v_pAccessID# 
-			AND 
-	       		rownum <= 1
-		]]>
-	</select>
-	
-	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="String"		resultClass="CommunityBoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				*
-			FROM 
-	        	ezCommunity.TBL_Board_BoardInfo
-			WHERE  
-	       		BOARDID = #pBoardID#
-		]]>
-	</select>
-	
 	<select id="EzCommunityDAO.getACL"							parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -516,6 +610,30 @@
 		]]>		
 	</select>
 	
+	<select id="EzCommunityDAO.pollResGetAllCount"				parameterClass="Integer"	resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		EZCOMMUNITY.C_POLLRESPONSE
+       		WHERE 
+       			QUESTIONID = #v_QUESTIONID#
+		]]>		
+	</select>
+	
+	<select id="EzCommunityDAO.pollResGetCount"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		EZCOMMUNITY.C_POLLRESPONSE
+       		WHERE 
+       			QUESTIONID = #v_QUESTIONID#
+       		AND
+       			ANSWERID = #v_ANSWERID#
+		]]>		
+	</select>
+	
 	<update id="EzCommunityDAO.updateLastDate"					parameterClass="Map">
 		<![CDATA[
 			UPDATE 
@@ -548,6 +666,16 @@
         		EZCOMMUNITY.TBL_Board_Item_Attachments
        		VALUES
        			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#)
+		]]>		
+	</insert>
+	
+	<insert id="EzCommunityDAO.pollAddOkGoInsert3"				parameterClass="Map">
+		<![CDATA[
+			INSERT
+        	INTO
+        		EZCOMMUNITY.C_PollAnswer(ANSWERID, POLLQUESTIONID, ANSWERNO, ANSWERCONTENT)
+       		VALUES
+       			(EZCOMMUNITY.C_POLLANSWER_ANSWERID_SEQ.NEXTVAL, #v_POLLQUESTIONID#, #v_ANSWERNO#, #v_ANSWERCONTENT#)
 		]]>		
 	</insert>
 	

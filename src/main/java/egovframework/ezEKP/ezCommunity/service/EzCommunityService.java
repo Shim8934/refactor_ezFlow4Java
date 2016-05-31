@@ -15,7 +15,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -48,6 +51,8 @@ public interface EzCommunityService {
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
 	
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception;
+	
+	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -153,6 +158,22 @@ public interface EzCommunityService {
 
 	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
 	
+	public String pollMainGet1(String id, String code) throws Exception;
+
+	public String pollMainGet3(String managerID) throws Exception;
+
+	public String pollMainGet4(String strQuestionID) throws Exception;
+	
+	public String pollAddOkGoGet1(String code) throws Exception;
+
+	public String pollAddOkGoGet2(String code, int maxNo) throws Exception;
+
+	public String pollAddOkGoGet3(String managerID) throws Exception;
+	
+	public String pollDeleteGet1(String managerID) throws Exception;
+
+	public String pollDeleteGet3(String code) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -208,14 +229,38 @@ public interface EzCommunityService {
 	public void guestEditOkDelete(String no, String code) throws Exception;
 
 	public void guestEditOkUpdate(String no, String code, String memo, String id) throws Exception;
+
+	public void pollAddOkGoInsert1(String code, int maxNo, String subject, String startDate, String endDate, String id) throws Exception;
 	
-	public String pollMainGet1(String id, String code) throws Exception;
+	public void pollAddOkGoInsert2(String managerID, String subject, String answerCount, String selType, String answerViewType) throws Exception;
+	
+	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception;
 
-	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception;
+	public List<CommunityCPollQuestionVO> pollDeleteGet2(String managerID) throws Exception;
 
-	public String pollMainGet3(String managerID) throws Exception;
+	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception;
 
-	public String pollMainGet4(String strQuestionID) throws Exception;
+	public void pollDeleteDel1(int questionID, int answerID) throws Exception;
+
+	public void pollDeleteDel2(int questionID) throws Exception;
+
+	public void pollDeleteDel3(String managerID) throws Exception;
+
+	public String pollResGet1(String id, String code) throws Exception;
+
+	public CommunityCPollManagerVO pollResGet2(String pollManagerID) throws Exception;
+
+	public CommunityCPollQuestionVO pollResGet3(String pollManagerID) throws Exception;
+
+	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception;
+
+	public int pollResGetAllCount(int questionID) throws Exception;
+
+	public List<CommunityCPollAnswerVO> pollResGet6(int questionID) throws Exception;
+
+	public int pollResGetCount(int questionID, int answerID) throws Exception;
+
+	public String pollResGet4(String lang, String pollRegUser) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

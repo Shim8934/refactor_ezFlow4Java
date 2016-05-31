@@ -15,7 +15,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -435,5 +438,92 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public String pollMainGet4(String v_STRQUESTIONID) throws Exception {
 		return (String) select("EzCommunityDAO.pollMainGet4", v_STRQUESTIONID);
+	}
+
+	public String pollAddOkGoGet1(String v_CODE) throws Exception {
+		return (String) select("EzCommunityDAO.pollAddOkGoGet1", v_CODE);
+	}
+
+	public void pollAddOkGoInsert1(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert1", map);
+	}
+
+	public String pollAddOkGoGet2(Map<String, Object> map) throws Exception {
+		return (String) select("EzcommunityDAO.pollAddOkGoGet2", map);
+	}
+
+	public void pollAddOkGoInsert2(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert2", map);
+	}
+
+	public String pollAddOkGoGet3(String v_MANAGERID) throws Exception {
+		return (String) select("EzCommunityDAO.pollAddOkGoGet3", v_MANAGERID);
+	}
+
+	public void pollAddOkGoInsert3(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert3", map);
+	}
+
+	public String pollDeleteGet1(String v_MANAGERID) throws Exception {
+		return (String) select("EzCommunityDAO.pollDeleteGet1", v_MANAGERID);
+	}
+
+	public String pollDeleteGet3(String v_CODE) throws Exception {
+		return (String) select("EzCommunityDAO.pollDeleteGet3", v_CODE);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCPollQuestionVO> pollDeleteGet2(String v_MANAGERID) throws Exception {
+		return (List<CommunityCPollQuestionVO>) list("EzCommunityDAO.pollDeleteGet2", v_MANAGERID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCPollAnswerVO> pollDeleteGet4(int v_QUESTIONID) throws Exception {
+		return (List<CommunityCPollAnswerVO>) list("EzCommunityDAO.pollDeleteGet4", v_QUESTIONID);
+	}
+
+	public void pollDeleteDel1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.pollDeleteDel1", map);
+	}
+
+	public void pollDeleteDel2(int v_QUESTIONID) throws Exception {
+		delete("EzCommunityDAO.pollDeleteDel2", v_QUESTIONID);
+	}
+
+	public void pollDeleteDel3(String v_MANAGERID) throws Exception {
+		delete("EzCommunityDAO.pollDeleteDel3", v_MANAGERID);
+	}
+
+	public String pollResGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.pollResGet1", map);
+	}
+
+	public CommunityCPollManagerVO pollResGet2(String v_POLLMANAGERID) throws Exception {
+		return (CommunityCPollManagerVO) select("EzCommunityDAO.pollResGet2", v_POLLMANAGERID);
+	}
+
+	public CommunityCPollQuestionVO pollResGet3(String v_POLLMANAGERID) throws Exception {
+		return (CommunityCPollQuestionVO) select("EzCommunityDAO.pollResGet3", v_POLLMANAGERID);
+	}
+
+	public CommunityCPollResponseVO pollResGet5(Map<String, Object> map) throws Exception {
+		return (CommunityCPollResponseVO) select("EzCommunityDAO.pollResGet5", map);
+	}
+
+	public Integer pollResGetAllCount(int v_QUESTIONID) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollResGetAllCount", v_QUESTIONID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCPollAnswerVO> pollResGet6(int v_QUESTIONID) throws Exception {
+		return (List<CommunityCPollAnswerVO>) list("EzCommunityDAO.pollResGet6", v_QUESTIONID);
+	}
+
+	public Integer pollResGetCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollResGetCount", map);
+	}
+
+	public String pollResGet4(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.pollResGet4", map);
 	}
 }
