@@ -2457,28 +2457,22 @@ public class EzResourceServiceImpl implements EzResourceService{
                 if ((dateTimeStr.split(" ")[1].equals("오후") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
                     timeSetStr = String.valueOf(Integer.parseInt((dateTimeStr.split(" ")[2].split(":")[0]))+ 12);
                     timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                }
-                else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))){
+                } else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))) {
                     if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
                         timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    }
-                    else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
+                    } else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
                         timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    }
-                    else{
+                    } else {
                         timeSetStr = dateTimeStr.split(" ")[2];
                     }
-                }
-                else{
+                } else {
                     timeSetStr = dateTimeStr.split(" ")[2];
                 }
                 resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
-            }
-            else{
+            } else {
                 resultStr = dateTimeStr + "T00:00:00.000Z";
             }
-        }
-        else{
+        } else {
             resultStr = "";
         }
         return resultStr;
