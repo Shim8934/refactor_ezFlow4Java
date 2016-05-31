@@ -4,19 +4,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<c:if test="${guest == '1' }">
-			<script type="text/javascript">
-				window.history.back();
-			</script>
-		</c:if>
-		
 		<title>poll_edit</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<!-- 		<script type="text/javascript" src="/js/controls/datepicker.htc.js"></script> -->
+		<script type="text/javascript" src="/js/ezCommunity/controls/datepicker.htc.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<!-- data picker -->
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
         <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
@@ -26,7 +21,7 @@
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		
 		
 		<script type="text/javascript">
 			window.onload = function() {
@@ -39,7 +34,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        
@@ -48,12 +43,12 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/imgicon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
 		        
-		        var SDate = new Date("${strStartDate1}");
-		        var EDate = new Date("${strEndDate1}");
+		        var SDate = new Date("${pStartDate}");
+		        var EDate = new Date("${pEndDate}");
 		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
@@ -334,15 +329,15 @@
 			<table class="content">
 				<tr>
 					<th><spring:message code='ezCommunity.t599' /></th>
-					<td><textarea name="pollSubject" style="width: 98%;height:130px" readonly><c:out value="${managerRS_PollSubject}" /></textarea></td>
+					<td><textarea name="pollSubject" style="width: 98%;height:130px" readonly><c:out value="${managerVO.pollSubject}" /></textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>
 	      			<td>
-	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${sel_Type}');" disabled>
+	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>
 	      				
 	      					<c:choose>
-	      						<c:when test="${selType == '1' }">
+	      						<c:when test="${questionVO.answerType == '1' }">
 	      							<option value="1" selected><spring:message code='ezCommunity.t601' />
 	      						</c:when>
 	      						
@@ -352,7 +347,7 @@
 	      					</c:choose>
 	      					
 	      					<c:choose>
-	      						<c:when test="${selType == '2' }">
+	      						<c:when test="${questionVO.answerType == '2' }">
 	      							<option value="2" selected><spring:message code='ezCommunity.t602' />
 	      						</c:when>
 	      						
@@ -362,7 +357,7 @@
 	      					</c:choose>
 	      					
 	      					<c:choose>
-	      						<c:when test="${selType == '3' }">
+	      						<c:when test="${questionVO.answerType == '3' }">
 	      							<option value="3" selected><spring:message code='ezCommunity.t603' />
 	      						</c:when>
 	      						
@@ -373,9 +368,9 @@
 	      					
 	        			</select>
 	        			
-	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selResChange('${answerViewType}');" disabled>
+	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selResChange('${questionVO.answerViewType}');" disabled>
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '0' }">
+	        					<c:when test="${questionVO.answerViewType == '0' }">
 	        						<option value="0" selected><spring:message code='ezCommunity.t661' />
 	        					</c:when>
 	        					
@@ -385,7 +380,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '1' }">
+	        					<c:when test="${questionVO.answerViewType == '1' }">
 	        						<option value="1" selected>5 Scale[<spring:message code='ezCommunity.t605' />
 	        					</c:when>
 	        					
@@ -395,7 +390,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '2' }">
+	        					<c:when test="${questionVO.answerViewType == '2' }">
 	        						<option value="2" selected>5 Scale[<spring:message code='ezCommunity.t606' />
 	        					</c:when>
 	        					
@@ -405,7 +400,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '3' }">
+	        					<c:when test="${questionVO.answerViewType == '3' }">
 	        						<option value="3" selected>5 Scale[<spring:message code='ezCommunity.t607' />
 	        					</c:when>
 	        					
@@ -415,7 +410,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '11' }">
+	        					<c:when test="${questionVO.answerViewType == '11' }">
 	        						<option value="11" selected>Yes/No
 	        					</c:when>
 	        					
@@ -425,7 +420,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '12' }">
+	        					<c:when test="${questionVO.answerViewType == '12' }">
 	        						<option value="12" selected><spring:message code='ezCommunity.t608' />
 	        					</c:when>
 	        					
@@ -435,7 +430,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '13' }">
+	        					<c:when test="${questionVO.answerViewType == '13' }">
 	        						<option value="13" selected><spring:message code='ezCommunity.t609' />
 	        					</c:when>
 	        					
@@ -445,7 +440,7 @@
 	        				</c:choose>
 	        				
 	        				<c:choose>
-	        					<c:when test="${answerViewType == '14' }">
+	        					<c:when test="${questionVO.answerViewType == '14' }">
 	        						<option value="14" selected><spring:message code='ezCommunity.t610' />
 	        					</c:when>
 	        					
@@ -456,7 +451,7 @@
 	        				
 	        			</select>
 	        			
-	        			<input type="text" id="selRes2" name="selRes2" size="5" value="<c:out value = '${answerCount}' />" disabled><spring:message code='ezCommunity.t611' />
+	        			<input type="text" id="selRes2" name="selRes2" size="5" value="<c:out value = '${questionVO.answerCount}' />" disabled><spring:message code='ezCommunity.t611' />
 	        		</td>
 	    		</tr>
 	    		<tr>

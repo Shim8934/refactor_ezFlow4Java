@@ -203,6 +203,7 @@
 		          			</c:if>
 						</ul>
 					</div>
+					
 					<div id="close">
 						<ul>
 					    	<li><span onclick="btnClose_onclick()" ><spring:message code='ezCommunity.t21' /></span></li>

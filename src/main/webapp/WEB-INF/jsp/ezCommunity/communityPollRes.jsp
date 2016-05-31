@@ -28,7 +28,7 @@
 			}
 			
 			function etcview(etc, qID) {
-				window.open("/ezCommunity/pollEtcView.do?etc="+escape(etc)+"&qID="+qID, "rts60", "width=430,height=420,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" );
+				window.open("/ezCommunity/pollETCView.do?etc="+encodeURIComponent(etc)+"&questionID="+qID, "rts60", "width=430,height=420,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no" );
 			}
 			
 			function goPage() {	

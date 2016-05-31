@@ -1960,9 +1960,41 @@ System.out.println("@");
 		map.put("v_ANSWERCOUNT", answerCount);
 		
 		ezCommunityDAO.pollResOkSet(map);
-		
 	}
 
+	@Override
+	public CommunityCPollManagerVO pollEditGet1(String managerID) throws Exception {
+		return ezCommunityDAO.pollEditGet1(managerID);
+	}
+
+	@Override
+	public CommunityCPollQuestionVO pollEditGet2(String managerID) throws Exception {
+		return ezCommunityDAO.pollEditGet2(managerID);
+	}
+
+	@Override
+	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SUBJECT", subject);
+		map.put("v_POLLSTARTDATE", startDate);
+		map.put("v_POLLENDDATE", endDate);
+		map.put("v_MANAGERID", managerID);
+		
+		ezCommunityDAO.pollEditOkUpdate(map);
+	}
+
+	@Override
+	public String pollETCViewGet(String questionID) throws Exception {
+		return ezCommunityDAO.pollETCViewGet(questionID);
+	}
+
+	@Override
+	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception {
+		return ezCommunityDAO.pollETCTableGet(questionID);
+	}
+
+	
 	
 /*	@Override
 	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {

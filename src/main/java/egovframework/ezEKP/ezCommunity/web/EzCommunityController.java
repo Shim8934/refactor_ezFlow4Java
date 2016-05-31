@@ -132,7 +132,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 //        boolean	joinFlag = false;
         
         
-        LoginVO loginVO = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
         
         if (request.getParameter("communityCD") != null) {
             code = request.getParameter("communityCD");
@@ -152,8 +152,8 @@ public class EzCommunityController extends EgovFileMngUtil{
             userLevel = "";
         }
         
-        String userInfoUserID = loginVO.getId();
-        String userID = loginVO.getId();
+        String userInfoUserID = userInfo.getId();
+        String userID = userInfo.getId();
         
         if (code.equals("")) {
         	String vPermit = ezCommunityService.leftCommunityGet1(code, userInfoUserID);
@@ -173,17 +173,17 @@ public class EzCommunityController extends EgovFileMngUtil{
         	
         	//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
         	/*//dll
-        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID());
+        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
         	
         	int pMode = 0;
         	
-        	if (boardGroupAdminFG.equals("OK") || loginVO.getRollInfo().toLowerCase().indexOf("c=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("k=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
         		pMode = 0;
         	} else {
         		pMode = 1;
         	}
         	//dll
-        	String retXML = getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(loginVO.getLang()));
+        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
         	
         	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
         		xmlret = commonUtil.convertStringToDocument(retXML);
@@ -206,9 +206,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("codeName",codeName);
 		model.addAttribute("userLevel",userLevel);
 		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
-		model.addAttribute("chCommunityAdmin",loginVO.getRollInfo().indexOf("t=1"));
+		model.addAttribute("chCommunityAdmin",userInfo.getRollInfo().indexOf("t=1"));
 		model.addAttribute("checkSysop",checkSysop);
-		model.addAttribute("lang",loginVO.getLang());
+		model.addAttribute("lang",userInfo.getLang());
 		model.addAttribute("userID", userID);
 		model.addAttribute("userInfoUserID",userInfoUserID);
 		
@@ -223,8 +223,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie) throws Exception {
 		String userID = "";
         StringBuilder sb = new StringBuilder();
-        LoginVO loginVO = commonUtil.userInfo(loginCookie);
-        userID = loginVO.getId();
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        userID = userInfo.getId();
         
         List<CommunityLeftCommunityVO> leftCommunityList =ezCommunityService.leftCommunityGet3(userID);
         
@@ -294,16 +294,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commMake(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		String userInfoUserID = "", userInfoDisplayName = "";
 		String langPrimary="", langSecondary="";
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		userInfoUserID = loginVO.getId();
-		langPrimary = config.getProperty("config.lang_Primary"+loginVO.getLang());
-		langSecondary = config.getProperty("config.lang_Secondary"+loginVO.getLang());
+		userInfoUserID = userInfo.getId();
+		langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
 
-		if (loginVO.getLang().equals("2")) {
-			userInfoDisplayName = loginVO.getDisplayName2();
+		if (userInfo.getLang().equals("2")) {
+			userInfoDisplayName = userInfo.getDisplayName2();
 		} else {
-			userInfoDisplayName = loginVO.getDisplayName1();
+			userInfoDisplayName = userInfo.getDisplayName1();
 		}
 
 		model.addAttribute("langPrimary", langPrimary);
@@ -575,7 +575,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pClubID = "", pRootBoardID = "", pSubFlag = "", pExcludeBoardID = " ";
 		int pSelectBy = 0, pMode = 0;
 		String strXML = "";
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		pClubID = request.getParameter("classID");
 		pRootBoardID = request.getParameter("rootBoardID");
 		pSubFlag = request.getParameter("subFlag");
@@ -587,15 +587,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pSelectBy = Integer.parseInt(request.getParameter("selectFlag"));
 		}
 		
-		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID());
+		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 
-		if (boardGroupAdminFG.equals("OK") || loginVO.getRollInfo().toLowerCase().indexOf("c=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("k=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
 			pMode = 0;
 		} else {
 			pMode = 1;
 		}
 		
-		strXML = ezCommunityService.getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(loginVO.getLang()));
+		strXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(userInfo.getLang()));
 
 		return strXML;
 	}
@@ -654,9 +654,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String checkCommHome(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		String codeName = "", userLevel = "";
         
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userInfoUserID = loginVO.getId();
+		String userInfoUserID = userInfo.getId();
 		
 		String code = request.getParameter("communityCD");
 		userLevel = request.getParameter("userLevel");
@@ -682,17 +682,17 @@ public class EzCommunityController extends EgovFileMngUtil{
         		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
         	}
         	
-        	String boardGroupAdminFG = ezCommunityService.brdCheckIfBoardGroupAdmin(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID());
+        	String boardGroupAdminFG = ezCommunityService.brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
         	
         	int pMode = 0;
         	
-        	if (boardGroupAdminFG.equals("OK") || loginVO.getRollInfo().toLowerCase().indexOf("c=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("k=1") > -1 || loginVO.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
         		pMode = 0;
         	} else {
         		pMode = 1;
         	}
 
-        	String retXML = getBoardTree(pRootBoardID, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(loginVO.getLang()));
+        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
         	
         	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
         		xmlret = commonUtil.convertStringToDocument(retXML);
@@ -1794,7 +1794,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
 		int prevPage = 0, nextPage = 0 , totalBlock = 0, goPage = 0;
 		int comNoPerPage = 17;
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		request.setCharacterEncoding("UTF-8");
 		
@@ -1827,7 +1827,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code);
 		}
 
-		keywordCount = ezCommunityService.getBBSListGet1(bName, commonUtil.getMultiData(loginVO.getLang()), pKeyword, sRadio);
+		keywordCount = ezCommunityService.getBBSListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), pKeyword, sRadio);
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -1835,7 +1835,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, commonUtil.getMultiData(loginVO.getLang()), pKeyword, sRadio);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), pKeyword, sRadio);
 		
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
@@ -1914,7 +1914,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
 			
-			if (commonUtil.getMultiData(loginVO.getLang()).equals("")) {
+			if (commonUtil.getMultiData(userInfo.getLang()).equals("")) {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
 			} else {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
@@ -1956,7 +1956,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("titleName", titleName);
 		model.addAttribute("bName", bName);
 		model.addAttribute("block", nowBlock);
-		model.addAttribute("rollInfo", loginVO.getRollInfo());
+		model.addAttribute("rollInfo", userInfo.getRollInfo());
 		model.addAttribute("code", code);
 		
 		return "/ezCommunity/board/bbsList";
@@ -1974,7 +1974,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String strWriteDate = "";
 		int nowBlock = 0;
 	
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String bName = request.getParameter("bName").toLowerCase();
 		String mode = request.getParameter("mode");
@@ -1993,7 +1993,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pagec = request.getParameter("pagec");
 		}
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(loginVO.getId(), loginVO.getRollInfo());
+		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
 		String fileName = ezCommunityService.bbsEditGet1(bName, no);
 		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no);
 		
@@ -2009,7 +2009,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			readNo = cBoardGet1.getReadNum();
 			strWriteDate = cBoardGet1.getWriteDay().trim();
 			
-			if (commonUtil.getMultiData(loginVO.getLang()).equals("2")) {
+			if (commonUtil.getMultiData(userInfo.getLang()).equals("2")) {
 				strWriteName = cBoardGet1.getUserName2();
 			} else {
 				strWriteName = cBoardGet1.getUserName();
@@ -2063,7 +2063,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("nextTitle", nextTitle);
 		model.addAttribute("nextItemID", nextItemID);
 		model.addAttribute("previousItemID", previousItemID);
-		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("userInfo", userInfo);
 		
 		
 		return "/ezCommunity/board/bbsViewNew";
@@ -2078,7 +2078,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int pagec = 0, block = 0;
 		String step = "", level = "", ref = "";
 		
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String mode = request.getParameter("mode");
 		String bName = request.getParameter("bName");
@@ -2111,39 +2111,39 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String titleName = ezCommunityService.getBoardTitleName(bName, code);
 		}
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(loginVO.getId(), loginVO.getRollInfo());*/
+		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());*/
 		String serverName = request.getServerName();
 		CommunityCBoardVO cBoardVO = null;
 		
 		if (!no.equals("")) { //  수정(mode :  "edit")  또는 답변(mode :  "write")
 
 			fileName = ezCommunityService.bbsEditGet1(bName, no);
-			cBoardVO = ezCommunityService.bbsEditNew(bName, no, commonUtil.getMultiData(loginVO.getLang()));
+			cBoardVO = ezCommunityService.bbsEditNew(bName, no, commonUtil.getMultiData(userInfo.getLang()));
 			
 			 if (!no.equals("")) { // 수정(mode : "edit") 답변 (mode : "write")
-				 if (loginVO.getLang().equals("2")) {
-					 grsUserName = loginVO.getDisplayName2();
+				 if (userInfo.getLang().equals("2")) {
+					 grsUserName = userInfo.getDisplayName2();
 				 } else {
-					 grsUserName = loginVO.getDisplayName1();
+					 grsUserName = userInfo.getDisplayName1();
 				 }
 			 } else {
-				 if (commonUtil.getMultiData(loginVO.getLang()).equals("2")) {
+				 if (commonUtil.getMultiData(userInfo.getLang()).equals("2")) {
 					 grsUserName = cBoardVO.getUserName2();
 				 } else {
 					 grsUserName = cBoardVO.getUserName();
 				 }
 			 }
 			 
-			 if (commonUtil.getMultiData(loginVO.getLang()).equals("2")) {
+			 if (commonUtil.getMultiData(userInfo.getLang()).equals("2")) {
 				 writeFakerName = cBoardVO.getUserName2();
 			 } else {
 				 writeFakerName = cBoardVO.getUserName();
 			 }
 		} else { // 쓰기(mode :  "write")
-			if (loginVO.getLang().equals("2")) {
-				grsUserName = loginVO.getDisplayName2();
+			if (userInfo.getLang().equals("2")) {
+				grsUserName = userInfo.getDisplayName2();
 			} else {
-				grsUserName = loginVO.getDisplayName1();
+				grsUserName = userInfo.getDisplayName1();
 			}
 		}
 		
@@ -2158,9 +2158,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("grsUserName", grsUserName);
 		model.addAttribute("writerFakerName", writeFakerName);
 		model.addAttribute("fileName", fileName);
-		model.addAttribute("userInfoUserNM1", loginVO.getDisplayName1());
-		model.addAttribute("userInfoUserNM2", loginVO.getDisplayName2());
-		model.addAttribute("userInfoUserID", loginVO.getId());
+		model.addAttribute("userInfoUserNM1", userInfo.getDisplayName1());
+		model.addAttribute("userInfoUserNM2", userInfo.getDisplayName2());
+		model.addAttribute("userInfoUserID", userInfo.getId());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("cBoard", cBoardVO);
 		model.addAttribute("step", step);
@@ -2176,7 +2176,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/bbsEditOk.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String bbsEditOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(xmlData);		
 
 		int myRef = 0, myStep = 0, myLevel = 0;
@@ -2216,12 +2216,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 
         if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = ezCommunityService.bbsEditOkGet1(bName, gant, code);
-        	int adminCheck = ezCommunityService.bbsAdminCheck(loginVO.getId(), loginVO.getRollInfo());
+        	int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
 
         	if (cBoard != null) {
         		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
-    			//if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1 || loginVO.getRollInfo().indexOf("t=1") > 0) {
-        		if (cBoard.getId().trim().equals(loginVO.getId()) || adminCheck == 1) {
+    			//if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+        		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                ezCommunityService.bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
 	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + ezCommunityService.getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
 	                
@@ -2309,7 +2309,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
         	String nowDate = EgovDateUtil.getTodayTime();
         	
-        	ezCommunityService.bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, loginVO.getCompanyID(), loginVO.getId(), userNm, userNm2, title, maxIdFieldName);
+        	ezCommunityService.bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName);
         	
         	try{
         		File dir = new File(dirPath);
@@ -2353,13 +2353,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/ckEditor.do")
 	public String ckEditor(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		String pMode = "";
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		if(request.getParameter("DraftFlag") != null){
 			pMode = request.getParameter("DraftFlag");
 		}
 
-		model.addAttribute("userInfo",loginVO);
+		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("pMode", pMode);
 		
 		return "/ezCommunity/CKEditor";
@@ -2637,7 +2637,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 
 	/**
-	 * 전자설문 목록 화면 호출함수
+	 * 설문조사 목록 화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollMain.do")
 	public String pollMain(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2712,7 +2712,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 등록 화면1 호출함수
+	 * 설문조사 등록 화면1 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAdd.do")
 	public String pollAdd(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2772,7 +2772,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 등록 화면2 호출함수
+	 * 설문조사 등록 화면2 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
 	public String pollAddOk (ModelMap model, HttpServletRequest request) {
@@ -2935,7 +2935,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 등록 실행함수
+	 * 설문조사 등록 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOkGo.do", method=RequestMethod.POST)
 	public void pollAddOkGo(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -3088,6 +3088,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 				break;
 		}
 		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
 		response.getWriter().write("<script language='javascript'>\n");
 		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 		response.getWriter().write("</script>");
@@ -3095,7 +3098,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 삭제 실행함수
+	 * 설문조사 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollDelete.do")
 	public void pollDelete(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -3126,6 +3129,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
 		response.getWriter().write("<script language='javascript'>\n");
 		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 		response.getWriter().write("</script>");
@@ -3133,7 +3139,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 읽기화면 호출함수
+	 * 설문조사 읽기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollRes.do")
 	public String poll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -3295,7 +3301,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 응답 실행 함수
+	 * 설문조사 응답 실행 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollResOk.do", method = RequestMethod.POST)
 	public void pollResOk(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -3344,6 +3350,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			ezCommunityService.pollResOkSet(questionID, pollSelect, answerETC, userInfo.getId(), userInfo.getCompanyID(), isSave, answerType, answerCount);
 		}
 		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
@@ -3352,12 +3361,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			if (notResponse == 1) {
 				response.getWriter().write("<script language='javascript'>\n");
-				response.getWriter().write("alert(" + egovMessageSource.getMessage("ezCommunity.t691", new Locale(globals.getProperty("Globals.language"))) + ")");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t691", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("window.history.back();");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			} else {
 				response.getWriter().write("<script language='javascript'>\n");
-				response.getWriter().write("alert(" + egovMessageSource.getMessage("ezCommunity.t692", new Locale(globals.getProperty("Globals.language"))) + ")");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t692", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("window.history.back();");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}
@@ -3365,14 +3376,99 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자설문 날짜변경화면 호출함수
+	 * 설문조사 날짜변경화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollEdit.do")
-	public void pollEdit(HttpServletRequest request) {
+	public String pollEdit(ModelMap model,HttpServletRequest request) throws Exception {
 		String pClubNo = request.getParameter("pClubNo");
 		String managerID = request.getParameter("managerID");
 		
+		CommunityCPollManagerVO managerVO = ezCommunityService.pollEditGet1(managerID);
 		
+		String pStartDate = managerVO.getPollStartDate().split(" ")[0];
+		String pEndDate = managerVO.getPollEndDate().split(" ")[0];
+		
+		CommunityCPollQuestionVO questionVO = ezCommunityService.pollEditGet2(managerID);
+		
+		model.addAttribute("pClubNo", pClubNo);
+		model.addAttribute("managerID", managerID);
+		model.addAttribute("managerVO", managerVO);
+		model.addAttribute("pStartDate", pStartDate);
+		model.addAttribute("pEndDate", pEndDate);
+		model.addAttribute("questionVO", questionVO);
+		
+		return "/ezCommunity/communityPollEdit";
+	}
+	
+	/**
+	 * 설문조사 날짜변경 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/pollEditOk.do")
+	public void pollEditOk(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String pClubNo = request.getParameter("pClubNo");
+		String managerID = request.getParameter("managerID");
+		String subject = request.getParameter("pollSubject");
+		String startDate = request.getParameter("startPollYear") + "-" + request.getParameter("startPollMonth") + "-" + request.getParameter("startPollDay");
+		String endDate = request.getParameter("endPollYear") + "-" + request.getParameter("endPollMonth") + "-" + request.getParameter("endPollDay");
+		
+		ezCommunityService.pollEditOkUpdate(subject, startDate, endDate, managerID);
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		response.getWriter().write("<script language='javascript'>\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + pClubNo + "';\n");
+		response.getWriter().write("</script>");
+		response.getWriter().flush();
+	}
+	
+	/**
+	 * 설문조사 답변 응답보기화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/pollETCView.do")
+	public String pollETCView(ModelMap model, HttpServletRequest request) throws Exception {
+		String questionID = request.getParameter("questionID");
+		String etc = request.getParameter("etc");
+		
+		String etcTotal = ezCommunityService.pollETCViewGet(questionID);
+		
+		if (etcTotal == null) {
+			etcTotal = "0";
+		}
+		
+		model.addAttribute("questionID", questionID);
+		model.addAttribute("etc", etc);
+		model.addAttribute("ETCTotal", etcTotal);
+		
+		return "/ezCommunity/communityPollETCView";
+	}
+	
+	/**
+	 * 설문조사 응답 테이블 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/pollETCTable.do")
+	public String pollETCTable(ModelMap model, HttpServletRequest request) throws Exception {
+		String questionID = request.getParameter("questionID");
+		String etc = request.getParameter("etc");
+		
+		List<CommunityCPollResponseVO> responseList = ezCommunityService.pollETCTableGet(questionID);
+		
+		model.addAttribute("questionID", questionID);
+		model.addAttribute("etc", etc);
+		model.addAttribute("responseList", responseList);
+		
+		return "/ezCommunity/communityPollETCTable";
+	}
+	
+	//여기할차례
+	/**
+	 * 회원목록 화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commViewMember.do")
+	public String commViewMember(HttpServletRequest request) throws Exception {
+		
+		
+		return "/ezCommunity/communityCommViewMember";
 	}
 }
 

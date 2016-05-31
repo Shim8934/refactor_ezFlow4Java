@@ -530,4 +530,25 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void pollResOkSet(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.pollResOkSet", map);
 	}
+
+	public CommunityCPollManagerVO pollEditGet1(String v_MANAGERID) throws Exception {
+		return (CommunityCPollManagerVO) select("EzCommunityDAO.pollEditGet1", v_MANAGERID);
+	}
+
+	public CommunityCPollQuestionVO pollEditGet2(String v_MANAGERID) throws Exception {
+		return (CommunityCPollQuestionVO) select("EzCommunityDAO.pollEditGet2", v_MANAGERID);
+	}
+
+	public void pollEditOkUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.pollEditOkUpdate", map);
+	}
+
+	public String pollETCViewGet(String v_QUESTIONID) throws Exception {
+		return (String) select("EzCommunityDAO.pollETCViewGet", v_QUESTIONID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCPollResponseVO> pollETCTableGet(String v_QUESTIONID) throws Exception {
+		return (List<CommunityCPollResponseVO>) list("EzCommunityDAO.pollETCTableGet", v_QUESTIONID);
+	}
 }

@@ -263,6 +263,16 @@ public interface EzCommunityService {
 	public String pollResGet4(String lang, String pollRegUser) throws Exception;
 
 	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception;
+
+	public CommunityCPollManagerVO pollEditGet1(String managerID) throws Exception;
+
+	public CommunityCPollQuestionVO pollEditGet2(String managerID) throws Exception;
+
+	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception;
+
+	public String pollETCViewGet(String questionID) throws Exception;
+
+	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

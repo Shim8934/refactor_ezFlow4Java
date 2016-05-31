@@ -218,6 +218,18 @@
 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET3(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.pollEditGet1"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollEditGet2"					parameterClass="String"		resultClass="CommunityCPollQuestionVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET2(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollETCTableGet"				parameterClass="String"		resultClass="CommunityCPollResponseVO">
+		{CALL EZCOMMUNITY.EZSP_POLL_ETC_TABLE_GET(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -354,6 +366,10 @@
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.pollETCViewGet"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_POLL_ETC_VIEW_GET(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -456,6 +472,10 @@
 	
 	<procedure id="EzCommunityDAO.pollResOkSet"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_POLL_RES_OK_SET(#v_QUESTIONID#, #v_POLLSELECT#, #v_ANSWERETC#, #v_USERINFO_USERID#, #v_USERINFO_COMPANYID#, #v_ISSAVE#, #v_ANSWERTYPE#, #v_ANSWERCOUNT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.pollEditOkUpdate"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_OK_UPDATE(#v_SUBJECT#, #v_POLLSTARTDATE#, #v_POLLENDDATE#, #v_MANAGERID#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
