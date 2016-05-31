@@ -955,6 +955,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("adminFg", "Y");
 		model.addAttribute("resID", resID);
+		model.addAttribute("ownerID", strOwnerID);
+		model.addAttribute("ownerNm", strOwnerNm);
+		model.addAttribute("ownerPosition", strOwnerPosition);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approveFlag", strApproveFlag);
 		model.addAttribute("brdNm", strBrdNm);
@@ -1422,5 +1425,97 @@ public class EzResourceController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			return "FALSE";
 		}
+	}
+	
+	/**
+	 * 자원관리 자원예약 자원선택 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleAddSelect.do")
+	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String brdID = "";
+		String brdNm = "";
+		String brdGubun = "";
+		String brdGbn = "";
+		String accessCode = "";
+		String selectNo = "";
+		String useEditor = "";
+		String useIE11Browser = "";
+		String noneActiveX = "";
+		
+		try {
+			noneActiveX = "YES";
+			useEditor = config.getProperty("EDITOR");
+			useIE11Browser = "CK";
+			
+			if (req.getParameter("brdID") != null) {
+				brdID = req.getParameter("brdID");
+			}
+System.out.println("brdID:"+brdID);
+			if (req.getParameter("brdNm") != null) {
+				brdNm = req.getParameter("brdNm");
+			}
+			if (req.getParameter("pbrdGubun") != null) {
+				brdGubun = req.getParameter("pbrdGubun");
+			}
+			if (req.getParameter("boardGbn") != null) {
+				brdGbn = req.getParameter("boardGbn");
+			}
+			
+			//관리자체크
+			/*if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()).equals("Y")) {
+				accessCode = "0";
+			} else {
+				accessCode = "2";
+			}*/
+			if (req.getParameter("flag") != null) {
+				selectNo = req.getParameter("flag");
+			}
+			
+			model.addAttribute("brdID", brdID);
+			model.addAttribute("brdNm", brdNm);
+			model.addAttribute("brdGubun", brdGubun);
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("serverName", req.getServerName());
+			model.addAttribute("selectNo", selectNo);
+			model.addAttribute("accessCode", "0");
+			model.addAttribute("useEditor", useEditor);
+			model.addAttribute("useIE11Browser", useIE11Browser);
+			model.addAttribute("noneActiveX", noneActiveX);
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+				
+		return "/ezResource/resScheduleAddSelect";
+	}
+	
+	/**
+	 * 자원관리 자원예약 자원선택 자원관리 추가시 권한 체크 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleAddGetACL.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleAddGetACL(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String ret = "";
+		try {
+			brdID = req.getParameter("brdID");
+			ret = ezResourceService.getACL(userInfo.getCompanyID(), brdID, userInfo.getId(), "everyone");
+		} catch (Exception e) {
+			 
+		}
+		return "<RESULT>"+ret+"</RESULT>";
+	}
+	
+	/**
+	 * 자원관리 자원예약 저장 후 닫기 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		return "";
 	}
 }
