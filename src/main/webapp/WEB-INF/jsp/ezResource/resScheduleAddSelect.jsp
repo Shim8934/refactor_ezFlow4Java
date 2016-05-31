@@ -20,7 +20,7 @@
 			var g_DeptID	= "${userInfo.deptID}";
 			var g_DeptPath	= "${userInfo.deptPathCode}";
 			var pCompanyID	 = "${userInfo.companyID}";
-			var g_AccessCode = ""; 
+			var g_AccessCode = "${accessCode}"; 
 			var g_ServerName = "${serverName}";
 			var selectNo = "${selectNo}";
 			var ReturnValue_CN = new Array();
@@ -51,7 +51,7 @@
 		    	TreeView.attachEvent('nodedblclick', InsertReceiver);
 
 		    	var xmlHTTP = createXMLHttpRequest();
-		    	xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
+		    	xmlHTTP.open("GET", "/xml/ezResource/organtree_config2.xml", false);
 		    	xmlHTTP.send();
 
 		    	if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -101,7 +101,7 @@
 			function locationInfo(pBrdNm) {
 			    var idx = "7";
 
-			    navigation_info = "<a href='/Myoffice/main/index_Resource.aspx' target='main' class='n'><spring:message code="ezResource.t334" /></a>"
+			    navigation_info = "<a href='/ezResource/resMain.do' target='main' class='n'><spring:message code="ezResource.t334" /></a>"
 
 			    if (pBrdNm != "") {
 		        navigation_info += " > " + pBrdNm + "</a>";
