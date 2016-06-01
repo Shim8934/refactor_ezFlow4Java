@@ -2582,20 +2582,38 @@ function SelectLang(lang) {
 
 // SipUri를 이용하여 사용자 속성 정보를 가져온다. (Lync 2013에서 사용)
 function getPropertiesBySIPURI(pSipUri) {
-
+    
     var adCount = 0;
     var xmlHTTP = createXMLHttpRequest();
     var xmlDOM = createXmlDom();
 
-    var objNode;
+ 	$.ajax({
+			url : '/ezOrgan/getSearchList.do',
+			method : 'POST',
+			dataType : "json",
+			data : {
+				search : "EXACT_SIPURI::" + pSipUri ,
+				cell : "displayName;title;mobile;telephoneNumber;homePhone;mail",
+				prop : "",
+				type : "user",
+				lang : displaylang
+			} ,
+			success : function(data, textStatus, jqXHR) {
+
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert(textStatus);
+			}
+		}); 
+   /* var objNode;
     createNodeInsert(xmlDOM, objNode, "DATA");
     createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "EXACT_SIPURI::" + pSipUri);
     createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName;title;mobile;telephoneNumber;homePhone;mail");
     createNodeAndInsertText(xmlDOM, objNode, "PROP", "");
     createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-    createNodeAndInsertText(xmlDOM, objNode, "LANG", displaylang);
+    createNodeAndInsertText(xmlDOM, objNode, "LANG", displaylang);*/
 
-    try {
+    /*try {
         if(bGroupwarePresence) {
             xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
         }
@@ -2624,7 +2642,7 @@ function getPropertiesBySIPURI(pSipUri) {
         xmlDOM = null;
     }
 
-    return xmlDOM;
+    return xmlDOM; */
 }
 
 // xmlPresenceDom(LyncDB에서 쿼리해온 사용자 state xml)에서 사용자 state 쿼리해서 NameControl state에 맞게 변환
