@@ -15,12 +15,14 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -273,6 +275,28 @@ public interface EzCommunityService {
 	public String pollETCViewGet(String questionID) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception;
+
+	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception;
+
+	public String adminMemberListGet2(String code) throws Exception;
+
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception;
+
+	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception;
+
+	public String getClubMemberInfo(String trim, String string, String lang) throws Exception;
+
+	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception;
+
+	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception;
+
+	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception;
+
+	public CommunityClubVO adminLeftGet(String code) throws Exception;
+
+	public int noticeSysopCheck(String code, String id, String rollInfo, String companyID) throws Exception;
+
+	
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

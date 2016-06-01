@@ -35,12 +35,14 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -1994,6 +1996,247 @@ System.out.println("@");
 		return ezCommunityDAO.pollETCTableGet(questionID);
 	}
 
+	@Override
+	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_S_RADIO", sRadio);
+		
+		return ezCommunityDAO.commViewMemberGet2(map);
+	}
+
+	@Override
+	public String adminMemberListGet2(String code) throws Exception {
+		return ezCommunityDAO.adminMemberListGet2(code);
+	}
+
+	@Override
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_S_RADIO", sRadio);
+		
+		return ezCommunityDAO.commViewMemberGet1(map);
+		
+	}
+
+	@Override
+	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", id);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.commViewMemberGet3(map);
+	}
+
+	@Override
+	public String getClubMemberInfo(String pCN, String pSearch, String lang) throws Exception {
+		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1"));
+		
+		if (lang.equals("2")) {
+			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+		} else {
+			return xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+		}
+	}
+
+	@Override
+	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_SYSOPID", cSysopID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.commOutGet(map);
+	}
+
+	@Override
+	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuilder sb = new StringBuilder();
+		String cateA = "0";
+		String cateB = "0";
+		String cateC = "0";
+		int caca = 0;
+		
+		
+		if (!c_Cate_A.equals("0")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_C_CODE", c_Cate_A);
+			map.put("v_C_CAT", "a");
+			cateA = ezCommunityDAO.ezCommunityBaseGet3(map);
+		}
+		
+		if (!c_Cate_B.equals("0")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_C_CODE", c_Cate_B);
+			map.put("v_C_CAT", "b");
+			
+			cateB = ezCommunityDAO.ezCommunityBaseGet3(map);
+		}
+		
+		if (!c_Cate_C.equals("0")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_C_CODE", c_Cate_C);
+			map.put("v_C_CAT", "c");
+			
+			cateC = ezCommunityDAO.ezCommunityBaseGet3(map);
+		}
+		
+		if (!cateA.equals("0")) {
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, new Locale(globals.getProperty("Globals.language"))));
+			caca = 1;
+		}
+		
+		if (!cateB.equals("0")) {
+			if (caca == 1) {
+				sb.append(",&nbsp");
+			}
+			
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateB, new Locale(globals.getProperty("Globals.language"))));
+			caca = 1;
+		}
+		
+		if (!cateC.equals("0")) {
+			if (caca == 1) {
+				sb.append(",&nbsp");
+			}
+			
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateC, new Locale(globals.getProperty("Globals.language"))));
+		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception {
+		String strReturn = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", userInfo.getId());
+		
+		if (ezCommunityDAO.commOutOkGet1(map) != null) {
+			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
+		} else {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_CODE", code);
+			map.put("v_USERINFO_USERID", userInfo.getId());
+			map.put("v_DATETIME_NOW", EgovDateUtil.getTodayTime());
+			map.put("v_REASON", reason);
+			
+			ezCommunityDAO.commOutOkInsert(map);
+			
+			strReturn = "<RETURN><VALUE>1</VALUE></RETURN>";
+//			SndMail(code);
+		}
+
+		return strReturn;
+	}
+
+	@Override
+	public CommunityClubVO adminLeftGet(String code) throws Exception {
+		return ezCommunityDAO.adminLeftGet(code);
+	}
+
+	@Override
+	public int noticeSysopCheck(String code, String id, String rollInfo, String companyID) throws Exception {
+		int sysopCheck = 0;
+		
+		
+		return 0;
+	}
+
+	
+	/*public void SndMail(string code)
+	{
+        try
+        {
+            string PositionNM = userinfo.Title;			//  직위
+            string DeptNM = userinfo.DeptName;		//  부서명
+            string CompanyNM = userinfo.CompanyName;		//  회사명
+            string mailSendServer = "\"" + userinfo.DisplayName + "\" <" + userinfo.Email + ">";
+            string strSql = "";
+
+
+#if USE_MSSQL
+            SqlConnection conn2 = new SqlConnection(GetSystemConfigValue("ezCommunity"));
+            SqlCommand comm2 = new SqlCommand("EZSP_COMM_OUT_OK_GET2", conn2);
+            comm2.CommandType = CommandType.StoredProcedure;
+            comm2.Parameters.Add("@CODE", SqlDbType.NChar, 20).Value = code;
+            comm2.Parameters.Add("@USERINFO_LANG", SqlDbType.NChar, 1).Value = GetMultiData(userinfo.lang);
+            conn2.Open();
+            SqlDataReader EMailRS = comm2.ExecuteReader();
+#elif USE_ORACLE
+            OracleConnection conn2 = new OracleConnection(GetSystemConfigValue("ezCommunityOra"));
+            OracleCommand comm2 = new OracleCommand("EZSP_COMM_OUT_OK_GET2", conn2);
+            comm2.CommandType = CommandType.StoredProcedure;
+            comm2.Parameters.Add("v_CODE", OracleType.NChar, 20).Value = code;
+            comm2.Parameters.Add("v_USERINFO_LANG", OracleType.NChar, 1).Value = GetMultiData(userinfo.lang);
+            comm2.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
+            conn2.Open();
+            OracleDataReader EMailRS = comm2.ExecuteReader();
+#endif
+            while (EMailRS.Read())
+            {
+                if (EMailRS["EMail"].ToString() != "")
+                {
+                    string CommunityUser = "\"" + EMailRS["UserName"].ToString() + "\" <" + EMailRS["EMail"].ToString() + ">";
+                    string content = "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] " + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t587") + "< " + reason + " > " + RM.GetString("t721");
+                    string strXML = "<DATA>";
+                    strXML += "<FROM><![CDATA[" + mailSendServer + "]]></FROM>";
+                    strXML += "<TO><![CDATA[" + CommunityUser + "]]></TO>";
+                    strXML += "<CC></CC>";
+                    strXML += "<BCC></BCC>";
+                    strXML += "<SUBJECT><![CDATA[" + "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] Community" + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t722") + "]]></SUBJECT>";
+                    strXML += "<BODY><![CDATA[" + content + "]]></BODY>";
+                    strXML += "</DATA>";
+
+                    // 2011.06 : 메일 노티 페이지 변경
+                    string WebServerName = Server.MachineName;
+                    string url = Request.Url.Scheme + "://" + WebServerName + "/myoffice/ezEmail/remote/mail_send_noti.aspx";
+
+                    string[] HeaderOption = new string[10];
+                    HeaderOption[0] = "Authorization\n" + Request.ServerVariables["HTTP_AUTHORIZATION"];
+                    HeaderOption[1] = "Content-Type\ntext/xml; charset=utf-8";
+                    HeaderOption[2] = "Accept-Language\nutf-8";
+
+                    string rtnStatus = "";
+                    Stream ResponseStream = null;
+                    long StreamSize = 0;
+
+                    if (ExecuteWebURL("POST", url, strXML, HeaderOption, ref rtnStatus, ref ResponseStream, ref StreamSize))
+                    {
+                        if (ResponseStream != null) { ResponseStream.Close(); }
+                        if (ResponseStream != null) { ResponseStream = null; }
+                    }
+                }
+            }
+            conn2.Close();
+            comm2.Dispose();
+            conn2.Dispose();
+        }
+        catch (Exception ex)
+        {
+            WriteTextLog("ezcomm_comm_out_ok", "SndMail", ex.ToString());
+        }
+	}*/
+	
+	
+	
 	
 	
 /*	@Override

@@ -503,10 +503,11 @@
 		        createNodeInsert(xmlDoc, objRoot, "PARAMETER");
 
 		        createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-		        xmlHttp.open("POST", "/ezCommunity/goadminOk.do", false);
+		        xmlHttp.open("POST", "/ezCommunity/goAdminOk.do", false);
 		        xmlHttp.send(xmlDoc);
 
-		        resultXML = xmlHttp.responseXML;
+		        resultXML = loadXMLString(xmlHttp.responseText);
+		        
 		        var master = "";
 		        
 		        master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
@@ -526,7 +527,7 @@
 		                var left = (width - wWeight) / 2;
 		                var top = (heigth - wHeight) / 2;
 
-		                var Para = window.open("/ezCommunity/commHome/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		            }
 		        } catch (e) { }
 		    }
@@ -539,7 +540,7 @@
 		        var left = (width - wWeight) / 2;
 		        var top = (heigth - wHeight) / 2;
 
-		        var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code + "&codeName=" + codeName, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&codeName=" + codeName, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		    }
 
 		    function open_admin_home(code, num) {
@@ -554,7 +555,7 @@
 		        var left = (width - wWeight) / 2;
 		        var top = (heigth - wHeight) / 2;
 
-		        var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code + "&codeName=" + codeName + "&num=" + num, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&codeName=" + codeName + "&num=" + num, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		    }
 		    
 		    function event_get_homeboardinfo() {

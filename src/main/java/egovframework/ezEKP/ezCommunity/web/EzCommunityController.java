@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,12 +48,14 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -604,6 +607,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 관리자권한 확인 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/goAdminOk.do")
+	@ResponseBody
 	public String goAdminOk(@RequestBody String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception {
 		String pClubID = "";
 		StringBuilder aspXML = new StringBuilder(), masterXML = new StringBuilder(), isinXML = new StringBuilder(), resultXML = new StringBuilder();
@@ -620,7 +624,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			aspXML.append(userID.trim());
 			aspXML.append("</VALUE>");
 		}
-		aspXML.append("<ASP>");
+		aspXML.append("</ASP>");
 		
 		List<CommunityClubVO> clubList = ezCommunityService.goAdminOkGet2(pClubID);
 		
@@ -3460,15 +3464,233 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityPollETCTable";
 	}
 	
-	//여기할차례
 	/**
 	 * 회원목록 화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commViewMember.do")
-	public String commViewMember(HttpServletRequest request) throws Exception {
+	public String commViewMember(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String keyword = "", sRadio = "", block = "";
+		int curPage = 1;
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		if (request.getParameter("keyword") != null) {
+			keyword = request.getParameter("keyword");
+		}
+		
+		if (request.getParameter("sRadio") != null) {
+			sRadio = request.getParameter("sRadio");
+		}
+		
+		if (request.getParameter("goToPage") != null) {
+			curPage = Integer.parseInt(request.getParameter("goToPage"));
+		}
+		
+		if (request.getParameter("block") != null) {
+			block = request.getParameter("block");
+		}
+		
+		String code = request.getParameter("code");
+		
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
+		
+		String keywordCount = ezCommunityService.commViewMemberGet2(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		
+		int comNoPerPage = 10;
+        int totalPage = Integer.parseInt(keywordCount) / comNoPerPage;
+
+        if ((totalPage * comNoPerPage) != Integer.parseInt(keywordCount) && (Integer.parseInt(keywordCount) % comNoPerPage) != 0){
+        	totalPage = totalPage + 1;
+        }
+        
+		String strSysopID = ezCommunityService.adminMemberListGet2(code).trim();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityCClubUserVO> userList = ezCommunityService.commViewMemberGet1(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		
+		int iOutputCount = 1;
+		
+		for(CommunityCClubUserVO user : userList) {
+			if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			
+			if (iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			CommunityMemberInfoVO memberInfo = ezCommunityService.commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
+			
+			if (userInfo.getLang().equals("2")) {
+				memberInfo.setUserName(memberInfo.getUserName2());
+			}
+			
+			sb.append("<tr>");
+			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+			sb.append("<td>");
+			
+			if (user.getC_ID().trim().equals(strSysopID)) {
+				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+			}
+			
+			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + memberInfo.getUserName() + "</a></td>");
+			sb.append("<td style=\"width:85\">" + ezCommunityService.getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang())) + "</td>");
+			sb.append("<td style=\"width:85\">" + user.getC_ID().trim() + "</td>");
+			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
+			sb.append("<td style=\"width:150\">");
+			
+			if (user.getC_lastDate() != null) {
+				sb.append(user.getC_lastDate().substring(0, 10));
+			}
+			
+			sb.append("</td>");
+			sb.append("<td style=\"width:55; align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", new Locale(globals.getProperty("Globals.language"))) + "</td></tr>");
+		}
+		
+		model.addAttribute("curPage", curPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("code", code);
+		model.addAttribute("sRadio", sRadio);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("nowBlock", block);
+		model.addAttribute("keywordCount", keywordCount);
+		model.addAttribute("strSysopID", strSysopID);
+		model.addAttribute("strXML", sb.toString());
 		
 		return "/ezCommunity/communityCommViewMember";
+	}
+	
+	/**
+	 * 회원탈퇴 화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commOut.do")
+	public String commOut(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		
+		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
+		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
+		
+		String sysopName = member.getUserName();
+		
+		if (sysopName.equals("")) {
+			sysopName = egovMessageSource.getMessage("ezCommunity.t398", new Locale(globals.getProperty("Globals.language")));
+		}
+		
+		if(commonUtil.getMultiData(userInfo.getLang()).equals("2")) {
+			club.setC_ClubName(club.getC_ClubName2());
+		}
+		
+		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim());
+	
+		model.addAttribute("code", code);
+		model.addAttribute("club", club);
+		model.addAttribute("sysopName", sysopName);
+		model.addAttribute("str_category_print", strCategoryPrint);
+		
+		return "/ezCommunity/communityCommOut";
+	}
+	
+	/**
+	 * 회원탈퇴 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commOutOk.do")
+	@ResponseBody
+	public String commOutOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
+		
+		String code = xmlDoc.getElementsByTagName("CODE").item(0).getTextContent();
+		String reason = xmlDoc.getElementsByTagName("REASON").item(0).getTextContent();
+		
+		String retValue = ezCommunityService.commOutOk(userInfo, code, reason);
+		
+		return retValue;
+	}
+	
+	/**
+	 * 관리메뉴 화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/admin/index.do")
+	public String adminIndex(HttpServletRequest request, ModelMap model) {
+		String flag = "", num = "";
+		String code = request.getParameter("code");
+		
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		
+		if (request.getParameter("num") != null) {
+			num = request.getParameter("num");
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("flag", flag);
+		model.addAttribute("num", num);
+		
+		return "/ezCommunity/communityAdminIndex";
+	}
+	
+	/**
+	 * 관리메뉴 왼쪽화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminLeft.do")
+	public String adminLeft(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String num = "", pExcludeBoardID = "", flag = "", clickBoard = "", boardID = "";
+		String pRootBoardID = "TOP", pSubFlag = "0";
+		int pSelectBy = 0;
+		
+		String code = request.getParameter("code");
+		
+		if (request.getParameter("num") != null) {
+			num = request.getParameter("num");
+		}
+		
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		
+		if (request.getParameter("clickBoard ") != null) {
+			clickBoard  = request.getParameter("clickBoard ");
+		}
+		
+		if (request.getParameter("boardID ") != null) {
+			boardID  = request.getParameter("boardID ");
+		}
+		
+		CommunityClubVO club = ezCommunityService.adminLeftGet(code);
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
+		String boardGroupAdmin_FG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		int pMode = 0;
+		
+		//TODO 2016-06-01 이효진 t=1 권한 없음 
+//		if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1)
+		if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
+			pMode = 0;
+		} else {
+			pMode = 1;
+		}
+
+		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")){
+            retXML = "<RESULT>ERROR</RESULT>";
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("num", num);
+		model.addAttribute("clickBoard", clickBoard);
+		model.addAttribute("boardID", boardID);
+		
+		model.addAttribute("flag", flag);
+		model.addAttribute("club", club);
+		model.addAttribute("xmlret", retXML);
+		
+		return "/ezCommunity/communityAdminLeft";
 	}
 }
 

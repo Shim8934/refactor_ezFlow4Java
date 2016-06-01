@@ -26,9 +26,6 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
-			    
-				var idx = "6";
-				var navigation_info = "<a href='/ezCommunity/indexMain.do' target='main'><spring:message code='ezCommunity.t577' /></a> > <a href='/ezCommunity/commHome/commHome.do?code=<c:out value='${code}' />' target='right' class='n'><spring:message code='ezCommunity.t578' /></a> > <spring:message code='ezCommunity.t598' />";
 				
 				$("#tblList").html($("#tblList").html() + '${strXML}'); 
 			}
