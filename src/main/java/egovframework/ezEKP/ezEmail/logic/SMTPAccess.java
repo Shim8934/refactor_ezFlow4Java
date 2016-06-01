@@ -53,7 +53,17 @@ public class SMTPAccess {
 	}
 	
 	public MimeMessage createMimeMessage(){
-		MimeMessage message = new MimeMessage(getSession());
+		MimeMessage message = new MimeMessage(getSession()) {
+			
+			@Override
+			protected void updateMessageID() throws MessagingException {
+				if (getHeader("Message-ID") == null) {
+					super.updateMessageID();
+				}
+			}
+			
+		};
+		
 		return message;
 	}
 	
