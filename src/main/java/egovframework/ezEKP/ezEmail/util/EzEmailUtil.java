@@ -1,7 +1,12 @@
 package egovframework.ezEKP.ezEmail.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -771,6 +776,49 @@ public class EzEmailUtil {
 		
 		return timeOffset;
 	}
+	
+	/**
+	 * sends an HTTP POST request and returns the response. 
+	 */
+	public String getWebServiceResult(String urlString, String inputParams) throws Exception {
+		String result = null;
+		
+		URL url = new URL(urlString);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");	
+		
+		if (inputParams != null) {
+			OutputStream os = conn.getOutputStream();
+			os.write(inputParams.getBytes());
+			os.flush();
+		}
+		
+		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			BufferedReader br = new BufferedReader(
+										new InputStreamReader(conn.getInputStream())
+										);
+
+			StringBuilder sb = new StringBuilder();
+			String output;
+
+			while ((output = br.readLine()) != null) {
+				sb.append(output);
+			}
+			
+			result = sb.toString();
+			
+			conn.disconnect();							
+		}
+		else {
+			Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
+			
+			throw e;
+		} 
+		
+		return result;
+	}    
 	
 	/**
 	 * change an http or https URL to an anchor tag in a text/plain message 
