@@ -2041,10 +2041,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 						
 						int length = rows.getLength();
 						boolean isRemoved = false;
-						if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-							for (int j=0; j<length; j++) {
+						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+							for (int j = 0; j < length; j++) {
 								if (rows.item(j).getFirstChild().getTextContent().equals(p.getFileName())) {
 									isRemoved = true;
+									break;
 								}
 							}
 						}

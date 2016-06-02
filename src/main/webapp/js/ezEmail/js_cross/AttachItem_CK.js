@@ -97,6 +97,9 @@ function DelList(resultXML) {
     xmlhttp = createXMLHttpRequest();
     xmlhttp.open("POST", "/ezEmail/mailDelInterAttach.do", false);
     xmlhttp.send(xml);
+    
+    var xmlDoc = loadXMLString(xmlhttp.responseText);	
+    g_url = xmlDoc.getElementsByTagName("DATA").item(0).textContent;    
 }
 
 function AddAttachFileInfoXmlParsing(resultXML) {
