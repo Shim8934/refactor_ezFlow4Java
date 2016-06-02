@@ -11,8 +11,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js/NewMailList.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js/Newemail.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/NameControl.js"></script>		
