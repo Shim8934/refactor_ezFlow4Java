@@ -49,7 +49,7 @@
 	                if (pMailAddress != "")
 	                    createNodeAndInsertText(xmlDom, objNode, "EMAILADDRESS", encodeURIComponent(pMailAddress));
 	            }
-	            g_xmlHttp.open("POST", "/myoffice/ezEmail/remote/mail_cancelsend.aspx", false);
+	            g_xmlHttp.open("POST", "/ezEmail/mailCancelSend.do", false);
 	            g_xmlHttp.onreadystatechange = mail_cancelsend_after;
 	            g_xmlHttp.send(xmlDom);
 	        }

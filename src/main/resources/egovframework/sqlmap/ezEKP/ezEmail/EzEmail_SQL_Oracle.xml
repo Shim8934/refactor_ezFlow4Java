@@ -149,6 +149,30 @@
 		{CALL EZEMAIL.EZSP_GETMAILCANCELLIST(#v_PMESSAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.checkDoubleMailReceive" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_CHECKDOUBLE_MAILRECE(#v_SENDEREMAIL#, #v_SUBJECT#, #v_RECDATE#, #v_MESSAGEID#, #v_SERVERNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.insertMailReceiveInfo" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_INSERT_MAILRECEIVE_I(#v_SENDEREMAIL#, #v_SUBJECT#, #v_RECDATE#, #v_MESSAGEID#, #v_SERVERNAME#, #v_RECALLKEY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.insertMailReceiveDetailInfo" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_MAIL_INSERT_MAILRECEIVE_D(#v_NUM#, #v_RECEIVEID#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReceiveMessageId" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_SELECT_MAILRECEIVE_M(#v_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.updateMailReceiveDetailInfo" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_MAIL_UPDATE_MAILRECEIVE_D(#v_NUM#, #v_EMAIL#, #v_CODE#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReceiveAddress" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_SELECT_MAILRECEIVE_A(#v_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 

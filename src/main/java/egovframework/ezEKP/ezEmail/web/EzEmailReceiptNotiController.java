@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -84,7 +89,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailReaderList.do")
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
-		url = URLEncoder.encode(url, "UTF-8");
 		model.addAttribute("url", url);
 		return "ezEmail/mailReaderList";
 	}
@@ -92,7 +96,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	/**
 	 * 메일 수신확인 리스트 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetReceiveList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
@@ -123,45 +127,13 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 //                OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
 //            }
 			
-			/*
-			<DATA>
-			  <ROW>
-			    <READDATE>0025-05-16 오전 12:00:00</READDATE>
-			    <READEREMAIL>gisa1@opensol2014.com</READEREMAIL>
-			    <READERNAME>gisa1</READERNAME>
-			    <CANCEL>
-			    </CANCEL>
-			  </ROW>
-			  <ROW>
-			    <READEREMAIL><![CDATA[RAB1@opensol2014.com]]></READEREMAIL>
-			    <READERNAME><![CDATA[부설연구소]]></READERNAME>
-			    <READDATE><![CDATA[UNREAD]]></READDATE>
-			    <CANCEL>
-			    </CANCEL>
-			  </ROW>
-			  <ROW>
-			    <READEREMAIL><![CDATA[OPENSOL@opensol2014.com]]></READEREMAIL>
-			    <READERNAME><![CDATA[오픈솔루션팀]]></READERNAME>
-			    <READDATE><![CDATA[UNREAD]]></READDATE>
-			    <CANCEL>
-			    </CANCEL>
-			  </ROW>
-			  <ROW>
-			    <READEREMAIL><![CDATA[GJS@opensol2014.com]]></READEREMAIL>
-			    <READERNAME><![CDATA[경영지원실]]></READERNAME>
-			    <READDATE><![CDATA[UNREAD]]></READDATE>
-			    <CANCEL>
-			    </CANCEL>
-			  </ROW>
-			  <SUBJECT>test</SUBJECT>
-			</DATA>
-			*/
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
 			
 			//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
 			String userId = id + "@" + config.getProperty("config.DomainName");
 			String userId2 = id + "@" + config.getProperty("config.DomainName");
+			logger.debug("messageId = " + messageId);
 			List<MailReadVO> readList = ezEmailService.getMailReadList(userId, userId2, messageId, outerReadCheck);
 			
 			List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
@@ -214,7 +186,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					
 					String status = "";
 					for (MailCancelVO cvo : cancelList) {
-						if (cvo.getReaderEmail().equals(email)) {
+						if (cvo.getReaderEmail() != null && cvo.getReaderEmail().equals(email)) {
 							if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
 								status = cvo.getStatus();
 							} else {
@@ -231,7 +203,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			}
 			
 			sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
-			sb.append("<DATA>");
+			sb.append("</DATA>");
 			returnValue = sb.toString();
 		}
 		
@@ -243,6 +215,137 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		}
 		
 		return returnValue;
+	}
+	
+	/**
+	 * 메일 회수 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailCancelSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String strError = "";
+		String localServerName = config.getProperty("config.COMPUTERNAME");
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		Document xmldom = commonUtil.convertRequestToDocument(request);
+		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
+		String folderPath = url.split("/")[0];
+		String uidStr = url.split("/")[1];
+		long uid = Long.parseLong(uidStr); 
+		
+		//넘어온 folderPath가 보낸편지함이 아닐경우
+		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+			return "메일 회수는 보낸편지함의 메일만 가능합니다.";
+		}
+		
+		String pEachCancel = "NO";
+		if (xmldom.getElementsByTagName("EMAILADDRESS") != null && xmldom.getElementsByTagName("EMAILADDRESS").getLength() > 0) {
+			pEachCancel = xmldom.getElementsByTagName("EMAILADDRESS").item(0).getTextContent();
+			pEachCancel = URLDecoder.decode(pEachCancel, "UTF-8");
+		}
+		
+		String emailAddress = id + "@" + config.getProperty("config.DomainName");
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+		folder.open(Folder.READ_ONLY);
+		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+		
+		if (message == null) {
+			return "삭제 하려는 원본 메일이 보낸 편지함에 없습니다.\r\n직전발송한 메일 회수인 경우 잠시 후 다시 시도 하여 주십시오.";
+		}
+		
+		String from = ((InternetAddress)message.getFrom()[0]).getAddress();
+		if (!from.equals(emailAddress)) {
+			return "메일 회수는 자신이 보낸메일만 가능합니다.";
+		}
+		
+		int maxRecAllCount = 500;
+		Address[] addresses = message.getAllRecipients();
+		if (addresses.length > maxRecAllCount) {
+			return "메일 회수는 수신자 수가 " + maxRecAllCount + " 명 이상인 메일은 회수 할 수 없습니다.";
+		}
+		
+		String internetMessageId = ((IMAPMessage)message).getMessageID();
+		String subject = message.getSubject();
+		
+		DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+		String createDate = sdFormat.format(message.getSentDate());
+		
+		String isInsert = ezEmailService.checkDoubleMailReceive(emailAddress, subject, createDate, internetMessageId, localServerName);
+		logger.debug("isInsert = " + isInsert);
+		
+		if (pEachCancel.equals("NO")) {
+			//내부사용자 추출
+			List<String> innerAddresses = new ArrayList<String>();
+			for (Address address : addresses) {
+				int index = ((InternetAddress)address).getAddress().indexOf("@");
+				String domain = "";
+				if (index > -1) {
+					domain = ((InternetAddress)address).getAddress().substring(index + 1);
+				}
+				if (domain.equals(config.getProperty("config.DomainName"))) {
+					innerAddresses.add(((InternetAddress)address).getAddress());
+				}
+			}
+			
+			if (isInsert == null) {
+				isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
+			}
+			
+			if (innerAddresses.size() == 0) {
+				return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+			}
+			
+			for (String address : innerAddresses) {
+				ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
+			}
+			
+			//회수처리 함수 호출(비동기)
+			ezEmailAsync.cancelMailDelete(isInsert);
+		} else {
+			String[] emailAddressArray = pEachCancel.split("\\|!\\|");
+			
+			//내부사용자 추출
+			List<String> innerAddresses = new ArrayList<String>();
+			for (String address : emailAddressArray) {
+				int index = address.indexOf("@");
+				String domain = "";
+				if (index > -1) {
+					domain = address.substring(index + 1);
+				}
+				if (domain.equals(config.getProperty("config.DomainName"))) {
+					innerAddresses.add(address);
+				}
+			}
+			
+			if (isInsert == null) {
+				isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
+			}
+			
+			if (innerAddresses.size() == 0) {
+				return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+			}
+			
+			for (String address : innerAddresses) {
+				ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
+			}
+			
+			//회수처리 함수 호출(비동기)
+			ezEmailAsync.cancelMailDelete(isInsert);
+		}
+		
+		folder.close(true);
+		ia.close();
+		
+		
+		
+		return "OK";
 	}
 	
 }

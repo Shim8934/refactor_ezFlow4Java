@@ -1,13 +1,30 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+
 import javax.annotation.Resource;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.search.FlagTerm;
+import javax.mail.search.MessageIDTerm;
+import javax.mail.search.SearchTerm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 
 @Component
 public class EzEmailAsync {
@@ -17,10 +34,85 @@ public class EzEmailAsync {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private Properties config;
+	
 	@Async
-	public void test(String str) throws Exception{
-		Thread.sleep(5000);
-		System.out.println(str);
+	public void cancelMailDelete(String num) {
+		try {
+			logger.debug("회수처리 비동기 함수 호출됨");
+			
+			final String messageId = ezEmailService.getMailReceiveMessageId(num);
+			if (messageId == null) {
+				logger.error("cannot get messageId from DB");
+			}
+			
+			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
+			
+			String password = "1234!";
+			Locale locale = Locale.getDefault();
+			
+			for (String address : addresses) {
+				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
+				//config.IS_READ_DELETE가 YES이면 읽었어도 지우기 때문에 jobCode=1
+				String jobCode = "3";
+				IMAPAccess ia = null;
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							address, password, egovMessageSource, locale);
+					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+					folder.open(Folder.READ_WRITE);
+					
+					SearchTerm searchTerm= new SearchTerm() {
+						@Override
+						public boolean match(Message message) {
+							try {
+								System.out.println(((MimeMessage) message).getMessageID());
+								System.out.println(messageId);
+								if (((MimeMessage) message).getMessageID().contains(messageId)) {
+									return true;
+								}
+							} catch (MessagingException e) {
+								e.printStackTrace();
+							}
+							return false;
+						}
+					};
+					Message[] messages = folder.search(searchTerm);
+					if (messages.length > 0) { //메일 발견
+						if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
+							if (config.getProperty("config.IS_READ_DELETE").equals("YES")) { //읽어도 지움
+								jobCode = "1";
+								messages[0].setFlag(Flags.Flag.DELETED, true);
+							} else { //읽으면 안지움
+								jobCode = "2";
+							}
+						} else { //메일 안읽음
+							jobCode = "1";
+							messages[0].setFlag(Flags.Flag.DELETED, true);
+						}
+					}
+					folder.close(true);
+					ia.close();
+					
+					logger.debug("num=" + num + ", address=" + address + ", jobCode=" + jobCode);
+					ezEmailService.updateMailReceiveDetailInfo(num, address, jobCode);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					jobCode = "3";
+					ezEmailService.updateMailReceiveDetailInfo(num, address, jobCode);
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

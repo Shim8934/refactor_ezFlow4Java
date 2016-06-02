@@ -1834,7 +1834,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 	        		Message draftMessage = ((IMAPFolder)folder).getMessageByUID(draftUID);
 	        		folder.copyMessages(new Message[]{draftMessage}, sendFolder);
-	        		draftMessage.setFlag(Flags.Flag.DELETED, true);	        		
+	        		draftMessage.setFlag(Flags.Flag.DELETED, true);
 	            }
 	            
 	            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제

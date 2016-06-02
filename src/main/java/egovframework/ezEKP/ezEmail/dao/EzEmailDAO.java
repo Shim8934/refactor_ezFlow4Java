@@ -88,12 +88,37 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<MailReadVO> getMailReadList(Map<String, Object> map) throws Exception {
-		return (List<MailReadVO>)list("EzEmailDAO.getMailReadList");
+		return (List<MailReadVO>)list("EzEmailDAO.getMailReadList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<MailCancelVO> getMailCancelList(Map<String, Object> map) throws Exception {
-		return (List<MailCancelVO>)list("EzEmailDAO.getMailCancelList");
+		return (List<MailCancelVO>)list("EzEmailDAO.getMailCancelList", map);
+	}
+	
+	public String checkDoubleMailReceive(Map<String, Object> map) throws Exception {
+		return (String)select("EzEmailDAO.checkDoubleMailReceive", map);
+	}
+	
+	public String insertMailReceiveInfo(Map<String, Object> map) throws Exception {
+		return (String)select("EzEmailDAO.insertMailReceiveInfo", map);
+	}
+	
+	public void insertMailReceiveDetailInfo(Map<String, Object> map) throws Exception {
+		insert("EzEmailDAO.insertMailReceiveDetailInfo", map);
+	}
+	
+	public String getMailReceiveMessageId(Map<String, Object> map) throws Exception {
+		return (String)select("EzEmailDAO.getMailReceiveMessageId", map);
+	}
+	
+	public void updateMailReceiveDetailInfo(Map<String, Object> map) throws Exception {
+		insert("EzEmailDAO.updateMailReceiveDetailInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getMailReceiveAddress(Map<String, Object> map) throws Exception {
+		return (List<String>)list("EzEmailDAO.getMailReceiveAddress", map);
 	}
 	
 }
