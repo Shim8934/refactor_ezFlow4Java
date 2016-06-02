@@ -1,9 +1,8 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,10 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
-import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
-
-import com.sun.mail.imap.IMAPFolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -625,6 +623,115 @@ public class EzEmailMailListController {
 		logger.debug("mailSetReadChange ended");
 		
 		return returnData;				
+	}
+	
+	/**
+	 * 메일에서 보낸사람 정보 추출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, Locale locale, Model model) throws Exception {
+		Document xmldom = commonUtil.convertRequestToDocument(request);
+		String itemId = xmldom.getElementsByTagName("ITEMID").item(0).getTextContent();
+		
+		long uid = 0;
+		String folderPath = null;
+		if (itemId != null) {
+			int index = itemId.lastIndexOf("/");
+			if (index != -1) {
+				folderPath = itemId.substring(0, index);
+				uid = Long.parseLong(itemId.substring(index + 1));
+			}
+		}
+		
+		if (uid == 0 || folderPath == null || folderPath.trim().equals("")) {
+			logger.error("cannot get request data");
+			return "ERROR";
+		}
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		IMAPAccess ia = null;
+		String resultData = "ERROR";
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			Folder folder = ia.getFolder(folderPath);
+			folder.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+			
+			if (message != null) {
+				String name = ((InternetAddress)message.getFrom()[0]).getPersonal();
+				String email = ((InternetAddress)message.getFrom()[0]).getAddress();
+				
+				if (name == null || name.trim().equals("")) {
+					name = email;
+				}
+				
+				resultData = name + " <" + email + ">";
+			}
+			
+			folder.close(true);
+			ia.close();
+		} catch (MessagingException e) {
+			logger.error(e.getMessage());
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		return resultData;
+	}
+	
+	/**
+	 * 수신거부 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailDenial.do")
+	public String mailDenial() throws Exception {
+		return "ezEmail/mailDenial";
+	}
+	
+	/**
+	 * jgw에 수신거부 요청 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailRequestDenial.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailRequestDenial(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, Locale locale, Model model) throws Exception {
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userInfo.get(0);
+		Document xmldom = commonUtil.convertRequestToDocument(request);
+		
+		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
+		
+		if (nodes == null || nodes.getLength() == 0) {
+			logger.error("cannot get request data");
+			return "<DATA><![CDATA[ERROR]]></DATA>";
+		}
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId,"UTF-8");
+		
+		for (int i=0; i<nodes.getLength(); i++) {
+			String address = nodes.item(i).getTextContent();
+			if (address.indexOf(" ") > -1) {
+				String email = address.split(" ")[1];
+				if (email != null) {
+					email = email.replace("<", "");
+					email = email.replace(">", "");
+					if (!email.trim().equals("")) {
+						inputParams += "&denialId=" + URLEncoder.encode(email,"UTF-8");
+					}
+				}
+			}
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		ezEmailUtil.getWebServiceResult("http://127.0.0.1:8082/jgw_server/ezEmailAccess/setMailDenial", inputParams);
+		return "<DATA><![CDATA[OK]]></DATA>";
 	}
 	
 }
