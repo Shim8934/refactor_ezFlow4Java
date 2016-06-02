@@ -30,5 +30,11 @@ public interface EzEmailService {
 	public void updateReservedMail(String pMessageId, String pSubject, String pSendDate) throws Exception;
 	public List<MailReadVO> getMailReadList(String pUserId, String pUserId2, String pMessageId, String pMessageId2) throws Exception;
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception;
+	public String checkDoubleMailReceive(String pSenderEmail, String pSubject, String pRecDate, String pMessageId, String pServerName) throws Exception;
+	public String insertMailReceiveInfo(String pSenderEmail, String pSubject, String pRecDate, String pMessageId, String pServerName, String pRecAllKey) throws Exception;
+	public void insertMailReceiveDetailInfo(int pNum, String pReceiveId) throws Exception;
+	public String getMailReceiveMessageId(String pNum) throws Exception;
+	public void updateMailReceiveDetailInfo(String pNum, String pEmail, String pCode) throws Exception;
+	public List<String> getMailReceiveAddress(String pNum) throws Exception;
 	
 }

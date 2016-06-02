@@ -194,5 +194,61 @@ public class EzEmailServiceImpl implements EzEmailService {
 		map.put("v_PMESSAGE", pMessage);
 		return ezEmailDAO.getMailCancelList(map);
 	}
+
+	@Override
+	public String checkDoubleMailReceive(String pSenderEmail, String pSubject, String pRecDate, String pMessageId,
+			String pServerName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SENDEREMAIL", pSenderEmail);
+		map.put("v_SUBJECT", pSubject);
+		map.put("v_RECDATE", pRecDate);
+		map.put("v_MESSAGEID", pMessageId);
+		map.put("v_SERVERNAME", pServerName);
+		return ezEmailDAO.checkDoubleMailReceive(map);
+	}
+
+	@Override
+	public String insertMailReceiveInfo(String pSenderEmail, String pSubject, String pRecDate, String pMessageId,
+			String pServerName, String pRecAllKey) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SENDEREMAIL", pSenderEmail);
+		map.put("v_SUBJECT", pSubject);
+		map.put("v_RECDATE", pRecDate);
+		map.put("v_MESSAGEID", pMessageId);
+		map.put("v_SERVERNAME", pServerName);
+		map.put("v_RECALLKEY", pRecAllKey);
+		return ezEmailDAO.insertMailReceiveInfo(map);
+	}
+
+	@Override
+	public void insertMailReceiveDetailInfo(int pNum, String pReceiveId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NUM", pNum);
+		map.put("v_RECEIVEID", pReceiveId);
+		ezEmailDAO.insertMailReceiveDetailInfo(map);
+	}
+
+	@Override
+	public String getMailReceiveMessageId(String pNum) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NUM", pNum);
+		return ezEmailDAO.getMailReceiveMessageId(map);
+	}
+
+	@Override
+	public void updateMailReceiveDetailInfo(String pNum, String pEmail, String pCode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NUM", pNum);
+		map.put("v_EMAIL", pEmail);
+		map.put("v_CODE", pCode);
+		ezEmailDAO.updateMailReceiveDetailInfo(map);
+	}
+
+	@Override
+	public List<String> getMailReceiveAddress(String pNum) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NUM", pNum);
+		return ezEmailDAO.getMailReceiveAddress(map);
+	}
 	
 }
