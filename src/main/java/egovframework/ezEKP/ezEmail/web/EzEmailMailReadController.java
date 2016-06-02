@@ -87,7 +87,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String password  = userInfo.get(1);
 
 		// retrieve the passed in parameters
-		String url = request.getParameter("URL");
+		String url = request.getParameter("iptURL");
 		long uid = 0;
 		String folderPath = null;
 		if (url != null) {
