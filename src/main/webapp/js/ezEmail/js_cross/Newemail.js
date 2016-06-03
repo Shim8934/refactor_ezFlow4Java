@@ -181,14 +181,13 @@ function ReSend(pURL, pEmail) {
 }
 
 function reply_mail_onclick() {
-
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
     }
     else {
         var pSelectItem;
         if (listContentArry.length > 0) {
-            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length-1])
         }
         else {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
@@ -200,38 +199,19 @@ function reply_mail_onclick() {
         if (conWidth > 890)
             conWidth = 890;
         var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - 890) / 2;
-        var oForm = document.createElement("FORM");
-        oForm.name = "fomAction";
-        oForm.method = "POST";
-
-        var oInputHidden = document.createElement("INPUT");
-        oInputHidden.type = "hidden";
-        oInputHidden.name = "iptURL";
-        oInputHidden.value = pSelectItem.getAttribute('_href');
-        oForm.appendChild(oInputHidden);
-        window.document.body.appendChild(oForm);
-        var _target = "reply_mail" + GetNewGuid();
-        var newwin = window.open("", _target, "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-
-        if (CrossYN() || pNoneActiveX == "YES")
-            oForm.action = "/ezEmail/mailWrite.do?cmd=REPLY";
-        else {
-            if (pUse_Editor == "")
-                oForm.action = "/ezEmail/mailWrite.do?cmd=REPLY";
-            else
-                oForm.action = "/ezEmail/mailWrite.do?cmd=REPLY";
-        }
-        oForm.target = _target;
-        oForm.submit();
+        var pLeft = (pwidth - 890) / 2;        
+        var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
 }
+
 function GetNewGuid() {
     return Math.floor((1 + Math.random()) * 0x10000)
                .toString(16)
                .substring(1);
-};
+}
+
 function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang43);
@@ -252,35 +232,12 @@ function all_reply_mail_onclick() {
             conWidth = 890;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - 890) / 2;
-
-        var oForm = document.createElement("FORM");
-        oForm.name = "fomAction";
-        oForm.method = "POST";
-
-        var oInputHidden = document.createElement("INPUT");
-        oInputHidden.type = "hidden";
-        oInputHidden.name = "iptURL";
-        oInputHidden.value = pSelectItem.getAttribute('_href');
-        oForm.appendChild(oInputHidden);
-        window.document.body.appendChild(oForm);
-        var _target = "all_reply" + GetNewGuid();
-        var newwin = window.open("", _target, "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        
-        oForm.action = "/ezEmail/mailWrite.do?cmd=REPLYALL";
-        /*if (CrossYN() || pNoneActiveX == "YES") {
-            oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-        }
-        else {
-            if (pUse_Editor == "")
-                oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-            else
-                oForm.action = "mail_write_Cross.aspx?cmd=REPLYALL";
-        }*/
-        oForm.target = _target;
-        oForm.submit();
+        var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
 }
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
@@ -301,31 +258,8 @@ function transmission_mail_onclick() {
             conWidth = 890;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - 890) / 2;
-
-        var oForm = document.createElement("FORM");
-        oForm.name = "fomAction";
-        oForm.method = "POST";
-
-        var oInputHidden = document.createElement("INPUT");
-        oInputHidden.type = "hidden";
-        oInputHidden.name = "iptURL";
-        oInputHidden.value = pSelectItem.getAttribute('_href');
-        oForm.appendChild(oInputHidden);
-        window.document.body.appendChild(oForm);
-        var _target = "transmission" + GetNewGuid();
-        var newwin = window.open("", _target, "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        oForm.action = "/ezEmail/mailWrite.do?cmd=FORWARD";
-        /*if (CrossYN() || pNoneActiveX == "YES") {
-            oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-        }
-        else {
-            if (pUse_Editor == "")
-                oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-            else
-                oForm.action = "mail_write_Cross.aspx?cmd=FORWARD";
-        }*/
-        oForm.target = _target;
-        oForm.submit();
+        var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
 }
