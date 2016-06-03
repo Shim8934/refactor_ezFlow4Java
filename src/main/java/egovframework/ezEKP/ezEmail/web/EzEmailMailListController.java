@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.StringReader;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -9,6 +10,10 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
 import javax.mail.Address;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -701,6 +706,8 @@ public class EzEmailMailListController {
 	@ResponseBody
 	public String mailRequestDenial(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, Locale locale, Model model) throws Exception {
+		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userInfo.get(0);
 		Document xmldom = commonUtil.convertRequestToDocument(request);
@@ -709,10 +716,10 @@ public class EzEmailMailListController {
 		
 		if (nodes == null || nodes.getLength() == 0) {
 			logger.error("cannot get request data");
-			return "<DATA><![CDATA[ERROR]]></DATA>";
+			return returnData;
 		}
 		
-		String inputParams = "userId=" + URLEncoder.encode(userId,"UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"),"UTF-8");
 		
 		for (int i=0; i<nodes.getLength(); i++) {
 			String address = nodes.item(i).getTextContent();
@@ -722,7 +729,7 @@ public class EzEmailMailListController {
 					email = email.replace("<", "");
 					email = email.replace(">", "");
 					if (!email.trim().equals("")) {
-						inputParams += "&denialId=" + URLEncoder.encode(email,"UTF-8");
+						inputParams += "&rejectId=" + URLEncoder.encode(email,"UTF-8");
 					}
 				}
 			}
@@ -730,8 +737,18 @@ public class EzEmailMailListController {
 		
 		logger.debug("inputParams=" + inputParams);
 		
-		ezEmailUtil.getWebServiceResult("http://127.0.0.1:8082/jgw_server/ezEmailAccess/setMailDenial", inputParams);
-		return "<DATA><![CDATA[OK]]></DATA>";
+		String strJson = ezEmailUtil.getWebServiceResult("http://127.0.0.1:8082/jgw_server/jMochaAccess/setMailReject", inputParams);
+		JsonReader reader = null;
+		reader = Json.createReader(new StringReader(strJson));
+        JsonObject jo = reader.readObject();
+        
+        if (jo.get("resultCode") != null) {
+        	returnData = "<DATA><![CDATA[" + jo.get("resultCode").toString().replaceAll("\"","") + "]]></DATA>";
+        }
+        
+        reader.close();
+        
+		return returnData;
 	}
 	
 }
