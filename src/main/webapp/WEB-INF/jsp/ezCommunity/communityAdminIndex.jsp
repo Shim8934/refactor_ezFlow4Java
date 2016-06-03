@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code = 'ezCommunity.t484' /></title>
+		<title>Community <spring:message code = 'ezCommunity.t565' /></title>
 	</head>
 	<frameset cols="192,*" frameborder="NO" border="0" framespacing="0">
 		<frame name="left" scrolling="NO" noresize src="/ezCommunity/adminLeft.do?code=<c:out value = '${code}' />&num=<c:out value ='${num}' />" marginwidth="0" marginheight="0">

@@ -108,7 +108,7 @@
 		                _img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
 		                //document.getElementById("coplogo").src = "/images/default_logo.jpg";
 		            } else {
-		                _img.src = "/ezCommunity/getCommunityThumInfo?type=COMMUNITYLOGO&fileName=" +  SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
+		                _img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" +  SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
 		            }
 		            
 		            document.getElementById("homeimg").appendChild(_img);
