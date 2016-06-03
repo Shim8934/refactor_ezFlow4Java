@@ -345,7 +345,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 					
 					int listCnt = xmlDom2.getElementsByTagName("appointment").getLength();
-
+System.out.println("listCnt:"+listCnt);
 				} else {
 					
 				}
@@ -1023,7 +1023,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String checkEDT = "";
 		String allDay = "";
 		int pNum = 0;
-		
+		int num = 0;
 		
 		if (config.getProperty("config.IE11EDITOR").equals("CK")) {
 			useIE11Browser = "CK";
@@ -1067,8 +1067,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
 				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID());
 			}
-			Document scheduleXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(getSchedule));  
-			int num = getSchedule.getNum();
+			
+			num = getSchedule.getNum();
 			pNum = getSchedule.getpNum();
 			ownerID = getSchedule.getOwnerID();
 			writerID = getSchedule.getWriterID();
@@ -1214,6 +1214,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("brdName", brdName);
 		model.addAttribute("resID", resID);
+		model.addAttribute("num", num);
 		model.addAttribute("approveFlag", brdApproveFlag);
 		model.addAttribute("cmdStr", cmdStr.toLowerCase());
 		model.addAttribute("fromStr", fromStr);
@@ -1272,6 +1273,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("brdName", brdName);
 		model.addAttribute("adminFg", adminFg);
+		model.addAttribute("companyID", companyID);
 		return "/ezResource/resScheduleManageForm";
 	}
 	
@@ -1381,10 +1383,38 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 승인요청 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleApprovList.do")
-	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		String resID = "";
+		String brdNm = "";
+		String startDate = "";
+		String endDate = "";
 		
+		try {
+			if (req.getParameter("resID") != null) {
+				resID = req.getParameter("resID");
+			}
+			if (req.getParameter("startDate") != null) {
+				startDate = req.getParameter("startDate");
+			}
+			if (req.getParameter("endDate") != null) {
+				endDate = req.getParameter("endDate");
+			}
+			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID());
+			if (userInfo.getLang().equals("1")) {
+				brdNm = resBrd.getBrdNm();
+			} else {
+				brdNm = resBrd.getBrdNm2();
+			}
+		} catch (Exception e) {
+			 
+		
+		}
 		model.addAttribute("userInfo",userInfo);
+		model.addAttribute("resID",resID);
+		model.addAttribute("brdNm",brdNm);
+		model.addAttribute("startDate",startDate);
+		model.addAttribute("endDate",endDate);
 		
 		return "/ezResource/resScheduleApprovList";
 	}
@@ -1437,8 +1467,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdID = "";
 		String brdNm = "";
 		String brdGubun = "";
-		String brdGbn = "";
-		String accessCode = "";
+		//String accessCode = "";
 		String selectNo = "";
 		String useEditor = "";
 		String useIE11Browser = "";
@@ -1458,9 +1487,6 @@ System.out.println("brdID:"+brdID);
 			}
 			if (req.getParameter("pbrdGubun") != null) {
 				brdGubun = req.getParameter("pbrdGubun");
-			}
-			if (req.getParameter("boardGbn") != null) {
-				brdGbn = req.getParameter("boardGbn");
 			}
 			
 			//관리자체크
@@ -1483,6 +1509,7 @@ System.out.println("brdID:"+brdID);
 			model.addAttribute("useEditor", useEditor);
 			model.addAttribute("useIE11Browser", useIE11Browser);
 			model.addAttribute("noneActiveX", noneActiveX);
+			
 		} catch (Exception e) {
 			 e.printStackTrace();
 		}
@@ -1517,5 +1544,53 @@ System.out.println("brdID:"+brdID);
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		return "";
+	}
+	
+	/**
+	 * 자원관리 자원예약 사용자 선택 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleSelectUser.do")
+	public String scheduleSelectUser(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		return "/ezResource/resScheduleSelectUser";
+	}
+	
+	/**
+	 * 자원관리 자원예약 부서 선택 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleSelectDept.do")
+	public String scheduleSelectDept(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		return "/ezResource/resScheduleSelectDept";
+	}
+	
+	/**
+	 * 자원관리 자원등록 조직도 부서 사원목록 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/getDeptMemberList.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String deptID = doc.getElementsByTagName("deptID").item(0).getTextContent();
+		String cell = doc.getElementsByTagName("cell").item(0).getTextContent();    
+        String propList = doc.getElementsByTagName("prop").item(0).getTextContent();
+        String listType = doc.getElementsByTagName("type").item(0).getTextContent();
+        
+        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang());
+        
+System.out.println("returnXML:"+returnXML);
+		return returnXML;
+	}
+	
+	/**
+	 * 자원관리 자원반복 삭제 확인 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleRepetitionDel.do")
+	public String scheduleRepetitionDel() throws Exception {
+		return "/ezResource/resScheduleRepetitionDel";
 	}
 }
