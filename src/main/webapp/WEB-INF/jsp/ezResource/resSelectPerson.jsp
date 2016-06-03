@@ -28,8 +28,7 @@
 		    var ReturnFunction;
 
 		window.onload = window_onload;
-		function window_onload()
-		{
+		function window_onload() {
 		    try {
 		        ReturnFunction = opener.select_person_cross_dialogArguments[1];
 		    }
@@ -104,11 +103,10 @@
 		        displayUserList(DeptID);
 		    }
 
-		    function displayUserList(DeptID)
-		    {
+		    function displayUserList(DeptID) {
 	 	        if (DeptID != undefined)
 		            tempDeptID = DeptID;
-		   /*     var xmlpara = createXmlDom();
+		        var xmlpara = createXmlDom();
 		        var objRoot, objNode;
 		        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "deptID", tempDeptID);
@@ -117,11 +115,11 @@
 		        createNodeAndInsertText(xmlpara, objNode, "page", CurPage);
 		        createNodeAndInsertText(xmlpara, objNode, "type", "user");
 		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptMemberList.do", true);
+		        g_xmlHTTP.open("POST", "/ezResource/getDeptMemberList.do", true);
 		        g_xmlHTTP.onreadystatechange = event_displayUserList;
-		        g_xmlHTTP.send(xmlpara); */
+		        g_xmlHTTP.send(xmlpara);
 		        
-			 	$.ajax({
+			 	/* $.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
   					dataType : "xml",
@@ -133,7 +131,7 @@
   						type : "user"
   					} ,
       				success : function(data, textStatus, jqXHR) {
-alert(data);
+alert(data.OuterXml);
       					pListXML_Info = data;
 						pSeach = false;
  		                DisplayUserImageList();
@@ -142,11 +140,10 @@ alert(data);
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code="ezResource.t2"/>" + textStatus);
   					}
-  				});  
+  				});   */
 		    }
 
-		    function event_displayUserList()
-		    {
+		    function event_displayUserList() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 		            if (g_xmlHTTP.statusText == "OK") {
 		                pListXML_Info = g_xmlHTTP.responseXML;
@@ -393,7 +390,9 @@ alert(data);
 
 		    var pSeach = false;
 		    function DisplayUserImageList() {
+alert("!!");
 		        var xmlRtn = pListXML_Info;
+alert(xmlRtn);
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
 		        totalPage = 1;
@@ -433,6 +432,7 @@ alert(data);
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
+
 		        for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
 		            if (pListType == "IMG") {
 		                
@@ -453,6 +453,7 @@ alert(data);
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
 		                M_TR.ondblclick = function () { select_member(); };
+		                
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
 		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
@@ -460,12 +461,12 @@ alert(data);
 		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
-		                } else {
+	                    }  else {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
 		                    }
-		                }
+		                } 
 
 		                var M_TR_TD = document.createElement("TD");
 		                M_TR_TD.setAttribute("class", "pictd");
@@ -537,8 +538,7 @@ alert(data);
 		                M_TR.appendChild(M_TR_TD2);
 		                MainTable.appendChild(M_TR);
 		                document.getElementById("DeptUserImgList").appendChild(MainTable);
-		            }
-		            else {
+		            } else {
 		                var M_TR = document.createElement("TR");
 		                M_TR.style.cursor = "pointer";
 		                M_TR.onmouseover = function () { event_listMover(this); };
@@ -546,14 +546,14 @@ alert(data);
 		                M_TR.onclick = function () { event_listclick(this); };
 		                M_TR.ondblclick = function () { select_member(); };
 		                if (CrossYN()) {
+alert(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length);
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
 		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
 		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
 		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
-		                }
-		                else {
+		                } else {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
