@@ -398,7 +398,7 @@ function DeleteAppointment()
 			schedule_repetition_del_cross_dialogArguments[0] = rgParams;
 			schedule_repetition_del_cross_dialogArguments[1] = DeleteAppointment_Complete;
 
-			DivPopUpShow(390, 260, "Schedule_Repetition_Del_cross.aspx");
+			DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
 		}
 		
 	    if (!isRepetition) {
@@ -424,7 +424,7 @@ function DeleteAppointment()
 	        createNodeAndInsertText(xmlpara, objNode, "STARTDATE", g_szCurrentApptSDate);
 	        createNodeAndInsertText(xmlpara, objNode, "ENDDATE", g_szCurrentApptEDate);
 
-	        xmlHttp.open("POST", "Schedule_Add_Ok.aspx?cmd=del", false);
+	        xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
 	        xmlHttp.send(xmlpara);
 
 	        var res = xmlHttp.responseText;
@@ -485,7 +485,7 @@ function DeleteAppointment_Complete(retVal) {
     createNodeAndInsertText(xmlpara, objNode, "STARTDATE", g_szCurrentApptSDate);
     createNodeAndInsertText(xmlpara, objNode, "ENDDATE", g_szCurrentApptEDate);
 
-    xmlHttp.open("POST", "Schedule_Add_Ok.aspx?cmd=del", false);
+    xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
     xmlHttp.send(xmlpara);
 
     var res = xmlHttp.responseText;
