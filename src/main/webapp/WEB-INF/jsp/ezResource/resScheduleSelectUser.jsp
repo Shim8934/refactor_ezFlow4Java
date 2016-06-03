@@ -129,6 +129,18 @@
   						type : "user"
   					} ,
       				success : function(result) {
+      					 var headerData = createXmlDom();
+      	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+
+      	                if (CrossYN()) {
+      	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+      	                    var Node = headerData.importNode(xmlRtn, true);
+      	                    headerData.documentElement.appendChild(Node);
+      	                } else {
+      	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+      	                    headerData.documentElement.appendChild(xmlRtn);
+      	                }
+      					
       					document.getElementById("OrganListView").innerHTML = "";
 		                var pUserList = new ListView();
 		                pUserList.SetID("lvUserList");
@@ -162,21 +174,47 @@
 		            keyword.focus();
 		            return;
 		        }
+		        
+		        $.ajax({
+  					url : '/ezOrgan/getSearchList.do',
+  					method : 'POST',
+  					dataType : "xml",
+  					data : {
+  						search : search_type.value + "::" + keyword.value ,
+  						cell : "company;description;displayName;title;telephoneNumber",
+  						prop : "department",
+  						type : "user"
+  					} ,
+      				success : function(result) {
+      					 var headerData = createXmlDom();
+       	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
+       	                if (CrossYN()) {
+       	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+       	                    var Node = headerData.importNode(xmlRtn, true);
+       	                    headerData.documentElement.appendChild(Node);
+       	                } else {
+       	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+       	                    headerData.documentElement.appendChild(xmlRtn);
+       	                }
+       					
+       					document.getElementById("OrganListView").innerHTML = "";
+ 		                var pUserList = new ListView();
+ 		                pUserList.SetID("lvUserList");
+ 		                pUserList.SetRowOnDblClick("select_member");
+ 		                pUserList.SetSelectFlag(false);
+ 		                pUserList.SetHeightFree(true);
+ 		                pUserList.DataSource(result);
+ 		                pUserList.DataBind("OrganListView");
+  					},
+  					error : function(jqXHR, textStatus, errorThrown) {
+  						alert('Error:'+textStatus);
+  						alert('Error:'+errorThrown);
+  						alert('Error:'+jqXHR.status);
+  					}
+  				});  
 
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "SEARCH", search_type.value + "::" + keyword.value);
-		        createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;displayName;title;telephoneNumber");
-		        createNodeAndInsertText(xmlDOM, objNode, "PROP", "department");
-		        createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-
-		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
-		        g_xmlHTTP.onreadystatechange = event_displayUserList;
-		        g_xmlHTTP.send(xmlDOM);
+		     
 		    }
 
 		    var checkname2_cross_dialogArguments = new Array();
@@ -186,7 +224,28 @@
 		            deptkeyword.focus();
 		            return;
 		        }
-		        var xmlHTTP = createXMLHttpRequest();
+		        
+		        $.ajax({
+  					url : '/ezOrgan/getSearchList.do',
+  					method : 'POST',
+  					dataType : "xml",
+  					data : {
+  						search : "displayname::" + deptkeyword.value ,
+  						cell : "extensionAttribute3;displayName;extensionAttribute9",
+  						prop : "",
+  						type : "group"
+  					} ,
+      				success : function(result) {
+      					xmlDOM = result;
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+  					},
+  					error : function(jqXHR, textStatus, errorThrown) {
+  						alert('Error:'+textStatus);
+  						alert('Error:'+errorThrown);
+  						alert('Error:'+jqXHR.status);
+  					}
+  				});  
+		       /*  var xmlHTTP = createXMLHttpRequest();
 		        var xmlDOM = createXmlDom();
 
 		        var objNode;
@@ -213,21 +272,19 @@
 		            alert(e.description);
 		            xmlDOM = null;
 		            xmlHTTP = null;
-		        }
+		        } */
 
 		        if (adCount == 0) {
 		            alert("<spring:message code='ezResource.t130'/>");
 		            return;
-		        }
-		        else if (adCount == 1) {
+		        } else if (adCount == 1) {
 		            g_xmlHTTP = createXMLHttpRequest();
 		            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) +
 							"</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
-		        }
-		        else {
+		        } else {
 		            var rgParams = new Array();
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
@@ -236,11 +293,10 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 
-		                DivPopUpShow(610, 372, "/ezOrgan/Admin/checkName2.do");
-		            }
-		            else {
+		                DivPopUpShow(610, 372, "/admin/ezOrgan/checkName2.do");
+		            } else {
 		                var feature = GetShowModalPosition(610, 372);
-		                window.showModalDialog("/ezOrgan/Admin/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:610px; status:no;scroll:no; help:no; edge:sunken" + feature);
+		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:610px; status:no;scroll:no; help:no; edge:sunken" + feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();
@@ -283,9 +339,9 @@
 		        if (ReturnFunction != null) {
 		            ReturnFunction(listview.GetSelectedRows()[0].getAttribute("DATA2") + ":" + getNodeText(listview.GetSelectedRows()[0].getElementsByTagName('td')[2]) + ":" + listview.GetSelectedRows()[0].getAttribute("DATA3"));
 		            //window.returnValue = listview.GetSelectedRows()[0].getAttribute("DATA2") + ":" + getNodeText(listview.GetSelectedRows()[0].getElementsByTagName('td')[2]) + ":" + listview.GetSelectedRows()[0].getAttribute("DATA3");
-		        }
-		        else
+		        } else {
 		            window.returnValue = listview.GetSelectedRows()[0].getAttribute("DATA2") + ":" + listview.GetSelectedRows()[0].getElementsByTagName('td')[2].innerText + ":" + listview.GetSelectedRows()[0].getAttribute("DATA3");
+		        }
 		        window.close();
 		    }
 		</script>
@@ -317,7 +373,7 @@
         		</HEADERS>
       		</LISTVIEWDATA>
     	</xml>
-    	<h1>${title}</h1>
+    	<h1><spring:message code='ezResource.t2003'/></h1>
     		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 	    	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    	<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -328,7 +384,7 @@
             			<div style="border: 1px solid #b6b6b6; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 			            <div class="box" style="margin-top:3px" >
             			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
-                			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/>></span></a>
+                			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
             			</div>
         			</td>
         			<td valign="top" style="padding-left:5px">

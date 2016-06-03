@@ -130,7 +130,7 @@
 		</script>
 	</head>
 	<body class="popup">
-    	<h1>${title}</h1>
+    	<h1><spring:message code='ezResource.t13'/></h1>
 	    <table>
 			<tr>
         		<td style="padding-right:5px">
