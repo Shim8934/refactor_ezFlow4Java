@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/controls/datepicker.htc.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<!-- data picker -->
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>

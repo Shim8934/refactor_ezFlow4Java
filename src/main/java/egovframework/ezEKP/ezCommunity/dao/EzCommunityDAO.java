@@ -202,7 +202,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetACL", map);
 	}
 
-	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) {
+	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
 		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetBoardProperty", pBoardID);
 	}
 	
@@ -628,7 +628,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunity.adminCommType", map);
 	}
 
-	public void adminLoGoOkUpdate2(Map<String, Object> map) {
+	public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunity.adminLogoOkUpdate2", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardInfoVO>) list("EzCommunity.getBoardList", map);
+	}
+
+	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
+		update("EzCommunity.adminHomeBoardSet", map);
 	}
 }

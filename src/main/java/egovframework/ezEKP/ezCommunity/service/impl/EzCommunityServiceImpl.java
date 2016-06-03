@@ -907,7 +907,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 	@Override
-	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) {
+	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception {
 		return ezCommunityDAO.getBoardProperty(pBoardID);
 	}
 
@@ -2263,7 +2263,29 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		ezCommunityDAO.adminLoGoOkUpdate2(map);
 	}
 
-	
+	@Override
+	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_LANG", lang);
+		map.put("v_POSITION", position);
+		
+		return ezCommunityDAO.getBoardList(map);
+	}
+
+	@Override
+	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CLEAR", clear);
+		map.put("v_POSITION", position);
+		map.put("v_SN", sn);
+		map.put("v_CN", cn);
+		map.put("v_BOARDID", boardID);
+		
+		ezCommunityDAO.adminHomeBoardSet(map);
+	}
 	
 	/*public void SndMail(string code)
 	{

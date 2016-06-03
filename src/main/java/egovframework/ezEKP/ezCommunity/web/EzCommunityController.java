@@ -3877,5 +3877,109 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return "/ezCommunity/communityAdminLogoOk";
 	}
+	
+	/**
+	 * 홈 화면관리화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminHomeBoard.do")
+	public String adminHomeBoard(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		StringBuilder listData = new StringBuilder();
+		StringBuilder listData2 = new StringBuilder();
+		StringBuilder listData3 = new StringBuilder();
+		
+		String code = request.getParameter("code");
+		
+		String listHeader = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t1168", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		String listHeader2 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2015", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		String listHeader3 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2016", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		
+		List<CommunityBoardInfoVO> boardInfoList = ezCommunityService.getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "ALL");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList) {
+			listData.append("<ROW><CELL><VALUE>");
+			listData.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData.append("</VALUE>");
+			listData.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData.append("</CELL></ROW>");
+		}
+		
+		List<CommunityBoardInfoVO> boardInfoList2 = ezCommunityService.getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "LEFT");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList2) {
+			listData2.append("<ROW><CELL><VALUE>");
+			listData2.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData2.append("</VALUE>");
+			listData2.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData2.append("</CELL></ROW>");
+		}
+		
+		List<CommunityBoardInfoVO> boardInfoList3 = ezCommunityService.getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "RIGHT");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList3) {
+			listData2.append("<ROW><CELL><VALUE>");
+			listData2.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData2.append("</VALUE>");
+			listData2.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData2.append("</CELL></ROW>");
+		}
+		
+		String returnVal = "<LISTVIEWDATA>" + listHeader + "<ROWS>" + listData.toString() + "</ROWS></LISTVIEWDATA>";
+		String returnVal2 = "<LISTVIEWDATA>" + listHeader2 + "<ROWS>" + listData2.toString() + "</ROWS></LISTVIEWDATA>";
+		String returnVal3 = "<LISTVIEWDATA>" + listHeader3 + "<ROWS>" + listData3.toString() + "</ROWS></LISTVIEWDATA>";
+		
+		model.addAttribute("code", code);
+		model.addAttribute("returnVal", returnVal);
+		model.addAttribute("returnVal2", returnVal2);
+		model.addAttribute("returnVal3", returnVal3);
+		model.addAttribute("listHeader", listHeader);
+		model.addAttribute("listHeader2", listHeader2);
+		model.addAttribute("listHeader3", listHeader3);
+		
+		return "/ezCommunity/communityAdminHomeBoard";
+	}
+	
+	/**
+	 * 홈 화면관리 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/saveHomeBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveHomeBoard (@RequestBody String xmlData) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+		
+		String code = xmlDom.getElementsByTagName("CODE").item(0).getTextContent();
+        String left = xmlDom.getElementsByTagName("LEFT").item(0).getTextContent();
+        String right = xmlDom.getElementsByTagName("RIGHT").item(0).getTextContent();
+		try{
+	        ezCommunityService.adminHomeBoardSet("TRUE", "", 0, code, "");
+	        
+	        if (!left.equals("")) {
+	        	int i = 1;
+	        	
+	        	for (String splitLeft : left.split(";")) {
+	        		ezCommunityService.adminHomeBoardSet("FLASE", "1", i, code, splitLeft);
+	        		i++;
+	        	}
+	        }
+	        
+	        if (!right.equals("")){
+	        	int i = 1;
+	        	
+	        	for (String splitRight : right.split(";")) {
+	        		ezCommunityService.adminHomeBoardSet("FLASE", "2", i, code, splitRight);
+	        		i++;
+	        	}
+	        }
+	        
+	        return "OK";
+		} catch (Exception e) {
+			return "ERROR";
+		}
+	}
+	
+	
+	
+	
+	
 }
 

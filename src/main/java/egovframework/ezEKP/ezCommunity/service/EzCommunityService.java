@@ -108,6 +108,8 @@ public interface EzCommunityService {
 
 	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID) throws Exception;
 	
+	public CommunityClubVO adminLogoGet(String code, String lang) throws Exception;
+	
 	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
 	
 	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception;
@@ -306,13 +308,15 @@ public interface EzCommunityService {
 	
 	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception;
 
-	public CommunityClubVO adminLogoGet(String code, String lang) throws Exception;
-
 	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception;
 
 	public void adminCommType(String copType, String fileName) throws Exception;
 
 	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception;
+
+	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception;
+
+	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

@@ -212,6 +212,10 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunity.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO">
+		{CALL EZCOMMUNITY.EZSP_GETBOARDLIST(#v_CODE#, #v_LANG#, #v_POSITION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -562,6 +566,10 @@
 	
 	<procedure id="EzCommunity.adminCommType"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_TYPE(#v_COPTYPE#, #v_FILENAME#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.adminHomeBoardSet"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
