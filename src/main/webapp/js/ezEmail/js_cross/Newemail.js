@@ -1168,41 +1168,9 @@ function callMsgDlg(szContentClass, Href) {
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     if (!g_bdraft) {
-        var oForm = document.createElement("FORM");
-        oForm.name = "fomAction";
-        oForm.method = "POST";
-
-        var oInputHidden = document.createElement("INPUT");
-        oInputHidden.type = "hidden";
-        oInputHidden.name = "iptURL";
-        oInputHidden.value = Href;
-        oForm.appendChild(oInputHidden);
-
-        var oInputHidden2 = document.createElement("INPUT");
-        oInputHidden2.type = "hidden";
-        oInputHidden2.name = "PNFlag";
-        oInputHidden2.value = "Y";
-        oForm.appendChild(oInputHidden2);
-
-        var oInputHidden3 = document.createElement("INPUT");
-        oInputHidden3.type = "hidden";
-        oInputHidden3.name = "CONTENTCLASS";
-        oInputHidden3.value = szContentClass;
-        oForm.appendChild(oInputHidden3);
-
-        window.document.body.appendChild(oForm);
-        var TagrGetName = "mailreadcontent_" + s4();
-
-        ReadMailOpenNewWin = window.open("", TagrGetName, feature);
-        
-        oForm.action = "/ezEmail/mailRead.do";
-        /*if (CrossYN() || pNoneActiveX == "YES")
-            oForm.action = "mail_read_Cross.aspx";
-        else
-            oForm.action = "mail_read.aspx"; */    
-        
-        oForm.target = TagrGetName;
-        oForm.submit();
+        var pURI;
+        pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
+        ReadMailOpenNewWin = window.open(pURI, "", feature);
         
         if (ReadMailOpenNewWin != null) {
         	ReadMailOpenNewWin.focus();
