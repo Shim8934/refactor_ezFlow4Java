@@ -403,14 +403,7 @@ public class EzEmailMailListController {
 				sb.append("<contentclass><![CDATA[REPLY]]></contentclass>");
 			}
 			else {
-				boolean isForwarded = false;
-				String[] flags = message.getFlags().getUserFlags();				
-				for (String flag : flags) {
-					if (flag.equals("$Forwarded")) {
-						isForwarded = true;
-						break;
-					}
-				}
+				boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
 				
 				if (isForwarded) {
 					sb.append("<contentclass><![CDATA[FORWARD]]></contentclass>");

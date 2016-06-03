@@ -80,4 +80,16 @@ public class SMTPAccess {
 		}
 	}
 	
+	public void sendMessageWithNewTransport(Message message) throws MessagingException {
+		Transport t = getSession().getTransport("smtp");
+		
+		try {
+			t.connect(userName, password);
+			t.sendMessage(message, message.getAllRecipients());
+		}
+		finally {
+			t.close();
+		}		
+	}
+	
 }

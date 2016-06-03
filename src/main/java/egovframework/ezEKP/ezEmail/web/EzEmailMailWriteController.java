@@ -1863,16 +1863,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	    		        orgMsgFolder.open(Folder.READ_WRITE);
 	    				
 	    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
-    		        	Flags forwardedFlag = new Flags("$Forwarded");
     		        	
 	    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
 	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-	    		        	orgMessage.setFlags(forwardedFlag, false);
+	    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
 	    		        }
 	    		        else {
-	    		        	orgMessage.setFlags(forwardedFlag, true);
+	    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 	    		        }
+	    		        
 	    		        orgMsgFolder.close(true);
 	    			}
 	            }

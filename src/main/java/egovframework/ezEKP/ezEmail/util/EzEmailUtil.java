@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -819,6 +820,46 @@ public class EzEmailUtil {
 		
 		return result;
 	}    
+	
+	public boolean hasForwardedFlag(Message message) throws MessagingException {
+		boolean isForwarded = false;
+		String[] flags = message.getFlags().getUserFlags();	
+		
+		for (String flag : flags) {
+			if (flag.equals("$Forwarded")) {
+				isForwarded = true;
+				break;
+			}
+		}
+
+		return isForwarded;
+	}
+	
+	public void setForwardedFlag(Message message, boolean isSet) throws MessagingException {
+		Flags forwardedFlag = new Flags("$Forwarded");
+		
+		message.setFlags(forwardedFlag, isSet);
+	}
+
+	public boolean hasMDNSentFlag(Message message) throws MessagingException {
+		boolean isMDNSent = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.equals("$MDNSent")) {
+				isMDNSent = true;
+				break;
+			}
+		}
+
+		return isMDNSent;
+	}
+	
+	public void setMDNSentFlag(Message message, boolean isSet) throws MessagingException {
+		Flags mdnSentFlag = new Flags("$MDNSent");
+		
+		message.setFlags(mdnSentFlag, isSet);
+	}
 	
 	/**
 	 * change an http or https URL to an anchor tag in a text/plain message 

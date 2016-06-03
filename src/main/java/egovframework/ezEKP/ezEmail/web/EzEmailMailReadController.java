@@ -23,6 +23,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
@@ -38,11 +39,14 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 
+import com.sun.mail.dsn.DispositionNotification;
+import com.sun.mail.dsn.MultipartReport;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -80,7 +84,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 읽기화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailRead.do")
-	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
@@ -337,7 +341,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 본문 내용 화면 정보 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailReadContent.do")
-	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
@@ -347,25 +351,44 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
 
+		String myEmailAddress = id+"@"+config.getProperty("config.DomainName");
+		
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+												myEmailAddress, password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = "";
-		if(f != null){
+		
+		if (f != null) {
 			f.open(Folder.READ_ONLY);
 			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
+			
+			if (f.isOpen() && f instanceof IMAPFolder) {
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
-			if(message != null){
+			
+			if (message != null) {
 				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
 				double size = Double.parseDouble(bodyInfoList.get(2));
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+				
+				// send an MDN to the sender.
+				if (!ezEmailUtil.hasMDNSentFlag(message)) {
+					logger.debug("MDNSentFlag isn't set");
+					
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+															myEmailAddress, password);
+					
+					processAutoMDN(sa, message, myEmailAddress);
+				}
+				else {
+					logger.debug("MDNSentFlag is set");
+				}
 			}
 		}
+		
 		ia.close();
 		
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
@@ -815,8 +838,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 
+		String myEmailAddress = id+"@"+config.getProperty("config.DomainName");
+		
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+												myEmailAddress, password, egovMessageSource, locale);
 		Folder f = ia.getFolder(folderPath);
 
 		List<String> bodyInfoList = null;
@@ -833,6 +858,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 
+				// send an MDN to the sender.
+				if (!ezEmailUtil.hasMDNSentFlag(message)) {
+					logger.debug("MDNSentFlag isn't set");
+					
+					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+															myEmailAddress, password);
+					
+					processAutoMDN(sa, message, myEmailAddress);
+				}
+				else {
+					logger.debug("MDNSentFlag is set");
+				}				
 			}
 		}
 		ia.close();
@@ -892,6 +929,47 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+	}
+	
+	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress) {
+		try {		
+			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
+			
+			if (fromEmailAddress.equalsIgnoreCase(myEmailAddress)) {
+				logger.debug("The same address");
+				return;
+			}
+			
+			String[] messageIds = message.getHeader("Message-ID");
+			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
+			
+			if (messageIds != null && mdnHeaders != null) {				
+				logger.debug("Sending an MDN...");
+											
+				Message replyMessage = message.reply(false);
+				
+				InternetHeaders h = new InternetHeaders();
+				
+				h.addHeader("Reporting-UA", "JMocha Mail 0.1");
+				h.addHeader("Final-Recipient", String.format("rfc822;%s", myEmailAddress));
+				h.addHeader("Original-Message-ID", messageIds[0]);
+				h.addHeader("Disposition", "automatic-action/MDN-sent-automatically; displayed");
+				
+				DispositionNotification dn = new DispositionNotification();
+				dn.setNotifications(h);
+				
+				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
+				replyMessage.setContent(mpr);		
+				replyMessage.setFrom(new InternetAddress(myEmailAddress));
+										
+				sa.sendMessageWithNewTransport(replyMessage);
+				
+				ezEmailUtil.setMDNSentFlag(message, true);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
 	
 }
