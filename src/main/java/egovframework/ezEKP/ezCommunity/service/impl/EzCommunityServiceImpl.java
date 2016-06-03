@@ -13,11 +13,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -697,17 +695,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		List<CommunityBoardTreeVO> boardTreeList = null;
 		List<CommunityBoardTreeVO> brdBoardTreeList = new ArrayList<CommunityBoardTreeVO>();
 		
-		//TODO 왜 계속 null 인지 모르겟음
-/*        String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang);
-System.out.println("retValue = "+retValue);
+		String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang);
 
         if (retValue != null && retValue.length() > 30) {
-System.out.println("@");
     		return retValue;
-        }*/
+        }
         
         String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {
         	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim());
@@ -2155,11 +2150,120 @@ System.out.println("@");
 	@Override
 	public int noticeSysopCheck(String code, String id, String rollInfo, String companyID) throws Exception {
 		int sysopCheck = 0;
+		String strSysopID = "", strIsIN = "", strCompanyID = "";
 		
+		if (!code.equals("")) {
+			CommunityClubVO club = ezCommunityDAO.ezCommunityBaseGet1(code);
+			
+			if (club != null) {
+				strSysopID = club.getC_SysopID().trim();
+                strIsIN = Integer.toString(club.getIsIn());
+                strCompanyID = club.getCompanyID().trim();
+			}
+		}
 		
-		return 0;
+		if (!strSysopID.equals(id)){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_STRUSERID", id);
+			
+			String strAdminID = ezCommunityDAO.ezCommunityBaseGet2(map);
+			
+			if (strAdminID == null && rollInfo.indexOf("c=1") < 0 ) {
+				if (strIsIN.equals("1") && strCompanyID.equals(companyID)) {
+					sysopCheck = 1;
+				} 
+			} else {
+				sysopCheck = 1;
+			}
+		} else {
+			sysopCheck = 1;
+		}
+		
+		return sysopCheck;
 	}
 
+	@Override
+	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_RECORD_C_SYSOPID", sysopID);
+		
+		return ezCommunityDAO.aspCommInfoGet2(map);
+	}
+
+	@Override
+	public String adminMemPermitGet1(String code) throws Exception {
+		return ezCommunityDAO.adminMemPermitGet1(code);
+	}
+
+	@Override
+	public String adminBasicGet1(String code) throws Exception {
+		return ezCommunityDAO.adminBasicGet1(code);
+	}
+	
+	@Override
+	public String adminBasicGet2(String code) throws Exception {
+		return ezCommunityDAO.adminBasicGet2(code);
+	}
+
+	@Override
+	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_CLUBNAME", clubVO.getC_ClubName());
+		map.put("v_C_CLUBNAME2", clubVO.getC_ClubName2());
+		map.put("v_C_CLUBGUBUN", clubVO.getC_ClubGubun());
+		map.put("v_C_CLUBTYPE", clubVO.getC_ClubConfirmType());
+		map.put("v_ISIN", clubVO.getIsIn());
+		map.put("v_C_CLUBDESC", clubVO.getC_ClubDesc());
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.adminBasicOkIpdate(map);
+	}
+
+	@Override
+	public CommunityClubVO  adminLogoGet(String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.adminLogoGet(map);
+	}
+
+	@Override
+	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LOGOFILENAME", logoFileNameLogo);
+		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
+		map.put("v_FILENAME",  fileName);
+		
+		ezCommunityDAO.adminLogoOkUpdate1(map);
+	}
+
+	@Override
+	public void adminCommType(String copType, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COPTYPE", copType);
+		map.put("v_FILENAME", fileName);
+		
+		ezCommunityDAO.adminCommType(map);
+	}
+
+	@Override
+	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BANNERFILENAME", bannerFileName);
+		map.put("v_FILENAME", fileName);
+		
+		ezCommunityDAO.adminLoGoOkUpdate2(map);
+	}
+
+	
 	
 	/*public void SndMail(string code)
 	{

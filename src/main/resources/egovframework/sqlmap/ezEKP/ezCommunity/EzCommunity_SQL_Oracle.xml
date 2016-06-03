@@ -204,6 +204,14 @@
 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET2(#v_USERINFO_LANG#, #v_RECORD_C_SYSOPID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -258,6 +266,10 @@
 	
 	<procedure id="EzCommunityDAO.adminLeftGet"					parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_LEFT_GET(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.ezCommunityBaseGet1"			parameterClass="String"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET1(#v_STRCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
@@ -412,6 +424,18 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.adminMemPermitGet1"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_MEM_PERMIT_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminBasicGet1"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminBasicGet2"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -520,8 +544,24 @@
 		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_OK_UPDATE(#v_SUBJECT#, #v_POLLSTARTDATE#, #v_POLLENDDATE#, #v_MANAGERID#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.commOutOkInsert"					parameterClass="Map">
+	<procedure id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_DATETIME_NOW#, #v_REASON#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminBasicOkUpdate"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_OK_UPDATE(#v_C_CLUBNAME#, #v_C_CLUBNAME2#, #v_C_CLUBGUBUN#, #v_C_CLUBTYPE#, #v_ISIN#, #v_C_CLUBDESC#, #v_CODE#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.adminLogoOkUpdate1"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_OK_UPDATE1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.adminLogoOkUpdate2"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_OK_UPDATE2(#v_BANNERFILENAME#, #v_FILENAME#)}
+	</procedure>
+	
+	<procedure id="EzCommunity.adminCommType"					parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_TYPE(#v_COPTYPE#, #v_FILENAME#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">

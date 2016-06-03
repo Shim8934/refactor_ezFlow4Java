@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -277,14 +278,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
 			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO");
 			
-	        if (pFilePath != null && pFilePath != "") {
+	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 	        }
 		}
 		
 		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
 			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM");
-	        if (pFilePath != null && pFilePath != "") {
+			
+	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 	        }
 		}
@@ -2202,13 +2204,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userNm2 = doc.getElementsByTagName("UserNM2").item(0).getTextContent();
 		String realPath = request.getServletContext().getRealPath("");
 
-		if (doc.getElementsByTagName("Ref").item(0).getTextContent() != "") {
+		if (doc.getElementsByTagName("Ref").item(0).getTextContent().equals("")) {
             myRef = Integer.parseInt(doc.getElementsByTagName("Ref").item(0).getTextContent());
 		}
-        if (doc.getElementsByTagName("Step").item(0).getTextContent() != "") {
+        if (doc.getElementsByTagName("Step").item(0).getTextContent().equals("")) {
             myStep = Integer.parseInt(doc.getElementsByTagName("Step").item(0).getTextContent());
         }
-        if (doc.getElementsByTagName("Level").item(0).getTextContent() != "") {
+        if (doc.getElementsByTagName("Level").item(0).getTextContent().equals("")) {
             myLevel = Integer.parseInt(doc.getElementsByTagName("Level").item(0).getTextContent());
         }
 		
@@ -2302,7 +2304,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 String strName = "000000000" + iName;
                 strName = strName.substring(strName.length() - 10, strName.length());
 
-                if (code != ""){
+                if (code.equals("")){
                     strName = strName + "(" + code + ")";
                 }
                 
@@ -3639,7 +3641,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String adminLeft(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String num = "", pExcludeBoardID = "", flag = "", clickBoard = "", boardID = "";
+		String num = "", pExcludeBoardID = " ", flag = "", clickBoard = "", boardID = "";
 		String pRootBoardID = "TOP", pSubFlag = "0";
 		int pSelectBy = 0;
 		
@@ -3664,6 +3666,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.adminLeftGet(code);
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
+		
 		String boardGroupAdmin_FG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 		int pMode = 0;
 		
@@ -3685,12 +3688,194 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("num", num);
 		model.addAttribute("clickBoard", clickBoard);
 		model.addAttribute("boardID", boardID);
-		
+		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("flag", flag);
 		model.addAttribute("club", club);
 		model.addAttribute("xmlret", retXML);
 		
+		System.out.println(retXML);
+		
 		return "/ezCommunity/communityAdminLeft";
+	}
+	
+	/**
+	 * 관리메뉴 기본정보수정화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminBasic.do")
+	public String adminBasic(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String name1 = "";
+		
+		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		
+		String code = request.getParameter("code");
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
+		if (sysopCheck != 1) {
+			return "/error";
+		}
+		
+		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
+		
+		if (club != null) {
+			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), club.getC_SysopID().trim());
+			
+			if (userInfo.getLang().equals("2")) {
+				member.setUserName(member.getUserName2());
+			}
+			
+			name1 = member.getUserName();
+		}
+
+		int pPermitCount = Integer.parseInt(ezCommunityService.adminMemPermitGet1(code));
+		String cCateA = ezCommunityService.adminBasicGet1(code);
+		String cCateB = ezCommunityService.adminBasicGet2(code);
+		
+		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("club", club);
+		model.addAttribute("name1", name1);
+		model.addAttribute("pPermitCount", pPermitCount);
+		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, new Locale(globals.getProperty("Globals.language"))));
+		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, new Locale(globals.getProperty("Globals.language"))));
+		model.addAttribute("lang_Primary", langPrimary);
+		model.addAttribute("lang_Secondary", langSecondary);
+		
+		return "/ezCommunity/communityAdminBasic";
+	}
+	
+	/**
+	 * 관리메뉴 기본정보수정 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminBasicOk.do")
+	public String adminBasicOk(@CookieValue("loginCookie")String loginCookie, CommunityClubVO clubVO, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
+		ezCommunityService.adminBasicOkUpdate(clubVO, code);
+		
+		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
+		
+		return "/ezCommunity/communityAdminBasicOk";
+	}
+	
+	/**
+	 * 커뮤니티 환경설정화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminLogo.do")
+	public String adminLogo(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
+		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, commonUtil.getMultiData(userInfo.getLang()));
+		String copType = ezCommunityService.commHomeGet4(code);
+		
+		clubVO.setC_Type(copType);
+		
+		if (userInfo.getLang().equals("2")) {
+			clubVO.setC_ClubName(clubVO.getC_ClubName2());
+		}
+		
+		
+		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("clubVO", clubVO);
+		
+		return "/ezCommunity/communityAdminLogo";
+	}
+	
+	/**
+	 * 커뮤니티 환경설정화면 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminLogoOk.do")
+	public String adminLogoOk(@CookieValue("loginCookie")String loginCookie, ModelMap model, MultipartHttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String fileName = "", attachFile = "", extName = "";
+		int iStart = 0;
+		String code = request.getParameter("code");
+		String copType = request.getParameter("type");
+		String imageSrc = request.getParameter("imageSrc");		
+		
+		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+
+		MultipartFile logoFile = request.getFile("logo");
+		//TODO 배너 미사용
+//		MultipartFile bannerFile = request.getFile("banner");
+		
+		
+		if (!logoFile.isEmpty()) {
+			fileName = code;
+			attachFile = logoFile.getOriginalFilename();
+			iStart = attachFile.lastIndexOf(".");
+			extName = attachFile.substring(iStart);
+			String logoFileName = fileName + "_logo_Temp" + "." + extName;
+			
+			File file = new File(logoPath + fileName + logoFileName);
+			logoFile.transferTo(file);
+			
+			
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
+			outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+			
+			File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+			ImageIO.write(outputImage, "png", newLogo);
+			String logoFileNameLogo = fileName + "_logo" + ".png";
+			
+			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+			
+			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
+			ImageIO.write(outputImage, "png", newThumbnail);
+			String logoFileNameThumbnail = fileName + "_thumbnail" + ".png";
+			
+			file.delete();
+			
+			ezCommunityService.adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, fileName);
+		}
+		
+		if (!copType.equals("")) {
+			ezCommunityService.adminCommType(copType, code);
+			
+			if (logoFile.isEmpty()) { 
+				if (imageSrc.indexOf("default_logo_type") > -1) {
+					ezCommunityService.adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
+				}
+			}
+		}
+
+		/*if (!bannerFile.isEmpty()) {
+			fileName = code;
+			attachFile = bannerFile.getOriginalFilename();
+			iStart = attachFile.lastIndexOf(".");
+			extName = attachFile.substring(iStart);
+			String bannerFileName = fileName + "_banner" + "." + extName;
+			
+			File file = new File(logoPath + fileName + bannerFileName);
+			bannerFile.transferTo(file);
+			
+			ezCommunityService.adminLogoOkUpdate2(bannerFileName, fileName);
+		}*/
+		
+		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("code", code);
+		
+		return "/ezCommunity/communityAdminLogoOk";
 	}
 }
 

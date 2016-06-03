@@ -55,6 +55,16 @@ public interface EzCommunityService {
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception;
 	
 	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception;
+	
+	public List<CommunityCPollAnswerVO> pollResGet6(int questionID) throws Exception;
+
+	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception;
+
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception;
+	
+	public List<CommunityCPollQuestionVO> pollDeleteGet2(String managerID) throws Exception;
+
+	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception;
 
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -79,6 +89,24 @@ public interface EzCommunityService {
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception;
 	
 	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id) throws Exception;
+	
+	public CommunityCPollManagerVO pollResGet2(String pollManagerID) throws Exception;
+
+	public CommunityCPollQuestionVO pollResGet3(String pollManagerID) throws Exception;
+
+	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception;
+	
+	public CommunityCPollManagerVO pollEditGet1(String managerID) throws Exception;
+
+	public CommunityCPollQuestionVO pollEditGet2(String managerID) throws Exception;
+	
+	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception;
+
+	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception;
+	
+	public CommunityClubVO adminLeftGet(String code) throws Exception;	
+
+	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID) throws Exception;
 	
 	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
 	
@@ -176,6 +204,28 @@ public interface EzCommunityService {
 
 	public String pollDeleteGet3(String code) throws Exception;
 	
+	public String pollResGet1(String id, String code) throws Exception;
+	
+	public String pollResGet4(String lang, String pollRegUser) throws Exception;
+	
+	public String pollETCViewGet(String questionID) throws Exception;
+	
+	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception;
+
+	public String adminMemberListGet2(String code) throws Exception;
+	
+	public String getClubMemberInfo(String trim, String string, String lang) throws Exception;
+	
+	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception;
+
+	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception;
+	
+	public String adminMemPermitGet1(String code) throws Exception;
+
+	public String adminBasicGet1(String code) throws Exception;
+
+	public String adminBasicGet2(String code) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -191,6 +241,12 @@ public interface EzCommunityService {
 	public int getReservedItemListCount(String id) throws Exception;
 	
 	public int checkOneLineOwner(String pReplyID, String id) throws Exception;
+	
+	public int pollResGetAllCount(int questionID) throws Exception;
+
+	public int pollResGetCount(int questionID, int answerID) throws Exception;
+
+	public int noticeSysopCheck(String code, String id, String rollInfo, String companyID) throws Exception;
 
 	public boolean saveMHT (String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 
@@ -238,65 +294,25 @@ public interface EzCommunityService {
 	
 	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception;
 
-	public List<CommunityCPollQuestionVO> pollDeleteGet2(String managerID) throws Exception;
-
-	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception;
-
 	public void pollDeleteDel1(int questionID, int answerID) throws Exception;
 
 	public void pollDeleteDel2(int questionID) throws Exception;
 
 	public void pollDeleteDel3(String managerID) throws Exception;
 
-	public String pollResGet1(String id, String code) throws Exception;
-
-	public CommunityCPollManagerVO pollResGet2(String pollManagerID) throws Exception;
-
-	public CommunityCPollQuestionVO pollResGet3(String pollManagerID) throws Exception;
-
-	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception;
-
-	public int pollResGetAllCount(int questionID) throws Exception;
-
-	public List<CommunityCPollAnswerVO> pollResGet6(int questionID) throws Exception;
-
-	public int pollResGetCount(int questionID, int answerID) throws Exception;
-
-	public String pollResGet4(String lang, String pollRegUser) throws Exception;
-
 	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception;
 
-	public CommunityCPollManagerVO pollEditGet1(String managerID) throws Exception;
-
-	public CommunityCPollQuestionVO pollEditGet2(String managerID) throws Exception;
-
 	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception;
-
-	public String pollETCViewGet(String questionID) throws Exception;
-
-	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception;
-
-	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception;
-
-	public String adminMemberListGet2(String code) throws Exception;
-
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception;
-
-	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception;
-
-	public String getClubMemberInfo(String trim, String string, String lang) throws Exception;
-
-	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception;
-
-	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception;
-
-	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception;
-
-	public CommunityClubVO adminLeftGet(String code) throws Exception;
-
-	public int noticeSysopCheck(String code, String id, String rollInfo, String companyID) throws Exception;
-
 	
+	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception;
+
+	public CommunityClubVO adminLogoGet(String code, String lang) throws Exception;
+
+	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception;
+
+	public void adminCommType(String copType, String fileName) throws Exception;
+
+	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
