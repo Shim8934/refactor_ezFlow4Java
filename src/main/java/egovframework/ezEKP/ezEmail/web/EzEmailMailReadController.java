@@ -48,6 +48,8 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -76,6 +78,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
@@ -347,6 +352,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password = userInfo.get(1);
 
+		// retrieve user info from db.
+		OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
+		
 		// retrieve the passed in parameters
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
@@ -374,17 +382,19 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 				
-				// send an MDN to the sender.
-				if (!ezEmailUtil.hasMDNSentFlag(message)) {
-					logger.debug("MDNSentFlag isn't set");
-					
-					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-															myEmailAddress, password);
-					
-					processAutoMDN(sa, message, myEmailAddress);
-				}
-				else {
-					logger.debug("MDNSentFlag is set");
+				if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					// send an MDN to the sender.
+					if (!ezEmailUtil.hasMDNSentFlag(message)) {
+						logger.debug("MDNSentFlag isn't set");
+						
+						SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+																myEmailAddress, password);
+						
+						processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
+					}
+					else {
+						logger.debug("MDNSentFlag is set");
+					}
 				}
 			}
 		}
@@ -826,6 +836,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
+		// retrieve user info from db.
+		OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
+		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
 		long uid = 0;
@@ -858,18 +871,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 
-				// send an MDN to the sender.
-				if (!ezEmailUtil.hasMDNSentFlag(message)) {
-					logger.debug("MDNSentFlag isn't set");
-					
-					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-															myEmailAddress, password);
-					
-					processAutoMDN(sa, message, myEmailAddress);
+				if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					// send an MDN to the sender.
+					if (!ezEmailUtil.hasMDNSentFlag(message)) {
+						logger.debug("MDNSentFlag isn't set");
+						
+						SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+																myEmailAddress, password);
+						
+						processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
+					}
+					else {
+						logger.debug("MDNSentFlag is set");
+					}				
 				}
-				else {
-					logger.debug("MDNSentFlag is set");
-				}				
 			}
 		}
 		ia.close();
@@ -931,7 +946,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
 	
-	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress) {
+	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
 		try {		
 			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
 			
@@ -960,7 +975,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
 				replyMessage.setContent(mpr);		
-				replyMessage.setFrom(new InternetAddress(myEmailAddress));
+				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
 										
 				sa.sendMessageWithNewTransport(replyMessage);
 				
