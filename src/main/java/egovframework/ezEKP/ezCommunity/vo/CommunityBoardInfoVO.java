@@ -42,7 +42,7 @@ public class CommunityBoardInfoVO {
 	/** 체크 인/아웃 사용유무*/
 	String checkUser;
 	/** 게시판 위치*/
-	String showPostition;
+	String showPosition;
 	/** 순서*/
 	int sn;
 	public String getC_clubNO() {
@@ -165,11 +165,11 @@ public class CommunityBoardInfoVO {
 	public void setCheckUser(String checkUser) {
 		this.checkUser = checkUser;
 	}
-	public String getShowPostition() {
-		return showPostition;
+	public String getShowPosition() {
+		return showPosition;
 	}
-	public void setShowPostition(String showPostition) {
-		this.showPostition = showPostition;
+	public void setShowPosition(String showPosition) {
+		this.showPosition = showPosition;
 	}
 	public int getSn() {
 		return sn;

@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -883,7 +881,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			sb.append("<BOARDID>"+boardInfo.getBoardID()+"</BOARDID>");
 			sb.append("<BOARDNAME>"+boardInfo.getBoardName()+"</BOARDNAME>");
 			sb.append("<BOARDNAME2>"+boardInfo.getBoardName2()+"</BOARDNAME2>");
-			sb.append("<SHOWPOSITION>"+boardInfo.getShowPostition()+"</SHOWPOSITION>");
+			sb.append("<SHOWPOSITION>"+boardInfo.getShowPosition()+"</SHOWPOSITION>");
 			sb.append("<SN>"+boardInfo.getSn()+"</SN>");
 			sb.append("<GUBUN>"+boardInfo.getGubun()+"</GUBUN>");
 			sb.append("</ROW>");
@@ -1965,7 +1963,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("rollInfo", userInfo.getRollInfo());
 		model.addAttribute("code", code);
 		
-		return "/ezCommunity/board/bbsList";
+		return "/ezCommunity/communityBbsList";
 	}
 	
 	/**
@@ -2072,7 +2070,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		
 		
-		return "/ezCommunity/board/bbsViewNew";
+		return "/ezCommunity/communityBbsViewNew";
 	}
 	
 	/**
@@ -2173,7 +2171,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("level", level);
 		model.addAttribute("gref", ref);
 		
-		return "/ezCommunity/board/bbsEditNew";
+		return "/ezCommunity/communityBbsEditNew";
 	}
 	
 	/**
@@ -3917,11 +3915,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		List<CommunityBoardInfoVO> boardInfoList3 = ezCommunityService.getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "RIGHT");
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList3) {
-			listData2.append("<ROW><CELL><VALUE>");
-			listData2.append(commonUtil.cleanValue(boardInfo.getBoardName()));
-			listData2.append("</VALUE>");
-			listData2.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
-			listData2.append("</CELL></ROW>");
+			listData3.append("<ROW><CELL><VALUE>");
+			listData3.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData3.append("</VALUE>");
+			listData3.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData3.append("</CELL></ROW>");
 		}
 		
 		String returnVal = "<LISTVIEWDATA>" + listHeader + "<ROWS>" + listData.toString() + "</ROWS></LISTVIEWDATA>";
@@ -3950,6 +3948,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = xmlDom.getElementsByTagName("CODE").item(0).getTextContent();
         String left = xmlDom.getElementsByTagName("LEFT").item(0).getTextContent();
         String right = xmlDom.getElementsByTagName("RIGHT").item(0).getTextContent();
+        
 		try{
 	        ezCommunityService.adminHomeBoardSet("TRUE", "", 0, code, "");
 	        
@@ -3970,15 +3969,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        		i++;
 	        	}
 	        }
-	        
 	        return "OK";
 		} catch (Exception e) {
 			return "ERROR";
 		}
 	}
 	
-	
-	
+	/**
+	 * 게시판 관리화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminBoardProperty.do")
+	public String adminBoardProperty (HttpServletRequest request) {
+		
+		return "";
+	}
 	
 	
 }
