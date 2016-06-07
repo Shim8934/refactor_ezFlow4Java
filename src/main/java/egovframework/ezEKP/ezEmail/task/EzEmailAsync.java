@@ -52,7 +52,8 @@ public class EzEmailAsync {
 			
 			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
 			
-			String password = "1234!";
+			String password = config.getProperty("config.JMochaSuperPassword");
+			
 			Locale locale = Locale.getDefault();
 			
 			for (String address : addresses) {
@@ -70,8 +71,6 @@ public class EzEmailAsync {
 						@Override
 						public boolean match(Message message) {
 							try {
-								System.out.println(((MimeMessage) message).getMessageID());
-								System.out.println(messageId);
 								if (((MimeMessage) message).getMessageID().contains(messageId)) {
 									return true;
 								}

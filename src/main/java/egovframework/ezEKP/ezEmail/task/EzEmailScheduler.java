@@ -71,7 +71,7 @@ public class EzEmailScheduler {
 				}
 
 				//TODO: 비밀번호 setting...
-				String password = "1234!";
+				String password = config.getProperty("config.JMochaSuperPassword");
 				String path = vo.getPath();
 				String deleteUnread = vo.getDeleteUnread();
 				int expireTime = vo.getExpireTime();
@@ -126,7 +126,7 @@ public class EzEmailScheduler {
 			if (index > -1) {
 				userId = userId.substring(0, index);
 			}
-			String password = "1234!";
+			String password = config.getProperty("config.JMochaSuperPassword");
 
 			FileInputStream fis = null;
 
