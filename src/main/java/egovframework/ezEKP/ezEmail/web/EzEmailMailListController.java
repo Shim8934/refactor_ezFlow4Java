@@ -730,7 +730,7 @@ public class EzEmailMailListController {
 		
 		logger.debug("inputParams=" + inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult("http://127.0.0.1:8082/jgw_server/jMochaAccess/setMailReject", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setMailReject", inputParams);
 		JsonReader reader = null;
 		reader = Json.createReader(new StringReader(strJson));
         JsonObject jo = reader.readObject();
