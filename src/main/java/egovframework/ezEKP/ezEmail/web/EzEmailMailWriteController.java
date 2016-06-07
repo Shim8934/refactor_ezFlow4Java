@@ -318,6 +318,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
         if (request.getParameter("URL") != null) {
         	_url = request.getParameter("URL");
+        } else if (request.getParameter("url") != null) {
+        	_url = request.getParameter("url");
         }
         urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
@@ -376,9 +378,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			// retrieve the Drafts folder name
         	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
     		
+        	// retrieve the Sent folder name
+        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+        	
     		// retrieve the specified message.
 			Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
-
+			
 			if (orgMessage != null) {				        	
 	        	// in case of editing a message in Drafts folder.
 	        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
@@ -435,6 +440,105 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	                }
 					
 	        	}
+	        	// in case of resending
+	        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
+	        		//임시보관함에 메시지 임시저장
+	        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+	        				userId+"@"+config.getProperty("config.DomainName"), password);
+	        		MimeMessage resendMessage = sa.createMimeMessage();
+	        		
+	        		resendMessage.setFlag(Flags.Flag.SEEN, true);
+	        		
+	        		if (orgMessage.isMimeType("multipart/related")) {
+		        		MimeMultipart relatedPart = new MimeMultipart("related");
+		        		
+		        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+		        			resendMessage.setContent(relatedPart);
+		        		}	        			
+		        		else {
+		        			resendMessage.setText("placeholder");
+		        		}	        					        		
+        			}
+        			else if (orgMessage.isMimeType("multipart/*")) {
+		                MimeMultipart mixedPart = new MimeMultipart();
+		                
+		                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+		                
+		                resendMessage.setContent(mixedPart);	    
+        			}
+        			else {
+        				resendMessage.setText("placeholder");
+        			}
+	        		
+	        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+	        		draftsFolder.open(Folder.READ_WRITE);       
+	        		long draftUID = 0;
+	        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{resendMessage});
+	        		if (uids != null && uids[0] != null) {
+	        			draftUID = uids[0].uid;
+	        		} 	        		
+	        		url = String.valueOf(draftUID);
+	        		logger.debug("draftUID=" + draftUID);
+	        		draftsFolder.close(true);
+	        		//END: 임시보관함에 메시지 임시저장
+	        		
+	        		reSendFlag = "Y";
+	        		
+	        		Address[] addresses = orgMessage.getAllRecipients();
+	        		for (Address address : addresses) {
+	        			System.out.println(address);
+	        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
+							to = ezEmailUtil.getStringListOfAddresses(new Address[]{address});
+							break;
+	        			}
+	        		}
+	        		
+	        		subject = orgMessage.getSubject();
+					subject = (subject != null) ? subject : "";
+	        		
+					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
+					bodyValue = bodyInfoList.get(0);
+	        		
+	        		if (attachedFileList.size() > 0) {
+		                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+		                
+						for (int i = 0; i < attachedFileList.size(); i++) {
+							Map<String, String> fileInfo = attachedFileList.get(i);
+							
+			                attachXmlList.append("<NODE>");
+			                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
+			                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+			                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+			                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+			                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+			                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+			                attachXmlList.append("</NODE>");
+						}
+						
+		                attachXmlList.append("</NODES></ROOT>");						
+		                attach = attachXmlList.toString();				                
+					}
+	        		
+	        		if (orgMessage.getHeader("X-Priority") != null) {
+	        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+	        			if (tempImportance.equals("1")) {
+	        				importance = "2";
+	        			} else if (tempImportance.equals("5")) {
+	        				importance = "0";
+	        			} else {
+	        				importance = "1";
+	        			}
+	        		}
+	        		
+	                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
+	                
+	                //TODO: Sensitivity?
+	                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
+	        		
+	                //TODO: 서명
+
+	        	}
 	        	// in case of replying
 	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
 	        		Message replyMessage = null; 
@@ -450,7 +554,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        		// ANSWERED flag needs to be cleared since the above reply method sets it.
 	        		orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 	        		
-	        		replyMessage.setFlag(Flags.Flag.SEEN, true);	        			        		
+	        		replyMessage.setFlag(Flags.Flag.SEEN, true);
 
 	        		if (_cmd.equals("FORWARD")) {
 	        			if (orgMessage.isMimeType("multipart/related")) {

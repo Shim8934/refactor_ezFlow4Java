@@ -169,15 +169,17 @@ function ReSend(pURL, pEmail) {
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-    if (CrossYN() || pNoneActiveX == "YES") {
-        window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
+    
+    window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
+    /*if (CrossYN() || pNoneActiveX == "YES") {
+        window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
     }
     else {
         if (pUse_Editor == "")
             window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
         else
             window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
-    }
+    }*/
 }
 
 function reply_mail_onclick() {
