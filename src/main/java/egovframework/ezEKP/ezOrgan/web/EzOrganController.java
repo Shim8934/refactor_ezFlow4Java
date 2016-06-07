@@ -228,7 +228,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 트리정보  함수
 	 */
-	@RequestMapping(value = "/ezApprovalG/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
@@ -251,6 +251,16 @@ public class EzOrganController {
 		String infoXML = ezOrganService.getPropertyList(cn, propName, userInfo.getPrimary());
 		
 		return infoXML;
+	}
+	
+	/**
+	 * 조직도 서브트리정보  함수
+	 */
+	@RequestMapping(value = "/ezOrgan/getOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getOrganSubTreeInfo(){
+		//TODO LDAP 이라 보류중
+		return "";
 	}
 
 }

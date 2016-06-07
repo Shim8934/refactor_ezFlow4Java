@@ -394,7 +394,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                         if (searchInfo[0].indexOf("EXACT_") == 0){
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
                         }else if (searchInfo[0].indexOf("LEFT_") == 0){
-                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + " + '%' ";
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + "%' ";
                         }else if (searchInfo[0].indexOf("RIGHT_") == 0){
                             strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
                     	}else{
@@ -429,7 +429,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-        
+System.out.println(strSQL + strSize);
         Map<String, Object> map = new HashMap<String, Object>();
         
         map.put("strSQL", strSQL + strSize);

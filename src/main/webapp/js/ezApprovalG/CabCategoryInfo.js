@@ -61,17 +61,23 @@ function TaskSCateList_rowclick()
 
 function InitCategorySelection()
 {
-	var xmlpara = createXmlDom();
-	var objNode = createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang); 
-	
-    var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTaskCategory.aspx",false);
-	xmlhttp.send(xmlpara);
-	
-	var xmlRtn = xmlhttp.responseXML;
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTaskCategory.do",
+		data : {
+			deptCode   : g_DeptCode,
+			companyID  : CompanyID,
+			strType    : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+	var xmlRtn = result;
 	var dataNodes = GetChildNodes(xmlRtn); 
 	var rtnValue = getNodeText(dataNodes[0]);
 	
@@ -94,18 +100,23 @@ function InitCategorySelection()
 
 function GetTaskMiddleCategory(pCode)
 {	
-	var xmlpara = createXmlDom();
-	var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "CATECODE", pCode);
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	
-    var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTaskMiddleCategory.aspx",false);
-	xmlhttp.send(xmlpara);
-	
-	var xmlRtn = xmlhttp.responseXML;
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTaskMiddleCategory.do",
+		data : {
+			cateCode   : pCode,
+			companyID  : CompanyID,
+			deptCode   : g_DeptCode
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+	var xmlRtn = result;
 	var dataNodes = GetChildNodes(xmlRtn); 
 	var rtnValue = getNodeText(dataNodes[0]);
 	
@@ -129,19 +140,24 @@ function GetTaskMiddleCategory(pCode)
 }
 function GetTaskSubCategory(pCode, pSubCategoryCode)
 {	    
-	var xmlpara = createXmlDom();
-	var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "MCATECODE", pCode);
-	createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DeptCode);
-	createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang);	
-	
-	var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTaskSubCategory.aspx",false);
-	xmlhttp.send(xmlpara);
-	
-	var rtnXml = xmlhttp.responseXML;
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTaskSubCategory.do",
+		data : {
+			cateCode   : pCode,
+			companyID  : CompanyID,
+			deptCode   : g_DeptCode,
+			strType    : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+	var rtnXml = result;
 	var dataNodes = GetChildNodes(rtnXml); 
 	var rtnValue = getNodeText(dataNodes[0]);
 	
@@ -303,38 +319,48 @@ function GetmakeXml(selCate, selSub, selSimple, SearchFlag) {
 
 }
 function GetListInSubCateList(pCode) {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "SCATECODE", pCode);
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang);
-
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTaskInSubCategory.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseXML;
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTaskInSubCategory.do",
+		data : {
+			cateCode   : pCode,
+			companyID  : CompanyID,
+			deptCode   : g_DeptCode,
+			strType    : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    return result;
 }
 
 
 function GetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "PROCESSDEPTCODE", pDeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "PRODUCTIONYEAR", pProduceYear);
-    createNodeAndInsertText(xmlpara, objNode, "TASKCODE", pTaskCode);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getCabinetSimpleList.do",
+		data : {
+			processDeptCode   : pDeptCode,
+			companyID         : CompanyID,
+			productionYear    : pProduceYear,
+			langType		  : UserLang,
+			flag			  : pFlag,
+			taskCode		  : pTaskCode
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetSimpleList.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    return XmlHttp.responseXML;
+    return result;
 }
 
 function GetSelIdxForSubCate(Rows, len, pSubCategoryCode)

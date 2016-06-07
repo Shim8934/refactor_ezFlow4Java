@@ -598,10 +598,11 @@ function AprLineChangeType() {
 //############################################################################################################################################# 부서에 사용자가 존재 여부 확인
 function isgetUser(DeptID) {	
 	var result = "";
+	var rtnVal = true;
 	$.ajax({
 		type : "POST",
 		dataType : "xml",
-		async : true,
+		async : false,
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
@@ -614,7 +615,6 @@ function isgetUser(DeptID) {
 		}        			
 	});
 
-    if (getXmlString(result) == "") rtnVal = false;
     var nodes = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (rtnVal) {
         nodeCnt = nodes.length;
@@ -624,6 +624,7 @@ function isgetUser(DeptID) {
         else
             rtnVal = false;
     }
+    
     return rtnVal;
 }
 

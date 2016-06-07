@@ -1258,8 +1258,8 @@ var strLangModifyFlag3 = "Modified";
 // Etc
 var strLangEtcAprType4 = "전결";	// 문서 싸인칸에 표시하는 전결문자
 var strLangEtcAprState4 = "Return";	// 문서 싸인칸에 표시하는 반송문자
-var strLangEtcFile1 = "TreeViewAddDept2.xml";	// xml 파일 처리
-var strLangEtcFile2 = "TreeViewTmpAddDept2.xml";	// xml 파일 처리
+var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept2.xml"; // xml 파일 처리
+var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept2.xml"; // xml 파일 처리
 
 var strLang1101 = "so that there is no manager in department."
 var strLang1102 = "Can not register in Receiving department."

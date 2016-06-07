@@ -3,7 +3,7 @@ function Receptinfo_ini() {
     if (!Recinfoini) {
         Recinfoini = true;
         Tree_setconfig();
-        TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname", "<%=_pServerName%>");
+        TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
         ChangeReceptTab(document.getElementById("3tab1"));
         initReceptListView();
         document.getElementById("3tab1").onclick();
@@ -78,26 +78,35 @@ function ChangeReceptTab(obj) {
 //#############################################################################################################################################수신처 리스트 초기화
 var xmlhttp;
 function initReceptListView() {
-    var xmlpara = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
+	var result = "";
+	var pMode = "";
+	var docIDorSN = "";
     if (pDocSn == "") {
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pMode", "COD");
+    	docIDorSN = pDocID;
+        pMode = "COD";
     }
     else {
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocSn);
-        createNodeAndInsertText(xmlpara, objNode, "pMode", "TMP");
+    	docIDorSN = pDocSn;
+        pMode = "TMP";
     }
-
-    xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AprDeptRequest.aspx", false);
-    xmlhttp.send(xmlpara);
-    Resultxml = xmlhttp.responseXML;
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/aprDeptRequest.do",
+		data : {
+			docID : docIDorSN,
+			mode  : pMode
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length > 9) {
+    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 9) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
         document.getElementById("trSummaryOuterReceiverList").style.display = "";
         document.getElementById("btnaddress").style.display = "none";
@@ -110,7 +119,7 @@ function initReceptListView() {
     listview.SetMulSelectable(false);
     listview.SetHeightFree(true);
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-    listview.DataSource(Resultxml);
+    listview.DataSource(result);
     listview.DataBind("RECEPTLIST");
     listview.SetSelectFlag(false);
     xmlhttp = null;
@@ -150,7 +159,7 @@ function TreeViewinitialize_tree2(targetDeptID, TopDeptID, tProperty, ServerName
         createNodeAndInsertText(xmlpara, objNode, "PROP", tProperty);
 
         xmlHTTP = createXMLHttpRequest();
-        xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", false);
+        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         var xmlDomRet = createXmlDom();
         xmlDomRet = xmlHTTP.responseXML;
@@ -210,7 +219,7 @@ function RequestData2(pNodeID, pTreeID) {
 
     var treeView = new TreeView();
     treeView.LoadFromID(pTreeID);
-    treeView.AppendChildNodes(xmlHTTP.responseXML.documentElement, pNodeID)
+    treeView.AppendChildNodes(xmlHTTP.responseXML.documentElement, pNodeID);
 }
 //#############################################################################################################################################수신처 조직도 사용자 가져오기 
 var ReceptUserXmlHttp;
@@ -256,7 +265,7 @@ function RdisplayUserList(DeptID) {
             check_presence();
     }
     else
-        OpenAlertUI(linealt12 + g_xmlHTTP.statusText)
+        OpenAlertUI(linealt12 + g_xmlHTTP.statusText);
 
     ReceptUserXmlHttp = null;
 
@@ -292,7 +301,7 @@ function event_RdisplayUserList() {
                 check_presence();
         }
         else
-            OpenAlertUI(linealt12 + g_xmlHTTP.statusText)
+            OpenAlertUI(linealt12 + g_xmlHTTP.statusText);
 
         ReceptUserXmlHttp = null;
     }
@@ -420,7 +429,6 @@ function AprDeptAdd_onclick(Type) {
                     OpenAlertUI(pAlertContent);
                     return;
                 }
-
                 if (DuplicateFlag)
                     AprLineAddDept(nodeIdx, "");
                 else {
@@ -438,7 +446,7 @@ function AprDeptAdd_onclick(Type) {
                 if (DuplicateFlag)
                     AprLineAddDept_User(pCurSelRow[0]);
                 else {
-                    var pAlertContent = linealt13
+                    var pAlertContent = linealt13;
                     OpenAlertUI(pAlertContent);
                 }
             }
@@ -585,7 +593,7 @@ function AprLineAddDept_User(pSelectedRow) {
 
     DeptAddIndex = DeptAddIndex + 1;
 
-    var strCmpID = pSelectedRow.getAttribute("DATA7")
+    var strCmpID = pSelectedRow.getAttribute("DATA7");
     var pDeptNm = pSelectedRow.childNodes[1].innerText;
     var puserNm = pSelectedRow.childNodes[0].innerText;
 
@@ -784,7 +792,7 @@ function event_displayUserList2() {
             }
         }
         else
-            OpenAlertUI(linealt2 + xmlhttpUserlist.statusText)
+            OpenAlertUI(linealt2 + xmlhttpUserlist.statusText);
 
         xmlhttpUserlist = null;
     }
@@ -842,8 +850,8 @@ function btnSearchDept_onClick() {
             g_xmlHTTP = createXMLHttpRequest();
 
             var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) +
-					"</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname</PROP></DATA>";
-            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+					"</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
         }
@@ -862,8 +870,8 @@ function btnSearchDept_onClick() {
 
                 if (rgParams["deptid"] != "") {
                     g_xmlHTTP = createXMLHttpRequest();
-                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname</PROP></DATA>";
-                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                     g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                     g_xmlHTTP.send(strQuery);
                 }
@@ -900,7 +908,7 @@ function btnSearchDept_onClick() {
                 var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
                 if (DuplicateFlag) {
                     Resultxml.async = false;
-                    Resultxml = loadXMLFile("TreeViewAddDept.xml")
+                    Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
 
                     var listview = new ListView();
                     listview.LoadFromID("lvRECEPTLIST");
@@ -1061,7 +1069,7 @@ function btnSearchDept_onClick() {
                     var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
                     if (DuplicateFlag) {
                         Resultxml.async = false;
-                        Resultxml = loadXMLFile("TreeViewAddDept.xml")
+                        Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
 
                         var listview = new ListView();
                         listview.LoadFromID("lvRECEPTLIST");
@@ -1215,8 +1223,8 @@ function btnSearchDept_onClick_Complete2(rgParams) {
     DivPopUpHidden();
     if (rgParams["deptid"] != "") {
         g_xmlHTTP = createXMLHttpRequest();
-        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname</PROP></DATA>";
-        g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
         g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
         g_xmlHTTP.send(strQuery);
     }
@@ -1234,7 +1242,7 @@ function btnSearchDept_onClick_Complete(reParam) {
         var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
         if (DuplicateFlag) {
             Resultxml.async = false;
-            Resultxml = loadXMLFile("TreeViewAddDept.xml")
+            Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
 
             var listview = new ListView();
             listview.LoadFromID("lvRECEPTLIST");
@@ -1392,7 +1400,7 @@ function btnSearchDept_onClick_Complete(reParam) {
             var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
             if (DuplicateFlag) {
                 Resultxml.async = false;
-                Resultxml = loadXMLFile("TreeViewAddDept.xml")
+                Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
 
                 var listview = new ListView();
                 listview.LoadFromID("lvRECEPTLIST");
@@ -1558,7 +1566,7 @@ function event_getDeptFullTree() {
             treeView.DataBind("TreeView2");
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText)
+            alert(strLang249 + g_xmlHTTP.statusText);
             g_xmlHTTP = null;
         }
     }
@@ -1567,7 +1575,7 @@ var xmlhttp2;
 //############################################################################################################################################# 외부 수신처 그룹 로딩
 function liniReceptOuter() {
     xmlhttp2 = createXMLHttpRequest();
-    xmlhttp2.open("POST", "/ezApprovalG/getOrganTreeInfo.do", true);
+    xmlhttp2.open("POST", "/ezOrgan/getOrganTreeInfo.do", true);
     xmlhttp2.onreadystatechange = event_GetReceptOuterTempletList;
     xmlhttp2.send();
 }
@@ -1905,7 +1913,7 @@ function ReSetAprLineDept(listview) {
         var CurSelRow = SelRow[0];
 
     TIndex = ColRow.length;
-    CIndex = Number(listview.GetSelectedIndexes().split(',')[0])
+    CIndex = Number(listview.GetSelectedIndexes().split(',')[0]);
     NIndex = TIndex - CIndex;
 
     if (CIndex != 0) {
@@ -1922,7 +1930,7 @@ function ReSetAprLineDept(listview) {
         else
             CurSelRow.cells[0].innerText = NIndex;
 
-        return NIndex
+        return NIndex;
     }
 }
 function AprDeptDel_onclick() {
@@ -2040,7 +2048,7 @@ function btnAddAddress_Complete(AddressUserName) {
     address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
 
     DivPopUpShow(655, 420, "/myoffice/ezAddress/address_zip_select.aspx");
-    TempAddressUserName = AddressUserName
+    TempAddressUserName = AddressUserName;
 }
 
 var aprdeptaddressname_cross_dialogArguments = new Array();
@@ -2307,7 +2315,7 @@ function insertOrganAll(_ParentOrganId, _ParentOrganName) {
             createNodeAndInsertText(XmlDoc, objNode, "DEPTID", _ParentOrganId);
             createNodeAndInsertText(XmlDoc, objNode, "PROP", "EXTENSIONATTRIBUTE2");
 
-            XmlHttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+            XmlHttp.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
             XmlHttp.send(XmlDoc);
 
             XmlDoc = null;
@@ -2431,10 +2439,8 @@ function AddOrgan(_OrganId, _OrganName) {
     }
 }
 function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocumentYN) {
-
-    var XmlHttp = null;
+	var result = "";
     var XmlDoc = null;
-    var objNode;
 
     try {
 
@@ -2442,19 +2448,23 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
         if (DuplicateFlag && ouReceiveDocumentYN == "Y") {
             AddOuter(outerdeptid, outerdeptnm);
         }
-
-        XmlHttp = createXMLHttpRequest();
-        XmlDoc = createXmlDom();
-
-        createNodeInsert(XmlDoc, objNode, "PARA");
-        createNodeAndInsertText(XmlDoc, objNode, "DEPTID", outerdeptoupath);
-
-        XmlHttp.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrganSubTreeInfo.aspx", false);
-        XmlHttp.send(XmlDoc);
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getOrganSubTreeInfo.do",
+    		data : {
+    			deptID 	: outerdeptoupath
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
 
         XmlDoc = null;
         XmlDoc = createXmlDom();
-        XmlDoc = loadXMLString(XmlHttp.responseText);
+        XmlDoc = loadXMLString(result);
 
         var objNodes = SelectNodes(XmlDoc, "NODES/NODE");
 
@@ -2468,9 +2478,7 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
     } catch (e) {
         alert("Receptinfo.js.insertOuterAll()::" + e.description);
     } finally {
-        XmlHttp = null;
         XmlDoc = null;
-        objNode = null;
     }
 }
 function AddOuter(strOuterDeptId, strOuterDeptName) {
@@ -2622,33 +2630,29 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
     }
 }
 function GetEntryInfo(_DEPTID) {
-    var XmlHttp = null;
-    var XmlDom = null;
-    var Node;
     var ReceiveDocument = "";
 
     try {
-        XmlDom = createXmlDom();
-        XmlHttp = createXMLHttpRequest();
-
-        createNodeInsert(XmlDom, Node, "DATA");
-        createNodeAndInsertText(XmlDom, Node, "CN", _DEPTID);
-        createNodeAndInsertText(XmlDom, Node, "PROP", "extensionAttribute11");
-
-        XmlHttp.open("POST", "/myoffice/ezOrgan/Admin/GetEntryInfo.aspx?pMode=dept", false);
-        XmlHttp.send(XmlDom);
-
-        if (XmlHttp.status == 200) {
-            XmlDom = XmlHttp.responseXML;
-            ReceiveDocument = SelectSingleNodeValueNew(XmlDom, "DATA/EXTENSIONATTRIBUTE11").trim();
-        }
+    	var result = "";
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/admin/ezOrgan/getEntryInfo.do",
+    		data : {
+    			cn 	  : _DEPTID,
+    			prop  : "extensionAttribute11"
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
+        ReceiveDocument = SelectSingleNodeValueNew(result, "DATA/EXTENSIONATTRIBUTE11").trim();
 
     } catch (e) {
         alert(e.description);
-    } finally {
-        XmlHttp = null;
-        XmlDom = null;
-        Node = null;
-    }
+    } 
+    
     return ReceiveDocument;
 }

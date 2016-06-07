@@ -6,23 +6,22 @@ function InitReceptTemplet() {
 //############################################################################################################################################# 수신처 즐겨찾기 리스트 구성
 var xmlhttp;
 function GetReceptTempletList() {
-    var xmlpara = createXmlDom();
-    xmlhttp = createXMLHttpRequest();
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/GetReceptTemplist.aspx", true);
-    xmlhttp.onreadystatechange = event_GetReceptTempletList;
-    xmlhttp.send(xmlpara);
-    
-    
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezApprovalG/getReceptTemplist.do",
+		data : {
+				userID : pUserID,
+				formID : pFormID
+				},
+		success: function(text){
+			event_GetReceptTempletList(text);
+		}        			
+	});
 }
-function event_GetReceptTempletList()
+function event_GetReceptTempletList(text)
 {
-    if(xmlhttp == null || xmlhttp.readyState != 4) return;
     try
     {
         if (document.getElementById("RecSaveList").innerHTML != "") document.getElementById("RecSaveList").innerHTML = "";
@@ -31,7 +30,7 @@ function event_GetReceptTempletList()
         liveView.SetRowOnClick("lvRecSaveList_onSel_Click");
         liveView.SetSelectFlag(true);
         liveView.SetHeightFree(true);
-        liveView.DataSource(loadXMLString(xmlhttp.responseText));      
+        liveView.DataSource(loadXMLString(text));      
         liveView.DataBind("RecSaveList");    
 
         var pCurSelRow = liveView.GetSelectedRows();
@@ -39,10 +38,8 @@ function event_GetReceptTempletList()
             GetReceptTempletInfo(pCurSelRow[0].getAttribute("DATA1"));
         }
         else{
-            document.getElementById("RecSaveDetail").innerHTML = ""
+            document.getElementById("RecSaveDetail").innerHTML = "";
         }
-            
-        xmlhttp = null;
     }
     catch (ErrMsg) {
         alert(" GetReceptTempletList : " + ErrMsg.description);
@@ -61,22 +58,23 @@ function lvRecSaveList_onSel_Click() {
 var xmlHTTP;
 function GetReceptTempletInfo(p_AprLineTempletID) {
 
-    var xmlpara = createXmlDom();
-    xmlHTTP = createXMLHttpRequest();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "APRDEPT"); // Root Node 생성	
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_AprLineTempletID);
-
-    xmlHTTP.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/GetAprDeptTempletListInfo.aspx", true);
-    xmlHTTP.send(xmlpara);
-    xmlHTTP.onreadystatechange = event_GetReceptTempletInfo;
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezApprovalG/getAprDeptTempletListInfo.do",
+		data : {
+				userID : pUserID,
+				formID : pFormID,
+				aprSN  : p_AprLineTempletID
+				},
+		success: function(text){
+			event_GetReceptTempletInfo(text);
+		}        			
+	});
 }
-function event_GetReceptTempletInfo()
+function event_GetReceptTempletInfo(text)
 {
-    if(xmlHTTP == null || xmlHTTP.readyState != 4) return;
     try
     {
         if (document.getElementById("RecSaveDetail").innerHTML != "")
@@ -86,7 +84,7 @@ function event_GetReceptTempletInfo()
         pAPRTEMP.SetMulSelectable(false);   
         pAPRTEMP.SetHeightFree(true);
         pAPRTEMP.SetSelectFlag(false);
-        pAPRTEMP.DataSource(loadXMLString(xmlHTTP.responseText));
+        pAPRTEMP.DataSource(loadXMLString(text));
         pAPRTEMP.DataBind("RecSaveDetail");
         xmlHTTP = null;
     }
@@ -102,10 +100,9 @@ function liniReceptGroup() {
 function GetReceptGroupList() {
     xmlhttp = null;
     xmlhttp = createXMLHttpRequest();
-    var objNode;
 
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/GetReceptGroupList.aspx", true);
-    xmlhttp.send("");
+    xmlhttp.open("Post", "/ezApprovalG/getReceptGroupList.do", true);
+    xmlhttp.send();
     xmlhttp.onreadystatechange = event_GetReceptGroupList;
 }
 function event_GetReceptGroupList()
@@ -222,16 +219,21 @@ function AprLineAddDeptGroup() {
 }
 
 function AddGroupReceptADD(p_AprLineTempletID) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "APRDEPT");
-    createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_AprLineTempletID);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/GetReceptGroupADDTo.aspx", false);
-    xmlhttp.send(xmlpara);
-    var ResultXML = loadXMLString(xmlhttp.responseText)
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getReceptGroupADDTo.do",
+		data : {
+				groupID : p_AprLineTempletID
+				},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
+    var ResultXML = loadXMLString(result)
     if (SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").length > 0) {
         var listview = new ListView();
         listview.LoadFromID("lvRECEPTLIST");
@@ -328,21 +330,21 @@ function lvRecGroupList_onSel_Click() {
 //############################################################################################################################################# 수신처 그룹 리스트 세부 리스트
 var xmlHTTP2;
 function GetReceptGroupInfo(p_AprLineTempletID) {
-    var xmlpara = createXmlDom();
-    xmlHTTP2 = createXMLHttpRequest();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "APRDEPT");
-    createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_AprLineTempletID);
-
-    xmlHTTP2.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/GetReceptGroupDetailList.aspx", true);
-    xmlHTTP2.send(xmlpara);
-    xmlHTTP2.onreadystatechange = event_GetReceptGroupInfo;
-    
-    
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getReceptGroupDetailList.do",
+		data : {
+				groupID : p_AprLineTempletID
+				},
+		success: function(text){
+			event_GetReceptGroupInfo(text);
+		}        			
+	});
 }
-function event_GetReceptGroupInfo()
+function event_GetReceptGroupInfo(text)
 {
-    if(xmlHTTP2 == null || xmlHTTP2.readyState != 4) return;
     try
     {        
         if (document.getElementById("RecGroupDetail").innerHTML != "")
@@ -352,7 +354,7 @@ function event_GetReceptGroupInfo()
         pAPRTEMP.SetMulSelectable(false);  
         pAPRTEMP.SetHeightFree(true);
         pAPRTEMP.SetSelectFlag(false);
-        pAPRTEMP.DataSource(loadXMLString(xmlHTTP2.responseText));
+        pAPRTEMP.DataSource(loadXMLString(text));
         pAPRTEMP.DataBind("RecGroupDetail");
         xmlHTTP2 = null;
     }
@@ -384,17 +386,21 @@ function btn_AprDeptTempletAdd_onclick()
     }
 }
 function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "APRDEPT");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "p_CheckAprDeptTempletSN", p_CheckAprDeptTempletSN);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AddToAprDept.aspx", false);
-    xmlhttp.send(xmlpara);
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/addToAprDept.do",
+		data : {
+				userID : pUserID,
+				formID : pFormID,
+				aprSN  : p_CheckAprDeptTempletSN
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
     document.getElementById('RECEPTLIST').innerHTML = "";
     var listview = new ListView();                      
@@ -403,7 +409,7 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
     listview.SetHeightFree(true);
     listview.SetSelectFlag(false);
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-    listview.DataSource(xmlhttp.responseXML);            
+    listview.DataSource(result);            
     listview.DataBind("RECEPTLIST");
 }
 //############################################################################################################################################# 수신처 즐겨찾기 적용 
@@ -443,19 +449,23 @@ function btn_AprDeptTempletDel_onclick_Complete() {
 }
 
 function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "APRDEPT");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-    createNodeAndInsertText(xmlpara, objNode, "p_SelAprDeptTempletSN", p_SelAprDeptTempletSN);
-
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/DelAprDeptTempletList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/delAprDeptTempletList.do",
+		data : {
+				userID : pUserID,
+				formID : pFormID,
+				aprSN  : p_SelAprDeptTempletSN
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(result);
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "TRUE") {
@@ -501,7 +511,7 @@ function btn_AprDeptTempletSave_onclick(mode) {
     }
 
     if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRECEPTLIST_TR_noItems") {
-        var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/ezDEPTTEMPLET/AprDeptTempletName_Cross.aspx";
+        var windowName = "/ezApprovalG/aprDeptTempletName.do";
         var parameter = "status:no;dialogWidth:340px;dialogHeight:200px;scroll:no;edge:sunken";
         var dialogValue = new Array();
         dialogValue[0] = pUserID;
@@ -570,7 +580,7 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     }
         
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/CreateAprDeptTemplet.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/createAprDeptTemplet.do", false);
     xmlhttp.send(AprDeptInfo);
 
     var dataNodes = GetChildNodes(xmlhttp.responseXML);

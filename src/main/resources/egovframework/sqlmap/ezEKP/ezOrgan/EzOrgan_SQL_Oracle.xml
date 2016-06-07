@@ -80,7 +80,7 @@
 		{CALL EZHRMASTER.EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo">
+	<procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	

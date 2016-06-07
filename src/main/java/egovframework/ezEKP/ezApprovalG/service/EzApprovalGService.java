@@ -79,7 +79,34 @@ public interface EzApprovalGService {
 	
 	public String addToAprLine(String userID, String formID, String aprSN, String companyID, String lang) throws Exception;
 	
-	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
+	public String getReceiptTempletInfo(String formID, String userID, String companyID) throws Exception;
+	
+	public String getReceiptTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang) throws Exception;
+	
+	public String getTempList(String companyID, String lang) throws Exception;
+	
+	public String getTempList2(String groupID, String companyID, String lang) throws Exception;
+	
+	public String getTempList3(String userID, String formID, String companyID, String lang) throws Exception;
+	
+	public String getListXML(String groupID, String lang, String companyID) throws Exception;
+	
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang) throws Exception;
+	
+	public String deleteReceiptTempletDetailInfo(String formID, String userID, String aprDeptSN, String companyID) throws Exception;
+	
+	public String updateReceiptTempletDetailInfo(Document doc, String companyID) throws Exception;
+	
+	public String getTaskCategory(String deptCode, String companyID, String type) throws Exception;
+	
+	public String getTaskMiddleCategory(String deptCode, String companyID, String cateCode) throws Exception;
+	
+	public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception;
+	
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception;
+	
+	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType) throws Exception;
 
+	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 }
