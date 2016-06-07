@@ -16,9 +16,11 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.connector.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
@@ -570,19 +573,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 	}
 	/**
-	 * SubBoards 호출함수
+	 * 게시판Tree 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/getSubBoards.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
 	public String getSubBoards(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
-		String pClubID = "", pRootBoardID = "", pSubFlag = "", pExcludeBoardID = " ";
+		String pClubID = "", pRootBoardID = "", pSubFlag = "0", pExcludeBoardID = " ";
 		int pSelectBy = 0, pMode = 0;
 		String strXML = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		pClubID = request.getParameter("classID");
 		pRootBoardID = request.getParameter("rootBoardID");
-		pSubFlag = request.getParameter("subFlag");
-
+		
+		if (request.getParameter("subFlag") != null) {
+			pSubFlag = request.getParameter("subFlag");
+		}
+		
 		if (request.getParameter("excludeBoardID") != null) {
 			pExcludeBoardID = request.getParameter("excludeBoardID");
 		}
@@ -2600,8 +2606,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//TORO 글쓰기할때 글 내용인가?
 		String memo = request.getParameter("memo");
 		
-		System.out.println(memo);
-		
 		switch (mode) {
 			case "write" :
 				ezCommunityService.guestEditOkInsert(code, userInfo, memo);
@@ -3691,8 +3695,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("club", club);
 		model.addAttribute("xmlret", retXML);
 		
-		System.out.println(retXML);
-		
 		return "/ezCommunity/communityAdminLeft";
 	}
 	
@@ -3979,11 +3981,155 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판 관리화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/adminBoardProperty.do")
-	public String adminBoardProperty (HttpServletRequest request) {
+	public String adminBoardProperty (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		return "";
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		String useMultiData = config.getProperty("config.Use_MultiData");
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		CommunityBoardPropertyVO boardProp = ezCommunityService.getBoardProperty(boardID);
+		
+		if (boardProp.getDeleteAfter() == null) {
+			boardProp.setDeleteAfter("-1");
+		}
+		
+		if (boardProp.getBoardColor() == null) {
+			boardProp.setBoardColor("#000000");
+		}
+		
+		String style = "";
+		
+		if (ezCommunityService.boardPropertyGet(boardID) > 0) {
+			style = "display:none";
+		}
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("code", code);
+		model.addAttribute("useMultiData", useMultiData);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("boardProp", boardProp);
+		model.addAttribute("_style", style);
+		
+		return "/ezCommunity/communityAdminBoardProperty";
 	}
 	
+	/**
+	 * 그룹생성화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardGroupCreate.do")
+	public String boardGroupCreate(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String boardID = request.getParameter("boardID");
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		model.addAttribute("code", code);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("lang_Primary", langPrimary);
+		model.addAttribute("lang_Secondary", langSecondary);
+		
+		return "/ezCommunity/communityAdminBoardGroupCreate";
+	}
 	
+	/**
+	 * 그룹생성화면 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/createBoardGroup.do")
+	public void createBoardGroup(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardGroupID = request.getParameter("boardGroupID");
+		String boardGroupName = request.getParameter("boardGroupName");
+		String boardGroupName2 = request.getParameter("boardGroupName2");
+		String code = request.getParameter("code");
+		
+		ezCommunityService.createBoardGroup(code, boardGroupID, boardGroupName, boardGroupName2, userInfo);
+	}
+	
+	/**
+	 * 순서변경화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardOrder.do")
+	public String boardOrder(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String boardID = request.getParameter("boardID");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("upperBoardID", parentBoardID);
+		model.addAttribute("boardName", boardInfo.getBoardName());
+
+		return "/ezCommunity/communityAdminBoardOrder";
+	}
+	
+	/**
+	 * 게시판관리 Tree 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminGetSubBoards.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String adminGetSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pExcludeBoardID = " ";
+		int pMode = 0;
+		
+		String upperBoardID = request.getParameter("upperBoardID");
+		String code = request.getParameter("code");
+		
+		if (request.getParameter("pExcludeBoardID") != null) {
+			pExcludeBoardID = request.getParameter("pExcludeBoardID");
+		}
+		
+		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+
+		return strXML;
+	}
+	
+	/**
+	 * 순서변경 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/saveBoardOrder.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveBoardOrder(@RequestBody String xmlData, HttpServletRequest request) throws Exception {
+		String ret = ezCommunityService.saveBoardOrder(xmlData);
+		
+		ezCommunityService.deleteBoard();
+		
+		ret = "<RESULT>" + ret + "</RESULT>";
+
+		return ret;
+	}
 }
 

@@ -66,6 +66,8 @@ public interface EzCommunityService {
 
 	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception;
 
+	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception;
+	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang) throws Exception;
@@ -314,9 +316,15 @@ public interface EzCommunityService {
 
 	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception;
 
-	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception;
-
 	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception;
+
+	public Integer boardPropertyGet(String boardID) throws Exception;
+
+	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception;
+
+	public String saveBoardOrder(String xmlData) throws Exception;
+
+	public void deleteBoard() throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

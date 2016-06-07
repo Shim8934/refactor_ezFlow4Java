@@ -862,7 +862,10 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID);
 		
 		if (strProp != null) {
-	    	boardInfo.setExpireDays(Integer.toString(strProp.getItemExpires()));
+			if (strProp.getItemExpires() != null) {
+				boardInfo.setExpireDays(Integer.toString(strProp.getItemExpires()));
+			}
+			
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 		    boardInfo.setBoardName(strProp.getBoardName());
 		    boardInfo.setBoardName2(strProp.getBoardName2());
@@ -1457,7 +1460,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				previousTitle = tempTitle;
 			}
 			
-			System.out.println(item.getTitle());
 			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size() - 1) {
 				nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
 				nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
@@ -1668,8 +1670,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		CommunityBoardItemVO item = ezCommunityDAO.copyItemGet1(map);
 		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID, pDestBoardID));
-		
-		System.out.println(item.getContentLocation());
 		
 		return null;
 	}
@@ -2286,6 +2286,54 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		ezCommunityDAO.adminHomeBoardSet(map);
 	}
+
+	@Override
+	public Integer boardPropertyGet(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.boardPropertyGet(map);
+	}
+
+	@Override
+	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_BOARDGROUPID", boardGroupID);
+		map.put("v_BOARDGROUPNAME", boardGroupName);
+		map.put("v_BOARDGROUPNAME2", boardGroupName2);
+		map.put("v_USERINFO_USERID", userInfo.getId());
+		map.put("v_ACCESSNAME", userInfo.getDisplayName1() + "(" + userInfo.getCompanyName1() + ", " + userInfo.getDeptName1() + ")");
+		
+		ezCommunityDAO.createBoardGroup(map);
+	}
+
+	@Override
+	public String saveBoardOrder(String xmlData) throws Exception {
+		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
+		String pBoardIDList = xmlDoc.getElementsByTagName("BOARDIDLIST").item(0).getTextContent().trim();
+		int pBoardListCount = pBoardIDList.split(";").length;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardIDList", pBoardIDList);
+		map.put("v_pBoardListCount", pBoardListCount);
+		map.put("v_err_cd", 0);
+		
+		ezCommunityDAO.saveBoardOrder(map);
+		
+		return "OK";
+	}
+
+	@Override
+	public void deleteBoard() throws Exception {
+		ezCommunityDAO.deleteBoard();
+	}
+	
+	
 	
 	/*public void SndMail(string code)
 	{

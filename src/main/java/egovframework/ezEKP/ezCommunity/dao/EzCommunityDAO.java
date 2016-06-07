@@ -452,7 +452,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	public Integer checkOneLineOwner(Map<String, Object> map) throws Exception {
-		select("EzCommunity.checkOneLineOwner", map);
+		select("EzCommunityDAO.checkOneLineOwner", map);
 		return (Integer) map.get("v_pCount");
 	}
 	
@@ -617,27 +617,44 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	public CommunityClubVO adminLogoGet(Map<String, Object> map) throws Exception {
-		return (CommunityClubVO) select("EzCommunity.adminLogoGet", map);
+		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet", map);
 	}
 
 	public void adminLogoOkUpdate1(Map<String, Object> map) throws Exception {
-		update("EzCommunity.adminLogoOkUpdate1", map);
+		update("EzCommunityDAO.adminLogoOkUpdate1", map);
 	}
 
 	public void adminCommType(Map<String, Object> map) throws Exception {
-		update("EzCommunity.adminCommType", map);
+		update("EzCommunityDAO.adminCommType", map);
 	}
 
 	public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
-		update("EzCommunity.adminLogoOkUpdate2", map);
+		update("EzCommunityDAO.adminLogoOkUpdate2", map);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardInfoVO>) list("EzCommunity.getBoardList", map);
+		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
 	}
 
 	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
-		update("EzCommunity.adminHomeBoardSet", map);
+		update("EzCommunityDAO.adminHomeBoardSet", map);
+	}
+
+	public Integer boardPropertyGet(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.boardPropertyGet", map);
+		return (Integer) map.get("v_pCount");
+	}
+
+	public void createBoardGroup(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardGroup", map);
+	}
+
+	public void saveBoardOrder(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.saveBoardOrder", map);
+	}
+
+	public void deleteBoard() throws Exception {
+		delete("EzCommunityDAO.deleteBoard");
 	}
 }

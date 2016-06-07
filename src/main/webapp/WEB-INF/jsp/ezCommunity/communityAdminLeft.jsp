@@ -291,7 +291,6 @@
 			function makeTree() {
 				var retXML = loadXMLString('${xmlret}');
 				var treeXML = "";
-				treeXML += "<ul>"
 
 				for (var i = 0; i < SelectNodes(retXML, "TREEVIEWDATA/NODE").length; i++) {
 					treeXML += "<li><span id='" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "\" , \"" + cnt + "\", event)'>" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA2") + "</span>";
@@ -300,8 +299,9 @@
 					treeXML += "</span></li>";
 				}
 				
-				treeXML += "</ul>";
 				$("#treeUL").html(treeXML);
+				
+				initToggleList(document.getElementById("left"), "h2", "ul", "li");
 			}
 		</script>
 		
@@ -314,9 +314,8 @@
 	        <h2><span onClick="goPage(10)" id="goPage_10"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
 			<h2><span onClick="Open_Func('${cnt}')" id="BoardList"> <spring:message code = 'ezCommunity.t418' /></span></h2>
 			
-			<ul id = "treeUL">
-			</ul>
-				
+			<ul id = "treeUL"></ul>
+			
 			<h2><span onClick="goPage(4)"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(5)"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(6)"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>

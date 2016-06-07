@@ -8,7 +8,7 @@ public class CommunityBoardPropertyVO {
 	/** 게시판 설명*/
 	String boardDescription;
 	/** 게시물 만료기간일수(-1이면 만료되지 않음)*/
-	int itemExpires;
+	Integer itemExpires;
 	/** 게시판이 속해 있는 게시판그룹 아이디*/
 	String boardGoroupID;
 	/** 관리자에게 게시 알림여부*/
@@ -26,7 +26,7 @@ public class CommunityBoardPropertyVO {
 	/** 게시판 위치*/
 	String showPosition;
 	/** 순서*/
-	int sn;
+	String sn;
 	/** 개시글 갯수*/
 	int ss_Board_MaxRows;
 	/** 검색 개시글 갯수*/
@@ -97,10 +97,10 @@ public class CommunityBoardPropertyVO {
 	public void setBoardDescription(String boardDescription) {
 		this.boardDescription = boardDescription;
 	}
-	public int getItemExpires() {
+	public Integer getItemExpires() {
 		return itemExpires;
 	}
-	public void setItemExpires(int itemExpires) {
+	public void setItemExpires(Integer itemExpires) {
 		this.itemExpires = itemExpires;
 	}
 	public String getBoardGoroupID() {
@@ -151,10 +151,10 @@ public class CommunityBoardPropertyVO {
 	public void setShowPosition(String showPosition) {
 		this.showPosition = showPosition;
 	}
-	public int getSn() {
+	public String getSn() {
 		return sn;
 	}
-	public void setSn(int sn) {
+	public void setSn(String sn) {
 		this.sn = sn;
 	}
 	public int getSs_Board_MaxRows() {
