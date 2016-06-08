@@ -389,7 +389,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	        	rValue = new String[result.size()];
 	        	for (int i=0; i<result.size(); i++) {
 	        		rValue[i] = result.get(i).toString().replaceAll("\"", "");
-	        		System.out.println(result.get(i));
 	        	}
 	        }
 	        
