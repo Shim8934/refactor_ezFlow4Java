@@ -950,6 +950,23 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		try {		
 			String fromEmailAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
 			
+			int atSignIndex = fromEmailAddress.indexOf("@");
+			
+			if (fromEmailAddress.equals("") || atSignIndex == -1) {
+				logger.debug("invalid fromEmailAddress=" + fromEmailAddress);
+				return;
+			}
+			
+			String fromEmailDomain = fromEmailAddress.substring(atSignIndex + 1);
+			String myEmailDomain = myEmailAddress.substring(myEmailAddress.indexOf("@") + 1);
+			
+			logger.debug("fromEmailDomain=" + fromEmailDomain + ",myEmailDomain=" + myEmailDomain);
+			
+			if (!fromEmailDomain.equalsIgnoreCase(myEmailDomain)) {
+				logger.debug("different domain");
+				return;
+			}
+						
 			if (fromEmailAddress.equalsIgnoreCase(myEmailAddress)) {
 				logger.debug("The same address");
 				return;
