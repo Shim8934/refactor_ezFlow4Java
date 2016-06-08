@@ -966,12 +966,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				logger.debug("different domain");
 				return;
 			}
-						
-			if (fromEmailAddress.equalsIgnoreCase(myEmailAddress)) {
-				logger.debug("The same address");
-				return;
-			}
-			
+									
 			String[] messageIds = message.getHeader("Message-ID");
 			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
 			
