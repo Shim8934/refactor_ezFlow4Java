@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.StringReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -10,6 +11,11 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -281,16 +287,24 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("isInsert = " + isInsert);
 		
 		if (pEachCancel.equals("NO")) {
+			
+			String[] arrAddress = new String[addresses.length];
+			for (int i=0; i<addresses.length; i++) {
+				arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
+			}
+			
+			arrAddress = getMember(arrAddress);
+			
 			//내부사용자 추출
 			List<String> innerAddresses = new ArrayList<String>();
-			for (Address address : addresses) {
-				int index = ((InternetAddress)address).getAddress().indexOf("@");
+			for (String address : arrAddress) {
+				int index = address.indexOf("@");
 				String domain = "";
 				if (index > -1) {
-					domain = ((InternetAddress)address).getAddress().substring(index + 1);
+					domain = address.substring(index + 1);
 				}
 				if (domain.equals(config.getProperty("config.DomainName"))) {
-					innerAddresses.add(((InternetAddress)address).getAddress());
+					innerAddresses.add(address);
 				}
 			}
 			
@@ -310,6 +324,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			ezEmailAsync.cancelMailDelete(isInsert);
 		} else {
 			String[] emailAddressArray = pEachCancel.split("\\|!\\|");
+			
+			emailAddressArray = getMember(emailAddressArray);
 			
 			//내부사용자 추출
 			List<String> innerAddresses = new ArrayList<String>();
@@ -346,6 +362,44 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		
 		return "OK";
+	}
+	
+	public String[] getMember(String[] addresses) {
+		String[] rValue = null;
+		try {
+			String inputParams = "";
+			
+			for (int i=0; i<addresses.length; i++) {
+				if (i == 0) {
+					inputParams = "address=" + URLEncoder.encode(addresses[i], "UTF-8");
+				} else {
+					inputParams += "&address=" + URLEncoder.encode(addresses[i], "UTF-8");
+				}
+			}
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail", inputParams);
+			JsonReader reader = null;
+			reader = Json.createReader(new StringReader(strJson));
+	        JsonObject jo = reader.readObject();
+	        
+	        if (jo.get("result") != null) {
+	        	JsonArray result = (JsonArray)jo.get("result");
+	        	rValue = new String[result.size()];
+	        	for (int i=0; i<result.size(); i++) {
+	        		rValue[i] = result.get(i).toString().replaceAll("\"", "");
+	        		System.out.println(result.get(i));
+	        	}
+	        }
+	        
+	        reader.close();
+        
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rValue;
 	}
 	
 }
