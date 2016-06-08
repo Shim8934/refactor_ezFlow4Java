@@ -16,11 +16,9 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.connector.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,6 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
@@ -333,8 +330,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String cCateA = "", cCateB = "", cCateC = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		//TODO 2016-05-03 이효진 사용하지 않음
-//		String makeID = request.getParameter("makeID");
 		String clubName = request.getParameter("hiddenClubName");
 		String clubType = request.getParameter("clubType");
 		String clubConfirmType = request.getParameter("clubConfirmType");
@@ -4130,6 +4125,118 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ret = "<RESULT>" + ret + "</RESULT>";
 
 		return ret;
+	}
+	
+	/**
+	 * 하위게시판 생성화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardCreate.do")
+	public String boardCreate(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("code", code);
+		model.addAttribute("lang_Primary", langPrimary);
+		model.addAttribute("lang_Secondary", langSecondary);
+		model.addAttribute("parentBoardName", boardInfo.getBoardName());
+		
+		return "/ezCommunity/communityAdminBoardCreate";
+	}
+	
+	/**
+	 * 하위게시판 생성 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/createBoard.do", method = RequestMethod.POST)
+	public void createBoard(@CookieValue("loginCookie") String loginCookie , HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String boardName = request.getParameter("boardName");
+		String boardName2 = request.getParameter("boardName2");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		
+		//첨부 용량 제한 [이성우]
+		String comatt = "10";
+		
+		ezCommunityService.createBoardInsert(code, boardID, boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
+	}
+	
+	/**
+	 * 게시판이동화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardMove.do")
+	public String boardMove(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("code", code);
+		model.addAttribute("boardName", boardInfo.getBoardName());
+		
+		return "/ezCommunity/communityAdminBoardMove";
+	}
+	
+	/**
+	 * 대상게시판선택화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardMoveSelect.do")
+	public String boardMoveSelect() throws Exception {
+		return "/ezCommunity/communityAdminBoardMoveSelect";
+	}
+	
+	/**
+	 * 게시판이동 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/moveBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String moveBoard(HttpServletRequest request) throws Exception {
+		String orgBoardID = request.getParameter("orgBoardID");
+		String newParentBoardID = request.getParameter("newParentBoardID");
+		String newBoardGroupID = request.getParameter("newBoardGroupID");
+		
+		String ret = ezCommunityService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID);
+		ret = "<RESULT>" + ret + "</RESULT>";
+		
+		ezCommunityService.deleteBoard();
+		
+		return ret;
+	}
+	
+	/**
+	 * 게시판삭제화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardDelete.do")
+	public String boardDelete() {
+		return "";
 	}
 }
 

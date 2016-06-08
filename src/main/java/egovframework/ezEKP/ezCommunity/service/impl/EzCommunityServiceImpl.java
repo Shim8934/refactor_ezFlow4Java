@@ -2332,8 +2332,45 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public void deleteBoard() throws Exception {
 		ezCommunityDAO.deleteBoard();
 	}
-	
-	
+
+	@Override
+	public void createBoardInsert(String code, String boardID,
+			String boardName, String boardName2, String parentBoardID,
+			String boardGroupID, String comatt, LoginVO userInfo)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_BOARDID", boardID);
+		map.put("v_BOARDNAME", boardName);
+		map.put("v_BOARDNAME2", boardName2);
+		map.put("v_PARENTBOARDID", parentBoardID);
+		map.put("v_BOARDGROUPID", boardGroupID);
+		map.put("v_COMATT", comatt);
+		map.put("v_USERINFO_USERID", userInfo.getId());
+		map.put("v_USERINFO_DISPLAYNAME", userInfo.getDisplayName1());
+		map.put("v_USERINFO_COMPANYNAME", userInfo.getCompanyName1());
+		map.put("v_USERINFO_DEPTNAME", userInfo.getDeptName1());
+		
+		ezCommunityDAO.createBoardInsert(map);
+	}
+
+	@Override
+	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pOrgBoardID", orgBoardID);
+		map.put("v_pNewParentBoardID", newParentBoardID);
+		map.put("v_pNewBoardGroupID", newBoardGroupID);
+		
+		try{
+			ezCommunityDAO.moveBoard(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+	}
 	
 	/*public void SndMail(string code)
 	{

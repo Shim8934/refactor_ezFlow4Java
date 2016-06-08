@@ -174,6 +174,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.commViewMemberGet1", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -256,6 +261,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public CommunityCPollResponseVO pollResGet5(Map<String, Object> map) throws Exception {
 		return (CommunityCPollResponseVO) select("EzCommunityDAO.pollResGet5", map);
+	}
+	
+	public CommunityClubVO adminLeftGet(String v_CODE) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.adminLeftGet", v_CODE);
+	}
+
+	public CommunityClubVO ezCommunityBaseGet1(String v_STRCODE) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.ezCommunityBaseGet1", v_STRCODE);
+	}
+
+	public CommunityMemberInfoVO aspCommInfoGet2(Map<String, Object> map) throws Exception {
+		return (CommunityMemberInfoVO) select("EzCommunityDAO.aspCommInfoGet2", map);
 	}
 	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
@@ -418,6 +435,21 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.ezCommunityBaseGet3", map);
 	}
 	
+	public String adminMemPermitGet1(String v_CODE) throws Exception {
+		return (String) select("EzCommunityDAO.adminMemPermitGet1", v_CODE);
+	}
+
+	public String adminBasicGet1(String v_CODE) throws Exception {
+		return (String) select("EzCommunityDAO.adminBasicGet1", v_CODE);
+	}
+	
+	public String adminBasicGet2(String v_CODE) throws Exception {
+		return (String) select("EzCommunityDAO.adminBasicGet2", v_CODE);
+	}
+	public CommunityClubVO adminLogoGet(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet", map);
+	}
+
 	public Integer pollResGetAllCount(int v_QUESTIONID) throws Exception {
 		return (Integer) select("EzCommunityDAO.pollResGetAllCount", v_QUESTIONID);
 	}
@@ -456,24 +488,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) map.get("v_pCount");
 	}
 	
-	public void bbsEditOkSet1(Map<String, Object> map) throws Exception{
-		update("EzCommunityDAO.bbsEditOkSet1", map);
-	}
-
-	public void bbsEditOkSet2(Map<String, Object> map) throws Exception{
-		update("EzCommunityDAO.bbsEditOkSet2", map);
+	public Integer boardPropertyGet(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.boardPropertyGet", map);
+		return (Integer) map.get("v_pCount");
 	}
 
 	public void bbsEditOkInsert(Map<String, Object> map) throws Exception{
 		insert("EzCommunityDAO.bbsEditOkInsert", map);
-	}
-
-	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.getBoardTreeSet", map);
-	}
-
-	public void bbsDelOkDel(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.bbsDelOkDel", map);
 	}
 
 	public void commMakeOkInsert1() throws Exception {
@@ -486,6 +507,65 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void joinOkInsert(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.joinOkInsert", map);
+	}
+	
+	public void deleteItem4(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.deleteItem4", map);
+	}
+
+	public void brdNewItem(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.brdNewItem", map);
+	}
+	
+	public void insertAttachInfo(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertAttachInfo", map);
+	}
+
+	public void saveOneLineReply(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.saveOneLineReply", map);		
+	}
+	
+	public void guestEditOkInsert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.guestEditOkInsert", map);
+	}
+	
+	public void pollAddOkGoInsert1(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert1", map);
+	}
+
+	public void pollAddOkGoInsert3(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert3", map);
+	}
+	
+	public void pollAddOkGoInsert2(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollAddOkGoInsert2", map);
+	}
+	
+	public void commOutOkInsert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.commOutOkInsert", map);
+	}
+
+	public void createBoardGroup(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardGroup", map);
+	}
+	
+	public void createBoardInsert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardInsert", map);
+	}
+	public void pollResOkSet(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.pollResOkSet", map);
+	}
+
+	public void updateAttachInfo(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateAttachInfo", map);
+	}
+
+	public void bbsEditOkSet1(Map<String, Object> map) throws Exception{
+		update("EzCommunityDAO.bbsEditOkSet1", map);
+	}
+
+	public void bbsEditOkSet2(Map<String, Object> map) throws Exception{
+		update("EzCommunityDAO.bbsEditOkSet2", map);
 	}
 
 	public void commMakeOkSet1(Map<String, Object> map) throws Exception {
@@ -504,6 +584,54 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.setAsRead", map);
 	}
 
+	public void brdUpdateItem(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.brdUpdateItem", map);
+	}
+
+	public void guestEditOkUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.guestEditOkUpdate", map);
+	}
+
+	public void pollEditOkUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.pollEditOkUpdate", map);
+	}
+	
+	public void adminLogoOkUpdate1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminLogoOkUpdate1", map);
+	}
+
+	public void adminCommType(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminCommType", map);
+	}
+
+	public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminLogoOkUpdate2", map);
+	}
+
+	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminHomeBoardSet", map);
+	}
+
+	public void saveBoardOrder(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.saveBoardOrder", map);
+	}
+	
+	public void adminBasicOkIpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminBasicOkUpdate", map);
+	}
+	
+	public void guestEditOkDelete(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.guestEditOkDelete", map);
+	}
+	
+	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.getBoardTreeSet", map);
+	}
+
+	public void bbsDelOkDel(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.bbsDelOkDel", map);
+	}
+
 	public void deleteItem1(String itemID) throws Exception {
 		delete("EzCommunityDAO.deleteItem1", itemID);
 	}
@@ -514,50 +642,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public void deleteItem3(String itemID) throws Exception {
 		delete("EzCommunityDAO.deleteItem3", itemID);
-	}
-	
-	public void deleteItem4(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.deleteItem4", map);
-	}
-
-	public void brdNewItem(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.brdNewItem", map);
-	}
-
-	public void updateAttachInfo(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.updateAttachInfo", map);
-	}
-
-	public void insertAttachInfo(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.insertAttachInfo", map);
-	}
-
-	public void brdUpdateItem(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.brdUpdateItem", map);
-	}
-
-	public void saveOneLineReply(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.saveOneLineReply", map);		
-	}
-	
-	public void guestEditOkInsert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.guestEditOkInsert", map);
-	}
-
-	public void guestEditOkDelete(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.guestEditOkDelete", map);
-	}
-
-	public void guestEditOkUpdate(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.guestEditOkUpdate", map);
-	}
-	
-	public void pollAddOkGoInsert1(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.pollAddOkGoInsert1", map);
-	}
-
-	public void pollAddOkGoInsert3(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.pollAddOkGoInsert3", map);
 	}
 	
 	public void pollDeleteDel1(Map<String, Object> map) throws Exception {
@@ -571,90 +655,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void pollDeleteDel3(String v_MANAGERID) throws Exception {
 		delete("EzCommunityDAO.pollDeleteDel3", v_MANAGERID);
 	}
-	
-	public void pollResOkSet(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.pollResOkSet", map);
-	}
-
-	public void pollEditOkUpdate(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.pollEditOkUpdate", map);
-	}
-	
-	public void pollAddOkGoInsert2(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.pollAddOkGoInsert2", map);
-	}
-	
-	public void commOutOkInsert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.commOutOkInsert", map);
-	}
-
-	public CommunityClubVO adminLeftGet(String v_CODE) throws Exception {
-		return (CommunityClubVO) select("EzCommunityDAO.adminLeftGet", v_CODE);
-	}
-
-	public CommunityClubVO ezCommunityBaseGet1(String v_STRCODE) throws Exception {
-		return (CommunityClubVO) select("EzCommunityDAO.ezCommunityBaseGet1", v_STRCODE);
-	}
-
-	public CommunityMemberInfoVO aspCommInfoGet2(Map<String, Object> map) throws Exception {
-		return (CommunityMemberInfoVO) select("EzCommunityDAO.aspCommInfoGet2", map);
-	}
-
-	public String adminMemPermitGet1(String v_CODE) throws Exception {
-		return (String) select("EzCommunityDAO.adminMemPermitGet1", v_CODE);
-	}
-
-	public String adminBasicGet1(String v_CODE) throws Exception {
-		return (String) select("EzCommunityDAO.adminBasicGet1", v_CODE);
-	}
-	
-	public String adminBasicGet2(String v_CODE) throws Exception {
-		return (String) select("EzCommunityDAO.adminBasicGet2", v_CODE);
-	}
-
-	public void adminBasicOkIpdate(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminBasicOkUpdate", map);
-	}
-
-	public CommunityClubVO adminLogoGet(Map<String, Object> map) throws Exception {
-		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet", map);
-	}
-
-	public void adminLogoOkUpdate1(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminLogoOkUpdate1", map);
-	}
-
-	public void adminCommType(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminCommType", map);
-	}
-
-	public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminLogoOkUpdate2", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
-	}
-
-	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminHomeBoardSet", map);
-	}
-
-	public Integer boardPropertyGet(Map<String, Object> map) throws Exception {
-		select("EzCommunityDAO.boardPropertyGet", map);
-		return (Integer) map.get("v_pCount");
-	}
-
-	public void createBoardGroup(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.createBoardGroup", map);
-	}
-
-	public void saveBoardOrder(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.saveBoardOrder", map);
-	}
 
 	public void deleteBoard() throws Exception {
 		delete("EzCommunityDAO.deleteBoard");
+	}
+
+	public void moveBoard(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.moveBoard", map);
 	}
 }

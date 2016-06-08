@@ -325,6 +325,10 @@ public interface EzCommunityService {
 	public String saveBoardOrder(String xmlData) throws Exception;
 
 	public void deleteBoard() throws Exception;
+
+	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception;
+
+	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

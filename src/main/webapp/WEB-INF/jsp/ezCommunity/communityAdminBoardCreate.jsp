@@ -75,16 +75,16 @@
 			    }
 					
 			    var xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "aspx/CreateBoard.aspx?boardID=" + "{" + GetGUID().toUpperCase() + "}" + "&boardName=" + escape(txtNewName.value) + "&boardName2=" + escape(txtNewName2.value) + "&parentBoardID=" + BoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code, false);
+			    xmlhttp.open("POST", "/ezCommunity/createBoard.do?boardID=" + "{" + GetGUID().toUpperCase() + "}" + "&boardName=" + encodeURIComponent(txtNewName.value) + "&boardName2=" + encodeURIComponent(txtNewName2.value) + "&parentBoardID=" + BoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code, false);
 				xmlhttp.send();
 				xmlhttp = null;
 	
 				alert("<spring:message code='ezCommunity.t322' />");
 				
 			    if (CrossYN()) {
-			        window.parent.frames[0].location.href = "/myOffice/ezcommunity/commhome/admin/admin_left.aspx?" + "code="+code+"&clickboard=Y&boardID=" + BoardGroupID;
+			        window.parent.frames[0].location.href = "/ezCommunity/adminLeft.do?" + "code="+code+"&clickBoard=Y&boardID=" + BoardGroupID;
 			    } else {
-			        window.parent.frames.item(0).location.href = "/myOffice/ezcommunity/commhome/admin/admin_left.aspx?" + "code=" + code + "&clickboard=Y&boardID=" + BoardGroupID;
+			        window.parent.frames.item(0).location.href = "/ezCommunity/adminLeft.do?" + "code=" + code + "&clickBoard=Y&boardID=" + BoardGroupID;
 			    }
 			}
 			
@@ -108,33 +108,33 @@
 	
 				switch(pIndex) {
 					case 1:		
-						window.location.href = "BoardProperty.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/adminBoardProperty.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 					case 2:		
-					    window.location.href = "BoardCreate.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+					    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 					case 3:		
-						window.location.href = "BoardACL.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardACL.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 				    case 4:
-				        window.location.href = "BoardOrder.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 				    case 5:		
 				        if (BoardID == BoardGroupID) {
 				            alert("<spring:message code='ezCommunity.t377' />");
 				        } else {
-				            window.location.href = "BoardMove.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				            window.location.href = "/ezCommunity/boardMove.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 				        }
 				        
 				        break;
 					case 6:		
-						window.location.href = "BoardDelete.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 					case 7:		
-						window.location.href = "SearchBoardItem.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 					case 9:		
-						window.location.href = "BoardGroupCreate.aspx?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 						
 					default:
@@ -215,7 +215,7 @@
 			    <td colspan="2" style="padding:0">
 			    	<table style="width:100%">
 						<tr class="primary">
-				        	<th>${lang_Primary]</th>
+				        	<th>${lang_Primary}</th>
 				        	<td><input type="text" id ="txtNewName" name="txtNewName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 		        		</tr>
 		        		<tr class="secondary">

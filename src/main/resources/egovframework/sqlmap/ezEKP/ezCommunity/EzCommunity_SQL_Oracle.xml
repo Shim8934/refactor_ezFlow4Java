@@ -584,6 +584,14 @@
 		{CALL EZCOMMUNITY.EZSP_CREATEBOARDGROUP(#v_CODE#, #v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_USERINFO_USERID#, #v_ACCESSNAME#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.createBoardInsert"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_CREATEBOARD_INSERT(#v_CODE#, #v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_COMATT#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.moveBoard"					parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL2(#v_QUESTIONID#)}
 	</procedure>
