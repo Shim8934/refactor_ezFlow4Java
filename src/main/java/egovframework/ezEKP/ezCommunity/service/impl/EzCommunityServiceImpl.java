@@ -1123,7 +1123,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_PSTARTDATE", startDateTime);
 		map.put("v_PENDDATE", endDateTime);
 		
-		
 		return ezCommunityDAO.searchItemCount(map);
 	}
 
@@ -2371,6 +2370,98 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			return "ERROR" + e.getMessage();
 		}
 	}
+
+	@Override
+	public String brdDeleteBoard(String boardID) throws Exception {
+		try{
+			ezCommunityDAO.brdDeleteBoard(boardID);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+	}
+
+	@Override
+	public String adminSearchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception {
+		if (boardID.equals("")) {
+			boardID = "%%";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PTITLE", title);
+		map.put("v_PWRITERNAME", writerName);
+		map.put("v_PABSTRACT", abstracts);
+		map.put("v_PSTARTDATE", startDateTime);
+		map.put("v_PENDDATE", endDateTime);
+		
+		return ezCommunityDAO.adminSearchItemCount(map);
+	}
+
+	@Override
+	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PENDROW", pEndRow);
+		map.put("v_STRLANG", lang);
+		map.put("v_PBOARDID", boardID);
+		map.put("v_PTITLE", title);
+		map.put("v_PWRITERNAME", writerName);
+		map.put("v_PABSTRACT", abstracts);
+		map.put("v_PSTARTDATE", searchStart);
+		map.put("v_PENDDATE", searchEnd);
+		map.put("v_PUSERID", id);
+		
+		List<CommunityBoardListVO> list = ezCommunityDAO.adminSearchItemXML(map);
+        
+        sb.append("<NODES>");
+		
+		for (CommunityBoardListVO board : list) {
+			count++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<BoardID>" + board.getBoardID() + "</BoardID>");
+				sb.append("<BoardName>" + commonUtil.cleanValue(board.getBoardName()) + "</BoardName>");
+				sb.append("<ItemID>" + board.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(board.getWriterID()) + "</WriterID>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(board.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(board.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(board.getWriterCompanyName()) + "</WriterCompanyName>");
+				
+				if (board.getWriteDate().equals(board.getParentWriteDate())) {
+					sb.append("<WriteDate>" + board.getWriteDate() + "</WriteDate>");
+				} else {
+					sb.append("<WriteDate>" + board.getParentWriteDate() + "</WriteDate>");
+				}
+				
+				sb.append("<Importance>" + board.getImportance() + "</Importance>");
+				sb.append("<Title>" + commonUtil.cleanValue(board.getTitle()) + "</Title>");
+				
+				if (board.getAttachments().equals("")) {
+					sb.append("<Attachments></Attachments>");
+				} else {
+					sb.append("<Attachments>" + board.getAttachments() + "</Attachments>");
+				}
+				
+				sb.append("<ReadCount>" + board.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + board.getItemLevel() + "</ItemLevel>");
+				sb.append("<ReadFlag>" + board.getReadFlag() + "</ReadFlag>");
+				sb.append("<Abstract>" + board.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+	
 	
 	/*public void SndMail(string code)
 	{

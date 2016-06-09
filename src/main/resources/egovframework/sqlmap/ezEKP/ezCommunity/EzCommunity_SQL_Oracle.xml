@@ -148,6 +148,10 @@
 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.adminSearchItemXML"			parameterClass="Map"		resultClass="CommunityBoardListVO">
+		{CALL EZCOMMUNITY.EZSP_ADMINSEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.getItemXML"					parameterClass="Map"		resultMap="CommunityBoardItem">
 		{CALL EZCOMMUNITY.EZSP_BRDGETITEMINFO(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -338,6 +342,10 @@
 	
 	<procedure id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminSearchItemCount"			parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ADMINSEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.getReservedItemListCount"		parameterClass="Map"		resultClass="String">
@@ -600,6 +608,10 @@
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL3(#v_MANAGERID#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.brdDeleteBoard"				parameterClass="String">
+		{CALL EZCOMMUNITY.EZSP_BRDDELETEBOARD(#v_pBoardID#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
 	</procedure>
@@ -607,6 +619,7 @@
 	<procedure id="EzCommunityDAO.deleteBoard">
 		{CALL EZCOMMUNITY.EZSP_DELETEBOARD()}
 	</procedure>
+	
 	
 	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[

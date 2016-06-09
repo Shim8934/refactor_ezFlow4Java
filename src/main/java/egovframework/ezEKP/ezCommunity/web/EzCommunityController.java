@@ -891,11 +891,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("</DATA>");
 		sb.append("</BOARDINFO>");
 		sb.append("<BOARDITEM>");
-		sb.append("<DATA>");
 		
 		for(int i = 0; i < boardInfoList.size(); i++){
 			String boardID = boardInfoList.get(i).getBoardID();
 			List<CommunityBoardItemVO> boardItemList = ezCommunityService.copHomeBoardItemGet(boardID);
+			sb.append("<DATA>");
 			
 			for(CommunityBoardItemVO boardItem: boardItemList){
 				sb.append("<ROW>");
@@ -907,11 +907,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<EXTENSIONATTRIBUTE5>"+boardItem.getExtensionAttribute5()+"</EXTENSIONATTRIBUTE5>");
 				sb.append("</ROW>");
 			}
+			
+			sb.append("</DATA>");
 		}
 		
-		sb.append("</DATA>");
 		sb.append("</BOARDITEM>");
 		sb.append("</ITEM>");
+System.out.println(sb.toString());
 		
 		return sb.toString();
 	}
@@ -3975,7 +3977,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 관리화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminBoardProperty.do")
+	@RequestMapping(value = "/ezCommunity/boardProperty.do")
 	public String adminBoardProperty (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -4235,8 +4237,162 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판삭제화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/boardDelete.do")
-	public String boardDelete() {
-		return "";
+	public String boardDelete(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("code", code);
+		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("xmlret", strXML);
+		
+		return "/ezCommunity/communityAdminBoardDelete";
+	}
+	
+	/**
+	 * 게시판삭제 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/deleteBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String delete(HttpServletRequest request) throws Exception {
+		String boardID = request.getParameter("boardID");
+		
+		String ret = ezCommunityService.brdDeleteBoard(boardID);
+		ezCommunityService.deleteBoard();
+		
+		ret = "<RESULT>" + ret + "</RESULT>";
+		
+		return ret;
+	}
+	
+	/**
+	 * 관리메뉴 게시판검색화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminSearchBoardItem.do")
+	public String adminSearchBoardItem(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		String title = "", writerName = "", abstracts = "", searchStart = "", searchEnd = "";
+		int pPage = 1, totalCount = 0, totalPage = 0;
+		String strXML = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+		String boardGroupID = request.getParameter("boardGroupID");
+		String code = request.getParameter("code");
+		
+		String orgBoardParameters = request.getParameter("orgBoardParameters");
+		
+		if (request.getParameter("page") != null) {
+			pPage = Integer.parseInt(request.getParameter("page"));
+		}
+		if (request.getParameter("title") != null) {
+			title = request.getParameter("title");
+		}
+		if (request.getParameter("writerName") != null) {
+			writerName = request.getParameter("writerName");
+		}
+		if (request.getParameter("abstract") != null) {
+			abstracts = request.getParameter("abstract");
+		}
+		if (request.getParameter("searchStart") != null) {
+			searchStart = request.getParameter("searchStart");
+		}
+		if (request.getParameter("searchEnd") != null) {
+			searchEnd = request.getParameter("searchEnd");
+		}
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName());
+		}
+		
+		int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
+        int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+        String startDateTime = "";
+        String endDateTime = "";
+
+        if (!searchStart.equals("")) {
+        	startDateTime = searchStart.split(" ")[0];
+        	endDateTime = searchEnd.split(" ")[0];
+        }
+
+        if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
+        	totalCount = Integer.parseInt(ezCommunityService.adminSearchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime));
+            strXML = ezCommunityService.adminSearchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()));
+            
+            if (totalCount > 0) {
+				if (totalCount > boardInfo.getSs_SearchBoard_MaxRows()) {
+					if(totalCount % boardInfo.getSs_SearchBoard_MaxRows() > 0) {
+						totalPage = totalCount / boardInfo.getSs_SearchBoard_MaxRows() + 1;
+					} else {
+						totalPage = totalCount / boardInfo.getSs_SearchBoard_MaxRows();
+					}
+				} else {
+					totalPage = 1;
+				}
+			} else {
+				totalPage = 1;
+			}
+        }
+        
+        model.addAttribute("boardID", boardID);
+		model.addAttribute("parentBoardID", parentBoardID);
+		model.addAttribute("boardGroupID", boardGroupID);
+		model.addAttribute("code", code);
+		model.addAttribute("boardName", boardInfo.getBoardName());
+		
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("boardInfo", boardInfo);
+        model.addAttribute("orgBoardParameters", orgBoardParameters);
+        model.addAttribute("searchStart", startDateTime);
+        model.addAttribute("searchEnd", endDateTime);
+        model.addAttribute("strXML", strXML);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("title", title);
+        model.addAttribute("writerName", writerName);
+        model.addAttribute("abstract", abstracts);
+        
+		return "/ezCommunity/communityAdminSearchBoardItem";
+	}
+	
+	/**
+	 * 검색 대상게시판 선택화면 호출
+	 */
+	@RequestMapping(value = "/ezCommunity/boardSelect.do")
+	public String boardSelect(ModelMap model, HttpServletRequest request) {
+		String code = request.getParameter("code");
+		
+		model.addAttribute("code", code);
+		
+		return "/ezCommunity/communityBoardSelect";
+	}
+	
+	/**
+	 * 탈퇴희망자 승인화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminOuterList.do")
+	public String adminOuterList(ModelMap model, HttpServletRequest request) {
+		
+		return "/ezCommunity/communityAdminOuterList";
 	}
 }
 

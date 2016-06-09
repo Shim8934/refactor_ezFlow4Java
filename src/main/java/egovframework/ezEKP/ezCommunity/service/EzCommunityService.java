@@ -329,6 +329,14 @@ public interface EzCommunityService {
 	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception;
 
 	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+
+	public String brdDeleteBoard(String boardID) throws Exception;
+
+	public String adminSearchItemCount(String id, String boardID, String title,
+			String writerName, String abstracts, String startDateTime,
+			String endDateTime) throws Exception;
+
+	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

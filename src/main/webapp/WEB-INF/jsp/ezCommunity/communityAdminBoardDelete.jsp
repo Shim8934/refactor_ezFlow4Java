@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code = 'ezCommunity.t340' /></title>
+		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -12,103 +12,54 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var xmlhttp = createXMLHttpRequest();
-
-			var SelectedBoardID = "";
-			var SelectedBoardName = "";
-			var SelectedBoardParentBoardID = "";
-			var selectedBoardGroupID = "";
-
-			var OrgBoardID = "<c:out value = '${boardID}' />";
-			var OrgBoardGroupID = "<c:out value = '${boardGroupID}' />";
+			var SelectedBoardID = "<c:out value = '${boardID}' />";
+			var SelectedBoardName = "<c:out value = '${boardName}' />";
 			
 			var BoardID = "<c:out value = '${boardID}' />";
 			var ParentBoardID = "<c:out value = '${parentBoardID}' />";
 			var BoardGroupID = "<c:out value = '${boardGroupID}' />";
 			var code = "<c:out value = '${code}' />";
-			var iMenuNum = 5;
+			var iMenuNum = 6;
 			
-			function Move() {
-			    var boardName = "";
-			    
-			    if (CrossYN()) {
-			        boardName = document.getElementById("pSelectBoardName").textContent;
-			    } else {
-			        boardName = document.getElementById("pSelectBoardName").innerText;
-			    }
-
-			    if (boardName == "") {
-					alert("<spring:message code = 'ezCommunity.t341' />");
-					return;
-				}
+			function Delete() {
+				var ret = confirm("<spring:message code ='ezCommunity.t329' />");
 				
-				if (OrgBoardID == selectedBoardGroupID) {
-					alert("<spring:message code = 'ezCommunity.t342' />");
-					return;
-				}
+				if(ret) {
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/ezCommunity/deleteBoard.do?boardID=" + SelectedBoardID + "&boardName=" + SelectedBoardName + "&code=" + code, false);
+					xmlhttp.send();
 				
-				xmlhttp.open("POST", "/ezCommunity/moveBoard.do?orgBoardID=" + OrgBoardID + "&newParentBoardID=" + SelectedBoardID + "&newBoardGroupID=" + selectedBoardGroupID + "&code=" + code, false);
-				xmlhttp.send();
-				
-				if(xmlhttp.responseText.indexOf("OK") > -1) {
-					alert("<spring:message code = 'ezCommunity.t343' />");
-					parent.window.location.reload();
-				}else {
-					alert("<spring:message code = 'ezCommunity.t344' />");
-				}
-			}
-
-			function MoveSelect() {
-				var parameter = new Array();
-				parameter[0] = OrgBoardID;
-				parameter[1] = OrgBoardGroupID;
-				parameter[2] = code;
-				var url;
-				
-				url = "/ezCommunity/boardMoveSelect.do";
-				
-				var feature	= "status:no;dialogWidth:338px;dialogHeight:650px;help:no;scroll:no;edge:sunken";
-				feature = feature + GetShowModalPosition(338, 650);
-				var ret = window.showModalDialog(url, parameter, feature);
-				
-				if (typeof(ret) == "undefined") {
-					return;
-				}
-				
-				if (ret[0] == "cancel") {
-					alert("<spring:message code = 'ezCommunity.t345' />");
-				} else {
-					SelectedBoardID = ret[0];
-					selectedBoardGroupID = ret[1];
-					
-					if (CrossYN()) {
-					    document.getElementById("pSelectBoardName").textContent = ret[2];
-					} else {
-					    document.getElementById("pSelectBoardName").innerText = ret[2];
+					if(xmlhttp.responseText.indexOf("OK") > -1) {
+					    parent.window.frames.left.location.reload();
+					    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.aspx?code=<c:out value = '${code}' />";
+					}else {
+						alert("<spring:message code ='ezCommunity.t330' />");
 					}
 					
-					MoveCheck.style.display = "";
+					xmlhttp = null;
 				}
 			}
 			
-			function OpenRightMenu(pIndex) {
+			function OpenRightMenu(pIndex){
 				if (BoardID == "" && pIndex == 6) {
-					alert("<spring:message code = 'ezCommunity.t289' />");
+					alert("<spring:message code ='ezCommunity.t289' />");
 					return;
 				}
-
+			
 				curMenuIndex = pIndex;
-
-				if (BoardID == "" && pIndex != 9 && pIndex != 7 && pIndex != 6) {
-					alert("<spring:message code = 'ezCommunity.t289' />");
+				
+				if (BoardID == "" && pIndex != 9 && pIndex != 7 && pIndex != 6)
+				{
+					alert("<spring:message code ='ezCommunity.t289' />");
 					return;
 				}
 				
-				if (BoardID == ParentBoardID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 4 && pIndex != 9 && pIndex != 7 && pIndex != 6) {
-					alert("<spring:message code = 'ezCommunity.t290' />");
+				if (BoardID == ParentBoardID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 4 && pIndex != 9 && pIndex != 7 && pIndex != 6)
+				{
+					alert("<spring:message code ='ezCommunity.t290' />");
 					return;
 				}
-
+				
 				switch(pIndex) {
 					case 1:		
 						window.location.href = "/ezCommunity/boardProperty.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
@@ -120,16 +71,16 @@
 						window.location.href = "/ezCommunity/boardACL.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
 				    case 4:
-				        if (CrossYN()) {
-				            window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
-				        } else {
-				            window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
-				        }
+				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						break;
+				    case 5:		
+				        if (BoardID == BoardGroupID) {
+				            alert("<spring:message code ='ezCommunity.t377' />");
+					    } else {
+							window.location.href = "/ezCommunity/boardMove.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						}
 				        
-						break;
-					case 5:		
-						window.location.href = "/ezCommunity/boardMove.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
-						break;
+					    break;
 					case 6:		
 						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 						break;
@@ -148,7 +99,7 @@
 			/* function searchBoard_onclick() {
 			    var feature = "DialogHeight:470px;DialogWidth:340px;status:no;help:no;edge:sunken";
 			    feature = feature + GetShowModalPosition(340, 470);
-			    var ret = window.showModalDialog("/ezCommunity/class_admin/Board/SearchBoard.aspx", "", feature);
+			    var ret = window.showModalDialog("/myoffice/ezCommunity/class_admin/Board/SearchBoard.aspx", "", feature);
 			    
 				if(typeof(ret) == "undefined") {
 				} else {
@@ -161,7 +112,7 @@
 					}
 				}
 			}
-
+			
 			function loadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID, pBoardName, pParentBoardID) {
 				var divs = TopBoardsList.all.tags("DIV");
 				
@@ -170,7 +121,7 @@
 						divs.item(i).parentElement.parentElement.style.display = "none";
 					}
 				}
-
+			
 				pObjSpan.parentElement.parentElement.nextSibling.style.display = "";
 				var TreeCtrl = pObjSpan.parentElement.parentElement.nextSibling.firstChild.firstChild;
 				
@@ -178,22 +129,20 @@
 				TreeCtrl.config = xmlDom_treeview;
 				TreeCtrl.source = GetBoardTreeByPath(pBoardID, pBoardGroupID);
 				TreeCtrl.update();
-
+			
 				SelectedBoardID = pBoardID;
 				SelectedBoardName = pBoardName;
 				SelectedBoardParentBoardID = pParentBoardID;
 				SelectedBoardGroupID = pBoardGroupID;
-
-				window.location.href = "BoardProperty.aspx?BoardID=" + SelectedBoardID;
-			} */
 			
+				window.location.href = "/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID;
+			} */
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezCommunity.t346' /></h1>
-		
+		<h1><spring:message code = 'ezCommunity.t331' /></h1>
 		<div id="mainmenu">
-			<ul>
+		  	<ul>
 			    <li><span onClick="OpenRightMenu(1)"><spring:message code = 'ezCommunity.t291' /></span></li>
 			    <li><span onClick="OpenRightMenu(9)"><spring:message code = 'ezCommunity.t297' /></span></li>
 			    <li><span onClick="OpenRightMenu(2)"><spring:message code = 'ezCommunity.t324' /></span></li>
@@ -202,47 +151,26 @@
 			    <li><span onClick="OpenRightMenu(6)"><spring:message code = 'ezCommunity.t208' /></span></li>
 			    <li><span onClick="OpenRightMenu(7)"><spring:message code = 'ezCommunity.t296' /></span></li>
 			    <li style="display:none"><span onClick="OpenRightMenu(3)"><spring:message code = 'ezCommunity.t293' /></span></li>
-			</ul>
+		  	</ul>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		
-		<div class="subtxt">
-		
-			<c:choose>
-				<c:when test="">
-					<b class="point"><spring:message code = 'ezCommunity.t347' /></b> - <spring:message code = 'ezCommunity.t348' />
-				</c:when>
-				
-				<c:otherwise>
-					<spring:message code = 'ezCommunity.t348' />
-				</c:otherwise>
-			</c:choose>
-			
-		</div>
-		
-		<table class="content" style="margin-top:5px">
-			<tr>
-		    	<th><spring:message code = 'ezCommunity.t349' /></th>
-		    	<td><b class="point"><c:out value = '${boardName}' /></b></td>
-			</tr>
-		</table>
-		
-		<br>
 		<table class="content" >
-			<tr>
-			    <th><spring:message code = 'ezCommunity.t350' /></th>
-			    <td ID="pSelectBoardName"><a class="imgbtn"><span onClick="MoveSelect()"><spring:message code = 'ezCommunity.t351' /></span></a></td>
-			</tr>
-		</table>
+		  	<tr>
+			    <th ><spring:message code = 'ezCommunity.t306' /></th> 
+				<td><b class="point"><c:out value = '${boardName}' /></b></td> 
+			</tr> 
+			<tr> 
+		    	<td colspan="2" style="padding:15px"> <spring:message code = 'ezCommunity.t332' /><b class="point"><c:out value = '${boardName}' /></b><spring:message code = 'ezCommunity.t333' /><br> <spring:message code = 'ezCommunity.t334' /></td> 
+		  	</tr> 
+		</table> 
 		
-		<div class="btnposition" id="MoveCheck" style="display:none">
-			<input name="submit" type="submit"  onClick="Move()" value="<spring:message code = 'ezCommunity.t108' />"> 
-			<input name="submit2" type="submit"  onClick="window.location.reload(false)" value="<spring:message code = 'ezCommunity.t109' />">
+		<div class="btnposition">
+			<a class="imgbtn" onClick="Delete()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
+			<a class="imgbtn" onClick="history.back();"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 		</div>
-	
 	</body>
 </html>

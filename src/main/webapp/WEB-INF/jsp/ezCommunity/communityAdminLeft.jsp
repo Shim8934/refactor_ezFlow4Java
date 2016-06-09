@@ -200,31 +200,31 @@
 				
 				switch(pIndex) {	
 					case 1:
-						window.open("/ezCommunity/adminBoardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 2:
-					    window.open("/ezCommunity/adminBoardCreate.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+					    window.open("/ezCommunity/boardCreate.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 3:
-						window.open("/ezCommunity/adminBoardACL.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardACL.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 4:
-						window.open("/ezCommunity/adminBoardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 5:
-						window.open("/ezCommunity/adminBoardMove.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardMove.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 6:
-						window.open("/ezCommunity/adminBoardDelete.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardDelete.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 7:
 						window.open("/ezCommunity/adminSearchBoardItem.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;
 					case 9:
-						window.open("/ezCommunity/adminBoardGroupCreate.do?code=" + code, "right");
+						window.open("/ezCommunity/boardGroupCreate.do?code=" + code, "right");
 						break;
 					default:
-						window.open("/ezCommunity/adminBoardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
 						break;		
 				}
 			}

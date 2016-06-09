@@ -568,7 +568,7 @@
 		            if (SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length > 0) {
 		                document.getElementById("mainboard").style.display = "";
 		                document.getElementById("makeguide").style.display = "none";
-		                for (var i = 0; i < SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length; i++) {
+		                for (i = 0; i < SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length; i++) {
 		                    var div = document.createElement("DIV");
 		                    div.className = "boare_area";
 
@@ -801,7 +801,7 @@
 		                            document.getElementById("mainboard").appendChild(div);
 		                        }
 		                    }
-		                }
+		                }//for
 		            } else {
 		                document.getElementById("makeguide").style.display = "";
 		            }

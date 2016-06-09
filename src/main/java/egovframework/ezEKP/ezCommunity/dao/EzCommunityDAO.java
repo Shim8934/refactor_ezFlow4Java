@@ -343,6 +343,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.searchItemCount", map);
 	}
 	
+	public String adminSearchItemCount(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.adminSearchItemCount", map);
+	}
+	
 	public String brdNewItemCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.brdNewItemCount", map);
 	}
@@ -620,6 +624,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.adminBasicOkUpdate", map);
 	}
 	
+	public void moveBoard(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.moveBoard", map);
+	}
+	
 	public void guestEditOkDelete(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.guestEditOkDelete", map);
 	}
@@ -660,7 +668,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.deleteBoard");
 	}
 
-	public void moveBoard(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.moveBoard", map);
+	public void brdDeleteBoard(String v_pBoardID) throws Exception {
+		delete("EzCommunityDAO.brdDeleteBoard", v_pBoardID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> adminSearchItemXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.adminSearchItemXML", map);
 	}
 }

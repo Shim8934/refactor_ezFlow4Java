@@ -171,7 +171,7 @@
 		                window.location.href = "/ezCommunity/boardDelete.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 		                break;
 		            case 7:
-		                window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+		                window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
 		                break;
 		            case 9:
 		                window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
@@ -181,10 +181,11 @@
 		                break;
 		        }
 		    }
-		        function searchBoard_onclick() {
-		            var feature = "DialogHeight:470px;DialogWidth:340px;status:no;help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(340, 470);
-		            var ret = window.showModalDialog("/ezCommunity/searchBoard.do", "", feature);
+			
+	        /* function searchBoard_onclick() {
+	            var feature = "DialogHeight:470px;DialogWidth:340px;status:no;help:no;edge:sunken";
+	            feature = feature + GetShowModalPosition(340, 470);
+	            var ret = window.showModalDialog("/ezCommunity/searchBoard.do", "", feature);
 		            
 		        if (typeof (ret) == "undefined") {
 		        } else {
@@ -221,7 +222,7 @@
 		        SelectedBoardGroupID = pBoardGroupID;
 		
 		        window.location.href = "/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID;
-		    }
+		    } */
 		</script>
 	</head>
 	<body class="mainbody">
