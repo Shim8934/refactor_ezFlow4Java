@@ -175,7 +175,7 @@
 	                TD3.style.overflow = "hidden";
 	                TD3.style.textOverflow = "ellipsis";
 	                TD3.style.whiteSpace = "nowrap";
-	                if (ReadDate == "UNREAD" || CancelStatus != "") {
+	                if (ReadDate == "UNREAD" || (CancelStatus != "" && CancelStatus != "2")) {
 	                    TD4_ATag = document.createElement("A");
 	                    TD4_ATag.className = "imgbtn";
 	                    TD4_Span = document.createElement("SPAN");
@@ -202,7 +202,7 @@
 	                if (pGubun == "ALL") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
-	                else if (pGubun == "READ" && ReadDate != "UNREAD" && CancelStatus == "") {
+	                else if (pGubun == "READ" && ReadDate != "UNREAD") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
 	                else if (pGubun == "UNREAD" && ReadDate == "UNREAD" && CancelStatus == "") {

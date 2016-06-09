@@ -144,6 +144,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			
 			List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 			
+			List<String> tempMailList = new ArrayList<String>();
+			
+			//수신table에서 가져옴
 			for (MailReadVO vo : readList) {
 				sb.append("<ROW>");
 				sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
@@ -164,8 +167,10 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 				
 				sb.append("</ROW>");
+				tempMailList.add(vo.getReaderEmail());
 			}
 			
+			//email message에서 가져옴
 			Address[] addresses = message.getAllRecipients();
 			for (Address address : addresses) {
 				String email = ((InternetAddress)address).getAddress();
@@ -202,10 +207,31 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						}
 					}
 					sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
-					
 					sb.append("</ROW>");
+					
+					tempMailList.add(email);
 				}
 				
+			}
+			
+			//회수table에서 가져옴
+			for (MailCancelVO cvo : cancelList) {
+				
+				if (!tempMailList.contains(cvo.getReaderEmail())) {
+					sb.append("<ROW>");
+					sb.append("<READEREMAIL><![CDATA[" + cvo.getReaderEmail() + "]]></READEREMAIL>");
+					sb.append("<READERNAME><![CDATA[" + cvo.getReaderEmail() + "]]></READERNAME>");
+					sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+					
+					String status = "";
+					if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
+						status = cvo.getStatus();
+					} else {
+						status = "0";
+					}
+					sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+					sb.append("</ROW>");
+				}
 			}
 			
 			sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
