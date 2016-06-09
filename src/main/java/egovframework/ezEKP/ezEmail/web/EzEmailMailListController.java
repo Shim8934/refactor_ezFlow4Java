@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.json.stream.JsonParser;
 import javax.mail.Address;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
