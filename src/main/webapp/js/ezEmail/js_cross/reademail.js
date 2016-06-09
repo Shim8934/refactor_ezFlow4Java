@@ -127,7 +127,7 @@ var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {
     mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
-    DivPopUpShow(320, 375, "/myoffice/ezEmail/mail_movecopy_cross.aspx");
+    DivPopUpShow(320, 375, "/ezEmail/mailMoveCopy.do");
 }
 function move_onclick_Complete(moveUrl) {
     DivPopUpHidden();
