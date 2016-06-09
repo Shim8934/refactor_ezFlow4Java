@@ -71,7 +71,9 @@ public class EzEmailAsync {
 						@Override
 						public boolean match(Message message) {
 							try {
-								if (((MimeMessage) message).getMessageID().contains(messageId)) {
+								String thisMessageId = ((MimeMessage)message).getMessageID(); 
+								
+								if (thisMessageId != null && thisMessageId.contains(messageId)) {
 									return true;
 								}
 							} catch (MessagingException e) {
