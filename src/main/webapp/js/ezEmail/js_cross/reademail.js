@@ -276,7 +276,7 @@ function CopyOrMoveMail(cmd, itemIDs, copyFolderID) {
         createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", itemIDs);
         createNodeAndInsertText(xmlDOM, objNode, "FOLDERID", copyFolderID);
 
-        g_copyItemHttp.open("POST", "/myoffice/ezEmail/remote/mail_movecopy.aspx", true);
+        g_copyItemHttp.open("POST", "/ezEmail/mailMovecopy.do", true);
         event_CopyOrMoveMail.cmd = cmd;
         g_copyItemHttp.onreadystatechange = event_CopyOrMoveMail;
         g_copyItemHttp.send(xmlDOM);

@@ -390,4 +390,119 @@ public class EzEmailMailSearchController {
 		return returnData;		
 	}
 	
+	/**
+	 * 메일 삭제 실행 함수(메일 검색)
+	 */
+	@RequestMapping(value="/ezEmail/mailDeleteS.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailDeleteS(@CookieValue("loginCookie") String loginCookie, 
+			@RequestParam("cmd") String cmd,
+			@RequestBody String bodyData,
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailDelete started");
+		logger.debug("cmd=" + cmd);
+		logger.debug("bodyData=" + bodyData);
+		
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdAndPassword.get(0);
+		String password = userIdAndPassword.get(1);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
+		
+		String folderId = null;
+		
+		if (uniqueId.endsWith(",")) {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+		}
+		String[] folderAndMsgIdArray = uniqueId.split(",");
+					
+		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+			String folderAndMsgId = folderAndMsgIdArray[i];
+			folderId = folderAndMsgId.split("/")[0];
+			String msgId = folderAndMsgId.split("/")[1];
+			long uid = Long.parseLong(msgId);
+			
+			IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);		
+			
+			Message deleteMsg = sourceFolder.getMessageByUID(uid);
+			
+			if (deleteMsg != null) {
+				deleteMsg.setFlag(Flags.Flag.DELETED, true);
+			}
+			
+			sourceFolder.close(true);
+		}	
+		
+				
+		imapAccess.close();		
+		
+		String returnData = "";
+		logger.debug("mailDelete ended");
+		
+		return returnData;
+	}
+	
+	/**
+	 * 메일 이동/복사 실행 함수(메일 검색)
+	 */
+	@RequestMapping(value="/ezEmail/mailMoveCopyMessageS.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailMoveCopyMessageS(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdAndPassword.get(0);
+		String password = userIdAndPassword.get(1);
+		
+		logger.debug("bodyData=" + bodyData);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
+		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+		String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
+		
+		if (uniqueId.endsWith(",")) {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+		}
+		
+		String[] folderAndMsgIdArray = uniqueId.split(",");
+				
+		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+			String folderAndMsgId = folderAndMsgIdArray[i];
+			String folderId = folderAndMsgId.split("/")[0];	
+			String msgId = folderAndMsgId.split("/")[1];
+			long uid = Long.parseLong(msgId);
+			
+			IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);
+			
+			Message message = sourceFolder.getMessageByUID(uid);
+			
+			if (message != null) {
+				IMAPFolder movefolder = (IMAPFolder)imapAccess.getFolder(mfolderId);			
+				sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+				
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					message.setFlag(Flags.Flag.DELETED, true);
+				}
+			}
+			
+			sourceFolder.close(true);
+		}
+		
+		imapAccess.close();	
+		
+		return "";
+	}
+	
 }

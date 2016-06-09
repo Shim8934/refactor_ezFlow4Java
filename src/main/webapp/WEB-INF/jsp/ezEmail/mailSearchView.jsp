@@ -291,7 +291,7 @@
 	        if (CrossYN()) {
 	            mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
 	            mail_movecopy_cross_dialogArguments[2] = "CLOSE";
-	            var OpenWin = window.open("/myoffice/ezEmail/mail_movecopy_cross.aspx", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
+	            var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        else {
@@ -323,7 +323,7 @@
 	                copyItemList(moveUrl["cmd"], moveUrl["url"], selcheck);
 	            }
 
-	            listContentArry = new Array()
+	            listContentArry = new Array();
 	        }
 	    }
 	}
@@ -375,7 +375,7 @@
             createNodeAndInsertText(xmlDOM, objNode, "CMD",cmd );
             createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", itemIDs);
             createNodeAndInsertText(xmlDOM, objNode, "FOLDERID",copyFolderID );
-            g_copyItemHttp.open("POST", "/myoffice/ezEmail/remote/mail_movecopy.aspx", true);
+            g_copyItemHttp.open("POST", "/ezEmail/mailMoveCopyMessageS.do", true);
             g_copyItemHttp.onreadystatechange = event_copyItemList;
             event_copyItemList.cmd = cmd;
             g_copyItemHttp.send(xmlDOM);
@@ -395,21 +395,26 @@
 	        if (g_copyItemHttp.status < 200 || g_copyItemHttp.status > 300) {
 	            g_copyItemHttp = null;
 
-	            if (event_copyItemList.cmd == "COPY")
+	            if (event_copyItemList.cmd == "COPY") {
 	                alert(strLang52);
-	            else if (event_copyItemList.cmd == "MOVE")
+	            }
+	            else if (event_copyItemList.cmd == "MOVE") {
 	                alert(strLang5);
-	            else if (event_copyItemList.cmd == "BDELETE")
+	            }
+	            else if (event_copyItemList.cmd == "BDELETE") {
 	                alert(strLang6);
+	            }
 	        }
 	        else {
 	            g_copyItemHttp = null;
 
 	            if (event_copyItemList.cmd == "COPY") {
 	                alert(strLang53);
+	                start_search();
 	            }
 	            else {
 	                alert(strLang53.replace('복사', '이동'));
+	                start_search();
 	            }
 	        }
 	    }
@@ -444,7 +449,7 @@
         var objNode;
         createNodeInsert(xmlDOM, objNode, "DATA");
         createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
-		xmlHTTP.open("POST", "/ezEmail/mailDelete.do?cmd=BDELETE", false);
+		xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
 		xmlHTTP.send(xmlDOM);
 		
 		if (xmlHTTP.status < 200 || xmlHTTP.status > 300)

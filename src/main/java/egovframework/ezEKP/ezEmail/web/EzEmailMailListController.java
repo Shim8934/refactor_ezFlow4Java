@@ -469,7 +469,7 @@ public class EzEmailMailListController {
 				uids[i] = Long.parseLong(msgId);
 			}	
 		}
-		logger.debug("folderId=" + folderId);		
+		logger.debug("folderId=" + folderId);
 		
 		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
@@ -499,7 +499,61 @@ public class EzEmailMailListController {
 		
 		return returnData;				
 	}
+	
+	/**
+	 * 메일 이동/복사 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
 		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdAndPassword.get(0);
+		String password = userIdAndPassword.get(1);
+		
+		logger.debug("bodyData=" + bodyData);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
+		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+		String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
+		
+		if (uniqueId.endsWith(",")) {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+		}
+		
+		String[] folderAndMsgIdArray = uniqueId.split(",");
+		String folderId = folderAndMsgIdArray[0].split("/")[0];			
+		long[] uids = new long[folderAndMsgIdArray.length];
+		
+		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+			String folderAndMsgId = folderAndMsgIdArray[i];
+			String msgId = folderAndMsgId.split("/")[1];
+			uids[i] = Long.parseLong(msgId);
+		}
+		
+		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				
+		IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
+		sourceFolder.open(Folder.READ_WRITE);
+		
+		Message[] messages = sourceFolder.getMessagesByUID(uids);
+		
+		IMAPFolder movefolder = (IMAPFolder)imapAccess.getFolder(mfolderId);			
+		sourceFolder.copyUIDMessages(messages, movefolder);
+		
+		if (cmd.equalsIgnoreCase("MOVE")) {
+			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+		}
+		
+		sourceFolder.close(true);
+		imapAccess.close();	
+		
+		return "";
+	}
+	
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */

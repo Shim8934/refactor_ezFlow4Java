@@ -303,7 +303,7 @@ function move_mail_onclick() {
     }
     mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = "CLOSE";
-    var OpenWin = window.open("/myoffice/ezEmail/mail_movecopy_cross.aspx", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
+    var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
     try { OpenWin.focus(); } catch (e) { }
 }
 function move_mail_onclick_Complete(moveUrl) {
@@ -318,7 +318,7 @@ function move_mail_onclick_Complete(moveUrl) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
-        Mail_MoveDeletePostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
+        Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
     }
     else if (moveUrl["cmd"] == "COPY") {
         var szItemID = "";
@@ -340,15 +340,21 @@ function Mail_CopyPostSend(Mode, Url, szItemID) {
     createNodeAndInsertText(xmlpara, objNode, "CMD", Mode);
     createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", Url);
-    xmlhttp_mailCopy.open("POST", "/myoffice/ezEmail/remote/mail_movecopy.aspx", true);
+    xmlhttp_mailCopy.open("POST", "/ezEmail/mailMoveCopyMessage.do", true);
     xmlhttp_mailCopy.onreadystatechange = event_Mail_CopyPostSend;
+    event_Mail_CopyPostSend.mode = Mode;
     xmlhttp_mailCopy.send(xmlpara);
 }
 function event_Mail_CopyPostSend() {
     if (xmlhttp_mailCopy != null && xmlhttp_mailCopy.readyState == 4) {
         if (xmlhttp_mailCopy.status >= 200 && xmlhttp_mailCopy.status < 300) {
+        	MailListRefresh();
             refreshUnreadCount();
-            alert(CopyMsg);
+            if(event_Mail_CopyPostSend.mode=="MOVE") {
+            	alert(MoveMsg);
+            } else if (event_Mail_CopyPostSend.mode=="COPY") {
+            	alert(CopyMsg);
+            }
         }
         else {
             alert(strLang5);
