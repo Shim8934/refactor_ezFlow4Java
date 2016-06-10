@@ -5,13 +5,12 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.mail.search.FlagTerm;
-import javax.mail.search.MessageIDTerm;
 import javax.mail.search.SearchTerm;
 
 import org.slf4j.Logger;
@@ -19,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -82,7 +79,15 @@ public class EzEmailAsync {
 							return false;
 						}
 					};
-					Message[] messages = folder.search(searchTerm);
+					
+					Message[] messages = folder.getMessages();
+					
+					// pre-fetch fields needed for searching
+					FetchProfile fp = new FetchProfile();
+					fp.add(FetchProfile.Item.ENVELOPE);
+					folder.fetch(messages, fp);
+					
+					messages = folder.search(searchTerm);
 					if (messages.length > 0) { //메일 발견
 						if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
 							if (config.getProperty("config.IS_READ_DELETE").equals("YES")) { //읽어도 지움
