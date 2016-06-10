@@ -374,6 +374,90 @@ public class EzResourceServiceImpl implements EzResourceService{
 		map.put("v_DELCODE", delCode);
 		ezResourceDAO.delFormID(map);
 	}
+	
+	@Override
+	public void updateSchedule(int num, String ownerID, String companyID, String approve) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PNUM", num);
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PAPPROVE", approve);
+		ezResourceDAO.updateSchedule(map);
+	}
+
+	
+	@Override
+	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, String endDate,
+			String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, String typeVal,
+			String approve) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_ownerID", ownerID);
+		map.put("v_P_num", num);
+		map.put("v_P_pnum", pNum);
+		map.put("v_P_companyID", companyID);
+		map.put("v_P_writerID", writerID);
+		map.put("v_P_title", title);
+		map.put("v_P_location", location);
+		map.put("v_P_timeDisplay", timeDisplay);
+		map.put("v_P_startDate", startDate);
+		map.put("v_P_endDate", endDate);
+		map.put("v_P_allDay", allDay);
+		map.put("v_P_alertTime", alertTime);
+		map.put("v_P_content", content);
+		map.put("v_P_importance", importance);
+		map.put("v_P_reFlag", reFlag);
+		map.put("v_P_gresFlag", gresFlag);
+		map.put("v_P_entryList", entryList);
+		map.put("v_P_characterID", characterID);
+		map.put("v_P_attachFlag", attachFlag);
+		map.put("v_P_typeVal", typeVal);
+		map.put("v_P_Approve", approve);
+		ezResourceDAO.modifyResSch(map);
+	}
+
+	@Override
+	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_ownerID", ownerID);
+		map.put("v_P_num", num);
+		map.put("v_P_pnum", pNum);
+		map.put("v_P_companyID", companyID);
+		map.put("v_P_writerID",  writerID);
+		map.put("v_P_sDate", sDate);
+		map.put("v_P_eDate", eDate);
+		map.put("v_P_insType", insType);
+		ezResourceDAO.delResSch(map);
+	}
+	
+	@Override
+	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
+			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
+			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_ownerID", ownerID);
+		map.put("v_P_pnum", pNum);
+		map.put("v_P_companyID", companyID);
+		map.put("v_P_writerID", writerID);
+		map.put("v_P_title", title);
+		map.put("v_P_location", location);
+		map.put("v_P_timeDisplay", timeDisplay);
+		map.put("v_P_startDate", startDate);
+		map.put("v_P_endDate", endDate);
+		map.put("v_P_allDay", allDay);
+		map.put("v_P_alertTime", alertTime);
+		map.put("v_P_content", content);
+		map.put("v_P_importance", importance);
+		map.put("v_P_reFlag", reFlag);
+		map.put("v_P_gresFlag", gresFlag);
+		map.put("v_P_entryList", entryList);
+		map.put("v_P_characterID", characterID);
+		map.put("v_P_attachFlag", attachFlag);
+		map.put("v_P_deptNM", deptNm);
+		map.put("v_P_ownerNM", ownerNm);
+		map.put("v_P_Approve", approve);
+		map.put("v_P_ScheduleID", scheduleID);
+		ezResourceDAO.addResSch(map);
+	}
 
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
@@ -388,7 +472,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			
 			String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept);
 			Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
-
+System.out.println("scheRs:"+scheRs);
 			returnStr.append("<root>");
 			
 			for (int i=0; i<scheRSDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -542,7 +626,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 					}
 					returnSchedule += "</DATA>";
 				}
-			
+System.out.println("returnSchedule:"+returnSchedule);
 				Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
 				
 				if (returnDom1 != null) {
@@ -602,7 +686,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 				}
 				returnRepetition += "</DATA>";
 			}
-			
+
 			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
 
 			if (returnRepetitionDom != null) {
@@ -612,15 +696,16 @@ public class EzResourceServiceImpl implements EzResourceService{
 					 reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 					
 					String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate);
-	
+System.out.println("returnRepDateTimes:"+returnRepDateTimes);	
 					if (!returnRepDateTimes.trim().equals("")) {
 						Document returnRepDateTimesDom = commonUtil.convertStringToDocument(returnRepDateTimes);
 
 						for (int j=0; j<returnRepDateTimesDom.getElementsByTagName("f_sDate").getLength(); j++) {
-							String fSDate = returnRepDateTimesDom.getElementsByTagName("f_sDate").item(j).getTextContent().substring(0, 8);
-							String fEDate = returnRepDateTimesDom.getElementsByTagName("f_eDate").item(j).getTextContent().substring(0, 8);
+System.out.println("fSDate:"+returnRepDateTimesDom.getElementsByTagName("f_sDate").item(j).getTextContent());
+							String fSDate = returnRepDateTimesDom.getElementsByTagName("f_sDate").item(j).getTextContent().substring(0, 10);
+							String fEDate = returnRepDateTimesDom.getElementsByTagName("f_eDate").item(j).getTextContent().substring(0, 10);
 							
-							ResGetScheduleListTermVO getScheduleListTerm = getScheduleListTerm(Integer.parseInt(reNum), companyID, reOwnerID, fSDate.substring(0,  8)+" 23:59:59", fEDate, pWriterName, pWriterDept);
+							ResGetScheduleListTermVO getScheduleListTerm = getScheduleListTerm(Integer.parseInt(reNum), companyID, reOwnerID, fSDate.substring(0,  10)+" 23:59:59", fEDate, pWriterName, pWriterDept);
 							
 							if (getScheduleListTerm != null) {
 								if (!getScheduleListTerm.getReFlag().equals("4")) {
@@ -711,8 +796,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 				String startDateTime = getRepDateTimes.getStartDateTime();
 				String endDateTime = getRepDateTimes.getEndDateTime();
 
-				startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "", "");
-				endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "", "");
+				startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
+				endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 
 				String reWay = getRepDateTimes.getReWay();
 				String reDay = getRepDateTimes.getReDay();
@@ -787,7 +872,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			
 			String tmpSTime = startDateTime.substring(11, 19);
 			String tmpETime = endDateTime.substring(11, 19);
-			
+	
 			String tmpDTStr = startDateTime.substring(0, 10);
 			String tmpEDTStr = startDateTime.substring(0, 10);
 			
@@ -795,7 +880,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String tmpEDTStr1 = tmpEDTStr;
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "yyyy-MM-dd HH:mm:ss", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			
@@ -842,9 +927,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							returnXML.append("</ROW>");
 						}
 					}
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, ""), "", "", "");
-					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval, ""), "", "", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, ""), "", "", "");
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "");
 				} else {
 					if (endRecurType.equals("0")) {
 						if (number(tmpDTStr) > number(eDate)) {
@@ -884,9 +969,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							}
 						}
 					}
-					
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				}
 				temp++;
 				if (temp > 1000) {
@@ -922,9 +1007,10 @@ public class EzResourceServiceImpl implements EzResourceService{
 			
 			String tmpSDTStr = tmpDTStr;
 			String tmpEDTStr1 = tmpEDTStr;
-			
+
+System.out.println("startDateTime:"+startDateTime);
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			
@@ -956,9 +1042,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 						} else if (weekDay(tmpDTStr) < Integer.parseInt(wDay[i]) + 1 || !selDTStr.equals(tmpDTStr)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							
 							secondWhileFlag = false;
 							break;
@@ -967,16 +1053,16 @@ public class EzResourceServiceImpl implements EzResourceService{
 					if (secondWhileFlag == false) {
 						break;
 					}
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (interval * 7), ""), "yyyyMMdd", "yyyyMMdd", "");
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (interval * 7), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (interval * 7), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (interval * 7), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 					
 					if (weekDay(tmpDTStr) != 1) {
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1- weekDay(tmpDTStr)), ""), "yyyyMMdd", "yyyyMMdd", "");
-						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (1 - tmpWeekDay), ""), "yyyyMMdd", "yyyyMMdd", "");
-						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (1 - tmpWeekDay), ""), "yyyyMMdd", "yyyyMMdd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1- weekDay(tmpDTStr)), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (1 - tmpWeekDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (1 - tmpWeekDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 					}
 					for (int i=0; i<wDayCnt; i++) {
 						if (wDay[i].equals("")) {
@@ -985,9 +1071,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 						if (weekDay(tmpDTStr) != (Integer.parseInt(wDay[i]) + 1)) {
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 					}
 					temp2 ++;
@@ -1071,10 +1157,10 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String tmpSDTStr = tmpDTStr;
 			String tmpEDTStr1 = tmpEDTStr;
 			
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+System.out.println("startDateTimeMonth"+startDateTime);
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "startDateTimeMonth"), "yyyy-MM-dd HH:mm:ss", "startDateTimeMonth", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			String orgtmpDTStr = tmpDTStr;
@@ -1106,9 +1192,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 					}
 					
 					if (checkLastDate) {
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(daysOfMonth) - datePartDay, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(daysOfMonth) - datePartDay, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(daysOfMonth) - datePartDay, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(daysOfMonth) - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(daysOfMonth) - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(daysOfMonth) - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						
 						if (endRecurType.equals("0")) {
 							if (number(tmpDTStr) > number(eDate)) {
@@ -1153,9 +1239,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 					int count = 1;
 					int datePartDay = format.parse(tmpDTStr).getDate();
 					
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1 - datePartDay, ""), "yyyyMMdd", "yyyyMMdd", "");
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1 - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1 - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1 - datePartDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 					
 					String sTmpDTStr = tmpDTStr;
 					
@@ -1182,9 +1268,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							}
 							count ++;
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							
 						}
 						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
@@ -1195,25 +1281,25 @@ public class EzResourceServiceImpl implements EzResourceService{
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									} else {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 								}
 							} 
 						} else {
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 					} else {
 						int count1 = 1;
 						
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1233,9 +1319,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							}
 							count1++;
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 						if (wDayCnt == 2) {
 							if (tmpWeekDay == 7) {
@@ -1256,7 +1342,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1281,7 +1367,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1309,7 +1395,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
@@ -1334,9 +1420,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 						}
 					}
 				}
-				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				
 				temp++;
 				if (temp > 1000) {
@@ -1376,7 +1462,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
 			if (number(tmpSTime) > number(tmpETime)) {
-				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, ""), "", "", "");
+				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
 			}
 			String orgtmpDTStr = tmpDTStr;
@@ -1395,9 +1481,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 				}
 				
 				int datePartMonth = format.parse(tmpDTStr).getMonth();
-				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpEDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpSDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), ""), "yyyyMMdd", "yyyyMMdd", "");
+				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpEDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpSDTStr,(Integer.parseInt(monthsOfYear) - datePartMonth), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				
 				if (selType.equals("0")) {
 					int datePartDay = format.parse(tmpDTStr).getDate();
@@ -1414,9 +1500,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 					}
 					
 					if (checkLastDate) {
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
-						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
-						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(daysOfMonth) - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						
 						if (endRecurType.equals("0")) {
 							if (number(tmpDTStr) > number(eDate)) {
@@ -1461,9 +1547,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 					int count = 1;
 					int datePartDay = format.parse(tmpDTStr).getDate();
 					
-					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1 - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (1 - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
-					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (1 - datePartDay), ""), "yyyyMMdd", "yyyyMMdd", "");
+					tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1 - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (1 - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (1 - datePartDay), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 					
 					String sTmpDTStr = tmpDTStr;
 					
@@ -1490,9 +1576,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							}
 							count ++;
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
 							tmpDTStr = sTmpDTStr;
@@ -1502,25 +1588,25 @@ public class EzResourceServiceImpl implements EzResourceService{
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
 								if (format.parse(tmpDTStr).getDate() == 1) {
-									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								} else {
 									if (weekDay(sTmpDTStr) == 1 || weekDay(sTmpDTStr) == 7) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									} else {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 								}
 							} 
 						} else {
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 					} else {
 						int count1 = 1;
 						
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1540,9 +1626,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 							}
 							count1++;
 							
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
 						if (wDayCnt == 2) {
 							if (tmpWeekDay == 7) {
@@ -1563,7 +1649,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1588,7 +1674,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1616,7 +1702,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							if (wDayCnt != 0) {
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
-										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
@@ -1641,9 +1727,9 @@ public class EzResourceServiceImpl implements EzResourceService{
 						}
 					}
 				}
-				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
-				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, ""), "yyyyMMdd", "yyyyMMdd", "");
+				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				
 				temp++;
 				if (temp > 1000) {
@@ -1669,7 +1755,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 	@SuppressWarnings("deprecation")
 	public int weekDay(String inputStr) {
 		int returnValue = 0;
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
 				if (format.parse(inputStr).getDay() == 0) {
@@ -2275,7 +2361,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String[] entryArr;
 			String[] entryEmail;
 			String entryID = "";
-			String entryName = "";
+			//String entryName = "";
 			
 			if (cmd.equals("add")) {
 				if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
@@ -2286,7 +2372,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 					
 					for (int i=0; i<entryNum; i++) {
 						entryArr = entry[i].split("<");
-						entryName = entryArr[0];
+						//entryName = entryArr[0];
 						entryEmail = entryArr[1].split("@");
 						entryID = entryEmail[0];
 						
@@ -2305,7 +2391,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 					entryNum = entry.length;
 					for (int i=0; i<entryNum; i++) {
 						entryArr = entry[i].split("<");
-						entryName = entryArr[0];
+						//entryName = entryArr[0];
 						entryEmail = entryArr[1].split("@");
 						entryID = entryEmail[0];
 						
@@ -2515,7 +2601,127 @@ public class EzResourceServiceImpl implements EzResourceService{
 		} else {
 			return "";
 		}
-
+	}
+	
+	public boolean delResSch(String xmlStr) {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String ownerID = xmlRes.getElementsByTagName("OWNERID").item(0).getTextContent();
+			String num = xmlRes.getElementsByTagName("NUM").item(0).getTextContent();
+			String pNum = xmlRes.getElementsByTagName("PNUM").item(0).getTextContent();
+			String companyID = xmlRes.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			String writerID = xmlRes.getElementsByTagName("WRITERID").item(0).getTextContent();
+			String sDate = xmlRes.getElementsByTagName("STARTDATE").item(0).getTextContent();
+			String eDate = xmlRes.getElementsByTagName("ENDDATE").item(0).getTextContent();
+			String insType = xmlRes.getElementsByTagName("INSTYPE").item(0).getTextContent();
+			
+			delResSch(ownerID, num, pNum, companyID, writerID, sDate, eDate, Integer.parseInt(insType));
+			return true;
+		} catch (Exception e) {
+			 return false;
+		}
+	}
+	
+	public String modifyResSch(String xmlStr) {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String attachFlag = "";
+		try {
+			String title = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
+			String location = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
+			String timeDisplay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(2).getTextContent().trim();
+			String startDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(3).getTextContent().trim();
+			String endDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(4).getTextContent().trim();
+			String allDay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(5).getTextContent().trim();
+			String alertTime = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(6).getTextContent().trim();
+			String content = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(7).getTextContent().trim();
+			String writerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(8).getTextContent().trim();
+			String importance = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(9).getTextContent().trim();
+			String entryList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(10).getTextContent().trim();
+			String reFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(11).getTextContent().trim();
+			String gresFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(12).getTextContent().trim();
+			String num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(13).getTextContent().trim();
+			String pNum = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(14).getTextContent().trim();
+			String ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(15).getTextContent().trim();
+			String attachFiles = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(16).getTextContent().trim();
+			String companyID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(17).getTextContent().trim();
+			String characterID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(18).getTextContent().trim();
+			String typeVal = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(19).getTextContent().trim();
+			String strApprove = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(20).getTextContent().trim();
+			
+			if (!attachFiles.equals("")) {
+				attachFlag = "1";
+			} else {
+				attachFlag = "0";
+			}
+			
+			modifyResSch(ownerID, num, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance,
+								reFlag, gresFlag, entryList, characterID, attachFlag, typeVal, strApprove);
+			String returnStr = "";
+			returnStr += "<RTN_DATA>";
+            returnStr += "<NUM>" + num + "</NUM>";
+            returnStr += "<OWNERID>" + ownerID + "</OWNERID>";
+            returnStr += "</RTN_DATA>";
+            
+            return returnStr;
+            
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public String addResSch(String xmlStr) {
+System.out.println("!!");
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String attachFlag = "";
+		String scheduleID = "";
+		try {
+			String title = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
+			String location = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
+			String timeDisplay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(2).getTextContent().trim();
+			String startDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(3).getTextContent().trim();
+			String endDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(4).getTextContent().trim();
+			String allDay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(5).getTextContent().trim();
+			String alertTime = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(6).getTextContent().trim();
+			String content = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(7).getTextContent().trim();
+			String writerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(8).getTextContent().trim();
+			String importance = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(9).getTextContent().trim();
+			String entryList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(10).getTextContent().trim();
+			String reFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(11).getTextContent().trim();
+			String gresFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(12).getTextContent().trim();
+			String num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(13).getTextContent().trim();
+			String pNum = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(14).getTextContent().trim();
+			String ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(15).getTextContent().trim();
+			String attachFiles = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(16).getTextContent().trim();
+			String companyID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(17).getTextContent().trim();
+			String characterID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(18).getTextContent().trim();
+			String deptNm = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(20).getTextContent().trim();
+			String ownerNm = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(21).getTextContent().trim();
+			String strApprove = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(22).getTextContent().trim();
+			
+			if (xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().getLength() > 23) {
+				scheduleID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(23).getTextContent().trim();
+			}
+			
+			if (!attachFiles.equals("")) {
+				attachFlag = "1";
+			} else {
+				attachFlag = "0";
+			}
+			
+			addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
+					entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID);
+			String returnStr = "";
+			returnStr += "<RTN_DATA>";
+            returnStr += "<NUM>" + num + "</NUM>";
+            returnStr += "<OWNERID>" + writerID + "</OWNERID>";
+            returnStr += "</RTN_DATA>";
+            
+            return returnStr;
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }
 

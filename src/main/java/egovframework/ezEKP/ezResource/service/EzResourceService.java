@@ -82,6 +82,10 @@ public interface EzResourceService {
 	
 	public String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) throws Exception;
 	
+	public String addResSch(String xmlStr) throws Exception;
+	
+	public String modifyResSch(String xmlStr) throws Exception;
+	
 	public boolean deleteRepetition(String xmlStr) throws Exception;
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception;
@@ -92,10 +96,16 @@ public interface EzResourceService {
 	
 	public boolean addResData(String xmlStr) throws Exception;
 	
+	public boolean delResSch(String xmlStr) throws Exception;
+	
 	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
 	
 	public void insertForm(String resID, String brdNm, String formText) throws Exception;
+	
+	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
+			String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
+			String deptNm, String ownerNm, String approve, String scheduleID) throws Exception;
 	
 	public void delResData(String brdID, String companyID) throws Exception;
 	
@@ -110,7 +120,15 @@ public interface EzResourceService {
 	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID) throws Exception;
 	
+	public void updateSchedule(int num, String ownerID, String companyID, String approve) throws Exception;
+	
+	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
+	String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
+	String typeVal, String approve) throws Exception;
+	
 	public void deleteRepetition(String ownerID, int pNum) throws Exception;
 	
 	public void delFormID(String delCode) throws Exception;
+	
+	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType) throws Exception;
 }

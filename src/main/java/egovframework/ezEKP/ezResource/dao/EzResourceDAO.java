@@ -122,8 +122,16 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		insert("EzResourceDAO.insertForm", map);
 	}
 	
+	public void addResSch(Map<String, Object> map) {
+		insert("EzResourceDAO.addRessch", map);
+	}
+	
 	public void modifyResData(Map<String, Object> map) {
 		update("EzResourceDAO.modifyResData", map);
+	}
+	
+	public void updateSchedule(Map<String, Object> map) {
+		update("EzResourceDAO.updateSchedule", map);
 	}
 	
 	public void updateScheduleDateTime(Map<String, Object> map) {
@@ -132,6 +140,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void updateScheduleRepetition(Map<String, Object> map) {
 		update("EzResourceDAO.updateScheduleRepetition", map);
+	}
+	
+	public void modifyResSch(Map<String, Object> map) {
+		update("EzResourceDAO.modifyResSch", map);
 	}
 	
 	public void delResData(Map<String, Object> map) {
@@ -144,6 +156,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void delFormID(Map<String, Object> map) {
 		delete("EzResourceDAO.delFormID", map);
+	}
+	
+	public void delResSch(Map<String, Object> map) {
+		delete("EzResourceDAO.delResSch", map);
 	}
 	
 }
