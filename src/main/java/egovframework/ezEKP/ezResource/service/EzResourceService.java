@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezResource.service;
 
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
