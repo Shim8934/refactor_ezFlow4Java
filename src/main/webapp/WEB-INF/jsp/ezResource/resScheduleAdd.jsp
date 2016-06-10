@@ -46,7 +46,7 @@
 	    	var org_num			= "${num}";
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
-	    	var writerIDVal		= "${userInfo.deptName1}";
+	    	var writerIDVal		= "${writerID}";
 	    	var cmd				= "${cmdStr}";
 	    	var typeVal			= "${typeVal}";
 	    	var startDateVal	= "${startDateVal}";
@@ -196,12 +196,11 @@
 	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
-//2016-05-30T16:00:00:000Z
+
 	        	var SDate = new Date("${startDateTime2}");
-	        	//var SDate = new Date("2016-05-28T17:00:00:000Z");
 	        	SDate.setHours(SDate.getHours() - 9);
+	        	
 	        	var EDate = new Date("${endDateTime2}");
-	        	//var EDate = new Date("2016-05-28T17:30:00:000Z");
 	        	EDate.setHours(EDate.getHours() - 9);
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -445,6 +444,38 @@
 						<c:choose>
 							<c:when test="${reFlag ne '1'}">
 								<tr id="tr_Recur" style="display: none">
+									<th> <spring:message code="ezResource.t197"/></th>
+          								<td colspan="3"><span id="AllDayDisplay"></span>
+            								<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
+            									<c:choose>
+            										<c:when test="${timeDisplay eq '1'}">
+														<option value="1" selected><spring:message code="ezResource.t198"/></option>
+              											<option value="2" ><spring:message code="ezResource.t199"/></option>
+              											<option value="3" ><spring:message code="ezResource.t200"/></option>
+              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            										</c:when>
+            										<c:when test="${timeDisplay eq '2'}">
+														<option value="1" ><spring:message code="ezResource.t198"/></option>
+              											<option value="2" selected><spring:message code="ezResource.t199"/></option>
+              											<option value="3" ><spring:message code="ezResource.t200"/></option>
+              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            										</c:when>
+            										<c:when test="${timeDisplay eq '3'}">
+														<option value="1" ><spring:message code="ezResource.t198"/></option>
+              											<option value="2" ><spring:message code="ezResource.t199"/></option>
+              											<option value="3" selected><spring:message code="ezResource.t200"/></option>
+              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
+            										</c:when>
+            										<c:when test="${timeDisplay eq '4'}">
+														<option value="1" ><spring:message code="ezResource.t198"/></option>
+              											<option value="2" ><spring:message code="ezResource.t199"/></option>
+              											<option value="3" ><spring:message code="ezResource.t200"/></option>
+              											<option value="4" selected><spring:message code="ezResource.t201"/></option>            												
+            										</c:when>
+            									</c:choose>
+            								</select>        
+            			  				</td>
+            			  			</tr>	
 							</c:when>
 							<c:otherwise>
 								<tr id="tr_Recur" >
