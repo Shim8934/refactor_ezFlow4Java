@@ -16,6 +16,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -977,6 +978,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				logger.debug("Sending an MDN...");
 											
 				Message replyMessage = message.reply(false);
+				
+        		// ANSWERED flag needs to be cleared since the above reply method sets it.
+				message.setFlag(Flags.Flag.ANSWERED, false);
 				
 				InternetHeaders h = new InternetHeaders();
 				
