@@ -31,17 +31,17 @@
 .calendar_month .td_list td .company{display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 회사 */
 /* //개인,부서,회사 색상 */
 
-.icon_h{display:inline-block; width:13px; height:13px; background:url(images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
-.icon_l{display:inline-block; width:13px; height:13px; background:url(images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
+.icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+.icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 
 
 
 
 /* 자원관리 승인,비승인아이콘 */
 .calendar_month .td_list td.resource_ok{color:#666666;}
-.calendar_month .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_month .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
 .calendar_month .td_list td.resource_no{color:#666666;}
-.calendar_month .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+.calendar_month .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
 /* //월보기 */
 
 
@@ -89,10 +89,10 @@
 
 
 .calendar_data_ok{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
+.calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
 .calendar_data_ok table td{background:#818f98 !important;} /* 20130418_임의로 작업 추후변경 */
 .calendar_data_no{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
+.calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
 .calendar_data_no table td{background:#818f98 !important; color:#fff;} /* 20130418_임의로 작업 추후변경 */
 /* //주보기 */
 
@@ -160,15 +160,15 @@
 .calendar_layer .text .td_list td{padding:3px 0px; color:#393939;}
 .calendar_layer .btn{background:#fff; border:1px solid #e5e5e5; border-top:1px solid #dedede; padding:10px 0px 9px 0px; margin:0 auto; text-align:center;}
 .calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
-.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
-.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
+.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(/images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
+.calendar_layer .btn ul li span{display:inline-block; background:url(/images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
 
 
 /* 자원관리 승인,비승인아이콘 */
 .calendar_layer .text .td_list td.resource_ok{color:#00b43b;}
-.calendar_layer .text .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_layer .text .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
 .calendar_layer .text .td_list td.resource_no{color:#999999;}
-.calendar_layer .text .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+.calendar_layer .text .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
 .calendar_layer .text .td_list td .width_16{display:inline-block; width:16px; height:16px; background:transparent; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 공백width */
 /* //달력layer 팝업 */
 
