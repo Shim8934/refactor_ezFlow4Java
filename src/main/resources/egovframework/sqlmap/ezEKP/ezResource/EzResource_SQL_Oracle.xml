@@ -192,9 +192,9 @@
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
-		<result property="num"					column="NUM"						columnIndex="1"/>
-		<result property="pNum"					column="PNUM"						columnIndex="2"  		nullValue=""/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
+		<result property="num"					column="NUM"						columnIndex="2"/>
+		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>
 		<result property="companyID"			column="COMPANYID"			columnIndex="4"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="5"/>
 		<result property="deptNm"				column="DEPTNM"					columnIndex="6"/>
@@ -361,6 +361,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzResourceDAO.updateSchedule" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_UPDATESCHEDULE(#v_PNUM#, #v_POWNERID#, #v_PCOMPANYID#, #v_PAPPROVE#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
@@ -426,6 +432,28 @@
 	<procedure id="EzResourceDAO.delFormID" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_DEL_FORMID(#v_DELCODE#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.delResSch" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DELRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_sDate#, #v_P_eDate#, #v_P_insType#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.modifyRessch" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_MODIFYRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#
+			, #v_P_startDate#, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#,
+			#v_P_attachFlag#, #v_P_typeVal#, #v_P_Approve#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceDAO.addRessch" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_ADDRESSCH2(#v_P_ownerID#, #v_P_num#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#
+			, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#, #v_P_attachFlag#,
+			#v_P_deptNM#, #v_P_ownerNM#, #iv_P_Approve#, #v_P_ScheduleID#)}
 		]]>
 	</procedure>
 	
