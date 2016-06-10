@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -293,6 +294,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 			if (cmd.equals("get")) {
 				startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+System.out.println("startDate:"+startDate);
 				endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 
 				if (viewType.equals("list")) {
@@ -303,20 +305,21 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 				if (type.equals("") || type == null) {
 					xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
+System.out.println("startDate0:"+startDate.substring(0, 10));
 					xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
 				} else {
 					if (type.equals("MAIN")) {
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
 					} else {
-						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, ""), "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","");
-						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, ""), "yyyyMMdd", "yyyy-MM-dd HH:mm:ss","");
-						
+						String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss","");
+						String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss","");
+System.out.println("startDate1:"+startDate1);
 						xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
 						xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
 					}
 				}
-				reVal = ezResourceService.getScheduleXML(xmlStr, resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
+				reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
 
 				Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				
@@ -453,9 +456,7 @@ System.out.println("listCnt:"+listCnt);
 		
 		if (curPage.equals("") || Integer.parseInt(curPage.trim()) < 1) {
 			curPage = "1";
-		} else {
-			curPage = curPage;
-		}
+		} 
 		
 		totalCnt = ezResourceService.getBrdCnt(Integer.parseInt(brdID), userInfo.getCompanyID());
 
@@ -876,8 +877,8 @@ System.out.println("listCnt:"+listCnt);
 		String strOwnDeptNm = "";
 		String strOwnerNm = "";
 		String strOwnerPosition = "";
-		String cUserIDStr = "";
-		String currentUserID = "";
+		//String cUserIDStr = "";
+		//String currentUserID = "";
 		
 		if (req.getParameter("resID") != null) {
 			resID = req.getParameter("resID");
@@ -897,28 +898,28 @@ System.out.println("listCnt:"+listCnt);
 			strOwnerPosition = resBrd.getOwnerPosition2();
 		}
 		
-		String strBrdID = resBrd.getBrdID();
+		//String strBrdID = resBrd.getBrdID();
 		String strBrdExplain = resBrd.getBrdExplain();
 		String strResLocation = resBrd.getResLocation();
-		String strOwnDeptID = resBrd.getOwnDeptID();
+		//String strOwnDeptID = resBrd.getOwnDeptID();
 		String strOwnerID = resBrd.getOwnerID();
-		String strOwnerCall = resBrd.getOwnerCall();
-		String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
+		//String strOwnerCall = resBrd.getOwnerCall();
+		//String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strBrdAccess = resBrd.getBrdAccess();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone");
 		StringBuilder iYear = new StringBuilder();
 		StringBuilder iMonth = new StringBuilder();
 		
-		if (req.getParameter("cuid") != null) {
+		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
-		}
+		}*/
 		
-		if (cUserIDStr.equals("")) {
+		/*if (cUserIDStr.equals("")) {
 			currentUserID = userInfo.getId();
 		} else {
 			currentUserID = cUserIDStr;
-		}
+		}*/
 		
 		String displaySTime = "9";
 		String displayETime = "18";
@@ -958,9 +959,11 @@ System.out.println("listCnt:"+listCnt);
 		model.addAttribute("ownerID", strOwnerID);
 		model.addAttribute("ownerNm", strOwnerNm);
 		model.addAttribute("ownerPosition", strOwnerPosition);
+		model.addAttribute("ownerDeptNm", strOwnDeptNm);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approveFlag", strApproveFlag);
 		model.addAttribute("brdNm", strBrdNm);
+		model.addAttribute("brdAccess", strBrdAccess);
 		model.addAttribute("displaySTime", displaySTime);
 		model.addAttribute("displayETime", displayETime);
 		model.addAttribute("nonActiveX", "YES");
@@ -976,16 +979,9 @@ System.out.println("listCnt:"+listCnt);
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRead.do")
-	public String scheduleRead(Model model) throws Exception {
-		return "/ezResource/resScheduleRead";
-	}
-	
-	/**
-	 * 자원관리 자원 예약 화면 호출 함수
-	 */
-	@RequestMapping(value = "/ezResource/scheduleAdd.do")
-	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String useIE11Browser = "";
 		String editor = config.getProperty("EDITOR");
 		String nonActiveX = "YES";
@@ -1010,20 +1006,23 @@ System.out.println("listCnt:"+listCnt);
 		String endDateTime = "";
 		String startDateTime2 = "";
 		String endDateTime2 = "";
-		String alertTime = "";
 		String timeDisplay = "";
 		String content = "";
 		String ownerID = "";
 		String writerID = "";
 		String curStartDateTime = "";
 		String curEndDateTime = "";
-		String curStartDateTime2 = "";
-		String curEndDateTime2 = "";
+		/*String curStartDateTime2 = "";
+		String curEndDateTime2 = "";*/
 		String checkSDT = "";
 		String checkEDT = "";
 		String allDay = "";
-		int pNum = 0;
-		int num = 0;
+		String pNum = "";
+		String num = "";
+		String saveApproveFlag = "";
+		String entryList = "";
+		String startDateTimeRepeat = "";
+		String endDateTimeRepeat = "";
 		
 		if (config.getProperty("config.IE11EDITOR").equals("CK")) {
 			useIE11Browser = "CK";
@@ -1034,7 +1033,7 @@ System.out.println("listCnt:"+listCnt);
 		if (req.getParameter("brdName") != null) {
 			brdName = req.getParameter("brdName");
 		}
-
+System.out.println("brdName:"+brdName);
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "");
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID());
 		
@@ -1068,12 +1067,12 @@ System.out.println("listCnt:"+listCnt);
 				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID());
 			}
 			
-			num = getSchedule.getNum();
-			pNum = getSchedule.getpNum();
+			num = String.valueOf(getSchedule.getNum());
+			pNum = String.valueOf(getSchedule.getpNum());
 			ownerID = getSchedule.getOwnerID();
 			writerID = getSchedule.getWriterID();
 			
-			String propList = "homemdb;extensionAttribute1;department;displayName;mail;mailNickname;title;description;company;physicalDeliveryOfficeName;TelephoneNumber;extensionAttribute10";
+			String propList = "displayName;description";
 			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
@@ -1100,7 +1099,6 @@ System.out.println("listCnt:"+listCnt);
 			timeDisplay = getSchedule.getTimeDisplay();
 			startDateTime = getSchedule.getStartDate();
 			endDateTime = getSchedule.getEndDate();
-			alertTime = getSchedule.getAlertTime();
 			reFlag = getSchedule.getReFlag();
 			gresFlag = getSchedule.getGresFlag();
 			content = getSchedule.getContent();
@@ -1109,15 +1107,12 @@ System.out.println("listCnt:"+listCnt);
 			if (importance.equals("")) {
 				importance = "2";
 			}
-			String entryList = getSchedule.getEntryList();
+			entryList = getSchedule.getEntryList();
 			allDay = getSchedule.getAllDay();
-			String publicFlag = getSchedule.getPublicFlag();
-			int characterID2 = getSchedule.getCharacterID();
-			String saveApproveFlag = getSchedule.getApproveFlag();
+			saveApproveFlag = getSchedule.getApproveFlag();
 			
 			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum));
-			String startDateTimeRepeat = "";
-			String endDateTimeRepeat = "";
+			
 			if (repDateTimes != null) {
 				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());
 				endDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getEndDateTime());
@@ -1128,8 +1123,6 @@ System.out.println("listCnt:"+listCnt);
 			String selEd = "";
 			String cDate = "";
 			String cTime = "";
-			String sTime = "";
-			String eTime = "";
 			
 			if (req.getParameter("selsd") != null) {
 				selSd = req.getParameter("selsd");
@@ -1195,8 +1188,291 @@ System.out.println("listCnt:"+listCnt);
 		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		
-		curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
-		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
+		/*curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
+		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");*/
+		
+		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
+		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
+
+		startDateTime2 = ezResourceService.isoUTFDate(startDateTime);
+		endDateTime2 = ezResourceService.isoUTFDate(endDateTime);
+
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("editor", editor);
+		model.addAttribute("nonActiveX", nonActiveX);
+		model.addAttribute("adminFg", adminFg);
+		model.addAttribute("brdName", brdName);
+		model.addAttribute("resID", resID);
+		model.addAttribute("num", num);
+		model.addAttribute("approveFlag", brdApproveFlag);
+		model.addAttribute("cmdStr", cmdStr.toLowerCase());
+		model.addAttribute("fromStr", fromStr);
+		model.addAttribute("dayView", dayView);
+		model.addAttribute("pNum", pNum);
+		model.addAttribute("ownerNm", ownerNm);
+		model.addAttribute("ownerID", ownerID);
+		model.addAttribute("gresFlag", gresFlag);
+		model.addAttribute("reFlag", reFlag);
+		model.addAttribute("deptNm", deptNm);
+		model.addAttribute("content", content);
+		model.addAttribute("importance", importance);
+		model.addAttribute("loc", loc);
+		model.addAttribute("timeDisplay", timeDisplay);
+		model.addAttribute("title", title);
+		model.addAttribute("writerID", writerID);
+		model.addAttribute("allDay", allDay);
+		model.addAttribute("startDateTime", startDateTime);
+		model.addAttribute("endDateTime", endDateTime);
+		model.addAttribute("startDateTime2", startDateTime2);
+		model.addAttribute("endDateTime2", endDateTime2);
+		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
+		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
+		model.addAttribute("startDateVal", startDateVal);
+		model.addAttribute("endDateVal", endDateVal);
+		model.addAttribute("typeVal", typeVal);
+		model.addAttribute("saveApproveFlag", saveApproveFlag);
+		model.addAttribute("entryList", entryList);
+		model.addAttribute("checkSDT", checkSDT);
+		model.addAttribute("checkEDT", checkEDT);
+		
+		if (reFlag.equals("1")) {
+			model.addAttribute("strTmpReFlagVal", "2");
+			model.addAttribute("strDspMod1", "style='display:none'");
+			model.addAttribute("strDspMod2", "");
+		} else {
+			model.addAttribute("strTmpReFlagVal", "0");
+			model.addAttribute("strDspMod1", "");
+			model.addAttribute("strDspMod2", "style='display:none'");
+		}
+		
+		if (reFlag.equals("")) {
+			model.addAttribute("strIReFlagVal", "0");
+		} else {
+			model.addAttribute("strIReFlagVal", reFlag);
+		}
+		
+		return "/ezResource/resScheduleRead";
+	}
+	
+	/**
+	 * 자원관리 자원 예약 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleAdd.do")
+	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useIE11Browser = "";
+		String editor = config.getProperty("EDITOR");
+		String nonActiveX = "YES";
+		String resID = "";
+		String brdName = "";
+		String cmdStr = "";
+		String fromStr = "";
+		String dayView = "";
+		String orgNum = "";
+		String orgOwnerID = "";
+		String typeVal = "";
+		String startDateVal = "";
+		String endDateVal = "";
+		String deptNm = "";
+		String ownerNm = "";
+		String title = "";
+		String loc = "";
+		String importance = "";
+		String gresFlag = "0";
+		String reFlag = "";
+		String startDateTime = "";
+		String endDateTime = "";
+		String startDateTime2 = "";
+		String endDateTime2 = "";
+		String timeDisplay = "";
+		String content = "";
+		String ownerID = "";
+		String writerID = "";
+		String curStartDateTime = "";
+		String curEndDateTime = "";
+		/*String curStartDateTime2 = "";
+		String curEndDateTime2 = "";*/
+		String checkSDT = "";
+		String checkEDT = "";
+		String allDay = "";
+		String saveApproveFlag = "";
+		String startDateTimeRepeat = "";
+		String endDateTimeRepeat = "";
+		String entryList = "";
+		
+		int pNum = 0;
+		int num = 0;
+		
+		if (config.getProperty("config.IE11EDITOR").equals("CK")) {
+			useIE11Browser = "CK";
+		}
+		if (req.getParameter("ownerID") != null) {
+			resID = req.getParameter("ownerID");
+		}
+		if (req.getParameter("brdName") != null) {
+			brdName = req.getParameter("brdName");
+		}
+
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "");
+		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID());
+		
+		if (req.getParameter("cmd") != null) {
+			cmdStr = req.getParameter("cmd");
+		}
+		if (req.getParameter("from") != null) {
+			fromStr = req.getParameter("from");
+		}
+		if (req.getParameter("dayView") != null) {
+			dayView = req.getParameter("dayView");
+		}
+		if (cmdStr.equals("mod")) {
+			if (req.getParameter("num") != null) {
+				orgNum = req.getParameter("num").trim();
+			}
+			if (req.getParameter("ownerID") != null) {
+				orgOwnerID = req.getParameter("ownerID").trim();
+			}
+			if (req.getParameter("type") != null) {
+				typeVal = req.getParameter("type").trim();
+			}
+			if (req.getParameter("startDate") != null) {
+				startDateVal = req.getParameter("startDate").trim();
+			}
+			if (req.getParameter("endDate") != null) {
+				endDateVal = req.getParameter("endDate").trim();
+			}
+			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
+			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID());
+			}
+			
+			num = getSchedule.getNum();
+			pNum = getSchedule.getpNum();
+			ownerID = getSchedule.getOwnerID();
+			writerID = getSchedule.getWriterID();
+			
+			String propList = "displayName;description";
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang());
+			
+			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
+			
+			if (userInfo.getLang().equals("1")) {
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
+			} else {
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getLang()).item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getLang()).item(0).getTextContent();
+			}
+			title = getSchedule.getTitle();
+			
+			if (title != null) {
+				 title = title.replace("'", "&#39;");
+                 title = title.replace("\"", "&quot;");
+			}
+			loc = getSchedule.getLocation();
+
+			if (loc != null) {
+				loc = title.replace("'", "&#39;");
+                loc = title.replace("\"", "&quot;");
+			}
+			timeDisplay = getSchedule.getTimeDisplay();
+			startDateTime = getSchedule.getStartDate();
+			endDateTime = getSchedule.getEndDate();
+			reFlag = getSchedule.getReFlag();
+			gresFlag = getSchedule.getGresFlag();
+			content = getSchedule.getContent();
+			importance = getSchedule.getImportance();
+			
+			if (importance.equals("")) {
+				importance = "2";
+			}
+			entryList = getSchedule.getEntryList();
+			allDay = getSchedule.getAllDay();
+			saveApproveFlag = getSchedule.getApproveFlag();
+			
+			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum));
+			
+			if (repDateTimes != null) {
+				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());
+				endDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getEndDateTime());
+			}
+		} else {
+			importance = "2";
+			String selSd = "";
+			String selEd = "";
+			String cDate = "";
+			String cTime = "";
+			
+			if (req.getParameter("selsd") != null) {
+				selSd = req.getParameter("selsd");
+			}
+			if (req.getParameter("seled") != null) {
+				selEd = req.getParameter("seled");
+			}
+			if (selSd.equals("") || selEd.equals("")) {
+				cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
+				cTime = cDate.split(" ")[1].substring(0, 2);
+				
+				if (req.getParameter("startDate") != null) {
+					cDate = req.getParameter("startDate");
+				}
+				cDate = cDate.substring(0, 10);
+				startDateTime = cDate + " " + cTime + ":00:00";
+				
+				if (req.getParameter("endDate") != null) {
+					cDate = req.getParameter("endDate");
+				}
+				cDate = cDate.substring(0, 10);
+				endDateTime = cDate + " " + cTime + ":30:00";
+			} else {
+				if (selSd.length() == 10) {
+					cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
+					cTime = cDate.split(" ")[1].substring(0, 2);
+					cDate = cDate.substring(0, 10);
+					startDateTime = selSd + " " + cTime + ":00:00";
+					endDateTime = selEd + " " + cTime + ":30:00";
+
+				} else {
+					startDateTime = selSd;
+					endDateTime = selEd;
+				}
+			}
+			if (req.getParameter("ownerID") != null) {
+				ownerID = req.getParameter("ownerID");
+			}
+		}
+		String curDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
+		String curTime = curDate.split(" ")[1].substring(0, 2);
+			
+		if (req.getParameter("startDate") != null) {
+			curDate = req.getParameter("startDate");
+		}
+		if (curDate.length() == 9) {
+			curDate = curDate.substring(0, 9);
+		} else {
+			curDate = curDate.split(" ")[0];
+		}
+		curStartDateTime = curDate + " " + curTime + ":00:00";
+			
+		if (req.getParameter("endDate") != null) {
+			curDate = req.getParameter("endDate");
+		}
+		if (curDate.length() == 9) {
+			curDate = curDate.substring(0, 9);
+		} else {
+			curDate = curDate.split(" ")[0];
+		}
+		curEndDateTime = curDate + " " + curTime + ":30:00";
+		
+		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
+		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
+		
+		/*curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
+		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");*/
 		
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
@@ -1223,14 +1499,28 @@ System.out.println("listCnt:"+listCnt);
 		model.addAttribute("gresFlag", gresFlag);
 		model.addAttribute("reFlag", reFlag);
 		model.addAttribute("content", content);
+		model.addAttribute("ownerID", ownerID);
+		model.addAttribute("ownerNm", ownerNm);
 		model.addAttribute("importance", importance);
 		model.addAttribute("loc", loc);
+		model.addAttribute("timeDisplay", timeDisplay);
+		model.addAttribute("writerID", writerID);
+		model.addAttribute("deptNm", deptNm);
 		model.addAttribute("title", title);
 		model.addAttribute("allDay", allDay);
+		model.addAttribute("entryList", entryList);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("startDateTime2", startDateTime2);
 		model.addAttribute("endDateTime2", endDateTime2);
+		model.addAttribute("startDateVal", startDateVal);
+		model.addAttribute("endDateVal", endDateVal);
+		model.addAttribute("typeVal", typeVal);
+		model.addAttribute("saveApproveFlag", saveApproveFlag);
+		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
+		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
+		model.addAttribute("checkSDT", checkSDT);
+		model.addAttribute("checkEDT", checkEDT);
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");
@@ -1538,11 +1828,76 @@ System.out.println("brdID:"+brdID);
 	/**
 	 * 자원관리 자원예약 저장 후 닫기 실행 함수
 	 */
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
+	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+		String cmd = "";
+		String typeVal = "";
+		String companyID = "";
+		try {
+			if (req.getParameter("cmd") != null) {
+				cmd = req.getParameter("cmd");
+			}
+			if (req.getParameter("type") != null) {
+				typeVal = req.getParameter("type");
+			}
+			companyID = userInfo.getCompanyID();
+			Document dom = commonUtil.convertStringToDocument(xmlStr);
+			
+			if (cmd.equals("del")) {
+				Node rootNode = dom.getDocumentElement();
+				Node objNode = dom.createElement("COMPANYID");
+				objNode.setTextContent(companyID);
+				rootNode.appendChild(objNode);
+				
+				boolean reVal = ezResourceService.delResSch(commonUtil.convertDocumentToString(dom));
+				
+				if (reVal == true) {
+					return "OK";
+				} else {
+					return "NO";
+				}
+			} else if (cmd.equals("add")) {
+				String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+				String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+				SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				
+				//////////////////////////////추후 수정
+				if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
+					endDate = EgovDateUtil.addYMDtoDayTime(endDate, endDate, 0, 0, 0, 0, -1, "yyyy-MM-dd HH:mm");
+				}
+				dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(ezResourceService.getDBTime(startDate));
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(ezResourceService.getDBTime(endDate));
+System.out.println("!!!");
+				String ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom));
+				
+				return ret;
+			} else if (cmd.equals("mod")) {
+				String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+				String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+				SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				
+				//////////////////////////////추후 수정
+				if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
+					endDate = EgovDateUtil.addYMDtoDayTime(endDate, endDate, 0, 0, 0, 0, -1, "yyyy-MM-dd HH:mm");
+				}
+				dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(ezResourceService.getDBTime(startDate));
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(ezResourceService.getDBTime(endDate));
+				
+				Node rootNode = dom.getDocumentElement();
+				Node objNode = dom.createElement("TYPE_VAL");
+				objNode.setTextContent(typeVal);
+				rootNode.appendChild(objNode);
+				
+				String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom));
+				
+				return ret;
+			}
+		} catch (Exception e) {
+			 
+		}
 		return "";
 	}
 	
@@ -1592,5 +1947,44 @@ System.out.println("returnXML:"+returnXML);
 	@RequestMapping(value = "/ezResource/scheduleRepetitionDel.do")
 	public String scheduleRepetitionDel() throws Exception {
 		return "/ezResource/resScheduleRepetitionDel";
+	}
+	
+	/**
+	 * 자원관리 자원사용 승인Flag 저장 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/updateApprovalFlag.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateApprovalFlag(@RequestBody String xmlStr) throws Exception {
+		Document dom = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String companyID = dom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			String resID = dom.getElementsByTagName("RESID").item(0).getTextContent();
+			String num = dom.getElementsByTagName("NUM").item(0).getTextContent();
+			String approve = dom.getElementsByTagName("APPROVE").item(0).getTextContent();
+			
+			ezResourceService.updateSchedule(Integer.parseInt(num), resID, companyID, approve);
+			
+			return "True";
+		} catch (Exception e) {
+			return "False";
+		}
+	}
+	
+	/**
+	 * 자원관리 중복체크 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/timeDupCheck.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String timeDupCheck(@RequestBody String xmlStr) throws Exception {
+		
+		return "False";
+	}
+	
+	/**
+	 * 자원관리 자원반복 오픈 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/scheduleRepetitionOpen.do")
+	public String scheduleRepetitionOpen() throws Exception {
+		return "/ezResource/resScheduleRepetitionOpen";
 	}
 }
