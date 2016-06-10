@@ -122,6 +122,7 @@
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
   					dataType : "xml",
+  					async : "false",
   					data : {
   						deptID : DeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
@@ -147,8 +148,9 @@
 		                pUserList.SetRowOnDblClick("select_member");
 		                pUserList.SetSelectFlag(false);
 		                pUserList.SetHeightFree(true);
-		                pUserList.DataSource(result);
+		                pUserList.DataSource(headerData);
 		                pUserList.DataBind("OrganListView");
+		                
   					},
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert('Error:'+textStatus);
@@ -204,7 +206,7 @@
  		                pUserList.SetRowOnDblClick("select_member");
  		                pUserList.SetSelectFlag(false);
  		                pUserList.SetHeightFree(true);
- 		                pUserList.DataSource(result);
+ 		                pUserList.DataSource(headerData);
  		                pUserList.DataBind("OrganListView");
   					},
   					error : function(jqXHR, textStatus, errorThrown) {
@@ -213,8 +215,6 @@
   						alert('Error:'+jqXHR.status);
   					}
   				});  
-
-		     
 		    }
 
 		    var checkname2_cross_dialogArguments = new Array();
@@ -367,7 +367,7 @@
             			<WIDTH>50</WIDTH>
           			</HEADER>
           			<HEADER>
-            			<NAME><spring:message code='ezResource.t11'/>></NAME>
+            			<NAME><spring:message code='ezResource.t11'/></NAME>
             			<WIDTH>100</WIDTH>
           			</HEADER>
         		</HEADERS>

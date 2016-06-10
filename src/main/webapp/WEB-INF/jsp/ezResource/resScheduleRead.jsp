@@ -20,10 +20,10 @@
 	        var org_deptNM = "${deptNm}";
 	        var org_num = '${num}';
 	        var org_ownerID = "${ownerID}";
-	        var ss_companyID = '${companyID}';
+	        var ss_companyID = '${userInfo.companyID}';
 	        var org_companyID = ss_companyID;
 	        var pAdminFg = "${adminFg}";
-	        var s_userID = '${userID}';
+	        var s_userID = '${userInfo.id}';
 	        var org_brdName = "${brdName}";
 	        var iReFlag = "${reFlagVal}";
 	        var pUse_Editor = "${useEditor}";
@@ -34,7 +34,7 @@
 	        var sDT = "${startDateTime}";
 	        var eDT = "${endDateTime}";
 	        var ApproveFlag = "${approveFlag}";
-	        var SavedApproveFlag = "${savedApproveFlag}";
+	        var SavedApproveFlag = "${saveApproveFlag}";
 	        var reFlagVal = '${reFlag}';
 	        var server_name = "${serverName}";
 	        var pnumVal = '${pNum}';
@@ -52,7 +52,8 @@
 	                ItemArray[0] = Array("${resID}");
 	                ItemArray[1] = Array("${brdName}");
 	                //brdNm에 trim
-	                document.getElementById('itemList').innerHTML = unescape("${brdName}");
+	                //document.getElementById('itemList').innerHTML = encodeURIComponent("${brdName}");
+	                document.getElementById('itemList').innerHTML = "${brdName}";
 	            }
 	            var xmlHttp = createXMLHttpRequest();
 	            var xmlpara = createXmlDom();
@@ -171,7 +172,7 @@
 	                }
 	            }
 
-	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + escape(org_brdName);
+	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + org_brdName;
 	        }
 
 	        function window_onUnload() {
@@ -409,7 +410,7 @@
         		<tr>
             		<th><spring:message code='ezResource.t224' /></th>
             		<td colspan="3">
-                		<div id="titleDIV"><%-- <%= Server.HtmlEncode(title) %> --%></div>
+                		<div id="titleDIV"> ${title}</div>
             		</td>
         		</tr>
         			<tr style="height:100%">
