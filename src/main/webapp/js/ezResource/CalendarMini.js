@@ -392,7 +392,7 @@ function OnDoubleClickAppointment(srcEl) {
 
         } else {
             
-            filename = "Schedule_Read.aspx";
+            filename = "scheduleRead.do";
 
 
             // 반복자원예약에 대한 처리

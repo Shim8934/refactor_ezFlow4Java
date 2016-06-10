@@ -1638,7 +1638,7 @@ function SaveOrDeleteAttachFile() {
 				objNode6.text = gFlagVal;
 				xmlpara.documentElement.appendChild(objNode6);
 				
-				xmlhttp.open ("Post","Schedule_Attach_Proc.aspx?cmd=del",false);
+				xmlhttp.open ("Post","/ezResource/scheduleAttachProc.do?cmd=del",false);
 				xmlhttp.send(xmlpara);
 				
 				var re = xmlhttp.responseText;
@@ -1683,7 +1683,7 @@ function SaveOrDeleteAttachFile() {
 				objNode6.text = gFlagVal;
 				xmlpara.documentElement.appendChild(objNode6);
 				
-				xmlhttp.open ("Post","Schedule_Attach_Proc.aspx?cmd=del",false);
+				xmlhttp.open ("Post","/ezResource/scheduleAttachProc.do?cmd=del",false);
 				xmlhttp.send(xmlpara);
 				
 				var re = xmlhttp.responseText;

@@ -199,7 +199,7 @@ function idCalendarViewer_OnDoubleClickAppointment(event) {
 			filename = "Schedule_UnReg.asp";
 
 		}else{
-		    filename = "Schedule_Read.aspx";
+		    filename = "scheduleRead.do";
 
 			// 반복자원예약에 대한 처리
 			if( parseInt(szInstancetype) == 1 || parseInt(szInstancetype) == 3)
@@ -231,11 +231,11 @@ function idCalendarViewer_OnDoubleClickAppointment(event) {
 	    //화면창 더블클릭했을때 오픈창(개인/그룹을 뛰운다)
 		if (CrossYN()) {
 		    var feature = GetOpenPosition(820, 700);
-		    window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + escape(brd_NM), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + brd_NM, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		}
 		else {
 		    var feature = GetOpenPosition(770, 700);
-		    window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + escape(brd_NM), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + brd_NM, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		}
 	}
 }

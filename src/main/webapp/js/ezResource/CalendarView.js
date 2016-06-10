@@ -564,14 +564,14 @@ function Write() {
 
     var feature = GetOpenPosition(770, 700);
     if (CrossYN() || pNoneActiveX == "YES") {
-        window.open("Schedule_Add_Cross.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
-            window.open("Schedule_Add.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
         else {
-            window.open("Schedule_Add_IE.aspx?cmd=add&from=schedule&selsd=&seled=&day_view=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startdate=" + startdate + "&enddate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + escape(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 

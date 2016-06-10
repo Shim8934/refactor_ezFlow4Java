@@ -1155,7 +1155,7 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
         //else
         //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 
-        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURI(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + sz_BrdName, "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
