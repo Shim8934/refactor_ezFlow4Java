@@ -106,7 +106,7 @@ public class CommunityClubVO {
 	/** <자료실> 왼쪽 메뉴 공시사항 게시판 순서*/
 	int c_ClubPds1_OrderBy;
 	/** 커뮤니티 점수*/
-	int score;
+	String score;
 	/** 회사내외여부*/
 	int isIn;
 	/** 회사ID*/
@@ -435,10 +435,10 @@ public class CommunityClubVO {
 	public void setC_ClubPds1_OrderBy(int c_ClubPds1_OrderBy) {
 		this.c_ClubPds1_OrderBy = c_ClubPds1_OrderBy;
 	}
-	public int getScore() {
+	public String getScore() {
 		return score;
 	}
-	public void setScore(int score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 	public int getIsIn() {

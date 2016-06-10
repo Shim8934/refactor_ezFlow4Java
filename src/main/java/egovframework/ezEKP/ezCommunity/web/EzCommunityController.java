@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
@@ -914,7 +915,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		sb.append("</BOARDITEM>");
 		sb.append("</ITEM>");
-System.out.println(sb.toString());
 		
 		return sb.toString();
 	}
@@ -4027,6 +4027,21 @@ System.out.println(sb.toString());
 	}
 	
 	/**
+	 * 게시판 관리메뉴 일반설정 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/saveBoardProperty.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveBoardProperty(@RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ret = ezCommunityService.saveBoardProperty(userInfo.getId(), xmlData);
+		
+		ezCommunityService.deleteBoard();
+		
+		return "<RESULT>" + ret + "</RESULT>";
+	}
+	
+	/**
 	 * 그룹생성화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/boardGroupCreate.do")
@@ -4454,12 +4469,13 @@ System.out.println(sb.toString());
 		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code);
 		
 		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("code", code);
 		
 		return "/ezCommunity/communityAdminOuterOkNo";
 	}
 	
 	/**
-	 * 회원 탈퇴처리화면 호출함수
+	 * 회원 탈퇴처리화면/마스터이취임화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/adminMemberList.do")
 	public String adminMemberList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
@@ -4475,7 +4491,8 @@ System.out.println(sb.toString());
 		
 		if (request.getParameter("ser") != null) {
 			ser = request.getParameter("ser");
-		}		
+		}
+		
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
@@ -4488,6 +4505,7 @@ System.out.println(sb.toString());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
+		
 		
 		for (CommunityCClubUserVO clubUser : list) {
 			sb.append("<tr>");
@@ -4517,6 +4535,9 @@ System.out.println(sb.toString());
 		return "/ezCommunity/communityAdminMemberList";
 	}
 	
+	/** 
+	 * 회원 탈퇴처리화면/마스터이취임화면 실행함수
+	 */
 	@RequestMapping( value = "/ezCommunity/adminMemberListOk.do")
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -4567,7 +4588,7 @@ System.out.println(sb.toString());
 		}
 		
 		Integer result = ezCommunityService.adminMemberListOkGetE(code, cID);
-		System.out.println(result);
+		
 		if (result != null) {
 			if (result > 0) {
 				existOutList = true;
@@ -4587,6 +4608,112 @@ System.out.println(sb.toString());
 		model.addAttribute("existOutList", existOutList);
 		
 		return "/ezCommunity/communityAdminMemberListOk";
+	}
+	
+	/** 
+	 * 회원 탈퇴처리화면/마스터이취임화면 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminMemberListOkGo.do")
+	public String adminMemberListOkGo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		String mode = request.getParameter("mode");
+		String cID = request.getParameter("cID");
+		String userName = request.getParameter("userName");
+		String cNm = request.getParameter("cNm");
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
+		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm);
+		
+		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("code", code);
+		model.addAttribute("mode", mode);
+		model.addAttribute("userName", userName);
+		
+		return "ezCommunity/communityAdminMemberListOkGo";
+	}
+	
+	/**
+	 * Cop 폐쇄신청화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminCommClose.do")
+	public String adminCommClose(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+		
+		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
+		
+		ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), club.getC_SysopID().trim());
+		
+		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), club.getC_SysopID().trim());
+		
+		String sysopName = member.getUserName();
+		
+		if (userInfo.getLang().equals("2")) {
+			sysopName = member.getUserName2();
+		}
+		
+		if (sysopName.equals("")) {
+			sysopName = egovMessageSource.getMessage("ezCommunity.t398", new Locale(globals.getProperty("Globals.language")));
+		}
+		
+		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim());
+				
+		model.addAttribute("code", code);
+		model.addAttribute("sysopName", sysopName);
+		model.addAttribute("club", club);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strCategoryPrint", strCategoryPrint);
+		
+		return "/ezCommunity/communityAdminCommClose";
+	}
+	
+	/**
+	 * Cop 폐쇄신청 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminCommCloseOk.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String adminCommCloseOk(@RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+		
+		String strXML = "";
+		
+		String code = xmlDom.getElementsByTagName("CODE").item(0).getTextContent();
+		String reason = xmlDom.getElementsByTagName("REASON").item(0).getTextContent();
+		reason = reason.replace("'", "''");
+		
+		CommunityCComCloseVO closeVO = ezCommunityService.adminCommCloseOkGet1(code);
+		
+		if (closeVO != null) {
+			strXML = "<RETURN><VALUE>ExistApplication</VALUE></RETURN>";
+		} else {
+			CommunityClubVO clubVO = ezCommunityService.adminCommCloseOkGet2(code);
+			
+			if (clubVO != null) {
+				 String commName = clubVO.getC_ClubName().trim();
+                 commName = commName.replace("'", "''");
+                 // 20100108 : 폐쇄신청 \" -> "로 나오도록 수정
+                 //commName = commName.Replace("\"", "\\\"");
+
+                 String commName2 = clubVO.getC_ClubName2().trim();
+                 commName2 = commName2.replace("'", "''");
+                 // 20100108 : 폐쇄신청 \" -> "로 나오도록 수정
+                 //commName2 = commName2.Replace("\"", "\\\"");
+
+                 String sysopID = clubVO.getC_SysopID().trim();
+                 String companyName = userInfo.getCompanyName1();
+                 
+                 ezCommunityService.adminCommCloseOkInser(code, commName, commName2, sysopID, companyName, EgovDateUtil.getTodayTime(), reason, egovMessageSource.getMessage("ezCommunity.t483", new Locale(globals.getProperty("Globals.language"))));
+                 
+                 strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
+			}
+		}
+		
+		return strXML;
 	}
 }
 

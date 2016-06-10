@@ -16,7 +16,6 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -35,6 +34,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
@@ -2483,7 +2483,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_FALG", flag);
+		map.put("v_FLAG", flag);
 		map.put("v_USERID", userID);
 		map.put("v_CODE", code);
 		
@@ -2538,6 +2538,79 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.adminMemberListOkGetE(map);
 	}
+
+	@Override
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_MODE", mode);
+		map.put("v_CODE", code);
+		map.put("v_C_ID", cID);
+		map.put("v_C_NM", cNm);
+		
+		ezCommunityDAO.adminMemberListGoSE(map);
+	}
+
+	@Override
+	public String saveBoardProperty(String id, String xmlData) throws Exception {
+		try {
+			Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_pBoardName", xmlDom.getElementsByTagName("BOARDNAME").item(0).getTextContent());
+			map.put("v_pBoardName2", xmlDom.getElementsByTagName("BOARDNAME2").item(0).getTextContent());
+			map.put("v_pBoardID", xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
+			map.put("v_pAttachMax", xmlDom.getElementsByTagName("ATTACHMAX").item(0).getTextContent());
+			map.put("v_pDescription", xmlDom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
+			map.put("v_pExpires", xmlDom.getElementsByTagName("EXPIRES").item(0).getTextContent());
+			map.put("v_pURL", xmlDom.getElementsByTagName("URL").item(0).getTextContent());
+			map.put("v_pGubun", xmlDom.getElementsByTagName("GUBUN").item(0).getTextContent());
+			map.put("v_pReplyNotify", xmlDom.getElementsByTagName("REPLYNOTIFY").item(0).getTextContent());
+			map.put("v_pDeleteAfter", xmlDom.getElementsByTagName("DELETEAFTER").item(0).getTextContent());
+			map.put("v_pBoardColor", xmlDom.getElementsByTagName("BOARDCOLOR").item(0).getTextContent());
+			map.put("v_pVersionUse", xmlDom.getElementsByTagName("VERSIONUSE").item(0).getTextContent());
+			map.put("v_pCheckUse", xmlDom.getElementsByTagName("CHECKUSE").item(0).getTextContent());
+			
+			ezCommunityDAO.brdSaveBoardProperty(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+	}
+
+	@Override
+	public CommunityCComCloseVO adminCommCloseOkGet1(String code) throws Exception {
+		return ezCommunityDAO.adminCommCloseOkGet1(code);
+	}
+
+	@Override
+	public CommunityClubVO adminCommCloseOkGet2(String code) throws Exception {
+		return ezCommunityDAO.adminCommCloseOkGet2(code);
+	}
+
+	@Override
+	public void adminCommCloseOkInser(String code, String commName,
+			String commName2, String sysopID, String companyName,
+			String todayTime, String reason, String closeState)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_COMMNAME", commName);
+		map.put("v_COMMNAME2", commName2);
+		map.put("v_SYSOPID", sysopID);
+		map.put("v_COMPANYNAME", companyName);
+		map.put("v_DATETIME_NOW", todayTime);
+		map.put("v_REASON", reason);
+		map.put("v_CLOSESTATE", closeState);
+		
+		ezCommunityDAO.adminCommCloseOkInser(map);
+	}
+	
+	
+	
 	
 	
 	/*public void SndMail(string code)

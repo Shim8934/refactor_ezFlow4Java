@@ -22,6 +22,7 @@
 	<typeAlias alias="CommunityCClubUserVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
 	<typeAlias alias="CommunityMemberInfoVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO"/>
 	<typeAlias alias="CommunityCOutApplicationVO"		type="egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO"/>
+	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -101,9 +102,18 @@
 		<result property="outDate"						column="OUTDATE"					columnIndex="2"/>
 		<result property="outReason"					column="OUTREASON"					columnIndex="3"		javaType="String" jdbcType="CLOB"/>
 		<result property="userName"						column="USERNAME"					columnIndex="4"/>
-		
-		
-		
+	</resultMap>
+	
+	<resultMap class="CommunityCComCloseVO" id="CommunityCComClose">
+		<result property="c_ClubNo"						column="C_CLUBNO"					columnIndex="1"/>
+		<result property="c_ClubName"					column="C_CLUBNAME"					columnIndex="2"/>
+		<result property="c_ClubName2"					column="C_CLUBNAME2"				columnIndex="3"/>
+		<result property="c_SysopID"					column="C_SYSOPID"					columnIndex="4"/>
+		<result property="companyName"					column="COMPANYNAME"				columnIndex="5"/>
+		<result property="applicationDate"				column="APPLICATIONDATE"			columnIndex="6"/>
+		<result property="closeReason"					column="CLOSEREASON"				columnIndex="7"		javaType="String" jdbcType="CLOB"/>
+		<result property="closeState"					column="CLOSESTATE"					columnIndex="8"/>
+		<result property="closeState2"					column="CLOSESTATE2"				columnIndex="9"/>
 	</resultMap>
 	
 	<procedure id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList">
@@ -300,6 +310,14 @@
 	
 	<procedure id="EzCommunityDAO.ezCommunityBaseGet1"			parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET1(#v_STRCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminCommCloseOkGet1"			parameterClass="String"		resultMap="CommunityCComClose">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminCommCloseOkGet2"			parameterClass="String"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
@@ -635,7 +653,19 @@
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.adminOuterOkNoSet"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_BRDMOVEBOARD(#v_FLAG#, #v_CODE#, #v_C_ID#)}
+		{CALL EZCOMMUNITY.EZSP_ADMIN_OUTER_OKNO_SET(#v_FLAG#, #v_USERID#, #v_CODE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.brdSaveBoardProperty"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_BRDSAVEBOARDPROPERTY(#v_pBoardID#, #v_pAttachMax#, #v_pDescription#, #v_pExpires#, #v_pURL#, #v_pReplyNotify#, #v_pGubun#, #v_pBoardName#, #v_pBoardName2#, #v_pDeleteAfter#, #v_pBoardColor#, #v_pVersionUse#, #v_pCheckUse#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminMemberListGoSE"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GO_SE(#v_MODE#, #v_CODE#, #v_C_ID#, #v_C_NM#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.adminCommCloseOkInser"		parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_INSER(#v_CODE#, #v_COMMNAME#, #v_COMMNAME2#, #v_SYSOPID#, #v_COMPANYNAME#, #v_DATETIME_NOW#, #v_REASON#, #v_CLOSESTATE#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">

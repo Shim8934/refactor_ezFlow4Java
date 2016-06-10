@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
@@ -710,5 +711,26 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public Integer adminMemberListOkGetE(Map<String, Object> map) throws Exception {
 		select("EzCommunityDAO.adminMemberListOkGetE", map);
 		return (Integer) map.get("v_pCount");
+	}
+
+	public void adminMemberListGoSE(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminMemberListGoSE", map);
+	}
+
+	public void brdSaveBoardProperty(Map<String, Object> map) {
+		update("EzCommunityDAO.brdSaveBoardProperty", map);
+		
+	}
+
+	public CommunityCComCloseVO adminCommCloseOkGet1(String v_CODE) throws Exception {
+		return (CommunityCComCloseVO) select("EzCommunityDAO.adminCommCloseOkGet1", v_CODE);
+	}
+
+	public CommunityClubVO adminCommCloseOkGet2(String v_CODE) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.adminCommCloseOkGet2", v_CODE);
+	}
+
+	public void adminCommCloseOkInser(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.adminCommCloseOkInser", map);
 	}
 }

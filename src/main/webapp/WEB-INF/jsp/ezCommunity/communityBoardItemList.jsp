@@ -90,11 +90,11 @@
 						listXML += "<TD title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "</nobr></TD>";
 					}
 					
-					if (gubun == "1") {
+					if (gubun == '1') {
 						listXML += "<TD>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
 					}
 					
-					if (gubun != "2") {
+					if (gubun != '2') {
 						listXML += "<TD>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
                         listXML += "<TD><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
 					} else {
@@ -651,7 +651,7 @@
 	</head>
 	<body class = "cmhome_body">
 		<c:if test="${boardInfo.listView_FG != 'true' }">
-			<div style="margin-top:100px;text-align:center"><spring:message code='ezCommunity.t431' /></div>
+			<div style="margin-top:100px;text-align:center"><spring:message code='ezCommunity.t909' /></div>
 			
 		</c:if>
 		

@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
@@ -352,6 +353,16 @@ public interface EzCommunityService {
 	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception;
 
 	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
+
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception;
+
+	public String saveBoardProperty(String id, String xmlData) throws Exception;
+
+	public CommunityCComCloseVO adminCommCloseOkGet1(String code) throws Exception;
+
+	public CommunityClubVO adminCommCloseOkGet2(String code) throws Exception;
+
+	public void adminCommCloseOkInser(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		
 		<c:if test="${sysopCheck != '1' }">
 			<spring:message code = 'ezCommunity.t447' />
@@ -22,7 +23,7 @@
 			<c:when test="${userMode == '1' }">
 				<script type="text/javascript">
 					OpenAlertUI("${userName} <spring:message code = 'ezCommunity.t514' />");
-					document.location.href="admin_memberlist.aspx?code=${code}&mode=${mode}";
+					document.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
 				</script>
 			</c:when>
 			
