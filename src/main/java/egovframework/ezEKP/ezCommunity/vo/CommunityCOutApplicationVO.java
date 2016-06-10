@@ -5,6 +5,10 @@ public class CommunityCOutApplicationVO {
 	String c_clubNo;
 	/** 마스터ID*/
 	String userID;
+	/** 사용자명*/
+	String userName;
+	/** 사용자명(다국어)*/
+	String userName2;
 	/** 폐쇄 신청 일자 */
 	String outDate;
 	/** 폐쇄 사유(CLOB)*/
@@ -20,6 +24,18 @@ public class CommunityCOutApplicationVO {
 	}
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
 	}
 	public String getOutDate() {
 		return outDate;

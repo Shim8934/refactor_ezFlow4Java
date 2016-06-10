@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
@@ -67,6 +68,8 @@ public interface EzCommunityService {
 	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception;
 
 	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception;
+	
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception;
 	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -230,6 +233,20 @@ public interface EzCommunityService {
 
 	public String adminBasicGet2(String code) throws Exception;
 	
+	public String saveBoardOrder(String xmlData) throws Exception;
+	
+	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+
+	public String brdDeleteBoard(String boardID) throws Exception;
+
+	public String adminSearchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
+
+	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang) throws Exception;
+	
+	public Integer boardPropertyGet(String boardID) throws Exception;
+
+	public Integer adminOuterListGet1(String code) throws Exception;
+	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
 	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
@@ -318,25 +335,23 @@ public interface EzCommunityService {
 
 	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception;
 
-	public Integer boardPropertyGet(String boardID) throws Exception;
-
 	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception;
-
-	public String saveBoardOrder(String xmlData) throws Exception;
 
 	public void deleteBoard() throws Exception;
 
 	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception;
 
-	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception;
 
-	public String brdDeleteBoard(String boardID) throws Exception;
+	public Integer adminMemberListGet1(String code) throws Exception;
 
-	public String adminSearchItemCount(String id, String boardID, String title,
-			String writerName, String abstracts, String startDateTime,
-			String endDateTime) throws Exception;
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception;
 
-	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang) throws Exception;
+	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID) throws Exception;
+
+	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception;
+
+	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

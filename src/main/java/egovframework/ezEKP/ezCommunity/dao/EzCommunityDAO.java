@@ -179,6 +179,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> adminSearchItemXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.adminSearchItemXML", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityCOutApplicationVO>) list("EzCommunityDAO.adminOuterListGet2", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -462,6 +472,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) select("EzCommunityDAO.pollResGetCount", map);
 	}
 	
+	public Integer adminOuterListGet1(String v_CODE) throws Exception {
+		return (Integer) select("EzCommunityDAO.adminOuterListGet1", v_CODE);
+	}
+	
 	public Integer checkIfLeafBoardGet(Map<String, Object> map) throws Exception {
 		select("EzCommunityDAO.checkIfLeafBoardGet", map);
 		return (Integer) map.get("v_pCount");
@@ -496,7 +510,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		select("EzCommunityDAO.boardPropertyGet", map);
 		return (Integer) map.get("v_pCount");
 	}
-
+	
 	public void bbsEditOkInsert(Map<String, Object> map) throws Exception{
 		insert("EzCommunityDAO.bbsEditOkInsert", map);
 	}
@@ -628,6 +642,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.moveBoard", map);
 	}
 	
+	public void adminOuterOkNoSet(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminOuterOkNoSet", map);	
+	}
+	
 	public void guestEditOkDelete(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.guestEditOkDelete", map);
 	}
@@ -672,8 +690,25 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.brdDeleteBoard", v_pBoardID);
 	}
 
+	public Integer adminMemberListGet1(String v_CODE) throws Exception {
+		return (Integer) select("EzCommunityDAO.adminMemberListGet1", v_CODE);
+	}
+
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardListVO> adminSearchItemXML(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardListVO>) list("EzCommunityDAO.adminSearchItemXML", map);
+	public List<CommunityCClubUserVO> adminMemberListGet3(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.adminMemberListGet3", map);
+	}
+
+	public CommunityMemberInfoVO getMemberInfo(Map<String, Object> map) throws Exception {
+		return (CommunityMemberInfoVO) select("EzCommunityDAO.getMemberInfo", map);
+	}
+
+	public CommunityCClubUserVO adminMemberListOkGet(Map<String, Object> map) throws Exception {
+		return (CommunityCClubUserVO) select("EzCommunityDAO.adminMemberListOkGet", map);
+	}
+
+	public Integer adminMemberListOkGetE(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.adminMemberListOkGetE", map);
+		return (Integer) map.get("v_pCount");
 	}
 }

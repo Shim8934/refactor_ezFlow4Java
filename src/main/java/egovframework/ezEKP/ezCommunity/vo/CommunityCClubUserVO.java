@@ -31,6 +31,8 @@ public class CommunityCClubUserVO {
 	String permit;
 	/** 사용자회사아이디*/
 	String companyID;
+	/** 사용자이름*/
+	String userName;
 	public String getC_clubNo() {
 		return c_clubNo;
 	}
@@ -120,5 +122,11 @@ public class CommunityCClubUserVO {
 	}
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
-	}	
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 }
