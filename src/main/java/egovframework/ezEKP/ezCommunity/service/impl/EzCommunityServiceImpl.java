@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -34,6 +35,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollAnswerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
@@ -2460,6 +2462,81 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		sb.append("</NODES>");
 		
 		return sb.toString();
+	}
+
+	@Override
+	public Integer adminOuterListGet1(String code) throws Exception {
+		return ezCommunityDAO.adminOuterListGet1(code);
+	}
+
+	@Override
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.adminOuterListGet2(map);
+	}
+
+	@Override
+	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_FALG", flag);
+		map.put("v_USERID", userID);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.adminOuterOkNoSet(map);
+	}
+
+	@Override
+	public Integer adminMemberListGet1(String code) throws Exception {
+		return ezCommunityDAO.adminMemberListGet1(code);
+	}
+
+	@Override
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_FLAG", flag);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_SER", ser);
+		
+		return ezCommunityDAO.adminMemberListGet3(map);
+	}
+
+	@Override
+	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_C_ID", cID);
+		
+		return ezCommunityDAO.getMemberInfo(map);
+	}
+
+	@Override
+	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_C_ID", cID);
+		map.put("v_COMPANYID", companyID);
+		
+		return ezCommunityDAO.adminMemberListOkGet(map);
+	}
+
+	@Override
+	public Integer adminMemberListOkGetE(String code, String cID) throws Exception {
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_C_ID", cID);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.adminMemberListOkGetE(map);
 	}
 	
 	
