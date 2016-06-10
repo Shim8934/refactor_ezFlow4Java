@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -53,4 +55,24 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	/**
+	 * 자원관리 메인화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/resourceMain.do")
+	public String resourceMain(Model model) throws Exception {
+		String crossPage = "/admin/ezResource/gwBoardListManagelistLeft.do";
+		model.addAttribute("crossPage", crossPage);
+		return "admin/ezResource/resMain";
+	}
+	
+	/**
+	 * 자원관리 좌측화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistLeft.do")
+	public String gwBoardListManagelistLeft(Model model) throws Exception {
+		
+		return "admin/ezResource/resGwBoardListManageListLeft";
+	}
+	
 }
