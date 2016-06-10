@@ -13,8 +13,8 @@
 <script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 <script type="text/javascript" src="/js/ezEmail/js_cross/date_component.js"></script>
-<script  type="text/javascript" src="/js/ezEmail/controls_cross/datepicker.htc.js"></script>
-<script  type="text/javascript" src="/js/ezEmail/controls_cross/composeappt.js"></script>
+<script  type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
+<script  type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>

@@ -22,6 +22,9 @@ function HiddenMailProgress() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("MailProgress").style.display = "none";
 }
+function MailListRefresh() {
+	start_search();
+}
 function start_search() {
     listContentArry = new Array();
     listEventCheckbox = false;
