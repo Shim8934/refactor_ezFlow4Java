@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -12,6 +13,9 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +225,177 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("rtnValue=" + rtnValue);
 		
 		return rtnValue;
+	}
+	
+	/**
+	 * 메일 자동 전달 설정 화면 표시 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoForward.do")
+	public String mailAutoForward(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+
+		String forwardAddress = getMailForwardAddress(userEmail);
+		
+		model.addAttribute("userId", userId);
+		model.addAttribute("userEmail", userEmail);
+		model.addAttribute("forwardAddress", forwardAddress);
+		
+		return "ezEmail/mailAutoForward";
+	}
+
+	/**
+	 * 메일 자동 전달 설정 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoForwardSave.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody	
+	public String mailAutoForwardSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("mailAutoForwardSave started");		
+		logger.debug("bodyData=" + bodyData);
+	
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		
+		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
+		
+		String strResult = "";
+		
+		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
+			strResult = setMailForwardAddress(userEmail, forwardAddress);
+		}
+		else {
+			strResult = "MINE";
+		}
+		
+		String returnData = "<RESULT>" + strResult + "</RESULT>";
+		
+		logger.debug("mailAutoForwardSave ended");
+		
+		return returnData;		
+	}
+	
+	/**
+	 * 메일 자동 전달 설정 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody	
+	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("mailAutoForwardDelete started");		
+		logger.debug("bodyData=" + bodyData);
+	
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+				
+		String strResult = deleteMailForwardAddress(userEmail);
+		
+		String returnData = "<RESULT>" + strResult + "</RESULT>";
+		
+		logger.debug("mailAutoForwardDelete ended");
+		
+		return returnData;		
+	}	
+	
+	/**
+	 * JMocha Gateway Server에 메일 자동 전달 설정 요청을 보내는 함수
+	 */	
+	private String setMailForwardAddress(String userEmail, String forwardAddress) {
+		String result = "Error";
+		
+		try {
+			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
+			String forwardAddressParam = "forwardAddress=" + URLEncoder.encode(forwardAddress, "UTF-8");
+			String inputParams = userIdParam + "&" + forwardAddressParam;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setMailForwardAddress";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				result = (String)responseObj.get("resultCode");		        		        				
+			}						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * JMocha Gateway Server로부터 메일 자동 전달 설정을 읽는 함수
+	 */		
+	private String getMailForwardAddress(String userEmail) {
+		String result = "";
+		
+		try {
+			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
+			String inputParams = userIdParam;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getMailForwardAddress";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					if (resultArray != null && resultArray.size() > 0) {
+						result = (String)resultArray.get(0);
+					}
+				}				
+			}						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * JMocha Gateway Server에 메일 자동 전달 삭제 요청을 보내는 함수
+	 */	
+	private String deleteMailForwardAddress(String userEmail) {
+		String result = "Error";
+		
+		try {
+			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
+			String inputParams = userIdParam;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailForwardAddress";			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				result = (String)responseObj.get("resultCode");		        		        				
+			}						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	/**

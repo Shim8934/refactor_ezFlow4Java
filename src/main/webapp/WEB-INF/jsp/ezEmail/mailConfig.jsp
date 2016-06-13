@@ -41,10 +41,7 @@
 	            var pSelectTab = obj.getAttribute("divname");
 	            switch (pSelectTab) {
 	                case "MailEnv_div1":
-	                    if(CrossYN())
-	                        document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailGeneral.do";
-	                    else
-	                        document.getElementById("MailEnv_ifrm").src = "mail_general.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailGeneral.do";
 	                    break;
 	                case "MailEnv_div2":
 	                        document.getElementById("MailEnv_ifrm").src = "/myoffice/ezAddress/address_config.aspx";
@@ -56,10 +53,7 @@
 	                        document.getElementById("MailEnv_ifrm").src = "mail_pop3.aspx";
 	                    break;
 	                case "MailEnv_div4":
-	                    if (CrossYN() || (pNoneActiveX == "YES"))
-	                        document.getElementById("MailEnv_ifrm").src = "mail_autoforward_cross.aspx";
-	                    else
-	                        document.getElementById("MailEnv_ifrm").src = "mail_autoforward.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoForward.do";
 	                    break;
 	                case "MailEnv_div5":
 	                    if (CrossYN())
@@ -68,10 +62,7 @@
 	                        document.getElementById("MailEnv_ifrm").src = "mail_InboxRule.aspx";
 	                    break;
 	                case "MailEnv_div6":
-	                    if (CrossYN() || (pNoneActiveX == "YES"))
-	                        document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
-	                    else
-	                        document.getElementById("MailEnv_ifrm").src = "mail_autodelete.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
 	                    break;
 	                case "MailEnv_div7":
 	                    if (CrossYN()) {
