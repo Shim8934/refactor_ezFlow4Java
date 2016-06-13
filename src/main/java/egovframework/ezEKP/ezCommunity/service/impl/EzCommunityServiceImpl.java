@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommunity.service.impl;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl implements EzCommunityService{
@@ -69,6 +71,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	@Resource(name="EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Autowired
+	private EgovFileScrty egovFileScrty;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -822,6 +827,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			}
 		}
 		
+		
 		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
 		boardInfo.setSs_Board_MaxRows(10);
@@ -835,7 +841,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -859,6 +865,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			boardInfo.setWrite_FG("false");
 			boardInfo.setReply_FG("false");
 			boardInfo.setDelete_FG("false");
+		} else {
+			boardInfo.setAccess_FG(boardInfo.getAccess_FG().trim());
+			boardInfo.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+			boardInfo.setListView_FG(boardInfo.getListView_FG());
+			boardInfo.setRead_FG(boardInfo.getRead_FG());
+			boardInfo.setWrite_FG(boardInfo.getWrite_FG());
+			boardInfo.setReply_FG(boardInfo.getReply_FG());
+			boardInfo.setDelete_FG(boardInfo.getDelete_FG());
 		}
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID);
@@ -1193,6 +1207,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String newItem(Document xmlData, String pMode, String realPath) throws Exception {
 		String pUploadFilePath = "", pContentLocation = "", pHasAttach = "", pContent = "";
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
 		boolean saveMHTResult = false;
 		CommunityBoardItemVO item = new CommunityBoardItemVO();
 
@@ -1265,8 +1281,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		item.setExtensionAttribute32(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
 		item.setExtensionAttribute4(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
 		item.setExtensionAttribute5(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
-
-		item.setDocPassword(xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		
+//		item.setDocPassword(xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String rpwd = EgovFileScrty.decryptRsa(pk, xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		item.setDocPassword(EgovFileScrty.encryptPassword(rpwd, "unknown"));
 
 		if (!pMode.equals("copy")) {
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
@@ -1670,7 +1689,16 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_pOrgBoardID", pOrgBoardID);
 		
 		CommunityBoardItemVO item = ezCommunityDAO.copyItemGet1(map);
-		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID, pDestBoardID));
+		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1)));
+		item.setContentLocation(item.getContentLocation().replaceAll(pOrgItemID.substring(1, pOrgBoardID.length()-1), pDestItemID.substring(1, pDestBoardID.length()-1)));
+		item.setStartDate("");
+		item.setUpperItemIDTree(pDestItemID);
+		item.setItemLevel(1);
+		
+//		copyFiles();
+		
+//		List<CommunityBoardItemAttachmentVO> OrgattachList = ezCommunityDAO.copyItemGet2(pOrgItemID);
+		
 		
 		return null;
 	}
@@ -2608,10 +2636,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		ezCommunityDAO.adminCommCloseOkInser(map);
 	}
-	
-	
-	
-	
+
+	@Override
+	public String checkPassword(String pItemID) throws Exception {
+		return ezCommunityDAO.checkPassword(pItemID);
+	}
 	
 	/*public void SndMail(string code)
 	{

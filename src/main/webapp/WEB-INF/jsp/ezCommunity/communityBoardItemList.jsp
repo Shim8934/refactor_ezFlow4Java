@@ -44,7 +44,7 @@
     		var pSortBy = "<c:out value='${pSortBy}' />";
     		var url = "<c:out value='${url}' />";
     		var ShowAdjacent = "<c:out value='${showAdjacent}' />";
-    		var gubun = "<c:out value='${gubun}' />";
+    		var gubun = "<c:out value='${boardInfo.gubun}' />";
     		var UserLevel = "<c:out value='${userLevel}' />";
     		var code = "<c:out value='${code}' />";
     		var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
@@ -163,7 +163,6 @@
    		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
    		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
    		        }
-    		    
 
     		    var pheight = window.screen.availHeight;
     		    var pwidth = window.screen.availWidth;
@@ -243,6 +242,33 @@
     		            alert("<spring:message code='ezCommunity.t431' />");
     		            return;
     		        }
+    		    } else {
+    		    	if (gubun == "2") {
+    		    		var pItemInfo = strListInfo.split(";")[0];
+     		            var pItemID = pItemInfo.split(",")[0];
+     		            
+    		    		if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
+    	            		return;
+    	            	}
+    	            	
+                        var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+    					
+    					if (ret != "OK") {
+    					    alert("<spring:message code = 'ezCommunity.t901' />");
+    					    return;
+    					}
+    					
+    	 			    var xmlhttp = createXMLHttpRequest();
+    	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+    	 			    xmlhttp.send();
+    	 			    xmlhttp = null;
+    	 			    
+    	 			    try {
+    	 			        window.refresh_onclick();
+    	 			    } catch (e) {
+    	 			    }
+    		    	}
+    		    	
     		    }
     		    
     		    if (CheckIfHasReplies()) {

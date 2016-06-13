@@ -733,4 +733,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void adminCommCloseOkInser(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.adminCommCloseOkInser", map);
 	}
+
+	public String checkPassword(String v_PITEMID) throws Exception {
+		return (String) select("EzCommunityDAO.checkPassword", v_PITEMID);
+	}
 }

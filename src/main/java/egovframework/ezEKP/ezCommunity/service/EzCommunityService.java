@@ -363,6 +363,8 @@ public interface EzCommunityService {
 	public CommunityClubVO adminCommCloseOkGet2(String code) throws Exception;
 
 	public void adminCommCloseOkInser(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState) throws Exception;
+
+	public String checkPassword(String pItemID) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

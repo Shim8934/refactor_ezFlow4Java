@@ -57,9 +57,10 @@
 			    	destItemIDList += "{" + GetGUID().toUpperCase() + "};";
 			   	}
 			   	
-			   	alert(ItemIDList)
-			   	alert(BoardID)
-			   	alert(destItemIDList)
+			   	alert(ItemIDList);
+			   	alert(BoardID);
+			   	alert(destItemIDList);
+			   	alert(pDestBoardID);
 			   	$.ajax({
 			   		type : "POST",
 			   		async : false,

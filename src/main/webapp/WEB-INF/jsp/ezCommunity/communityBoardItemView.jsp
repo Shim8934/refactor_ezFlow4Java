@@ -6,7 +6,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
@@ -15,9 +14,10 @@
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
@@ -26,9 +26,9 @@
 	        var curFontSize = 1;
 	        var pItemID = "<c:out value='${itemID}' />";
 			var pBoardID = "<c:out value='${boardID}' />";
-	        var pBoardName = "<c:out value='${boardInfo.boardName}' />' />";
-	        var strWriterID = "<c:out value='${item.writerID}' />' />";
-	        var strWriterName = "<c:out value='${item.writerName}' />' />";
+	        var pBoardName = "<c:out value='${boardInfo.boardName}' />";
+	        var strWriterID = "<c:out value='${item.writerID}' />";
+	        var strWriterName = "<c:out value='${item.writerName}' />";
 	        var strWriterDeptName = "<c:out value='${item.writerDeptName}' />";
 	        var strWriterCompanyName = "<c:out value='${item.writerCompanyName}' />";
 	        var strWriteDate = "<c:out value='${item.writeDate}' />";
@@ -39,7 +39,7 @@
 	        var SSUserID = "<c:out value='${userInfo.id}' />";
 	        var SSUserName = "<c:out value='${userInfo.displayName1}' />";
 	        var Access_FG = "<c:out value='${boardInfo.access_FG}' />";
-	        var BoardAdmin_FG = "<c:out value='${boardInfo.boardAdmin_FG}>' />";
+	        var BoardAdmin_FG = "<c:out value='${boardInfo.boardAdmin_FG}' />";
 	        var ListView_FG = "<c:out value='${boardInfo.listView_FG}' />";
 	        var Read_FG = "<c:out value='${boardInfo.read_FG}' />";
 	        var Write_FG = "<c:out value='${boardInfo.write_FG}' />";
@@ -58,6 +58,7 @@
 	        var userinfo_lang = "<c:out value='${strUserLang}' />";
 	    	var objMHT = new ActiveXObject("MhtFormat.Convert");
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
+	    	var rsa = new RSAKey();
 	    	
 	    	window.onload = function () {
 	    	    try {
@@ -93,6 +94,8 @@
 	    	    catch (e) {
 	    	        alert(e.description);
 	    	    }
+	    	    
+	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
 
 	        function AddLinkTarget() {
@@ -123,7 +126,7 @@
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 	                if (gubun == "2") {
                 		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-                        var OpenWin = window.open("/ezComunity/checkPassword.do?itemID=" + pItemID, "checkPassWord", GetOpenWindowfeature(340, 200));
+                        var OpenWin = window.open("/ezComunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
                         try {
                         	OpenWin.focus();
                         } catch (e) { }
@@ -132,10 +135,17 @@
 	                	return;
 	                }
 	            } else {
-	            	 if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
-	            		 return;
-	            	 }
-
+	            	if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
+	            		return;
+	            	}
+	            	
+                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+					
+					if (ret != "OK") {
+					    alert("<spring:message code = 'ezCommunity.t901' />");
+					    return;
+					}
+					
 	 			    var xmlhttp = createXMLHttpRequest();
 	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
 	 			    xmlhttp.send();
@@ -145,6 +155,7 @@
 	 			        window.opener.refresh_onclick();
 	 			    } catch (e) {
 	 			    }
+	 			    
 	 			    window.close();
 	            }
 	        }
@@ -196,7 +207,7 @@
 				    return;
 				}
 
-	            if (cadmin != "admin" && BoardAdmin_FG != "true" && BoardAdmin_FG != "true") {
+	            if (cadmin != "admin" && BoardAdmin_FG != "true") {
 	                if (strWriterID != SSUserID && gubun != "2") {
 	                    alert("<spring:message code='ezCommunity.t939'/>");
 					    return;
@@ -208,15 +219,26 @@
                     checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
                     var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
                     try { OpenWin.focus(); } catch (e) { }
-	            	
-					window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	            } else {
-// 	            	if (${pModify == 'ON'}) {
-// 	                    alert("<spring:message code='ezCommunity.t941'/>");
-// 	                    return;
-// 	                }
-	                
-	                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	            	alert(2);
+// 	            	 var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
+                    feature = feature + GetShowModalPosition(330, 200);
+                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
+                    if (typeof (ret) == "undefined") {
+                        alert("<spring:message code = 'ezCommunity.t939' />");
+                        return;
+                    }
+                    if (ret != "OK") {
+                        alert("<spring:message code = 'ezCommunity.t939' />");
+                        return;
+                    }
+
+                    if ("${pModify}" == "ON") {
+                        alert("<spring:message code = 'ezCommunity.t941' />");
+                        return;
+                    }
+                    
+                    window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	            }
 	        }
 	        
@@ -504,7 +526,7 @@
 	                strXML += "<PASSWORD></PASSWORD>";
 	            }
 	            else {
-	                strXML += "<PASSWORD>" + Crypt_Encrytion(document.getElementById('txtPassWord').value) + "</PASSWORD>";
+	                strXML += "<PASSWORD>" + rsa.encrypt(document.getElementById('txtPassWord').value) + "</PASSWORD>";
 	            }
 	            strXML += "</DATA>";
 	            
@@ -537,7 +559,6 @@
                         checkreplypassword_dialogArguments = new Array();
                         checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
                         var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));
-                        
                         try {
                         	OpenWin.focus();
                         } catch (e) { }
@@ -1069,5 +1090,6 @@
 	    </table>
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent }" type="hidden"/>
 	</body>
 </html>

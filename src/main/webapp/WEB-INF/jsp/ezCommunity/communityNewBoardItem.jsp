@@ -11,17 +11,21 @@
 		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		
+		
+		
+		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		
 		<!-- data picker -->
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
         <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
@@ -91,7 +95,7 @@
 		    var unloadflag = "0";
 		    var PhotoBoard = "N";
 		    var _hasattach = "<c:out value = '${hasAttach}' />";
-		    
+		    var rsa = new RSAKey();
 			var flag = false;
 			
 			window.onload = function () {
@@ -131,6 +135,7 @@
 		        }
 		        
 		        ChkPermanent();
+		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		    }
 			
 			$(function(){
@@ -407,7 +412,6 @@
 		        var importance = "";
 		        if(chkEmergent.checked) {
 		            importance = "1";
-	
 		        } else {
 		            importance = "0";
 		        }
@@ -476,7 +480,6 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", strUserPhone);
 		        } else {
-	
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", "");
@@ -516,14 +519,15 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);	
 	
 		        if (gubun == "2") {
-		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", Crypt_Encrytion(document.getElementById('txtPassWord').value));
+		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
 		        } else {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");
 		        }
 				
 		        
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
-		        xmlhttp.send(xmlDom);					
+		        xmlhttp.send(xmlDom);
+		        
 
 		        if (xmlhttp.responseText == "OK") {
 		            xmlhttp = null;
@@ -1130,6 +1134,7 @@
 	    </table>
 	    
 	    <input id="publicModulus" value="${publicModulus }" type="hidden"/>
+	    <input id="publicExponent" value="${publicExponent }" type="hidden"/>
 	    
 	    <script type="text/javascript">
 	        if("${boardInfo.gubun != '2'}") {

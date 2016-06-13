@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.security.PrivateKey;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -1145,6 +1146,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1222,6 +1224,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("item", item);
 		model.addAttribute("pReservedItem", pReservedItem);
 		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("pDocID", pDocID);
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("strNow", EgovDateUtil.getTodayTime());
@@ -1396,6 +1399,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		String showAdjacent = request.getParameter("showAdjacent");
+		
 		if (showAdjacent == null) {
 			showAdjacent = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
 		}
@@ -1405,13 +1409,14 @@ public class EzCommunityController extends EgovFileMngUtil{
         String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
         String useKMS = config.getProperty("config.Use_ezKMS");
         String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
         
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response);
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		
+
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);
 
@@ -1463,7 +1468,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				item.setWriterCompanyName("");
 			}
 		}
-		
+
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
@@ -1486,14 +1491,53 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pVersionUse", pVersionUse);
 		model.addAttribute("ch_CommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
 		
 		return "/ezCommunity/communityBoardItemView";
 	}
 	
-	//TODO 2016-05-19 이효진  만들어야함
 	/**
-	 * checkPassword
+	 * 암호확인화면 호출함수
 	 */
+	@RequestMapping(value = "/ezCommunity/checkPassword.do")
+	public String checkPassword(ModelMap model, HttpServletRequest request) throws Exception {
+		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
+		String pItemID = request.getParameter("itemID");
+		
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("itemID", pItemID);
+		
+		return "/ezCommunity/communityCheckPassword";
+	}
+	
+	
+	/**
+	 * 암호확인 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/confirmPassword.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String confirmPassword(ModelMap model, HttpServletRequest request) throws Exception {
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		String itemID = request.getParameter("itemID");
+		String newPassword = request.getParameter("newPassword");
+		String oldPassword = "";
+		
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
+		
+		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
+		oldPassword = ezCommunityService.checkPassword(itemID).trim();
+		
+		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
+			return "OK";
+		} else {
+			return "NO";
+		}
+	}
 	
 	/**
 	 * 한줄답변 목록 호출함수
@@ -1734,7 +1778,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		
-		model.addAttribute("itemIdList", pItemIDList);
+		model.addAttribute("itemIDList", pItemIDList);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
 		return "/ezCommunity/communityCopyBoardItem";

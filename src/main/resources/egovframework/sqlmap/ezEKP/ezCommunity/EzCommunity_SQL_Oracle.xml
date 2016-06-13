@@ -488,6 +488,10 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.checkPassword"				parameterClass="String"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_CHECKPASSWORD(#v_PITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -524,7 +528,7 @@
 		{CALL EZCOMMUNITY.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.adminMemberListOkGetE"				parameterClass="Map"		resultClass="Integer">
+	<procedure id="EzCommunityDAO.adminMemberListOkGetE"		parameterClass="Map"		resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GET_E(#v_CODE#, #v_C_ID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
