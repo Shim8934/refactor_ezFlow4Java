@@ -119,7 +119,7 @@ function GetTaskMiddleCategory(pCode)
 	var xmlRtn = result;
 	var dataNodes = GetChildNodes(xmlRtn); 
 	var rtnValue = getNodeText(dataNodes[0]);
-	
+
 	if (rtnValue == "FALSE")
 	{
 		alert(strLang471);
@@ -128,6 +128,7 @@ function GetTaskMiddleCategory(pCode)
 	{
 		document.getElementById("selTaskMCategory").innerHTML = "";
 		var nodesCategory =  SelectNodes(xmlRtn, "TASKMCATEGORY/MCATEGORY");
+	
 		if(nodesCategory)
 		{
 			InitCodeSelectBox(nodesCategory, selTaskMCategory);
@@ -244,7 +245,7 @@ function TaskSCateList_onclick()
 }
 
 function GetmakeXml(selCate, selSub, selSimple, SearchFlag) {
-    var strXml;
+    var strXml = "";
     strXml = strXml + "<ROW>";
     //철단위
     if (!selSimple) {
@@ -376,19 +377,24 @@ function GetSelIdxForSubCate(Rows, len, pSubCategoryCode)
 
 function GetTaskListInSubCategory(pCode, pTaskCode)
 {
-	var xmlpara = createXmlDom();
-	var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "SCATECODE", pCode);
-	createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DeptCode);
-	createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang);		
-
-	var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTaskInSubCategory.aspx",false);
-	xmlhttp.send(xmlpara);
-	
-	var rtnXml = xmlhttp.responseXML;
+	var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTaskInSubCategory.do",
+		data : {
+			cateCode   : pCode,
+			companyID  : CompanyID,
+			deptCode   : g_DeptCode,
+			strType    : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+	var rtnXml = result;
 	var dataNodes = GetChildNodes(rtnXml);
 	var retValue = getNodeText(dataNodes[0]);
 	
@@ -479,7 +485,6 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode)
 	        var simpleCode = getNodeText(SelectSingleNode(GetChildNodes(SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y])[0], "DATA1"));  //철코드
 	        var simpleXml = GetSimpleList(arr_userinfo[4], "", simpleCode, g_SelCabID, g_InitFlag);
 	        var simpleCnt = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW").length;
-	        var curCategory;
 	        var curSubCategory = SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y];
 	        if (!simpleCnt) {
 	            GetXml = GetXml + GetmakeXml(rtnXml, curSubCategory, false, true);
@@ -532,7 +537,7 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode)
 function OpenTaskFindWin()
 {
 	var para = new Array();
-	var url = "/myoffice/ezApprovalG/ezCabinet/FindTask_Cross.aspx";
+	var url = "/ezApprovalG/findTask.do";
 	var feature = "dialogWidth:360px;dialogHeight:205px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
     feature =  feature + GetShowModalPosition(330, 205);
     var rtn;
@@ -544,20 +549,25 @@ function OpenTaskFindWin()
 
 function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode)
 {
-	var xmlpara = createXmlDom();
+	var result = "";
 	
-	var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "TITLE", pTitle);
-    createNodeAndInsertText(xmlpara, objNode, "CODE", pCode);
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", pDeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);	     
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);	
-    
-	var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezCabinet/aspx/API_FindTask.aspx",false);
-	xmlhttp.send(xmlpara);
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/findTaskList.do",
+		data : {
+			deptCode   : pDeptCode,
+			title 	   : pTitle,
+			code       : pCode,
+			flag       : pFlag,
+			companyID  : CompanyID,
+			langType   : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 	
-	return xmlhttp.responseXML;
+	return result;
 }

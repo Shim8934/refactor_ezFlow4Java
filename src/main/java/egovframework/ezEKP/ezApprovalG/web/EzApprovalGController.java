@@ -1167,6 +1167,9 @@ public class EzApprovalGController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기록물철 중기능 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getTaskMiddleCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskMiddleCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -1176,10 +1179,13 @@ public class EzApprovalGController {
 		String companyID = request.getParameter("companyID");
 		String cateCode = request.getParameter("cateCode");
 		String result = ezApprovalGService.getTaskMiddleCategory(deptCode, companyID, cateCode);
-		
+
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기록물철 소기능 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getTaskSubCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskSubCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -1194,6 +1200,9 @@ public class EzApprovalGController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기록물철 소기능(소분류) 별 단위업무정보 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getTaskInSubCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskInSubCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -1208,6 +1217,9 @@ public class EzApprovalGController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기록물철 리스트 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getCabinetSimpleList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetSimpleList(HttpServletRequest request) throws Exception{
@@ -1223,4 +1235,127 @@ public class EzApprovalGController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기록물철 단위업무 검색 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/findTask.do")
+	public String findTask() throws Exception{
+		return "ezApprovalG/apprGFindTask";
+	}
+	
+	/**
+	 * 전자결재G 기록물철 단위업무 검색 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/findTaskList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String findTaskList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String deptCode = request.getParameter("deptCode");
+		String title = request.getParameter("title");
+		String code = request.getParameter("code");
+		String flag = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		String langType = request.getParameter("langType");
+		String result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기안 의견버튼 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
+	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String susinAdmin = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGaprOpinion";
+	}
+	
+	/**
+	 * 전자결재G 기안 의견리스트 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/opinionRequest.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String opinionRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기안 의견삭제 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/opinionDel.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String opinionDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document docXML = commonUtil.convertStringToDocument(xmlDom);
+		String result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+
+	@RequestMapping(value = "/ezApprovalG/aprAttach.do")
+	public String aprAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String formID = request.getParameter("formID");
+		String docID = request.getParameter("docID");
+		String draftFlag = request.getParameter("draftFlag");
+		String serverName = request.getServerName();
+		String susinAdmin = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String formList = ezApprovalGService.getOptionInfo("A36", "007", userInfo, "CODE");
+		String poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
+		String maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
+		String isBody = "";
+		
+		if (formList.replace(formID, "").equals(formList)) {
+			isBody = "YES";
+		}
+		
+		model.addAttribute("formID", formID);
+		model.addAttribute("docID", docID);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("poptExt", poptExt);
+		model.addAttribute("maxSize", maxSize);
+		model.addAttribute("isBody", isBody);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGaprAttach";
+	}
 }

@@ -43,6 +43,14 @@ public class ApprGTaskVO {
 	private String keepingMethod;
 	/** 보존장소*/
 	private String keepingPlace;
+	/** 처리과부서코드*/
+	private String processDeptCode;
+	/** 처리과이름*/
+	private String processDeptName;
+	/** 처리과이름(다국어)*/
+	private String processDeptName2;
+	/** 소기능명(다국어)*/
+	private String scName2;
 	
 	public String getCategoryCode() {
 		return categoryCode;
@@ -169,6 +177,30 @@ public class ApprGTaskVO {
 	}
 	public void setKeepingPlace(String keepingPlace) {
 		this.keepingPlace = keepingPlace;
+	}
+	public String getProcessDeptCode() {
+		return processDeptCode;
+	}
+	public void setProcessDeptCode(String processDeptCode) {
+		this.processDeptCode = processDeptCode;
+	}
+	public String getProcessDeptName() {
+		return processDeptName;
+	}
+	public void setProcessDeptName(String processDeptName) {
+		this.processDeptName = processDeptName;
+	}
+	public String getProcessDeptName2() {
+		return processDeptName2;
+	}
+	public void setProcessDeptName2(String processDeptName2) {
+		this.processDeptName2 = processDeptName2;
+	}
+	public String getScName2() {
+		return scName2;
+	}
+	public void setScName2(String scName2) {
+		this.scName2 = scName2;
 	}
 	
 }

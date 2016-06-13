@@ -133,6 +133,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSIMPLECABINETLIST(#v_PDEPTCODE#, #v_PYEAR#, #v_PACCOUNTPYEAR#, #v_TASKCODE#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -199,6 +203,10 @@
 	
 	<procedure id="EzApprovalG.deleteReceiptTempletDetailInfo" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIPTTEMPLETDETAI(#v_FORMID#, #v_USERID#, #v_APRDEPTSN#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.deleteOpinionInfo" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DELETEOPINIONINFO(#v_DOCID#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">

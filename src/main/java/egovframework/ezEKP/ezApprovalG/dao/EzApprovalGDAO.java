@@ -186,6 +186,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> findTask(Map<String, Object> map) throws Exception{
+		return (List<ApprGTaskVO>) list("EzapprovalG.findTask", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -278,6 +283,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public void deleteReceiptTempletDetailInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptTempletDetailInfo", map);
+	}
+
+	public void deleteOpinionInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteOpinionInfo", map);
 	}
 
 }

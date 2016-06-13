@@ -106,6 +106,12 @@ public interface EzApprovalGService {
 	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception;
 	
 	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType) throws Exception;
+	
+	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType) throws Exception;
+	
+	public String deleteOpinionInfo(String docID, String companyID, String lang) throws Exception;
+	
+	public String updateOpinionInfo(Document docXML, String companyID, String lang) throws Exception;
 
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
