@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/ezResource/admin/gwAdmin.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pUserID		= '${userInfo.id}';
-			var pDeptID		= '${userInfo.deptCode}';
+			var pDeptID		= '${userInfo.deptID}';
 			var pCompanyID	= '${userInfo.companyID}';
 			var pAdminYN	= '${adminYN}';
 
@@ -92,7 +92,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "Y");
 		        createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "1");
 
-		        xmlhttp.open("POST", "/admin/ezResource/callMamagerDepthNode.do?flag=" + selectNo, false);
+		        xmlhttp.open("POST", "/admin/ezResource/callManagerDepthNode.do?flag=" + selectNo, false);
 		        xmlhttp.send(xmlpara);
 
 		        var XMLstring = xmlhttp.responseText;
@@ -170,7 +170,10 @@
 				<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px"></select>
 			</div>
     		<br />
-    		<div id="TreeView" style="vertical-align:top;height:400px;width:165px;overflow-x:auto;overflow-y:auto;"></div>
+    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc);height:380px;width:174px;overflow-x:auto;overflow-y:auto;
+    			BORDER:#b6b6b6 0px solid; BACKGROUND-COLOR:#F8F8F8;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
+			</div>
     		
 			<form name="brds">
 				<input type="hidden" id="up_id" name="up_id" value="0">
