@@ -2,6 +2,110 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezResourceAdmin">
+	<typeAlias  alias="ResGetSubClsListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO"/>
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
 	
+	<resultMap class="ResGetSubClsListVO" 	id="resGetSubClsListVO">
+		<result property="brdID"						column="BRD_ID"					columnIndex="1"/>
+		<result property="brdCompany"				column="BRD_COMPANY"		columnIndex="2"/>
+		<result property="brdNm"						column="BRD_NM"					columnIndex="3"/>
+		<result property="brdNm2"					column="BRD_NM2"				columnIndex="4" 		nullValue="0"/>
+		<result property="brdGroup"					column="BRD_GROUP"				columnIndex="5"/>
+		<result property="brdGb"						column="BRD_GB"					columnIndex="6"/>
+		<result property="brdRef"						column="BRD_REF"					columnIndex="7"/>
+		<result property="brdLevel"					column="BRD_LEVEL"				columnIndex="8"/>
+		<result property="brdStep"					column="BRD_STEP"				columnIndex="9"/>
+		<result property="brdPositerm"				column="BRD_POSTTERM"		columnIndex="10"/>
+		<result property="brdExplain"				column="BRD_EXPLAIN"			columnIndex="11"/>
+		<result property="brdAccess"					column="BRD_ACCESS"			columnIndex="12"/>
+		<result property="brdUpper"					column="BRD_UPPER"				columnIndex="13"/>
+		<result property="brdCount"					column="BRD_COUNT"				columnIndex="14"/>
+		<result property="brdURL"						column="BRD_URL"					columnIndex="15"/>
+		<result property="attachSize"					column="ATTACH_SIZE"			columnIndex="16"/>
+		<result property="replyMailFg"				column="REPLY_MAIL_FG"		columnIndex="17"/>
+		<result property="ownDeptID"				column="OWNDEPTID"			columnIndex="18"/>
+		<result property="ownDeptNm"				column="OWNDEPTNM"			columnIndex="19"/>
+		<result property="ownDeptNm2"			column="OWNDEPTNM2"			columnIndex="20" 		nullValue="0"/>
+		<result property="ownerID"					column="OWNERID"				columnIndex="21"/>
+		<result property="ownerNm"					column="OWNERNM"				columnIndex="22"/>
+		<result property="ownerNm2"				column="OWNERNM2"			columnIndex="23"/>
+		<result property="ownerPosition"			column="OWNERPOSITION"		columnIndex="24"/>
+		<result property="ownerPosition2"			column="OWNERPOSITION2"	columnIndex="25"/>
+		<result property="ownerCall"					column="OWNERCALL"			columnIndex="26"/>
+		<result property="makeDate"					column="MAKEDATE"				columnIndex="27"/>
+		<result property="resLocation"				column="RESLOCATION"			columnIndex="28"/>
+		<result property="brdUpper2"				column="BRD_UPPER2"			columnIndex="29"/>
+		<result property="approveFlag"				column="APPROVEFLAG"			columnIndex="30"/>
+	</resultMap>
+	
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"						column="DEPT_YN"					columnIndex="1"/>
+		<result property="sdaYn"						column="SDA_YN"					columnIndex="1"/>
+		<result property="memberNam"				column="MEMBER_NAM"			columnIndex="1"/>
+		<result property="memberID"				column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"					column="ACCESS_LVL"			columnIndex="1"/>
+	</resultMap>
+	
+	<procedure id="EzResourceAdminDAO.addClsData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_ADDCLSDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
+			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#, #v_P_IS_COMPANY#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.modifyClsData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_MODIFYCLSDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
+			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.saveACL" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_SAVEACL(#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.delResAcll" parameterClass="Map"  resultClass="Integer">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DELRESACLL(#v_P_RESID#, #v_P_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.chgClsOrder" parameterClass="Map">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_CHGCLSORDER(#v_P_SourceID#, #v_P_TargetID#, #v_P_CompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.moveCls" parameterClass="Map">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_MOVECLS(#v_P_SourceID#, #v_P_ParentID#, #v_P_CompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.delClsData" parameterClass="Map">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_DELCLSDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.getSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #v_P_UserID#, #v_P_DeptPath#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.getAdmSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETADMSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETCLSACLLIST(#v_P_Brd_ID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 </sqlMap>
 
