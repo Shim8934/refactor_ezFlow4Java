@@ -203,6 +203,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
 			NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
 			NodeList nodes12 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+			NodeList nodes13 = (NodeList)xpath.evaluate("NODES/NODE/DATA10", xmlRet, XPathConstants.NODESET);
 			
 			if(nodes.getLength() != 0) {
 				for(int i=0; i<nodes.getLength(); i++) {
@@ -242,6 +243,9 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 					if(nodes12.item(i).getTextContent().equals("")) {
 						nodes12.item(i).setTextContent("<![CDATA[]]>");
+					}
+					if(nodes13.item(i).getTextContent().equals("")) {
+						nodes13.item(i).setTextContent("<![CDATA[]]>");
 					}
 				}
 			}
