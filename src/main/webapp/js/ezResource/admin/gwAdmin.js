@@ -1,12 +1,12 @@
-﻿var g_AdminMenu = {	"NEW" : "GwBoard_List_RegSubBoard.aspx", 
-			"MOD" : "GwBoard_List_RegComBoard.aspx",
-			"ACL" : "gwBoard_Post_RegBoardRightMain.aspx",
-			"STEP": "GwBoard_Post_RegBoardOrder.aspx",
-			"MOV" : "GwBoard_Post_BoardMove.aspx",
-			"DEL" : "gwBoard_post_BoardDel.aspx",
-			"ITEMMOV" : "gwboard_get_ItemMoveSearch.aspx" ,
-			"ITEMUPDATE" : "gwboard_get_ItemMoveSearch.aspx",
-			"GONGJI" : "gwBoard_Post_RegGongjiBoard.aspx" };
+﻿var g_AdminMenu = {	"NEW" : "gwBoardListRegSubBoard.do", 
+			"MOD" : "gwBoardListRegComBoard.do",
+			"ACL" : "gwBoardPostRegBoardRightMain.do",
+			"STEP": "gwBoardPostRegBoardOrder.do",
+			"MOV" : "gwBoardPostBoardMove.do",
+			"DEL" : "gwBoardpostBoardDel.do",
+			"ITEMMOV" : "gwboardGetItemMoveSearch.do" ,
+			"ITEMUPDATE" : "gwboardGetItemMoveSearch.do",
+			"GONGJI" : "gwBoardPostRegGongjiBoard.do" };
 
 
 function NavigateBrdAdmin_Res(pFlag) {
@@ -30,12 +30,12 @@ function NavigateBrdAdmin_Res(pFlag) {
 		var rep = new RegExp( "&", "gi" );
 		p_BrdNm = p_BrdNm.replace(rep, "chr(38)");
 		
-		var szUrl = "/Myoffice/ezResource/Admin/" + g_AdminMenu[pFlag];
-		szUrl += "?brd_id=" + p_BrdID + "&brd_nm=" + escape(p_BrdNm);
-		szUrl += "&brd_level=" + encodeURI(p_BrdLevel) + "&brd_ref=" + p_BrdRef;
-		szUrl += "&brd_step=" + p_BrdStep + "&brd_count=" + p_BrdCount;
-		szUrl += "&brd_gb=" + p_BrdGb + "&brd_upper=" + p_BrdUpper;
-		szUrl += "&brd_group=" + p_BrdGroup + "&Menu=" + pFlag + "&SelCompanyID=" + pSelCompanyID;
+		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + escape(p_BrdNm);
+		szUrl += "&brdLevel=" + encodeURI(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
+		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
+		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
 	    //frames("board_main") == frames[1]
 		window.parent.frames[1].location = szUrl;
 	}else{
@@ -66,12 +66,12 @@ function NavigateBrdAdminleft(pFlag)
 		var rep = new RegExp( "&", "gi" );
 		p_BrdNm = p_BrdNm.replace( rep, "chr(38)" );
 		
-		var szUrl = "/Myoffice/ezResource/Admin/" + g_AdminMenu[pFlag];
-		szUrl += "?brd_id=" + p_BrdID + "&brd_nm=" + escape(p_BrdNm);
-		szUrl += "&brd_level=" + encodeURI(p_BrdLevel) + "&brd_ref=" + p_BrdRef;
-		szUrl += "&brd_step=" + p_BrdStep + "&brd_count=" + p_BrdCount;
-		szUrl += "&brd_gb=" + p_BrdGb + "&brd_upper=" + p_BrdUpper;
-		szUrl += "&brd_group=" + p_BrdGroup + "&Menu=" + pFlag + "&SelCompanyID=" + pSelCompanyID;
+		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + escape(p_BrdNm);
+		szUrl += "&brdLevel=" + encodeURI(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
+		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
+		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
 		
 	    //frames("board_main") == frames[1]
 		window.parent.frames[1].location = szUrl;
