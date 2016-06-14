@@ -13,16 +13,16 @@
 		<result property="brdGroup"					column="BRD_GROUP"				columnIndex="5"/>
 		<result property="brdGb"						column="BRD_GB"					columnIndex="6"/>
 		<result property="brdRef"						column="BRD_REF"					columnIndex="7"/>
-		<result property="brdLevel"					column="BRD_LEVEL"				columnIndex="8"/>
+		<result property="brdLevel"					column="BRD_LEVEL"				columnIndex="8"			nullValue="0"/>
 		<result property="brdStep"					column="BRD_STEP"				columnIndex="9"/>
-		<result property="brdPositerm"				column="BRD_POSTTERM"		columnIndex="10"/>
+		<result property="brdPostTerm"				column="BRD_POSTTERM"		columnIndex="10"/>
 		<result property="brdExplain"				column="BRD_EXPLAIN"			columnIndex="11"/>
 		<result property="brdAccess"					column="BRD_ACCESS"			columnIndex="12"/>
 		<result property="brdUpper"					column="BRD_UPPER"				columnIndex="13"/>
 		<result property="brdCount"					column="BRD_COUNT"				columnIndex="14"/>
 		<result property="brdURL"						column="BRD_URL"					columnIndex="15"/>
 		<result property="attachSize"					column="ATTACH_SIZE"			columnIndex="16"/>
-		<result property="replyMailFg"				column="REPLY_MAIL_FG"		columnIndex="17"/>
+		<result property="replyMailFg"				column="REPLY_MAIL_FG"		columnIndex="17"		nullValue="0"/>
 		<result property="ownDeptID"				column="OWNDEPTID"			columnIndex="18"/>
 		<result property="ownDeptNm"				column="OWNDEPTNM"			columnIndex="19"/>
 		<result property="ownDeptNm2"			column="OWNDEPTNM2"			columnIndex="20" 		nullValue="0"/>
@@ -105,6 +105,12 @@
 	<procedure id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETCLSACLLIST(#v_P_Brd_ID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzResourceAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETBRDINFO(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 </sqlMap>
