@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1178,7 +1179,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			ezCommunityDAO.deleteItem1(itemID);
 			ezCommunityDAO.deleteItem2(itemID);
 			ezCommunityDAO.deleteItem3(itemID);
+			ezCommunityDAO.deleteItem5(itemID);
 			ezCommunityDAO.deleteItem4(map);
+			
 		}
 	}
 
@@ -1282,26 +1285,25 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		item.setExtensionAttribute4(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
 		item.setExtensionAttribute5(xmlData.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
 		
-//		item.setDocPassword(xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
-		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		String rpwd = EgovFileScrty.decryptRsa(pk, xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
-		item.setDocPassword(EgovFileScrty.encryptPassword(rpwd, "unknown"));
-
+		if (pMode.equals("copy")){
+			if (!xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent().equals("")) {
+				item.setDocPassword(xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+			}
+		} else {
+			if (!xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent().equals("")) {
+				PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+				String rpwd = EgovFileScrty.decryptRsa(pk, xmlData.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+				item.setDocPassword(EgovFileScrty.encryptPassword(rpwd, "unknown"));
+			}
+		}
+		
+		
 		if (!pMode.equals("copy")) {
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
 			
 			if (saveMHTResult == false) {
 				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
 			}
-		}
-    
-		if (item.getAttachments().length() > 0) {
-			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
-				return "ERROR:첨부 파일 정보를 저장하는데 실패 하였습니다.";
-			}
-			pHasAttach = "1";
-		} else {
-			pHasAttach = "0";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1337,11 +1339,22 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 		if (pMode.equals("modify")) {
 			ezCommunityDAO.brdUpdateItem(map);
-			return "OK";
 		} else {
 			ezCommunityDAO.brdNewItem(map);
-			return "OK";
 		}
+		
+		ezCommunityDAO.newItemDel(item.getItemID());
+		
+		if (item.getAttachments().length() > 0) {
+			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
+				return "ERROR:첨부 파일 정보를 저장하는데 실패 하였습니다.";
+			}
+			pHasAttach = "1";
+		} else {
+			pHasAttach = "0";
+		}
+		
+		return "OK";
 	}
 
 	@Override
@@ -1372,7 +1385,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				
 				temps = attachments.split(";")[i].split("_");
 				fileName = temps[temps.length-1];
-				
+
 				if (!thumbPath.equals("")) {
 					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";"));
 					map.put("itemID", itemID);
@@ -1397,12 +1410,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					ezCommunityDAO.insertAttachInfo(map);
 				} else {
 					map.put("filePath", filePath);
-					ezCommunityDAO.updateAttachInfo(map);
+					ezCommunityDAO.insertAttachInfo(map);
 				}
 			}
 			
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -1411,7 +1425,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String getItemAttachmentXML(String itemID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(itemID);
-		
+
 		sb.append("<NODES>");
 		
 		for (CommunityBoardItemAttachmentVO attach : list) {
@@ -1682,25 +1696,125 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception {
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
 		
 		CommunityBoardItemVO item = ezCommunityDAO.copyItemGet1(map);
+		item.setItemID(pDestItemID);
+		item.setBoardID(pDestBoardID);
 		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1)));
 		item.setContentLocation(item.getContentLocation().replaceAll(pOrgItemID.substring(1, pOrgBoardID.length()-1), pDestItemID.substring(1, pDestBoardID.length()-1)));
 		item.setStartDate("");
 		item.setUpperItemIDTree(pDestItemID);
 		item.setItemLevel(1);
+		item.setParentWriteDate("");
 		
-//		copyFiles();
+		String pUploadFilePath = realPath + config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		
-//		List<CommunityBoardItemAttachmentVO> OrgattachList = ezCommunityDAO.copyItemGet2(pOrgItemID);
+		copyFiles(pOrgItemID, pOrgBoardID, pDestItemID, pDestBoardID, pUploadFilePath);
+		List<CommunityBoardItemAttachmentVO> orgAttachList = ezCommunityDAO.copyItemGet2(pOrgItemID);
 		
+		StringBuilder attachments = new StringBuilder();
 		
-		return null;
+		for(CommunityBoardItemAttachmentVO itemAttachment : orgAttachList) {
+			String orgAttach = itemAttachment.getFilePath();
+			String destAttach = itemAttachment.getFilePath().replaceAll(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
+			
+			copyAttachments(orgAttach, destAttach, pDestBoardID, pUploadFilePath);
+			attachments.append(destAttach + ";");
+		}
+
+		item.setAttachments(attachments.toString());
+		if (item.getWriterID() == null) {
+			item.setWriterID("");
+		}
+		if (item.getWriterName() == null) {
+			item.setWriterName("");
+		}
+		if (item.getWriterName2() == null) {
+			item.setWriterName2("");
+		}
+		if (item.getWriterDeptID() == null) {
+			item.setWriterDeptID("");
+		}
+		if (item.getWriterDeptName() == null) {
+			item.setWriterDeptName("");
+		}
+		if (item.getWriterDeptName2() == null) {
+			item.setWriterDeptName2("");
+		}
+		if (item.getWriterCompanyID() == null) {
+			item.setWriterCompanyID("");
+		}
+		if (item.getWriterCompanyName() == null) {
+			item.setWriterCompanyName("");
+		}
+		if (item.getWriterCompanyName2() == null) {
+			item.setWriterCompanyName2("");
+		}
+		if (item.getAbsTract() == null) {
+			item.setAbsTract("");
+		}
+		if (item.getDocPassword() == null) {
+			item.setDocPassword("");
+		}
+		if (item.getExtensionAttribute3() == null) {
+        	item.setExtensionAttribute3("");
+        }
+        if (item.getExtensionAttribute32() == null) {
+        	item.setExtensionAttribute32("");
+        }
+        if (item.getExtensionAttribute4() == null) {
+        	item.setExtensionAttribute4("");
+        }
+        if (item.getExtensionAttribute5() == null) {
+        	item.setExtensionAttribute5("");
+        }
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<NODES>");
+        sb.append("<NODE>");
+        sb.append("<FILEPATH>" + config.getProperty("upload_community.ROOT") + commonUtil.separator + "</FILEPATH>");
+        sb.append("<ITEMID>" + pDestItemID + "</ITEMID>");
+        sb.append("<BOARDID>" + pDestBoardID + "</BOARDID>");
+        sb.append("<WRITERID>" + item.getWriterID() + "</WRITERID>");
+        sb.append("<WRITERNAME>" + item.getWriterName() + "</WRITERNAME>");
+        sb.append("<WRITERNAME2>" + item.getWriterName2() + "</WRITERNAME2>");
+        sb.append("<DEPTID>" + item.getWriterDeptID() + "</DEPTID>");
+        sb.append("<DEPTNAME>" + item.getWriterDeptName() + "</DEPTNAME>");
+        sb.append("<DEPTNAME2>" + item.getWriterDeptName2() + "</DEPTNAME2>");
+        sb.append("<COMPANYID>" + item.getWriterCompanyID() + "</COMPANYID>");
+        sb.append("<COMPANYNAME>" + item.getWriterCompanyName() + "</COMPANYNAME>");
+        sb.append("<COMPANYNAME2>" + item.getWriterCompanyName2() + "</COMPANYNAME2>");
+        sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
+        sb.append("<TITLE>" + item.getTitle() + "</TITLE>");
+        sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
+        sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
+        sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
+        sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
+        sb.append("<ATTACHMENTS>" + item.getAttachments() + "</ATTACHMENTS>");
+        sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
+        sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");
+        sb.append("<EXTENSIONATTRIBUTE1>" + item.getExtensionAttribute1() + "</EXTENSIONATTRIBUTE1>");
+        sb.append("<EXTENSIONATTRIBUTE2>" + item.getExtensionAttribute2() + "</EXTENSIONATTRIBUTE2>");
+        sb.append("<EXTENSIONATTRIBUTE3>" + item.getExtensionAttribute3() + "</EXTENSIONATTRIBUTE3>");
+        sb.append("<EXTENSIONATTRIBUTE32>" +item.getExtensionAttribute32() + "</EXTENSIONATTRIBUTE32>");
+        sb.append("<EXTENSIONATTRIBUTE4>" + item.getExtensionAttribute4() + "</EXTENSIONATTRIBUTE4>");
+        sb.append("<EXTENSIONATTRIBUTE5>" + item.getExtensionAttribute5() + "</EXTENSIONATTRIBUTE5>");
+        sb.append("<DOCPASSWORD>" + item.getDocPassword() + "</DOCPASSWORD>");
+        sb.append("</NODE>");
+        sb.append("</NODES>");
+
+        String ret = newItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath);
+        
+        if(ret.equals("OK")) {
+        	ezCommunityDAO.copyUpdate(pDestItemID);
+        }
+        
+		return ret;
 	}
 
 	@Override
@@ -2619,10 +2733,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void adminCommCloseOkInser(String code, String commName,
-			String commName2, String sysopID, String companyName,
-			String todayTime, String reason, String closeState)
-			throws Exception {
+	public void adminCommCloseOkInser(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CODE", code);
@@ -2642,6 +2753,45 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.checkPassword(pItemID);
 	}
 	
+	@Override
+	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
+            String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";
+            String destFilePath = pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht";
+
+            File destdir = new File(pRef + pDestBoardID);
+            if (!destdir.exists()) {
+            	destdir.mkdir();
+            	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+            	destdir1.mkdir();
+            	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+            	destdir2.mkdir();
+            }
+            
+            File orgFile = new File(orgFilePath);
+            File destFile = new File(destFilePath);
+            
+            FileCopyUtils.copy(orgFile, destFile);
+	}
+	
+	@Override
+	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
+        String orgFilePath = pRef + pOrgFilePath;
+        String destFilePath = pRef + pDestFilePath;
+
+        File destdir = new File(pRef + pDestBoardID);
+        if (!destdir.exists()) {
+        	destdir.mkdir();
+        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	destdir1.mkdir();
+        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+        	destdir2.mkdir();
+        }
+        
+        File orgFile = new File(orgFilePath);
+        File destFile = new File(destFilePath);
+        
+        FileCopyUtils.copy(orgFile, destFile);
+}
 	/*public void SndMail(string code)
 	{
         try

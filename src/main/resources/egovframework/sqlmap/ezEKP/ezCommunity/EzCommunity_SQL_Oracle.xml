@@ -320,6 +320,10 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.copyItemGet2"					parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
+		{CALL EZCOMMUNITY.EZSP_COPYITEM_GET2(#v_pOrgItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -684,6 +688,14 @@
 		{CALL EZCOMMUNITY.EZSP_BRDDELETEBOARD(#v_pBoardID#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.copyUpdate"					parameterClass="String">
+		{CALL EZCOMMUNITY.EZSP_COPYITEM_UPDATE(#v_pItemID#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.newItemDel"					parameterClass="String">
+		{CALL EZCOMMUNITY.EZSP_NEWITEM_DEL(#v_PITEMID#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
 	</procedure>
@@ -747,18 +759,6 @@
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.pollResGet6"						parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
-		<![CDATA[
-			SELECT 
-				*
-			FROM 
-	        	EZCOMMUNITY.C_POLLANSWER
-			WHERE  
-	       		POLLQUESTIONID = #v_QUESTIONID#
-	       	ORDER BY ANSWERNO
-		]]>
-	</select>
-	
 	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
@@ -770,6 +770,18 @@
 			AND 
 				ACCESSID = #pUserID#
 		]]>		
+	</select>
+	
+	<select id="EzCommunityDAO.pollResGet6"						parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+	        	EZCOMMUNITY.C_POLLANSWER
+			WHERE  
+	       		POLLQUESTIONID = #v_QUESTIONID#
+	       	ORDER BY ANSWERNO
+		]]>
 	</select>
 	
 	<select id="EzCommunityDAO.getCategoryValueA"											resultMap="CategoryValue">
@@ -838,7 +850,6 @@
 		]]>		
 	</select>
 	
-	
 	<select id="EzCommunityDAO.deleteItemGet"					parameterClass="String"		resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -847,17 +858,6 @@
         		EZCOMMUNITY.TBL_BOARD_ITEM 
        		WHERE 
        			ITEMID = #itemID#
-		]]>		
-	</select>
-	
-	<select id="EzCommunityDAO.pollResGetAllCount"				parameterClass="Integer"	resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				COUNT(*)
-        	FROM 
-        		EZCOMMUNITY.C_POLLRESPONSE
-       		WHERE 
-       			QUESTIONID = #v_QUESTIONID#
 		]]>		
 	</select>
 	
@@ -871,6 +871,17 @@
        			QUESTIONID = #v_QUESTIONID#
        		AND
        			ANSWERID = #v_ANSWERID#
+		]]>		
+	</select>
+	
+	<select id="EzCommunityDAO.pollResGetAllCount"				parameterClass="Integer"	resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		EZCOMMUNITY.C_POLLRESPONSE
+       		WHERE 
+       			QUESTIONID = #v_QUESTIONID#
 		]]>		
 	</select>
 	
@@ -906,7 +917,7 @@
         		EZCOMMUNITY.TBL_Board_Item_Attachments
        		VALUES
        			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#)
-		]]>		
+		]]>
 	</insert>
 	
 	<insert id="EzCommunityDAO.pollAddOkGoInsert3"				parameterClass="Map">
@@ -916,8 +927,30 @@
         		EZCOMMUNITY.C_PollAnswer(ANSWERID, POLLQUESTIONID, ANSWERNO, ANSWERCONTENT)
        		VALUES
        			(EZCOMMUNITY.C_POLLANSWER_ANSWERID_SEQ.NEXTVAL, #v_POLLQUESTIONID#, #v_ANSWERNO#, #v_ANSWERCONTENT#)
-		]]>		
+		]]>
 	</insert>
+	
+	<insert id="EzCommunityDAO.deleteItem4"						parameterClass="Map">
+		<![CDATA[
+			INSERT
+        	INTO
+        		EZCOMMUNITY.TBL_BOARD_DELETERESERVEDITEM
+       		VALUES
+       			(#boardID#, #itemID#)
+		]]>
+	</insert>
+	
+	<delete id="EzCommunityDAO.guestEditOkDelete"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+        	FROM
+        		EZCOMMUNITY.C_ClubGuest
+        	WHERE
+        		C_NO = #v_C_NO#
+        	AND
+        		C_CLUBNO = #v_CODE#
+		]]>
+	</delete>
 	
 	<delete id="EzCommunityDAO.deleteItem1"						parameterClass="String">
 		<![CDATA[
@@ -926,7 +959,7 @@
         		EZCOMMUNITY.TBL_BOARD_ITEM 
        		WHERE 
        			ITEMID = #itemID#
-		]]>		
+		]]>
 	</delete>
 	
 	<delete id="EzCommunityDAO.deleteItem2"						parameterClass="String">
@@ -949,27 +982,14 @@
 		]]>		
 	</delete>
 	
-	<delete id="EzCommunityDAO.deleteItem4"						parameterClass="Map">
+	<delete id="EzCommunityDAO.deleteItem5"						parameterClass="String">
 		<![CDATA[
-			INSERT
-        	INTO
-        		EZCOMMUNITY.TBL_BOARD_DELETERESERVEDITEM
-       		VALUES
-       			(#boardID#, #itemID#)
+			DELETE 
+        	FROM 
+        		EZCOMMUNITY.TBL_BOARD_ITEM_ATTACHMENTS
+       		WHERE 
+       			ITEMID = #itemID#
 		]]>		
 	</delete>
-	
-	<delete id="EzCommunityDAO.guestEditOkDelete"				parameterClass="Map">
-		<![CDATA[
-			DELETE
-        	FROM
-        		EZCOMMUNITY.C_ClubGuest
-        	WHERE
-        		C_NO = #v_C_NO#
-        	AND
-        		C_CLUBNO = #v_CODE#
-		]]>
-	</delete>
-	
 	
 </sqlMap>

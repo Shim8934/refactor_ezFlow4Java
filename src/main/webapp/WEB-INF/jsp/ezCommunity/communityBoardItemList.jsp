@@ -693,14 +693,14 @@
 					<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>
 				
-				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' && gubun != '2' }">
+				<c:if test="${boardInfo.gubun != '2' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
 				
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>
 				
-				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' && boardInfo.read_FG == 'true'}">
+				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					<li><span onClick="search_onclick()"><spring:message code='ezCommunity.t31' /></span></li>
 				</c:if>
 				

@@ -72,6 +72,8 @@ public interface EzCommunityService {
 	
 	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception;
 	
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception;
+	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang) throws Exception;
@@ -115,6 +117,14 @@ public interface EzCommunityService {
 	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID) throws Exception;
 	
 	public CommunityClubVO adminLogoGet(String code, String lang) throws Exception;
+	
+	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID) throws Exception;
+
+	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception;
+
+	public CommunityCComCloseVO adminCommCloseOkGet1(String code) throws Exception;
+
+	public CommunityClubVO adminCommCloseOkGet2(String code) throws Exception;
 	
 	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception;
 	
@@ -192,7 +202,7 @@ public interface EzCommunityService {
 
 	public String getACL(String id, String pComID) throws Exception;
 
-	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pUploadFilePath) throws Exception;
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath) throws Exception;
 
 	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
 	
@@ -244,9 +254,17 @@ public interface EzCommunityService {
 
 	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang) throws Exception;
 	
+	public String saveBoardProperty(String id, String xmlData) throws Exception;
+	
+	public String checkPassword(String pItemID) throws Exception;
+	
 	public Integer boardPropertyGet(String boardID) throws Exception;
 
 	public Integer adminOuterListGet1(String code) throws Exception;
+	
+	public Integer adminMemberListGet1(String code) throws Exception;
+
+	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
 	
 	public int checkIfLeafBoardGet(String boardID) throws Exception;
 
@@ -344,27 +362,13 @@ public interface EzCommunityService {
 
 	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception;
 
-	public Integer adminMemberListGet1(String code) throws Exception;
-
-	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception;
-
-	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID) throws Exception;
-
-	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception;
-
-	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
-
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception;
-
-	public String saveBoardProperty(String id, String xmlData) throws Exception;
-
-	public CommunityCComCloseVO adminCommCloseOkGet1(String code) throws Exception;
-
-	public CommunityClubVO adminCommCloseOkGet2(String code) throws Exception;
-
+	
 	public void adminCommCloseOkInser(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState) throws Exception;
-
-	public String checkPassword(String pItemID) throws Exception;
+	
+	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception;
+	
+	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception;
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

@@ -1210,7 +1210,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                 	}
                 }
 
-                if (Integer.parseInt(item.getAttachments()) > 0) {
+                if (item.getAttachments() != null && item.getAttachments().length() > 0) {
                 	hasAttach = "YES";
                 }
 			}
@@ -1272,7 +1272,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userExtension = config.getProperty("config.USE_FileExtension").toString();
 		Iterator<String> itr = request.getFileNames();
 		
-		String pDirPath = request.getServletContext().getRealPath("") + commonUtil.separator + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String pDirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String tempPath = pDirPath  + "TempUploadFile";
 		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "UploadFile";
 		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
@@ -1817,25 +1817,46 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 복사 실행함수
 	 */
-	//TODO 2016-05-24 이효진 다른게시판 만들고나서 구현가능
-	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	public String copyItem(ModelMap model, HttpServletRequest request) throws Exception {
 		String pOrgItemIDList = request.getParameter("orgItemIDList");
 		String pOrgBoardID = request.getParameter("orgBoardID");
 		String pDestItemIDList = request.getParameter("destItemIDList");
 		String pDestBoardID = request.getParameter("destBoardID");
-		String pUploadFilePath = config.getProperty("upload_community.ROOT");
+		String realPath = request.getServletContext().getRealPath("");
 		String ret = "";
 		
 		int i = 0;
 		for(String pOrgItemID : pOrgItemIDList.split(";")) {
-			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, pUploadFilePath);
+			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, realPath);
 		}
 		
-		model.addAttribute("RESULT", ret);
+		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
+		return "json";
+	}
+	
+	/**
+	 * 복사시 일반/포토/익명 게시판 검사 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/checkIfAnonyBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	public String checkIfAnonyBoard(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String ret = "";
+		String pBoardID = request.getParameter("boardID");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		
+		if (boardInfo.getGubun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGubun().equals("3")) {
+			ret = "anonyboard";
+		} else {
+			ret = "normalboard";
+		}
+		
+		model.addAttribute("result", ret);
 		
 		return "json";
 	}
+	
 	/**
 	 * 알림마당 목록화면 호출함수
 	 */
@@ -4639,6 +4660,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+System.out.println(memberInfo.getUserName());
+System.out.println(memberInfoVO.getUserName());
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
 		model.addAttribute("cID", cID);
@@ -4675,6 +4698,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
 		model.addAttribute("userName", userName);
+		
+System.out.println(userName);
 		
 		return "ezCommunity/communityAdminMemberListOkGo";
 	}
@@ -4758,6 +4783,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		return strXML;
+	}
+	
+	/**
+	 * OpenAlertUI 화면호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/ezAprAlert.do")
+	public String ezAprAlert () {
+		return "/ezCommunity/communityAprAlert";
 	}
 }
 

@@ -671,6 +671,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.deleteItem3", itemID);
 	}
 	
+	public void deleteItem5(String itemID) throws Exception {
+		delete("EzCommunityDAO.deleteItem5", itemID);
+	}
+	
 	public void pollDeleteDel1(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.pollDeleteDel1", map);
 	}
@@ -736,5 +740,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public String checkPassword(String v_PITEMID) throws Exception {
 		return (String) select("EzCommunityDAO.checkPassword", v_PITEMID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemAttachmentVO> copyItemGet2(String v_pOrgItemID) {
+		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.copyItemGet2", v_pOrgItemID);
+	}
+
+	public void copyUpdate(String v_pItemID) throws Exception {
+		update("EzCommunityDAO.copyUpdate", v_pItemID);
+	}
+
+	public void newItemDel(String v_PITEMID) throws Exception {
+		delete("EzCommunityDAO.newItemDel", v_PITEMID);
 	}
 }

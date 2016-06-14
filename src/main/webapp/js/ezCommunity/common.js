@@ -9,7 +9,7 @@ function OpenInformationUI(pInformationContent)
 function OpenAlertUI(pAlertContent)
 {
 	var parameter = pAlertContent;
-	var url = "/myoffice/ezCommunity/htm/ezAPRALERT.aspx";
+	var url = "/ezCommunity/ezAprAlert.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:207px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 }

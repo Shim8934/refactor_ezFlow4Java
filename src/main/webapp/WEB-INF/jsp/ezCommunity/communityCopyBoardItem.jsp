@@ -33,7 +33,7 @@
 		    		return;
 				}
    				
-    		CopyItem(selectedBoard);
+    			CopyItem(selectedBoard);
 			}
 
 			function cancel() {
@@ -56,11 +56,7 @@
 			   	for (i = 0; i < ItemIDList.split(";").length - 1; i++) {
 			    	destItemIDList += "{" + GetGUID().toUpperCase() + "};";
 			   	}
-			   	
-			   	alert(ItemIDList);
-			   	alert(BoardID);
-			   	alert(destItemIDList);
-			   	alert(pDestBoardID);
+
 			   	$.ajax({
 			   		type : "POST",
 			   		async : false,
@@ -73,25 +69,26 @@
 			   			destBoardID : pDestBoardID
 			   		},
 			   		success : function(result) {
-			   			if (result.indexOf("OK") > -1) {
+			   			if (result["ret"].indexOf("OK") > -1) {
 		 					alert("<spring:message code='ezCommunity.t1051' />");
 		 				} else {
-		 					alert("<spring:message code='ezCommunity.t1052' />" + result);
+		 					alert("<spring:message code='ezCommunity.t1052' />" + result["ret"]);
 		 				}
+			   			
+			   			try {
+		 			        window.opener.refresh_onclick();
+		 			    } catch (e) {
+		 			    }
+		 			    
+		 			    window.close();
 			   		}
 			   	});
-	
-// 				xmlhttp.open("POST", "/ezCommunity/copyItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardID + "&destItemIDList=" + destItemIDList + "&destBoardID=" + pDestBoardID, false);
-// 				xmlhttp.send();
-	
-// 				if (xmlhttp.responseText.indexOf("OK") > -1) {
-// 					alert("<spring:message code='ezCommunity.t1051' />");
-// 				} else {
-// 					alert("<spring:message code='ezCommunity.t1052' />" + xmlhttp.responseText);
-// 				}
 			}
 
 			function CheckIfCanWrite(pBoardID) {
+				var boardInfo;
+				var access = "";
+				
 				$.ajax({
 					type : "POST",
 					async : false,
@@ -100,36 +97,43 @@
 					data : { boardID	:	pBoardID, 
 						   },
 					success: function(result){
-						var boardInfo = result["boardInfo"];
-						var access = boardInfo["access_"];
-						
-						if(access != "-1") {
-							return true;
-						} else {
-							return false;
-						}
+						boardInfo = result["boardInfo"];
+						access = boardInfo["access_"];
 					},
 					error: function(e) {
 						alert("error");
-						return false;
 					}
 				});
+				
+				if(access != "-1") {
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 			function CheckIfAnonyBoard(pBoardID) {
-			    var xmlhttp2 = createXMLHttpRequest();
-			    xmlhttp2.open("POST", "aspx/CheckIfAnonyBoard.aspx?boardID=" + pBoardID, false);
-			    xmlhttp2.send();
-			
-			    var retval = "0";
-			    
-			    if (xmlhttp2.responseText.indexOf("anonyboard") > -1) {
-			    	retval = "1";
-			    }
-			    
-			    xmlhttp2 = null;
-			
-			    return retval;
+				var retval = '0';
+				
+				$.ajax({
+			   		type : "POST",
+			   		async : false,
+			   		url : "/ezCommunity/checkIfAnonyBoard.do",
+			   		dataType : "JSON",
+			   		data : {
+			   			boardID : pBoardID,
+			   		},
+			   		success : function(result) {
+			   			if (result["result"] == 'anonyboard') {
+		 					retval = '1';
+		 				}
+			   		},
+					error: function(e) {
+						alert("error");
+					}
+			   	});
+				
+				return retval;
 			}
 
 			window.onload = function () {
