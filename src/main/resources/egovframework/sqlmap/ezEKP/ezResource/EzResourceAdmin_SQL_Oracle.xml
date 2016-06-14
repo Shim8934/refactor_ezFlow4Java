@@ -12,7 +12,7 @@
 		<result property="brdNm2"					column="BRD_NM2"				columnIndex="4" 		nullValue="0"/>
 		<result property="brdGroup"					column="BRD_GROUP"				columnIndex="5"/>
 		<result property="brdGb"						column="BRD_GB"					columnIndex="6"/>
-		<result property="brdRef"						column="BRD_REF"					columnIndex="7"/>
+		<result property="brdRef"						column="BRD_REF"					columnIndex="7"			nullValue="0"/>
 		<result property="brdLevel"					column="BRD_LEVEL"				columnIndex="8"			nullValue="0"/>
 		<result property="brdStep"					column="BRD_STEP"				columnIndex="9"/>
 		<result property="brdPostTerm"				column="BRD_POSTTERM"		columnIndex="10"/>
