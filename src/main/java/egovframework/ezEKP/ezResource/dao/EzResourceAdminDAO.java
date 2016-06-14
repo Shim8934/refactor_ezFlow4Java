@@ -27,6 +27,10 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 		return  (List<ResGetClsAclListVO>) list("EzResourceAdminDAO.getClsAclList", map);
 	}
 	
+	public ResGetSubClsListVO getBrdInfo(Map<String, Object> map) {
+		return (ResGetSubClsListVO) select("EzResourceAdminDAO.getBrdInfo", map);	
+	}
+	
 	public int delResAcll(Map<String, Object> map) {
 		return delete("EzResourceAdminDAO.delResAcll", map);
 	}

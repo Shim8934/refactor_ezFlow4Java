@@ -137,6 +137,14 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 		ezResourceAdminDAO.delClsData(map);
 	}
 	
+	@Override
+	public ResGetSubClsListVO getBrdInfo(int brdID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDID", brdID);
+		map.put("v_PCOMPANYID", companyID);
+		return ezResourceAdminDAO.getBrdInfo(map);
+	}
+	
 	public boolean addClsData(String xmlStr) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		try {
@@ -162,6 +170,30 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 			return true;
 			
 		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean modifyClsData(String xmlStr) throws Exception {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String classGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
+			String deptID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
+			String deptNm = xmlRes.getElementsByTagName("DATA").item(2).getTextContent().trim();
+			String ownerID = xmlRes.getElementsByTagName("DATA").item(3).getTextContent().trim();
+			String ownerNm = xmlRes.getElementsByTagName("DATA").item(4).getTextContent().trim();
+			String ownerPos = xmlRes.getElementsByTagName("DATA").item(5).getTextContent().trim();
+			String ownerCall = xmlRes.getElementsByTagName("DATA").item(6).getTextContent().trim();
+			String brdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent().trim();
+			String brdExplain = xmlRes.getElementsByTagName("DATA").item(8).getTextContent().trim();
+			String accessNoty = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
+			String companyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
+			String brdNm2 = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
+			
+			modifyClsData(classGB, deptID, deptNm, ownerID, ownerNm, ownerPos, ownerCall, brdNm, brdExplain, accessNoty, companyID, brdNm2);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

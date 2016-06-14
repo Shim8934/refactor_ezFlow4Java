@@ -12,9 +12,13 @@ public interface EzResourceAdminService {
 	
 	public List<ResGetClsAclListVO> getClsAclList(String brdID, String companyID) throws Exception;
 	
+	public ResGetSubClsListVO getBrdInfo(int brdID, String companyID) throws Exception;
+	
 	public int delResAcll(String resID, String companyID) throws Exception;
 	
 	public boolean addClsData(String xmlStr) throws Exception;
+	
+	public boolean modifyClsData(String xmlStr) throws Exception;
 	
 	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany) throws Exception;
 	

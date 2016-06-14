@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -209,5 +210,59 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		} catch (Exception e) {
 		}
 		return commonUtil.convertDocumentToString(xmlRet);
+	}
+	
+	/**
+	 * 자원관리 일반설정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardListRegComBoard.do")
+	public String gwBoardListRegComBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String companyID = "";
+		ResGetSubClsListVO getBrdInfo = new ResGetSubClsListVO();
+		String langPrimary = "";
+		String langSecondary = "";
+		
+			try {
+				langPrimary = config.getProperty("config.lang_Primary1");
+				langSecondary = config.getProperty("config.lang_Secondary1");
+				
+				if (req.getParameter("brdID") != null) {
+					brdID = req.getParameter("brdID");
+				}
+				if (req.getParameter("selCompanyID") != null) {
+					companyID = req.getParameter("selCompanyID");
+				}
+				
+				getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID);
+				
+			} catch (Exception e) {
+
+			}
+
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("getBrdInfo", getBrdInfo);
+			model.addAttribute("brdID", brdID);
+			model.addAttribute("selCompanyID", companyID);
+			model.addAttribute("adminFg", "YES");
+			model.addAttribute("langPrimary", langPrimary);
+			model.addAttribute("langSecondary", langSecondary);
+		return "admin/ezResource/resGwBoardListRegComBoard";
+	}
+	
+	/**
+	 * 자원관리 일반설정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/callBrdMod.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callBrdMod(@RequestBody String xmlStr) throws Exception {
+		try {
+			boolean returnValue = ezResourceAdminService.modifyClsData(xmlStr);
+			return String.valueOf(returnValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }
