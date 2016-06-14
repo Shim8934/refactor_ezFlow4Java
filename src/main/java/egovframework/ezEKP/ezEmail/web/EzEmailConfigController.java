@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -261,10 +263,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
 		
-		String strResult = "";
+		String strResult = "Error";
 		
 		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
-			strResult = setMailForwardAddress(userEmail, forwardAddress);
+			try {				
+				InternetAddress InternetAddress = new InternetAddress(forwardAddress);
+				strResult = setMailForwardAddress(userEmail, InternetAddress.getAddress());
+			} catch (AddressException e) {
+			}
 		}
 		else {
 			strResult = "MINE";
