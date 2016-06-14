@@ -20,7 +20,7 @@ public class ResGetSubClsListVO {
 	/** 관련 게시판 내 순서*/
 	private int brdStep;
 	/** 게시 만료 기간*/
-	private int brdPositerm;
+	private int brdPostTerm;
 	/** 게시판 설명*/
 	private String brdExplain;
 	/** 게시판 접근 거부 메시지*/
@@ -116,11 +116,11 @@ public class ResGetSubClsListVO {
 	public void setBrdStep(int brdStep) {
 		this.brdStep = brdStep;
 	}
-	public int getBrdPositerm() {
-		return brdPositerm;
+	public int getbrdPostTerm() {
+		return brdPostTerm;
 	}
-	public void setBrdPositerm(int brdPositerm) {
-		this.brdPositerm = brdPositerm;
+	public void setbrdPostTerm(int brdPostTerm) {
+		this.brdPostTerm = brdPostTerm;
 	}
 	public String getBrdExplain() {
 		return brdExplain;
