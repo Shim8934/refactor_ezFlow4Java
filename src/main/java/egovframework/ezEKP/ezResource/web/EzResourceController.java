@@ -848,7 +848,7 @@ System.out.println("listCnt:"+listCnt);
 		
 		try {
 			//임시
-			useOCS = "YES";
+			useOCS = config.getProperty("config.USE_OCS");
 			userLang = userInfo.getLang();
 		} catch (Exception e) {
 			

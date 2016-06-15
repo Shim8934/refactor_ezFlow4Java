@@ -224,30 +224,30 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String langPrimary = "";
 		String langSecondary = "";
 		
-			try {
-				langPrimary = config.getProperty("config.lang_Primary1");
-				langSecondary = config.getProperty("config.lang_Secondary1");
+		try {
+			langPrimary = config.getProperty("config.lang_Primary1");
+			langSecondary = config.getProperty("config.lang_Secondary1");
 				
-				if (req.getParameter("brdID") != null) {
-					brdID = req.getParameter("brdID");
-				}
-				if (req.getParameter("selCompanyID") != null) {
-					companyID = req.getParameter("selCompanyID");
-				}
-				
-				getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID);
-				
-			} catch (Exception e) {
-
+			if (req.getParameter("brdID") != null) {
+				brdID = req.getParameter("brdID");
 			}
+			if (req.getParameter("selCompanyID") != null) {
+				companyID = req.getParameter("selCompanyID");
+			}
+				
+			getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID);
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-			model.addAttribute("userInfo", userInfo);
-			model.addAttribute("getBrdInfo", getBrdInfo);
-			model.addAttribute("brdID", brdID);
-			model.addAttribute("selCompanyID", companyID);
-			model.addAttribute("adminFg", "YES");
-			model.addAttribute("langPrimary", langPrimary);
-			model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("getBrdInfo", getBrdInfo);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("selCompanyID", companyID);
+		model.addAttribute("adminFg", "YES");
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
 		return "admin/ezResource/resGwBoardListRegComBoard";
 	}
 	
@@ -264,5 +264,127 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	/**
+	 * 자원관리 하위분류등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardListRegSubBoard.do")
+	public String gwBoardListRegSubBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "";
+		String brdNm = "";
+		String brdLevel = "";
+		String brdStep = "";
+		String brdGroup = "";
+		String selCompanyID = "";
+		String langPrimary = "";
+		String langSecondary = "";
+		
+		try {
+			langPrimary = config.getProperty("config.lang_Primary1");
+			langSecondary = config.getProperty("config.lang_Secondary1");
+				
+			if (req.getParameter("brdID") != null) {
+				brdID = req.getParameter("brdID");
+			}
+			if (req.getParameter("brdNm") != null) {
+				brdNm = req.getParameter("brdNm");
+			}
+			if (req.getParameter("brdLevel") != null) {
+				brdLevel = req.getParameter("brdLevel");
+			}
+			if (req.getParameter("brdStep") != null) {
+				brdStep = req.getParameter("brdStep");
+			}
+			if (req.getParameter("brdGroup") != null) {
+				brdGroup = req.getParameter("brdGroup");
+			}
+			if (req.getParameter("selCompanyID") != null) {
+				selCompanyID = req.getParameter("selCompanyID");
+			}
+		} catch (Exception e) {
+			
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("upNm", brdNm);
+		model.addAttribute("upLevel", brdLevel);
+		model.addAttribute("upStep", brdStep);
+		model.addAttribute("brdGroup", brdGroup);
+		model.addAttribute("selCompanyID", selCompanyID);
+		model.addAttribute("adminFg", "YES");
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		return "admin/ezResource/resGwBoardListRegSubBoard";
+	}
+	
+	/**
+	 * 자원관리 하위분류 등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/callBrdNew.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callBrdNew(@RequestBody String xmlStr) throws Exception {
+		try {
+			boolean returnValue = ezResourceAdminService.addClsData(xmlStr);
+			return String.valueOf(returnValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	/**
+	 * 자원관리 권한설정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardRightMain.do")
+	public String gwBoardPostRegRightMain(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		return "admin/ezResource/resGwBoardPostRegBoardRightMain";
+	}
+	
+	/**
+	 * 자원관리 권한설정 - 사용자추가 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do")
+	public String gwBoardPostRegRight(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useOCS = config.getProperty("config.USE_OCS");
+		model.addAttribute("useOCS", useOCS);
+		return "admin/ezResource/popup/resGwBoardPostRegBoardRight";
+	}
+	
+	/**
+	 * 자원관리 분류순서조정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardOrder.do")
+	public String gwBoardPostRegBoardOrder(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		
+		return "admin/ezResource/resGwBoardPostRegBoardOrder";
+	}
+	
+	/**
+	 * 자원관리 분류이동 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardMove.do")
+	public String gwBoardPostBoardMove(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		
+		return "admin/ezResource/resGwBoardPostBoardMove";
+	}
+	
+	/**
+	 * 자원관리 분류삭제 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardDel.do")
+	public String gwBoardPostBoardDel(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		
+		return "admin/ezResource/resGwBoardPostBoardDel";
 	}
 }
