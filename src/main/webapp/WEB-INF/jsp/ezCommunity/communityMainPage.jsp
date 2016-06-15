@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = null;
@@ -19,11 +20,11 @@
 	        var xmlhttp4 = null;
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
-	        var strlang = "<c:out value = '${strlang' />";
-	        var totalPage = "<c:out value = '${totalPage' />";
+	        var strlang = "<c:out value = '${userInfo.lang}' />";
+	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";
-	        var ch_CommunityAdmin = "<c:out value = '${userinfo.RollInfo.IndexOf("t=1")' />";
+
 	        var bestclick = false;
 	        var strLang1 = "<spring:message code = 'ezCommunity.t1379' />";
 	        var strLang2 = "<spring:message code = 'ezCommunity.t9' />";
@@ -33,8 +34,7 @@
 	        var strLang6 = "<spring:message code = 'ezCommunity.t1079' />";
 	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
-	        var pUse_IE11Browser = "<c:out value = '${Use_IE11Browser' />";
-	        var pNoneActiveX = "<c:out value = '${NoneActiveX}' />";
+	        var pUse_IE11Browser = "<c:out value = '${useIE11Browser}' />";
 	        
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -100,315 +100,317 @@
 	        }
 
 	        function get_newCommunity() {
-	            xmlhttp2 = createXMLHttpRequest();
+// 	            xmlhttp2 = createXMLHttpRequest();
 
-	            var xmlDom = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
+// 	            var xmlDom = createXmlDom();
+// 	            var objNode;
+// 	            createNodeInsert(xmlDom, objNode, "DATA");
 
-	            createNodeAndInsertText(xmlDom, objNode, "MODE", "NEW");
+// 	            createNodeAndInsertText(xmlDom, objNode, "MODE", "NEW");
 
-	            xmlhttp2.open("POST", "aspx/getbestnewcommunity.aspx", true);
-	            xmlhttp2.onreadystatechange = event_get_newCommunity;
-	            xmlhttp2.send(xmlDom);
+// 	            xmlhttp2.open("POST", "aspx/getbestnewcommunity.aspx", true);
+// 	            xmlhttp2.onreadystatechange = event_get_newCommunity;
+// 	            xmlhttp2.send(xmlDom);
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/getBestNewCommunity.do",
+					data : { mode   : "NEW"
+					},
+					success: function(result){
+						event_get_newCommunity(result);
+					}
+				});
 	        }
 
 	        function get_bestCommunity() {
-	            xmlhttp = createXMLHttpRequest();
+// 	            xmlhttp = createXMLHttpRequest();
 
-	            var xmlDom = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
+// 	            var xmlDom = createXmlDom();
+// 	            var objNode;
+// 	            createNodeInsert(xmlDom, objNode, "DATA");
 
-	            createNodeAndInsertText(xmlDom, objNode, "MODE", "BEST");
+// 	            createNodeAndInsertText(xmlDom, objNode, "MODE", "BEST");
 
-	            xmlhttp.open("POST", "aspx/getbestnewcommunity.aspx", true);
-	            xmlhttp.onreadystatechange = event_get_bestCommunity;
-	            xmlhttp.send(xmlDom);
+// 	            xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", true);
+// 	            xmlhttp.onreadystatechange = event_get_bestCommunity;
+// 	            xmlhttp.send(xmlDom);
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/getBestNewCommunity.do",
+					data : { mode   : "BEST"
+					},
+					success: function(result){
+						event_get_bestCommunity(result);
+					}
+				});
 	        }
 
-	        function event_get_newCommunity() {
-	            if (xmlhttp2 == null || xmlhttp2.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
-	                var xmldom = loadXMLString(xmlhttp2.responseText);
-	                var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
-	                
-	                for (var i = 0; i < bestcoummunity.length; i++) {
-	                    var dl = document.createElement("DL");
-	                    dl.className = "newCommunity_list";
+	        function event_get_newCommunity(result) {
+                var xmldom = loadXMLString(result);
+                var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
+                
+                for (var i = 0; i < bestcoummunity.length; i++) {
+                    var dl = document.createElement("DL");
+                    dl.className = "newCommunity_list";
 
-	                    var dt = document.createElement("DT");
+                    var dt = document.createElement("DT");
 
-	                    var img = document.createElement("IMG");
-	                    
-	                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
-	                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    } else {
-	                        img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    }
-	                    
-	                    img.style.width = "56px";
-	                    img.style.height = "40px";
+                    var img = document.createElement("IMG");
+                    
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                    } else {
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                    }
+                    
+                    img.style.width = "56px";
+                    img.style.height = "40px";
 
-	                    var span = document.createElement("SPAN");
-	                    span.className = "icon_newcommunity01";
+                    var span = document.createElement("SPAN");
+                    span.className = "icon_newcommunity01";
 
-	                    var img2 = document.createElement("IMG");
+                    var img2 = document.createElement("IMG");
 
-	                    img2.src = "/images/kr/community/icon_newCommunity04.png";
+                    img2.src = "/images/kr/community/icon_newCommunity04.png";
 
-	                    var dd = document.createElement("DD");
+                    var dd = document.createElement("DD");
 
-	                    var span2 = document.createElement("SPAN");
+                    var span2 = document.createElement("SPAN");
 
-	                    var copName = "";
-	                    
-	                    if (strlang == "" || strlang == "1") {
-	                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
-	                    } else {
-	                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
-	                    }
+                    var copName = "";
+                    
+                    if (strlang == "" || strlang == "1") {
+                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
+                    } else {
+                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
+                    }
 
-	                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
-	                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
-	                    span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
-	                    span2.style.cursor = "pointer";
-	                    span2.onclick = function () { move_cop(this); };
+                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
+                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
+                    span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
+                    span2.style.cursor = "pointer";
+                    span2.onclick = function () { move_cop(this); };
 
-	                    var dd2 = document.createElement("DD");
-	                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    var dd2 = document.createElement("DD");
+                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
 
-	                    span.appendChild(img2);
-	                    dt.appendChild(img);
-	                    dt.appendChild(span);
+                    span.appendChild(img2);
+                    dt.appendChild(img);
+                    dt.appendChild(span);
 
-	                    dd.appendChild(span2);
+                    dd.appendChild(span2);
 
-	                    dl.appendChild(dt);
-	                    dl.appendChild(dd);
-	                    dl.appendChild(dd2);
+                    dl.appendChild(dt);
+                    dl.appendChild(dd);
+                    dl.appendChild(dd2);
 
-	                    document.getElementById("newcomm").appendChild(dl);
-	                    xmlhttp2 = null;
-	                }
-	            }
+                    document.getElementById("newcomm").appendChild(dl);
+                }
 	        }
 
-	        function event_get_bestCommunity() {
-	            if (xmlhttp == null || xmlhttp.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-	                var xmldom = loadXMLString(xmlhttp.responseText);
+	        function event_get_bestCommunity(result) {
+                var xmldom = loadXMLString(result);
 
-	                var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
-	                
-	                for (var i = 0; i < bestcoummunity.length; i++) {
-	                    var dl = document.createElement("DL");
-	                    dl.className = "newCommunity_list";
+                var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
+                
+                for (var i = 0; i < bestcoummunity.length; i++) {
+                    var dl = document.createElement("DL");
+                    dl.className = "newCommunity_list";
 
-	                    var dt = document.createElement("DT");
+                    var dt = document.createElement("DT");
 
-	                    var img = document.createElement("IMG");
-	                    
-	                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
-	                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    } else {
-	                        img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    }
-	                    
-	                    img.style.width = "56px";
-	                    img.style.height = "40px";
+                    var img = document.createElement("IMG");
+                    
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                    } else {
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                    }
+                    
+                    img.style.width = "56px";
+                    img.style.height = "40px";
 
-	                    var span = document.createElement("SPAN");
-	                    span.className = "icon_newcommunity01";
+                    var span = document.createElement("SPAN");
+                    span.className = "icon_newcommunity01";
 
-	                    var img2 = document.createElement("IMG");
+                    var img2 = document.createElement("IMG");
 
-	                    var order = i + 1;
-	                    img2.src = "/images/kr/community/icon_newCommunity0" + order + ".png";
+                    var order = i + 1;
+                    img2.src = "/images/kr/community/icon_newCommunity0" + order + ".png";
 
-	                    var dd = document.createElement("DD");
+                    var dd = document.createElement("DD");
 
-	                    var span2 = document.createElement("SPAN");
-	                    var copName = "";
-	                    
-	                    if (strlang == "" || strlang == "1") {
-	                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
-	                    } else {
-	                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
-	                    }
-	                    
-	                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
-	                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
-	                    span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
-	                    span2.style.cursor = "pointer";
-	                    span2.onclick = function () { move_cop(this); };
+                    var span2 = document.createElement("SPAN");
+                    var copName = "";
+                    
+                    if (strlang == "" || strlang == "1") {
+                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
+                    } else {
+                        copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
+                    }
+                    
+                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
+                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
+                    span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
+                    span2.style.cursor = "pointer";
+                    span2.onclick = function () { move_cop(this); };
 
-	                    var dd2 = document.createElement("DD");
-	                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    var dd2 = document.createElement("DD");
+                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
 
-	                    span.appendChild(img2);
-	                    dt.appendChild(img);
-	                    dt.appendChild(span);
+                    span.appendChild(img2);
+                    dt.appendChild(img);
+                    dt.appendChild(span);
 
-	                    dd.appendChild(span2);
+                    dd.appendChild(span2);
 
-	                    dl.appendChild(dt);
-	                    dl.appendChild(dd);
-	                    dl.appendChild(dd2);
+                    dl.appendChild(dt);
+                    dl.appendChild(dd);
+                    dl.appendChild(dd2);
 
-	                    document.getElementById("bestcomm").appendChild(dl);
-	                    xmlhttp = null;
-	                }
-	            }
+                    document.getElementById("bestcomm").appendChild(dl);
+                }
+
 	        }
 
 	        function get_myCommunity() {
-	            xmlhttp3 = createXMLHttpRequest();
-
-	            var xmlDom = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
-
-	            createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-
-	            xmlhttp3.open("POST", "aspx/mycopnewboarditem.aspx", true);
-	            xmlhttp3.onreadystatechange = event_get_myCommunity;
-	            xmlhttp3.send(xmlDom);
+	        	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/myCopNewBoardItem.do",
+						data : { page   : CurPage
+						},
+						success: function(result){
+							event_get_myCommunity(result);
+						}
+				});
 	        }
 
-	        function event_get_myCommunity() {
-	            if (xmlhttp3 == null || xmlhttp3.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp3.status >= 200 && xmlhttp3.status < 300) {
-	                document.getElementById("mycommunity").innerHTML = "";
-	                var xmldom = loadXMLString(xmlhttp3.responseText);
-	                var table;
-	                
-	                if (SelectNodes(xmldom, "ITEM/DATA").length <= 0) {
-	                	return;
-	                }
-	                
-	                for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
-	                    var copno;
-	                    
-	                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO") != copno) {
-	                        copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
-	                        table = null;
-	                        var div = document.createElement("DIV");
-	                        div.className = "tabpartMycommunity";
+	        function event_get_myCommunity(result) {
+                document.getElementById("mycommunity").innerHTML = "";
+                var xmldom = loadXMLString(result);
+                var table;
+                
+                if (SelectNodes(xmldom, "ITEM/DATA").length <= 0) {
+                	return;
+                }
+                
+                for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
+                    var copno;
+                    
+                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO") != copno) {
+                        copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
+                        table = null;
+                        var div = document.createElement("DIV");
+                        div.className = "tabpartMycommunity";
 
-	                        var dl = document.createElement("DL");
-	                        dl.className = "tabpartMycommunityTitle";
-	                        var dt = document.createElement("DT");
+                        var dl = document.createElement("DL");
+                        dl.className = "tabpartMycommunityTitle";
+                        var dt = document.createElement("DT");
 
-	                        if (strlang == "" || strlang == "1") {
-	                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
-	                        } else {
-	                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
-	                        }
-	                        
-	                        var dd = document.createElement("DD");
-	                        var span = document.createElement("SPAN");
-	                        span.className = "icon_community01";
-	                        span.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_MEMBERCNT");
+                        if (strlang == "" || strlang == "1") {
+                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+                        } else {
+                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
+                        }
+                        
+                        var dd = document.createElement("DD");
+                        var span = document.createElement("SPAN");
+                        span.className = "icon_community01";
+                        span.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_MEMBERCNT");
 
-	                        var span2 = document.createElement("SPAN");
-	                        span2.className = "line";
+                        var span2 = document.createElement("SPAN");
+                        span2.className = "line";
 
-	                        var span3 = document.createElement("SPAN");
-	                        span3.className = "icon_community02";
-	                        span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMCNT");
+                        var span3 = document.createElement("SPAN");
+                        span3.className = "icon_community02";
+                        span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMCNT");
 
-	                        var span4 = document.createElement("SPAN");
-	                        span4.className = "line";
+                        var span4 = document.createElement("SPAN");
+                        span4.className = "line";
 
-	                        var span5 = document.createElement("SPAN");
-	                        span5.className = "btn_community01";
-	                        span5.setAttribute("code", copno);
-	                        span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
-	                        span5.onclick = function () { move_cop(this); };
+                        var span5 = document.createElement("SPAN");
+                        span5.className = "btn_community01";
+                        span5.setAttribute("code", copno);
+                        span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
+                        span5.onclick = function () { move_cop(this); };
 
-	                        var span6 = document.createElement("SPAN");
-	                        span6.innerHTML = strLang8;
+                        var span6 = document.createElement("SPAN");
+                        span6.innerHTML = strLang8;
 
-	                        span5.appendChild(span6);
+                        span5.appendChild(span6);
 
-	                        dd.appendChild(span);
-	                        dd.appendChild(span2);
-	                        dd.appendChild(span3);
-	                        dd.appendChild(span4);
-	                        dd.appendChild(span5);
+                        dd.appendChild(span);
+                        dd.appendChild(span2);
+                        dd.appendChild(span3);
+                        dd.appendChild(span4);
+                        dd.appendChild(span5);
 
-	                        dl.appendChild(dt);
-	                        dl.appendChild(dd);
+                        dl.appendChild(dt);
+                        dl.appendChild(dd);
 
-	                        div.appendChild(dl);
+                        div.appendChild(dl);
 
-	                        document.getElementById("mycommunity").appendChild(div);
+                        document.getElementById("mycommunity").appendChild(div);
 
-	                        div = null;
+                        div = null;
 
-	                        div = document.createElement("DIV");
-	                        div.className = "tabpartMycommunityList";
-	                        table = document.createElement("TABLE");
-	                        table.style.width = "100%";
-	                        table.style.border = "0";
-	                        div.appendChild(table);
-	                        document.getElementById("mycommunity").appendChild(div);
+                        div = document.createElement("DIV");
+                        div.className = "tabpartMycommunityList";
+                        table = document.createElement("TABLE");
+                        table.style.width = "100%";
+                        table.style.border = "0";
+                        div.appendChild(table);
+                        document.getElementById("mycommunity").appendChild(div);
+                    }
 
-	                    }
+                    var tr = document.createElement("TR");
 
-	                    var tr = document.createElement("TR");
+                    var td = document.createElement("TD");
+                    var td2 = document.createElement("TD");
+                    var td3 = document.createElement("TD");
+                    var td4 = document.createElement("TD");
 
-	                    var td = document.createElement("TD");
-	                    var td2 = document.createElement("TD");
-	                    var td3 = document.createElement("TD");
-	                    var td4 = document.createElement("TD");
+                    td.className = "text";
+                    var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
+                    var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
+                    var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
+                    var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
+                    td.style.cursor = "pointer";
+                    td.setAttribute("boardid", boardid);
+                    td.setAttribute("itemid", itemid);
+                    td.setAttribute("gubun", gubun);
+                    td.setAttribute("code", copno);
+                    td.onclick = function () { ItemRead_onclick(this); };
+                    
+                    if (strlang == "" || strlang == "1") {
+                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td2.className = "team";
+                        td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
+                        td3.className = "name";
+                        td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
+                    } else {
+                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td2.className = "team";
+                        td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME2");
+                        td3.className = "name";
+                        td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME2");
+                    }
+                    
+                    td4.className = "day";
+                    td4.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE").substring(0, 10);
 
-	                    td.className = "text";
-	                    var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
-	                    var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
-	                    var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
-	                    var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
-	                    td.style.cursor = "pointer";
-	                    td.setAttribute("boardid", boardid);
-	                    td.setAttribute("itemid", itemid);
-	                    td.setAttribute("gubun", gubun);
-	                    td.setAttribute("code", copno);
-	                    td.onclick = function () { ItemRead_onclick(this); };
-	                    
-	                    if (strlang == "" || strlang == "1") {
-	                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
-	                        td2.className = "team";
-	                        td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
-	                        td3.className = "name";
-	                        td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
-	                    } else {
-	                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
-	                        td2.className = "team";
-	                        td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME2");
-	                        td3.className = "name";
-	                        td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME2");
-	                    }
-	                    
-	                    td4.className = "day";
-	                    td4.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE").substring(0, 10);
-
-	                    tr.appendChild(td);
-	                    tr.appendChild(td2);
-	                    tr.appendChild(td3);
-	                    tr.appendChild(td4);
-	                    table.appendChild(tr);
-	                }
-	            }
+                    tr.appendChild(td);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    table.appendChild(tr);
+                }
 	        }
 
 	        var BlockSize = 10;
@@ -426,23 +428,23 @@
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -469,24 +471,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -1106,9 +1108,9 @@
 
 	            if (gubun == "3") {
 	                if (CrossYN() || pNoneActiveX == "YES") {
-	                    window.open("BoardItemView_Photo_Cross.aspx?ShowAdjacent=" + 1 + "&ItemID=" + pItemID + "&BoardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                } else {
-	                    window.open("BoardItemView_Photo.aspx?ShowAdjacent=" + 1 + "&ItemID=" + pItemID + "&BoardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                }
 	            } else {
 	                if (CrossYN() || pUse_IE11Browser == "CK" || pNoneActiveX == "YES") {
@@ -1131,7 +1133,7 @@
 	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
 	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
 
-	            xmlhttp.open("POST", "remote/GetACL.aspx", false);
+	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
 	            xmlhttp.send(xmldom);
 	            
 	            if (xmlhttp.responseText == "ERR" | clubgubun == "1") {
@@ -1145,7 +1147,7 @@
 
 	                    createNodeInsert(xmldom, objNode, "DATA");
 	                    createNodeAndInsertText(xmldom, objNode, "CODE", idx);
-	                    xmlhttp.open("POST", "aspx/Getisjoin.aspx", false);
+	                    xmlhttp.open("POST", "/ezCommunity/getIsJoin.do", false);
 	                    xmlhttp.send(xmldom);
 
 	                    if (xmlhttp.responseText == "FALSE") {
@@ -1158,9 +1160,9 @@
 	                        var type = val.getAttribute("type");
 
 	                        if (type == "2") {
-	                            window.open("/myOffice/ezcommunity/join_1.aspx?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                            window.open("/ezcommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                        } else if (type == "3") {
-	                            window.open("/myOffice/ezcommunity/join_2.aspx?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                            window.open("/ezcommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                        }
 	                    } else {
 	                        alert(strLang7);
@@ -1179,7 +1181,7 @@
 	            if (code == "0") {
 	                window.frames.location.href = window.frames.location.href;
 	            } else {
-	                var url = "Check_commhome.aspx?communityCD=" + code + "&UserLevel=1";
+	                var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&UserLevel=1";
 	                var wWeight = "1300";
 	                var wHeight = "900";
 

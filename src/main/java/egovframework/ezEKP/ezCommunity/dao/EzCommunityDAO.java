@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -723,7 +724,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void brdSaveBoardProperty(Map<String, Object> map) {
 		update("EzCommunityDAO.brdSaveBoardProperty", map);
-		
 	}
 
 	public CommunityCComCloseVO adminCommCloseOkGet1(String v_CODE) throws Exception {
@@ -753,5 +753,25 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void newItemDel(String v_PITEMID) throws Exception {
 		delete("EzCommunityDAO.newItemDel", v_PITEMID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> myCommunityGet(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.myCommunityGet", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> myCommunityItemGet(String v_COPNO) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityItemGet", v_COPNO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> mainPageGet5(String v_USERINFO_LANG) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.mainPageGet5", v_USERINFO_LANG);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> mainPageGet6(String v_USERINFO_LANG) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.mainPageGet6", v_USERINFO_LANG);
 	}
 }

@@ -23,9 +23,8 @@
 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 			var codeName = "<c:out value='${codeName }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
-			var newmemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
+			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
-// 			안쓰면 삭제
 			var xmlhttp;
 			var xmlhttp2;
 			

@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -2851,7 +2852,35 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         File destFile = new File(destFilePath);
         
         FileCopyUtils.copy(orgFile, destFile);
-}
+	}
+
+	@Override
+	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", id);
+		map.put("v_PSTART", pStart);
+		map.put("v_PEND", pEnd);
+		map.put("v_MODE", mode);
+		
+		return ezCommunityDAO.myCommunityGet(map);
+	}
+
+	@Override
+	public List<CommunityMyCommunityVO> myCommunityItemGet(String clubNo) throws Exception {
+		return ezCommunityDAO.myCommunityItemGet(clubNo);
+	}
+
+	@Override
+	public List<CommunityMyCommunityVO> mainPageGet5(String lang) throws Exception {
+		return ezCommunityDAO.mainPageGet5(lang);
+	}
+
+	@Override
+	public List<CommunityMyCommunityVO> mainPageGet6(String lang) throws Exception {
+		return ezCommunityDAO.mainPageGet6(lang);
+	}
+
 	/*public void SndMail(string code)
 	{
         try

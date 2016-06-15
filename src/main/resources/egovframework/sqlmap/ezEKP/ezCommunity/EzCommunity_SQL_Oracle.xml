@@ -23,6 +23,7 @@
 	<typeAlias alias="CommunityMemberInfoVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO"/>
 	<typeAlias alias="CommunityCOutApplicationVO"		type="egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO"/>
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
+	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -324,6 +325,18 @@
 		{CALL EZCOMMUNITY.EZSP_COPYITEM_GET2(#v_pOrgItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.myCommunityItemGet"			parameterClass="String"		resultClass="CommunityMyCommunityVO">
+		{CALL EZCOMMUNITY.EZSP_MYCOMMUNITYITEM_GET(#v_COPNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.mainPageGet5"					parameterClass="String"		resultClass="CommunityMyCommunityVO">
+		{CALL EZCOMMUNITY.EZSP_MAIN_PAGE_GET5(#v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.mainPageGet6"					parameterClass="String"		resultClass="CommunityMyCommunityVO">
+		{CALL EZCOMMUNITY.EZSP_MAIN_PAGE_GET6(#v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -430,6 +443,10 @@
 	
 	<procedure id="EzCommunityDAO.ezCommunityBaseGet3"			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET3(#v_C_CODE#, #v_C_CAT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.myCommunityGet"				parameterClass="Map"		resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_MYCOMMUNITY_GET(#v_USERID#, #v_PSTART#, #v_PEND#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.leftCommunityGet2"			parameterClass="String"		resultClass="String">
@@ -694,7 +711,7 @@
 	
 	<procedure id="EzCommunityDAO.newItemDel"					parameterClass="String">
 		{CALL EZCOMMUNITY.EZSP_NEWITEM_DEL(#v_PITEMID#)}
-	</procedure>
+	</procedure>	
 	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}

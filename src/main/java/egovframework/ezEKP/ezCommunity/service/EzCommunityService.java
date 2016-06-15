@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -369,6 +370,15 @@ public interface EzCommunityService {
 	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception;
 	
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception;
+
+	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception;
+
+	public List<CommunityMyCommunityVO> myCommunityItemGet(String clubNo) throws Exception;
+
+	public List<CommunityMyCommunityVO> mainPageGet5(String lang) throws Exception;
+	
+	public List<CommunityMyCommunityVO> mainPageGet6(String lang) throws Exception;
+
 	
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
