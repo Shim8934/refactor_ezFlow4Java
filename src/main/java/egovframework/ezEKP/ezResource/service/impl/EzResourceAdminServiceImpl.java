@@ -148,18 +148,18 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 	public boolean addClsData(String xmlStr) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		try {
-			String classGB = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(0).getTextContent().trim();
-			String deptID = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(1).getTextContent().trim();
-			String deptNm = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(2).getTextContent().trim();
-			String ownerID = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(3).getTextContent().trim();
-			String ownerNm = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(4).getTextContent().trim();
-			String ownerPos = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(5).getTextContent().trim();
-			String ownerCall = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(6).getTextContent().trim();
-			String brdNm = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(7).getTextContent().trim();
-			String brdExplain = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(8).getTextContent().trim();
-			String accessNoty = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(9).getTextContent().trim();
-			String companyID = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(10).getTextContent().trim();
-			String brdNm2 = xmlRes.getElementsByTagName("DATA").item(0).getChildNodes().item(11).getTextContent().trim();
+			String classGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
+			String deptID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
+			String deptNm = xmlRes.getElementsByTagName("DATA").item(2).getTextContent().trim();
+			String ownerID = xmlRes.getElementsByTagName("DATA").item(3).getTextContent().trim();
+			String ownerNm = xmlRes.getElementsByTagName("DATA").item(4).getTextContent().trim();
+			String ownerPos = xmlRes.getElementsByTagName("DATA").item(5).getTextContent().trim();
+			String ownerCall = xmlRes.getElementsByTagName("DATA").item(6).getTextContent().trim();
+			String brdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent().trim();
+			String brdExplain = xmlRes.getElementsByTagName("DATA").item(8).getTextContent().trim();
+			String accessNoty = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
+			String companyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
+			String brdNm2 = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 			String isCompany = "";
 			
 			if (xmlRes.getElementsByTagName("ISCOMPANY").getLength() > 0) {
