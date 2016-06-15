@@ -3,7 +3,7 @@
 			"ACL" : "gwBoardPostRegBoardRightMain.do",
 			"STEP": "gwBoardPostRegBoardOrder.do",
 			"MOV" : "gwBoardPostBoardMove.do",
-			"DEL" : "gwBoardpostBoardDel.do",
+			"DEL" : "gwBoardPostBoardDel.do",
 			"ITEMMOV" : "gwboardGetItemMoveSearch.do" ,
 			"ITEMUPDATE" : "gwboardGetItemMoveSearch.do",
 			"GONGJI" : "gwBoardPostRegGongjiBoard.do" };
@@ -31,8 +31,8 @@ function NavigateBrdAdmin_Res(pFlag) {
 		p_BrdNm = p_BrdNm.replace(rep, "chr(38)");
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
-		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + escape(p_BrdNm);
-		szUrl += "&brdLevel=" + encodeURI(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + p_BrdNm;
+		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
 		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
@@ -42,7 +42,6 @@ function NavigateBrdAdmin_Res(pFlag) {
 		alert("" + strLang1 + "");
 	}
 }
-
 
 function NavigateBrdAdminleft(pFlag)
 {
@@ -67,8 +66,8 @@ function NavigateBrdAdminleft(pFlag)
 		p_BrdNm = p_BrdNm.replace( rep, "chr(38)" );
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
-		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + escape(p_BrdNm);
-		szUrl += "&brdLevel=" + encodeURI(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + p_BrdNm;
+		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
 		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
