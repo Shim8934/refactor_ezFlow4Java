@@ -163,7 +163,7 @@
 			<input type="hidden" name="code" value="<c:out value = '${code}' />" > 
 			<input type="hidden" name="mode" value="<c:out value = '${mode}' />" >
 			<input type="hidden" name="cID" value="<c:out value = '${cID}' />" >
-			<input type="hidden" name="userName" value="<c:out value = '${userName}' />" >
+			<input type="hidden" name="userName" value="<c:out value = '${memberInfo.userName}' />" >
 			<!-- 표준모듈 (2007.03.15) 수정 : 마스터 위임 시 게시판 권한 위임 관련 수정 -->
 		    <input type="hidden" name="cNm" value="<c:out value = '${cNm}' />" >
 		</form>

@@ -4659,9 +4659,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				existOutList = true;
 			}
 		}
-		
-System.out.println(memberInfo.getUserName());
-System.out.println(memberInfoVO.getUserName());
+
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
 		model.addAttribute("cID", cID);
@@ -4786,11 +4784,20 @@ System.out.println(userName);
 	}
 	
 	/**
-	 * OpenAlertUI 화면호출 함수
+	 * OpenAlertUI 화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/ezAprAlert.do")
 	public String ezAprAlert () {
 		return "/ezCommunity/communityAprAlert";
+	}
+	
+	/**
+	 * 메인페이지화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/mainPage.do")
+	public String mainPage(@CookieValue("loginCookie") String loginCookie) {
+		
+		return "/ezCommunity/communityMainPage";
 	}
 }
 
