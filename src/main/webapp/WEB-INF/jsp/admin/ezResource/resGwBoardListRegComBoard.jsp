@@ -132,7 +132,7 @@
 				}
 
 				var rtnText = xmlHttp.responseText
-alert("rtnText:"+rtnText);
+
 				if (rtnText == "" || rtnText == "False"){
 					alert("2. <spring:message code="ezResource.t42" />");
 					return;

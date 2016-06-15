@@ -10,13 +10,13 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			g_BrdID  = "${brdID}";
-			g_UserID = "${userInfo}";
-			g_UserNm = "${userInfo}";
+			g_UserID = "${userInfo.id}";
+			g_UserNm = "${userInfo.displayName1}";
 
 			var L_UpLevel	= "${upLevel}";
 			var L_UpStep	= "${upStep}";
 			var L_BrdGroup	= "${brdGroup}";
-			var pCompanyID	= "${companyID}";
+			var pCompanyID	= "${selCompanyID}";
 			var sAdminfg	= "${adminFg}";
 
 			document.onselectstart = function () {
@@ -38,7 +38,7 @@
 			
 				var pParentClsID = g_BrdID;
 				var pMakerDeptID = "${userInfo.deptID}"; 
-				var pMakerDeptNm = "${userInfo.deptNm1}"
+				var pMakerDeptNm = "${userInfo.deptName1}"
 				var pMakerUserID = g_UserID;
 				var pMakerUserNm = g_UserNm;
 				var pMakerPosition = "${userInfo.title1}";
