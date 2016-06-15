@@ -57,7 +57,7 @@
 	                    break;
 	                case "MailEnv_div5":
 	                    if (CrossYN())
-	                        document.getElementById("MailEnv_ifrm").src = "mail_InboxRule_cross.aspx";
+	                        document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailInboxRule.do";
 	                    else
 	                        document.getElementById("MailEnv_ifrm").src = "mail_InboxRule.aspx";
 	                    break;

@@ -3,8 +3,10 @@ package egovframework.ezEKP.ezEmail.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -14,6 +16,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,6 +38,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -95,23 +100,23 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userIE11Browser = "";
 		String noneActiveX = "YES";
 		String blockedSenders = "";
-		
+
 		if ((request.getHeader("User-Agent").contains("rv:11") || request.getHeader("User-Agent").contains("Trident/7.0"))
 				&& config.getProperty("config.IE11EDITOR").equals("CK")) {
 			userIE11Browser = "CK";
 		}
-        
+
 		userEditor = config.getProperty("config.EDITOR");
 		blockedSenders = config.getProperty("config.BlockedSenders");
-		
+
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("blockedSenders", blockedSenders);
-		
+
 		return "ezEmail/mailConfig";
 	}
-	
+
 	/**
 	 * 메일 기본 환경설정 내부 화면 호출 함수
 	 */
@@ -119,7 +124,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
-		
+
 		String listCount = "";
 		String previewMode = "OFF";
 		String previewHListSize = "50";
@@ -129,7 +134,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String refreshInterval = "";
 		String keepDeleteLength = "";
 		String mailSendObject = "";
-		
+
 		listCount = mailGeneralVO.getListCount();
 		previewMode = mailGeneralVO.getPreviewMode();
 		previewHListSize = mailGeneralVO.getPreviewHList();
@@ -139,20 +144,20 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		refreshInterval = mailGeneralVO.getRefreshInterval();
 		keepDeleteLength = mailGeneralVO.getKeepDeleteLength();
 		mailSendObject = "";
-		
+
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
-		
+
 		//TODO: userinfo.DisplayName2 가져오기.
 		String pmailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
 		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
-		
+
 		String[] senderList = pmailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (String pSenderNM : senderList) {
 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
 		}
-		
+
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
 		model.addAttribute("previewHListSize", previewHListSize);
@@ -162,10 +167,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("refreshInterval", refreshInterval);
 		model.addAttribute("keepDeleteLength", keepDeleteLength);
 		model.addAttribute("mailSendObject", mailSendObject);
-		
+
 		return "ezEmail/mailGeneral";
 	}
-	
+
 	/**
 	 * 메일 환경 설정 저장 함수
 	 */
@@ -179,7 +184,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			Model model) throws Exception {
 		logger.debug("mailGeneralSave started");		
 		logger.debug("bodyData=" + bodyData);
-				
+
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String userId = doc.getElementsByTagName("USERID").item(0).getTextContent();
 		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
@@ -191,23 +196,23 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
 		String mailSenderNm = "";
-		
+
 		if (mode != null && mode.equals("ALL")) {
 			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
 		}
-		
+
 		logger.debug("userId=" + userId + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
-						+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
-						+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
-						+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
-						+ ",mailSenderNm=" + mailSenderNm
-						);
-		
+				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
+				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
+				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
+				+ ",mailSenderNm=" + mailSenderNm
+				);
+
 		String rtnValue= "OK";
-		
+
 		try {
 			MailGeneralVO mailGeneral = new MailGeneralVO();
-			
+
 			mailGeneral.setListCount(listCount);
 			mailGeneral.setRefreshInterval(refreshInterval);
 			mailGeneral.setKeepDeleteLength(keepDeleteLength);
@@ -217,18 +222,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewHList(previewHList);
 			mailGeneral.setPreviewHContent(previewHContent);	
 			mailGeneral.setMailSenderNm(mailSenderNm);
-			
+
 			ezEmailService.setMailGeneral(userId, mailGeneral);
 		}
 		catch (Exception e) {
 			rtnValue = "ERROR:" + e.getMessage();
 		}
-		
+
 		logger.debug("rtnValue=" + rtnValue);
-		
+
 		return rtnValue;
 	}
-	
+
 	/**
 	 * 메일 자동 전달 설정 화면 표시 함수
 	 */
@@ -238,11 +243,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userEmail = userId + "@" + config.getProperty("config.DomainName");
 
 		String forwardAddress = getMailForwardAddress(userEmail);
-		
+
 		model.addAttribute("userId", userId);
 		model.addAttribute("userEmail", userEmail);
 		model.addAttribute("forwardAddress", forwardAddress);
-		
+
 		return "ezEmail/mailAutoForward";
 	}
 
@@ -255,16 +260,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoForwardSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailAutoForwardSave started");		
 		logger.debug("bodyData=" + bodyData);
-	
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String userEmail = userId + "@" + config.getProperty("config.DomainName");
-		
+
 		Document doc = commonUtil.convertStringToDocument(bodyData);
-		
+
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
-		
+
 		String strResult = "Error";
-		
+
 		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
 			try {				
 				InternetAddress InternetAddress = new InternetAddress(forwardAddress);
@@ -275,14 +280,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		else {
 			strResult = "MINE";
 		}
-		
+
 		String returnData = "<RESULT>" + strResult + "</RESULT>";
-		
+
 		logger.debug("mailAutoForwardSave ended");
-		
+
 		return returnData;		
 	}
-	
+
 	/**
 	 * 메일 자동 전달 설정 함수
 	 */
@@ -292,76 +297,76 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailAutoForwardDelete started");		
 		logger.debug("bodyData=" + bodyData);
-	
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String userEmail = userId + "@" + config.getProperty("config.DomainName");
-				
+
 		String strResult = deleteMailForwardAddress(userEmail);
-		
+
 		String returnData = "<RESULT>" + strResult + "</RESULT>";
-		
+
 		logger.debug("mailAutoForwardDelete ended");
-		
+
 		return returnData;		
 	}	
-	
+
 	/**
 	 * JMocha Gateway Server에 메일 자동 전달 설정 요청을 보내는 함수
 	 */	
 	private String setMailForwardAddress(String userEmail, String forwardAddress) {
 		String result = "Error";
-		
+
 		try {
 			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
 			String forwardAddressParam = "forwardAddress=" + URLEncoder.encode(forwardAddress, "UTF-8");
 			String inputParams = userIdParam + "&" + forwardAddressParam;
-			
+
 			logger.debug("inputParams=" + inputParams);
-			
+
 			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setMailForwardAddress";
 			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-			
+
 			logger.debug("response=" + response);
-			
+
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
+
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * JMocha Gateway Server로부터 메일 자동 전달 설정을 읽는 함수
 	 */		
 	private String getMailForwardAddress(String userEmail) {
 		String result = "";
-		
+
 		try {
 			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
 			String inputParams = userIdParam;
-			
+
 			logger.debug("inputParams=" + inputParams);
-			
+
 			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getMailForwardAddress";
 			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-			
+
 			logger.debug("response=" + response);
-			
+
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
+
 				String resultCode = (String)responseObj.get("resultCode");
-				
+
 				if (resultCode.equalsIgnoreCase("OK")) {
 					JSONArray resultArray = (JSONArray)responseObj.get("result");
-					
+
 					if (resultArray != null && resultArray.size() > 0) {
 						result = (String)resultArray.get(0);
 					}
@@ -370,40 +375,40 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * JMocha Gateway Server에 메일 자동 전달 삭제 요청을 보내는 함수
 	 */	
 	private String deleteMailForwardAddress(String userEmail) {
 		String result = "Error";
-		
+
 		try {
 			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
 			String inputParams = userIdParam;
-			
+
 			logger.debug("inputParams=" + inputParams);
-			
+
 			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailForwardAddress";			
 			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-			
+
 			logger.debug("response=" + response);
-			
+
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
+
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
@@ -414,42 +419,42 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String signature2 = "";
 		String signature3 = "";
 		String serverName = "";
-		
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
-		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-		
-		if (mailSignatureVO != null) {
-            signState = mailSignatureVO.getUseFlag().trim();
-            signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent1();
-            signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent2();
-            signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent3();
-        } else {
-            signature1 = "<div>&nbsp;</div>";
-            signature2 = "<div>&nbsp;</div>";
-            signature3 = "<div>&nbsp;</div>";
 
-        }
-		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+
+		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+
+		if (mailSignatureVO != null) {
+			signState = mailSignatureVO.getUseFlag().trim();
+			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent1();
+			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent2();
+			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent3();
+		} else {
+			signature1 = "<div>&nbsp;</div>";
+			signature2 = "<div>&nbsp;</div>";
+			signature3 = "<div>&nbsp;</div>";
+
+		}
+
 		serverName = config.getProperty("config.ServerName");
-		
+
 		logger.debug("signState : " + signState);
 		logger.debug("signature1 : " + signature1);
 		logger.debug("signature2 : " + signature2);
 		logger.debug("signature3 : " + signature3);
 		logger.debug("serverName : " + serverName);
 		logger.debug("userId : " + userId);
-		
+
 		model.addAttribute("signState", signState);
 		model.addAttribute("signature1", signature1);
 		model.addAttribute("signature2", signature2);
 		model.addAttribute("signature3", signature3);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userId);
-		
+
 		return "ezEmail/mailSignatureCK";
 	}
-	
+
 	/**
 	 * 메일 서명관리 저장 실행 함수
 	 */
@@ -459,13 +464,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
 		Node tempNode = null;
-		
+
 		String pUserID = "";
 		String pUseFlag = "";
 		String pContent1 = "";
 		String pContent2 = "";
 		String pContent3 = "";
-		
+
 		if (root.getElementsByTagName("USERID") != null) {
 			tempNode = root.getElementsByTagName("USERID").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
@@ -496,13 +501,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pContent3 = tempNode.getTextContent();
 			}
 		}
-		
+
 		ezEmailService.setMailSignature(pUserID, pUseFlag, pContent1, pContent2, pContent3);
-		
+
 		return "";
 	}
-	
-	
+
+
 	/**
 	 * 메일 서명관리 ck에디터 이미지 업로드 호출 Method
 	 */
@@ -510,7 +515,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String ckImageUpload() {
 		return "ezEmail/ckImageUpload";
 	}
-	
+
 	/**
 	 * 메일 서명관리 ck에디터 업로드 화면 호출 Method
 	 */
@@ -522,37 +527,37 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String realPath = request.getServletContext().getRealPath("");
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
-		
+
 		File file = new File(realPath + filePath);
-        if (!file.exists()) {
-        	file.mkdir();
-        }
-		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+
 		filePath = filePath + commonUtil.separator + today;
 		file = new File(realPath + filePath);
-        if (!file.exists()) {
-        	file.mkdir();
-        }
-        
-        int width = 0;
+		if (!file.exists()) {
+			file.mkdir();
+		}
+
+		int width = 0;
 		int height = 0;
-		
+
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
+
 		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
-	
+
 		if (imageFile.exists()) {			
 			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
-		
+
 		model.addAttribute("imgPath", (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
-		
+
 		return "ezEmail/ckUpload";
 	}
-	
-	
+
+
 	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */
@@ -560,18 +565,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		List<MailDeleteVO> list = ezEmailService.getMailDelete(userId);
-		
+
 		for (MailDeleteVO vo : list) {
 			if (vo.getDeleteUnread().trim().equals("1")) {
 				vo.setDeleteUnread("checked");
 			}
 		}
-		
+
 		model.addAttribute("list", list);
-		
+
 		return "ezEmail/mailAutoDelete";
 	}
-	
+
 	/**
 	 * 메일 편지함선택 화면 호출 함수
 	 */
@@ -579,45 +584,312 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailSelectFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailSelectFolder";
 	}
-	
+
 	/**
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
 	@ResponseBody
 	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
+
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
 		String expireTimeStr = request.getParameter("expiretime") == null ? "" : request.getParameter("expiretime");
 		int expireTime = expireTimeStr.equals("") ? 0 : Integer.parseInt(expireTimeStr);
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-		
+
 		ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
-		
+
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
 		return "";
 	}
-	
+
 	/**
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
 	@ResponseBody
 	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
+
 		String itemSeqStr = request.getParameter("itemseq") == null ? "" : request.getParameter("itemseq");
 		int itemSeq = itemSeqStr.equals("") ? 0 : Integer.parseInt(itemSeqStr);
-		
+
 		ezEmailService.deleteMailDelete(userId, itemSeq);
-		
+
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
 		return "";
 	}
-	
+
+	/**
+	 * 메일 자동분류 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailInboxRule.do")
+	public String mailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailInboxRule";
+	}
+
+	/**
+	 * 메일 자동분류 분류추가 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailNewInboxRule.do")
+	public String mailNewInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailNewInboxRule";
+	}
+
+	/**
+	 * 메일 자동분류 분류추가 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailSetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+
+		String mode = request.getParameter("mode");
+
+		StringBuilder sb = new StringBuilder();
+
+		Document doc = commonUtil.convertRequestToDocument(request);
+		String displayName = doc.getElementsByTagName("NAME").item(0).getTextContent();
+		sb.append("displayName=" + URLEncoder.encode(displayName, "UTF-8"));
+
+		userId = userId + "@" + config.getProperty("config.DomainName");
+		sb.append("&userId=" + URLEncoder.encode(userId, "UTF-8"));
+
+		//condition
+		Node condition = doc.getElementsByTagName("CONDITION").item(0);
+		NodeList conRows = condition.getChildNodes();
+		for (int i=0; i<conRows.getLength(); i++) {
+			Node row = conRows.item(i);
+			NodeList rowChilds = row.getChildNodes();
+
+			for (int j=0; j<rowChilds.getLength(); j++) {
+				if (rowChilds.item(j).getNodeName().equals("CONKIND")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						break;
+					}
+					sb.append("&case=condition");
+					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+				} else if (rowChilds.item(j).getNodeName().equals("CONVALUE")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						sb.append("&value=");
+					} else {
+						sb.append("&value=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+					}
+				}
+			}
+		}
+
+		//action
+		Node action = doc.getElementsByTagName("ACTION").item(0);
+		NodeList actRows = action.getChildNodes();
+		for (int i=0; i<actRows.getLength(); i++) {
+			Node row = actRows.item(i);
+			NodeList rowChilds = row.getChildNodes();
+
+			for (int j=0; j<rowChilds.getLength(); j++) {
+				if (rowChilds.item(j).getNodeName().equals("ACTKIND")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						break;
+					}
+					sb.append("&case=action");
+					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+				} else if (rowChilds.item(j).getNodeName().equals("ACTVALUE") || rowChilds.item(j).getNodeName().equals("URL")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						sb.append("&value=");
+					} else {
+						sb.append("&value=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+					}
+				}
+			}
+		}
+
+		//exception
+		Node exception = doc.getElementsByTagName("EXCEPTION").item(0);
+		NodeList exptRows = exception.getChildNodes();
+		for (int i=0; i<exptRows.getLength(); i++) {
+			Node row = exptRows.item(i);
+			NodeList rowChilds = row.getChildNodes();
+
+			for (int j=0; j<rowChilds.getLength(); j++) {
+				if (rowChilds.item(j).getNodeName().equals("EXPTKIND")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						break;
+					}
+					sb.append("&case=exception");
+					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+				} else if (rowChilds.item(j).getNodeName().equals("EXPTVALUE")) {
+					if (rowChilds.item(j).getTextContent().equals("null")) {
+						sb.append("&value=");
+					} else {
+						sb.append("&value=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
+					}
+				}
+			}
+		}
+
+		String inputParams = sb.toString();
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = "";
+
+		if (mode.equalsIgnoreCase("NEW")) {
+			strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setInboxRule", inputParams);
+		} else if (mode.equalsIgnoreCase("DENIAL")) {
+			//수신거부
+		} else {
+			//자동분류 수정
+		}
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+
+		String returnValue = "Error";
+		if (object.get("resultCode") != null) {
+			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
+		}
+
+		return returnValue;
+	}
+
+	/**
+	 * 메일 자동분류 분류추가 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String resultValue = "Error";
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		userId = userId + "@" + config.getProperty("config.DomainName");
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInboxRule", inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		if (object.get("result") != null) {
+			JSONArray array = (JSONArray)object.get("result");
+
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			Document doc = docBuilder.newDocument();
+			Element data = doc.createElement("DATA");
+			doc.appendChild(data);
+
+			Map<Integer, Element> ruleMap = new HashMap<Integer, Element>();
+
+			for (int i=0; i<array.size(); i++) {
+				JSONObject obj = (JSONObject)array.get(i);
+				
+				if (!ruleMap.containsKey(Integer.parseInt(obj.get("ruleId").toString()))) {
+					Element row = doc.createElement("ROWS");
+					data.appendChild(row);
+					
+					Element id = doc.createElement("ID");
+					id.appendChild(doc.createCDATASection(obj.get("ruleId").toString()));
+					row.appendChild(id);
+					
+					Element name = doc.createElement("NAME");
+					name.appendChild(doc.createCDATASection(obj.get("ruleName").toString()));
+					row.appendChild(name);
+					
+					Element use = doc.createElement("USE");
+					use.appendChild(doc.createCDATASection(obj.get("isUse").toString()));
+					row.appendChild(use);
+					
+					Element priority = doc.createElement("PRIORITY");
+					priority.appendChild(doc.createCDATASection(obj.get("priority").toString()));
+					row.appendChild(priority);
+					
+					Element condition = doc.createElement("CONDITION");
+					row.appendChild(condition);
+					
+					Element action = doc.createElement("ACTION");
+					row.appendChild(action);
+					
+					Element exception = doc.createElement("EXCEPTION");
+					row.appendChild(exception);
+					
+					ruleMap.put(Integer.parseInt(obj.get("ruleId").toString()), row);
+				}
+				
+				Element tRow = ruleMap.get(Integer.parseInt(obj.get("ruleId").toString()));
+				Element tCondition = null;
+				Element tAction = null;
+				Element tException = null;
+				
+				NodeList rowChilds = tRow.getChildNodes();
+				
+				for (int j=0; j<rowChilds.getLength(); j++) {
+					if (rowChilds.item(j).getNodeName().equalsIgnoreCase("CONDITION")) {
+						tCondition = (Element)rowChilds.item(j);
+					} else if (rowChilds.item(j).getNodeName().equalsIgnoreCase("ACTION")) {
+						tAction = (Element)rowChilds.item(j);
+					} else if (rowChilds.item(j).getNodeName().equalsIgnoreCase("EXCEPTION")) {
+						tException = (Element)rowChilds.item(j);
+					}
+				}
+				
+				if (obj.get("case").toString().equalsIgnoreCase("CONDITION")) {
+					//TODO: DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
+					if (obj.get("kind").toString().equalsIgnoreCase("SUBJECT") || obj.get("kind").toString().equalsIgnoreCase("BODY")) {
+						Element kind = doc.createElement("KIND");
+						kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
+						tCondition.appendChild(kind);
+						
+						Element values = doc.createElement("VALUES");
+						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						tCondition.appendChild(values);
+						
+					} else {
+						
+					}
+				} else if (obj.get("case").toString().equalsIgnoreCase("ACTION")) {
+					//TODO: DELETE, MOVE, COPY, READ, REDIRECTION, FORWARD, IMPORTANCE
+					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
+					if (obj.get("kind").toString().equalsIgnoreCase("MOVE")) {
+						Element kind = doc.createElement("KIND");
+						kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
+						tAction.appendChild(kind);
+						
+						Element folderId = doc.createElement("FOLDERID");
+						folderId.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						tAction.appendChild(folderId);
+						
+						Element folderName = doc.createElement("FOLDERNAME");
+						
+						String folderNameStr = (String)obj.get("value");
+						if (folderNameStr.equals(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+							folderNameStr = egovMessageSource.getMessage("ezEmail.t99000025", locale);
+						}
+						if (folderNameStr.lastIndexOf(".") > -1) {
+							folderNameStr = folderNameStr.substring(folderNameStr.lastIndexOf("."));
+						}
+						folderName.appendChild(doc.createCDATASection(folderNameStr));
+						tAction.appendChild(folderName);
+						
+						Element values = doc.createElement("VALUES");
+						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						tAction.appendChild(values);
+						
+					} else {
+						
+					}
+				} else if (obj.get("case").toString().equalsIgnoreCase("EXCEPTION")) {
+					//TODO: DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
+				}
+			}
+			
+			resultValue = commonUtil.convertDocumentToString(doc);
+		}
+		
+		return resultValue;
+	}
+
 }

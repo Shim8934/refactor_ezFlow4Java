@@ -24,6 +24,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -784,15 +786,14 @@ public class EzEmailMailListController {
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setMailReject", inputParams);
-		JsonReader reader = null;
-		reader = Json.createReader(new StringReader(strJson));
-        JsonObject jo = reader.readObject();
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
         
-        if (jo.get("resultCode") != null) {
-        	returnData = "<DATA><![CDATA[" + jo.get("resultCode").toString().replaceAll("\"","") + "]]></DATA>";
+        if (object.get("resultCode") != null) {
+        	returnData = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
         }
-        
-        reader.close();
         
 		return returnData;
 	}

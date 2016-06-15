@@ -23,6 +23,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -406,19 +409,18 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			logger.debug("inputParams=" + inputParams);
 			
 			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail", inputParams);
-			JsonReader reader = null;
-			reader = Json.createReader(new StringReader(strJson));
-	        JsonObject jo = reader.readObject();
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
 	        
-	        if (jo.get("result") != null) {
-	        	JsonArray result = (JsonArray)jo.get("result");
-	        	rValue = new String[result.size()];
-	        	for (int i=0; i<result.size(); i++) {
-	        		rValue[i] = result.get(i).toString().replaceAll("\"", "");
+	        if (object.get("result") != null) {
+	        	JSONArray array = (JSONArray)object.get("result");
+	        	rValue = new String[array.size()];
+	        	for (int i=0; i<array.size(); i++) {
+	        		rValue[i] = array.get(i).toString();
 	        	}
 	        }
 	        
-	        reader.close();
         
 		} catch (Exception e) {
 			e.printStackTrace();
