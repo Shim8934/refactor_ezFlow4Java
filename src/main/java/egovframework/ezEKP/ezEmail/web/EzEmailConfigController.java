@@ -673,7 +673,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
 						break;
 					}
-					sb.append("&case=condition");
+					sb.append("&type=condition");
 					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
 				} else if (rowChilds.item(j).getNodeName().equals("CONVALUE")) {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
@@ -697,7 +697,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
 						break;
 					}
-					sb.append("&case=action");
+					sb.append("&type=action");
 					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
 				} else if (rowChilds.item(j).getNodeName().equals("ACTVALUE") || rowChilds.item(j).getNodeName().equals("URL")) {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
@@ -721,7 +721,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
 						break;
 					}
-					sb.append("&case=exception");
+					sb.append("&type=exception");
 					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent(), "UTF-8"));
 				} else if (rowChilds.item(j).getNodeName().equals("EXPTVALUE")) {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
@@ -763,7 +763,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String resultValue = "Error";
+		String returnValue = "Error";
 		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
@@ -836,9 +836,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					}
 				}
 				
-				if (obj.get("case").toString().equalsIgnoreCase("CONDITION")) {
-					//TODO: DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
-					if (obj.get("kind").toString().equalsIgnoreCase("SUBJECT") || obj.get("kind").toString().equalsIgnoreCase("BODY")) {
+				if (obj.get("type").toString().equalsIgnoreCase("CONDITION")) {
+					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
 						tCondition.appendChild(kind);
@@ -847,13 +846,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
 						tCondition.appendChild(values);
 						
-					} else {
-						
-					}
-				} else if (obj.get("case").toString().equalsIgnoreCase("ACTION")) {
-					//TODO: DELETE, MOVE, COPY, READ, REDIRECTION, FORWARD, IMPORTANCE
+				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION")) {
+					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
-					if (obj.get("kind").toString().equalsIgnoreCase("MOVE")) {
+					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("READ")
+							|| obj.get("kind").toString().equalsIgnoreCase("IMPORTANCE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
+							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD")) {
+						Element kind = doc.createElement("KIND");
+						kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
+						tAction.appendChild(kind);
+						
+						Element values = doc.createElement("VALUES");
+						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						tAction.appendChild(values);
+						
+					} else if (obj.get("kind").toString().equalsIgnoreCase("MOVE") || obj.get("kind").toString().equalsIgnoreCase("COPY")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
 						tAction.appendChild(kind);
@@ -869,27 +876,55 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 							folderNameStr = egovMessageSource.getMessage("ezEmail.t99000025", locale);
 						}
 						if (folderNameStr.lastIndexOf(".") > -1) {
-							folderNameStr = folderNameStr.substring(folderNameStr.lastIndexOf("."));
+							folderNameStr = folderNameStr.substring(folderNameStr.lastIndexOf(".")+1);
 						}
 						folderName.appendChild(doc.createCDATASection(folderNameStr));
 						tAction.appendChild(folderName);
 						
 						Element values = doc.createElement("VALUES");
-						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						values.appendChild(doc.createCDATASection(obj.get("kind").toString()));
 						tAction.appendChild(values);
-						
-					} else {
-						
 					}
-				} else if (obj.get("case").toString().equalsIgnoreCase("EXCEPTION")) {
-					//TODO: DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
+				} else if (obj.get("type").toString().equalsIgnoreCase("EXCEPTION")) {
+					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
+					Element kind = doc.createElement("KIND");
+					kind.appendChild(doc.createCDATASection(obj.get("kind").toString()));
+					tException.appendChild(kind);
+					
+					Element values = doc.createElement("VALUES");
+					values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+					tException.appendChild(values);
 				}
 			}
 			
-			resultValue = commonUtil.convertDocumentToString(doc);
+			returnValue = commonUtil.convertDocumentToString(doc);
 		}
 		
-		return resultValue;
+		return returnValue;
 	}
 
+	/**
+	 * 메일 자동분류 분류추가 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailDeleteInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "Error";
+		
+		Document doc = commonUtil.convertRequestToDocument(request);
+		String ruleId = doc.getElementsByTagName("RULEID").item(0).getTextContent();
+		
+		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteInboxRule", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode") != null) {
+			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
+		}
+
+		return returnValue;
+	}
+	
 }

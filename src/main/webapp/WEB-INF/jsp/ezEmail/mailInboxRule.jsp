@@ -34,7 +34,7 @@
 		        _RowObject = null;
 		        document.getElementById("ContentDescription").innerHTML = "";
 		        Xmlhttp = createXMLHttpRequest();
-		        Xmlhttp.open("POST", "../remote/mail_get_inboxRule.aspx", true);
+		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
 		        Xmlhttp.send("");  
 		    }
@@ -430,13 +430,13 @@
 		            return;
 		        }
 		        XmlhttpDelete = createXMLHttpRequest();
-		        XmlhttpDelete.open("POST", "../remote/mail_delete_inboxRule.aspx", true);
+		        XmlhttpDelete.open("POST", "/ezEmail/mailDeleteInboxRule.do", true);
 		        XmlhttpDelete.onreadystatechange = event_DeleteRuleComplite;
 		        XmlhttpDelete.send("<DATA><RULEID>" + _RowObject.getAttribute("_itemid") + "</RULEID></DATA>");
 		        Rule_Reload();
 		    }
 		    function event_DeleteRuleComplite() {
-		        if (XmlhttpDelete == null || XmlhttpDelete.readystate != 4)
+		        if (XmlhttpDelete == null || XmlhttpDelete.readyState != 4)
 		            return;
 		        if (XmlhttpDelete.status >= 200 && XmlhttpDelete.status < 300) {
 		
