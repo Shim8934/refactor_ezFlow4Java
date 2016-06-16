@@ -473,16 +473,15 @@
 		            createNodeAndInsertText(Xmldom, objNode, "STATUS", "N");
 		
 		        XmlhttpStatus = createXMLHttpRequest(); 
-		        XmlhttpStatus.open("POST", "../remote/mail_setrule_status.aspx", true);
+		        XmlhttpStatus.open("POST", "/ezEmail/mailSetRuleStatus.do", true);
 		        XmlhttpStatus.onreadystatechange = event_statusComplite;
 		        XmlhttpStatus.send(Xmldom);
 		    }
 		    function event_statusComplite() {
-		        if (XmlhttpStatus == null || XmlhttpStatus.readystate != 4)
+		        if (XmlhttpStatus == null || XmlhttpStatus.readyState != 4)
 		            return;
 		        if (XmlhttpStatus.status >= 200 && XmlhttpStatus.status < 300) {
-		
-		            if (XmlhttpStatus.responseXML.text == "OK")
+		            if (XmlhttpStatus.responseXML.getElementsByTagName("DATA")[0].textContent == "OK")
 		            { }
 		            else
 		                alert(strLang217);
@@ -499,7 +498,7 @@
 		        createNodeAndInsertText(Xmldom, objNode, "BRULEID", B_itemid);
 		        createNodeAndInsertText(Xmldom, objNode, "BPRIORITY", A_priority);
 		        var XmlhttpPriority = createXMLHttpRequest();
-		        XmlhttpPriority.open("POST", "../remote/mail_set_rulepriority.aspx", false);
+		        XmlhttpPriority.open("POST", "/ezEmail/mailSetRulePriority.do", false);
 		        XmlhttpPriority.send(Xmldom);
 		        if (navigator.userAgent.indexOf("MSIE") != -1) {
 		            if (XmlhttpPriority.responseXML.text == "OK") {

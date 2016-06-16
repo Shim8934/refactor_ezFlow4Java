@@ -642,7 +642,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 자동분류 분류추가 실행 함수
+	 * 메일 자동분류 분류추가/수정 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -758,7 +758,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 자동분류 분류추가 실행 함수
+	 * 메일 자동분류 분류 리스트 추출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -904,7 +904,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 자동분류 분류추가 실행 함수
+	 * 메일 자동분류 분류삭제 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -927,4 +927,61 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
+	/**
+	 * 메일 자동분류 우선순위 변경 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailSetRulePriority(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "Error";
+		
+		Document doc = commonUtil.convertRequestToDocument(request);
+		String aRuleId = doc.getElementsByTagName("ARULEID").item(0).getTextContent();
+		String aPriority = doc.getElementsByTagName("APRIORITY").item(0).getTextContent();
+		String bRuleId = doc.getElementsByTagName("BRULEID").item(0).getTextContent();
+		String bPriority = doc.getElementsByTagName("BPRIORITY").item(0).getTextContent();
+		
+		String inputParams = "aRuleId=" + URLEncoder.encode(aRuleId, "UTF-8");
+		inputParams += "&aPriority=" + URLEncoder.encode(aPriority, "UTF-8");
+		inputParams += "&bRuleId=" + URLEncoder.encode(bRuleId, "UTF-8");
+		inputParams += "&bPriority=" + URLEncoder.encode(bPriority, "UTF-8");
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRulePriority", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode") != null) {
+			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
+		}
+
+		return returnValue;
+	}
+	
+	/**
+	 * 메일 자동분류 사용여부 변경 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailSetRuleStatus(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "Error";
+		
+		Document doc = commonUtil.convertRequestToDocument(request);
+		String ruleId = doc.getElementsByTagName("RULEID").item(0).getTextContent();
+		String status = doc.getElementsByTagName("STATUS").item(0).getTextContent();
+		
+		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
+		inputParams += "&status=" + URLEncoder.encode(status, "UTF-8");
+
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRuleStatus", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode") != null) {
+			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
+		}
+
+		return returnValue;
+	}
 }
