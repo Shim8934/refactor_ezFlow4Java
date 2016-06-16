@@ -35,29 +35,42 @@
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    
 		    $(function () {
-		        xmlhttp = createXMLHttpRequest();
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/commHome/commHomeInfo.do",
+					data : { code   : code
+					},
+					success: function(result){
+						event_get_commhomeinfo(result);
+					}
+				});
+		        
 
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "CODE", code);
+// 		        xmlhttp2 = createXMLHttpRequest();
 
-		        xmlhttp.open("POST", "/ezCommunity/commHome/commHomeInfo.do", true);
+// 		        var xmlDom = createXmlDom();
+// 		        var objNode;
+// 		        createNodeInsert(xmlDom, objNode, "DATA");
+// 		        createNodeAndInsertText(xmlDom, objNode, "CODE", code);
 
-		        xmlhttp.onreadystatechange = event_get_commhomeinfo;
-		        xmlhttp.send(xmlDom);
+// 		        xmlhttp2.open("POST", "/ezCommunity/commHome/commHomeBoardInfo.do", true);
 
-		        xmlhttp2 = createXMLHttpRequest();
-
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "CODE", code);
-
-		        xmlhttp2.open("POST", "/ezCommunity/commHome/commHomeBoardInfo.do", true);
-
-		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
-		        xmlhttp2.send(xmlDom);
+// 		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
+// 		        xmlhttp2.send(xmlDom);
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
+					data : { code   : code
+					},
+					success: function(result){
+						event_get_homeboardinfo(result);
+					}
+				});
 
 		        var treedom = loadXMLString(treedate);
 
@@ -91,80 +104,76 @@
 		        }
 		    });
 		    
-		    function event_get_commhomeinfo() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) {
-		            return;
-		        }
-		        if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-		            var xmldom = loadXMLString(xmlhttp.responseText);
-		            
-		            var _img = document.createElement("img");
-		            _img.id = "coplogo";
-		            _img.style.width = "894px";
-		            _img.style.height = "100px";
+		    function event_get_commhomeinfo(result) {
+	            var xmldom = loadXMLString(result);
+	            
+	            var _img = document.createElement("img");
+	            _img.id = "coplogo";
+	            _img.style.width = "894px";
+	            _img.style.height = "100px";
 
-		            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {
-		                _img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
-		                //document.getElementById("coplogo").src = "/images/default_logo.jpg";
-		            } else {
-		                _img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" +  SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
-		            }
-		            
-		            document.getElementById("homeimg").appendChild(_img);
+	            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {
+	                _img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
+	                //document.getElementById("coplogo").src = "/images/default_logo.jpg";
+	            } else {
+	                _img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" +  SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO");
+	            }
+	            
+	            document.getElementById("homeimg").appendChild(_img);
 
-		            if (strlang == "" || strlang == "1") {
-		                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
-		                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
-		            } else {
-		                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
-		                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
-		            }
+	            if (strlang == "" || strlang == "1") {
+	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
+	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
+	            } else {
+	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
+	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
+	            }
 
-		            document.getElementById("mastericon").onclick = function () { openInfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
-		            document.getElementById("mastername").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERNAME");
-		            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
-		            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
-		            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
-		            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
+	            document.getElementById("mastericon").onclick = function () { openInfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
+	            document.getElementById("mastername").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERNAME");
+	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
+	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
+	            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
 
-		            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
+	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
-		            var _img = document.createElement("img");
-		            if (userImage != "") {
-		                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
-		            } else {
-		                _img.src = "/images/OrganTree/porson_noimg.gif";
-		            }
-		            
-		            _img.style.width = "51px";
-		            _img.style.height = "54px";
+	            var _img = document.createElement("img");
+	            if (userImage != "") {
+	                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
+	            } else {
+	                _img.src = "/images/OrganTree/porson_noimg.gif";
+	            }
+	            
+	            _img.style.width = "51px";
+	            _img.style.height = "54px";
 
-		            document.getElementById("pic").appendChild(_img);
-					var sConfirmType = "";
-					
-		            switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBCONFIRMTYPE").trim()) {
-		                case "2":
-		                    sConfirmType = "<spring:message code='ezCommunity.t699' />";
+	            document.getElementById("pic").appendChild(_img);
+				var sConfirmType = "";
+				
+	            switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBCONFIRMTYPE").trim()) {
+	                case "2":
+	                    sConfirmType = "<spring:message code='ezCommunity.t699' />";
+	                break;
+	            case "3":
+	                sConfirmType = "<spring:message code='ezCommunity.t14' />";
+	                break;
+	        	}
+	            
+	        	switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBGUBUN").trim()) {
+		            case "1":
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t701' />";
+		                break;
+		            case "2":
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + sConfirmType;
 		                break;
 		            case "3":
-		                sConfirmType = "<spring:message code='ezCommunity.t14' />";
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + sConfirmType;
 		                break;
-		        	}
-		            
-		        	switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBGUBUN").trim()) {
-			            case "1":
-			                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t701' />";
-			                break;
-			            case "2":
-			                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + sConfirmType;
-			                break;
-			            case "3":
-			                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + sConfirmType;
-			                break;
-		        	}
-		        	
-		        	document.getElementById("copdesc").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC");
-		        }
+	        	}
+	        	
+	        	document.getElementById("copdesc").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC");
+
 		    }
 		    
 		    function openInfo(userid) {
@@ -557,254 +566,249 @@
 		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&codeName=" + codeName + "&num=" + num, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		    }
 		    
-		    function event_get_homeboardinfo() {
-		        if (xmlhttp2 == null || xmlhttp2.readyState != 4) {
-		            return;
-		        }
-		        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
-		            var xmldom = loadXMLString(xmlhttp2.responseText);
+		    function event_get_homeboardinfo(result) {
+	            var xmldom = loadXMLString(result);
 
-		            if (SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length > 0) {
-		                document.getElementById("mainboard").style.display = "";
-		                document.getElementById("makeguide").style.display = "none";
-		                for (i = 0; i < SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length; i++) {
-		                    var div = document.createElement("DIV");
-		                    div.className = "boare_area";
+	            if (SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length > 0) {
+	                document.getElementById("mainboard").style.display = "";
+	                document.getElementById("makeguide").style.display = "none";
+	                for (i = 0; i < SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length; i++) {
+	                    var div = document.createElement("DIV");
+	                    div.className = "boare_area";
 
-		                    if (i + 1 != SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length && SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SN") == SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i + 1], "SN")) {
-		                        for (var k = 0; k < 2; k++) {
-		                            var div2 = document.createElement("DIV");
-		                            
-		                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SHOWPOSITION") == "1") {
-		                                if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
-		                                    div2.className = "f_left btype_list";
-		                                } else {
-		                                    div2.className = "f_left btype_photo";
-		                                }
-		                            } else {
-		                                if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
-		                                    div2.className = "f_right btype_list";
-		                                } else {
-		                                    div2.className = "f_right btype_photo";
-		                                }
-		                            }
+	                    if (i + 1 != SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW").length && SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SN") == SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i + 1], "SN")) {
+	                        for (var k = 0; k < 2; k++) {
+	                            var div2 = document.createElement("DIV");
+	                            
+	                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SHOWPOSITION") == "1") {
+	                                if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
+	                                    div2.className = "f_left btype_list";
+	                                } else {
+	                                    div2.className = "f_left btype_photo";
+	                                }
+	                            } else {
+	                                if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
+	                                    div2.className = "f_right btype_list";
+	                                } else {
+	                                    div2.className = "f_right btype_photo";
+	                                }
+	                            }
 
-		                            var p = document.createElement("P");
-		                            p.className = "title";
-		                            
-		                            if (strlang == "" || strlang == "1") {
-		                                p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME");
-		                            } else {
-		                                p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME2");
-		                            }
+	                            var p = document.createElement("P");
+	                            p.className = "title";
+	                            
+	                            if (strlang == "" || strlang == "1") {
+	                                p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME");
+	                            } else {
+	                                p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME2");
+	                            }
 
-		                            var span = document.createElement("SPAN");
-		                            span.className = "more";
-		                            span.setAttribute("boardid", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDID"));
-		                            span.setAttribute("boardname", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME"));
-		                            span.setAttribute("gubun", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN"));
-		                            span.onclick = function () { moreclick(this); };
+	                            var span = document.createElement("SPAN");
+	                            span.className = "more";
+	                            span.setAttribute("boardid", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDID"));
+	                            span.setAttribute("boardname", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME"));
+	                            span.setAttribute("gubun", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN"));
+	                            span.onclick = function () { moreclick(this); };
 
-		                            var img = document.createElement("IMG");
-		                            img.src = "/images/kr/community/type1/btn_more.gif";
-		                            img.style.width = "40px";
-		                            img.style.height = "16px";
+	                            var img = document.createElement("IMG");
+	                            img.src = "/images/kr/community/type1/btn_more.gif";
+	                            img.style.width = "40px";
+	                            img.style.height = "16px";
 
-		                            span.appendChild(img);
-		                            p.appendChild(span);
+	                            span.appendChild(img);
+	                            p.appendChild(span);
 
-		                            var ul = document.createElement("UL");
-	                                var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
+	                            var ul = document.createElement("UL");
+                                var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
 
-		                            if (isdata.trim() != "") {
-		                                var imageCnt = 0;
-		                                
-		                                for (var j = 0; j < GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i]).length; j++) {
-		                                    var li = document.createElement("LI");
+	                            if (isdata.trim() != "") {
+	                                var imageCnt = 0;
+	                                
+	                                for (var j = 0; j < GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i]).length; j++) {
+	                                    var li = document.createElement("LI");
 
-		                                    var span2 = document.createElement("SPAN");
-		                                    var span3 = document.createElement("SPAN");
-		                                    
-		                                    if (SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN") != "3") {
-		                                        span2.className = "txt";
-		                                        span2.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
-		                                        span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                        span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                        span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                        span2.setAttribute("code", code);
-		                                        span2.style.cursor = "pointer";
-		                                        span2.onclick = function () { ItemRead_onclick(this); };
+	                                    var span2 = document.createElement("SPAN");
+	                                    var span3 = document.createElement("SPAN");
+	                                    
+	                                    if (SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN") != "3") {
+	                                        span2.className = "txt";
+	                                        span2.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
+	                                        span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                        span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                        span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                        span2.setAttribute("code", code);
+	                                        span2.style.cursor = "pointer";
+	                                        span2.onclick = function () { ItemRead_onclick(this); };
 
-		                                        span3.className = "date";
-		                                        span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "WRITEDATE").substring(0, 10);
-		                                    } else {
-		                                        if (imageCnt == 4) {
-		                                            break;
-		                                        }
-		                                        
-		                                        span2.className = "photo";
-		                                        span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                        span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                        span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                        span2.setAttribute("code", code);
-		                                        span2.style.cursor = "pointer";
-		                                        span2.onclick = function () { ItemRead_onclick(this); };
+	                                        span3.className = "date";
+	                                        span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "WRITEDATE").substring(0, 10);
+	                                    } else {
+	                                        if (imageCnt == 4) {
+	                                            break;
+	                                        }
+	                                        
+	                                        span2.className = "photo";
+	                                        span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                        span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                        span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                        span2.setAttribute("code", code);
+	                                        span2.style.cursor = "pointer";
+	                                        span2.onclick = function () { ItemRead_onclick(this); };
 
-		                                        var img = document.createElement("IMG");
-		                                        var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
-		                                        
-		                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
-		                                        img.style.width = "68px";
-		                                        img.style.height = "68px";
+	                                        var img = document.createElement("IMG");
+	                                        var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
+	                                        
+	                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
+	                                        img.style.width = "68px";
+	                                        img.style.height = "68px";
 
-		                                        span2.appendChild(img);
-		                                        span3.className = "ptxt";
-		                                        span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
-		                                        span3.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                        span3.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                        span3.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                        span3.setAttribute("code", code);
-		                                        span3.onclick = function () { ItemRead_onclick(this); };
-		                                        imageCnt++;
-		                                    }
+	                                        span2.appendChild(img);
+	                                        span3.className = "ptxt";
+	                                        span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
+	                                        span3.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                        span3.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                        span3.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                        span3.setAttribute("code", code);
+	                                        span3.onclick = function () { ItemRead_onclick(this); };
+	                                        imageCnt++;
+	                                    }
 
-		                                    li.appendChild(span2);
-		                                    li.appendChild(span3);
+	                                    li.appendChild(span2);
+	                                    li.appendChild(span3);
 
-		                                    ul.appendChild(li);
-		                                    div2.appendChild(p);
-		                                    div2.appendChild(ul);
-		                                    div.appendChild(div2);
-		                                    document.getElementById("mainboard").appendChild(div);
-		                                }
-		                            } else {
-		                                div2.appendChild(p);
-		                                div2.appendChild(ul);
-		                                div.appendChild(div2);
-		                                document.getElementById("mainboard").appendChild(div);
-		                            }
-		                            
-		                            if (k == 0) {
-		                                i++;
-		                            }
-		                        }
-		                    } else {
-		                        var div2 = document.createElement("DIV");
-		                        
-		                        if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SHOWPOSITION") == "1") {
-		                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
-		                                div2.className = "f_left btype_list";
-		                            } else {
-		                                div2.className = "f_left btype_photo";
-		                            }
-		                        } else {
-		                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
-		                                div2.className = "f_right btype_list";
-		                            } else {
-		                                div2.className = "f_right btype_photo";
-		                            }
-		                        }
+	                                    ul.appendChild(li);
+	                                    div2.appendChild(p);
+	                                    div2.appendChild(ul);
+	                                    div.appendChild(div2);
+	                                    document.getElementById("mainboard").appendChild(div);
+	                                }
+	                            } else {
+	                                div2.appendChild(p);
+	                                div2.appendChild(ul);
+	                                div.appendChild(div2);
+	                                document.getElementById("mainboard").appendChild(div);
+	                            }
+	                            
+	                            if (k == 0) {
+	                                i++;
+	                            }
+	                        }
+	                    } else {
+	                        var div2 = document.createElement("DIV");
+	                        
+	                        if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "SHOWPOSITION") == "1") {
+	                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
+	                                div2.className = "f_left btype_list";
+	                            } else {
+	                                div2.className = "f_left btype_photo";
+	                            }
+	                        } else {
+	                            if (SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN") != "3") {
+	                                div2.className = "f_right btype_list";
+	                            } else {
+	                                div2.className = "f_right btype_photo";
+	                            }
+	                        }
 
-		                        var p = document.createElement("P");
-		                        p.className = "title";
-		                        
-		                        if (strlang == "" || strlang == "1"){
-		                            p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME");
-		                        } else {
-		                            p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME2");
-		                        }
-		                        
-		                        var span = document.createElement("SPAN");
-		                        span.className = "more";
-		                        span.setAttribute("boardid", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDID"));
-		                        span.setAttribute("boardname", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME"));
-		                        span.setAttribute("gubun", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN"));
-		                        span.onclick = function () { moreclick(this); };
-		                        var img = document.createElement("IMG");
-		                        img.src = "/images/kr/community/type1/btn_more.gif";
-		                        img.style.width = "40px";
-		                        img.style.height = "16px";
+	                        var p = document.createElement("P");
+	                        p.className = "title";
+	                        
+	                        if (strlang == "" || strlang == "1"){
+	                            p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME");
+	                        } else {
+	                            p.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME2");
+	                        }
+	                        
+	                        var span = document.createElement("SPAN");
+	                        span.className = "more";
+	                        span.setAttribute("boardid", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDID"));
+	                        span.setAttribute("boardname", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "BOARDNAME"));
+	                        span.setAttribute("gubun", SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDINFO/DATA/ROW")[i], "GUBUN"));
+	                        span.onclick = function () { moreclick(this); };
+	                        var img = document.createElement("IMG");
+	                        img.src = "/images/kr/community/type1/btn_more.gif";
+	                        img.style.width = "40px";
+	                        img.style.height = "16px";
 
-		                        span.appendChild(img);
-		                        p.appendChild(span);
+	                        span.appendChild(img);
+	                        p.appendChild(span);
 
-		                        var ul = document.createElement("UL");
-		                        var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
+	                        var ul = document.createElement("UL");
+	                        var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
 
-		                        if (isdata.trim() != "") {
-		                            var imageCnt = 0;
-		                            
-		                            for (var j = 0; j < GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i]).length; j++) {
-		                                var li = document.createElement("LI");
+	                        if (isdata.trim() != "") {
+	                            var imageCnt = 0;
+	                            
+	                            for (var j = 0; j < GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i]).length; j++) {
+	                                var li = document.createElement("LI");
 
-		                                var span2 = document.createElement("SPAN");
-		                                var span3 = document.createElement("SPAN");
-		                                
-		                                if (SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN") != "3") {
-		                                    span2.className = "txt";
-		                                    span2.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
-		                                    span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                    span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                    span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                    span2.setAttribute("code", code);
-		                                    span2.style.cursor = "pointer";
-		                                    span2.onclick = function () { ItemRead_onclick(this); };
+	                                var span2 = document.createElement("SPAN");
+	                                var span3 = document.createElement("SPAN");
+	                                
+	                                if (SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN") != "3") {
+	                                    span2.className = "txt";
+	                                    span2.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
+	                                    span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                    span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                    span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                    span2.setAttribute("code", code);
+	                                    span2.style.cursor = "pointer";
+	                                    span2.onclick = function () { ItemRead_onclick(this); };
 
-		                                    span3.className = "date";
-		                                    span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "WRITEDATE").substring(0, 10);
-		                                } else {
-		                                    if (imageCnt == 4) {
-		                                        break;
-		                                    }
-		                                    
-		                                    span2.className = "photo";
-		                                    span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                    span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                    span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                    span2.setAttribute("code", code);
-		                                    span2.style.cursor = "pointer";
-		                                    span2.onclick = function () { ItemRead_onclick(this); };
+	                                    span3.className = "date";
+	                                    span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "WRITEDATE").substring(0, 10);
+	                                } else {
+	                                    if (imageCnt == 4) {
+	                                        break;
+	                                    }
+	                                    
+	                                    span2.className = "photo";
+	                                    span2.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                    span2.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                    span2.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                    span2.setAttribute("code", code);
+	                                    span2.style.cursor = "pointer";
+	                                    span2.onclick = function () { ItemRead_onclick(this); };
 
-		                                    var img = document.createElement("IMG");
-		                                    var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
+	                                    var img = document.createElement("IMG");
+	                                    var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
 
-		                                    img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
-		                                    img.style.width = "68px";
-		                                    img.style.height = "68px";
+	                                    img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
+	                                    img.style.width = "68px";
+	                                    img.style.height = "68px";
 
-		                                    span2.appendChild(img);
+	                                    span2.appendChild(img);
 
-		                                    span3.className = "ptxt";
-		                                    span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
-		                                    span3.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
-		                                    span3.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
-		                                    span3.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
-		                                    span3.setAttribute("code", code);
-		                                    span3.onclick = function () { ItemRead_onclick(this); };
-		                                    imageCnt++;
-		                                }
+	                                    span3.className = "ptxt";
+	                                    span3.innerHTML = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "TITLE");
+	                                    span3.setAttribute("itemid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "ITEMID"));
+	                                    span3.setAttribute("boardid", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID"));
+	                                    span3.setAttribute("gubun", SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "GUBUN"));
+	                                    span3.setAttribute("code", code);
+	                                    span3.onclick = function () { ItemRead_onclick(this); };
+	                                    imageCnt++;
+	                                }
 
-		                                li.appendChild(span2);
-		                                li.appendChild(span3);
+	                                li.appendChild(span2);
+	                                li.appendChild(span3);
 
-		                                ul.appendChild(li);
-		                                div2.appendChild(p);
-		                                div2.appendChild(ul);
-		                                div.appendChild(div2);
-		                                document.getElementById("mainboard").appendChild(div);
-		                            }
-		                        } else {
-		                            div2.appendChild(p);
-		                            div2.appendChild(ul);
-		                            div.appendChild(div2);
-		                            document.getElementById("mainboard").appendChild(div);
-		                        }
-		                    }
-		                }//for
-		            } else {
-		                document.getElementById("makeguide").style.display = "";
-		            }
-		        }
+	                                ul.appendChild(li);
+	                                div2.appendChild(p);
+	                                div2.appendChild(ul);
+	                                div.appendChild(div2);
+	                                document.getElementById("mainboard").appendChild(div);
+	                            }
+	                        } else {
+	                            div2.appendChild(p);
+	                            div2.appendChild(ul);
+	                            div.appendChild(div2);
+	                            document.getElementById("mainboard").appendChild(div);
+	                        }
+	                    }
+	                }
+	            } else {
+	                document.getElementById("makeguide").style.display = "";
+	            }
 		    }
 		    
 		    function ItemRead_onclick(val) {

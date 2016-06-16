@@ -295,8 +295,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.leftCommunityGet2", CODE);
 	}
 
-	public String leftCommunityGet4(String CODE) throws Exception {
-		return (String) select("EzCommunityDAO.leftCommunityGet4", CODE);
+	public CommunityClubVO leftCommunityGet4(String v_CODE) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.leftCommunityGet4", v_CODE);
 	}
 
 	public String brdCheckIfBoardGroupAdmin(Map<String, Object> map) throws Exception {
@@ -773,5 +773,54 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CommunityMyCommunityVO> mainPageGet6(String v_USERINFO_LANG) throws Exception {
 		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.mainPageGet6", v_USERINFO_LANG);
+	}
+
+	public String join1Get(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.join1Get", map);
+	}
+
+	public String joinGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.joinGet1", map);
+	}
+
+	public CommunityClubVO adminNoticeMailOkGet1(String v_CODE) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.adminNoticeMailOkGet1", v_CODE);
+	}
+
+	public String joinGet2(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.joinGet2", map);
+	}
+
+	public String joinOkGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.joinOkGet1", map);
+	}
+
+	public void joinOkSet1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.joinOkSet1", map);
+	}
+
+	public String joinOkGet2(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.joinOkGet2", map);
+	}
+
+	public CommunityClubVO joinOkGet3(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.joinOkGet3", map);
+	}
+
+	public void joinOkUpdate1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.joinOkUpdate1", map);
+	}
+
+	public CommunityMemberInfoVO joinOkGet4(Map<String, Object> map) throws Exception {
+		return (CommunityMemberInfoVO) select("EzCommunityDAO.joinOkGet4", map);
+	}
+
+	public void joinOkUpdate3(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.joinOkUpdate3", map);
+	}
+
+	public void joinOkUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.joinOkUpdate2", map);
+		
 	}
 }

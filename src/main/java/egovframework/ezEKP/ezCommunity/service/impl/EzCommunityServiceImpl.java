@@ -106,7 +106,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String leftCommunityGet4(String code) throws Exception {
+	public CommunityClubVO leftCommunityGet4(String code) throws Exception {
 		return ezCommunityDAO.leftCommunityGet4(code);
 	}
 	
@@ -560,13 +560,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void joinOkInsert(String companyID, String userID, String userName, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception {
+	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_USERNAME", userName);
-		map.put("v_USERNAME2", userName);
+		map.put("v_USERNAME2", userName2);
 		map.put("v_COMPANYNAME", companyName);
 		map.put("v_COMPANYNAME2", companyName2);
 		map.put("v_COMPANYZIP", companyZip);
@@ -2881,6 +2881,141 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.mainPageGet6(lang);
 	}
 
+	@Override
+	public String join1Get(String no, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_NO", no);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.join1Get(map);
+	}
+
+	@Override
+	public String joinGet1(String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.joinGet1(map);
+	}
+
+	@Override
+	public CommunityClubVO adminNoticeMailOkGet1(String code) throws Exception {
+		return ezCommunityDAO.adminNoticeMailOkGet1(code);
+	}
+
+	@Override
+	public String joinGet2(String sysopID, String companyID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SYSOPID", sysopID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.joinGet2(map);
+	}
+
+	@Override
+	public String joinOkGet1(String code, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", id);
+		
+		return ezCommunityDAO.joinOkGet1(map);
+	}
+
+	@Override
+	public void joinOkSet1(String code, String id, String todayTime, String companyID) throws Exception {
+		Map<String, Object> map =new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_DTNOW", todayTime);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		
+		ezCommunityDAO.joinOkSet1(map);
+	}
+
+	@Override
+	public String joinOkGet2(String code, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", id);
+		
+		return ezCommunityDAO.joinOkGet2(map);
+	}
+
+	@Override
+	public CommunityClubVO joinOkGet3(String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.joinOkGet3(map);
+	}
+
+	@Override
+	public void JoinOkUpdate1(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openBirth, String openSex, String openHouse) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_CODE", code);
+		map.put("v_C_INTRO", cIntro);
+		map.put("v_OPENEMAIL", openEmail);
+		map.put("v_OPENHP", openHp);
+		map.put("v_OPENCOMP", openComp);
+		map.put("v_OPENBIRTH", openBirth);
+		map.put("v_OPENSEX", openSex);
+		map.put("v_OPENHOUSE", openHouse);
+		
+		ezCommunityDAO.joinOkUpdate1(map);
+	}
+
+	@Override
+	public CommunityMemberInfoVO joinOkGet4(String companyID, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_USERINFO_USERID", id);
+		
+		return ezCommunityDAO.joinOkGet4(map);
+	}
+
+	@Override
+	public void JoinOkUpdate3(String companyID, String id, String birthDay) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_BIRTHDAY", birthDay);
+		
+		ezCommunityDAO.joinOkUpdate3(map);
+	}
+
+	@Override
+	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_CODE", code);
+		map.put("v_C_INTRO", cIntro);
+		map.put("v_OPENEMAIL", openEmail);
+		map.put("v_OPENHP", openHp);
+		map.put("v_OPENCOMP", openComp);
+		map.put("v_OPENHOUSE", openHouse);
+		map.put("v_OPENJOB", openJob);
+		map.put("v_OPENBIRTH", openBirth);
+		map.put("v_OPENSEX", openSex);
+		
+		ezCommunityDAO.joinOkUpdate2(map);
+	}
+
+	
 	/*public void SndMail(string code)
 	{
         try

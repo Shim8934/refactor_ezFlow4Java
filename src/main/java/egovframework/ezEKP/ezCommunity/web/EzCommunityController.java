@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -201,8 +202,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         	if (userInfoUserID.equals(ezCommunityService.leftCommunityGet4(code))) {
         		checkSysop = true;
         	}
-        	
-        }        
+        }
 
         //TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
         /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userID));
@@ -494,17 +494,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String birthDay = "";
 			String gender = "";
 			
-			if (userName2.equals("")) {
-				userName2 = userName;
-			}
-			if (companyName2.equals("")) {
-				companyName2 = companyName;
-			}
-			if (deptName2.equals("")) {
-				deptName2 = deptName;
-			}
-			
-			ezCommunityService.joinOkInsert(companyID, userID, userName, companyName, companyName2, companyZip, companyAddress, deptName, deptName2, companyTel, companyFax, homeTel, handPhone, eMail, birthDay, gender);
+			ezCommunityService.joinOkInsert(companyID, userID, userName, userName2, companyName, companyName2, companyZip, companyAddress, deptName, deptName2, companyTel, companyFax, homeTel, handPhone, eMail, birthDay, gender);
 		}
 		
 		String fileName = "", attachFile = "", onlyFileName = "", extName = "";
@@ -733,7 +723,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String codeName = request.getParameter("codeName");
 		String userLevel = request.getParameter("userLevel");
-		
+
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
 		
@@ -782,7 +772,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			newMemberConfirmType = Integer.parseInt(confirmType);
 		}
 		
-		if (ezCommunityService.leftCommunityGet4(code).trim().equals(userInfo.getId()) && !checkSysop) {
+		CommunityClubVO clubVO = ezCommunityService.leftCommunityGet4(code);
+		
+		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
 			checkSysop = true;
 		}
 		
@@ -803,10 +795,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
-	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception {
+	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String code = commonUtil.convertStringToDocument(xmlData).getElementsByTagName("CODE").item(0).getTextContent();
+		String code = request.getParameter("code");
 		String strSysopID = "";
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code);
@@ -870,9 +862,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
-	public String commHomeBoardInfo(@RequestBody String xmlData) throws Exception {
+	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		String code = commonUtil.convertStringToDocument(xmlData).getElementsByTagName("CODE").item(0).getTextContent();
+		String code = request.getParameter("code");
 		//EZSP_COPHOME_BOARD_GET
 		List<CommunityBoardInfoVO> boardInfoList = ezCommunityService.copHomeBoardGet(code);
 		
@@ -4873,6 +4865,193 @@ public class EzCommunityController extends EgovFileMngUtil{
 		rtnVal.append("</DATA>");
 		
 		return rtnVal.toString();
+	}
+	
+	/**
+	 * 회원가입화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/join1.do")
+	public String join1(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String no = request.getParameter("no");
+		
+		String clubName = ezCommunityService.join1Get(no, commonUtil.getMultiData(userInfo.getLang()));
+		
+		model.addAttribute("clubName", clubName);
+		model.addAttribute("no", no);
+		
+		return "/ezCommunity/communityJoin1";
+	}
+	
+	//TODO 2016-06-16 이효진 승인 필요한 회원가입
+	/**
+	 * 회원가입화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/join2.do")
+	public String join2(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String no = request.getParameter("no");
+		
+		String clubName = ezCommunityService.join1Get(no, commonUtil.getMultiData(userInfo.getLang()));
+		
+		model.addAttribute("clubName", clubName);
+		model.addAttribute("no", no);
+		
+		return "/ezCommunity/communityJoin2";
+	}
+	
+	/**
+	 * 회원가입화면 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/agreeOk.do")
+	public String agreeOk(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean bCanJoin = true;
+		
+		String code = request.getParameter("code");
+		
+		String userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code);
+		
+		if (userLevel != null) {
+			bCanJoin = false;
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("bCanJoin", bCanJoin);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userLevel", userLevel);
+		
+		return "/ezCommunity/communityAgreeOk";
+	}
+	
+	/**
+	 * 회원가입 정보입력화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/join.do")
+	public String join(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String code = request.getParameter("code");
+
+		CommunityClubVO clubVO = ezCommunityService.adminNoticeMailOkGet1(code);
+		String clubName = ezCommunityService.joinGet1(code, commonUtil.getMultiData(userInfo.getLang()));
+		String sysUserName = ezCommunityService.joinGet2(clubVO.getC_SysopID().trim(), clubVO.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
+		
+		clubVO.setC_ClubName(clubName);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("code", code);
+		model.addAttribute("clubVO", clubVO);
+		model.addAttribute("sysUserName", sysUserName);
+
+		return "/ezCommunity/communityJoin";
+	}
+	
+	/**
+	 * 회원가입 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/joinOk.do")
+	public String joinOk(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean bCanJoin = true;
+		String openJob = "0";
+		String openBirth = "";
+		
+		String code = request.getParameter("code");
+		String cIntro = request.getParameter("cIntro");
+		String birthType = request.getParameter("birthType");
+		String birthYear = request.getParameter("birthYear");
+		String openEmail = request.getParameter("openEmail");
+		String openHp = request.getParameter("openHp");
+		String openComp = request.getParameter("openComp");
+		String openHouse = request.getParameter("openHouse");
+		String openSex = request.getParameter("openSex");
+		String birthDay = request.getParameter("birthDay ");
+		String birthMonth = request.getParameter("birthMonth");
+		String gender = request.getParameter("gender");
+		
+		if(request.getParameter("openBirth") != null) {
+			openBirth = request.getParameter("openBirth");
+		}
+		
+		String userLevel = ezCommunityService.joinOkGet1(code, userInfo.getId());
+		
+		if (userLevel != null) {
+			bCanJoin = false;
+		}
+		
+		ezCommunityService.joinOkSet1(code, userInfo.getId(), EgovDateUtil.getTodayTime(), userInfo.getCompanyID());
+		
+		String cID = ezCommunityService.joinOkGet2(code, userInfo.getId());
+		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		if(clubVO.getC_ClubConfirmType().equals("1") || clubVO.getC_ClubConfirmType().equals("2")) {
+			if (openBirth.equals("1")) {
+				birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
+			} else {
+				birthDay = "";
+			}
+			
+			ezCommunityService.JoinOkUpdate1(userInfo.getId(), code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse);
+			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId());
+			
+			if (memberInfoVO != null) {
+				ezCommunityService.JoinOkUpdate3(userInfo.getCompanyID(), userInfo.getId(), birthDay);
+			} else {
+				ezCommunityService.joinOkInsert(userInfo.getCompanyID(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyName1(), userInfo.getCompanyName2(), "", "", userInfo.getDeptName1(), userInfo.getDeptName2(), "", "", "", userInfo.getPhone(), userInfo.getEmail(), birthDay, gender);
+			}
+		} else {
+			ezCommunityService.joinOkUpdate2(userInfo.getId(), code, cIntro, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex);
+			
+			if (openBirth.equals("1")) {
+				birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
+			} else {
+				birthDay = "";
+			}
+			
+			ezCommunityService.JoinOkUpdate1(userInfo.getId(), code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse);
+			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId());
+			
+			if (memberInfoVO != null) {
+				ezCommunityService.JoinOkUpdate3(userInfo.getCompanyID(), userInfo.getId(), birthDay);
+			} else {
+				ezCommunityService.joinOkInsert(userInfo.getCompanyID(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyName1(), userInfo.getCompanyName2(), "", "", userInfo.getDeptName1(), userInfo.getDeptName2(), "", "", "", userInfo.getPhone(), userInfo.getEmail(), birthDay, gender);
+			}
+		}
+//		sendMail()
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("code", code);
+		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("bCanJoin", bCanJoin);
+		model.addAttribute("cID", cID);
+		model.addAttribute("clubVO", clubVO);
+		
+		return "/ezCommunity/communityJoinOk";
+	}
+	
+	/**
+	 * 승인필요한 커뮤니티 가입시 검사 실행 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/remote/getACL.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String remoteGetACL (HttpServletRequest request) {
+		String cID = request.getParameter("cID");
+		String uID = request.getParameter("uID");
+//		
+//		String gClubG = ezCommunityService.getACLGet1(cID);
+//		String cPermit = ezCommunityService.getACLGet2(uID, cID);
+//		
+//		if (cPermit.equals("0") || cPermit.equals("")) {
+//			if (gClubG.trim().equals("3")) {
+//				return "ERR";
+//			} else if (gClubG.trim().equals("2")) {
+//				return "OK";
+//			}
+//		} else {
+//			return "OK";
+//		}
+		return "";
 	}
 }
 

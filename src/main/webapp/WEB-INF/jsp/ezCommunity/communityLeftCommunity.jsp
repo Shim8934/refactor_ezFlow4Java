@@ -109,9 +109,9 @@
 			    if (totalCnt > 0) {
 			        for (var i = 0; i < totalCnt; i++) {
 			            var confirmtype1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE");
-			            var sysopID1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_SYSOPID");
+			            var sysopID1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_SYSOPID").trim();
 			            var memberCnt1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_MEMBERCNT");
-			            var code2 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNO");
+			            var code2 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNO").trim();
 			            var copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME");
 			            if (lang != "1")
 			                copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME2");
@@ -132,12 +132,11 @@
 	                            if (copLogo.indexOf("default_logo_type") > -1)
 	                                _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
 	                            else
-	                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + escape(copLogo));
+	                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
 	                                //_img.setAttribute("src", "/Upload_Community/logo/" + copLogo);
 
 	                            _span.appendChild(_img);
 	                            _li.innerHTML = _span.outerHTML + copName;
-
 	                            document.getElementById("list_thumbnail").appendChild(_li);
 	                        }
 	                    }
@@ -303,7 +302,7 @@
 	        function go_menu(btn) {
 	            if (UserLevel == "") {
 	                if (document.goMyCommForm.MyCommunityList.length != 0){
-	                    code = document.goMyCommForm.MyCommunityList[document.goMyCommForm.MyCommunityList.selectedIndex].value;
+	                    code = document.goMyCommForm.MyCommunityList[document.goMyCommForm.MyCommunityList.selectedIndex].value.trim();
 	                }
 	                var dropdown = document.goMyCommForm.MyCommunityList;
 	                var index = document.goMyCommForm.MyCommunityList.selectedIndex;
@@ -422,7 +421,7 @@
             }
 	        
             function GoFunc(obj) {
-                code = obj.getAttribute("code");
+                code = obj.getAttribute("code").trim();
                 codeName = obj.innerText;
                 if (code == "0") {
                     window.frames.location.href = window.frames.location.href;

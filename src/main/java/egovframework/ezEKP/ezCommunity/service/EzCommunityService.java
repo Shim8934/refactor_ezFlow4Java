@@ -75,6 +75,14 @@ public interface EzCommunityService {
 	
 	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception;
 	
+	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception;
+
+	public List<CommunityMyCommunityVO> myCommunityItemGet(String clubNo) throws Exception;
+
+	public List<CommunityMyCommunityVO> mainPageGet5(String lang) throws Exception;
+	
+	public List<CommunityMyCommunityVO> mainPageGet6(String lang) throws Exception;
+	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang) throws Exception;
@@ -133,7 +141,7 @@ public interface EzCommunityService {
 
 	public String leftCommunityGet2(String code) throws Exception;
 	
-	public String leftCommunityGet4(String code) throws Exception;
+	public CommunityClubVO leftCommunityGet4(String code) throws Exception;
 	
 	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception;
 
@@ -307,7 +315,7 @@ public interface EzCommunityService {
 
 	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception;
 
-	public void joinOkInsert(String companyID, String userID, String userName, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception;
+	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception;
 
 	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception;
 
@@ -371,15 +379,30 @@ public interface EzCommunityService {
 	
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception;
 
-	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception;
+	public String join1Get(String no, String lang) throws Exception;
 
-	public List<CommunityMyCommunityVO> myCommunityItemGet(String clubNo) throws Exception;
+	public String joinGet1(String code, String lang) throws Exception;
 
-	public List<CommunityMyCommunityVO> mainPageGet5(String lang) throws Exception;
-	
-	public List<CommunityMyCommunityVO> mainPageGet6(String lang) throws Exception;
+	public CommunityClubVO adminNoticeMailOkGet1(String code) throws Exception;
 
-	
+	public String joinGet2(String sysopID, String companyID, String lang) throws Exception;
+
+	public String joinOkGet1(String code, String id) throws Exception;
+
+	public void joinOkSet1(String code, String id, String todayTime, String companyID) throws Exception;
+
+	public String joinOkGet2(String code, String id) throws Exception;
+
+	public CommunityClubVO joinOkGet3(String code, String lang) throws Exception;
+
+	public void JoinOkUpdate1(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openBirth, String openSex, String openHouse) throws Exception;
+
+	public CommunityMemberInfoVO joinOkGet4(String companyID, String id) throws Exception;
+
+	public void JoinOkUpdate3(String companyID, String id, String birthDay) throws Exception;
+
+	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
+
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 
 //	public String sortXML(String pXML, String pSortBy) throws Exception;

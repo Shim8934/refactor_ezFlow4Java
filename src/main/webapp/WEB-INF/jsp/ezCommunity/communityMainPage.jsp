@@ -100,17 +100,6 @@
 	        }
 
 	        function get_newCommunity() {
-// 	            xmlhttp2 = createXMLHttpRequest();
-
-// 	            var xmlDom = createXmlDom();
-// 	            var objNode;
-// 	            createNodeInsert(xmlDom, objNode, "DATA");
-
-// 	            createNodeAndInsertText(xmlDom, objNode, "MODE", "NEW");
-
-// 	            xmlhttp2.open("POST", "aspx/getbestnewcommunity.aspx", true);
-// 	            xmlhttp2.onreadystatechange = event_get_newCommunity;
-// 	            xmlhttp2.send(xmlDom);
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -125,17 +114,6 @@
 	        }
 
 	        function get_bestCommunity() {
-// 	            xmlhttp = createXMLHttpRequest();
-
-// 	            var xmlDom = createXmlDom();
-// 	            var objNode;
-// 	            createNodeInsert(xmlDom, objNode, "DATA");
-
-// 	            createNodeAndInsertText(xmlDom, objNode, "MODE", "BEST");
-
-// 	            xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", true);
-// 	            xmlhttp.onreadystatechange = event_get_bestCommunity;
-// 	            xmlhttp.send(xmlDom);
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -190,7 +168,7 @@
                     }
 
                     span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
-                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
+                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
                     span2.onclick = function () { move_cop(this); };
@@ -254,7 +232,7 @@
                     }
                     
                     span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
-                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
+                    span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
                     span2.onclick = function () { move_cop(this); };
@@ -303,8 +281,8 @@
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
                     
-                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO") != copno) {
-                        copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
+                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO".trim()) != copno) {
+                        copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                         table = null;
                         var div = document.createElement("DIV");
                         div.className = "tabpartMycommunity";
@@ -379,7 +357,7 @@
                     td.className = "text";
                     var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
                     var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
-                    var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO");
+                    var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
@@ -853,7 +831,7 @@
 	                    var span5 = document.createElement("SPAN");
 	                    span5.className = "btn_community01";
 
-	                    span5.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO"));
+	                    span5.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
 	                    span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
 	                    span5.onclick = function () { move_cop(this); };
 
@@ -921,7 +899,7 @@
 	                var p = document.createElement("P");
 	                p.className = "btn_CommunityMore";
 
-	                p.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO"));
+	                p.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
 	                p.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
 	                p.style.cursor = "pointer";
 	                p.onclick = function () { move_cop(this); };
@@ -1122,60 +1100,57 @@
 	        }
 
 	        function move_cop(val) {
-	            var xmlhttp = createXMLHttpRequest();
-	            var xmldom = createXmlDom();
-	            var objNode;
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/remote/getACL.do",
+					data : { cID	:	idx,
+							 uID	:	"${userInfo.id}"
+					},
+					success: function(result){
+						if (result == "ERR" || clubgubun == "1") {
+							var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
+							 
+							if (rtn) {
+								$.ajax({
+									type : "POST",
+									dataType : "text",
+									async : true,
+									url : "/ezCommunity/getIsJoin.do",
+									data : { code	:	idx
+									},
+									success: function(result){
+										if (result == "FALSE") {
+											var wWeight = "330";
+							                var wHeight = "207";
+							                var heigth = window.screen.availHeight;
+							                var width = window.screen.availWidth;
+					                        var left = (width - wWeight) / 2;
+					                        var top = (heigth - wHeight) / 2;
+					                        var type = val.getAttribute("type");
 
-	            var clubgubun = 0;
-	            var idx = val.getAttribute("code");
-
-	            createNodeInsert(xmldom, objNode, "DATA");
-	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
-	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
-
-	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
-	            xmlhttp.send(xmldom);
-	            
-	            if (xmlhttp.responseText == "ERR" | clubgubun == "1") {
-	                var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
-	                
-	                if (rtn) {
-	                    xmlhttp = null;
-	                    var xmlhttp = createXMLHttpRequest();
-	                    var xmldom = createXmlDom();
-	                    var objNode;
-
-	                    createNodeInsert(xmldom, objNode, "DATA");
-	                    createNodeAndInsertText(xmldom, objNode, "CODE", idx);
-	                    xmlhttp.open("POST", "/ezCommunity/getIsJoin.do", false);
-	                    xmlhttp.send(xmldom);
-
-	                    if (xmlhttp.responseText == "FALSE") {
-	                        var wWeight = "330";
-	                        var wHeight = "207";
-	                        var heigth = window.screen.availHeight;
-	                        var width = window.screen.availWidth;
-	                        var left = (width - wWeight) / 2;
-	                        var top = (heigth - wHeight) / 2;
-	                        var type = val.getAttribute("type");
-
-	                        if (type == "2") {
-	                            window.open("/ezcommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-	                        } else if (type == "3") {
-	                            window.open("/ezcommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-	                        }
-	                    } else {
-	                        alert(strLang7);
-	                    }
-	                }
-	            } else {
-	                //window.open("/myOffice/ezCommunity/main.aspx?communityCD=" + idx + "&UserLevel=1", "main");
-	                GoFunc(val);
-	            }
+					                        if (type == "2") {
+					                            window.open("/ezcommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+					                        } else if (type == "3") {
+					                            window.open("/ezcommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+					                        }
+					                	} else {
+					                    	alert(strLang7);
+					                	}
+									}
+								});
+					 		} else {
+								//window.open("/myOffice/ezCommunity/main.aspx?communityCD=" + idx + "&UserLevel=1", "main");
+								GoFunc(val);
+							}
+						}
+					}
+				});
 	        }
 
 	        function GoFunc(obj) {
-	            code = obj.getAttribute("code");
+	            code = obj.getAttribute("code").trim();
 	            codeName = obj.innerText;
 	            
 	            if (code == "0") {
