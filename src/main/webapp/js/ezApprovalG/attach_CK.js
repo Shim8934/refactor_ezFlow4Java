@@ -1,14 +1,20 @@
 ﻿function InitAttach(pDocID) {
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-    xmlhttp.open("Post", "aspx/AttachRequest.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    Resultxml = xmlhttp.responseXML;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/attachRequest.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    Resultxml = result;
     var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
         pAttachSN = Number(SelectSingleNodeValue(GetLastChildNodes(NodeList[0], 2)[0], "DATA2")) + 1;
@@ -49,7 +55,7 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
         var Cell = GetChildNodes(Row);
 
         GetXml = GetXml + "<ROW>";
-        var re = /&/g
+        var re = /&/g;
         GetXml = GetXml + "<COLUMN>" + MakeXMLString(GetChildNodes(AttachRow[i])[0].innerHTML) + "</COLUMN>";
         GetXml = GetXml + "<DATA1>" + MakeXMLString(GetAttribute(AttachRow[i], "DATA1")) + "</DATA1>";
         GetXml = GetXml + "<DATA2>" + MakeXMLString(GetAttribute(AttachRow[i], "DATA2")) + "</DATA2>";
@@ -93,7 +99,7 @@ function DelAttachFileAtList(pAttachCurSel) {
 }
 function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
-    xmlhttp.open("Post", "aspx/AprAttachSave.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
     xmlhttp.send(Attachxml);
 
     if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "FALSE") {
@@ -117,7 +123,7 @@ function SaveAttachListInfo(Attachxml) {
 
 var aprattachname_cross_dialogArguments = new Array();
 function getAttachFilePageNum(PageNum, DisplayName, CompleteFunction) {
-    var windowName = "/myoffice/ezApprovalG/ezAPRATTACH/AprAttachName_Cross.aspx";
+    var windowName = "/ezApprovalG/aprAttachName.do";
   
     var dialogValue = new Array();
     dialogValue[0] = PageNum;
@@ -307,16 +313,23 @@ function orderListView_id() {
     }
 }
 function AttachRemoveAll() {
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/attachRemove.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-    xmlhttp.open("Post", "aspx/AttachRemove.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    Resultxml = xmlhttp.responseText;
+    Resultxml = result;
+    
     return Resultxml;
 }
 var pDeleteFile = new Array();
@@ -336,7 +349,7 @@ function DeleteFileAtServer(pAttachCurSelRow) {
 }
 function DeleteFileAtServer_true(xmlpara) {
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "aspx/DeleteServerFile.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/deleteServerFile.do", false);
     xmlhttp.send(xmlpara);
 
     return xmlhttp.responseText;
@@ -350,7 +363,7 @@ function AttachFileListCancel() {
     var pTotalRow = TotalList.GetDataRows();
 
     for (i = 0 ; i < pAttachFlag ; i++) {
-        Rtnval = DeleteFileAtServer(pTotalRow[i])
+        Rtnval = DeleteFileAtServer(pTotalRow[i]);
         if (Rtnval == "FALSE") {
             var pAlertContent = strLang223;
             OpenAlertUI(pAlertContent);
@@ -362,7 +375,7 @@ function AttachFileListCancel() {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -387,7 +400,7 @@ function OpenAlertUI_Complete() {
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;
@@ -411,14 +424,14 @@ function OpenInformationUI_Complete() {
 function chkFileFilter(cur_ExtName) {
     if (optExt == "" || optExt == "NONE") return true;
 
-    var aExtNames = optExt.split(";")
-    var plength = aExtNames.length
+    var aExtNames = optExt.split(";");
+    var plength = aExtNames.length;
 
-    var s = cur_ExtName.lastIndexOf(".")
+    var s = cur_ExtName.lastIndexOf(".");
     if (s == -1)
-        cur_ExtName = ""
+        cur_ExtName = "";
     else
-        cur_ExtName = cur_ExtName.substring(s + 1)
+        cur_ExtName = cur_ExtName.substring(s + 1);
 
     var i;
     var chkflag = false;
@@ -438,27 +451,32 @@ function chkFileFilter(cur_ExtName) {
     return chkflag;
 }
 function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pAttachSN", tempAttachSN);
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-    createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-    createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
-    createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-    createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
-    createNodeAndInsertText(xmlpara, objNode, "pModifyFlag", pModifyFlag);
-    createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
-    createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-    createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
-
-    xmlhttp.open("POST", "../ezAPRHISTORY/aspx/UpdateAttachHistory.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "TRUE") {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/updateAttachHistory.do",
+		data : {
+			docID : pDocID,
+			attachSN : tempAttachSN,
+			userID : arr_userinfo[1],
+			userName : arr_userinfo[11],
+			userJobTitle : arr_userinfo[13],
+			userDeptID : arr_userinfo[4],
+			userDeptName : arr_userinfo[15],
+			modifyFlag : pModifyFlag,
+			userName2 : arr_userinfo[12],
+			userJobTitle2 : arr_userinfo[14],
+			userDeptName2 : arr_userinfo[16]
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    if (SelectSingleNodeValue(result, "RESULT") == "TRUE") {
     }
     else {
         var pAlertContent = strLang226;

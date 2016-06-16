@@ -112,6 +112,23 @@ public interface EzApprovalGService {
 	public String deleteOpinionInfo(String docID, String companyID, String lang) throws Exception;
 	
 	public String updateOpinionInfo(Document docXML, String companyID, String lang) throws Exception;
+	
+	public String getDocHrefYear(String docID, String companyID) throws Exception;
+	
+	public String getDocDir(String docID) throws Exception;
+	
+	public String getAttachFileInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String updateHistoryForAttach(String docID, String attachSN, String tempUserID, String tempUserName, String tempUserName2, String tempUserJobTitle, String tempUserJobTitle2,
+			String tempUserDeptID, String tempUserDeptName, String tempUserDeptName2, String modifyFlag, String dirPath, String companyID) throws Exception;
+	
+	public String updateAttachFileInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	
+	public String deleteAttachFileInfo(String docID, String companyID, String lang) throws Exception;
+	
+	public String getListInfoXml(String listFlag, String listType, String companyID, String lang) throws Exception;
+	
+	public String getRecordList(Document doc, String lang) throws Exception;
 
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 

@@ -1499,7 +1499,7 @@ var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
         var parameter = pDocID;
-        var url = "/myoffice/ezApprovalG/ezAprDocAttach/aprCabinetAttach_Cross.aspx?" + "DraftFlag=" + DraftFlag;
+        var url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
 
         if (CrossYN() || NonActiveX == "YES") {
             aprcabinetattach_cross_dialogArguments[0] = parameter;

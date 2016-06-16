@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -7,7 +8,9 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +18,13 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -39,7 +45,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  */
 
 @Controller
-public class EzApprovalGController {
+public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -1310,6 +1316,9 @@ public class EzApprovalGController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 기안 의견저장 표출 Method
+	 */	
 	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
@@ -1321,6 +1330,9 @@ public class EzApprovalGController {
 		return result;
 	}
 
+	/**
+	 * 전자결재G 기안 첨부 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/aprAttach.do")
 	public String aprAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1357,5 +1369,282 @@ public class EzApprovalGController {
 		model.addAttribute("userInfo", userInfo);
 		
 		return "ezApprovalG/apprGaprAttach";
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부업로드 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/upload.do")
+	public String upload(MultipartHttpServletRequest request, Model model) throws Exception{
+		MultipartFile multilFile = request.getFile("file1");
+		String useExtension = config.getProperty("config.USE_FileExtension");
+		String companyID = request.getParameter("compid");
+		String docID = request.getParameter("docid");
+		String fileAttachSN = request.getParameter("attachsn");
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, companyID);
+		String fileName = multilFile.getOriginalFilename();
+		String resultUpload = "";
+		String fileLocation = "";
+		int fileSize = (int) multilFile.getSize();
+		int maxSize = 0;
+		
+		if (request.getParameter("maxsize") != null) {
+			maxSize = Integer.parseInt(request.getParameter("maxsize"));
+		}
+		
+		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
+		File uFile = new File(upd);
+		File tFile = new File(tempUpd);
+		
+		if (uFile.isDirectory()) {
+			uFile.mkdir();
+		}
+		
+		if (!tFile.isDirectory()) {
+			tFile.mkdir();
+		}
+		
+		if (fileName.indexOf("\\") > -1) {
+			fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+		}
+		
+		String fileAttachFormatSN = "00000" + fileAttachSN;
+		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, fileAttachFormatSN.length());
+		
+		String saveFileName = docID + fileAttachFormatSN + fileName;
+		
+		if (fileSize > maxSize) {
+			resultUpload = "overflow";
+		} else {
+			if (useExtension.indexOf(fileName.substring(fileName.lastIndexOf(".") + 1)) == -1 && !useExtension.equals("*")) {
+				resultUpload = "denied";
+			} else {
+				writeUploadedFile(multilFile, saveFileName, tempUpd);
+				fileLocation = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + saveFileName;
+				resultUpload = "true";
+			}
+		}
+		
+		model.addAttribute("resultUpload", resultUpload);
+		model.addAttribute("fileLocation", fileLocation);
+		model.addAttribute("fileName", fileName);
+		model.addAttribute("fileSize", fileSize);
+		
+		return "ezApprovalG/apprGupload";
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부명,쪽수 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprAttachName.do")
+	public String aprAttachName(){
+		return "ezApprovalG/apprGaprAttachName";
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부리스트 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/attachRequest.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String attachRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang());
+
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부삭제 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/deleteServerFile.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteServerFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String rtnVal = "";
+		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String attachSN = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String fileName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID());
+		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String fileAttachFormatSN = "00000" + attachSN;
+		
+		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, 4);
+		
+		String fileSpec = upd + docID + fileAttachFormatSN + fileName;
+		
+		if (new File(fileSpec).exists()) {
+			deleteFile(fileSpec);
+			rtnVal = "TRUE";
+		} else {
+			rtnVal = "FALSE";
+		}
+		
+		return rtnVal;
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부히스토리 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/updateAttachHistory.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateAttachHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String attachSN = request.getParameter("attachSN");
+		String tempUserID = request.getParameter("userID");
+		String tempUserName = request.getParameter("userName");
+		String tempUserName2 = request.getParameter("userName2");
+		String tempUserJobTitle = request.getParameter("userJobTitle");
+		String tempUserJobTitle2 = request.getParameter("userJobTitle2");
+		String tempUserDeptID = request.getParameter("userDeptID");
+		String tempUserDeptName = request.getParameter("userDeptName");
+		String tempUserDeptName2 = request.getParameter("userDeptName2");
+		String modifyFlag = request.getParameter("modifyFlag");
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.updateHistoryForAttach(docID, attachSN, tempUserID, tempUserName, tempUserName2, tempUserJobTitle, tempUserJobTitle2, 
+																  tempUserDeptID, tempUserDeptName, tempUserDeptName2, modifyFlag, dirPath, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기안 첨부저장 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprAttachSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprAttachSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		
+		for (int k = 0; k < xmlDom.getElementsByTagName("DATA1").getLength(); k++) {
+			String fileDocID = xmlDom.getElementsByTagName("DATA3").item(k).getTextContent();
+			String oldYear = ezApprovalGService.getDocHrefYear(fileDocID, userInfo.getCompanyID());
+			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
+			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
+			
+			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
+			
+			if (file.exists()) {
+				FileUtils.moveFile(file, new File(upd + fileName));
+			}
+			
+			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
+		}
+		String result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/attachRemove.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String attachRemove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.deleteAttachFileInfo(docID, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/downloadAttach.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String docStatus = request.getParameter("docStatus");
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		String realPath = request.getServletContext().getRealPath("");
+		String result = "";
+		
+		if (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP")) {
+			if (docID != null && !docID.equals("")) {
+				String checkMode = "";
+				
+				if (docStatus.toCharArray().equals("TMP")) {
+					checkMode = "TMP";
+				} else {
+					checkMode = "REC";
+				}
+				
+				int permission = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID());
+				
+				if (permission <= 0) {
+					result = "NOTPERMISSION";
+				}
+			}
+		} else if (docStatus.toUpperCase().equals("END")) {
+			String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+			String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+			
+			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+				result = "NOTPERMISSION";
+			}
+		}
+		
+		if (!result.equals("NOTPERMISSION")) {
+			downFile(response, realPath + filePath, fileName);
+		}
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do")
+	public String aprCabinetAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String draftflag = request.getParameter("draftFlag");
+		
+		model.addAttribute("draftFlag", draftflag);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGaprCabinetAttach";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getLVHearderInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getLVHearderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String listFlag = request.getParameter("listFlag");
+		String listType = request.getParameter("listType");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/showProgress.do")
+	public String showProgress(HttpServletRequest request, Model model){
+		String fileInfo = request.getParameter("fileInfo");
+		
+		model.addAttribute("fileInfo", fileInfo);
+		
+		return "ezApprovalG/apprGshowProgress";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getTransList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getTransList() throws Exception{
+		//TODO: 닷net버전이 미구현 된거같음
+		return "";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getRecordList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecordList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody String xmlDom) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlDom);
+		String result = ezApprovalGService.getRecordList(doc, userInfo.getLang());
+		
+		return result;
 	}
 }

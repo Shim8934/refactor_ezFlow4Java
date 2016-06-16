@@ -654,7 +654,7 @@
 		  </tr>
 		</table>
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-		<form method="post" id="form" name="form" enctype="multipart/form-data" action="../ezAPRATTACH/upload.aspx" target="ifrm" >
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition">       
 		        <a class="file-btn" style="vertical-align:top">
 		          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px;">

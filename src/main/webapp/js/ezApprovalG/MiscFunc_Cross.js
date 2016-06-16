@@ -10,7 +10,7 @@
 
 
             selOption[i] = new Option(strText, strValue);
-            selOption[i].id = strValue;
+            selOption[i].id = strValue
             objSel.options[i] = selOption[i];
         }
     }
@@ -30,7 +30,7 @@ function InitCodeSelBoxWithNullOpt(nodeXml, objSel) {
             strText = getNodeText(GetChildNodes(nodeXml[i])[1]);
 
             selOption[i] = new Option(strText, strValue);
-            selOption[i].id = strValue;
+            selOption[i].id = strValue
             objSel.options[i + 1] = selOption[i];
         }
     }
@@ -49,7 +49,7 @@ function DelListRow(objListView) {
         if (len > 0) {
             for (count1 = 0; count1 < len; count1++) {
                 selRow = GetAttribute(selRows[count1], "id");
-                pListView.DeleteRow(selRow);
+                pListView.DeleteRow(selRow)
 
             }
         }

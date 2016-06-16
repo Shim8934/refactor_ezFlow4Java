@@ -1,12 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -25,8 +29,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -40,6 +46,12 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties config;
+
+	@Autowired
+	private Properties globals;
+	
 	@Resource(name = "EzApprovalGDAO")
 	private EzApprovalGDAO ezApprovalGDAO;
 	
@@ -47,7 +59,7 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 	private EzOrganService ezOrganService;
 	
 	@Resource(name = "egovMessageSource")
-    private EgovMessageSource egovMessageSource;
+    private EgovMessageSource messageSource;
 	
 	// DocType
 	public String staDTDraftDoc = "001";		// 기안문
@@ -1546,7 +1558,6 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 			ezApprovalGDAO.createNewDoc(map);
 			returnVal = tmpDocID.trim();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			returnVal = "";
 		}
 		
@@ -2507,6 +2518,994 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		return rtnVal;
 	}
 
+	@Override
+	public String getDocHrefYear(String docID, String companyID) throws Exception {
+		String rtnValue = EgovDateUtil.getTodayTime().substring(0, 4);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_PDOCID", docID);
+		
+		String href = ezApprovalGDAO.getDocHrefYear(map);
+		
+		if (href != null) {
+			String[] arry = href.split("/");
+			
+			if (arry.length >= 7 && arry[4].length() == 4) {
+				rtnValue = arry[4];
+			}
+		}
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getDocDir(String docID) throws Exception {
+		String tempHref = "";
+
+		if (docID.length() == 0) {
+			tempHref = docID;
+		} else {
+			tempHref = String.valueOf((Integer.parseInt(docID.substring(docID.length() - 3, docID.length())) % 1000));
+		}
+		
+		return tempHref;
+	}
+
+	@Override
+	public String getAttachFileInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception {
+		String listString = "";
+		StringBuffer resultXML = new StringBuffer();
+		String orderOption1 = "";
+		
+		listString = getListHeader("041", companyID, lang);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (sortOption.equals("")) {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				} else {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_MODE", mode);
+		map.put("v_ORDERBY", orderOption1);
+		
+		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getAttachFileInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAttachInfoVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAttachInfoVOList.get(i)));
+		}
+		sb.append("</DATA>");
+
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.toUpperCase().equals("ATTACHUSERNAME")) {
+					fieldName = fieldName + commonUtil.getMultiData(lang);
+				}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, lang) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ATTACHFILESN").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "</DATA6>");
+					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ATTACHFILESIZE").item(k).getTextContent() + "bytes") + "</DATA8>");
+					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("PAGENUM").item(k).getTextContent()) + "</DATA9>");
+					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("ATTACHFILENAME").item(k).getTextContent()) + "</DATA10>");
+					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("BODYATTACH").item(k).getTextContent()) + "</DATA11>");
+					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("DISPLAYNAME").item(k).getTextContent()) + "</DATA12>");
+					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "</DATA13>");
+					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "</DATA14>");
+					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "</DATA15>");
+					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "</DATA16>");
+					resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "</DATA17>");
+					resultXML.append("<DATA18>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "</DATA18>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String updateHistoryForAttach(String docID, String attachSN, String tempUserID, String tempUserName, String tempUserName2, String tempUserJobTitle, String tempUserJobTitle2,
+			String tempUserDeptID, String tempUserDeptName, String tempUserDeptName2, String modifyFlag, String dirPath, String companyID) throws Exception {
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID.trim());
+		map.put("v_ATTACHFILESN", attachSN.trim());
+		
+		int strSN = ezApprovalGDAO.updateHistoryForAttach_M(map) + 1;
+		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.updateHistoryForAttach_I(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAttachInfoVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAttachInfoVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("ATTACHFILENAME").getLength() > 0) {
+			String oldYear = getDocHrefYear(docID, companyID);
+			String source = convWebToPath(docXML.getElementsByTagName("ATTACHFILEHREF").item(0).getTextContent(), dirPath);
+			String target = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
+							getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
+			
+			FileUtils.copyFile(new File(source), new File(target));
+			
+			target = config.getProperty("upload_approvalG.ROOT") + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
+					 getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
+		
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("companyID", companyID);
+			map1.put("v_DOCID", docID.trim());
+			map1.put("v_ATTACHSN", attachSN.trim());
+			map1.put("v_ATTACHNAME", docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent());
+			map1.put("v_ATTACHDISPNAME", docXML.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
+			map1.put("v_ATTACHHREF", target);
+			map1.put("v_ATTACHSIZE", docXML.getElementsByTagName("ATTACHFILESIZE").item(0).getTextContent());
+			map1.put("v_USERID", tempUserID);
+			map1.put("v_USERNAME", tempUserName);
+			map1.put("v_USERNAME2", tempUserName2);
+			map1.put("v_USERJOBTITLE", tempUserJobTitle);
+			map1.put("v_USERJOBTITLE2", tempUserJobTitle2);
+			map1.put("v_USERDEPTID", tempUserDeptID);
+			map1.put("v_USERDEPTNAME", tempUserDeptName);
+			map1.put("v_USERDEPTNAME2", tempUserDeptName2);
+			map1.put("v_MODIFYSN", String.valueOf(strSN));
+			map1.put("v_MODIFYFLAG", modifyFlag.trim());
+			map1.put("v_PAGENUM", docXML.getElementsByTagName("PAGENUM").item(0).getTextContent());
+		
+			try {
+				ezApprovalGDAO.updateHistoryForAttach(map1);
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				rtnVal = "<RESULT>FALSE</RESULT>";
+			}
+		}
+
+		return rtnVal;
+	}
+
+	@Override
+	public String updateAttachFileInfo(Document xmlDom, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(3).getTextContent();
+		String rtnVal = deleteAttachFileInfo(docID, companyID, lang);
+		
+		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
+			String size = "";
+			for (int k = 0; k < xmlDom.getElementsByTagName("ROW").getLength(); k++) {
+				size = xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getTextContent().replace("bytes", "").trim();
+				
+				strSQL.append("INSERT INTO TBAPRATTACHINFO (DocID, AttachFileSN, AttachFileName, ");
+                strSQL.append("AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, ");
+                strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2,");
+				strSQL.append("PageNum, DisplayName, BodyAttach) VALUES ('");
+				strSQL.append(docID + "', '" + xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(2).getTextContent() + "', N'");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent()) + "', N'");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent()) + "', '");
+				strSQL.append(size + "', '" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(4).getTextContent()));
+				strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent()));
+                strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent()));
+				strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent()));
+                strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(16).getTextContent()));
+				strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent()));
+				strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(17).getTextContent()));
+                strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(18).getTextContent()));
+				strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent()));
+				strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(12).getTextContent()));
+                strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent()) + "');\n");
+			}
+
+			strSQL.append("UPDATE TBAPRDOCINFO SET HasAttachYN = 'Y' WHERE DocID = '" + docID + "';");
+			
+			try {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+				map.put("companyID", companyID);
+				
+				ezApprovalGDAO.transactionSQL(map);
+				
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				rtnVal = "<RESULT>FALSE</RESULT>";
+			}
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String deleteAttachFileInfo(String docID, String companyID, String lang) {
+		String rtnVal = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		try {
+			ezApprovalGDAO.deleteAttachFileInfo(map);
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String getListInfoXml(String listFlag, String listType, String companyID, String lang) throws Exception {
+		String typeCode = getListTypeCode(listFlag, listType);
+		String szListXml = getListInfo(typeCode, companyID, lang);
+		
+		return szListXml;
+	}
+
+	@Override
+	public String getRecordList(Document doc, String lang) throws Exception {
+		// TODO Auto-generated method stub
+		StringBuilder strSQL = new StringBuilder();
+		StringBuilder strSQLCnt = new StringBuilder();
+		StringBuilder resultXML = new StringBuilder();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		String deptCode = doc.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim();
+		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
+		String transFlag = doc.getElementsByTagName("TRANSFLAG").item(0).getTextContent().trim();
+		String listFlag = doc.getElementsByTagName("LISTFLAG").item(0).getTextContent().trim();
+		String orderBy = doc.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
+		String pageSize = doc.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim();
+		String pageNo = doc.getElementsByTagName("PAGENO").item(0).getTextContent().trim();
+		String selectClause = "";
+		String extraSelectClause = "";
+		String fromClause = "";
+		String cabJoinClause = "";
+		String strWhereClause = "";
+		String listType = "001";
+		boolean usePublicFlag = false;
+		
+		switch (listFlag) {
+		case "0" :	// 기록물 대장
+			listType = "001";
+			usePublicFlag = true;
+			break;
+
+		case "1" :	// 편철확정대상 기록물
+			listType = "001";
+			break;
+
+		case "2" :	// 기록물 생산현황
+			listType = "003";
+			break;
+
+		case "3" :	// 목록이관 대상
+			listType = "005";
+			break;
+
+		case "4" :	// 파일이관 대상
+			listType = "005";
+			strWhereClause = " And CatalogTransferFlag='1' And " + 
+				"(DocTransferFlag='0' OR DocTransferFlag IS NULL) " + 
+				"And TBRECORD.DocID IS NOT NULL And SeperateAttachNo='00' ";
+			break;
+
+		case "5" :	// 이관목록
+			listType = "005";
+			strWhereClause = " And DocTransferFlag='1' And " +
+                "DocTransferYear=(Select Max(DocTransferYear) From TBSEPERATEATTACH)  ";
+			break;
+
+		case "6" :	// 연기신청목록
+			listType = "007";
+			break;
+
+		case "7" :	// 폐기대상 기록물
+			listType = "001";
+
+			String DFlag = getCode2Name("A35", "003", companyID, lang).toUpperCase().trim();
+			if (DFlag == "Y")
+			{
+				// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
+				strWhereClause = " AND TBCABINET.TerminateFlag = '1' AND " + 
+					EgovDateUtil.getTodayTime().substring(0, 4) + " - TBCABINET.ExpirationYear > TBCABINET.KeepingPeriod ";
+			}
+			else
+			{
+				// 일반 G버전. 폐기 대상은 이관된 기록물.
+				strWhereClause = " And DocTransferFlag='1' ";
+			}
+			break;
+
+		case "9" :	// 첨부대상 기록물
+			listType = "001";
+			usePublicFlag = true;
+			strWhereClause = " And (TBRECORD.DocID IS NOT NULL And TBCABINET.OwnerDeptID='" +
+				deptCode + "' And SeperateAttachNo='00') ";
+			break;
+
+		case "10" :	// 접수목록
+			listType = "001";
+			usePublicFlag = true;
+			strWhereClause = " And (TBENDAPRDOCINFO.DocState='011' OR TBRECORD.DocType ='2') ";
+			break;
+
+		case "11" :	// 발송목록
+			listType = "001";
+			usePublicFlag = true;
+			strWhereClause = " And (TBENDAPRDOCINFO.DocState='014' OR TBRECORD.DocType ='1') ";
+			break;
+		}
+		
+		if (usePublicFlag) {
+			if (getIsUse("A22", "001", companyID, lang).equals("1")) {
+				usePublicFlag = true; //보안등급 사용여부
+			} else {
+				usePublicFlag = false;
+			}
+		}
+		if (orderBy.equals("")) {
+			orderBy = " Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ";
+		}
+		
+		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
+                " SELECT TBRECORD.RecordID, TBRECORD.DocID, TBRECORD.RegisterNo, TBSEPERATEATTACH.CreateDate, " +
+                "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
+                "TBSEPERATEATTACH.CabinetID, TBSEPERATEATTACH.SeperateAttachNo , " + 
+				"TBENDAPRDOCINFO.Href, TBENDAPRDOCINFO.ContainerID, TBENDAPRDOCINFO.FormID, " + 
+				"TBENDAPRDOCINFO.WriterID, TBCABINET.ConfirmFlag, TBCABINET.CabinetClassNo, " + 
+				"TBCABINET.ProcessDeptCode AS CabDeptCode, TBCABINET.OwnerDeptID, " + 
+                "TBRECORD.RegisterDate, TBRECORD.AprMemberTitle, TBRECORD.DrafterName, TBRECORD.AttachFlag, " +
+				"TBCABINET.OwnerTask, TBRECORD.RejectFlag ";
+
+        fromClause = " FROM TBRECORD Left Join TBENDAPRDOCINFO " + 
+			"On TBRECORD.DocID=TBENDAPRDOCINFO.DocID Inner Join TBSEPERATEATTACH " +
+            "On TBRECORD.RecordID=TBSEPERATEATTACH.RecordID ";
+
+		if (usePublicFlag) {
+            fromClause += " Left Join TBEXPENDAPRDOCINFO " + 
+				"On TBRECORD.DocID=TBEXPENDAPRDOCINFO.DocID ";
+
+			// 수정(2005.09.29) : 보안결재 필드 추가
+			selectClause += ", TBEXPENDAPRDOCINFO.SecurityApproval ";
+		}
+		
+		String arrListInfo = getLVFieldInfo(listType, companyID, lang);
+		Document arrList = commonUtil.convertStringToDocument(arrListInfo);
+		
+		for (int k = 0; k < arrList.getElementsByTagName("SELECTFIELD").getLength(); k++) {
+			if (!makeListField(arrList.getElementsByTagName("COLNAME").item(k).getTextContent()).equals("")) {
+				if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLNAME").item(k).getTextContent().toUpperCase().trim()) < 0) {
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent().trim();
+				} else if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLALIAS").item(k).getTextContent().toUpperCase().trim()) < 0) {
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent().trim();
+				}
+			}
+		}
+		
+		cabJoinClause = getCabJoinClause(doc, deptCode, transFlag, listFlag, companyID);
+		
+		if (doc.getElementsByTagName("RECDEPTCODE").getLength() > 0) {
+			strWhereClause += " AND TBRECORD.ProcessDeptCode = '" + makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().trim()) + "' ";
+		}
+
+		if (doc.getElementsByTagName("TITLE").getLength() > 0) {
+			strWhereClause += " AND TBSEPERATEATTACH.Title Like N'%" + makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().trim()) + "%' ";
+		}
+
+		if (doc.getElementsByTagName("REGTYPE").getLength() > 0) {
+			strWhereClause += " AND TBSEPERATEATTACH.RegisterType = '" + makeRightField(doc.getElementsByTagName("REGTYPE").item(0).getTextContent().trim()) + "' ";
+		}
+
+		if (doc.getElementsByTagName("SREGDATE").getLength() > 0) {
+            strWhereClause += " AND TBRECORD.RegisterDate >= TO_DATE('" + makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent().trim().substring(0, 19)) + "','YYYY.MM.DD HH24:MI:SS') ";
+		}
+		
+		if (doc.getElementsByTagName("EREGDATE").getLength() > 0) {
+            strWhereClause += " AND TBRECORD.RegisterDate <= TO_DATE('" + makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent().trim().substring(0, 19)) + "','YYYY.MM.DD HH24:MI:SS') ";
+		}
+		
+		if (doc.getElementsByTagName("SC").getLength() > 0) {
+			strWhereClause += " AND TBRECORD.RecordID IN (Select RecordID " +
+                "From TBSPECIALCATALOGINFO_REC Where SC1 Like N'%" +
+				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC2 Like N'%" +
+				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC3 Like N'%" + 
+				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%') ";
+		}
+		
+        if (doc.getElementsByTagName("DRAFTER").getLength() > 0) {
+            strWhereClause += " AND (TBENDAPRDOCINFO.WriterName Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%' ";
+            strWhereClause += " OR TBENDAPRDOCINFO.WriterName2 Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%') ";
+        }
+        
+        if (usePublicFlag) {
+        	String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6");
+        	
+        	if (userSecurityCode == null || userSecurityCode.equals(" ") || userSecurityCode.equals("")) {
+        		userSecurityCode = "0";
+        	}
+        	
+        	if (getIsUse("A22", "005", companyID, lang).equals("1")) {
+        		strWhereClause += " AND (TBEXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBEXPENDAPRDOCINFO.SecurityCode IS NULL or GetIsLineInfo(TBRECORD.DocID, '" + userID + "') = 'Y') ";
+        	} else {
+        		strWhereClause += " AND (TBEXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBEXPENDAPRDOCINFO.SecurityCode IS NULL) ";
+        	}
+        }
+        
+        strSQL.append(selectClause);
+        strSQL.append(extraSelectClause);
+        strSQL.append(fromClause);
+        strSQL.append(cabJoinClause);
+        strSQL.append(" Where TBRECORD.DelFlag='0' AND TBSEPERATEATTACH.DelFlag='0' ");
+        strSQL.append(strWhereClause);
+        
+        int start = 0, end = 0;
+        
+        if (doc.getElementsByTagName("ISDOCPRINT").getLength() > 0 && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().trim().equals("TRUE")) {
+        	end = Integer.parseInt(doc.getElementsByTagName("PAGENO").item(0).getTextContent().trim());
+        	start = Integer.parseInt(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim());
+        } else {
+        	end = Integer.parseInt(pageSize) * Integer.parseInt(pageNo);
+        	start = end - Integer.parseInt(pageSize) + 1;
+        }
+        
+        if (doc.getElementsByTagName("ISDOCPRINT").getLength() > 0 && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().trim().equals("TRUE") && start < 0) {
+        	strSQL.append(" ) N ) A ");
+        } else {
+        	strSQL.append(" ) N ) A WHERE ROWNUM_ BETWEEN " + start + " AND " + end);
+        }
+        
+        strSQLCnt.append(fromClause);
+        strSQLCnt.append(cabJoinClause);
+        strSQLCnt.append(" Where TBRECORD.DelFlag='0' AND TBSEPERATEATTACH.DelFlag='0' ");
+        strSQLCnt.append(strWhereClause);
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sqlString", "SELECT * FROM ( " + strSQL.toString());
+		map.put("companyID", companyID);
+		
+        List<ApprGRecordVO> apprGRecordVOList = ezApprovalGDAO.getRecordList(map);
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGRecordVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGRecordVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("sqlString", "SELECT COUNT(TBRECORD.RecordID) " + strSQLCnt.toString());
+		map1.put("companyID", companyID);
+		
+		int docCnt = ezApprovalGDAO.getRecordListCount(map1);
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALDOCCOUNT>" + docCnt + "</TOTALDOCCOUNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < arrList.getElementsByTagName("ROW").getLength(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + arrList.getElementsByTagName("NAME").item(k).getTextContent().trim() + "</NAME>");
+			resultXML.append("<WIDTH>" + arrList.getElementsByTagName("WIDTH").item(k).getTextContent().trim() + "</WIDTH>");
+			
+			if (arrList.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TBRECORD.ATTACHFLAG")) {
+				resultXML.append("<COLNAME>" + "HASATTACHYN" + "</COLNAME>");
+			}
+			if (arrList.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TBRECORD.REJECTFLAG")) {
+				resultXML.append("<COLNAME>" + "REJECTFLAG" + "</COLNAME>");
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		resultXML.append("<ROWS>");
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int p = 0; p < arrList.getElementsByTagName("COLALIAS").getLength(); p++) {
+				String fieldName = arrList.getElementsByTagName("COLALIAS").item(p).getTextContent().trim().toUpperCase();
+				
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>");
+				
+				switch (arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()) {
+				case "dtSerialNum" :						// 순번
+                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
+					break;
+
+				case "dtCabClassNo" :						// 기록물철 분류번호
+					//분류번호(처리과기관코드+단위업무번호+생산년도+기록물철등록연번+권호수)
+					resultXML.append(getCabinetNo(makeListField(docXML.getElementsByTagName("CABDEPTCODE").item(k).getTextContent()),
+							makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()),
+							makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(k).getTextContent()),
+							makeListField(docXML.getElementsByTagName("REGSERIALNO").item(k).getTextContent()),
+							makeListField(docXML.getElementsByTagName("VOLUMENO").item(k).getTextContent())));
+					break;
+
+				case "dtRegisterNo" :						// 기록물 등록번호
+					//기록물 등록번호(처리과기관코드+기록물등록연번)
+					resultXML.append(getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(k).getTextContent()),
+						makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent())));
+					break;
+
+				case "dtRegisterType" :						// 등록구분
+					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), companyID, lang));
+					break;
+
+				case "dtBool" :								// Y/N 형식의 데이터 타입
+					String tempValue = makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent().trim());
+					if (tempValue == "1") {
+						resultXML.append("Y");
+					} else {
+						resultXML.append("N");
+					}
+					break;
+
+				case "dtDate" :								// 날짜 타입(시간제외)
+					resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()), 1));
+					break;
+
+				case "dtDateTime" :								// 날짜 타입(시간포함)
+System.out.println(fieldName);
+					resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()), 0));
+					break;
+
+				default:
+					resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(k).getTextContent()));
+					break;
+				}
+				
+				resultXML.append("</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent()) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("RECORDID").item(k).getTextContent()) + "</DATA6>");
+					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(k).getTextContent()) + "</DATA8>");
+					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(k).getTextContent()) + "</DATA9>");
+					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "</DATA10>");
+					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(k).getTextContent()) + "</DATA11>");
+					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "</DATA12>");
+					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent()) + "</DATA13>");
+					
+					if (usePublicFlag) {
+						resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+					}
+					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "</DATA15>");
+				}
+				resultXML.append("</CELL>");
+				
+				if (fieldName.toUpperCase().equals("ATTACHFLAG")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("ATTACHFLAG").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (fieldName.toUpperCase().equals("REJECTFLAG")) {
+					resultXML.append("<REJECTFLAG>" + docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent() + "</REJECTFLAG>");
+				}
+			}
+		}
+		return resultXML.toString();
+	}
+
+	public String formatDateForView(String pDate, int iFlag) {
+		if (pDate.length() > 0) {
+			if (iFlag == 0) {
+				return pDate;
+			} else {
+				return pDate.substring(0, 10);
+			}
+		} else {
+			return "";
+		}
+	}
+
+	public String getRegTypeString(String pCode, String companyID, String lang) throws Exception{
+		return getCabinetCode2Name("003", pCode, companyID, lang);
+	}
+
+	public String getRecRegSNToName(String deptName, String regNo) {
+		return deptName + "-" + regNo;
+	}
+
+	public String getCabinetNo(String strDeptCode, String strTaskCode, String strPYear, String strRegSerialNo, String strVolNo) {
+		return strDeptCode + "-" + strTaskCode + "-" + strPYear + "-" + strRegSerialNo + "(" + strVolNo + ")";
+	}
+
+	public String getCabJoinClause(Document doc, String deptCode, String transFlag, String listFlag, String companyID) throws Exception{
+		StringBuilder strSQL = new StringBuilder();
+		String cabWhere = "";
+		String tempDeptCode = deptCode;
+		String g_Const_CabinetWhereClause = " Where TBCABINET.DelFlag = '0' " + 
+				"AND TBCABINETCLASS.DelFlag = '0' AND NOT (TBCABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') ";
+		
+		if (doc.getElementsByTagName("DEPTCODE").getLength() > 0) {
+			tempDeptCode = doc.getElementsByTagName("DEPTCODE").item(0).getTextContent();
+		}
+		
+		strSQL.append("Inner Join ( Select ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, ");
+        strSQL.append("TaskName, TaskName2, VolumeNo, CabinetID, TCabinetID, TBCABINET.CabinetClassNo, ");
+		strSQL.append("DisplayEndDate, DisplayReason, ConfirmFlag, ProductionYear, RegSerialNo, ");
+		strSQL.append("DisplayRecFlag, ExTransYear, TransDelayReason, TransDelayFlag, OwnerDeptID, ");
+        strSQL.append("OwnerTask, TerminateFlag, ExpirationYear, KeepingPeriod " + " From TBCABINETCLASS  Inner Join " +
+                "TBCABINET  On TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo ");
+        
+        switch (listFlag) {
+		case "0" :		// 기록물 대장
+			if (doc.getElementsByTagName("CABINETID").getLength() > 0) {
+				cabWhere = "WHERE CabinetID IN (";
+				for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
+					if (k == 0) {
+						cabWhere += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
+					} else {
+						cabWhere += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
+					}
+				}
+				cabWhere += ")";
+			} else {
+				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
+			}
+			break;
+
+		case "1" :		// 편철확정대상 기록물
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.TerminateFlag='1' And TBCABINETCLASS.ConfirmFlag='0'";
+			break;
+
+		case "2" :		// 기록물 생산 현황
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM SYSDATE)";
+			break;
+
+		case "3" :		// 목록이관 대상
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.ConfirmFlag='1' " + 
+					"And ( ( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+		            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM SYSDATE) " +
+		            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+		            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM SYSDATE) ) " + 
+					") ) And CatalogTransferFlag='0' ";
+			break;
+
+		case "6" :		// 연기신청목록
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + "And TBCABINETCLASS.KeepingPlace='1' " +
+		            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+		            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM SYSDATE) ) " +
+		            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM SYSDATE) ) OR " +
+		            " ( TBCABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBCABINET ) ) ) ";
+			break;
+
+		default : 
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
+			break;
+		}
+        
+        if (doc.getElementsByTagName("CHARGER").getLength() > 0) {
+        	cabWhere += "AND TBCABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
+        			"From TBCABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
+        }
+
+		if (doc.getElementsByTagName("TRANSEXPIRE").getLength() > 0) {
+			cabWhere += g_Const_TransExpCabConst_Function(companyID);
+		}
+
+		if (doc.getElementsByTagName("CABTITLE").getLength() > 0) {
+			cabWhere += "AND TBCABINETCLASS.Title Like N'%" + makeSearchField(doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim()) + "%' ";
+		}
+		
+		strSQL.append(cabWhere + ") TBCABINET On TBSEPERATEATTACH.CabinetID=TBCABINET.CabinetID ");
+
+		if (transFlag == "1") {
+			strSQL.append("OR TBSEPERATEATTACH.CabinetID=TBCABINET.TCabinetID ");
+		}
+
+		return strSQL.toString();
+	}
+
+	public String makeSearchField(String orgStr) {
+		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+	}
+
+	public String g_Const_TransExpCabConst_Function(String companyID) throws Exception{
+		String strSQL = "";
+		String accountingYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, "1");
+		
+		if (!accountingYear.trim().equals("")) {
+			strSQL = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
+                    "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+                    " And TBCABINETCLASS.ConfirmYear < '" + (Integer.parseInt(accountingYear) - 1) + "'" +
+                    " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And RTRIM(DISPLAYENDDATE) <> '' AND TBCABINETCLASS.DisplayEndDate<'" + accountingYear + "') " +
+                    " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<'" + (Integer.parseInt(accountingYear) - 1) + "') " +
+                    " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
+	    } else {
+	        strSQL = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
+	                "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+	                " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM SYSDATE-(INTERVAL '1' YEAR)) " +
+	                " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+	                " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) ) " +
+	                " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
+	
+	    }
+		
+		return strSQL;
+	}
+
+	public String getLVFieldInfo(String listType, String companyID, String lang) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_LISTTYPE", listType);
+		map.put("v_LANGTYPE", lang);
+		
+		List<ApprGListInfoVO> apprGListInfoVOList = ezApprovalGDAO.getLVFieldInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGListInfoVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGListInfoVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	public String getListInfo(String typeCode, String companyID, String lang) throws Exception{
+		StringBuilder strSQL = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_LISTTYPE", typeCode);
+		map.put("v_LANGTYPE", lang);
+		
+		List<ApprGListInfoVO> apprGListInfoVOList = ezApprovalGDAO.getListInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGListInfoVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGListInfoVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		long width = 0;
+		
+		strSQL.append("<LISTINFO>");
+		
+		for (int k = 0; k < dlength; k++) {
+			strSQL.append("<CELL>");
+			strSQL.append("<SN>" + makeListField(docXML.getElementsByTagName("SN").item(k).getTextContent().trim()) + "</SN>");
+			strSQL.append("<NAME>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent().trim()) + "</NAME>");
+			strSQL.append("<WIDTH>" + makeListField(docXML.getElementsByTagName("WIDTH").item(k).getTextContent().trim()) + "</WIDTH>");
+			
+			if (!docXML.getElementsByTagName("WIDTH").item(k).getTextContent().trim().equals("")) {
+				width += Long.parseLong(docXML.getElementsByTagName("WIDTH").item(k).getTextContent().trim());
+			}
+			strSQL.append("<TABLENAME>" + makeListField(docXML.getElementsByTagName("TABLENAME").item(k).getTextContent().trim()) + "</TABLENAME>");
+			strSQL.append("<COLNAME>" + makeListField(docXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim()) + "</COLNAME>");
+			strSQL.append("<COLALIAS>" + makeListField(docXML.getElementsByTagName("COLALIAS").item(k).getTextContent().trim()) + "</COLALIAS>");
+			strSQL.append("<DTYPE>" + makeListField(docXML.getElementsByTagName("DTYPE").item(k).getTextContent().trim()) + "</DTYPE>");
+			strSQL.append("</CELL>");
+		}
+		strSQL.append("<TWIDTH>" + width + "</TWIDTH>");
+		strSQL.append("</LISTINFO>");
+		
+		return strSQL.toString();
+	}
+
+	//DocList_Flag- "RECORD":기록물 리스트, "CABINET":기록물철 리스트
+	//ListTypeFlag- 0:대장목록, 1:편철확정, 2:생산현황고보, 3:목록이관대상, 4:파일이관대상, 5:이관목록, 6:연기신청목록
+	public String getListTypeCode(String listFlag, String listType) {
+		String typeCode = "";
+        switch (listFlag.toUpperCase()) {
+        case "CABINET":
+            switch (listType.toUpperCase()) {
+            case "0":	// 기록물철 대장
+                typeCode = "002";
+                break;
+
+            case "1":	// 편철확정 대상 기록물철
+                typeCode = "002";
+                break;
+
+            case "2":	// 기록물철 생산현황보고
+                typeCode = "P01";
+                break;
+
+            case "3":	// 목록 이관대상
+                typeCode = "P01";
+                break;
+
+            case "4":	// 파일 이관대상
+                typeCode = "P01";
+                break;
+
+            case "5":	// 이관목록
+                typeCode = "P01";
+                break;
+
+            case "6":	// 연기신청 목록
+                typeCode = "008";
+                break;
+
+            case "7":	// 연기신청 목록
+                typeCode = "002";
+                break;
+
+            case "8":	// 연기신청 목록
+                typeCode = "009";
+                break;
+
+            case "9":	// 인계기록물철
+                typeCode = "002";
+                break;
+
+            case "10":	// 종료연도 연기의뢰 기록물철(업무담당자)
+                typeCode = "010";
+                break;
+
+            case "11":	// 종료연도 연기확인 기록물철(기록물 관리책임자)
+                typeCode = "010";
+                break;
+
+            default:
+                typeCode = "002";
+                break;
+            }
+            break;
+
+        case "RECORD":
+            switch (listType.toUpperCase()) {
+            case "0":	// 기록물 대장
+                typeCode = "001";
+                break;
+
+            case "1":	// 편철확정 대상 기록물
+                typeCode = "001";
+                break;
+
+            case "2":	// 기록물 생산현황보고
+                typeCode = "P02";
+                break;
+
+            case "3":	// 목록이관대상
+                typeCode = "P02";
+                break;
+
+            case "4":	// 파일이관대상
+                typeCode = "P02";
+                break;
+
+            case "5":	// 이관목록
+                typeCode = "P02";
+                break;
+
+            case "6":	// 연기신청 목록
+                typeCode = "007";
+                break;
+
+            case "7":	// 폐기대상 기록물
+                typeCode = "001";
+                break;
+
+            case "9":	// 완료첨부
+                typeCode = "001";
+                break;
+
+            case "10":	// 접수목록
+                typeCode = "001";
+                break;
+
+            case "11":	// 발송목록
+                typeCode = "001";
+                break;
+
+            default:
+                typeCode = "001";
+                break;
+            }
+            break;
+
+        case "CABHIST":		// 기록물철등록부 변경이력
+            typeCode = "P03";
+            break;
+
+        case "RECHIST":		// 기록물등록대장 변경이력
+            typeCode = "P04";
+            break;
+
+        case "SCLIST":			// 특수목록 리스트
+            typeCode = "P05";
+            break;
+
+        case "ATTACH":			// 첨부리스트
+            typeCode = "P06";
+            break;
+
+        case "DISTLIST":		// 배부대장
+            typeCode = "P07";
+            break;
+
+        case "Delivery":		// 배부대장
+            typeCode = messageSource.getMessage("ezApprovalG.t96", new Locale(globals.getProperty("Globals.language")));
+            break;
+        }
+        
+        return typeCode;
+	}
+
+	public String getNDigitNum(String strValue, int numDigits) {
+		int valueLen = strValue.length();
+		
+		if (valueLen >= numDigits) {
+			return strValue;
+		} else {
+			String tempDigit = "0" + "" + (numDigits - valueLen);
+			
+			return tempDigit + strValue;
+		}
+	}
+
+	public String convWebToPath(String href, String dirPath) throws Exception{
+		String tempPath = href.toLowerCase();
+		tempPath = tempPath.replace("/files/upload_approvalg/", dirPath);
+		
+		return tempPath;
+	}
+
 	public String makeTaskListXmlAll(Document docXML, String companyID, String langType) throws Exception{
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
@@ -2761,12 +3760,7 @@ public class EzApprovalGServiceImpl implements EzApprovalGService {
 		map.put("companyID", companyID);
 		
 		rtnVal = ezApprovalGDAO.aprGetNewID(map);
-		
-		int strLen = 20 - rtnVal.length();
-		
-		for (int k = 0; k < strLen; k++) {
-			rtnVal = "0" + rtnVal;
-		}
+		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
 		
 		return rtnVal;
 	}

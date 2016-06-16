@@ -13,7 +13,7 @@ function DocFileAttach_Click(obj) {
         regData = navigator.systemLanguage;
     else if (document.getElementById) {
         if (navigator && navigator.systemLanguage)
-            regData = navigator.systemLanguage.substr(0, 2)
+            regData = navigator.systemLanguage.substr(0, 2);
         else {
             if (typeof clientInformation != 'undefined')
                 regData = clientInformation.systemLanguage;
@@ -39,22 +39,28 @@ function trim(str) {
 
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+    
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTotalAttachInfo.do",
+		data : {
+			docID : tempDocID,
+			mode : INGFlag
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "NODE", tempDocID);
-    createNodeAndInsertText(xmlpara, objNode, "NODE", INGFlag);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var xmlRtn = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+    var xmlRtn = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 
     if (xmlRtn.length > 0) {
         var strAttach = " &nbsp ";
-        var rep = /'/g
+        var rep = /'/g;
         for (i = 0; i < xmlRtn.length; i++) {
             var Row = xmlRtn[i];
             var Cell = GetChildNodes(Row);
@@ -100,7 +106,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var protocol = window.location.protocol;
                 var serverName = window.location.hostname;
 
-                strAttach = strAttach + "<a href='" + protocol + "//" + serverName + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=APPROVALG&DOCID=" + tempDocID + "&DOCSTATUS=" + INGFlag + "&DOCATTACHSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filepath=" + filepath + "'" + " onclick='AttachProcess()'>";
+                strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess()'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0'>";
@@ -114,15 +120,15 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var OpenLocation = "";
                 if (FileDocID == "" && FilePath == "") {
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
-                    strAttach = strAttach + "<IMG SRC='/Images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; "
+                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }             
                 else if (FileExt == "hwp") {
                     openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + escapenew(FileDocID) +
 						"&DocHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                    strAttach = strAttach + "<IMG SRC='/Images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; "
+                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }
                 else {
                     if (CrossYN() || NonActiveX == "YES") {
@@ -138,8 +144,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     }
                     openLocation = openLocation + "?DocID=" + escapenew(FileDocID) + "&DocHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                    strAttach = strAttach + "<IMG SRC='/Images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; "
+                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }
             }
 

@@ -3311,7 +3311,7 @@ function getDeptInfo_nodName(pDeptID,NodeName)
 
 var g_progresswin = null;
 function showProgress() {
-	g_progresswin = modelessWindow("/myoffice/ezApprovalG/show_progress.aspx?fileinfo=" + escape(strLang313) , "", 390, 185, g_progresswin);
+	g_progresswin = modelessWindow("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI(strLang313) , "", 390, 185, g_progresswin);
     //while (g_progresswin.document.readyState != "complete") { }// 2011.02.16 IE9 지원안함.
 	
 
