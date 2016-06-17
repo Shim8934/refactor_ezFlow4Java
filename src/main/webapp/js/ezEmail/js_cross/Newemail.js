@@ -525,7 +525,7 @@ function reject_onclick_Complete(retVal)
         createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "DENIAL", retVal[i]);
     }
     var xmlHTTP = new XMLHttpRequest();
-    xmlHTTP.open("POST", "/ezEmail/mailRequestDenial.do?mode=DENIAL", false);
+    xmlHTTP.open("POST", "/ezEmail/mailRequestDenial.do", false);
     xmlHTTP.setRequestHeader("Content-Type", "text/xml");
     xmlHTTP.send(xmlpara);
 

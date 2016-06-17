@@ -191,6 +191,7 @@
 		                    var _exp = "\"" + MakeXMLString(spltActVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
 		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 		                    break;
 		                case "COPY":
 		                    ActObj.selectedIndex = 4;
@@ -248,13 +249,13 @@
 		        for (var i = 0 ; i < spltExpt.length; i++) {
 		            AddRule(ExptArea);
 		            ExptObj = document.all("Exception").item(i);
-		
+		            
 		            switch (spltExpt[i]) {
 		                case "DOMAIN":
 		                    ExptObj.selectedIndex = 1;
 		                    ExptObj.item(1).checked = true;
 		                    var _exp = "\"" + spltExptVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -392,7 +393,7 @@
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
 		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
-		        DivPopUpShow(400, 355, "../mail_selectfolder_Cross.aspx");
+		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        try {
@@ -418,7 +419,7 @@
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
 		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
 		        mail_selectfolder_cross_dialogArguments[3] = obj.parentNode;
-		        DivPopUpShow(400, 355, "../mail_selectfolder_Cross.aspx");
+		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFoldercell_Complete(mailBoxInfo) {
 		        try {

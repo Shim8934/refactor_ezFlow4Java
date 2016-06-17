@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.io.StringReader;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +10,6 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.mail.Address;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -767,34 +764,45 @@ public class EzEmailMailListController {
 			return returnData;
 		}
 		
-		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"),"UTF-8");
+		StringBuilder sb = new StringBuilder();
+		
+		userId = userId + "@" + config.getProperty("config.DomainName");
+		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
+		
+		List<String> addresses = new ArrayList<String>();
 		
 		for (int i=0; i<nodes.getLength(); i++) {
 			String address = nodes.item(i).getTextContent();
-			if (address.indexOf(" ") > -1) {
-				String email = address.split(" ")[1];
-				if (email != null) {
-					email = email.replace("<", "");
-					email = email.replace(">", "");
-					if (!email.trim().equals("")) {
-						inputParams += "&rejectId=" + URLEncoder.encode(email,"UTF-8");
-					}
+			InternetAddress internetAddress = new InternetAddress(address);
+			String email = internetAddress.getAddress();
+			String name = internetAddress.getPersonal();
+			
+			if (name == null) {
+				name = internetAddress.getAddress();
+			}
+			
+			if (email != null) {
+				if (!addresses.contains(email)) {
+					String displayName = address + " " + egovMessageSource.getMessage("ezEmail.t270", locale);
+					sb.append("&displayName=" + URLEncoder.encode(displayName, "UTF-8"));
+					sb.append("&rejectId=" + URLEncoder.encode(email, "UTF-8"));
+					addresses.add(email);
 				}
 			}
 		}
 		
+		String inputParams = sb.toString();
 		logger.debug("inputParams=" + inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setMailReject", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRejectRule", inputParams);
 		
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
 		
-        
-        if (object.get("resultCode") != null) {
-        	returnData = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
+		if (object.get("resultCode") != null) {
+			returnData = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
         }
-        
+		
 		return returnData;
 	}
 	

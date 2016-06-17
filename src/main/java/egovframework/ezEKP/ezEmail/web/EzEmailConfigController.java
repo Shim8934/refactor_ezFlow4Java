@@ -699,6 +699,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					}
 					sb.append("&type=action");
 					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent().toLowerCase(), "UTF-8"));
+					
+					if (rowChilds.item(j).getTextContent().equalsIgnoreCase("IMPORTANCE")) {
+						sb.append("&value=" + rowChilds.item(j+1).getTextContent().toLowerCase());
+						break;
+					} else if (rowChilds.item(j).getTextContent().equalsIgnoreCase("READ") || rowChilds.item(j).getTextContent().equalsIgnoreCase("DELETE")) {
+						sb.append("&value=");
+						break;
+					}
+					
 				} else if (rowChilds.item(j).getNodeName().equals("ACTVALUE") || rowChilds.item(j).getNodeName().equals("URL")) {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
 						sb.append("&value=");
@@ -740,8 +749,6 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		if (mode.equalsIgnoreCase("NEW")) { //룰 추가
 			strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setInboxRule", inputParams);
-		} else if (mode.equalsIgnoreCase("DENIAL")) { //수신거부 추가
-			
 		} else if (mode.equalsIgnoreCase("MOD")) { //룰 수정
 			String ruleId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			inputParams += "&ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
@@ -852,8 +859,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION")) {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
-					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("READ")
-							|| obj.get("kind").toString().equalsIgnoreCase("IMPORTANCE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
+					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
 							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
@@ -861,6 +867,24 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						
 						Element values = doc.createElement("VALUES");
 						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+						tAction.appendChild(values);
+						
+					} else if (obj.get("kind").toString().equalsIgnoreCase("IMPORTANCE")) {
+						Element kind = doc.createElement("KIND");
+						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
+						tAction.appendChild(kind);
+						
+						Element values = doc.createElement("VALUES");
+						values.appendChild(doc.createCDATASection(obj.get("value").toString().toUpperCase()));
+						tAction.appendChild(values);
+						
+					} else if (obj.get("kind").toString().equalsIgnoreCase("READ")) {
+						Element kind = doc.createElement("KIND");
+						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
+						tAction.appendChild(kind);
+						
+						Element values = doc.createElement("VALUES");
+						values.appendChild(doc.createCDATASection("READ"));
 						tAction.appendChild(values);
 						
 					} else if (obj.get("kind").toString().equalsIgnoreCase("MOVE") || obj.get("kind").toString().equalsIgnoreCase("COPY")) {

@@ -793,7 +793,7 @@
 			<option value="DELETE"><spring:message code='ezEmail.t168' /></option>
 			<option value="REDIRECTION"><spring:message code='ezEmail.t837' /></option>
 			<option value="COPY"><spring:message code='ezEmail.t838' /></option>
-			<option value="READ"><spring:message code='ezEmail.t839' /></option>
+			<!-- <option value="READ"><spring:message code='ezEmail.t839' /></option> -->
 			<option value="IMPORTANCE"><spring:message code='ezEmail.t840' /></option>
 			<!-- <option value="FORWARD"><spring:message code='ezEmail.t841' /></option> -->
 		</select><span id="ActS" name="ActS" style="display:inline-block;width:230px;height:20px;border:0px solid #dbdbda;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
