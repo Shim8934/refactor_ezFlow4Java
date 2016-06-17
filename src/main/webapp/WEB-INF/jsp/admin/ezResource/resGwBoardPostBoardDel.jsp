@@ -90,7 +90,7 @@
   	        		<div class="warnintxt01" style="text-align:left">
 	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="136" height="112"></span>
 	        			<dl class="warningdl">
-	        				<dd> ${wrnMsg}</dd>
+	        				<dd> ${pWrnMsg}</dd>
 	        			</dl>
 	        		</div>
 	    		</div>

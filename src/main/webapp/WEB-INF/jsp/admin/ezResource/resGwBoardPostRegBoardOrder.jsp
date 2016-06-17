@@ -67,7 +67,7 @@
 					var curr_id, next_id;
 					curr_id = selectobj.options[index].value;		
 					next_id = selectobj.options[newidx].value;
-				
+	
 					if( ChgStep_xmlhttp(inc, curr_id, next_id) ) {
 						tmp = selectobj.options[index].value;		
 						selectobj.options[index].value = selectobj.options[newidx].value;		
@@ -104,12 +104,13 @@
 					xmlhttp.send();
 					var rv = xmlhttp.responseText;
 
-					if( rv == "True")
+					if( rv == "true") {
 						return(true);
-					else
+					} else {
 						return(false);
-				    
+					}
 				} catch(e) { 
+					
 				}
 			}
 
@@ -175,7 +176,7 @@
 				<table class="popuplist" style="width:100%">
         			<tr>
             			<td>
-                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px">  ${subBrdLst } </select>
+                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px">  ${subBrdLst} </select>
             			</td>
             			<td width="30" align="center">
                         	<img src="/images/arr_up.gif" vspace="2" style="cursor:pointer" onClick="javascript:SetOrder(-1)"><br>

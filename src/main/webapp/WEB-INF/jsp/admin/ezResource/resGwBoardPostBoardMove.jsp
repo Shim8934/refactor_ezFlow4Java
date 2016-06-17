@@ -92,7 +92,7 @@
 
 				var para = new Array();
 				var retVal = new Array();
-				var url = "organ.do";
+				var url = "/admin/ezResource/organ.do";
 				para[1] = pCompanyID;
 				
 				if (CrossYN()) {
