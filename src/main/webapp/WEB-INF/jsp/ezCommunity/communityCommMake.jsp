@@ -161,7 +161,7 @@
 	
 	    <table class="content">
 	        <form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
-	            <input type="hidden" name="makeID" value="<c:out value='${userInfoUserID }' />">
+	            <input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
 	            <input type="hidden" name="hiddenClubName">
 	            <input type="hidden" name="hiddenClubName2">
 	            <input type="hidden" name="hiddenIntro">

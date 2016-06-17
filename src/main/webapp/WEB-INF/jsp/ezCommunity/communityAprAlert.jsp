@@ -11,6 +11,7 @@
 		
 		
 		<script type="text/javascript">
+		<!--
 			function btn_OpinionOK_onclick() {
 		        window.close();
 		    }
@@ -20,8 +21,8 @@
 	
 		        //IE 이외에 브라우져에서 창크기 다시 조절
 		        var UserAgentState = navigator.userAgent.toLowerCase();
-		        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
-		        if (!browserIE) {
+		        
+		        if (!CrossYN()) {
 		            if (UserAgentState.indexOf("firefox") != -1) {
 		                window.resizeTo(349, 279);
 		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
@@ -31,6 +32,7 @@
 		            }
 		        }
 		    }
+		//-->
 		</script>
 	</head>
 	<body style="overflow:hidden;">

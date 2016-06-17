@@ -3,8 +3,11 @@ package egovframework.ezEKP.ezCommunity.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.ModelMap;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -30,10 +33,44 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
+	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, ModelMap model, String code) throws Exception;
+	
+	public String getLeftCommunity(LoginVO userInfo) throws Exception;
+	
+	public String getLeftBoardList() throws Exception;
+	
+	public void commMakeOk(LoginVO userInfo, CommunityClubVO clubVO, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	public String getSubBoard(LoginVO userInfo, HttpServletRequest request) throws Exception;
+	
+	public String goAdminOk(String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception;
+	
+	public void checkCommHome(LoginVO userInfo , ModelMap model, HttpServletRequest request) throws Exception;
+
+	public void popupCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	public String commHomeInfo(LoginVO userInfo, String code) throws Exception;
+	
+	public String commHomeBoardInfo(HttpServletRequest request) throws Exception;
+	
+	public void boardItemList(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception;
+	
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String strWriterFakeName, String hasAttach) throws Exception;
+	
+	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String previousItemID, String previousTitle, String nextItemID, String nextTitle, String cAdmin, String gcAdmin, String pVersionUse, String showAdjacent, String adjacentItemsEnableFlag) throws Exception;
+	
+	public String confirmPassword(String itemID, String newPassword) throws Exception;
+	
+	public String bbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage,
+			String bName, int comNoPerPage) throws Exception;
+	
+	
+	
+	
 	
 	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception;
-	
-	public List<CommunityCBoardVO> getLeftBoardList() throws Exception;
 	
 	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception;
 	
@@ -289,7 +326,7 @@ public interface EzCommunityService {
 	
 	public int getReservedItemListCount(String id) throws Exception;
 	
-	public int checkOneLineOwner(String pReplyID, String id) throws Exception;
+	public String checkOneLineOwner(String pReplyID, String id) throws Exception;
 	
 	public int pollResGetAllCount(int questionID) throws Exception;
 
@@ -325,11 +362,11 @@ public interface EzCommunityService {
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
 
-	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception;
+	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception;
 
 	public void deleteItem(String itemList) throws Exception;
 
-	public void saveOneLineReply(String pItemID, String pReplyID, String pBoardID, String userID, String userName, String userName2, String pContent, String pPassword) throws Exception;
+	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception;
 	
 	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception;
 
@@ -402,6 +439,33 @@ public interface EzCommunityService {
 	public void JoinOkUpdate3(String companyID, String id, String birthDay) throws Exception;
 
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
+
+	public String getACLGet1(String cID) throws Exception;
+
+	public String getACLGet2(String uID, String cID) throws Exception;
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+	
+
+	
+
+	
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

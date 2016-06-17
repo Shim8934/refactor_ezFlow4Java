@@ -47,19 +47,6 @@
 					}
 				});
 		        
-
-// 		        xmlhttp2 = createXMLHttpRequest();
-
-// 		        var xmlDom = createXmlDom();
-// 		        var objNode;
-// 		        createNodeInsert(xmlDom, objNode, "DATA");
-// 		        createNodeAndInsertText(xmlDom, objNode, "CODE", code);
-
-// 		        xmlhttp2.open("POST", "/ezCommunity/commHome/commHomeBoardInfo.do", true);
-
-// 		        xmlhttp2.onreadystatechange = event_get_homeboardinfo;
-// 		        xmlhttp2.send(xmlDom);
-		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",

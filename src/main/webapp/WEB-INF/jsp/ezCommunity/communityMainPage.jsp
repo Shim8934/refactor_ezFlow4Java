@@ -14,8 +14,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var xmlhttp = null;
-	        var xmlhttp2 = null;
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
 	        var xmlhttp5 = null;
@@ -280,8 +278,8 @@
                 
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
-                    
-                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO".trim()) != copno) {
+
+                    if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim() != copno) {
                         copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                         table = null;
                         var div = document.createElement("DIV");
@@ -1100,6 +1098,9 @@
 	        }
 
 	        function move_cop(val) {
+	        	var clubgubun = 0;
+	            var idx = val.getAttribute("code");
+	            
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -1111,7 +1112,7 @@
 					success: function(result){
 						if (result == "ERR" || clubgubun == "1") {
 							var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
-							 
+
 							if (rtn) {
 								$.ajax({
 									type : "POST",
@@ -1131,19 +1132,19 @@
 					                        var type = val.getAttribute("type");
 
 					                        if (type == "2") {
-					                            window.open("/ezcommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+					                            window.open("/ezCommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 					                        } else if (type == "3") {
-					                            window.open("/ezcommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+					                            window.open("/ezCommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 					                        }
 					                	} else {
 					                    	alert(strLang7);
 					                	}
 									}
 								});
-					 		} else {
-								//window.open("/myOffice/ezCommunity/main.aspx?communityCD=" + idx + "&UserLevel=1", "main");
-								GoFunc(val);
-							}
+					 		}
+						} else {
+							//window.open("/ezCommunity/main.do?communityCD=" + idx + "&userLevel=1", "main");
+							GoFunc(val);
 						}
 					}
 				});
@@ -1156,7 +1157,7 @@
 	            if (code == "0") {
 	                window.frames.location.href = window.frames.location.href;
 	            } else {
-	                var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&UserLevel=1";
+	                var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&userLevel=1";
 	                var wWeight = "1300";
 	                var wHeight = "900";
 

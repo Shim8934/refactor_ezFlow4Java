@@ -1,7 +1,7 @@
 function OpenInformationUI(pInformationContent)
 {
 	var parameter = pInformationContent;
-	var url = "/myoffice/ezCommunity/htm/ezAPROPINION.aspx";
+	var url = "/ezCommunity/ezAPROPINION.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:207px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 	return RtnVal;

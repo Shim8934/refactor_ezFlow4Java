@@ -117,7 +117,7 @@
 			                copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME2");
 			            var copLogo = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
 
-			            if (sysopID1 == "${userInfoUserID}" || memberCnt1 >= 0) {
+			            if (sysopID1 == "${userInfo.id}" || memberCnt1 >= 0) {
 	                        if (confirmtype1 == 3 && confirmtype1 == 0) {
 	                        }else {
 	                            var _li = document.createElement("li");
@@ -401,16 +401,16 @@
 	                        navigation_info = "CoP";
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
-	                    case "<spring:message code='ezCommunity.t73' />":
+	                    case "<spring:message code = 'ezCommunity.t73' />":
                             window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Notice&type=notice", "right");
                             break;
-                        case "<spring:message code='ezCommunity.t74' />":
+                        case "<spring:message code = 'ezCommunity.t74' />":
                             window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board", "right");
                             break;
-                        case "<spring:message code='ezCommunity.t1117' />":
+                        case "<spring:message code = 'ezCommunity.t1117' />":
                             window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&amp;key", "right");
                             break;
-                        case "<spring:message code='ezCommunity.t1011' />":
+                        case "<spring:message code = 'ezCommunity.t1011' />":
                             window.open("/ezCommunity/commMake.do", "right");
                             break;
                         default:
@@ -461,7 +461,7 @@
                 master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
                 
                 master = master.toLowerCase();
-                UserID = "<c:out value = '${userInfoUserID}' />'";
+                UserID = "<c:out value = '${userInfo.id}' />'";
 			    UserID = UserID.toLowerCase();
 			
 			    try {
@@ -508,7 +508,7 @@
 
                 master = master.toLowerCase();
 
-                UserID = "${userInfoUserID}";
+                UserID = "${userInfo.id}";
                 UserID = UserID.toLowerCase();
 
                 if (UserID == master)

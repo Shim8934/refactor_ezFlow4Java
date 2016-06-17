@@ -31,11 +31,11 @@
 			var pRef = "<c:out value='${gref}'/>";
 			var pStep  = "<c:out value='${step}'/>";
 			var pLevel = "<c:out value='${level}'/>";
-			var pName  = "<c:out value='${userInfoUserID}'/>";
+			var pName  = "<c:out value='${userInfo.id}'/>";
 			var pCode  = "<c:out value='${code}'/>";	
 			var pBname  = "<c:out value='${bName}'/>";	
-			var pUserNM = "<c:out value='${userInfoUserNM1}'/>";
-			var pUserNM2 = "<c:out value='${userInfoUserNM2}'/>"; 
+			var pUserNM = "<c:out value='${userInfo.displayName1}'/>";
+			var pUserNM2 = "<c:out value='${userInfo.displayName2}'/>"; 
 			var strContentLocation ="";
 			var g_progresswin;
 			var pTitle = "<c:out value='${cBoard.title}'/>";

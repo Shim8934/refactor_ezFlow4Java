@@ -821,6 +821,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void joinOkUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.joinOkUpdate2", map);
-		
+	}
+
+	public String getACLGet1(String v_CID) throws Exception {
+		return (String) select("EzCommunityDAO.getACLGet1", v_CID);
+	}
+
+	public String getACLGet2(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getACLGet2", map);
 	}
 }

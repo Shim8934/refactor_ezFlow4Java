@@ -1,24 +1,34 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -86,11 +96,986 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Autowired
 	private Properties config;
 	
+	
 	@Override
-	public String leftCommunityGet1(String code, String userInfoUserID) throws Exception {
+	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, ModelMap model, String code) throws Exception {
+		String  userLevel = "";
+		int newMemberConfirmtype = 0;
+		//TODO 사용하지않음 
+/*		String pRootBoardID = "top";
+		String pSubFlag = "0";
+		int pSelectBy = 0;
+		String pExcludeBoardID = "";
+		Document xmlret;
+        Document xmlcop;*/
+        boolean checkSysop = false;
+        //TODO 사용하는곳이 없음
+//        boolean	joinFlag = false;
+        
+        if (request.getParameter("userLevel") != null) {
+            userLevel = request.getParameter("userLevel");
+        }
+        
+        if (code.equals("")) {
+        	String vPermit = leftCommunityGet1(code, userInfo.getId());
+        	
+        	if (vPermit==null) {
+        		userLevel = "0";
+        	} else {
+        		userLevel = vPermit;
+//        		joinFlag = true;
+        	}
+        	
+        	String clubConfirmType = leftCommunityGet2(code);
+        	
+        	if (clubConfirmType != null) {
+        		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
+        	}
+        	
+        	//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
+        	/*//dll
+        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+        	
+        	int pMode = 0;
+        	
+        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+        		pMode = 0;
+        	} else {
+        		pMode = 1;
+        	}
+        	//dll
+        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+        	
+        	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
+        		xmlret = commonUtil.convertStringToDocument(retXML);
+        	} else {
+        		xmlret = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
+        	}*/
+        	
+
+        	if (userInfo.getId().equals(leftCommunityGet4(code))) {
+        		checkSysop = true;
+        	}
+        }
+
+        //TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
+        /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userInfo.getID()));
+		xmlcop = commonUtil.convertStringToDocument(rtnVal);*/
+		
+		model.addAttribute("userLevel",userLevel);
+		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
+		model.addAttribute("chCommunityAdmin",userInfo.getRollInfo().indexOf("t=1"));
+		model.addAttribute("checkSysop",checkSysop);
+	}
+
+	
+	@Override
+	public String getLeftCommunity(LoginVO userInfo) throws Exception {
+		String userID = "";
+        StringBuilder sb = new StringBuilder();
+        
+        userID = userInfo.getId();
+        
+        List<CommunityLeftCommunityVO> leftCommunityList =leftCommunityGet3(userID);
+        
+        sb.append("<DATA>");
+        
+        for (CommunityLeftCommunityVO leftCommunity : leftCommunityList) {
+        	sb.append(commonUtil.getQueryResult(leftCommunity));
+        }
+        
+        sb.append("</DATA>");
+        
+        return sb.toString();
+	}
+
+	@Override
+	public String getLeftBoardList() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		List<CommunityCBoardVO> leftBoardList= ezCommunityDAO.getLeftBoardList();
+		sb.append("<DATA>");
+		
+		for (CommunityCBoardVO leftBoard : leftBoardList) {
+			sb.append(commonUtil.getQueryResult(leftBoard));
+		}
+		
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public void commMakeOk(LoginVO userInfo, CommunityClubVO clubVO, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
+		String clubName2 = "";
+		MultipartFile cClubLogo = null, cClubBanner = null;
+		String cCateA = "", cCateB = "", cCateC = "";
+
+		String clubName = request.getParameter("hiddenClubName");
+		String clubType = request.getParameter("clubType");
+		String clubConfirmType = request.getParameter("clubConfirmType");
+		String intro = request.getParameter("intro");
+		String pNewID = request.getParameter("sNewID");
+		String pNewSubID = request.getParameter("sNewSubID");
+		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		String logo = "default_logo_type1.jpg";
+		String banner = "default_banner.jpg";
+		int isIn = 0, boardNo = 0;
+		
+		if (request.getParameter("hiddenClubName2") != null) {
+			clubName2 = request.getParameter("hiddenClubName2");
+		}
+		if (request.getParameter("cCateA") != null) {
+			cCateA = request.getParameter("cCateA");
+		}
+		if (request.getParameter("cCateB") != null) {
+			cCateB = request.getParameter("cCateB");
+		}
+		if (request.getParameter("cCateC") != null) {
+			cCateC = request.getParameter("cCateC");
+		}
+		if (request.getFile("logo") != null) {
+			cClubLogo = request.getFile("logo");
+		}
+		if (request.getFile("banner") != null) {
+			cClubBanner = request.getFile("banner");
+		}
+		if (request.getParameter("isIn") != null) {
+			isIn = Integer.parseInt(request.getParameter("isIn"));
+		}
+		if (clubName2.equals("")) {
+			clubName2 = clubName;
+		}
+		
+		String[] bBoardName = egovMessageSource.getMessage("ezCommunity.t1492", new Locale(globals.getProperty("Globals.language"))).split(";");
+		String[] bNotiName = egovMessageSource.getMessage("ezCommunity.t1493", new Locale(globals.getProperty("Globals.language"))).split(";");
+		//10MB 제한
+		String comatt = "10";
+		
+		if(cCateA.equals("")) {
+			cCateA = "0";
+		}
+		if(cCateB.equals("")) {
+			cCateB = "0";
+		}
+		if(cCateC.equals("")) {
+			cCateC = "0";
+		}
+		
+		clubVO = commMakeOkGet1(clubName, cCateA, cCateB, cCateC, commonUtil.getMultiData(userInfo.getLang()));
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		if (clubVO != null) {
+			response.getWriter().write("<script language='javascript'>");
+			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", new Locale(globals.getProperty("Globals.language"))) + "');");
+			response.getWriter().write("history.back();");			
+			response.getWriter().write("</script>");
+			response.getWriter().flush();
+			
+			return;
+		}
+		
+		boardNo = commMakeOkGet2();
+		boardNo += 1;
+		
+		if (commMakeOkGet4() == 0) {
+			commMakeOkInsert1();
+		}
+		
+		int clubNo = 0;
+		clubNo = Integer.parseInt(commMakeOkGet3().trim());
+		clubNo ++ ;
+		
+		String code = "C_"+clubNo;
+		int openEmail = 1;
+		int openHp = 1;
+		int openComp = 1;
+		int openHouse = 1;
+		int openJob = 1;
+		int openSex = 1;
+		int openBirth = 0;
+		
+		commMakeOkInsert2(clubNo, EgovDateUtil.getTodayTime(), clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[1].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID());
+		
+		//TODO 2016-05-03 이효진 Email부분 
+/*		ezCommunityService.commMakeOkGet5()
+		OracleConnection conn2 = new OracleConnection(GetSystemConfigValue("ezCommunityOra"));
+                OracleCommand comm2 = new OracleCommand("EZSP_COMM_MAKE_OK_GET5", conn2);
+                comm2.CommandType = CommandType.StoredProcedure;
+                comm2.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
+                conn2.Open();
+                OracleDataReader EMailRS = comm2.ExecuteReader();
+
+                string mailSendServer = "\"" + userinfo.DisplayName + "\" <" + userinfo.Email + ">";
+                while (EMailRS.Read())
+                {
+                    if (EMailRS["UserMail"].ToString() != "")
+                    {
+                        string CommunityUser = "\"" + EMailRS["UserName"].ToString() + "\" <" + EMailRS["UserMail"].ToString() + ">";
+
+                        string strMailXML = "<DATA>";
+                        strMailXML += "<FROM><![CDATA[" + mailSendServer + "]]></FROM>";
+                        strMailXML += "<TO><![CDATA[" + CommunityUser + "]]></TO>";
+                        strMailXML += "<CC></CC>";
+                        strMailXML += "<BCC></BCC>";
+                        strMailXML += "<SUBJECT><![CDATA[[Community] " + RM.GetString("t1031") + "></SUBJECT>";
+                        if (userinfo.primary == "1")
+                        {
+                            strMailXML += "<BODY><![CDATA[" + userinfo.DisplayName + RM.GetString("t1032") + clubname + "]" + RM.GetString("t1033") + "></BODY>";
+                        }
+                        else
+                        {
+                            strMailXML += "<BODY><![CDATA[" + userinfo.DisplayName + RM.GetString("t1032") + clubname2 + "]" + RM.GetString("t1033") + "></BODY>";
+                        }
+
+                        strMailXML += "</DATA>";
+
+                        string WebServerName = Server.MachineName;
+                        string url = Request.Url.Scheme + "://" + WebServerName + "/myoffice/ezEmail/remote/mail_send_noti.aspx";
+
+                        string[] HeaderOption = new string[10];
+                        HeaderOption[0] = "Authorization\n" + Request.ServerVariables["HTTP_AUTHORIZATION"];
+                        HeaderOption[1] = "Content-Type\ntext/xml; charset=utf-8";
+                        HeaderOption[2] = "Accept-Language\nutf-8";
+
+                        string rtnStatus = "";
+                        Stream ResponseStream = null;
+                        long StreamSize = 0;
+
+                        if (ExecuteWebURL("POST", url, strMailXML, HeaderOption, ref rtnStatus, ref ResponseStream, ref StreamSize))
+                        {
+                            if (ResponseStream != null) { ResponseStream.Close(); }
+                            if (ResponseStream != null) { ResponseStream = null; }
+                        }
+                    }
+                }*/
+		
+		if (commMakeOkGet6(userInfo.getCompanyID(), userInfo.getId()) == null) {
+			String companyID = userInfo.getCompanyID();
+			String userID = userInfo.getId();
+			String userName = userInfo.getDisplayName1();
+			String userName2 = userInfo.getDisplayName2();
+			String companyName = userInfo.getCompanyName1();
+			String companyName2 = userInfo.getCompanyName2();
+			String companyZip = ""; //회사 우편번호
+			String companyAddress = ""; //회사 주소
+			String deptName = userInfo.getDeptName1();
+			String deptName2 = userInfo.getDeptName2();
+			String companyTel = "";
+			String companyFax = "";
+			String homeTel = "";
+			String handPhone = "";
+			String eMail = userInfo.getEmail();
+			String birthDay = "";
+			String gender = "";
+			
+			joinOkInsert(companyID, userID, userName, userName2, companyName, companyName2, companyZip, companyAddress, deptName, deptName2, companyTel, companyFax, homeTel, handPhone, eMail, birthDay, gender);
+		}
+		
+		String fileName = "", attachFile = "", onlyFileName = "", extName = "";
+		int fileSize = 0, iStart = 0;
+		
+		if (!cClubLogo.isEmpty()) {
+			fileName = code;
+			attachFile = cClubLogo.getOriginalFilename();
+			fileSize = (int) cClubLogo.getSize();
+			onlyFileName = attachFile;
+			iStart = onlyFileName.lastIndexOf(".");
+			extName = onlyFileName.substring(iStart);
+
+			File file = new File(logoPath + fileName + "_logo" + "." + extName);
+			cClubLogo.transferTo(file);
+			
+			
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
+			outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+			
+			File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+			ImageIO.write(outputImage, "png", newLogo);
+			//썸네일파일 생성
+			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+			
+			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
+			ImageIO.write(outputImage, "png", newThumbnail);
+			
+			file.delete();
+			
+			commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, fileSize);
+		}
+		
+		//배너파일 생성
+		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
+		if (!cClubBanner.isEmpty()) {
+			fileName = code;
+			attachFile = cClubBanner.getOriginalFilename();
+			fileSize = (int) cClubBanner.getSize();
+			onlyFileName = attachFile;
+			iStart = onlyFileName.lastIndexOf(".");
+			extName = onlyFileName.substring(iStart);
+			
+			File file = new File(logoPath + fileName + "_banner" + "." + extName);
+			cClubBanner.transferTo(file);
+			
+			commMakeOkSet2(fileName + "_banner" + "." + extName, fileName, fileSize);
+		}
+		
+		if (clubVO == null) {
+			response.getWriter().write("<script language='javascript'>\n");
+			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", new Locale(globals.getProperty("Globals.language"))) + "');\n");
+			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
+			response.getWriter().write("</script>");
+			response.getWriter().flush();
+		}
+	}
+
+	@Override
+	public String getSubBoard(LoginVO userInfo, HttpServletRequest request) throws Exception {
+		String pClubID = "", pRootBoardID = "", pSubFlag = "0", pExcludeBoardID = " ";
+		int pSelectBy = 0, pMode = 0;
+		String strXML = "";
+		
+		pClubID = request.getParameter("classID");
+		pRootBoardID = request.getParameter("rootBoardID");
+		
+		if (request.getParameter("subFlag") != null) {
+			pSubFlag = request.getParameter("subFlag");
+		}
+		
+		if (request.getParameter("excludeBoardID") != null) {
+			pExcludeBoardID = request.getParameter("excludeBoardID");
+		}
+		if ( request.getParameter("selectFlag") != null) {
+			pSelectBy = Integer.parseInt(request.getParameter("selectFlag"));
+		}
+		
+		String boardGroupAdminFG = checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+			pMode = 0;
+		} else {
+			pMode = 1;
+		}
+		
+		strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(userInfo.getLang()));
+
+		return strXML;
+	}
+	
+	
+	@Override
+	public String goAdminOk(String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception {
+		String pClubID = "";
+		StringBuilder aspXML = new StringBuilder(), masterXML = new StringBuilder(), isinXML = new StringBuilder(), resultXML = new StringBuilder();
+		
+		Document xmlDom = commonUtil.convertStringToDocument(data);
+		pClubID = xmlDom.getChildNodes().item(0).getTextContent();
+		
+		//TODO 2016-04-26 이효진  사용하지 않는 Table을 참조해서 Null반환
+		List<String> userIDList = goAdminOkGet1();
+		aspXML.append("<ASP>");
+		
+		for (String userID : userIDList) {
+			aspXML.append("<VALUE>");
+			aspXML.append(userID.trim());
+			aspXML.append("</VALUE>");
+		}
+		aspXML.append("</ASP>");
+		
+		List<CommunityClubVO> clubList = goAdminOkGet2(pClubID);
+		
+		for (CommunityClubVO communityClub : clubList) {
+			masterXML.append("<MASTER>");
+			masterXML.append("<VALUE>");
+			masterXML.append(communityClub.getC_SysopID().trim());
+			masterXML.append("</VALUE>");
+			masterXML.append("</MASTER>");
+			isinXML.append("<ISIN>");
+			isinXML.append("<VALUE>");
+			isinXML.append(Integer.toString(communityClub.getIsIn()).trim());
+			isinXML.append("</VALUE>");
+			isinXML.append("</ISIN>");
+		}
+		
+		resultXML.append("<COMMUNITY>");
+		resultXML.append(aspXML.toString());
+		resultXML.append("<SITE><VALUE></VALUE></SITE>");
+		resultXML.append(masterXML.toString());
+		resultXML.append(isinXML.toString());
+		resultXML.append("</COMMUNITY>");
+
+		return resultXML.toString();
+	}
+
+
+	@Override
+	public void checkCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request) throws Exception {
+		String codeName = "", userLevel = "";
+		String pRootBoardID = "TOP";
+		
+		String code = request.getParameter("communityCD");
+		userLevel = request.getParameter("userLevel");
+		
+		if (request.getParameter("communityName") != null) {
+			codeName = request.getParameter("communityName");
+		}
+		
+		if (!code.equals("")) {
+			String vPermit = leftCommunityGet1(code, userInfo.getId());
+        	
+        	if (vPermit == null) {
+        		userLevel = "0";
+        	} else {
+        		userLevel = vPermit;
+//        		joinFlag = true;
+        	}
+        	
+        	//TODO
+        	/*String newMemberConfirmtype = leftCommunityGet2(code);
+        	
+        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+        	
+        	int pMode = 0;
+        	
+        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+        		pMode = 0;
+        	} else {
+        		pMode = 1;
+        	}
+
+        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+        	
+        	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
+        		xmlret = commonUtil.convertStringToDocument(retXML);
+        	} else {
+        		xmlret = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
+        	}
+        	
+
+        	if (userInfo.getId().equals(leftCommunityGet4(code))) {
+        		checkSysop = true;
+        	}*/
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("codeName", codeName);
+		model.addAttribute("userLevel", userLevel);
+	}
+
+
+	@Override
+	public void popupCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String rootBoardID = "TOP";
+		boolean joinFlag = false, checkSysop = false;
+		int newMemberConfirmType = 0;
+		
+		String code = request.getParameter("code");
+		String codeName = request.getParameter("codeName");
+		String userLevel = request.getParameter("userLevel");
+
+		// 20100119 보안처리 관련 추가작업(권한체크)
+		communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		
+		String strVisit = commHomeGet1(userInfo.getId(), code);
+		
+		if (strVisit == null || strVisit.substring(0, 10).equals(EgovDateUtil.getToday("-"))) {
+			updateLastDate(EgovDateUtil.getTodayTime(), code, userInfo.getId());
+		}
+		
+		String copType = commHomeGet4(code);
+		
+		if (copType == null) {
+			copType = "type1";
+		}
+		
+		//사용하는곳이 없다
+		int memberCount = commHomeGet2(code);
+		
+		String boardGroupAdminFG = checkIfBoardGroupAdmin(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		int mode = 0;
+		
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+			mode = 0;
+		} else {
+			mode = 1;
+		}
+		
+		String retXML = getBoardTree(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
+			retXML = "<RESULT>ERROR</RESULT>";
+		}
+		
+		String permit = leftCommunityGet1(code, userInfo.getId());
+
+		if (permit != null) {
+			userLevel = permit;
+			joinFlag = true;
+		} else {
+			userLevel = "0";
+		}
+		
+		String confirmType = leftCommunityGet2(code);
+		
+		if (confirmType != null) {
+			newMemberConfirmType = Integer.parseInt(confirmType);
+		}
+		
+		CommunityClubVO clubVO = leftCommunityGet4(code);
+		
+		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
+			checkSysop = true;
+		}
+		
+		model.addAttribute("copType", copType);
+		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("joinFlag", joinFlag);
+		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
+		model.addAttribute("checkSysop", checkSysop);
+		model.addAttribute("retXML", retXML);
+	}
+
+
+	@Override
+	public String commHomeInfo(LoginVO userInfo, String code) throws Exception {
+		String strSysopID = "";
+		
+		CommunityClubVO clubVO = aspCommInfoGet1(code);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		String temp = commonUtil.getQueryResult(clubVO);
+		sb.append(temp.substring(5, temp.length()-6));
+		sb.append("</DATA>");
+		
+		Document xmlMainDom = commonUtil.convertStringToDocument(sb.toString());
+		strSysopID = xmlMainDom.getElementsByTagName("C_SYSOPID").item(0).getTextContent().trim();
+		
+		String proplist = "displayName;description;company;extensionAttribute2";
+		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang());
+		
+		Document xmldomMemberInfo = commonUtil.convertStringToDocument(infoXMLMemberInfo);
+		
+		String name = xmldomMemberInfo.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+		String companyNM = xmldomMemberInfo.getElementsByTagName("COMPANY").item(0).getTextContent().trim();
+		String deptName = xmldomMemberInfo.getElementsByTagName("DESCRIPTION").item(0).getTextContent().trim();
+		String userImage = xmldomMemberInfo.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim();
+		
+		Node targetNode = xmlMainDom.getElementsByTagName("DATA").item(0);
+		Node newRow = xmlMainDom.createElement("MEMBER");
+		Node newDataName = null;
+		Node newDataValue = null;
+		
+		newDataName = xmlMainDom.createElement("USERNAME");
+		newDataValue = xmlMainDom.createTextNode(name);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("DEPTNAME");
+		newDataValue = xmlMainDom.createTextNode(deptName);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("COMPANYNAME");
+		newDataValue = xmlMainDom.createTextNode(companyNM);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("USERIMAGE");
+		newDataValue = xmlMainDom.createTextNode(userImage);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		newDataName = xmlMainDom.createElement("USERID");
+		newDataValue = xmlMainDom.createTextNode(strSysopID);
+		newDataName.appendChild(newDataValue);
+		newRow.appendChild(newDataName);
+		
+		targetNode.appendChild(newRow);
+		
+		return commonUtil.convertDocumentToString(xmlMainDom);
+	}
+
+	@Override
+	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		String code = request.getParameter("code");
+		
+		List<CommunityBoardInfoVO> boardInfoList = copHomeBoardGet(code);
+		
+		sb.append("<ITEM>");
+		sb.append("<BOARDINFO>");
+		sb.append("<DATA>");
+		
+		for(CommunityBoardInfoVO boardInfo: boardInfoList){
+			sb.append("<ROW>");
+			sb.append("<BOARDID>"+boardInfo.getBoardID()+"</BOARDID>");
+			sb.append("<BOARDNAME>"+boardInfo.getBoardName()+"</BOARDNAME>");
+			sb.append("<BOARDNAME2>"+boardInfo.getBoardName2()+"</BOARDNAME2>");
+			sb.append("<SHOWPOSITION>"+boardInfo.getShowPosition()+"</SHOWPOSITION>");
+			sb.append("<SN>"+boardInfo.getSn()+"</SN>");
+			sb.append("<GUBUN>"+boardInfo.getGubun()+"</GUBUN>");
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</DATA>");
+		sb.append("</BOARDINFO>");
+		sb.append("<BOARDITEM>");
+		
+		for(int i = 0; i < boardInfoList.size(); i++){
+			String boardID = boardInfoList.get(i).getBoardID();
+			List<CommunityBoardItemVO> boardItemList = copHomeBoardItemGet(boardID);
+			sb.append("<DATA>");
+			
+			for(CommunityBoardItemVO boardItem: boardItemList){
+				sb.append("<ROW>");
+				sb.append("<BOARDID>"+boardItem.getBoardID()+"</BOARDID>");
+				sb.append("<ITEMID>"+boardItem.getItemID()+"</ITEMID>");
+				sb.append("<TITLE>"+boardItem.getTitle()+"</TITLE>");
+				sb.append("<WRITEDATE>"+boardItem.getWriteDate()+"</WRITEDATE>");
+				sb.append("<GUBUN>"+boardItem.getGubun()+"</GUBUN>");
+				sb.append("<EXTENSIONATTRIBUTE5>"+boardItem.getExtensionAttribute5()+"</EXTENSIONATTRIBUTE5>");
+				sb.append("</ROW>");
+			}
+			
+			sb.append("</DATA>");
+		}
+		
+		sb.append("</BOARDITEM>");
+		sb.append("</ITEM>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public void boardItemList(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception {
+		String url = "", pSortBy = "", strXML = "", showAdjacent = "";
+		int pPage = 1, totalCount = 0, totalPage = 0;
+		String pBoardID = request.getParameter("boardID");
+		
+		if (boardInfo.getListView_FG().equals("true")) {
+			url = boardInfo.getUrl();
+			
+			if (request.getParameter("sortBy") != null) {
+				pSortBy = request.getParameter("sortBy");
+			}
+			if (request.getParameter("page") != null) {
+				pPage = Integer.parseInt(request.getParameter("page"));
+			}
+			
+			int pStartRow = (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
+			int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
+			
+			if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				totalCount = Integer.parseInt(getNewItemListCount(userInfo.getId()));
+				
+				if (totalCount < pEndRow) {
+					pEndRow = totalCount;
+				}
+				
+                strXML = getNewItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy);
+            } else {
+                showAdjacent = "1";
+                totalCount = Integer.parseInt(getBoardTotalItemCount(pBoardID));
+                
+                if (totalCount < pEndRow) {
+					pEndRow = totalCount;
+				}
+                
+                strXML = getBoardListItemXML(userInfo.getId(), pBoardID, pStartRow, pEndRow, pSortBy, userInfo.getLang());
+            }
+			
+			if (totalCount > 0) {
+				if (totalCount > boardInfo.getSs_Board_MaxRows()) {
+					if(totalCount % boardInfo.getSs_Board_MaxRows() > 0) {
+						totalPage = totalCount / boardInfo.getSs_Board_MaxRows() + 1;
+					} else {
+						totalPage = totalCount / boardInfo.getSs_Board_MaxRows();
+					}
+				} else {
+					totalPage = 1;
+				}
+			} else {
+				totalPage = 1;
+			}
+		}
+		
+		model.addAttribute("url", url);
+		model.addAttribute("pSortBy", pSortBy);
+		model.addAttribute("pPage", pPage);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("strXML", strXML);
+	}
+
+	
+	@Override
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String strWriterFakeName, String hasAttach) throws Exception {
+		
+		if (!pUrl.equals("")) {
+			item.setStartDate(EgovDateUtil.getToday("-"));
+			item.setStartDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+			expireDays = "-1";
+		} else {
+			if (userInfo.getLang().equals("2")) {
+				item.setBoardName(boardInfo.getBoardName2());
+			} else {
+				item.setBoardName(boardInfo.getBoardName());
+			}
+
+			expireDays = boardInfo.getExpireDays();
+			if (pMode.equals("new")) {
+				if (expireDays.equals("-1")) {
+                    item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+                } else {
+                    item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
+                }
+			} else {
+				item = getItemXML(pBoardID, pItemID);
+				
+                if (pMode.equals("reply")) {
+                	item.setItemLevel(item.getItemLevel()+1);
+                	item.setAbsTract("");
+                	item.setTitle(item.getTitle());
+                } else if (pMode.equals("modify")) {
+                	if (item.getEndDate().substring(0, 4).equals("9999")) {
+                        if (expireDays == "-1")	{
+                        	item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"));
+                        } else {
+                            item.setEndDate(EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd"));
+                        }
+                    }
+                	
+                	if (boardInfo.getGubun() != null) {
+	                	if (boardInfo.getGubun().equals("2")) {
+	                		strWriterFakeName = item.getWriterName();
+	                	}
+                	}
+                }
+
+                if (item.getAttachments() != null && item.getAttachments().length() > 0) {
+                	hasAttach = "YES";
+                }
+			}
+		}
+	}
+
+
+	@Override
+	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
+		int cnt = 0, pMaxSize = 0;
+		String strXML = "";
+		
+		String pBoardID = request.getParameter("boardID");
+		String pMode = request.getParameter("mode");
+		
+		if (request.getParameter("cnt") != null) {
+			cnt = Integer.parseInt(request.getParameter("cnt"));
+		}
+		if (request.getParameter("maxSize") != null) {
+			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
+		}
+		
+		String userExtension = config.getProperty("config.USE_FileExtension").toString();
+		Iterator<String> itr = request.getFileNames();
+		
+		String pDirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String tempPath = pDirPath  + "TempUploadFile";
+		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "UploadFile";
+		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
+		
+		File tempDir = new File(tempPath);
+		
+		if (!tempDir.exists()) {
+			tempDir.mkdirs();
+		}
+		
+		File boardDir = new File(pDirPath + pBoardID);
+		File uploadDir = new File(uploadPath);
+		File docDir = new File(docPath);
+		
+		if (!boardDir.exists()) {
+			boardDir.mkdirs();
+			uploadDir.mkdirs();
+			docDir.mkdirs();
+		} else if (!uploadDir.exists()) {
+			uploadDir.mkdirs();
+		} else if (!docDir.exists()) {
+			docDir.mkdirs();
+		}
+		
+		strXML = "<ROOT><NODES>";
+		
+		while(itr.hasNext()){
+			MultipartFile file = request.getFile(itr.next());
+			String resultUpload = "false";
+			String pUploadSN = "{" + UUID.randomUUID().toString() + "}";
+			String pFileName = file.getOriginalFilename();
+			String pAttachPath = "";
+			
+			if (pFileName.indexOf(commonUtil.separator) > 0) {
+				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
+			}
+			
+			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
+			int fileSize = (int) file.getSize();
+			
+			if (fileSize > pMaxSize) {
+				resultUpload = "overflow";
+			} else {
+				if (pMode.equals("ATT")) {
+					if (userExtension.indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString()) == -1 && !userExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
+						file.transferTo(new File(pAttachPath));
+						resultUpload = "true";
+					}
+					//TODO 2016-05-16 이효진 포토게시판에서 쓸꺼같음
+				} else if (pMode.equals("PHOTO")) {
+					pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					file.transferTo(new File(pAttachPath));
+					
+					//TODO 썸네일 생성소스 만들어논거
+					/*BufferedImage inputImage = ImageIO.read(file);
+					BufferedImage outputImage = null;
+					Graphics2D saveImage = null;
+					//로고파일 생성			
+					outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+					saveImage = outputImage.createGraphics();
+					saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+					
+					File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+					ImageIO.write(outputImage, "png", newLogo);*/
+					
+					
+/*					System.Drawing.Image.GetThumbnailImageAbort myCallBack = new System.Drawing.Image.GetThumbnailImageAbort(ThumbnailCallback);
+                    System.Drawing.Image image = System.Drawing.Image.FromFile(pAttachPath);
+
+                    int nImgWidth = image.Width;
+                    int nImgHeight = image.Height;
+                    int nWidth = 0, nHeight = 0;
+                    if (nImgWidth > nImgHeight)
+                    {
+                        nWidth = 200;
+                        nHeight = (image.Height * nWidth) / image.Width;
+                    }
+                    else
+                    {
+                        nHeight = 200;
+                        nWidth = (image.Width * nHeight) / image.Height;
+                    }
+                    System.Drawing.Image imageThumbnail = image.GetThumbnailImage(100, 100, myCallBack, (IntPtr)0);
+                    imageThumbnail.Save(pDirPath + "\\TempUploadFile\\s_" + pUploadSN[i] + pFileName[i].Substring(pFileName[i].LastIndexOf('.')));
+                    imageThumbnail.Dispose();
+                    image.Dispose();*/
+					
+					resultUpload = "true";
+					strXML += "<NODE><PUPLOADSN>" + commonUtil.cleanValue(pUploadSN + pFileName.substring(pFileName.lastIndexOf('.'))) + "</PUPLOADSN>";
+				}
+			}
+			
+			if (!pMode.equals("PHOTO")) {
+				strXML += "<NODE><PUPLOADSN>" + commonUtil.cleanValue(pUploadSN + "_" + pFileName) + "</PUPLOADSN>";
+			}
+			
+			strXML += "<RESULTUPLOADA>" + commonUtil.cleanValue(resultUpload) + "</RESULTUPLOADA>";
+            strXML += "<PFILENAME>" + commonUtil.cleanValue(pFileName) + "</PFILENAME>";
+            strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
+            strXML += "<FILELOCATION>" + commonUtil.cleanValue(pAttachPath) + "</FILELOCATION>";
+            strXML += "</NODE>";	
+		}
+		
+		strXML += "</NODES></ROOT>";
+		
+		return strXML;
+	}
+
+
+	@Override
+	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String previousItemID, String previousTitle, String nextItemID, String nextTitle, String cAdmin, String gcAdmin, String pVersionUse, String showAdjacent, String adjacentItemsEnableFlag) throws Exception {
+		if (item.getParentWriteDate().compareTo(item.getWriteDate()) > 0) {
+			item.setWriteDate(item.getParentWriteDate());
+		}
+		
+		if (item.getEndDate().substring(0, 4).equals("9999")) {
+			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", new Locale(globals.getProperty("Globals.language"))));
+		}
+		
+		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+			Map<String, String> map = getAdjacentItems(pItemID, pBoardID, item.getUpperItemIDTree(), item.getParentWriteDate());
+			
+            previousItemID = map.get("previousItemID");
+            previousTitle = map.get("previousTitle");
+            nextItemID = map.get("nextItemID");
+            nextTitle = map.get("nextTitle");
+
+            if (previousTitle.equals("")) {
+            	previousTitle = egovMessageSource.getMessage("ezCommunity.t191", new Locale(globals.getProperty("Globals.language")));
+            }
+            
+            if (nextTitle.equals("")) {
+            	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", new Locale(globals.getProperty("Globals.language")));
+            }
+            
+            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+            	cAdmin = "admin";
+            }
+            
+            boardInfo.setBoardGroupAdmin_FG(checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID()));
+            
+            if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+            	gcAdmin = "OK";
+            }
+            
+            pVersionUse = getVersionInfo(pBoardID); 
+		}
+		
+		if (boardInfo.getGubun() != null) {
+			if (boardInfo.getGubun().equals("2")) {
+				item.setWriterID("");
+				item.setWriterDeptName("");
+				item.setWriterCompanyName("");
+			}
+		}
+	}
+
+
+	@Override
+	public String confirmPassword(String itemID, String newPassword) throws Exception {
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		String oldPassword = "";
+		
+		
+		
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
+		
+		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
+		oldPassword = checkPassword(itemID).trim();
+		
+		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
+			return "OK";
+		} else {
+			return "NO";
+		}
+	}
+
+
+	@Override
+	public String leftCommunityGet1(String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_USERID", userInfoUserID);
+		map.put("v_USERINFO_USERID", id);
 		
 		return ezCommunityDAO.leftCommunityGet1(map);
 	}
@@ -120,11 +1105,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_PCOMPANYID", companyID);
 
 		return ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
-	}
-	//TODO 나중에 안쓰면 삭제
-	@Override
-	public List<CommunityCBoardVO> getLeftBoardList() throws Exception {
-		return ezCommunityDAO.getLeftBoardList();
 	}
 
 	@Override
@@ -1190,28 +2170,33 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("iv_pBoardID", boardID);
-		map.put("v_pUserID", userInfo.getId());
-		map.put("v_pUserName", userInfo.getDisplayName1());
-		map.put("v_pUserDeptName", userInfo.getDeptName1());
-		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
-		map.put("v_pUserTitle", userInfo.getTitle1());
-		map.put("v_pUserName2", userInfo.getDisplayName2());
-		map.put("v_pUserDeptName2", userInfo.getDeptName2());
-		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
-		map.put("v_pUserTitle2", userInfo.getTitle2());
-		
-		for (String item : itemIDList.split(";")) {
-			map.put("v_pItemID", item);
-			ezCommunityDAO.setAsRead(map);
+	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("iv_pBoardID", boardID);
+			map.put("v_pUserID", userInfo.getId());
+			map.put("v_pUserName", userInfo.getDisplayName1());
+			map.put("v_pUserDeptName", userInfo.getDeptName1());
+			map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+			map.put("v_pUserTitle", userInfo.getTitle1());
+			map.put("v_pUserName2", userInfo.getDisplayName2());
+			map.put("v_pUserDeptName2", userInfo.getDeptName2());
+			map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+			map.put("v_pUserTitle2", userInfo.getTitle2());
+			
+			for (String item : itemIDList.split(";")) {
+				map.put("v_pItemID", item);
+				ezCommunityDAO.setAsRead(map);
+			}
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR";
 		}
+		
 	}
 
 	@Override
-	@Transactional
 	public void deleteItem(String itemList) throws Exception {
 		String boardID = "";
 		
@@ -1267,9 +2252,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		pUploadFilePath = xmlData.getElementsByTagName("FILEPATH").item(0).getTextContent();
 		item.setItemID(xmlData.getElementsByTagName("ITEMID").item(0).getTextContent());
 		item.setBoardID(xmlData.getElementsByTagName("BOARDID").item(0).getTextContent());
-		item.setWriterID(xmlData.getElementsByTagName("WRITERID").item(0).getTextContent());
-		item.setWriterName(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-		item.setWriterName2(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		item.setWriterID(xmlData.getElementsByTagName("WRITERID").item(0).getTextContent().trim());
+		item.setWriterName(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim());
+		item.setWriterName2(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim());
 		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
 		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
 		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
@@ -1278,7 +2263,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
 		item.setWriteDate(EgovDateUtil.getTodayTime());
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-		item.setTitle(xmlData.getElementsByTagName("TITLE").item(0).getTextContent());
+		item.setTitle(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().trim());
 		
 		
 		if (pMode.equals("copy")) {
@@ -1345,7 +2330,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				item.setDocPassword(EgovFileScrty.encryptPassword(rpwd, "unknown"));
 			}
 		}
-		
 		
 		if (!pMode.equals("copy")) {
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
@@ -1685,13 +2669,38 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void saveOneLineReply(String pItemID, String pReplyID, String pBoardID, String userID, String userName, String userName2, String pContent, String pPassword) throws Exception {
+	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception {
+		String userName = "", userName2 = "";
+		String pItemID = xmlDoc.getElementsByTagName("ITEMID").item(0).getTextContent();
+		String pReplyID = xmlDoc.getElementsByTagName("REPLYID").item(0).getTextContent();
+		String pBoardID = xmlDoc.getElementsByTagName("BOARDID").item(0).getTextContent();
+		String pContent = xmlDoc.getElementsByTagName("CONTENT").item(0).getTextContent();
+		String pPassword = xmlDoc.getElementsByTagName("PASSWORD").item(0).getTextContent();
+		String[] u_Name = egovMessageSource.getMessage("ezCommunity.t115", new Locale(globals.getProperty("Globals.language"))).split(";");
+		
+		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID);
+		
+		if (boardInfo.getGubun() != null) {
+			if (boardInfo.getGubun().equals("2")) {
+				userName = u_Name[0].trim();
+				userName2 = u_Name[1].trim();
+			} else {
+				userName = userInfo.getDisplayName1();
+				userName2 = userInfo.getDisplayName2();
+			}
+		} else {
+			userName = userInfo.getDisplayName1();
+			userName2 = userInfo.getDisplayName2();
+		}
+		
+		pContent = pContent.replace("'",  "''");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PITEMID", pItemID);
 		map.put("v_PREPLYID", pReplyID);
 		map.put("v_PBOARDID", pBoardID);
-		map.put("v_USERID", userID);
+		map.put("v_USERID", userInfo.getId());
 		map.put("v_USERNAME", userName);
 		map.put("v_USERNAME2", userName2);
 		map.put("v_PCONTENT", pContent);
@@ -1711,14 +2720,19 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public int checkOneLineOwner(String pReplyID, String id) throws Exception {
+	public String checkOneLineOwner(String pReplyID, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_pCount", 0);
 		
-		return ezCommunityDAO.checkOneLineOwner(map);
+		
+		if (ezCommunityDAO.checkOneLineOwner(map) > 0) {
+			return "OK_MINE";
+		} else {
+			return "FAIL";
+		}
 	}
 
 	@Override
@@ -1731,6 +2745,125 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.deleteOneLineReply(map);
 	}
+	
+	
+
+	@Override
+	public String bbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage,
+			String bName, int comNoPerPage) throws Exception {
+		StringBuilder strHTML = new StringBuilder();
+		int iColSpan = 5;
+		
+		if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+			iColSpan = 6;
+		}
+		
+		strHTML.append("<tr>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		
+		if (iColSpan == 6) {
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		}
+		
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("</tr>");
+		
+		int iOutputCount = 1;
+		int iList = 0;
+//		String pURL = "";
+		
+		for (CommunityCBoardVO cBoard : cBoardList) {
+			iList++;
+			
+			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			if ( iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			strHTML.append("<tr>");
+			strHTML.append("<td width=\"60px\">");
+			
+			String strClubRecordNo = "";
+			
+			if (code.equals("")) {
+				strClubRecordNo = Integer.toString(cBoard.getNo()).trim();
+			} else {
+				strClubRecordNo = Integer.toString(cBoard.getC_No()).trim();
+			}
+			
+			if (!bName.equals("c_clubnodice") && !bName.equals("c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					strHTML.append("<font color=\"#A4A4A4\">" + strClubRecordNo + "</font>");
+				} else {
+					strHTML.append(strClubRecordNo);
+				}
+			} else {
+				strHTML.append(strClubRecordNo);
+			}
+			
+			strHTML.append("</td>");
+			strHTML.append("<td class=\"t2\" onclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "') style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
+			strHTML.append("<nobr>");
+			
+			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					 int wid = 10 * cBoard.getRe_Level();
+					 
+                     strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+				}
+			}
+			
+			String nowDate = EgovDateUtil.getTodayTime();
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+
+			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">");
+			}
+			
+			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
+			
+			if (commonUtil.getMultiData(userInfo.getLang()).equals("")) {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
+			} else {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
+			String localPdsPath = ""; 
+			
+			if (iColSpan == 6) {
+				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
+				/*String file = cBoard.getCharFileName();
+				
+				if (bName.equals("c_clubpds")) {
+					localPdsPath = config.getProperty("upload_community.PDS");	
+				} else {
+					localPdsPath = config.getProperty("upload_community.PDS1");
+				}*/
+			
+				strHTML.append("<td class=\"t1\" >");
+				
+				if (cBoard.getCharFileName().equals("")) {
+					strHTML.append("<img src=\"/images/i_save01.gif\" width=\"12\" height=\"12\" border=\"0\">");
+				}
+				
+				strHTML.append("</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"60px\" >" + cBoard.getReadNum() + "</td>");
+			strHTML.append("</tr>");
+			
+			iOutputCount++;
+		}
+		return strHTML.toString();
+	}
+
 
 	@Override
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception {
@@ -3015,7 +4148,21 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		ezCommunityDAO.joinOkUpdate2(map);
 	}
 
-	
+	@Override
+	public String getACLGet1(String cID) throws Exception {
+		return ezCommunityDAO.getACLGet1(cID);
+	}
+
+	@Override
+	public String getACLGet2(String uID, String cID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_UID", uID);
+		map.put("v_CID", cID);
+		
+		return ezCommunityDAO.getACLGet2(map);
+	}
+
 	/*public void SndMail(string code)
 	{
         try
