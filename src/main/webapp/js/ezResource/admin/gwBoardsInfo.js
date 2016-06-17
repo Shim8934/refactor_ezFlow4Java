@@ -48,7 +48,7 @@
 		objNode.text = pCompanyID;
 		xmlpara.documentElement.appendChild(objNode);
 
-		xmlhttp.open("POST","Call_MamagerDepthNode.aspx",false);
+		xmlhttp.open("POST","/admin/ezResource/callManagerDepthNode.do",false);
 		xmlhttp.send(xmlpara);
 		
 		if(xmlhttp.responseXML.xml == "") return;
@@ -137,7 +137,7 @@ function getFirstDepthNode(TreeView, p_Depth, p_brd_id)
 	objNode.text = pCompanyID;
 	xmlpara.documentElement.appendChild(objNode);
 	
-	xmlhttp.open("POST","Call_MamagerDepthNode.aspx",false);
+	xmlhttp.open("POST","/admin/ezResource/callManagerDepthNode.do",false);
 	xmlhttp.send(xmlpara);
 	
 	if(xmlhttp.responseXML.xml == "") return;

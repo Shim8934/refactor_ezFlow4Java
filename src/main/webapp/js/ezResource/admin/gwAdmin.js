@@ -43,8 +43,7 @@ function NavigateBrdAdmin_Res(pFlag) {
 	}
 }
 
-function NavigateBrdAdminleft(pFlag)
-{
+function NavigateBrdAdminleft(pFlag) {
     var objSelected = "";
     var pSelCompanyID = window.parent.frames["board_menu"].pCompanyID;;
     objSelected = window.parent.frames["board_menu"].TreeView.selectedIndex();
