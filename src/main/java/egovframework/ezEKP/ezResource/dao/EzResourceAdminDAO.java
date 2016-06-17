@@ -35,6 +35,14 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 		return delete("EzResourceAdminDAO.delResAcll", map);
 	}
 	
+	public int getSubResCnt(Map<String, Object> map) {
+		return (int)select("EzResourceDAO.subResCnt", map);
+	}
+	
+	public int getSubClsCnt(Map<String, Object> map) {
+		return (int)select("EzResourceDAO.subClsCnt", map);
+	}
+	
 	public void addClsData(Map<String, Object> map) {
 		insert("EzResourceAdminDAO.addClsData", map);
 	}

@@ -145,6 +145,22 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 		return ezResourceAdminDAO.getBrdInfo(map);
 	}
 	
+	@Override
+	public int getSubResCnt(String resID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resID", resID);
+		map.put("companyID", companyID);
+		return ezResourceAdminDAO.getSubResCnt(map);
+	}
+	
+	@Override
+	public int getSubClsCnt(String resID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resID", resID);
+		map.put("companyID", companyID);
+		return ezResourceAdminDAO.getSubClsCnt(map);
+	}
+
 	public boolean addClsData(String xmlStr) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		try {
@@ -191,6 +207,132 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 			String brdNm2 = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 			
 			modifyClsData(classGB, deptID, deptNm, ownerID, ownerNm, ownerPos, ownerCall, brdNm, brdExplain, accessNoty, companyID, brdNm2);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public String getSubCntOfCls(String xmlStr) {
+		String resID = "";
+		String companyID = "";
+		int resCnt = 0;
+		int clsCnt = 0;
+		StringBuilder returnXML = new StringBuilder();
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			resID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
+			companyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
+			
+			resCnt = getSubResCnt(resID, companyID);
+			clsCnt = getSubClsCnt(resID, companyID);
+			
+			returnXML.append("<RTN_DATA>");
+			returnXML.append("<ERRCHK>True</ERRCHK>");
+			returnXML.append("<ERRDESC></ERRDESC>");
+			returnXML.append("<SUBRESCNT>" + resCnt + "</SUBRESCNT>");
+			returnXML.append("<SUBCLSCNT>" + clsCnt + "</SUBCLSCNT>");
+			returnXML.append("</RTN_DATA>");
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		}
+		return returnXML.toString();
+	}
+	
+	public boolean blnMoveCls(String srcBrdID, String targetBrdID, String strPara) throws Exception {
+		try {
+			moveCls(srcBrdID, targetBrdID, strPara);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean blnChgClsOrder(String currID, String nextID, String companyID) throws Exception {
+		try {
+			chgClsOrder(currID, nextID, companyID);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public String getSubClsList(String xmlStr, String langStr) throws Exception {
+		String parentID = "";
+		String companyID = "";
+		String accessFlag = "";
+		String userID = "";
+		String deptPath = "";
+		String returnXML = "";
+		String strXML = "";
+		
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			parentID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
+			companyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
+			
+			if (xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().getLength() > 2) {
+				accessFlag = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(2).getTextContent().trim();
+				userID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(3).getTextContent().trim();
+				deptPath = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(4).getTextContent().trim();
+			} else {
+				accessFlag = "0";
+			}
+			deptPath = "'" + deptPath.trim().replace(",", "', '") + "'";
+			
+			if (accessFlag.equals("0")) {
+				List<ResGetSubClsListVO> admSubClsList = getAdmSubClsList(parentID, companyID);
+				strXML += "<DATA>";
+				for (int i=0; i<admSubClsList.size(); i++) {
+					strXML += commonUtil.getQueryResult(admSubClsList.get(i));	
+				}
+				strXML += "</DATA>";
+			} else {
+				List<ResGetSubClsListVO> subClsList = getSubClsList(parentID, companyID, userID, deptPath);
+				strXML += "<DATA>";
+				for (int i=0; i<subClsList.size(); i++) {
+					strXML += commonUtil.getQueryResult(subClsList.get(i));
+				}
+				strXML += "</DATA>";
+			}
+			returnXML += "<SUBCLSLIST>";
+		
+			Document returnXMLDom = commonUtil.convertStringToDocument(strXML);
+			for (int i=0; i<returnXMLDom.getElementsByTagName("ROW").getLength(); i++) {
+				returnXML += "<ROWNODE>";
+				
+				for (int j=0; j<returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().getLength(); j++) {
+
+					String elementName = returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().item(j).getNodeName();
+					String elementValue = returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().item(j).getTextContent();
+					
+					if (elementName.equals("BRDNM") && !langStr.equals("1")) {
+						elementValue = returnXMLDom.getElementsByTagName("BRDNM2").item(i).getTextContent();
+						returnXML += "<" + elementName + ">" + elementValue + "</" + elementName + ">";
+					} else {
+						returnXML += "<" + elementName + ">" + elementValue + "</" + elementName + ">";
+					}
+				}
+				returnXML += "</ROWNODE>";
+			}
+			returnXML += "</SUBCLSLIST>";
+		} catch (Exception e) {
+			
+		}
+		return returnXML;
+	}
+	
+	public boolean delClsData(String xmlStr) throws Exception{
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String strBrdID = "";
+		String strCompanyID = "";
+
+		try {
+			strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent();
+			strCompanyID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent();
+			
+			delClsData(strBrdID, strCompanyID);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

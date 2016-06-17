@@ -14,11 +14,25 @@ public interface EzResourceAdminService {
 	
 	public ResGetSubClsListVO getBrdInfo(int brdID, String companyID) throws Exception;
 	
+	public String getSubCntOfCls(String xmlStr) throws Exception;
+	
+	public String getSubClsList(String xmlStr, String langStr) throws Exception;
+	
 	public int delResAcll(String resID, String companyID) throws Exception;
+	
+	public int getSubResCnt(String resID, String companyID) throws Exception;
+	
+	public int getSubClsCnt(String resID, String companyID) throws Exception; 
 	
 	public boolean addClsData(String xmlStr) throws Exception;
 	
 	public boolean modifyClsData(String xmlStr) throws Exception;
+	
+	public boolean blnMoveCls(String srcBrdID, String targetBrdID, String strPara) throws Exception;
+	
+	public boolean blnChgClsOrder(String currID, String nextID, String companyID) throws Exception;
+	
+	public boolean delClsData(String xmlStr) throws Exception;
 	
 	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany) throws Exception;
 	
