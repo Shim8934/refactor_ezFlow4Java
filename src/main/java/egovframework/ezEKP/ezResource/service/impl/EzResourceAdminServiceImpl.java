@@ -339,4 +339,68 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 			return false;
 		}
 	}
+	
+	public String getClsACLList(String xmlStr) throws Exception {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String strBrdID = "";
+		String strCompanyID = "";
+		String returnXML = "";
+
+		try {
+			strBrdID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
+			strCompanyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
+			
+			List<ResGetClsAclListVO> clsACLList = getClsAclList(strBrdID, strCompanyID);
+			
+			returnXML += "<RTN_DATA>";
+			for (int i=0; i<clsACLList.size(); i++) {
+				returnXML += "<NODE>";
+				returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getDeptYn()  + "</ATTRIBUTE>";
+				returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getSdaYn()  + "</ATTRIBUTE>";
+				returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberNam()  + "</ATTRIBUTE>";
+				returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberID()  + "</ATTRIBUTE>";
+				returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getAccessLvl()  + "</ATTRIBUTE>";
+				returnXML += "</NODE>";
+			}
+			returnXML += "</RTN_DATA>";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXML;
+	}
+	
+	public boolean saveACLLst(String xmlStr) throws Exception {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		boolean bDelete = false;
+		
+		String resID = "";
+		String deptYN = "";
+		String SDAYN = "";
+		String memberNam = "";
+		String memberID = "";
+		String accessLvl = "";
+		String companyID = "";
+		
+		try {
+			for (int i=0; i<xmlRes.getElementsByTagName("ROW_DATA").getLength(); i++) {
+				resID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("ResID").getTextContent();
+				deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
+				SDAYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
+				memberNam = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_nam").getTextContent();
+				memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
+				accessLvl = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Access_lvl").getTextContent();
+				companyID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("CompanyID").getTextContent();
+				
+				if (bDelete == false) {
+					delResAcll(resID, companyID);
+					bDelete = true;
+				}
+				saveACL(resID, deptYN, SDAYN, memberNam, memberID, accessLvl, companyID);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

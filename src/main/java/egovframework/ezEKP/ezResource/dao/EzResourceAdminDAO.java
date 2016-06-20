@@ -32,7 +32,7 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int delResAcll(Map<String, Object> map) {
-		return delete("EzResourceAdminDAO.delResAcll", map);
+		return (int)delete("EzResourceAdminDAO.delResAcll", map);
 	}
 	
 	public int getSubResCnt(Map<String, Object> map) {

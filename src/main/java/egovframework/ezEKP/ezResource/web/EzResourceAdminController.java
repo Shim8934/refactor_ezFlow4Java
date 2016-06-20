@@ -350,8 +350,69 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 권한설정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardRightMain.do")
-	public String gwBoardPostRegRightMain(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+	public String gwBoardPostRegRightMain(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String brdID = "";
+		String brdNm = "";
+		String brdGb = "";
+		String selCompanyID = "";
+		StringBuilder strXMLPara = new StringBuilder();
+		String strRtnXML = "";
+		String strVal = "";
+		String optAdmLvl = "";
+		String optUserLvl = "";
+		String strOptions = "";
+		try {
+			brdID = req.getParameter("brdID");
+			brdNm = req.getParameter("brdNm");
+			brdGb = req.getParameter("brdGb");
+			selCompanyID = req.getParameter("selCompanyID");
+			
+			strXMLPara.append("<PARA_DATA>");
+			strXMLPara.append("<NODE>" + brdID + "</NODE>");
+			strXMLPara.append("<NODE>" + selCompanyID + "</NODE>");
+			strXMLPara.append("</PARA_DATA>");
+			
+			strRtnXML = ezResourceAdminService.getClsACLList(strXMLPara.toString());
+			
+			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
+			
+			for (int i=0; i<xmlRet.getElementsByTagName("NODE").getLength(); i++) {
+				String strDeptYn = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(0).getTextContent();
+				String strSDAYN = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(1).getTextContent();
+				String memberNam = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(2).getTextContent();
+				String memberID = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(3).getTextContent();
+				String accessLvl = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(4).getTextContent();
+				
+				if (accessLvl.equals("1")) {
+					strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t115", locale);
+					optAdmLvl = "checked";
+					optUserLvl = "";
+				} else if (accessLvl.equals("2")) {
+					strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t116", locale);
+					optAdmLvl = "";
+					optUserLvl = "checked";
+				}
+				 strOptions = strOptions + "<OPTION";
+	             strOptions = strOptions + " Dept_YN='" + strDeptYn + "'";
+	             strOptions = strOptions + " SDA_YN='" + strSDAYN + "'";
+	             strOptions = strOptions + " Member_nam='" + memberNam + "'";
+	             strOptions = strOptions + " Member_ID='" + memberID + "'";
+	             strOptions = strOptions + " Access_lvl='" + accessLvl + "'>" + strVal;
+	             strOptions = strOptions + "</OPTION>";
+			}
+		} catch (Exception e) {
+			 
+		}
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("brdID", brdID);
+		model.addAttribute("brdNm", brdNm);
+		model.addAttribute("brdGb", brdGb);
+		model.addAttribute("companyID", selCompanyID);
+		model.addAttribute("strOptions", strOptions);
+		model.addAttribute("optAdmLvl", optAdmLvl);
+		model.addAttribute("optUserLvl", optUserLvl);
 		return "admin/ezResource/resGwBoardPostRegBoardRightMain";
 	}
 	
@@ -639,6 +700,22 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		try {
 			boolean result = ezResourceAdminService.delClsData(xmlStr);
+			return String.valueOf(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	/**
+	 * 자원관리 권한설정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezResource/callBrdMng.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callBrdMng(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			boolean result = ezResourceAdminService.saveACLLst(xmlStr);
 			return String.valueOf(result);
 		} catch (Exception e) {
 			e.printStackTrace();

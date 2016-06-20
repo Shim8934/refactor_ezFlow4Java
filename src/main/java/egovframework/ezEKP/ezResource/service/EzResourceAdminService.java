@@ -18,6 +18,8 @@ public interface EzResourceAdminService {
 	
 	public String getSubClsList(String xmlStr, String langStr) throws Exception;
 	
+	public String getClsACLList(String xmlStr) throws Exception;
+	
 	public int delResAcll(String resID, String companyID) throws Exception;
 	
 	public int getSubResCnt(String resID, String companyID) throws Exception;
@@ -33,6 +35,8 @@ public interface EzResourceAdminService {
 	public boolean blnChgClsOrder(String currID, String nextID, String companyID) throws Exception;
 	
 	public boolean delClsData(String xmlStr) throws Exception;
+	
+	public boolean saveACLLst(String xmlStr) throws Exception;
 	
 	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany) throws Exception;
 	
