@@ -97,7 +97,7 @@
 		<table class="content">
   			<tr>
     			<th> <spring:message code="ezResource.t44" /></th>
-    			<td>${upNm} <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${upNm}"></td>
+    			<td>${brdNm} <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${brdNm}"></td>
   			</tr>
 		</table>
 		<br>
@@ -115,7 +115,7 @@
         				</tr>
         				<tr>
           					<td style="height:90px">
-          						<input type="radio" id="brd_mng1" name="brd_mng" value="1" onClick="optAclLvl_Click(this);" ${optAdimLvl}> <spring:message code="ezResource.t112" /><br>
+          						<input type="radio" id="brd_mng1" name="brd_mng" value="1" onClick="optAclLvl_Click(this);" ${optAdmLvl}> <spring:message code="ezResource.t112" /><br>
             					<input type="radio" id="brd_mng2" name="brd_mng" value="2" onClick="optAclLvl_Click(this);" ${optUserLvl}> <spring:message code="ezResource.t107" />
             				</td>
         				</tr>

@@ -289,7 +289,240 @@
 
 	        			pListXML_Info = loadXMLString(result);
 						pSeach = false;
-						DisplayUserImageList(result);
+						//DisplayUserImageList(result);
+alert("result:"+pListXML_Info);
+						     var xmlRtn = result;
+	                document.getElementById("DeptUserImgList").innerHTML = "";
+	                document.getElementById("txtlist_Layer").scrollTop = "0";
+	                document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
+	                while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
+	                    document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
+	                }
+	                while (document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
+	                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
+	                }
+	                var UserListHTML = "";
+	                if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	                    SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                    SelectDeptNM.setAttribute("countinfo", "1")
+	                }
+	                if (pListType == "IMG") {
+	                    document.getElementById("DeptUserImgList").style.display = "";
+	                    document.getElementById("txtlist_Layer").style.display = "none";
+	                    document.getElementById("txtlist_table").style.display = "none";
+	                    document.getElementById("Search_txtlist_table").style.display = "none";
+	                    if (pSeach) {
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                        SelectDeptNM.setAttribute("countinfo", "1")
+	                    }
+	                } else {
+	                    document.getElementById("DeptUserImgList").style.display = "none";
+	                    document.getElementById("txtlist_Layer").style.display = "";
+	                    if (!pSeach) {
+	                        document.getElementById("txtlist_table").style.display = "";
+	                        document.getElementById("Search_txtlist_table").style.display = "none";
+	                    } else {
+	                        document.getElementById("Search_txtlist_table").style.display = "";
+	                        document.getElementById("txtlist_table").style.display = "none";
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                        SelectDeptNM.setAttribute("countinfo", "1")
+	                    }
+	                }
+	                
+	                for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+	                    if (pListType == "IMG") {
+	                        var MainTable = document.createElement("TABLE");
+	                        MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
+	                        MainTable.setAttribute("cellspacing", "0");
+	                        MainTable.setAttribute("cellpadding", "0");
+	                        
+	                        if (pListType == "IMG") {
+	                            MainTable.style.marginTop = "5px";
+	                        }
+
+	                        MainTable.style.marginLeft = "auto";
+	                        MainTable.style.marginRight = "auto";
+	                        var M_TR = document.createElement("TR");
+	                        M_TR.setAttribute("id", "MailUserlist_" + i);
+	                        M_TR.style.cursor = "pointer";
+	                        M_TR.onmouseover = function () { event_listMover(this); };
+	                        M_TR.onmouseout = function () { event_listMout(this); };
+	                        M_TR.onclick = function () { event_listclick(this); };
+	                        M_TR.ondblclick = function () { event_listDBclick(this); };
+	                        M_TR.setAttribute("draggable", true);
+	                        M_TR.onselectstart = function () { return false; };
+
+	                        if (CrossYN()) {
+
+	                            for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
+	                                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
+	                                    M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
+	                                                      trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
+	                                }
+	                            }
+	                        } else {
+	                            for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+	                                                  SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+	                            }
+	                        }
+
+	                        var M_TR_TD = document.createElement("TD");
+	                        M_TR_TD.setAttribute("class", "pictd");
+	                        var M_TR_DIV = document.createElement("DIV");
+	                        M_TR_DIV.setAttribute("class", "pic");
+	                        if (M_TR.getAttribute("_DATA9") != "") {
+	                            var M_TR_IMG = document.createElement("IMG");
+	                            M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+	                            M_TR_IMG.setAttribute("width", "90px");
+	                            M_TR_IMG.setAttribute("height", "90px");
+	                            M_TR_DIV.appendChild(M_TR_IMG);
+	                        }
+	                        M_TR_TD.appendChild(M_TR_DIV);
+	                        M_TR.appendChild(M_TR_TD);
+
+	                        var M_TR_TD2 = document.createElement("TD");
+	                        M_TR_TD2.style.width = "300px";
+
+	                        var M_TR_TDS_Table = document.createElement("TABLE");
+	                        M_TR_TDS_Table.setAttribute("class", "organinfo");
+	                        M_TR_TD2.appendChild(M_TR_TDS_Table);
+
+	                        var Sub_TR1 = document.createElement("TR");
+	                        var Sub_TD1 = document.createElement("TD");
+	                        Sub_TD1.style.textAlign = "left";
+	                        Sub_TD1.setAttribute("class", "name");
+	                        var pDisplayName = "";
+	                        var useOCS = "${useOCS}";
+	                        if (useOCS == "YES") {
+	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
+	                    }
+	                    pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
+	                    pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
+	                    Sub_TD1.innerHTML = pDisplayName;
+	                    Sub_TR1.appendChild(Sub_TD1);
+
+	                    var Sub_TR2 = document.createElement("TR");
+	                    var Sub_TD2 = document.createElement("TD");
+	                    Sub_TD2.style.textAlign = "left";
+	                    Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+	                    Sub_TR2.appendChild(Sub_TD2);
+
+	                    var Sub_TR3 = document.createElement("TR");
+	                    var Sub_TD3 = document.createElement("TD");
+	                    Sub_TD3.style.textAlign = "left";
+	                    var Sub_TD3_Img = document.createElement("IMG");
+	                    Sub_TD3_Img.setAttribute("class", "icon");
+	                    Sub_TD3_Img.setAttribute("src", "/images/organtree/icon_hp.gif");
+	                    Sub_TD3.appendChild(Sub_TD3_Img);
+	                    Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
+	                    Sub_TR3.appendChild(Sub_TD3);
+
+	                    var Sub_TR4 = document.createElement("TR");
+	                    var Sub_TD4 = document.createElement("TD");
+	                    Sub_TD4.style.textAlign = "left";
+	                    var Sub_TD4_Img = document.createElement("IMG");
+	                    Sub_TD4_Img.setAttribute("class", "icon");
+	                    Sub_TD4_Img.setAttribute("src", "/images/organtree/icon_mail.gif");
+	                    Sub_TD4.appendChild(Sub_TD4_Img);
+	                    Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
+	                    Sub_TR4.appendChild(Sub_TD4);
+
+	                    M_TR_TDS_Table.appendChild(Sub_TR1);
+	                    M_TR_TDS_Table.appendChild(Sub_TR2);
+	                    M_TR_TDS_Table.appendChild(Sub_TR3);
+	                    M_TR_TDS_Table.appendChild(Sub_TR4);
+
+	                    M_TR.appendChild(M_TR_TD2);
+	                    MainTable.appendChild(M_TR);
+	                    document.getElementById("DeptUserImgList").appendChild(MainTable);
+	                } else {
+	                    var M_TR = document.createElement("TR");
+	                    M_TR.setAttribute("id", "MailUserlist_" + i);
+	                    M_TR.style.cursor = "pointer";
+	                    M_TR.onmouseover = function () { event_listMover(this); };
+	                    M_TR.onmouseout = function () { event_listMout(this); };
+	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listDBclick(this); };
+	                    M_TR.setAttribute("draggable", true);
+	                    M_TR.onselectstart = function () { return false; };
+	                    
+alert("length:"+SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length);
+	                    if (CrossYN()) {
+	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
+	                            }
+	                        }
+	                    } else {
+	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+	                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+	                                              SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+	                        }
+	                    }
+
+	                    if (pSeach) {
+	                        var M_TR_TD1 = document.createElement("TD");
+	                        M_TR_TD1.style.overflow = "hidden";
+	                        M_TR_TD1.style.textOverflow = "ellipsis";
+	                        M_TR_TD1.style.whiteSpace = "nowrap";
+	                        M_TR_TD1.style.width = "110px";
+	                        M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA5");
+
+	                        var M_TR_TD2 = document.createElement("TD");
+	                        M_TR_TD2.style.overflow = "hidden";
+	                        M_TR_TD2.style.textOverflow = "ellipsis";
+	                        M_TR_TD2.style.whiteSpace = "nowrap";
+	                        M_TR_TD2.style.width = "90px";
+	                        
+	                        var useOCS = "${useOCS}";
+	                        if (useOCS == "YES") {
+	                    	    M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+	                        } else {
+		                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
+	                    	}
+
+	                    	var M_TR_TD3 = document.createElement("TD");
+	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                    	M_TR_TD3.style.width = "80px";
+
+	                    	var M_TR_TD4 = document.createElement("TD");
+	                    	M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+
+	                    	M_TR.appendChild(M_TR_TD1);
+	                    	M_TR.appendChild(M_TR_TD2);
+	                    	M_TR.appendChild(M_TR_TD3);
+	                    	M_TR.appendChild(M_TR_TD4);
+	                    	document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	                	} else {
+	                    	var M_TR_TD1 = document.createElement("TD");
+	                    	M_TR_TD1.style.overflow = "hidden";
+	                    	M_TR_TD1.style.textOverflow = "ellipsis";
+	                    	M_TR_TD1.style.whiteSpace = "nowrap";
+	                    	M_TR_TD1.style.width = "150px";
+	                    	
+	                    	var useOCS = "${useOCS}";
+	                    	if (useOCS == "YES") {
+	                        	M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+	                    	} else {
+	                        	M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
+	                    	}
+
+	                    	var M_TR_TD2 = document.createElement("TD");
+	                    	M_TR_TD2.style.width = "80px";
+	                    	M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+	                    	var M_TR_TD3 = document.createElement("TD");
+	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+
+	                    	M_TR.appendChild(M_TR_TD1);
+	                    	M_TR.appendChild(M_TR_TD2);
+	                    	M_TR.appendChild(M_TR_TD3);
+	                    	document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	                	}
+	            	}
+		        }
 	        		}        			
 	        	});
 	        }
@@ -527,8 +760,7 @@ alert(xmlToString(xml));
 	                }
 	            }
 
-	        }
-	        else {
+	        } else {
 	            if (p_ListOrderObject == "") {
 	                alert("<spring:message code="ezResource.t169" />");
 	                        return;
@@ -551,8 +783,7 @@ alert(xmlToString(xml));
 
 	                        if (bFlag) {
 	                            pAddFlag = true;
-	                        }
-	                        else {
+	                        } else {
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -596,22 +827,19 @@ alert(xmlToString(xml));
 	                        }
 	                    }
 	                }
-
-
-
-
 	                var listid = "MsgToList";
-
 	            }
+	    
 	            function CheckMailReceiver(selRow, option) {
 	                var rtnValue = false;
 	                var email;
-	                if (option == "1")
+	                if (option == "1") {
 	                    email = selRow.cells[0].DATA3;
-	                else if (option == "2")
+	                } else if (option == "2") {
 	                    email = selRow.cells[0].DATA2;
-	                else if (option == "3")
+	                } else if (option == "3") {
 	                    email = selRow;
+	                }
 
 	                var _listview = new ListView();
 	                _listview.LoadFromID("MsgToList");
@@ -648,30 +876,30 @@ alert(xmlToString(xml));
 	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
-	                }
-	                else {
+	                } else {
 	                    document.getElementById("DeptUserImgList").style.display = "none";
 	                    document.getElementById("txtlist_Layer").style.display = "";
 	                    if (!pSeach) {
 	                        document.getElementById("txtlist_table").style.display = "";
 	                        document.getElementById("Search_txtlist_table").style.display = "none";
-	                    }
-	                    else {
+	                    } else {
 	                        document.getElementById("Search_txtlist_table").style.display = "";
 	                        document.getElementById("txtlist_table").style.display = "none";
 	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
 	                }
+	                
 	                for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
 	                    if (pListType == "IMG") {
-
 	                        var MainTable = document.createElement("TABLE");
 	                        MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
 	                        MainTable.setAttribute("cellspacing", "0");
 	                        MainTable.setAttribute("cellpadding", "0");
-	                        if (pListType == "IMG")
+	                        
+	                        if (pListType == "IMG") {
 	                            MainTable.style.marginTop = "5px";
+	                        }
 
 	                        MainTable.style.marginLeft = "auto";
 	                        MainTable.style.marginRight = "auto";
@@ -684,6 +912,7 @@ alert(xmlToString(xml));
 	                        M_TR.ondblclick = function () { event_listDBclick(this); };
 	                        M_TR.setAttribute("draggable", true);
 	                        M_TR.onselectstart = function () { return false; };
+	                        
 	                        if (CrossYN()) {
 	                            for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
 	                                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
@@ -691,8 +920,7 @@ alert(xmlToString(xml));
 	                                                      trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
 	                                }
 	                            }
-	                        }
-	                        else {
+	                        } else {
 	                            for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 	                                                  SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
@@ -768,8 +996,7 @@ alert(xmlToString(xml));
 	                    M_TR.appendChild(M_TR_TD2);
 	                    MainTable.appendChild(M_TR);
 	                    document.getElementById("DeptUserImgList").appendChild(MainTable);
-	                }
-	                else {
+	                } else {
 	                    var M_TR = document.createElement("TR");
 	                    M_TR.setAttribute("id", "MailUserlist_" + i);
 	                    M_TR.style.cursor = "pointer";
@@ -786,8 +1013,7 @@ alert(xmlToString(xml));
 	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
 	                            }
 	                        }
-	                    }
-	                    else {
+	                    } else {
 	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 	                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 	                                              SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
@@ -807,272 +1033,278 @@ alert(xmlToString(xml));
 	                        M_TR_TD2.style.textOverflow = "ellipsis";
 	                        M_TR_TD2.style.whiteSpace = "nowrap";
 	                        M_TR_TD2.style.width = "90px";
+	                        
 	                        var useOCS = "${useOCS}";
-	                        if (useOCS == "YES")
-	                        M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                    else
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
+	                        if (useOCS == "YES") {
+	                    	    M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+	                        } else {
+		                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
+	                    	}
 
-	                    var M_TR_TD3 = document.createElement("TD");
-	                    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
-	                    M_TR_TD3.style.width = "80px";
+	                    	var M_TR_TD3 = document.createElement("TD");
+	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                    	M_TR_TD3.style.width = "80px";
 
-	                    var M_TR_TD4 = document.createElement("TD");
-	                    M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                    	var M_TR_TD4 = document.createElement("TD");
+	                    	M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 
-	                    M_TR.appendChild(M_TR_TD1);
-	                    M_TR.appendChild(M_TR_TD2);
-	                    M_TR.appendChild(M_TR_TD3);
-	                    M_TR.appendChild(M_TR_TD4);
-	                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
-	                }
-	                else {
-	                    var M_TR_TD1 = document.createElement("TD");
-	                    M_TR_TD1.style.overflow = "hidden";
-	                    M_TR_TD1.style.textOverflow = "ellipsis";
-	                    M_TR_TD1.style.whiteSpace = "nowrap";
-	                    M_TR_TD1.style.width = "150px";
-	                    var useOCS = "${useOCS}";
-	                    if (useOCS == "YES") {
-	                        M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                    } else {
-	                        M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
-	                    }
+	                    	M_TR.appendChild(M_TR_TD1);
+	                    	M_TR.appendChild(M_TR_TD2);
+	                    	M_TR.appendChild(M_TR_TD3);
+	                    	M_TR.appendChild(M_TR_TD4);
+	                    	document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	                	} else {
+	                    	var M_TR_TD1 = document.createElement("TD");
+	                    	M_TR_TD1.style.overflow = "hidden";
+	                    	M_TR_TD1.style.textOverflow = "ellipsis";
+	                    	M_TR_TD1.style.whiteSpace = "nowrap";
+	                    	M_TR_TD1.style.width = "150px";
+	                    	
+	                    	var useOCS = "${useOCS}";
+	                    	if (useOCS == "YES") {
+	                        	M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+	                    	} else {
+	                        	M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
+	                    	}
 
-	                    var M_TR_TD2 = document.createElement("TD");
-	                    M_TR_TD2.style.width = "80px";
-	                    M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                    	var M_TR_TD2 = document.createElement("TD");
+	                    	M_TR_TD2.style.width = "80px";
+	                    	M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 
-	                    var M_TR_TD3 = document.createElement("TD");
-	                    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                    	var M_TR_TD3 = document.createElement("TD");
+	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 
-	                    M_TR.appendChild(M_TR_TD1);
-	                    M_TR.appendChild(M_TR_TD2);
-	                    M_TR.appendChild(M_TR_TD3);
-	                    document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
-	                }
-	            }
-
-	        }
-	    }
-	    function show_member() {
-	        var listview = new ListView();
-	        listview.LoadFromID("Organ");
-	        var length = listview.GetRowCount()
-	        var selectdata = listview.GetSelectedRows();
-	        if (length > 0) {
-	            var id = GetAttribute(selectdata[0], "DATA2");
-	            var dept = GetAttribute(selectdata[0], "DATA10");
-	            var feature = GetOpenPosition(420, 450);
-	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	        }
-	    }
-	    function search_press(e) {
-	        if (window.event) {
-	            if (window.event.keyCode == 13) {
+	                    	M_TR.appendChild(M_TR_TD1);
+	                    	M_TR.appendChild(M_TR_TD2);
+	                    	M_TR.appendChild(M_TR_TD3);
+	                    	document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+	                	}
+	            	}
+		        }
+	    	}
+	            
+	    	function show_member() {
+	        	var listview = new ListView();
+	        	listview.LoadFromID("Organ");
+	        	var length = listview.GetRowCount()
+	        	var selectdata = listview.GetSelectedRows();
+	        	
+	        	if (length > 0) {
+	            	var id = GetAttribute(selectdata[0], "DATA2");
+	            	var dept = GetAttribute(selectdata[0], "DATA10");
+	            	var feature = GetOpenPosition(420, 450);
+	            	window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	}
+	    	}
+	    	
+	    	function search_press(e) {
+	        	if (window.event) {
+	            	if (window.event.keyCode == 13) {
+	                	search_click();
+	            	}
+	        	} else {
+	            	if (e.which == 13) {
 	                search_click();
-	            }
-	        } else {
-	            if (e.which == 13)
-	                search_click();
-	        }
-	    }
+	            	}
+		        }
+	    	}
 
-	    function search_click() {
-	        if (keyword.value == "") {
-	            alert("<spring:message code="ezResource.t129" />");
-	            keyword.focus();
-	            return;
-	        }
-	        var xmlHTTP = createXMLHttpRequest();
-	        var xmlDom = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	        createNodeAndInsertText(xmlDom, objNode, "SEARCH", document.getElementById("search_type").value + "::" + keyword.value);
-	        createNodeAndInsertText(xmlDom, objNode, "CELL", "company;description;displayName;title;telephoneNumber" + document.getElementById("search_type").value);
-	        createNodeAndInsertText(xmlDom, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-	        createNodeAndInsertText(xmlDom, objNode, "TYPE", "user");
+		    function search_click() {
+		        if (keyword.value == "") {
+	    	        alert("<spring:message code="ezResource.t129" />");
+	        	    keyword.focus();
+	            	return;
+	        	}
+	        	var xmlHTTP = createXMLHttpRequest();
+	        	var xmlDom = createXmlDom();
+	        	var objNode;
+	        	createNodeInsert(xmlDom, objNode, "DATA");
+	        	createNodeAndInsertText(xmlDom, objNode, "SEARCH", document.getElementById("search_type").value + "::" + keyword.value);
+	        	createNodeAndInsertText(xmlDom, objNode, "CELL", "company;description;displayName;title;telephoneNumber" + document.getElementById("search_type").value);
+	        	createNodeAndInsertText(xmlDom, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
+	        	createNodeAndInsertText(xmlDom, objNode, "TYPE", "user");
 
-	        g_xmlHTTP = createXMLHttpRequest();
-	        g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
-	        var usedefault;
-	        if (browserIE) {
-	            usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
-	        } else {
-	            usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
-	        }
-	        g_xmlHTTP.onreadystatechange = event_displayUserList2;
-	        g_xmlHTTP.send(xmlDom);
-	    }
-	    function event_displayUserList2() {
-	        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            if (g_xmlHTTP.statusText == "OK") {
-	                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0) {
-	                    alert("<spring:message code="ezResource.t9900006" />");
-	                } else {
-	                    pListXML_Info = g_xmlHTTP.responseXML;
-	                    pSeach = true;
-	                    DisplayUserImageList();
-	                }
-	            } else {
-	                alert("오류발생" + g_xmlHTTP.statusText);
-	            }
+	        	g_xmlHTTP = createXMLHttpRequest();
+	        	g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
+	        	var usedefault;
+	        	
+	        	if (browserIE) {
+	            	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
+	        	} else {
+	            	usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
+	        	}
+	        	g_xmlHTTP.onreadystatechange = event_displayUserList2;
+	        	g_xmlHTTP.send(xmlDom);
+	    	}
+		    
+	    	function event_displayUserList2() {
+	        	if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+	            	if (g_xmlHTTP.statusText == "OK") {
+		                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0) {
+		                    alert("<spring:message code="ezResource.t9900006" />");
+	    	            } else {
+	        	            pListXML_Info = g_xmlHTTP.responseXML;
+	            	        pSeach = true;
+	                	    DisplayUserImageList();
+	                	}
+	            	} else {
+	                	alert("오류발생" + g_xmlHTTP.statusText);
+	            	}
 
-	            g_xmlHTTP = null;
-	        }
-	    }
-	    function ReplaceText(orgStr, findStr, replaceStr) {
-	        var re = new RegExp(findStr, "gi");
+	            	g_xmlHTTP = null;
+	        	}
+	    	}
+	    	
+	    	function ReplaceText(orgStr, findStr, replaceStr) {
+	        	var re = new RegExp(findStr, "gi");
 
-	        return (orgStr.replace(re, replaceStr));
-	    }
-	    function ListTypeChangeIcon() {
-	        if (pListType == "IMG") {
-	            document.getElementById("imglist").setAttribute("src", "/images/kr/cm/btn_onimglist.gif");
-	            document.getElementById("txtlist").setAttribute("src", "/images/kr/cm/btn_list.gif");
-	        }
-	        else {
-	            document.getElementById("imglist").setAttribute("src", "/images/kr/cm/btn_imglist.gif");
-	            document.getElementById("txtlist").setAttribute("src", "/images/kr/cm/btn_onlist.gif");
-	        }
-	    }
-	    function ChangeListView_onClick(Div) {
-	        pListType = Div;
-	        ListTypeChangeIcon();
-	        DisplayUserImageList();
-	    }
-	    function keyword_Clear() {
-	        document.getElementsByName('keyword').item(0).value = "";
-	    }
-	    function makeArray(n) {
-	        this.length = n;
-	        for (var i = 1; i <= n; i++) {
-	            this[i] = 0;
-	        }
-	        return this;
-	    }
-	    var pCompanyID = "everyone";
-	    function close_onclick() {
-	        var listid = "MsgToList";
-	        var selList = new ListView();
-	        selList.LoadFromID(listid);
+	        	return (orgStr.replace(re, replaceStr));
+		    }
+	    	
+	    	function ListTypeChangeIcon() {
+		        if (pListType == "IMG") {
+		            document.getElementById("imglist").setAttribute("src", "/images/kr/cm/btn_onimglist.gif");
+	    	        document.getElementById("txtlist").setAttribute("src", "/images/kr/cm/btn_list.gif");
+		        } else {
+	            	document.getElementById("imglist").setAttribute("src", "/images/kr/cm/btn_imglist.gif");
+	            	document.getElementById("txtlist").setAttribute("src", "/images/kr/cm/btn_onlist.gif");
+	        	}
+	    	}
+	    	
+	    	function ChangeListView_onClick(Div) {
+	        	pListType = Div;
+	        	ListTypeChangeIcon();
+	        	DisplayUserImageList();
+	    	}
+	    	
+	    	function keyword_Clear() {
+	        	document.getElementsByName('keyword').item(0).value = "";
+	    	}
+	    	
+	    	function makeArray(n) {
+	        	this.length = n;
+	        	for (var i = 1; i <= n; i++) {
+	            	this[i] = 0;
+	        	}
+	        	return this;
+	    	}
+	    	var pCompanyID = "everyone";
+	    	function close_onclick() {
+	        	var listid = "MsgToList";
+	        	var selList = new ListView();
+	        	selList.LoadFromID(listid);
 
-	        var totalRows = selList.GetDataRows();
-	        var totalLen = totalRows.length;
+	        	var totalRows = selList.GetDataRows();
+	        	var totalLen = totalRows.length;
 
-	        if (Check_Everyone.checked) {
-	            SelectedACL = new makeArray(totalLen + 1);
-	            if (totalLen == 0) {
-	                SelectedACL[1] = "1^everyone^everyone";
-	            }
-	            else {
-	                for (var i = 0; i < totalLen; i++) {
-	                    var strTxt = GetAttribute(totalRows[i], "DATA2");
-	                    var strId = GetAttribute(totalRows[i], "DATA1");
+	        	if (Check_Everyone.checked) {
+		            SelectedACL = new makeArray(totalLen + 1);
+	            	if (totalLen == 0) {
+	                	SelectedACL[1] = "1^everyone^everyone";
+	            	} else {
+	                	for (var i = 0; i < totalLen; i++) {
+	                    	var strTxt = GetAttribute(totalRows[i], "DATA2");
+	                    	var strId = GetAttribute(totalRows[i], "DATA1");
 
-	                    if (strTxt.charAt(0) == " ") {
-	                        strTxt = strTxt.substr(1);
-	                    }
+	                    	if (strTxt.charAt(0) == " ") {
+		                        strTxt = strTxt.substr(1);
+		                    }
 
-	                    SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
-	                    if (totalLen == i + 1) {
-	                        SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone";
-	                    }
-	                }
-	            }
-	        } else {
-	            SelectedACL = new makeArray(totalLen);
-	            for (var i = 0; i < totalLen; i++) {
-	                var strTxt = GetAttribute(totalRows[i], "DATA2");
-	                var strId = GetAttribute(totalRows[i], "DATA1");
-	                SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
-	            }
-	        }
+	    	                SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
+	        	            if (totalLen == i + 1) {
+	            	            SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone";
+	                	    }
+	                	}
+	        	    }
+	        	} else {
+		            SelectedACL = new makeArray(totalLen);
+		            for (var i = 0; i < totalLen; i++) {
+	    	            var strTxt = GetAttribute(totalRows[i], "DATA2");
+	                	var strId = GetAttribute(totalRows[i], "DATA1");
+	                	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
+	            	}
+	        	}
 
-	        if (ReturnFunction != null) {
-	            ReturnFunction(SelectedACL);
-	        } else {
-	            window.returnValue = SelectedACL;
-	        }
-	        window.close();
-	    }
-	    function onDragEnter(evt) {
-	        evt.stopPropagation();
-	        evt.preventDefault();
-	        evt.dataTransfer.dropEffect = "copy";
-	        evt.dataTransfer.effectAllowed = "copy";
-	    }
-	    function onDrop(evt, element) {
-	        evt.stopPropagation();
-	        evt.preventDefault();
-	        InsertReceiver(element);
-	    }
+	        	if (ReturnFunction != null) {
+		            ReturnFunction(SelectedACL);
+		        } else {
+	    	        window.returnValue = SelectedACL;
+	        	}
+	        	window.close();
+	    	}
+	    	
+	    	function onDragEnter(evt) {
+		        evt.stopPropagation();
+		        evt.preventDefault();
+	        	evt.dataTransfer.dropEffect = "copy";
+	    	    evt.dataTransfer.effectAllowed = "copy";
+	    	}
+	    	
+	    	function onDrop(evt, element) {
+	        	evt.stopPropagation();
+	        	evt.preventDefault();
+	        	InsertReceiver(element);
+	    	}
 
-	    function cmdConfirm_onclick() {
+	    	function cmdConfirm_onclick() {
+		        var listid = "MsgToList";
+		        var selList = new ListView();
+	    	    selList.LoadFromID(listid);
 
-	        var listid = "MsgToList";
-	        var selList = new ListView();
-	        selList.LoadFromID(listid);
+		        var totalRows = selList.GetDataRows();
+	        	var totalLen = totalRows.length;
+	        	SelectedACL = new makeArray(ACLCnt);
+	        	
+	        	for (var i = 0; i < totalLen; i++) {
+	            	var strTxt = GetAttribute(totalRows[i], "DATA2");
+	            	var strId = GetAttribute(totalRows[i], "DATA1");
+	            	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
+	        	}
 
-	        var totalRows = selList.GetDataRows();
-	        var totalLen = totalRows.length;
-	        SelectedACL = new makeArray(ACLCnt);
-	        for (var i = 0; i < totalLen; i++) {
-	            var strTxt = GetAttribute(totalRows[i], "DATA2");
-	            var strId = GetAttribute(totalRows[i], "DATA1");
-	            SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
-	        }
+	        	var objACL = ACLList;
+	        	var ACLCnt = objACL.options.length;
 
+	        	var SelectedACL;
 
-	        var objACL = ACLList;
-	        var ACLCnt = objACL.options.length;
+	        	if (Check_Everyone.checked) {
+		            SelectedACL = new makeArray(ACLCnt + 1);
+		            if (ACLCnt == 0) {
+		                SelectedACL[1] = "1^everyone^everyone";
+	            	} else {
+		                for (var i = 0; i < ACLCnt; i++) {
+		                    var objOptions = objACL.options[i];
+	    	                var strTxt = objOptions.text;
+	    	                
+		                    if (strTxt.charAt(0) == " ") {
+	                        	strTxt = strTxt.substr(1);
+	                    	}
 
-	        var SelectedACL;
+	                    	SelectedACL[i + 1] = objOptions.gubun + "^" + objOptions.value + "^" + strTxt;
 
-	        if (Check_Everyone.checked) {
+	                    	if (ACLCnt == i + 1) {
+	                        	SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone";
+	                    	}
+	                	}
+	            	}
+	        	} else {
+	            	SelectedACL = new makeArray(ACLCnt);
+		            for (var i = 0; i < ACLCnt; i++) {
+		                var objOptions = objACL.options[i];
+	    	            var strTxt = objOptions.text;
 
-	            SelectedACL = new makeArray(ACLCnt + 1);
-
-	            if (ACLCnt == 0) {
-	                SelectedACL[1] = "1^everyone^everyone";
-	            } else {
-
-	                for (var i = 0; i < ACLCnt; i++) {
-	                    var objOptions = objACL.options[i];
-	                    var strTxt = objOptions.text;
-
-	                    if (strTxt.charAt(0) == " ") {
-	                        strTxt = strTxt.substr(1);
-	                    }
-
-	                    SelectedACL[i + 1] = objOptions.gubun + "^" + objOptions.value + "^" + strTxt;
-
-	                    if (ACLCnt == i + 1) {
-	                        SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone";
-	                    }
-	                }
-	            }
-
-	        } else {
-	            SelectedACL = new makeArray(ACLCnt);
-
-	            for (var i = 0; i < ACLCnt; i++) {
-	                var objOptions = objACL.options[i];
-	                var strTxt = objOptions.text;
-
-	                if (strTxt.charAt(0) == " ") {
-	                    strTxt = strTxt.substr(1);
-	                }
-	                SelectedACL[i + 1] = objOptions.gubun + "^" + objOptions.value + "^" + strTxt;
-	            }
-	        }
-	        if (ReturnFunction != null) {
-	            ReturnFunction(SelectedACL);
-	        } else {
-	            window.returnValue = SelectedACL;
-	        }
-	        self.close();
-	    }	
+	        	        if (strTxt.charAt(0) == " ") {
+	            	        strTxt = strTxt.substr(1);
+	                	}
+	                	SelectedACL[i + 1] = objOptions.gubun + "^" + objOptions.value + "^" + strTxt;
+	            	}
+	        	}
+	        	if (ReturnFunction != null) {
+		            ReturnFunction(SelectedACL);
+		        } else {
+	    	        window.returnValue = SelectedACL;
+	        	}
+	        	self.close();
+	    	}	
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden">	
