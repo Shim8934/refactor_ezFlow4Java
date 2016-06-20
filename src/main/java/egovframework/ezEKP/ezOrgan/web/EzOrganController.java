@@ -108,10 +108,9 @@ public class EzOrganController {
 		String lang = config.getProperty("config.primary");
 		String page = request.getParameter("page");
 		String infoXML = "";
-System.out.println(page);
+
 		if (page == null) {		
 			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang);
-System.out.println(infoXML);
 		} else {
 			/* TODO : 2016-03-29 장진혁과장 pagination 작업 필요 */
 			//infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page);			 
