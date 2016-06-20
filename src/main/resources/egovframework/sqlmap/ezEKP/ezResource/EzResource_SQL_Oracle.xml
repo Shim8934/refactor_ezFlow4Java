@@ -457,6 +457,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzResourceDAO.getSubCntOfCls" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETSUBCNTOFCLS(#v_P_ResID#, #v_P_CompanyID#, #v_SubResCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_SubClsCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT

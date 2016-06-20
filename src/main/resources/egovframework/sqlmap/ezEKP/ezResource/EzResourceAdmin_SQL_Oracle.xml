@@ -68,7 +68,7 @@
 	
 	<procedure id="EzResourceAdminDAO.delResAcll" parameterClass="Map"  resultClass="Integer">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_DELRESACLL(#v_P_RESID#, #v_P_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZRESOURCE.EZSP_DELRESACLL(#v_P_RESID#, #v_P_COMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -113,5 +113,35 @@
 			{CALL EZRESOURCE.EZSP_GETBRDINFO(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
+	
+	<select id="EzResourceDAO.subResCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(BRD_ID) , 0)
+   			FROM 
+   				EZRESOURCE.TBLBRD 
+   			WHERE
+   				BRD_UPPER = #resID#
+   			AND 
+   				Brd_Company = #companyID#
+   			AND 
+   				BRD_GB = '2'      			
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.subClsCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(BRD_ID) , 0)
+   			FROM 
+   				EZRESOURCE.TBLBRD 
+   			WHERE
+   				BRD_UPPER = #resID#
+   			AND 
+   				Brd_Company = #companyID#
+   			AND 
+   				BRD_GB = '1'      			
+		]]>
+	</select>
 </sqlMap>
 
