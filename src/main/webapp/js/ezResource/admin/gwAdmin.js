@@ -48,8 +48,7 @@ function NavigateBrdAdminleft(pFlag) {
     var pSelCompanyID = window.parent.frames["board_menu"].pCompanyID;;
     objSelected = window.parent.frames["board_menu"].TreeView.selectedIndex();
 
-	if( objSelected )
-	{
+	if( objSelected ) {
 		var p_BrdID = TreeView.getvalue(objSelected, "DATA1");
 		var p_BrdNm = TreeView.getvalue(objSelected, "DATA2");
 		var p_BrdLevel = TreeView.getvalue(objSelected, "DATA3");
@@ -73,9 +72,7 @@ function NavigateBrdAdminleft(pFlag) {
 		
 	    //frames("board_main") == frames[1]
 		window.parent.frames[1].location = szUrl;
-	}
-	else
-	{
+	} else {
 		alert("" + strLang1 + "");
 	}
 }

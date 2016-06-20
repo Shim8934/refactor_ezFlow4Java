@@ -2,18 +2,14 @@
 var L_AclValue = "";
 var L_ACLERRORMESSAGE = "" + strLang30 + "";
 
-function cmdOk_onclick() 
-{    
+function cmdOk_onclick() {    
 	var objSelected = acllist;
 	var cnt = objSelected.options.length;
 	
 	
-	if (cnt <= 0 )
-	{
+	if (cnt <= 0 ) {
 		alert("" + strLang31 + "");
-	}
-	else
-	{
+	} else {
 		var xmldom = "";
 		var xmlhttp = "";
 
@@ -36,7 +32,6 @@ function cmdOk_onclick()
 		        SetAttribute(objRow, "Access_lvl", objOptions.getAttribute("Access_lvl"));
 		        SetAttribute(objRow, "CompanyID", pCompanyID);
 		    }
-
 		} else {
 		    xmldom = new ActiveXObject("Microsoft.XMLDOM");
 		    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -56,8 +51,7 @@ function cmdOk_onclick()
 		            objRowData.setAttribute("Member_nam", objOptions.Member_nam);
 		            objRowData.setAttribute("Member_ID", objOptions.Member_ID);
 		            objRowData.setAttribute("Access_lvl", objOptions.Access_lvl);
-		        }
-		        else {
+		        } else {
 		            objRowData.setAttribute("Dept_YN", objOptions.getAttribute("Dept_YN"));
 		            objRowData.setAttribute("SDA_YN", objOptions.getAttribute("SDA_YN"));
 		            objRowData.setAttribute("Member_nam", objOptions.getAttribute("Member_nam"));
@@ -65,12 +59,10 @@ function cmdOk_onclick()
 		            objRowData.setAttribute("Access_lvl", objOptions.getAttribute("Access_lvl"));
 		        }
 
-		        
 		        objRowData.setAttribute("CompanyID", pCompanyID);
 
 		        objRoot.appendChild(objRowData);
 		    }
-
 		}
 	
 		xmlhttp.open("POST", "/admin/ezResource/callBrdMng.do", false);
@@ -83,9 +75,9 @@ function cmdOk_onclick()
 
 		var rtnXML = xmlhttp.responseText;
 		
-		if (rtnXML != "True"){
+		if (rtnXML != "true"){
 			alert("2." + strLang32 + "");
-		}else{
+		} else {
 			alert("" + strLang33 + "");
 		}
 	}
@@ -108,6 +100,7 @@ function cmdAdd_onclick() {
         }
     }
 }
+
 function cmdAdd_onclick_Complete(retVal) {
     if (typeof (retVal) != "undefined")
         SetAddACLList(retVal);
@@ -117,8 +110,7 @@ function cmdAdd_onclick_Complete(retVal) {
 function SetAddACLList(objAddList) {
 	var acl_cnt		= objAddList.length;
 	
-	for( var i = 0; i < acl_cnt; i++ )
-	{		
+	for( var i = 0; i < acl_cnt; i++ ) {		
 		var pCurrAcl = objAddList[i+1].split("^");
 
 		var objUserList = acllist;
@@ -157,8 +149,7 @@ function SetAddACLList(objAddList) {
 }
 
 
-function cmdDel_onclick() 
-{
+function cmdDel_onclick() {
     var objSelected = acllist;
 	var pos = objSelected.selectedIndex;
 	if (pos == "-1") return;
@@ -178,8 +169,7 @@ function cmdDel_onclick()
 }
 
 function CheckRead() {
-	if( brd_mng[0].checked == true )
-	{
+	if( brd_mng[0].checked == true ) {
 		CheckMng();
 		return;
 	}
@@ -187,16 +177,14 @@ function CheckRead() {
 	if( L_BrdGb == "2" )
 		return false;
 
-	if( brd_read[0].checked == true )
-	{
+	if( brd_read[0].checked == true ) {
 		brd_lst[0].checked = true;
 		brd_vbl[0].checked = true;
 	}		
 }
 
 function CheckReply() {
-	if( brd_mng[0].checked == true )
-	{
+	if( brd_mng[0].checked == true ) {
 		CheckMng();
 		return;
 	}
@@ -204,8 +192,7 @@ function CheckReply() {
 	if( L_BrdGb == "2" )
 		return false;
 
-	if( brd_reply[0].checked == true )
-	{
+	if( brd_reply[0].checked == true ) {
 		brd_read[0].checked = true;
 		brd_lst[0].checked = true;
 		brd_vbl[0].checked = true;
@@ -214,22 +201,18 @@ function CheckReply() {
 
 
 function CheckWrt() {
-	if( brd_mng[0].checked == true )
-	{
+	if( brd_mng[0].checked == true ) {
 		CheckMng();
 		return;
 	}
 	
-	if( brd_wrt[0].checked == true )
-	{
+	if( brd_wrt[0].checked == true ) {
 		brd_vbl[0].checked = true;
 	}
-	
 }
 
 function CheckLst() {
-	if( brd_mng[0].checked == true  )
-	{
+	if( brd_mng[0].checked == true  ) {
 		CheckMng();
 		return;
 	}
@@ -237,27 +220,21 @@ function CheckLst() {
 	if( L_BrdGb == "2" )
 		return false;
 		
-	if( brd_lst[0].checked == true || brd_lst[2].checked == true )
-	{
+	if( brd_lst[0].checked == true || brd_lst[2].checked == true ) {
 		brd_vbl[0].checked = true;
-	}
-	else
-	{
+	} else {
 		brd_read[1].checked = true;
 		brd_wrt[1].checked = true;
 	}
 }
 
-
 function CheckVbl() {
-	if( brd_mng[0].checked == true )
-	{
+	if( brd_mng[0].checked == true ) {
 		CheckMng();
 		return;
 	}
 	
-	if( brd_vbl[1].checked == true )
-	{
+	if( brd_vbl[1].checked == true ) {
 		brd_mng[1].checked = true;
 		brd_read[1].checked = true;
 		brd_wrt[1].checked = true;
@@ -266,19 +243,16 @@ function CheckVbl() {
 	}
 }
 
-
 function CheckMng() {	
 	var objSelected = acllist.options[acllist.selectedIndex];	
 	
-	if( objSelected.gubun == '2' || objSelected.gubun == '0')
-	{
+	if( objSelected.gubun == '2' || objSelected.gubun == '0') {
 		alert("" + strLang36 + "");
 		brd_mng[1].checked = true;
 		return;
 	}
 
-	if( brd_mng[0].checked == true ) 
-	{
+	if( brd_mng[0].checked == true ) {
 		brd_read[0].disabled = false;	
 		brd_lst[0].disabled = false;
 		brd_reply[0].disabled = false;
@@ -290,8 +264,7 @@ function CheckMng() {
 		brd_reply[0].checked = true;		
 	}
 	
-	if( L_BrdGb == "2" && brd_mng[1].checked == true )
-	{
+	if( L_BrdGb == "2" && brd_mng[1].checked == true ) {
 		brd_read[0].disabled = true;	
 		brd_lst[0].disabled = true;
 		brd_reply[0].disabled = true;
@@ -302,9 +275,8 @@ function CheckMng() {
 	}
 }
 
-function CheckManager(){
-	if( brd_manager[0].checked == true )
-	{
+function CheckManager() {
+	if( brd_manager[0].checked == true ) {
 		brd_mail.disabled = false;
 		
 		brd_read[0].checked = true;
@@ -313,20 +285,16 @@ function CheckManager(){
 		brd_reply[0].checked = true;
 		brd_vbl[0].checked = true;
 		brd_mail.checked = true;
-	}
-	else{
+	} else {
 		brd_mail.checked = false;
 		brd_mail.disabled = true;
 	}
-
 }
-
 
 function SetPermission( gubun, value ) {
 	var objSelected = acllist;
 	
-	if( objSelected.selectedIndex == -1 ) 
-	{
+	if( objSelected.selectedIndex == -1 ) {
 		alert(L_ACLERRORMESSAGE);
 		return false;cmdOk_onclick
 	}
@@ -334,8 +302,7 @@ function SetPermission( gubun, value ) {
 	var pos = objSelected.selectedIndex;
 	var SelectedUser = objSelected.options[pos];
 
-	if( SelectedUser.acl.substring(0,1) == '1' && SelectedUser.user_id == g_UserID && gubun != "manager" && gubun != "mail")
-	{
+	if( SelectedUser.acl.substring(0,1) == '1' && SelectedUser.user_id == g_UserID && gubun != "manager" && gubun != "mail") {
 		alert("" + strLang37 + "");
 		brd_mng[0].checked = true;
 		return false;
@@ -344,36 +311,42 @@ function SetPermission( gubun, value ) {
 	var acl_cnt;
 	var strAcl;
 	
-	if( gubun == "mng" )
+	if( gubun == "mng" ) {
 		CheckMng();
+	}
 	
-	if( gubun == "lst")   
+	if( gubun == "lst") {
 		CheckLst();
+	}   
 	
-	if( gubun == "read") 
+	if( gubun == "read") {
 		CheckRead();
+	} 
 		
-	if( gubun == "vbl")  
+	if( gubun == "vbl") {
 		CheckVbl();
+	}  
 
-	if( gubun == "wrt")  
+	if( gubun == "wrt") {
 		CheckWrt();
+	}  
 		
-	if( gubun == "reply")
+	if( gubun == "reply") {
 		CheckReply();
+	}
 	
-	if( gubun == "manager")
+	if( gubun == "manager") {
 		CheckManager();
+	}
 
-	if( value == 0 && brd_mng[0].checked && gubun != "manager" && gubun != "mail")
+	if( value == 0 && brd_mng[0].checked && gubun != "manager" && gubun != "mail") {
 		return false;
+	}
 		
 	acl_cnt = objSelected.options.length;
 	
-	for( i = 0; i < acl_cnt; i++ )
-	{
-		if( objSelected.options[i].selected )
-		{
+	for( i = 0; i < acl_cnt; i++ ) {
+		if( objSelected.options[i].selected ) {
 			pos = objSelected.options[i].value.lastIndexOf('^');
 			tmp = objSelected.options[i].value.substring(0, pos);
 						
@@ -392,7 +365,6 @@ function SetPermission( gubun, value ) {
 function SetAclLst() {
 	var strNewAcl = "",strGrant = "",strDeny = "",strlstDeny="";
 	
-
 	if( brd_mng[0].checked )	{
 		strNewAcl = strNewAcl + "1";
 		strGrant = strGrant + "" + strLang38 + "";
@@ -401,7 +373,7 @@ function SetAclLst() {
 		strDeny = strDeny + "" + strLang38 + "";
 	}
 	
-	if( brd_read[0].checked )	{
+	if( brd_read[0].checked ) {
 		strNewAcl = strNewAcl + "1";
 		strGrant = strGrant + "" + strLang39 + "";
 	} else {
@@ -412,7 +384,7 @@ function SetAclLst() {
 	if( brd_wrt[0].checked )	{
 		strNewAcl = strNewAcl + "1";
 		strGrant = strGrant + "" + strLang40 + "";
-	} else	{
+	} else	 {
 		strNewAcl = strNewAcl + "0";
 		strDeny = strDeny + "" + strLang40 + "";
 	}
@@ -420,7 +392,7 @@ function SetAclLst() {
 	if( brd_lst[0].checked )	{
 		strNewAcl = strNewAcl + "1";
 		strGrant = strGrant + "" + strLang41 + "";
-	} else if( brd_lst[1].checked ){
+	} else if( brd_lst[1].checked ) {
 		strNewAcl = strNewAcl + "0";
 		strDeny = strDeny + "" + strLang41 + "";
 	} else if( brd_lst[2].checked )	{
@@ -431,7 +403,7 @@ function SetAclLst() {
 	if( brd_vbl[0].checked )	{
 		strNewAcl = strNewAcl + "1";
 		strGrant = strGrant + "" + strLang42 + "";
-	} else	{
+	} else	 {
 		strNewAcl = strNewAcl + "0";
 		strDeny = strDeny + "" + strLang42 + "";
 	}
@@ -459,17 +431,17 @@ function SetAclLst() {
 		}
 	}
 	
-	if( brd_manager[0].checked ){
+	if( brd_manager[0].checked ) {
 		strNewAcl = strNewAcl + "1";
 		strLst = strLst + ", " + strLang48 + ""
-	} else{
+	} else {
 		strNewAcl = strNewAcl + "0";
 		strLst = strLst + ", " + strLang49 + ""
 	}
 	
-	if( brd_mail.checked ){
+	if( brd_mail.checked ) {
 		strNewAcl = strNewAcl + "1";
-	} else{
+	} else {
 		strNewAcl = strNewAcl + "0";
 	}
 	 	
@@ -478,12 +450,10 @@ function SetAclLst() {
 	
 }
 
-
 function SetUserValue() {
 	var pos = acllist.selectedIndex;
 	var pos1 = acllist.options[pos].value.lastIndexOf('^');
 	var strAcl = acllist.options[pos].acl;
-
 
 	var objSelected = acllist;
 	var SelectedUser = objSelected.options[pos];
