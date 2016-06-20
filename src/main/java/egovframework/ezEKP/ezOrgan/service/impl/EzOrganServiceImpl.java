@@ -259,8 +259,9 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             String cn2 = obj.getCn();
             String displayname2 = obj.getDisplayName();
-            
-            memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getCn());
+
+            //memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getCn());
+            memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getType());
             memberCount2++;
         }
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
@@ -283,8 +284,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         for (int i = 0; i < celllist.length; i++){
         	cellvalue = "";
-            
-            if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
+     System.out.println("pXMLString:"+pXMLString);       
+            //if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
+            if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pDeptID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))){
             	switch (celllist[i].toLowerCase()){
                 case "department":
                     cellvalue = pDeptID;
@@ -293,14 +295,15 @@ public class EzOrganServiceImpl implements EzOrganService {
                     cellvalue = pDeptName;
                     break;
                 case "title":
-                    if (doc.getElementsByTagName("ADDJOB") != null && !doc.getElementsByTagName("ADDJOB").item(0).getTextContent().equals("")){
-                        cellvalue = doc.getElementsByTagName("ADDJOB").item(0).getTextContent();
+                	//if (doc.getElementsByTagName("ADDJOB") != null && !doc.getElementsByTagName("ADDJOB").item(0).getTextContent().equals("")){
+                    if (doc.getElementsByTagName("TITLE") != null && !doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")){
+                        cellvalue = doc.getElementsByTagName("TITLE").item(0).getTextContent();
                         String[] sublist = cellvalue.split(";");
                         cellvalue = "";
 
                         for(String subinfo : sublist){
                             String[] subinfolist = subinfo.split(":");
-                            if (subinfolist[0] == pDeptID){                                
+                            if (subinfolist[0].equals(pDeptID)){                                
                                 cellvalue = subinfolist[1];
                                 break;
                             }
