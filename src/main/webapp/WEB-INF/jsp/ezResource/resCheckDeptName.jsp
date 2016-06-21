@@ -7,6 +7,7 @@
 		<title><spring:message code="ezResource.t13"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
 		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
@@ -19,17 +20,18 @@
 		            window.focus();
 		        }
 		    }
+		    
+		    $(document).ready(function(){
+		    	 try {
+			            dialogArguments = parent.checkdeptname_cross_dialogArguments[0];
+			            ReturnFunction = parent.checkdeptname_cross_dialogArguments[1];
 
-		    window.onload = function () {
-		        try {
-		            dialogArguments = parent.checkdeptname_cross_dialogArguments[0];
-		            ReturnFunction = parent.checkdeptname_cross_dialogArguments[1];
-		            retVal["deptid"] = "";
-		        }
-		        catch (e) {
-		        }
-		        initializeReceiverList();        
-		    }
+			            retVal["deptid"] = "";
+			        }
+			        catch (e) {
+			        }
+	    		initializeReceiverList();	    		
+	    	});
 
 		    function initializeReceiverList() {
 		        document.getElementById("ListView").innerHTML = "";
@@ -107,7 +109,7 @@
   			</LISTVIEWDATA>
 		</xml>
 		
-		<object style="display: none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" viewastext/>
+		<object style="display: none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" viewastext> </object>
 		
 		<h1><spring:message code="ezResource.t13"/></h1>
 		<h2><spring:message code="ezResource.t167"/></h2>
