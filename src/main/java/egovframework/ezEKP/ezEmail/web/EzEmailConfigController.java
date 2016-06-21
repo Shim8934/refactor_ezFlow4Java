@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -523,12 +524,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = config.getProperty("upload_mail.SIGNIMGS");
+		
 		String realPath = request.getServletContext().getRealPath("");
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
-
+		
+		String filePath = config.getProperty("upload_mail.ROOT");
 		File file = new File(realPath + filePath);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		filePath = config.getProperty("upload_mail.SIGNIMGS");
+		file = new File(realPath + filePath);
 		if (!file.exists()) {
 			file.mkdir();
 		}
@@ -1020,4 +1028,98 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		return "ezEmail/mailDetailInboxRule";
 	}
 	
+	/**
+	 * 메일 부재중 설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
+	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String gOofState = "disabled";
+		String gStartDate = "";
+		String gEndDate = "";
+		String gExternalAudience = "known";
+		String gInternal = "";
+		String gExternal = "";
+		
+		//TODO: 디비에서 가져오도록?
+		String userLang = "1";
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		userId = userId + "@" + config.getProperty("config.DomainName");
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getOutOfOffice", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("result") != null) {
+			JSONObject resultObject = (JSONObject)object.get("result");
+			gOofState = resultObject.get("oofState").toString();
+			gStartDate = resultObject.get("startDate").toString();
+			gEndDate = resultObject.get("endDate").toString();
+			gExternalAudience = resultObject.get("externalAudience").toString();
+			gInternal = resultObject.get("internal").toString();
+			gExternal = resultObject.get("external").toString();
+		}
+		
+		if (!gOofState.equals("scheduled")) {
+			String date = EgovDateUtil.getToday("-");
+			String hour = EgovDateUtil.getTodayTime().substring(11, 13);
+			
+			gStartDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 0, 1, 0, "yyyy-MM-dd HH:mm");
+			gEndDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 1, 0, 0, "yyyy-MM-dd HH:mm");
+		}
+		
+		model.addAttribute("gOofState", gOofState);
+		model.addAttribute("gStartDate", gStartDate);
+		model.addAttribute("gEndDate", gEndDate);
+		model.addAttribute("gExternalAudience", gExternalAudience);
+		model.addAttribute("gInternal", gInternal);
+		model.addAttribute("gExternal", gExternal);
+		model.addAttribute("userLang", userLang);
+		
+		return "ezEmail/mailOutOfOfficeCK";
+	}
+	
+	/**
+	 * 메일 부재중 설정 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do")
+	@ResponseBody
+	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "ERROR";
+		
+		Document doc = commonUtil.convertRequestToDocument(request);
+		String oofState = doc.getElementsByTagName("OOFSTATE").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String internal = doc.getElementsByTagName("INTERNAL").item(0).getTextContent();
+		String external = doc.getElementsByTagName("EXTERNAL").item(0).getTextContent();
+		String externalAudience = doc.getElementsByTagName("EXTERNALAUDIENCE").item(0).getTextContent();
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		userId = userId + "@" + config.getProperty("config.DomainName");
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
+		sb.append("&oofState=" + URLEncoder.encode(oofState, "UTF-8"));
+		sb.append("&startDate=" + URLEncoder.encode(startDate, "UTF-8"));
+		sb.append("&endDate=" + URLEncoder.encode(endDate, "UTF-8"));
+		sb.append("&internal=" + URLEncoder.encode(internal, "UTF-8"));
+		sb.append("&external=" + URLEncoder.encode(external, "UTF-8"));
+		sb.append("&externalAudience=" + URLEncoder.encode(externalAudience, "UTF-8"));
+		String inputParams = sb.toString();
+
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setOutOfOffice", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode") != null) {
+			returnValue = object.get("resultCode").toString();
+		}
+
+		return returnValue;
+		
+	}
 }

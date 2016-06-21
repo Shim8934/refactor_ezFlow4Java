@@ -91,13 +91,13 @@
 	                        if (pUse_Editor == "TAGFREE")
 	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_TFX.aspx";
 	                        else
-	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_CK.aspx";
+	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOfficeCK.do";
 	                    }
 	                    else {
 	                        if (pUse_Editor == "TAGFREE")
 	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_TFX.aspx";
 	                        else
-	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_CK.aspx";
+	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOfficeCK.do";
 	                    }
 	                    break;
 	                case "MailEnv_div9":
