@@ -781,7 +781,6 @@
 		{CALL EZCOMMUNITY.EZSP_DELETEBOARD()}
 	</procedure>
 	
-	
 	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
@@ -806,7 +805,7 @@
 			WHERE  
 	       		QUESTIONID = #v_QUESTIONID#
 	       	AND
-	       		USERID = #v_USERINFO_USERID#
+	       		RTRIM(USERID) = #v_USERINFO_USERID#
 	       	AND
 	       		COMPANYID = #v_USERINFO_COMPANYID#
 		]]>
@@ -821,7 +820,7 @@
 			WHERE  
 	       		COMPANYID = #v_COMPANYID#
 	       	AND
-	       		USERID = #v_C_ID#
+	       		RTRIM(USERID) = #v_C_ID#
 		]]>
 	</select>
 	
@@ -910,9 +909,9 @@
 			FROM 
 	        	ezCommunity.C_CLUBUSER
 			WHERE  
-	       		C_CLUBNO = #v_PCOMID#
+	       		RTRIM(C_CLUBNO) = #v_PCOMID#
 	       	AND
-	       		C_ID = #v_USERINFO_USERID#;
+	       		RTRIM(C_ID) = #v_USERINFO_USERID#;
 		]]>
 	</select>
 	
@@ -961,9 +960,9 @@
         		C_VISITED = C_VISITED + 1,
         		C_LASTDATE = #STRNOW# 
        		WHERE 
-       			C_CLUBNO = #CODE#
+       			RTRIM(C_CLUBNO) = #CODE#
        		AND
-       			C_ID = #ID#
+       			RTRIM(C_ID) = #ID#
 		]]>
 	</update>
 	
@@ -1014,9 +1013,9 @@
         	FROM
         		EZCOMMUNITY.C_ClubGuest
         	WHERE
-        		C_NO = #v_C_NO#
+        		RTRIM(C_NO) = #v_C_NO#
         	AND
-        		C_CLUBNO = #v_CODE#
+        		RTRIM(C_CLUBNO) = #v_CODE#
 		]]>
 	</delete>
 	

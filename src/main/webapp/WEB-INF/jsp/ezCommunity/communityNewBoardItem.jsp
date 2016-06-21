@@ -99,7 +99,6 @@
 			var flag = false;
 			
 			window.onload = function () {
-		        /* initKey(); */
 		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
 		            document.getElementById("file1").multiple = false;
 		        }

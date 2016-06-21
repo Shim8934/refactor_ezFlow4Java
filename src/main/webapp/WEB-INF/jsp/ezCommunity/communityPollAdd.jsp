@@ -412,7 +412,7 @@
 	            
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)"></textarea></td>
+	                <td><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>

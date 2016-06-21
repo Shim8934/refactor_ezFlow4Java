@@ -15,7 +15,6 @@
 			function closeok_onclick( code ) {
 				if( document.getElementById("closereason").value == "" ) {
 					alert("<spring:message code = 'ezCommunity.t464' />");
-					
 				    document.getElementById("closereason").focus();
 					
 					return;
@@ -23,49 +22,49 @@
 				
 			    if (document.getElementById("closereason").length > 2000) {
 					alert("<spring:message code = 'ezCommunity.t465' />");
-					
 			        document.getElementById("closereason").focus();
 					
 					return;	
 				}
-	
-			    var xmlHttp = createXMLHttpRequest();
-			    var xmlDoc = createXmlDom();
-			    var objRoot;
-	
-			    createNodeInsert(xmlDoc, objRoot, "PARAMETER");
-			    createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-			    createNodeAndInsertText(xmlDoc, objRoot, "REASON", ConvMakeXMLString(document.getElementById("closereason").value));
-				
-				xmlHttp.open("POST","/ezCommunity/adminCommCloseOk.do",false);
-				xmlHttp.send(xmlDoc);
-				
-				var resultXML = loadXMLString(xmlHttp.responseText);
-	
-				if (CrossYN()) {
-				    rtnValue = SelectNodes(resultXML, "/RETURN/VALUE").item(0).textContent;
-				} else {
-				    var commNodes = new ActiveXObject("Microsoft.XMLDOM");
-				    commNodes = resultXML.documentElement.childNodes;
-				    rtnValue = commNodes.item(0).text;
-				}
-				
-				if( rtnValue == "SuccessApplication" ) {
-					alert("<spring:message code = 'ezCommunity.t470' />");
-					manager_onclick( code );
-				} else if( rtnValue == "NotExistCompany" ) {
-					alert("<spring:message code = 'ezCommunity.t471' />");
-					manager_onclick( code );
-				} else if( rtnValue == "NotExistCommunity" ) {
-					alert("<spring:message code = 'ezCommunity.t472' />");
-					manager_onclick( code );
-				} else if( rtnValue == "ExistApplication" ) {
-					alert("<spring:message code = 'ezCommunity.t473' />");
-					manager_onclick( code );
-				} else {
-				    alert("<spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t474' />");
-					manager_onclick( code );
-				}
+			    
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/adminCommCloseOk.do",
+					data : {code	:	code,
+							reason	:	ConvMakeXMLString(document.getElementById("closereason").value)
+						   },
+					success	:	function(result) {
+						var resultXML = loadXMLString(result);
+						
+						if (CrossYN()) {
+						    rtnValue = SelectNodes(resultXML, "/RETURN/VALUE").item(0).textContent;
+						} else {
+						    var commNodes = new ActiveXObject("Microsoft.XMLDOM");
+						    commNodes = resultXML.documentElement.childNodes;
+						    rtnValue = commNodes.item(0).text;
+						}
+						
+						if( rtnValue == "SuccessApplication" ) {
+							alert("<spring:message code = 'ezCommunity.t470' />");
+							manager_onclick( code );
+						} else if( rtnValue == "NotExistCompany" ) {
+							alert("<spring:message code = 'ezCommunity.t471' />");
+							manager_onclick( code );
+						} else if( rtnValue == "NotExistCommunity" ) {
+							alert("<spring:message code = 'ezCommunity.t472' />");
+							manager_onclick( code );
+						} else if( rtnValue == "ExistApplication" ) {
+							alert("<spring:message code = 'ezCommunity.t473' />");
+							manager_onclick( code );
+						} else {
+						    alert("<spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t474' />");
+							manager_onclick( code );
+						}
+					}
+						   
+				});
 			}
 			
 			function ConvMakeXMLString(str) {

@@ -3,6 +3,9 @@ package egovframework.ezEKP.ezCommunity.service.impl;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -20,8 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -31,6 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
@@ -63,7 +70,10 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-
+/**
+ * @author DC363
+ *
+ */
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl implements EzCommunityService{
 	@Resource(name="EzCommunityDAO")
@@ -96,6 +106,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Autowired
 	private Properties config;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
+	
 	
 	@Override
 	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, ModelMap model, String code) throws Exception {
@@ -126,7 +138,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 //        		joinFlag = true;
         	}
         	
-        	String clubConfirmType = leftCommunityGet2(code);
+        	String clubConfirmType = ezCommunityDAO.leftCommunityGet2(code);
         	
         	if (clubConfirmType != null) {
         		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
@@ -153,7 +165,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         	}*/
         	
 
-        	if (userInfo.getId().equals(leftCommunityGet4(code))) {
+        	if (userInfo.getId().equals(ezCommunityDAO.leftCommunityGet4(code))) {
         		checkSysop = true;
         	}
         }
@@ -280,11 +292,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		boardNo += 1;
 		
 		if (commMakeOkGet4() == 0) {
-			commMakeOkInsert1();
+			ezCommunityDAO.commMakeOkInsert1();
 		}
 		
 		int clubNo = 0;
-		clubNo = Integer.parseInt(commMakeOkGet3().trim());
+		clubNo = Integer.parseInt(ezCommunityDAO.commMakeOkGet3().trim());
 		clubNo ++ ;
 		
 		String code = "C_"+clubNo;
@@ -479,7 +491,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		pClubID = xmlDom.getChildNodes().item(0).getTextContent();
 		
 		//TODO 2016-04-26 이효진  사용하지 않는 Table을 참조해서 Null반환
-		List<String> userIDList = goAdminOkGet1();
+		List<String> userIDList = ezCommunityDAO.goAdminOkGet1();
 		aspXML.append("<ASP>");
 		
 		for (String userID : userIDList) {
@@ -489,7 +501,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		aspXML.append("</ASP>");
 		
-		List<CommunityClubVO> clubList = goAdminOkGet2(pClubID);
+		List<CommunityClubVO> clubList = ezCommunityDAO.goAdminOkGet2(pClubID);
 		
 		for (CommunityClubVO communityClub : clubList) {
 			masterXML.append("<MASTER>");
@@ -538,7 +550,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         	}
         	
         	//TODO
-        	/*String newMemberConfirmtype = leftCommunityGet2(code);
+        	/*String newMemberConfirmtype = ezCommunityDAO.leftCommunityGet2(code);
         	
         	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
         	
@@ -559,7 +571,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         	}
         	
 
-        	if (userInfo.getId().equals(leftCommunityGet4(code))) {
+        	if (userInfo.getId().equals(ezCommunityDAO.leftCommunityGet4(code))) {
         		checkSysop = true;
         	}*/
 		}
@@ -577,17 +589,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		int newMemberConfirmType = 0;
 		
 		String code = request.getParameter("code");
-		String codeName = request.getParameter("codeName");
 		String userLevel = request.getParameter("userLevel");
-
-		// 20100119 보안처리 관련 추가작업(권한체크)
-		communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
-		
-		String strVisit = commHomeGet1(userInfo.getId(), code);
-		
-		if (strVisit == null || strVisit.substring(0, 10).equals(EgovDateUtil.getToday("-"))) {
-			updateLastDate(EgovDateUtil.getTodayTime(), code, userInfo.getId());
-		}
 		
 		String copType = commHomeGet4(code);
 		
@@ -622,13 +624,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			userLevel = "0";
 		}
 		
-		String confirmType = leftCommunityGet2(code);
+		String confirmType = ezCommunityDAO.leftCommunityGet2(code);
 		
 		if (confirmType != null) {
 			newMemberConfirmType = Integer.parseInt(confirmType);
 		}
 		
-		CommunityClubVO clubVO = leftCommunityGet4(code);
+		CommunityClubVO clubVO = ezCommunityDAO.leftCommunityGet4(code);
 		
 		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
 			checkSysop = true;
@@ -708,7 +710,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		StringBuilder sb = new StringBuilder();
 		String code = request.getParameter("code");
 		
-		List<CommunityBoardInfoVO> boardInfoList = copHomeBoardGet(code);
+		List<CommunityBoardInfoVO> boardInfoList = ezCommunityDAO.copHomeBoardGet(code);
 		
 		sb.append("<ITEM>");
 		sb.append("<BOARDINFO>");
@@ -731,7 +733,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		for(int i = 0; i < boardInfoList.size(); i++){
 			String boardID = boardInfoList.get(i).getBoardID();
-			List<CommunityBoardItemVO> boardItemList = copHomeBoardItemGet(boardID);
+			List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(boardID);
 			sb.append("<DATA>");
 			
 			for(CommunityBoardItemVO boardItem: boardItemList){
@@ -818,7 +820,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 	
 	@Override
-	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String strWriterFakeName, String hasAttach) throws Exception {
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, ModelMap model) throws Exception {
+		String strWriterFakeName = "";
 		
 		if (!pUrl.equals("")) {
 			item.setStartDate(EgovDateUtil.getToday("-"));
@@ -866,6 +869,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
                 }
 			}
 		}
+		
+		model.addAttribute("item", item);
+		model.addAttribute("strWriterFakeName", strWriterFakeName);
 	}
 
 
@@ -999,9 +1005,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return strXML;
 	}
 
-
 	@Override
-	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String previousItemID, String previousTitle, String nextItemID, String nextTitle, String cAdmin, String gcAdmin, String pVersionUse, String showAdjacent, String adjacentItemsEnableFlag) throws Exception {
+	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String showAdjacent, String adjacentItemsEnableFlag, ModelMap model) throws Exception {
+		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", cAdmin = "", gcAdmin = "", pVersionUse = "";
 		if (item.getParentWriteDate().compareTo(item.getWriteDate()) > 0) {
 			item.setWriteDate(item.getParentWriteDate());
 		}
@@ -1036,7 +1042,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             	gcAdmin = "OK";
             }
             
-            pVersionUse = getVersionInfo(pBoardID); 
+            pVersionUse = ezCommunityDAO.getVersionInfo(pBoardID); 
 		}
 		
 		if (boardInfo.getGubun() != null) {
@@ -1046,6 +1052,15 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				item.setWriterCompanyName("");
 			}
 		}
+		
+		model.addAttribute("item", item);
+		model.addAttribute("previousItemID", previousItemID);
+		model.addAttribute("previousTitle", previousTitle);
+		model.addAttribute("nextItemID", nextItemID);
+		model.addAttribute("nextTitle", nextTitle);	
+		model.addAttribute("cAdmin", cAdmin);
+		model.addAttribute("gcAdmin", gcAdmin);
+		model.addAttribute("pVersionUse", pVersionUse);
 	}
 
 
@@ -1055,19 +1070,892 @@ public class EzCommunityServiceImpl implements EzCommunityService{
     	String pre = egovFileScrty.getPre();
 		String oldPassword = "";
 		
-		
-		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
 		
 		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
-		oldPassword = checkPassword(itemID).trim();
+		oldPassword = ezCommunityDAO.checkPassword(itemID).trim();
 		
 		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
 			return "OK";
 		} else {
 			return "NO";
 		}
+	}
+
+	
+
+	@Override
+	public String pollMain(LoginVO userInfo, String code) throws Exception {
+		String pollState = "", pollManager = "";
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityCPollManagerVO> list = ezCommunityDAO.pollMainGet2(code);
+		
+		for (CommunityCPollManagerVO item : list) {
+
+			if (EgovDateUtil.getToday("-").compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
+				pollState = egovMessageSource.getMessage("ezCommunity.t677", new Locale(globals.getProperty("Globals.language")));
+				pollManager = egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language")));
+			} else {
+				if (EgovDateUtil.getToday("-").compareTo(item.getPollStartDate().substring(0, 10)) >= 0 && EgovDateUtil.getToday("-").compareTo(item.getPollEndDate().substring(0,10)) <= 0) {
+					pollState = egovMessageSource.getMessage("ezCommunity.t679", new Locale(globals.getProperty("Globals.language")));
+					pollManager = egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language")));
+				} else {
+					pollState= egovMessageSource.getMessage("ezCommunity.t680", new Locale(globals.getProperty("Globals.language")));
+					pollManager = egovMessageSource.getMessage("ezCommunity.t208", new Locale(globals.getProperty("Globals.language")));
+				}
+			}
+			
+			String strQuestionID = ezCommunityDAO.pollMainGet3(item.getManagerID());
+			String strResponseCnt = ezCommunityDAO.pollMainGet4(strQuestionID);
+			
+			sb.append("<tr>");
+			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
+			sb.append("<td>" + item.getPollStartDate().substring(0, 10) + " ~ " + item.getPollEndDate().substring(0, 10) + "</td>");
+			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + item.getPollSubject() + "\">");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + item.getPollSubject() + "</a></td>");
+			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", new Locale(globals.getProperty("Globals.language"))) + "</td>");
+			sb.append("<td>" + pollState + "</td>");
+			sb.append("<td>");
+			
+			if (item.getPollRegUser().equals(userInfo.getId())) {
+				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language"))))) {
+					sb.append("<a class=\"imgbtn\" onclick=poll_edit(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
+				} else if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t208", new Locale(globals.getProperty("Globals.language"))))) {
+					sb.append("<a class=\"imgbtn\" onclick=poll_Delete(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
+				}
+			}
+			
+			sb.append("</td>");
+			sb.append("</tr>");
+		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, ModelMap model) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		if (sel == 0 && !selType.equals("3")) {
+			sb.append("<select size=\"5\" style=\"Width:100%; Height:160px\" id=select1 name=select1>");
+			
+			switch (selRes) {
+				case "1" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t617", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t618", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t619", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t620", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t621", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t622", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t623", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t624", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t625", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t626", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 1;
+					answerCount = 5;
+					
+					break;
+				case "2" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t628", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t629", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t636", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t637", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 2;
+					answerCount = 5;
+					
+					break;
+				case "3" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t638", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t639", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t640", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t641", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t642", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t643", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t644", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t645", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 3;
+					answerCount = 5;
+					
+					break;
+				case "11" :
+					sb.append("<option value = \"1. Yes.\">1. Yes.</option>");
+					sb.append("<option value = \"2. No.\">2. No.</option>");
+					
+					selectedNo = 4;
+					answerCount = 2;
+					
+					break;
+				case "12" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t646", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t647", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t648", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t649", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 5;
+					answerCount = 2;
+					
+					break;
+				case "13" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t650", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t651", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t652", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t653", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 6;
+					answerCount = 2;
+					
+					break;
+				case "14" :
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					
+					selectedNo = 7;
+					answerCount = 2;
+					break;
+			}
+			
+			if (selType.equals("2")) {
+				answerCount++;
+				sb.append("<option value = \"3\">3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+			}
+			
+			sb.append("</select>");
+		} else {
+			if (sel == 1 && !selType.equals("3")) {
+				selectedNo = 8;
+				
+				if(!selType.equals("2")){
+					for(int i=1; i <= Integer.parseInt(selRes); i++) {
+						sb.append(i + ". <input type= \"text\" name = \"selNo_" + i + "\"><br>");
+					}
+					
+					answerCount = Integer.parseInt(selRes);
+				} else {
+					selectedNo = 9;
+					
+					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
+						sb.append(i + ". <input type= \"text\" name = \"selNo_" + i + "\"><br>");
+					}
+					
+					answerCount = Integer.parseInt(selRes);
+					sb.append(selRes + ". " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))));
+				}
+			} else {
+				if (selType.equals("3")) {
+					answerCount = 1;
+					selectedNo = 10;
+					sb.append(egovMessageSource.getMessage("ezCommunity.t654", new Locale(globals.getProperty("Globals.language"))) + "<input type = \"text\" name = \"selJU\">");
+				}
+			}
+		}
+		
+		model.addAttribute("answerCount", answerCount);
+		model.addAttribute("selectedNo", selectedNo);
+		
+		return sb.toString();
+	}
+
+
+	@Override
+	public void pollAddGo(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String questionID = "";
+		String code = request.getParameter("code");
+		String mode = request.getParameter("mode");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String subject = request.getParameter("pollSubject");
+		String selRes = request.getParameter("selRes");
+		String sel = request.getParameter("sel");
+		String selType = request.getParameter("selType");
+		String selectedNo = request.getParameter("selectedNo");
+		String answerViewType = request.getParameter("answerViewType");
+		String answerCount = request.getParameter("answerCount");
+		
+		
+		switch (mode) {
+			case "write" :
+				int maxNo = Integer.parseInt(ezCommunityDAO.pollAddOkGoGet1(code));
+				maxNo++;
+				
+				pollAddOkGoInsert1(code, maxNo, subject, startDate, endDate, userInfo.getId());
+				String managerID = pollAddOkGoGet2(code, maxNo);
+				
+				pollAddOkGoInsert2(managerID.trim(), subject, answerCount, selType, answerViewType);
+				
+				questionID = ezCommunityDAO.pollAddOkGoGet3(managerID);
+				
+				int[] selNo = new int [100];
+				String[] answerContent = new String [100];
+				
+				switch (selectedNo) {
+					case "1":
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t618", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t620", new Locale(globals.getProperty("Globals.language")));
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t622", new Locale(globals.getProperty("Globals.language")));
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t624", new Locale(globals.getProperty("Globals.language")));
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t655", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "2" :
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t629", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language")));
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language")));
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language")));
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t637", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "3" :
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t639", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t641", new Locale(globals.getProperty("Globals.language")));
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language")));
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t643", new Locale(globals.getProperty("Globals.language")));
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t645", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "4" :
+						answerContent[1] = "1. Yes.";
+						answerContent[2] = "2. No.";
+						
+						if (selType.equals("2")) {
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "5" :
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t647", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t649", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "6" :
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t651", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t653", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "7" :
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language")));
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language")));
+						
+						if (selType.equals("2")) {
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+						}
+						
+						break;
+						
+					case "8" :
+						for (int i = 1; i <= Integer.parseInt(answerCount); i++) {
+							if (request.getParameter("selNo_" + i) != null) {
+								answerContent[i] = i + ". " + request.getParameter("selNo_" + i);
+							}
+						}
+						
+						break;
+						
+					case "9" :
+						for (int i = 1; i <= Integer.parseInt(answerCount); i++) {
+							if (i == Integer.parseInt(answerCount) && selType.equals("2")) {
+								answerContent[i] = i + ". " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							} else {
+								if (request.getParameter("selNo_" + i) != null) {
+									answerContent[i] = request.getParameter("selNo_" + i);
+								}
+							}
+						}
+						
+						break;
+						
+					case "10" :
+						answerContent[1] = egovMessageSource.getMessage("ezCommunity.t603", new Locale(globals.getProperty("Globals.language")));
+						
+						break;
+				}
+				
+				for (int i = 1; i <= Integer.parseInt(answerCount); i++) {
+					pollAddOkGoInsert3(questionID.trim(), i, answerContent[i]);
+				}
+				
+				break;
+				
+			default :
+				break;
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		response.getWriter().write("<script language='javascript'>\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+		response.getWriter().write("</script>");
+		response.getWriter().flush();
+	}
+
+
+	@Override
+	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String code = request.getParameter("code");
+		String managerID = request.getParameter("managerID");
+		
+		String strRegUser = ezCommunityDAO.pollDeleteGet1(managerID);
+		
+		if (strRegUser != null) {
+			String sysopID = ezCommunityDAO.pollDeleteGet3(code).trim();
+
+			if (strRegUser.equals(userInfo.getId()) && sysopID.equals(userInfo.getId())) {
+				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(managerID);
+
+				for (CommunityCPollQuestionVO question : questionList) {
+					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(question.getQuestionID());
+					
+					for(CommunityCPollAnswerVO answer : answerList) {
+						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID());
+					}
+					
+					pollDeleteDel2(question.getQuestionID());
+				}
+				
+				pollDeleteDel3(managerID);
+			}
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		response.getWriter().write("<script language='javascript'>\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+		response.getWriter().write("</script>");
+		response.getWriter().flush();
+	}
+	
+	@Override
+	public void pollRes(LoginVO userInfo, ModelMap model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
+		int isSave = 0;
+		double responseCount = 0;
+		CommunityCPollManagerVO managerVO = ezCommunityDAO.pollResGet2(pollManagerID);
+		CommunityCPollQuestionVO questionVO = ezCommunityDAO.pollResGet3(pollManagerID);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if (questionVO != null) {
+			sb.append("<input type=\"hidden\" name=\"questionID_" + questionVO.getQuestionNo() + "\" value=\"" + questionVO.getQuestionID() + "\">");
+			sb.append("<input type=\"hidden\" name=\"answerCount_" + questionVO.getQuestionNo() + "\" value=\"" + questionVO.getAnswerCount() + "\">");
+			sb.append("<input type=\"hidden\" name=\"answerType_" + questionVO.getQuestionNo() + "\" value=\"" + questionVO.getAnswerType() + "\">");
+			
+			CommunityCPollResponseVO responseVO = pollResGet5(questionVO.getQuestionID(), userInfo.getId(), userInfo.getCompanyID());
+			
+			if (responseVO != null) {
+				isSave = 1;
+			}
+
+			int allResponseCount = pollResGetAllCount(questionVO.getQuestionID());
+			
+			sb.append("</table><br>");
+			sb.append("<table width=\"100%\" cellpadding=\"2\" cellspacing=\"1\" border=\"0\">");
+			
+			List<CommunityCPollAnswerVO> answerList = ezCommunityDAO.pollResGet6(questionVO.getQuestionID());
+			
+			for(CommunityCPollAnswerVO answerVO : answerList) {
+				switch (questionVO.getAnswerType()) {
+					case 1 :
+						sb.append("<tr><td class=\"t2\" width=\"50\" align=\"center\">");
+						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
+						
+						if (isSave == 1) {
+							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
+								sb.append(" checked");
+							}
+						}
+						
+						sb.append("></td>");
+						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
+						
+						responseCount = pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID());
+						int percent = 0;
+						
+						if (allResponseCount != 0) {
+							percent =  (int) ((double) responseCount / allResponseCount * 100);
+						}
+
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
+						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
+						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						
+						if (percent == 0) {
+							sb.append("0");
+						} else {
+							sb.append("10");
+						}
+						
+						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td>");
+						sb.append("</tr>");
+
+						break;
+					case 2 :
+						sb.append("<tr><td class=\"t2\" width=\"50\" align=\"center\">");
+						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
+						
+						if (isSave == 1) {
+							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
+								sb.append("checked");
+							}
+						}
+						
+						sb.append("></td><td class=\"t2\">");
+						
+						if (answerVO.getAnswerNo().equals(Integer.toString(questionVO.getAnswerCount()))) {
+							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+						} else {
+							sb.append(commonUtil.cleanValue(answerVO.getAnswerContent()));
+						}
+						
+						sb.append("</td>");
+						
+						responseCount = pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID());
+						
+						if (allResponseCount != 0) {
+                            percent = (int) ((double) responseCount / allResponseCount * 100);
+                        } else {
+                            percent = 0;
+                        }
+						
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
+						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
+						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
+						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						
+						if (percent == 0) {
+                            sb.append("0");
+                        } else {
+                        	sb.append("10");
+                        }
+						
+						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td></tr>");
+						
+						break;
+					case 3 :
+						sb.append("<tr><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
+						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", new Locale(globals.getProperty("Globals.language"))) + "</span></a>");
+						sb.append("</td>");
+						sb.append("</tr>");
+						
+						break;
+				}
+			}
+		}
+		
+		StringBuilder strHTML = new StringBuilder();
+		String name = pollResGet4(commonUtil.getMultiData(userInfo.getLang()), managerVO.getPollRegUser());
+		
+		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
+		
+		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+		} else {
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + managerVO.getPollSubject() + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + name + "</th>");
+		}
+		
+		strHTML.append("</tr>");
+		strHTML.append(sb.toString());
+		strHTML.append("</table>");
+		
+		model.addAttribute("isSave", isSave);
+		model.addAttribute("idSpanValue", strHTML.toString());
+	}
+
+	
+	@Override
+	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception {
+		int notResponse = 0;
+		
+		if (answerType.equals("3")) {
+			if(answerETC.equals("")) {
+				notResponse = 2;
+			}
+		} else {
+			if (answerType.equals("2")) {
+				if (pollSelect == null) {
+					notResponse = 1;
+				} else {
+					if (pollSelect.equals(answerCount) && answerETC.equals("")) {
+						notResponse = 2;
+					}
+				}
+			} else {
+				if (pollSelect == null) {
+					notResponse = 1;
+				}
+			}
+		}
+		
+		if (notResponse == 0) {
+			if (answerType.equals("3")) {
+				pollSelect = "1";
+			} else {
+				if (answerType.equals("2")) {
+					if (!pollSelect.equals(answerETC)) {
+						answerETC = ""; 
+					}
+				}
+			}
+			
+			pollResOkSet(questionID, pollSelect, answerETC, userInfo.getId(), userInfo.getCompanyID(), isSave, answerType, answerCount);
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		if (notResponse == 0) {
+			response.getWriter().write("<script language='javascript'>\n");
+			response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+			response.getWriter().write("</script>");
+			response.getWriter().flush();
+		} else {
+			if (notResponse == 1) {
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t691", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("window.history.back();");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			} else {
+				response.getWriter().write("<script language='javascript'>\n");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t692", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("window.history.back();");
+				response.getWriter().write("</script>");
+				response.getWriter().flush();
+			}
+		}
+	}
+
+
+	@Override
+	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, HttpServletResponse response) throws Exception {
+		pollEditOkUpdate(subject, startDate, endDate, managerID);
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		response.getWriter().write("<script language='javascript'>\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + pClubNo + "';\n");
+		response.getWriter().write("</script>");
+		response.getWriter().flush();
+	}
+
+	
+
+	@Override
+	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		
+		int iOutputCount = 1;
+		
+		for(CommunityCClubUserVO user : userList) {
+			if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			
+			if (iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
+			
+			if (userInfo.getLang().equals("2")) {
+				memberInfo.setUserName(memberInfo.getUserName2());
+			}
+			
+			sb.append("<tr>");
+			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+			sb.append("<td>");
+			
+			if (user.getC_ID().trim().equals(strSysopID)) {
+				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+			}
+			
+			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + memberInfo.getUserName() + "</a></td>");
+			sb.append("<td style=\"width:85\">" + getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang())) + "</td>");
+			sb.append("<td style=\"width:85\">" + user.getC_ID().trim() + "</td>");
+			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
+			sb.append("<td style=\"width:150\">");
+			
+			if (user.getC_lastDate() != null) {
+				sb.append(user.getC_lastDate().substring(0, 10));
+			}
+			
+			sb.append("</td>");
+			sb.append("<td style=\"width:55; align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", new Locale(globals.getProperty("Globals.language"))) + "</td></tr>");
+		}
+		
+		return sb.toString();
+	}
+
+
+	@Override
+	public void adminLogoOk(MultipartHttpServletRequest request) throws Exception {
+		String fileName = "", attachFile = "", extName = "";
+		int iStart = 0;
+		String code = request.getParameter("code");
+		String copType = request.getParameter("type");
+		String imageSrc = request.getParameter("imageSrc");		
+		
+		MultipartFile logoFile = request.getFile("logo");
+		//TODO 배너 미사용
+//		MultipartFile bannerFile = request.getFile("banner");
+		
+		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		
+		if (!logoFile.isEmpty()) {
+			fileName = code;
+			attachFile = logoFile.getOriginalFilename();
+			iStart = attachFile.lastIndexOf(".");
+			extName = attachFile.substring(iStart);
+			String logoFileName = fileName + "_logo_Temp" + "." + extName;
+			
+			File file = new File(logoPath + fileName + logoFileName);
+			logoFile.transferTo(file);
+			
+			
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
+			outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+			
+			File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+			ImageIO.write(outputImage, "png", newLogo);
+			String logoFileNameLogo = fileName + "_logo" + ".png";
+			
+			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+			
+			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
+			ImageIO.write(outputImage, "png", newThumbnail);
+			String logoFileNameThumbnail = fileName + "_thumbnail" + ".png";
+			
+			file.delete();
+			
+			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, fileName);
+		}
+		
+		if (!copType.equals("")) {
+			adminCommType(copType, code);
+			
+			if (logoFile.isEmpty()) { 
+				if (imageSrc.indexOf("default_logo_type") > -1) {
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
+				}
+			}
+		}
+
+		/*if (!bannerFile.isEmpty()) {
+			fileName = code;
+			attachFile = bannerFile.getOriginalFilename();
+			iStart = attachFile.lastIndexOf(".");
+			extName = attachFile.substring(iStart);
+			String bannerFileName = fileName + "_banner" + "." + extName;
+			
+			File file = new File(logoPath + fileName + bannerFileName);
+			bannerFile.transferTo(file);
+			
+			ezCommunityService.adminLogoOkUpdate2(bannerFileName, fileName);
+		}*/
+		
+	}
+
+	@Override
+	public String adminHomeBoard1(LoginVO userInfo, String code) throws Exception {
+		StringBuilder listData = new StringBuilder();
+		
+		List<CommunityBoardInfoVO> boardInfoList = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "ALL");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList) {
+			listData.append("<ROW><CELL><VALUE>");
+			listData.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData.append("</VALUE>");
+			listData.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData.append("</CELL></ROW>");
+		}
+		
+		return listData.toString();
+	}
+
+	@Override
+	public String adminHomeBoard2(LoginVO userInfo, String code)
+			throws Exception {
+		StringBuilder listData = new StringBuilder();
+		
+		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "LEFT");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList2) {
+			listData.append("<ROW><CELL><VALUE>");
+			listData.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData.append("</VALUE>");
+			listData.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData.append("</CELL></ROW>");
+		}
+		
+		return listData.toString();
+	}
+
+	@Override
+	public String adminHomeBoard3(LoginVO userInfo, String code)
+			throws Exception {
+		StringBuilder listData = new StringBuilder();
+		
+		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "RIGHT");
+		
+		for (CommunityBoardInfoVO boardInfo : boardInfoList3) {
+			listData.append("<ROW><CELL><VALUE>");
+			listData.append(commonUtil.cleanValue(boardInfo.getBoardName()));
+			listData.append("</VALUE>");
+			listData.append("<DATA1>" + commonUtil.cleanValue(boardInfo.getBoardID()) + "</DATA1>");
+			listData.append("</CELL></ROW>");
+		}
+		
+		return listData.toString();
+	}
+
+	@Override
+	public String adminOuterList(LoginVO userInfo, String code) throws Exception {
+		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		int iCount = 1, curPage = 0;
+		StringBuilder sb = new StringBuilder();
+		
+		for (CommunityCOutApplicationVO outApplication : list) {
+			sb.append("<tr>");
+            sb.append("<td height=\"23\" align=\"center\" >" + iCount + "</td>");
+            sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "</td>");
+            sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "</td>");
+            sb.append("<td align=\"center\">" + outApplication.getOutDate().substring(0, 10) + "</td>");
+            sb.append("<td align=\"center\">");
+            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</span></a><a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</span></a>");
+            sb.append("</td>");
+            sb.append("</tr>");
+            sb.append("<tr>");
+            sb.append("<td width='60' align='center' >" + egovMessageSource.getMessage("ezCommunity.t564", new Locale(globals.getProperty("Globals.language"))) + "</td>");
+            sb.append("<td align='left' colspan='4'>");
+            sb.append("<textarea id='reason' style='width: 100%;height:60px;box-sizing:border-box;-moz-box-sizing:border-box;' readonly>" + commonUtil.cleanValue(outApplication.getOutReason().trim()) + "</textarea>");
+            sb.append("</td>");
+            sb.append("</tr>");
+			
+			iCount++;
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String adminMemberList(LoginVO userInfo, String code, String flag, String ser, String strSysopID, String mode) throws Exception {
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), commonUtil.getMultiData(userInfo.getLang()), ser);
+		
+		int iCount = 1;
+		StringBuilder sb = new StringBuilder();
+		
+		for (CommunityCClubUserVO clubUser : list) {
+			sb.append("<tr>");
+			sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
+			sb.append("<td class=\"white\">");
+			
+			if (clubUser.getC_ID().trim().equals(strSysopID.trim())) {
+				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
+			}
+			
+			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=encodeURIComponent(" + clubUser.getUserName() + ")&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
+			sb.append(clubUser.getUserName()+"</a>");
+			sb.append("</td>");
+			sb.append("<td class=\"white\">" + clubUser.getC_ID() + "</td>");
+			sb.append("</tr>");
+			
+			iCount++;
+		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public int mainPage(LoginVO userInfo) throws Exception {
+		int totalPage = 0;
+		
+		List<String> clubNoList = myCommunityGet(userInfo.getId(), 0, 0, "CNT");
+		
+		if (clubNoList.size() % 3 == 0) {
+			totalPage = clubNoList.size() / 3;
+		} else {
+			totalPage = clubNoList.size() / 3 + 1;
+		}
+		
+		return totalPage;
+	}
+
+	@Override
+	public String myCopNewBoardItem(LoginVO userInfo, int startRow, int endRow) throws Exception {
+		StringBuilder rtnVal = new StringBuilder();
+		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST");
+		
+		rtnVal.append("<ITEM><DATA>");
+		
+		for (String clubNo : clubNoList) {
+			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(clubNo);
+
+			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				rtnVal.append(commonUtil.getQueryResult(myCommunity));
+			}
+		}
+		
+		rtnVal.append("</DATA></ITEM>");
+		
+		return rtnVal.toString();
+	}
+
+	@Override
+	public String getBestNewCommunity(LoginVO userInfo, String mode) throws Exception {
+		StringBuilder rtnVal = new StringBuilder();
+		
+		rtnVal.append("<DATA>");
+		
+		if (mode.equals("BEST")) {
+			List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(commonUtil.getMultiData(userInfo.getLang()));
+			
+			for (CommunityMyCommunityVO vo : list) {
+				rtnVal.append(commonUtil.getQueryResult(vo));
+			}
+			
+		} else {
+			List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet6(commonUtil.getMultiData(userInfo.getLang()));
+
+			for (CommunityMyCommunityVO vo : list) {
+				rtnVal.append(commonUtil.getQueryResult(vo));
+			}
+		}
+		
+		rtnVal.append("</DATA>");
+		
+		return rtnVal.toString();
 	}
 
 
@@ -1079,176 +1967,16 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.leftCommunityGet1(map);
 	}
-
-	@Override
-	public String leftCommunityGet2(String code) throws Exception {
-		return ezCommunityDAO.leftCommunityGet2(code);
-	}
-
-	@Override
-	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception {
-		return ezCommunityDAO.leftCommunityGet3(userID);
-	}
-
-	@Override
-	public CommunityClubVO leftCommunityGet4(String code) throws Exception {
-		return ezCommunityDAO.leftCommunityGet4(code);
-	}
 	
 	@Override
-	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
+	public void updateLastDate(String strNow, String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_PBOARDID", pRootBoardID);
-		map.put("v_PUSERID", id);
-		map.put("v_PDEPTID", deptID);
-		map.put("v_PCOMPANYID", companyID);
-
-		return ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
-	}
-
-	@Override
-	public String getCategoryValueA(String strSelCateA) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA();
+		map.put("STRNOW", strNow);
+		map.put("CODE", code);
+		map.put("ID", id);
 		
-		for(CommunityCCategoryVO category : categoryList){
-			sb.append("<Option Value=\"");
-			sb.append(category.getC_Code());
-			sb.append("\" ");
-			
-			if(strSelCateA.equals(category.getC_Code())){
-				sb.append("selected");
-			}
-			
-			sb.append(">");
-			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
-			sb.append("</Option>");
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public String getCategoryValueB(String strSelCateB) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB();
-		
-		for(CommunityCCategoryVO category : categoryList){
-			sb.append("<Option Value=\"");
-			sb.append(category.getC_Code());
-			sb.append("\" ");
-			
-			if(strSelCateB.equals(category.getC_Code())){
-				sb.append("selected");
-			}
-			
-			sb.append(">");
-			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
-			sb.append("</Option>");
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public String getCategoryValueC(String strSelCateC) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC();
-		
-		for(CommunityCCategoryVO category : categoryList){
-			sb.append("<Option Value=\"");
-			sb.append(category.getC_Code());
-			sb.append("\" ");
-			
-			if(strSelCateC.equals(category.getC_Code())){
-				sb.append("selected");
-			}
-			
-			sb.append(">");
-			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
-			sb.append("</Option>");
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PROOTBOARDID", pRootBoardID);
-		map.put("v_PUSERID", pUserID);
-		map.put("v_PDEPTID", pDeptID);
-		map.put("v_PCOMPANYID", pCompanyID);
-		map.put("v_PMODE", pMode);
-		map.put("v_PSUBFLAG", pSubFlag);
-		map.put("v_PSELECTBY", pSelectBy);
-		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
-		map.put("v_PCLUBNO", pClubNo);
-		map.put("v_STRLANG", strLang);
-		map.put("v_pCount", 0);
-		
-		return ezCommunityDAO.getBoardTreeGet1(map);
-	}
-
-	@Override
-	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PROOTBOARDID", pRootBoardID);
-		map.put("v_PUSERID", pUserID);
-		map.put("v_PDEPTID", pDeptID);
-		map.put("v_PCOMPANYID", pCompanyID);
-		map.put("v_PMODE", pMode);
-		map.put("v_PSELECTBY", pSelectBy);
-		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
-		map.put("v_PCLUBNO", pClubNo);
-		
-		return ezCommunityDAO.brdBoardTree(map);
-	}
-
-	@Override
-	public List<CommunityBoardTreeVO> getBoardTreeGet2(String pUserID) throws Exception {
-		return ezCommunityDAO.getBoardTreeGet2(pUserID);
-	}
-
-	@Override
-	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PROOTBOARDID", pRootBoardID);
-		map.put("v_PUSERID", pUserID);
-		map.put("v_PDEPTID", pDeptID);
-		map.put("v_PCOMPANYID", pCompanyID);
-		map.put("v_PMODE", pMode);
-		map.put("v_PSUBFLAG", pSubFlag);
-		map.put("v_PSELECTBY", pSelectBy);
-		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
-		map.put("v_PCLUBNO", pClubNo);
-		map.put("v_STRLANG", strLang);
-		map.put("v_RESULT", result);
-		
-		ezCommunityDAO.getBoardTreeSet(map);
-	}
-
-	@Override
-	public int checkIfLeafBoardGet(String boardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pBoardID", boardID);
-		map.put("v_pCount", 0);
-		return ezCommunityDAO.checkIfLeafBoardGet(map);
-	}
-
-	@Override
-	public List<String> goAdminOkGet1() throws Exception {
-		return ezCommunityDAO.goAdminOkGet1();
-	}
-
-	@Override
-	public List<CommunityClubVO> goAdminOkGet2(String pClubID) throws Exception {
-		return ezCommunityDAO.goAdminOkGet2(pClubID);
+		ezCommunityDAO.updateLastDate(map);
 	}
 
 	@Override
@@ -1331,93 +2059,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.bbsEditNew(map);
 	}
-
-	@Override
-	public CommunityCBoardVO bbsEditOkGet1(String bName, String gant, String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BNAME", bName);
-		map.put("v_GANT", gant);
-		map.put("v_CODE", code);
-		
-		return ezCommunityDAO.bbsEditOkGet1(map);
-	}
-
 	
-
-	@Override
-	public void bbsEditOkSet1(String bName, String title, String gant, String code, String attachList, String textContent) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BNAME", bName);
-		map.put("v_TITLE", title);
-		map.put("v_GANT", gant);
-		map.put("v_CODE", code);
-		map.put("v_ATTACHLIST", attachList);
-		map.put("v_TEXTCONTENT", textContent);
-		
-		ezCommunityDAO.bbsEditOkSet1(map);
-	}
-	
-	@Override
-	public String bbsEditOkGet2(String maxIdFieldName, String bName, String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
-		map.put("v_CODE", code);
-		
-		return ezCommunityDAO.bbsEditOkGet2(map);
-	}
-	
-	@Override
-	public String bbsEditOkGet3(String maxIdFieldName, String bName, String code, String strMaxNum) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
-		map.put("v_CODE", code);
-		map.put("v_STRMAXNUM", strMaxNum);
-		
-		return ezCommunityDAO.bbsEditOkGet3(map);
-	}
-
-	@Override
-	public void bbsEditOkSet2(String bName, int myRef, int myStep, String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BNAME", bName);
-		map.put("v_MYREF", myRef);
-		map.put("v_MYSTEP", myStep);
-		map.put("v_CODE", code);
-		
-		ezCommunityDAO.bbsEditOkSet2(map);
-	}
-	
-	@Override
-	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BNAME", bName);
-		map.put("v_MYREF", myRef);
-		map.put("v_NEWSTEP", newStep);
-		map.put("v_NEWLEVEL", newLevel);
-		map.put("v_ATTACHLIST", attachList);
-		map.put("v_NUMBER", number);
-		map.put("v_TEXTCONTENT", textContent);
-		map.put("v_DATETIME_NOW", nowDate);
-		map.put("v_FILENAME", fileName);
-		map.put("v_CODE", code);
-		map.put("v_USERINFO_COMPANYID", companyID);
-		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERNM", userNm);
-		map.put("v_USERNM2", userNm2);
-		map.put("v_TITLE", title);
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-
-		ezCommunityDAO.bbsEditOkInsert(map);
-	}
-
 	@Override
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception {
 		return ezCommunityDAO.bbsViewNewGet2(bName);
@@ -1432,111 +2074,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_CODE", code);
 		
 		return ezCommunityDAO.bbsDelOkGet(map);
-	}
-
-	@Override
-	public void bbsDelOkDel(String bName, String itemNo, String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BNAME", bName);
-		map.put("v_DOG", itemNo);
-		map.put("v_CODE", code);
-		
-		ezCommunityDAO.bbsDelOkDel(map);
-	}
-
-	@Override
-	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CLUBNAME", clubName);
-		map.put("v_C_CATE_A", cCateA);
-		map.put("v_C_CATE_B", cCateB);
-		map.put("v_C_CATE_C", cCateC);
-		map.put("v_USERINFO_LANG", lang);
-		
-		return ezCommunityDAO.commMakeOkGet1(map);
-	}
-
-	@Override
-	public int commMakeOkGet2() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pCount", 0);
-		
-		return ezCommunityDAO.commMakeOkGet2(map);
-	}
-	
-	@Override
-	public int commMakeOkGet4() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pCount", 0);
-		
-		return ezCommunityDAO.commMakeOkGet4(map);
-	}
-
-	@Override
-	public void commMakeOkInsert1() throws Exception {
-		ezCommunityDAO.commMakeOkInsert1();
-	}
-
-	@Override
-	public String commMakeOkGet3() throws Exception {
-		return ezCommunityDAO.commMakeOkGet3();
-	}
-
-	@Override
-	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_TMP_CLUBID", clubNo);
-		map.put("v_DATETIME_NOW1", todayTime);
-		map.put("v_CLUBNAME", clubName);
-		map.put("v_CLUBNAME2", clubName2);
-		map.put("v_C_CATE_A", cCateA);
-		map.put("v_C_CATE_B", cCateB);
-		map.put("v_C_CATE_C", cCateC);
-		map.put("v_CLUBTYPE", clubType);
-		map.put("v_CLUBCONFIRMTYPE", clubConfirmType);
-		map.put("v_INTRO", intro);
-		map.put("v_ISIN", isIn);
-		map.put("v_LOGO", logo);
-		map.put("v_LOGO_THUMBNAIL", logo);
-		map.put("v_BANNER", banner);
-		map.put("v_B_BOARD_NAME1", bBoardName1);
-		map.put("v_B_BOARD_NAME2", bBoardName2);
-		map.put("v_COMATT", comatt);
-		map.put("v_CODE", code);
-		map.put("v_B_NOTI_NAME1", bNotiName1);
-		map.put("v_B_NOTI_NAME2", bNotiName2);
-		map.put("v_PNEWID", pNewID);
-		map.put("v_BOARDNO", boardNo);
-		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERINFO_DISPLAYNAME", displayName1);
-		map.put("v_USERINFO_COMPANYNAME", companyName1);
-		map.put("v_USERINFO_DEPTNAME", deptName1);
-		map.put("v_PNEW_SUBID", pNewSubID);
-		map.put("v_DATETIME_NOW2", todayTime);
-		map.put("v_OPENEMAIL", openEmail);
-		map.put("v_OPENHP", openHp);
-		map.put("v_OPENCOMP", openComp);
-		map.put("v_OPENHOUSE", openHouse);
-		map.put("v_OPENJOB", openJob);
-		map.put("v_OPENBIRTH", openBirth);
-		map.put("v_OPENSEX", openSex);
-		map.put("v_USERINFO_COMPANYID", companyID);
-		
-		ezCommunityDAO.commMakeOkInsert2(map);
-	}
-
-	@Override
-	public String commMakeOkGet6(String companyID, String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_USERINFO_COMPANYID",	companyID);
-		map.put("v_USERINFO_USERID", id);
-		return ezCommunityDAO.commMakeOkGet6(map);
 	}
 
 	@Override
@@ -1563,29 +2100,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		ezCommunityDAO.joinOkInsert(map);
 	}
-
-	@Override
-	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_LOGOFILENAME", logoFileName);
-		map.put("v_LOGOFILENAME_THUMBNAIL", thumbnailFileName);
-		map.put("v_FILENAME", fileName);
-		map.put("v_FILESIZE", fileSize);
-		
-		ezCommunityDAO.commMakeOkSet1(map);
-	}
-
-	@Override
-	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BANNERFILENAME", bannerFileName);
-		map.put("v_FILENAME", fileName);
-		map.put("v_FILESIZE", fileSize);
-		
-		ezCommunityDAO.commMakeOkSet2(map);
-	}
 	
 	@Override
 	public String commHomeGet1(String id, String code) throws Exception {
@@ -1598,30 +2112,10 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void updateLastDate(String strNow, String code, String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("STRNOW", strNow);
-		map.put("CODE", code);
-		map.put("ID", id);
-		
-		ezCommunityDAO.updateLastDate(map);
-	}
-
-	@Override
 	public String commHomeGet4(String v_CODE) throws Exception {
 		return ezCommunityDAO.commHomeGet4(v_CODE);
 	}
-
-	@Override
-	public int commHomeGet2(String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_pCount", 0);
-		
-		return ezCommunityDAO.commHomeGet2(map);
-	}
+	
 
 	@Override
 	public CommunityClubVO aspCommInfoGet1(String code) throws Exception {
@@ -1645,41 +2139,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String pResult = pSignatureDir + commonUtil.separator + pFileName;
 		
 		return pResult;
-	}
-
-	@Override
-	public String getFileFolderName(String bName) throws Exception {
-		String strReturn = "";
-		
-		switch (bName){
-            case "c_clubnotice":
-                strReturn = "notice";
-                break;
-            case "c_clubboard":
-                strReturn = "board";
-                break;
-            case "c_clubboard1":
-                strReturn = "board1";
-                break;
-            case "c_clubboard2":
-                strReturn = "board";
-                break;
-            case "c_clubpds":
-                strReturn = "pds";
-                break;
-            case "c_clubpds1":
-                strReturn = "pds1";
-                break;
-            case "c_notice":
-                strReturn = "mainnotice";
-                break;
-            case "c_board":
-            default:
-                strReturn = "mainboard";
-                break;
-        }
-		
-		return strReturn;
 	}
 
 	@Override
@@ -1804,25 +2263,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"));
 
         return result.toString();
-	}
-	
-	@Override
-	public String checkIfLeafBoard(String pBoardID) throws Exception {
-		if (checkIfLeafBoardGet(pBoardID) > 0) {
-			return "FALSE";
-		} else {
-			return "TRUE";
-		}
-	}
-
-	@Override
-	public List<CommunityBoardInfoVO> copHomeBoardGet(String code) throws Exception {
-		return ezCommunityDAO.copHomeBoardGet(code);
-	}
-
-	@Override
-	public List<CommunityBoardItemVO> copHomeBoardItemGet(String boardID) throws Exception {
-		return ezCommunityDAO.copHomeBoardItemGet(boardID);
 	}
 
 	@Override
@@ -1952,117 +2392,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.getBoardProperty(pBoardID);
 	}
 
-	@Override
-	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PUSERID", id);
-		map.put("v_PSORTBY", pSortBy);
-		
-		if (pEndRow > 0){
-			map.put("v_PENDROW", pEndRow);
-		} else {
-			map.put("v_PENDROW", 0);
-		}
-		
-		int count = 0;
-		StringBuilder sb = new StringBuilder();
-		
-		List<CommunityBoardItemVO> list = ezCommunityDAO.getNewItemListXML(map);
-		
-		sb.append("<NODES>");
-		
-		for (CommunityBoardItemVO itemList : list) {
-			count ++;
-			
-			if (count >= pStartRow) {
-				sb.append("<NODE>");
-				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
-				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
-				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
-				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
-				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
-				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
-				sb.append("<Title>" + itemList.getTitle() + "</Title>");
-				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
-				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
-				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
-				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
-				sb.append("</NODE>");
-			}
-		}
-		
-		sb.append("</NODES>");
-		
-		return sb.toString();
-	}
-
-	@Override
-	public String getNewItemListCount(String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pUserID", id);
-		map.put("v_pNow", EgovDateUtil.getTodayTime());
-		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
-		
-		return ezCommunityDAO.brdNewItemCount(map);
-	}
-
-	@Override
-	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
-		int count = 0;
-		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
-		map.put("v_PUSERID", id);
-		map.put("v_PBOARDID", pBoardID);
-		map.put("v_PSORTBY", pSortBy);
-		map.put("v_PENDROW", pEndRow);
-		
-		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
-		
-		sb.append("<NODES>");
-		
-		for (CommunityBoardListVO boardList : list) {
-			count++;
-			
-			if (count >= pStartRow) {
-				sb.append("<NODE>");
-				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
-				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
-				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
-				sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
-				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
-				sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
-				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
-				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
-				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
-				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
-				sb.append("</NODE>");
-			}
-		}
-		
-		sb.append("</NODES>");
-		
-		return sb.toString();
-	}
-
-	@Override
-	public String getBoardTotalItemCount(String pBoardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pBoardID", pBoardID);
-		map.put("v_pNow", EgovDateUtil.getTodayTime());
-		
-		return ezCommunityDAO.getBoardTotalItemCount(map);
-	}
+	
 	
 	@Override
 	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception {
@@ -2392,70 +2722,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception {
-		String fileSize = "";
-		String filePath = "";
-		String[] temps = null;
-		String fileName = "";
-		Map<String, Object> map;
-		
-		try {
-			if (!attachments.substring(attachments.length() - 1).equals(";")) {
-				attachments += ";";
-			}
-			
-			for (int i = 0; i < attachments.split(";").length; i++) {
-				map = new HashMap<String, Object>();
-				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
-				fileSize = Integer.toString((int) file.length());
-				
-				filePath = attachments.split(";")[i];
-				
-				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
-					FileUtils.moveFile(file, destFile);
-					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
-				}
-				
-				temps = attachments.split(";")[i].split("_");
-				fileName = temps[temps.length-1];
-
-				if (!thumbPath.equals("")) {
-					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";"));
-					map.put("itemID", itemID);
-					
-					if (thumbPath.indexOf("TempUpload") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
-						FileUtils.moveFile(thumbnailFile, destThumbFile);
-						map.put("filePath", boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
-					} else {
-						map.put("filePath", thumbPath.split(";")[i]);
-					}
-					ezCommunityDAO.updateAttachInfo(map);
-				}
-				
-				map = new HashMap<String, Object>();
-				map.put("itemID", itemID);
-				map.put("fileSize", fileSize);
-				map.put("fileName", fileName);
-				
-				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
-					map.put("filePath", boardID + commonUtil.separator + "UploadFile" + filePath);
-					ezCommunityDAO.insertAttachInfo(map);
-				} else {
-					map.put("filePath", filePath);
-					ezCommunityDAO.insertAttachInfo(map);
-				}
-			}
-			
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	@Override
 	public String getItemAttachmentXML(String itemID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(itemID);
@@ -2476,126 +2742,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return sb.toString();
 	}
-
-	@Override
-	public boolean saveMHT(String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
-		String docPath = "";
-		String mhtFilePath = "";
-		
-		try {
-			docPath = realPath + commonUtil.separator + strFilePath + commonUtil.separator;
-			
-			if (!new File(docPath + strBoardID).exists()) {
-				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "UploadFile");
-				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
-				dir1.mkdirs();
-				dir2.mkdirs();
-			}
-			
-			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
-
-			if(new File(mhtFilePath).exists()) {
-				new File(mhtFilePath).delete();
-			}
-			
-			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
-			pw.print(strHTML);
-			pw.flush();
-			pw.close();
-			
-			return true;
-		} catch(Exception e) {
-			return false;
-		}
-	}
-
-	@Override
-	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception {
-		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
-		Map<String, Object> map;
-		List<CommunityBoardItemVO> list;
-		
-		map = new HashMap<String, Object>();
-		
-		map.put("v_PPARENTWRITEDATE", parentWriteDate);
-		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
-		map.put("v_PBOARDID", pBoardID);
-		
-		list = ezCommunityDAO.getAdjacentItemsGet1(map);
-		
-		for (CommunityBoardItemVO item : list) {
-			if (item.getItemID().equals(pItemID)) {
-				previousItemID = tempItemID;
-				previousTitle = tempTitle;
-			}
-			
-			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size() - 1) {
-				nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
-				nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
-			}
-			
-			tempItemID = item.getItemID().trim();
-			tempTitle = item.getTitle().trim();
-		}
-
-		if (previousItemID.equals("")) {
-			map = new HashMap<String, Object>();
-			map.put("v_PPARENTWRITEDATE", parentWriteDate);
-			map.put("v_PBOARDID", pBoardID);
-			
-			list = ezCommunityDAO.getAdjacentItemGet2(map);
-			
-			for (CommunityBoardItemVO item : list) {
-				if (item.getItemID().equals(pItemID) && list.indexOf(item) > 0) {
-					previousItemID = list.get(list.indexOf(item) - 1).getItemID().trim();
-					previousTitle = list.get(list.indexOf(item) - 1).getTitle().trim();
-				}
-			}
-		}
-		
-		
-		if (nextItemID.equals("")) {
-			map = new HashMap<String, Object>();
-			
-			map.put("v_PBOARDID", pBoardID);
-			map.put("v_PPARENTWRITEDATE", parentWriteDate);
-			map.put("v_PITEMID", pItemID);
-			map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
-			map.put("v_PREVIOUSITEMID", previousItemID);
-			
-			CommunityBoardItemVO item = ezCommunityDAO.getAdjacentItemGet3(map);
 	
-			if (item != null) {
-				nextItemID = item.getItemID();
-				nextTitle = item.getTitle();
-			}
-		}
-		
-		Map<String, String> ret = new HashMap<String, String>();
-		
-		ret.put("previousItemID", previousItemID);
-		ret.put("previousTitle", previousTitle);
-		ret.put("nextItemID", nextItemID);
-		ret.put("nextTitle", nextTitle);
-		
-		return ret;
-	}
-
-	@Override
-	public String getVersionInfo(String pBoardID) throws Exception {
-		return ezCommunityDAO.getVersionInfo(pBoardID);
-	}
-
-	@Override
-	public String getProperSizeDisplay(int pSize) throws Exception {
-		if (pSize > 1048576) {
-			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
-		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4)) + " KB";
-		} else {
-			return Integer.toString(pSize) + " Byte";
-		}
-	}
 
 	@Override
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
@@ -2863,6 +3010,302 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		return strHTML.toString();
 	}
+	
+	
+
+
+	@Override
+	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
+		int myRef = 0, myStep = 0, myLevel = 0;
+		String mode = request.getParameter("mode");
+		String code = request.getParameter("code");
+		String bName = request.getParameter("bName");
+		String no = request.getParameter("no");
+		String textContent = request.getParameter("textContent");
+		String MHTcontent = request.getParameter("content");
+		String title = request.getParameter("title");
+		String gant = request.getParameter("gant");
+		String sRadio = request.getParameter("sRadio");
+		String keyword = request.getParameter("keyword");
+		String id = request.getParameter("id");
+		String goToPage = request.getParameter("goToPage");
+		String block = request.getParameter("nowBlock");
+		String attachList = request.getParameter("attachList");
+		String userNm = request.getParameter("userNM");
+		String userNm2 = request.getParameter("userNM2");
+		String realPath = request.getServletContext().getRealPath("");
+
+		if (!request.getParameter("ref").equals("")) {
+            myRef = Integer.parseInt(request.getParameter("ref"));
+		}
+        if (!request.getParameter("step").equals("")) {
+            myStep = Integer.parseInt(request.getParameter("step"));
+        }
+        if (!request.getParameter("level").equals("")) {
+            myLevel = Integer.parseInt(request.getParameter("level"));
+        }
+		
+        String maxIdFieldName = "c_no";
+        
+        InputStream is = null;
+        OutputStream os = null;
+        PrintWriter pw = null;
+		
+		if (mode.equals("edit")) {
+        	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, gant, code);
+        	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
+
+        	if (cBoard != null) {
+        		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
+    			//if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+        		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
+	                bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
+	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
+	                
+	                try{
+		    		    pw = new PrintWriter(new File(strPath));
+			    		pw.print(MHTcontent);
+			    		pw.flush();
+			    		pw.close();
+			    		
+	                } catch (FileNotFoundException fnfe) {
+	    				LOGGER.debug("fnfe: {}", fnfe);
+	    			} catch (Exception e) {
+	    				LOGGER.debug("e: {}", e);
+	    			} finally {
+	    			    if (os != null) {
+	    					try {
+	    					    os.close();
+	    					} catch (Exception ignore) {
+	    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+	    					}
+	    			    }
+	    			    
+	    			    if (is != null) {
+	    					try {
+	    					    is.close();
+	    					} catch (Exception ignore) {
+	    						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+	    					}
+	    			    }
+	                }
+	        	}
+        	}
+        } else {
+        	String fileName = "";
+        	int newStep = 0, newLevel = 0;
+        	int maxNum = 0, number = 0;
+        	
+        	String strMaxNum = bbsEditOkGet2(maxIdFieldName, bName, code);
+        	
+        	if (!strMaxNum.equals("")) {
+        		fileName = bbsEditOkGet3(maxIdFieldName, bName, code, strMaxNum);
+        		maxNum = Integer.parseInt(strMaxNum);
+        	}
+        	
+        	number = maxNum + 1;
+        	
+        	if (no.equals("")) {
+        		myRef = number;
+        		newStep = 0;
+        		newLevel = 0;
+        	} else {
+        		if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+        			bbsEditOkSet2(bName.toUpperCase(), myRef, myStep, code);
+        		}
+        		
+        		newStep = myStep + 1;
+        		newLevel = myLevel + 1;
+        	}
+        	
+        	String dirPath = "";
+        	String strPath = "";
+        	
+        	if (strMaxNum.equals("")){
+                if (code == "") {
+                    fileName = "0000000001.mht";
+                } else {
+                    fileName = "0000000001" + "(" + code + ").mht";
+                }
+                
+                strPath = config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
+            } else {
+                int iName = Integer.parseInt(strMaxNum);
+                iName = iName + 1;
+                String strName = "000000000" + iName;
+                strName = strName.substring(strName.length() - 10, strName.length());
+
+                if (code.equals("")){
+                    strName = strName + "(" + code + ")";
+                }
+                
+                fileName = strName + ".mht";
+                dirPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator ;
+                strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
+            }
+
+        	String nowDate = EgovDateUtil.getTodayTime();
+        	
+        	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName);
+        	
+        	try{
+        		File dir = new File(dirPath);
+        		
+        		if (!dir.exists()) {
+        			dir.mkdirs();
+        		}
+        		
+	    		pw = new PrintWriter(new File(strPath));
+	    		pw.print(MHTcontent);
+	    		pw.flush();
+	    		pw.close();
+            } catch (FileNotFoundException fnfe) {
+ 				LOGGER.debug("fnfe: {}", fnfe);
+ 			} catch (Exception e) {
+ 				LOGGER.debug("e: {}", e);
+ 			} finally {
+ 			    if (os != null) {
+ 					try {
+ 					    os.close();
+ 					} catch (Exception ignore) {
+ 						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+ 					}
+ 			    }
+ 			    
+ 			    if (is != null) {
+ 					try {
+ 					    is.close();
+ 					} catch (Exception ignore) {
+ 						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+ 					}
+ 			    }
+             }
+        }
+		
+		return "OK";
+	}
+
+	@Override
+	public String bbsDelOk(LoginVO userInfo, HttpServletRequest request, CommunityCBoardVO board, String itemNo, String goToPage, String bName, int adminCheck) throws Exception {
+		String code = "";
+		String fileName = "", folder = "", strFile = "";
+		
+		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			fileName = board.getFileName();
+			
+			if (fileName != null) {
+				folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
+				strFile = folder + fileName;
+				File file = new File(strFile);
+				
+				if (file.exists()) {
+					file.delete();
+				}
+			}
+			
+			if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+				String attachList = "";
+				if (board.getCharFileName() != null) {
+					attachList = board.getCharFileName();
+					String[] strAttachFile = attachList.split(";");
+					folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
+					
+					for (int i = 0; i <= strAttachFile.length; i++) {
+						strFile = folder + strAttachFile[i];
+						File file = new File(strFile);
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			}
+			
+			bbsDelOkDel(bName, itemNo, code);
+			
+			return "OK";
+		}else {
+			return "ERROR";
+		}		
+	}
+
+
+	@Override
+	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception {
+		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang()));
+        
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        sb.append("<DATA>");
+        
+        for (CommunityCClubGuestVO item : list) {
+        	i++;
+        	
+        	if (i > comNoPerPage * curPage) {
+        		break;
+        	}
+        	
+        	if (i > comNoPerPage * curPage -5) {
+	        	sb.append("<ROW>");
+	        	sb.append("<NO>" + item.getNo() + "</NO>");
+	        	sb.append("<ID>" + item.getId().trim() + "</ID>");
+	        	sb.append("<USERNAME>" + item.getUserName() + "</USERNAME>");
+	        	sb.append("<USERNAME2>" + item.getUserName2() + "</USERNAME2>");
+	        	sb.append("<COMPANYID>" + item.getCompanyID() + "</COMPANYID>");
+	        	sb.append("<TITLE>" + item.getTitle() + "</TITLE>");
+	        	sb.append("<CONTENT>" + item.getContent().trim() + "</CONTENT>");
+	        	sb.append("<CONTENTURL>" + item.getContentURL() + "</CONTENTURL>");
+	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
+	        	sb.append("<WRITEDAY>" + item.getWriteDay() + "</WRITEDAY>");
+	        	if (EgovDateUtil.getDaysDiff(EgovDateUtil.getToday("-"), item.getWriteDay().split(" ")[0]) >= 0 ) {
+	        		sb.append("<NEW>" + "NEW" + "</NEW>");
+	        	}
+	        	sb.append("<C_NO>" + item.getC_No() + "</C_NO>");
+	        	sb.append("<C_CLUBNO>" + item.getC_clubNo() + "</C_CLUBNO>");
+	        	sb.append("</ROW>");
+        	}
+        }
+        
+        sb.append("</DATA>");
+        
+		return sb.toString();
+	}
+
+	
+
+	@Override
+	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
+		switch (mode) {
+			case "write" :
+				guestEditOkInsert(code, userInfo, memo);
+				
+				break;
+			case "delete" :
+				for (String no : cNo){
+					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId());
+					
+					if (item != null) {
+						bIsMyContent = true;
+						guestEditOkDelete(no, code);
+					}
+				}
+				
+				break;
+			case "edit" :
+				for (String no : cNo){
+					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId());
+					
+					if (item != null) {
+						bIsMyContent = true;
+						guestEditOkUpdate(no, code, memo, userInfo.getId());
+					}
+				}
+				
+				break;
+		}
+		
+		return bIsMyContent;
+	}
 
 
 	@Override
@@ -3023,17 +3466,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.guestOneGet1(map);
 	}
 
-	@Override
-	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_S_RADIO", sRadio);
-		map.put("v_KEYWORD", keyword);
-		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
-		
-		return ezCommunityDAO.guestOneGet2(map);
-	}
+	
+	
 
 	@Override
 	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id) throws Exception {
@@ -3048,42 +3482,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_USERINFO_USERID", userInfo.getId());
-		map.put("v_USERINFO_DISPLAYNAME1", userInfo.getDisplayName1());
-		map.put("v_USERINFO_DISPLAYNAME2", userInfo.getDisplayName2());
-		map.put("v_USERINFO_COMPANYID", userInfo.getCompanyID());
-		map.put("v_MEMO", memo);
-		
-		ezCommunityDAO.guestEditOkInsert(map);
-	}
-
-	@Override
-	public void guestEditOkDelete(String no, String code) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_C_NO", no);
-		map.put("v_CODE", code);
-		
-		ezCommunityDAO.guestEditOkDelete(map);
-	}
-
-	@Override
-	public void guestEditOkUpdate(String no, String code, String memo, String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_C_NO", no);
-		map.put("v_CODE", code);
-		map.put("v_MEMO", memo);
-		map.put("v_USERINFO_USERID", id);
-		
-		ezCommunityDAO.guestEditOkUpdate(map);
-	}
-
-	@Override
 	public String pollMainGet1(String id, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -3092,120 +3490,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.pollMainGet1(map);
 	}
-
-	@Override
-	public List<CommunityCPollManagerVO> pollMainGet2(String code) throws Exception {
-		return ezCommunityDAO.pollMainGet2(code);
-	}
-
-	@Override
-	public String pollMainGet3(String managerID) throws Exception {
-		return ezCommunityDAO.pollMainGet3(managerID);
-	}
-
-	@Override
-	public String pollMainGet4(String strQuestionID) throws Exception {
-		return ezCommunityDAO.pollMainGet4(strQuestionID);
-	}
-
-	@Override
-	public String pollAddOkGoGet1(String code) throws Exception {
-		return ezCommunityDAO.pollAddOkGoGet1(code);
-	}
-
-	@Override
-	public void pollAddOkGoInsert1(String code, int maxNo, String subject, String startDate, String endDate, String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_MAXNO", maxNo);
-		map.put("v_SUBJECT", subject);
-		map.put("v_STARTDATE", startDate);
-		map.put("v_ENDDATE", endDate);
-		map.put("v_USERINFO_USERID", id);
-		
-		ezCommunityDAO.pollAddOkGoInsert1(map);
-	}
-
-	@Override
-	public String pollAddOkGoGet2(String code, int maxNo) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_MAXNO", maxNo);
-		
-		return ezCommunityDAO.pollAddOkGoGet2(map);
-	}
-
-	@Override
-	public void pollAddOkGoInsert2(String managerID, String subject, String answerCount, String selType, String answerViewType) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_MANAGERID", managerID);
-		map.put("v_SUBJECT", subject);
-		map.put("v_ANSWERCOUNT", answerCount);
-		map.put("v_SELTYPE", selType);
-		map.put("v_ANSWERVIEWTYPE", answerViewType);
-		
-		ezCommunityDAO.pollAddOkGoInsert2(map);
-	}
-
-	@Override
-	public String pollAddOkGoGet3(String managerID) throws Exception {
-		return ezCommunityDAO.pollAddOkGoGet3(managerID);
-	}
-
-	@Override
-	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_POLLQUESTIONID", questionID);
-		map.put("v_ANSWERNO", answerNo);
-		map.put("v_ANSWERCONTENT", answerContent);
-		
-		ezCommunityDAO.pollAddOkGoInsert3(map);
-	}
-
-	@Override
-	public String pollDeleteGet1(String managerID) throws Exception {
-		return ezCommunityDAO.pollDeleteGet1(managerID);
-	}
-
-	@Override
-	public String pollDeleteGet3(String code) throws Exception {
-		return ezCommunityDAO.pollDeleteGet3(code);
-	}
-
-	@Override
-	public List<CommunityCPollQuestionVO> pollDeleteGet2(String managerID) throws Exception {
-		return ezCommunityDAO.pollDeleteGet2(managerID);
-	}
-
-	@Override
-	public List<CommunityCPollAnswerVO> pollDeleteGet4(int questionID) throws Exception {
-		return ezCommunityDAO.pollDeleteGet4(questionID);
-	}
-
-	@Override
-	public void pollDeleteDel1(int questionID, int answerID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_QUESTIONID", questionID);
-		map.put("v_ANSWERID", answerID);
-		
-		ezCommunityDAO.pollDeleteDel1(map);
-	}
-
-	@Override
-	public void pollDeleteDel2(int questionID) throws Exception {
-		ezCommunityDAO.pollDeleteDel2(questionID);
-	}
-
-	@Override
-	public void pollDeleteDel3(String managerID) throws Exception {
-		ezCommunityDAO.pollDeleteDel3(managerID);
-	}
-
+	
 	@Override
 	public String pollResGet1(String id, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3217,86 +3502,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public CommunityCPollManagerVO pollResGet2(String pollManagerID) throws Exception {
-		return ezCommunityDAO.pollResGet2(pollManagerID);
-	}
-
-	@Override
-	public CommunityCPollQuestionVO pollResGet3(String pollManagerID) throws Exception {
-		return ezCommunityDAO.pollResGet3(pollManagerID);
-	}
-
-	@Override
-	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_QUESTIONID", questionID);
-		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERINFO_COMPANYID", companyID);
-		
-		return ezCommunityDAO.pollResGet5(map);
-	}
-
-	@Override
-	public int pollResGetAllCount(int questionID) throws Exception {
-		Integer temp = ezCommunityDAO.pollResGetAllCount(questionID);
-		
-		if (temp != null) {
-			return temp;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public List<CommunityCPollAnswerVO> pollResGet6(int questionID) throws Exception {
-		return ezCommunityDAO.pollResGet6(questionID);
-	}
-
-	@Override
-	public int pollResGetCount(int questionID, int answerID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_QUESTIONID", questionID);
-		map.put("v_ANSWERID", answerID);
-		
-		
-		Integer temp = ezCommunityDAO.pollResGetCount(map);
-		
-		if (temp != null) {
-			return temp;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public String pollResGet4(String lang, String pollRegUser) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_USERINFO_LANG", lang);
-		map.put("v_POLLREGUSER", pollRegUser);
-		
-		return ezCommunityDAO.pollResGet4(map);
-	}
-
-	@Override
-	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_QUESTIONID", questionID);
-		map.put("v_POLLSELECT", pollSelect);
-		map.put("v_ANSWERETC", answerETC);
-		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERINFO_COMPANYID", companyID);
-		map.put("v_ISSAVE", isSave);
-		map.put("v_ANSWERTYPE", answerType);
-		map.put("v_ANSWERCOUNT", answerCount);
-		
-		ezCommunityDAO.pollResOkSet(map);
-	}
-
-	@Override
 	public CommunityCPollManagerVO pollEditGet1(String managerID) throws Exception {
 		return ezCommunityDAO.pollEditGet1(managerID);
 	}
@@ -3305,19 +3510,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public CommunityCPollQuestionVO pollEditGet2(String managerID) throws Exception {
 		return ezCommunityDAO.pollEditGet2(managerID);
 	}
-
-	@Override
-	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_SUBJECT", subject);
-		map.put("v_POLLSTARTDATE", startDate);
-		map.put("v_POLLENDDATE", endDate);
-		map.put("v_MANAGERID", managerID);
-		
-		ezCommunityDAO.pollEditOkUpdate(map);
-	}
-
+	
 	@Override
 	public String pollETCViewGet(String questionID) throws Exception {
 		return ezCommunityDAO.pollETCViewGet(questionID);
@@ -3344,42 +3537,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String adminMemberListGet2(String code) throws Exception {
 		return ezCommunityDAO.adminMemberListGet2(code);
 	}
-
-	@Override
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
-		map.put("v_KEYWORD", keyword);
-		map.put("v_S_RADIO", sRadio);
-		
-		return ezCommunityDAO.commViewMemberGet1(map);
-		
-	}
-
-	@Override
-	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_USERID", id);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_USERINFO_LANG", lang);
-		
-		return ezCommunityDAO.commViewMemberGet3(map);
-	}
-
-	@Override
-	public String getClubMemberInfo(String pCN, String pSearch, String lang) throws Exception {
-		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1"));
-		
-		if (lang.equals("2")) {
-			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
-		} else {
-			return xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-		}
-	}
-
+	
 	@Override
 	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3567,48 +3725,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_USERINFO_LANG", lang);
 		
 		return ezCommunityDAO.adminLogoGet(map);
-	}
-
-	@Override
-	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_LOGOFILENAME", logoFileNameLogo);
-		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
-		map.put("v_FILENAME",  fileName);
-		
-		ezCommunityDAO.adminLogoOkUpdate1(map);
-	}
-
-	@Override
-	public void adminCommType(String copType, String fileName) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_COPTYPE", copType);
-		map.put("v_FILENAME", fileName);
-		
-		ezCommunityDAO.adminCommType(map);
-	}
-
-	@Override
-	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_BANNERFILENAME", bannerFileName);
-		map.put("v_FILENAME", fileName);
-		
-		ezCommunityDAO.adminLoGoOkUpdate2(map);
-	}
-
-	@Override
-	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_LANG", lang);
-		map.put("v_POSITION", position);
-		
-		return ezCommunityDAO.getBoardList(map);
 	}
 
 	@Override
@@ -3806,16 +3922,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
-		
-		return ezCommunityDAO.adminOuterListGet2(map);
-	}
-
-	@Override
 	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -3829,18 +3935,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public Integer adminMemberListGet1(String code) throws Exception {
 		return ezCommunityDAO.adminMemberListGet1(code);
-	}
-
-	@Override
-	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CODE", code);
-		map.put("v_FLAG", flag);
-		map.put("v_USERINFO_LANG", lang);
-		map.put("v_SER", ser);
-		
-		return ezCommunityDAO.adminMemberListGet3(map);
 	}
 
 	@Override
@@ -3940,78 +4034,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_CLOSESTATE", closeState);
 		
 		ezCommunityDAO.adminCommCloseOkInser(map);
-	}
-
-	@Override
-	public String checkPassword(String pItemID) throws Exception {
-		return ezCommunityDAO.checkPassword(pItemID);
-	}
-	
-	@Override
-	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
-            String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";
-            String destFilePath = pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht";
-
-            File destdir = new File(pRef + pDestBoardID);
-            if (!destdir.exists()) {
-            	destdir.mkdir();
-            	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
-            	destdir1.mkdir();
-            	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
-            	destdir2.mkdir();
-            }
-            
-            File orgFile = new File(orgFilePath);
-            File destFile = new File(destFilePath);
-            
-            FileCopyUtils.copy(orgFile, destFile);
-	}
-	
-	@Override
-	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = pRef + pOrgFilePath;
-        String destFilePath = pRef + pDestFilePath;
-
-        File destdir = new File(pRef + pDestBoardID);
-        if (!destdir.exists()) {
-        	destdir.mkdir();
-        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
-        	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
-        	destdir2.mkdir();
-        }
-        
-        File orgFile = new File(orgFilePath);
-        File destFile = new File(destFilePath);
-        
-        FileCopyUtils.copy(orgFile, destFile);
-	}
-
-	@Override
-	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_USERID", id);
-		map.put("v_PSTART", pStart);
-		map.put("v_PEND", pEnd);
-		map.put("v_MODE", mode);
-		
-		return ezCommunityDAO.myCommunityGet(map);
-	}
-
-	@Override
-	public List<CommunityMyCommunityVO> myCommunityItemGet(String clubNo) throws Exception {
-		return ezCommunityDAO.myCommunityItemGet(clubNo);
-	}
-
-	@Override
-	public List<CommunityMyCommunityVO> mainPageGet5(String lang) throws Exception {
-		return ezCommunityDAO.mainPageGet5(lang);
-	}
-
-	@Override
-	public List<CommunityMyCommunityVO> mainPageGet6(String lang) throws Exception {
-		return ezCommunityDAO.mainPageGet6(lang);
 	}
 
 	@Override
@@ -4292,6 +4314,981 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return sb.toString();
 	}*/
 
-
+	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.guestOneGet2(map);
+	}
 	
+	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_USERID", userInfo.getId());
+		map.put("v_USERINFO_DISPLAYNAME1", userInfo.getDisplayName1());
+		map.put("v_USERINFO_DISPLAYNAME2", userInfo.getDisplayName2());
+		map.put("v_USERINFO_COMPANYID", userInfo.getCompanyID());
+		map.put("v_MEMO", memo);
+		
+		ezCommunityDAO.guestEditOkInsert(map);
+	}
+	
+	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_POLLSELECT", pollSelect);
+		map.put("v_ANSWERETC", answerETC);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_ISSAVE", isSave);
+		map.put("v_ANSWERTYPE", answerType);
+		map.put("v_ANSWERCOUNT", answerCount);
+		
+		ezCommunityDAO.pollResOkSet(map);
+	}
+	
+	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", id);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.commViewMemberGet3(map);
+	}
+	
+	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID) throws Exception {
+		return ezCommunityDAO.leftCommunityGet3(userID);
+	}
+	
+	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
+		
+		return ezCommunityDAO.brdBoardTree(map);
+	}
+	
+	public List<CommunityBoardTreeVO> getBoardTreeGet2(String pUserID) throws Exception {
+		return ezCommunityDAO.getBoardTreeGet2(pUserID);
+	}
+	
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_S_RADIO", sRadio);
+		
+		return ezCommunityDAO.commViewMemberGet1(map);
+	}	
+	
+	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_LANG", lang);
+		map.put("v_POSITION", position);
+		
+		return ezCommunityDAO.getBoardList(map);
+	}
+	
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.adminOuterListGet2(map);
+	}
+	
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_FLAG", flag);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_SER", ser);
+		
+		return ezCommunityDAO.adminMemberListGet3(map);
+	}
+
+	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", id);
+		map.put("v_PSTART", pStart);
+		map.put("v_PEND", pEnd);
+		map.put("v_MODE", mode);
+		
+		return ezCommunityDAO.myCommunityGet(map);
+	}
+	
+	public CommunityCBoardVO bbsEditOkGet1(String bName, String gant, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BNAME", bName);
+		map.put("v_GANT", gant);
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.bbsEditOkGet1(map);
+	}
+	
+	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CLUBNAME", clubName);
+		map.put("v_C_CATE_A", cCateA);
+		map.put("v_C_CATE_B", cCateB);
+		map.put("v_C_CATE_C", cCateC);
+		map.put("v_USERINFO_LANG", lang);
+		
+		return ezCommunityDAO.commMakeOkGet1(map);
+	}
+	
+	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		
+		return ezCommunityDAO.pollResGet5(map);
+	}
+	
+	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate) throws Exception {
+		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
+		Map<String, Object> map;
+		List<CommunityBoardItemVO> list;
+		
+		map = new HashMap<String, Object>();
+		
+		map.put("v_PPARENTWRITEDATE", parentWriteDate);
+		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+		map.put("v_PBOARDID", pBoardID);
+		
+		list = ezCommunityDAO.getAdjacentItemsGet1(map);
+		
+		for (CommunityBoardItemVO item : list) {
+			if (item.getItemID().equals(pItemID)) {
+				previousItemID = tempItemID;
+				previousTitle = tempTitle;
+			}
+			
+			if (item.getItemID().equals(pItemID) && list.indexOf(item) < list.size() - 1) {
+				nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
+				nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
+			}
+			
+			tempItemID = item.getItemID().trim();
+			tempTitle = item.getTitle().trim();
+		}
+
+		if (previousItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			map.put("v_PPARENTWRITEDATE", parentWriteDate);
+			map.put("v_PBOARDID", pBoardID);
+			
+			list = ezCommunityDAO.getAdjacentItemGet2(map);
+			
+			for (CommunityBoardItemVO item : list) {
+				if (item.getItemID().equals(pItemID) && list.indexOf(item) > 0) {
+					previousItemID = list.get(list.indexOf(item) - 1).getItemID().trim();
+					previousTitle = list.get(list.indexOf(item) - 1).getTitle().trim();
+				}
+			}
+		}
+		
+		
+		if (nextItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_PBOARDID", pBoardID);
+			map.put("v_PPARENTWRITEDATE", parentWriteDate);
+			map.put("v_PITEMID", pItemID);
+			map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
+			map.put("v_PREVIOUSITEMID", previousItemID);
+			
+			CommunityBoardItemVO item = ezCommunityDAO.getAdjacentItemGet3(map);
+	
+			if (item != null) {
+				nextItemID = item.getItemID();
+				nextTitle = item.getTitle();
+			}
+		}
+		
+		Map<String, String> ret = new HashMap<String, String>();
+		
+		ret.put("previousItemID", previousItemID);
+		ret.put("previousTitle", previousTitle);
+		ret.put("nextItemID", nextItemID);
+		ret.put("nextTitle", nextTitle);
+		
+		return ret;
+	}
+	
+	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", pRootBoardID);
+		map.put("v_PUSERID", id);
+		map.put("v_PDEPTID", deptID);
+		map.put("v_PCOMPANYID", companyID);
+
+		return ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
+	}
+	
+
+	public String getCategoryValueA(String strSelCateA) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA();
+		
+		for(CommunityCCategoryVO category : categoryList){
+			sb.append("<Option Value=\"");
+			sb.append(category.getC_Code());
+			sb.append("\" ");
+			
+			if(strSelCateA.equals(category.getC_Code())){
+				sb.append("selected");
+			}
+			
+			sb.append(">");
+			String code = "ezCommunity."+category.getC_Name();
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append("</Option>");
+		}
+		return sb.toString();
+	}
+
+	public String getCategoryValueB(String strSelCateB) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB();
+		
+		for(CommunityCCategoryVO category : categoryList){
+			sb.append("<Option Value=\"");
+			sb.append(category.getC_Code());
+			sb.append("\" ");
+			
+			if(strSelCateB.equals(category.getC_Code())){
+				sb.append("selected");
+			}
+			
+			sb.append(">");
+			String code = "ezCommunity."+category.getC_Name();
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append("</Option>");
+		}
+		return sb.toString();
+	}
+
+	public String getCategoryValueC(String strSelCateC) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC();
+		
+		for(CommunityCCategoryVO category : categoryList){
+			sb.append("<Option Value=\"");
+			sb.append(category.getC_Code());
+			sb.append("\" ");
+			
+			if(strSelCateC.equals(category.getC_Code())){
+				sb.append("selected");
+			}
+			
+			sb.append(">");
+			String code = "ezCommunity."+category.getC_Name();
+			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append("</Option>");
+		}
+		return sb.toString();
+	}
+	
+	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSUBFLAG", pSubFlag);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
+		map.put("v_STRLANG", strLang);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.getBoardTreeGet1(map);
+	}
+	
+	public String getFileFolderName(String bName) throws Exception {
+		String strReturn = "";
+		
+		switch (bName){
+            case "c_clubnotice":
+                strReturn = "notice";
+                break;
+            case "c_clubboard":
+                strReturn = "board";
+                break;
+            case "c_clubboard1":
+                strReturn = "board1";
+                break;
+            case "c_clubboard2":
+                strReturn = "board";
+                break;
+            case "c_clubpds":
+                strReturn = "pds";
+                break;
+            case "c_clubpds1":
+                strReturn = "pds1";
+                break;
+            case "c_notice":
+                strReturn = "mainnotice";
+                break;
+            case "c_board":
+            default:
+                strReturn = "mainboard";
+                break;
+        }
+		
+		return strReturn;
+	}
+	
+	public String bbsEditOkGet2(String maxIdFieldName, String bName, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+		map.put("v_BNAME", bName);	
+		map.put("v_CODE", code);
+		
+		return ezCommunityDAO.bbsEditOkGet2(map);
+	}
+	
+	public String bbsEditOkGet3(String maxIdFieldName, String bName, String code, String strMaxNum) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+		map.put("v_BNAME", bName);	
+		map.put("v_CODE", code);
+		map.put("v_STRMAXNUM", strMaxNum);
+		
+		return ezCommunityDAO.bbsEditOkGet3(map);
+	}
+	
+	public String commMakeOkGet6(String companyID, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_COMPANYID",	companyID);
+		map.put("v_USERINFO_USERID", id);
+		return ezCommunityDAO.commMakeOkGet6(map);
+	}
+	
+	public String checkIfLeafBoard(String pBoardID) throws Exception {
+		if (checkIfLeafBoardGet(pBoardID) > 0) {
+			return "FALSE";
+		} else {
+			return "TRUE";
+		}
+	}
+	
+	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", id);
+		map.put("v_PSORTBY", pSortBy);
+		
+		if (pEndRow > 0){
+			map.put("v_PENDROW", pEndRow);
+		} else {
+			map.put("v_PENDROW", 0);
+		}
+		
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityBoardItemVO> list = ezCommunityDAO.getNewItemListXML(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardItemVO itemList : list) {
+			count ++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
+				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
+				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
+				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
+				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
+				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
+				sb.append("<Title>" + itemList.getTitle() + "</Title>");
+				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
+				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
+				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+	
+	public String getNewItemListCount(String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pUserID", id);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
+		
+		return ezCommunityDAO.brdNewItemCount(map);
+	}
+	
+	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
+		map.put("v_PUSERID", id);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_PSORTBY", pSortBy);
+		map.put("v_PENDROW", pEndRow);
+		
+		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardListVO boardList : list) {
+			count++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + boardList.getWriteDate() + "</WriteDate>");
+				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
+				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
+				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
+				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+	
+	public String getBoardTotalItemCount(String pBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		
+		return ezCommunityDAO.getBoardTotalItemCount(map);
+	}
+	
+	public String getProperSizeDisplay(int pSize) throws Exception {
+		if (pSize > 1048576) {
+			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
+		} else if (pSize > 1024) {
+			return Integer.toString((int) (pSize / 102.4)) + " KB";
+		} else {
+			return Integer.toString(pSize) + " Byte";
+		}
+	}
+	
+	public String pollAddOkGoGet2(String code, int maxNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_MAXNO", maxNo);
+		
+		return ezCommunityDAO.pollAddOkGoGet2(map);
+	}
+	
+	public String pollResGet4(String lang, String pollRegUser) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_POLLREGUSER", pollRegUser);
+		
+		return ezCommunityDAO.pollResGet4(map);
+	}
+	
+	public String getClubMemberInfo(String pCN, String pSearch, String lang) throws Exception {
+		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1"));
+		
+		if (lang.equals("2")) {
+			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+		} else {
+			return xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+		}
+	}
+	
+	public int checkIfLeafBoardGet(String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pCount", 0);
+		return ezCommunityDAO.checkIfLeafBoardGet(map);
+	}
+	
+	public int commMakeOkGet2() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commMakeOkGet2(map);
+	}
+	
+	public int commMakeOkGet4() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commMakeOkGet4(map);
+	}
+	
+	public int commHomeGet2(String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_pCount", 0);
+		
+		return ezCommunityDAO.commHomeGet2(map);
+	}
+	
+	public int pollResGetAllCount(int questionID) throws Exception {
+		Integer temp = ezCommunityDAO.pollResGetAllCount(questionID);
+		
+		if (temp != null) {
+			return temp;
+		} else {
+			return 0;
+		}
+	}
+	
+	public int pollResGetCount(int questionID, int answerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_ANSWERID", answerID);
+		
+		
+		Integer temp = ezCommunityDAO.pollResGetCount(map);
+		
+		if (temp != null) {
+			return temp;
+		} else {
+			return 0;
+		}
+	}
+	
+	public boolean saveMHT(String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
+		String docPath = "";
+		String mhtFilePath = "";
+		
+		try {
+			docPath = realPath + commonUtil.separator + strFilePath + commonUtil.separator;
+			
+			if (!new File(docPath + strBoardID).exists()) {
+				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "UploadFile");
+				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
+				dir1.mkdirs();
+				dir2.mkdirs();
+			}
+			
+			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
+
+			if(new File(mhtFilePath).exists()) {
+				new File(mhtFilePath).delete();
+			}
+			
+			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
+			pw.print(strHTML);
+			pw.flush();
+			pw.close();
+			
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception {
+		String fileSize = "";
+		String filePath = "";
+		String[] temps = null;
+		String fileName = "";
+		Map<String, Object> map;
+		
+		try {
+			if (!attachments.substring(attachments.length() - 1).equals(";")) {
+				attachments += ";";
+			}
+			
+			for (int i = 0; i < attachments.split(";").length; i++) {
+				map = new HashMap<String, Object>();
+				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
+				fileSize = Integer.toString((int) file.length());
+				
+				filePath = attachments.split(";")[i];
+				
+				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
+					FileUtils.moveFile(file, destFile);
+					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
+				}
+				
+				temps = attachments.split(";")[i].split("_");
+				fileName = temps[temps.length-1];
+
+				if (!thumbPath.equals("")) {
+					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";"));
+					map.put("itemID", itemID);
+					
+					if (thumbPath.indexOf("TempUpload") > -1) {
+						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						FileUtils.moveFile(thumbnailFile, destThumbFile);
+						map.put("filePath", boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+					} else {
+						map.put("filePath", thumbPath.split(";")[i]);
+					}
+					ezCommunityDAO.updateAttachInfo(map);
+				}
+				
+				map = new HashMap<String, Object>();
+				map.put("itemID", itemID);
+				map.put("fileSize", fileSize);
+				map.put("fileName", fileName);
+				
+				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
+					map.put("filePath", boardID + commonUtil.separator + "UploadFile" + filePath);
+					ezCommunityDAO.insertAttachInfo(map);
+				} else {
+					map.put("filePath", filePath);
+					ezCommunityDAO.insertAttachInfo(map);
+				}
+			}
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PDEPTID", pDeptID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PMODE", pMode);
+		map.put("v_PSUBFLAG", pSubFlag);
+		map.put("v_PSELECTBY", pSelectBy);
+		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
+		map.put("v_PCLUBNO", pClubNo);
+		map.put("v_STRLANG", strLang);
+		map.put("v_RESULT", result);
+		
+		ezCommunityDAO.getBoardTreeSet(map);
+	}
+	
+	public void bbsEditOkSet1(String bName, String title, String gant, String code, String attachList, String textContent) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BNAME", bName);
+		map.put("v_TITLE", title);
+		map.put("v_GANT", gant);
+		map.put("v_CODE", code);
+		map.put("v_ATTACHLIST", attachList);
+		map.put("v_TEXTCONTENT", textContent);
+		
+		ezCommunityDAO.bbsEditOkSet1(map);
+	}
+	
+	public void bbsEditOkSet2(String bName, int myRef, int myStep, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BNAME", bName);
+		map.put("v_MYREF", myRef);
+		map.put("v_MYSTEP", myStep);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.bbsEditOkSet2(map);
+	}
+	
+	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BNAME", bName);
+		map.put("v_MYREF", myRef);
+		map.put("v_NEWSTEP", newStep);
+		map.put("v_NEWLEVEL", newLevel);
+		map.put("v_ATTACHLIST", attachList);
+		map.put("v_NUMBER", number);
+		map.put("v_TEXTCONTENT", textContent);
+		map.put("v_DATETIME_NOW", nowDate);
+		map.put("v_FILENAME", fileName);
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERNM", userNm);
+		map.put("v_USERNM2", userNm2);
+		map.put("v_TITLE", title);
+		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
+
+		ezCommunityDAO.bbsEditOkInsert(map);
+	}
+
+	public void bbsDelOkDel(String bName, String itemNo, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BNAME", bName);
+		map.put("v_DOG", itemNo);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.bbsDelOkDel(map);
+	}
+	
+	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TMP_CLUBID", clubNo);
+		map.put("v_DATETIME_NOW1", todayTime);
+		map.put("v_CLUBNAME", clubName);
+		map.put("v_CLUBNAME2", clubName2);
+		map.put("v_C_CATE_A", cCateA);
+		map.put("v_C_CATE_B", cCateB);
+		map.put("v_C_CATE_C", cCateC);
+		map.put("v_CLUBTYPE", clubType);
+		map.put("v_CLUBCONFIRMTYPE", clubConfirmType);
+		map.put("v_INTRO", intro);
+		map.put("v_ISIN", isIn);
+		map.put("v_LOGO", logo);
+		map.put("v_LOGO_THUMBNAIL", logo);
+		map.put("v_BANNER", banner);
+		map.put("v_B_BOARD_NAME1", bBoardName1);
+		map.put("v_B_BOARD_NAME2", bBoardName2);
+		map.put("v_COMATT", comatt);
+		map.put("v_CODE", code);
+		map.put("v_B_NOTI_NAME1", bNotiName1);
+		map.put("v_B_NOTI_NAME2", bNotiName2);
+		map.put("v_PNEWID", pNewID);
+		map.put("v_BOARDNO", boardNo);
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_USERINFO_DISPLAYNAME", displayName1);
+		map.put("v_USERINFO_COMPANYNAME", companyName1);
+		map.put("v_USERINFO_DEPTNAME", deptName1);
+		map.put("v_PNEW_SUBID", pNewSubID);
+		map.put("v_DATETIME_NOW2", todayTime);
+		map.put("v_OPENEMAIL", openEmail);
+		map.put("v_OPENHP", openHp);
+		map.put("v_OPENCOMP", openComp);
+		map.put("v_OPENHOUSE", openHouse);
+		map.put("v_OPENJOB", openJob);
+		map.put("v_OPENBIRTH", openBirth);
+		map.put("v_OPENSEX", openSex);
+		map.put("v_USERINFO_COMPANYID", companyID);
+		
+		ezCommunityDAO.commMakeOkInsert2(map);
+	}
+	
+	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LOGOFILENAME", logoFileName);
+		map.put("v_LOGOFILENAME_THUMBNAIL", thumbnailFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		
+		ezCommunityDAO.commMakeOkSet1(map);
+	}
+	
+	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BANNERFILENAME", bannerFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		
+		ezCommunityDAO.commMakeOkSet2(map);
+	}
+	
+	public void guestEditOkDelete(String no, String code) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_NO", no);
+		map.put("v_CODE", code);
+		
+		ezCommunityDAO.guestEditOkDelete(map);
+	}
+	
+	public void guestEditOkUpdate(String no, String code, String memo, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_C_NO", no);
+		map.put("v_CODE", code);
+		map.put("v_MEMO", memo);
+		map.put("v_USERINFO_USERID", id);
+		
+		ezCommunityDAO.guestEditOkUpdate(map);
+	}
+	
+	public void pollAddOkGoInsert1(String code, int maxNo, String subject, String startDate, String endDate, String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_MAXNO", maxNo);
+		map.put("v_SUBJECT", subject);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
+		map.put("v_USERINFO_USERID", id);
+		
+		ezCommunityDAO.pollAddOkGoInsert1(map);
+	}
+	
+	public void pollAddOkGoInsert2(String managerID, String subject, String answerCount, String selType, String answerViewType) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_MANAGERID", managerID);
+		map.put("v_SUBJECT", subject);
+		map.put("v_ANSWERCOUNT", answerCount);
+		map.put("v_SELTYPE", selType);
+		map.put("v_ANSWERVIEWTYPE", answerViewType);
+		
+		ezCommunityDAO.pollAddOkGoInsert2(map);
+	}
+	
+	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_POLLQUESTIONID", questionID);
+		map.put("v_ANSWERNO", answerNo);
+		map.put("v_ANSWERCONTENT", answerContent);
+		
+		ezCommunityDAO.pollAddOkGoInsert3(map);
+	}
+	
+	public void pollDeleteDel1(int questionID, int answerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_QUESTIONID", questionID);
+		map.put("v_ANSWERID", answerID);
+		
+		ezCommunityDAO.pollDeleteDel1(map);
+	}
+	
+	public void pollDeleteDel2(int questionID) throws Exception {
+		ezCommunityDAO.pollDeleteDel2(questionID);
+	}
+	
+	public void pollDeleteDel3(String managerID) throws Exception {
+		ezCommunityDAO.pollDeleteDel3(managerID);
+	}
+
+	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SUBJECT", subject);
+		map.put("v_POLLSTARTDATE", startDate);
+		map.put("v_POLLENDDATE", endDate);
+		map.put("v_MANAGERID", managerID);
+		
+		ezCommunityDAO.pollEditOkUpdate(map);
+	}
+	
+	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LOGOFILENAME", logoFileNameLogo);
+		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
+		map.put("v_FILENAME",  fileName);
+		
+		ezCommunityDAO.adminLogoOkUpdate1(map);
+	}
+	
+	public void adminCommType(String copType, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COPTYPE", copType);
+		map.put("v_FILENAME", fileName);
+		
+		ezCommunityDAO.adminCommType(map);
+	}
+	
+	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BANNERFILENAME", bannerFileName);
+		map.put("v_FILENAME", fileName);
+		
+		ezCommunityDAO.adminLoGoOkUpdate2(map);
+	}
+
+	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
+        String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";
+        String destFilePath = pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht";
+
+        File destdir = new File(pRef + pDestBoardID);
+        if (!destdir.exists()) {
+        	destdir.mkdir();
+        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	destdir1.mkdir();
+        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+        	destdir2.mkdir();
+        }
+        
+        File orgFile = new File(orgFilePath);
+        File destFile = new File(destFilePath);
+        
+        FileCopyUtils.copy(orgFile, destFile);
+	}
+	
+	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
+        String orgFilePath = pRef + pOrgFilePath;
+        String destFilePath = pRef + pDestFilePath;
+
+        File destdir = new File(pRef + pDestBoardID);
+        if (!destdir.exists()) {
+        	destdir.mkdir();
+        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	destdir1.mkdir();
+        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+        	destdir2.mkdir();
+        }
+        
+        File orgFile = new File(orgFilePath);
+        File destFile = new File(destFilePath);
+        
+        FileCopyUtils.copy(orgFile, destFile);
+	}
 }

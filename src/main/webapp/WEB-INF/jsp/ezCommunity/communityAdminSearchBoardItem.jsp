@@ -896,7 +896,7 @@
 				    		<th style="cursor:pointer;width:80px;" onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418'/><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:otherwise>
-				    		<th style="cursor:pointer;width:80px;" onClick="SortPage('BoardName')"><<spring:message code='ezCommunity.t418'/></th>
+				    		<th style="cursor:pointer;width:80px;" onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418'/></th>
 				    	</c:otherwise>
 				    </c:choose>
 				    

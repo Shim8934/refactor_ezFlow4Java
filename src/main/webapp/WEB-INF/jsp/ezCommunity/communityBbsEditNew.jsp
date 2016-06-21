@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <!-- 		<script type="text/javascript" src="/ezcommunity/editor/js/dhtmled.js"></script> -->
 
 		<script type="text/javascript">
@@ -26,8 +27,8 @@
 			var pSradio = "<c:out value='${sRadio}'/>";
 			var pKeyword = "<c:out value='${keyword}'/>";
 			var pID = "<c:out value='${grsID}'/>";
-			var pGoTopage = "<c:out value='${pagec}'/>";
-			var pNowblock = "<c:out value='${block}'/>";
+			var pGoToPage = "<c:out value='${pagec}'/>";
+			var pNowBlock = "<c:out value='${block}'/>";
 			var pRef = "<c:out value='${gref}'/>";
 			var pStep  = "<c:out value='${step}'/>";
 			var pLevel = "<c:out value='${level}'/>";
@@ -105,46 +106,52 @@
 					if (pBname == "c_clubpds" || pBname == "c_clubpds1") {
 						pAttachFileList = AttachFileList();
 					}
-
-					var xmlDom = createXmlDom();
-					var xmlHTTP = createXMLHttpRequest();
-				    var objNode;
-					createNodeInsert(xmlDom, objNode, "DATA"); 
-                    createNodeAndInsertText(xmlDom, objNode, "Attachlist", pAttachFileList);		
-                    createNodeAndInsertText(xmlDom, objNode, "Content", message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"));
-					createNodeAndInsertText(xmlDom, objNode, "Title", title.value);
-					createNodeAndInsertText(xmlDom, objNode, "Textcontent", message.GetEditorContent());
-					createNodeAndInsertText(xmlDom, objNode, "Mode", pMode);
-					createNodeAndInsertText(xmlDom, objNode, "NO", pNo);
-					createNodeAndInsertText(xmlDom, objNode, "Gant", pGant);
-					createNodeAndInsertText(xmlDom, objNode, "Sradio", pSradio);
-					createNodeAndInsertText(xmlDom, objNode, "Keyword", pKeyword);
-					createNodeAndInsertText(xmlDom, objNode, "ID", pID);
-					createNodeAndInsertText(xmlDom, objNode, "GoTopage", pGoTopage);
-					createNodeAndInsertText(xmlDom, objNode, "Nowblock", pNowblock);
-					createNodeAndInsertText(xmlDom, objNode, "Ref", pRef);
-					createNodeAndInsertText(xmlDom, objNode, "Step", pStep);
-					createNodeAndInsertText(xmlDom, objNode, "Level", pLevel);
-					createNodeAndInsertText(xmlDom, objNode, "Code", pCode);
-					createNodeAndInsertText(xmlDom, objNode, "Bname", pBname);
-					createNodeAndInsertText(xmlDom, objNode, "UserNM", pUserNM);
-					createNodeAndInsertText(xmlDom, objNode, "UserNM2", pUserNM2);
-				
-					xmlHTTP.open("POST", "/ezCommunity/bbsEditOk.do", false);
-					xmlHTTP.send(xmlDom);
 					
-					if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-						alert("<spring:message code = 'ezCommunity.t152'/>");
-					} else {
-						alert("<spring:message code = 'ezCommunity.t153'/>");
-					    
-					    if (window.opener.parent.left != undefined) {
-					        window.opener.parent.left.getBoardList();
-					    }
-					    
-					    window.opener.location.reload(false);
-					    window.close();
-					}
+					$.ajax({
+	 					type : "POST",
+	 					dataType : "text",
+	 					async : false,
+	 					url : "/ezCommunity/bbsEditOk.do",
+	 					data : {attachList	:	pAttachFileList,
+	 							content	:	message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"),
+	 							title	:	title.value,
+	 							textcontent	:	message.GetEditorContent(),
+	 							mode	:	pMode,
+	 							no	:	pNo,
+	 							gant	:	pGant,
+	 							sRadio	:	pSradio,
+	 							keyword	:	pKeyword,
+	 							id	:	pID,
+	 							goToPage	:	pGoToPage,
+	 							nowBlock	: pNowBlock,
+	 							ref	:	pRef,
+	 							step	:	pStep,
+	 							level	:	pLevel,
+	 							code	:	pCode,
+	 							bName	:	pBname,
+	 							userNM	:	pUserNM,
+	 							userNM2	:	pUserNM2
+	 						   },
+	 					success : function(result){
+	 						if (result != "OK") {
+	 	 						alert("<spring:message code = 'ezCommunity.t152'/>");
+	 	 					} else {
+	 	 						alert("<spring:message code = 'ezCommunity.t153'/>");
+	 						    
+	 	 					    if (window.opener.parent.left != undefined) {
+	 	 					        window.opener.parent.left.getBoardList();
+	 	 					    }
+	 						    
+	 	 					    window.opener.location.reload(false);
+	 	 					    window.close();
+	 	 					}
+	 					},
+	 					error : function(xhr, status, error) {
+							if (status != 200) {
+								alert("<spring:message code = 'ezCommunity.t152'/>");
+							}
+	 					}
+	 				});
 				}
 			}
 			

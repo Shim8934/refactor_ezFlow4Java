@@ -63,32 +63,59 @@
 		        result = confirm("<spring:message code='ezCommunity.t136' />");
 
 		        if (result) {
-		        	var xmlDom = createXmlDom();
-					var xmlHTTP = createXMLHttpRequest();
+// 		        	var xmlDom = createXmlDom();
+// 					var xmlHTTP = createXMLHttpRequest();
 
-	                var objNode;
-	                createNodeInsert(xmlDom, objNode, "DATA");
-	                createNodeAndInsertText(xmlDom, objNode, "ItemNo", grsNo);
-	                createNodeAndInsertText(xmlDom, objNode, "GoToPage", goToPage);
-	                createNodeAndInsertText(xmlDom, objNode, "Bname", bName);
+// 	                var objNode;
+// 	                createNodeInsert(xmlDom, objNode, "DATA");
+// 	                createNodeAndInsertText(xmlDom, objNode, "ItemNo", grsNo);
+// 	                createNodeAndInsertText(xmlDom, objNode, "GoToPage", goToPage);
+// 	                createNodeAndInsertText(xmlDom, objNode, "Bname", bName);
 		         
 
-		            xmlHTTP.open("POST", "/ezCommunity/bbsDelOk.do", false);
-		            xmlHTTP.send(xmlDom);
+// 		            xmlHTTP.open("POST", "/ezCommunity/bbsDelOk.do", false);
+// 		            xmlHTTP.send(xmlDom);
 
-		            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		                alert("<spring:message code='ezCommunity.t203' />");
-		            else {
-		                alert("<spring:message code='ezCommunity.t204' />");
-		                //window.opener.parent.left.getBoardList();
-		                window.opener.location.reload(false);
-		                window.close();
-		            }
+// 		            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+// 		                alert("<spring:message code='ezCommunity.t203' />");
+// 		            else {
+// 		                alert("<spring:message code='ezCommunity.t204' />");
+// 		                //window.opener.parent.left.getBoardList();
+// 		                window.opener.location.reload(false);
+// 		                window.close();
+// 		            }
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/bbsDelOk.do",
+						data : {itemNo	:	grsNo,
+								goToPage	:	goToPage,
+								bName	:	bName,
+						},
+						success : function(result) {
+							if (result != "OK") {
+								alert("<spring:message code='ezCommunity.t203' />");
+							} else {
+								 alert("<spring:message code='ezCommunity.t204' />");
+			 		                //window.opener.parent.left.getBoardList();
+			 		                window.opener.location.reload(false);
+			 		                window.close();
+							}
+						},
+						error : function(xhr, status, error) {
+							if (status != 200) {
+								alert("<spring:message code='ezCommunity.t203' />");
+							}
+						}
+					});
 		        }
 		    }
 
 		    function OpenItem(idx) {
-		        if (idx != "") window.location.href = window.location.href.replace("no=" + no, "no=" + idx);
+		        if (idx != "") {
+		        	window.location.href = window.location.href.replace("no=" + no, "no=" + idx);
+		        }
 		    }
 				
 		    function btnClose_onclick() {
