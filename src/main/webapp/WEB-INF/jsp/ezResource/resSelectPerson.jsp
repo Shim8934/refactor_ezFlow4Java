@@ -24,9 +24,9 @@
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var userlang = "${userLang}";
 		    var CurPage = "1";
-
+		    var pListXML_Info = null;
 		    var ReturnFunction;
-
+			
 		window.onload = window_onload;
 		function window_onload() {
 		    try {
@@ -44,7 +44,6 @@
 		        var treeView = new TreeView();
 		        treeView.SetConfig(xmlHTTP.responseXML);
 		    }
-			
 			
 		    var strQuery = "<DATA><DEPTID>${deptID}</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 		    var xmlHTTP = createXMLHttpRequest();
@@ -64,8 +63,7 @@
 		    {}
 		}
 
-		    function KeEventControl(obj)
-		    {
+		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
 		        if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
 		        {
@@ -87,8 +85,7 @@
 		        };
 		    }
 
-		    function TreeViewNodeClick()
-		    {
+		    function TreeViewNodeClick() {
 		        var nodeIdx = 1;
 		        issearch = false;
 		        CurPage = "1";
@@ -106,20 +103,8 @@
 		    function displayUserList(DeptID) {
 	 	        if (DeptID != undefined)
 		            tempDeptID = DeptID;
-		        var xmlpara = createXmlDom();
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "deptID", tempDeptID);
-		        createNodeAndInsertText(xmlpara, objNode, "cell", "company;description;displayName;title;telephoneNumber");
-		        createNodeAndInsertText(xmlpara, objNode, "prop", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-		        createNodeAndInsertText(xmlpara, objNode, "page", CurPage);
-		        createNodeAndInsertText(xmlpara, objNode, "type", "user");
-		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/ezResource/getDeptMemberList.do", true);
-		        g_xmlHTTP.onreadystatechange = event_displayUserList;
-		        g_xmlHTTP.send(xmlpara);
-		        
-			 	/* $.ajax({
+
+			 	 $.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
   					dataType : "xml",
@@ -131,7 +116,6 @@
   						type : "user"
   					} ,
       				success : function(data, textStatus, jqXHR) {
-alert(data.OuterXml);
       					pListXML_Info = data;
 						pSeach = false;
  		                DisplayUserImageList();
@@ -140,7 +124,7 @@ alert(data.OuterXml);
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code="ezResource.t2"/>" + textStatus);
   					}
-  				});   */
+  				});   
 		    }
 
 		    function event_displayUserList() {
@@ -194,26 +178,27 @@ alert(data.OuterXml);
 		            issearch = true;
 		        }
 
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "SEARCH", document.getElementById("search_type").value + "::" + keyword.value);
-		        createNodeAndInsertText(xmlDom, objNode, "CELL", "company;description;displayName;title;telephoneNumber" + document.getElementById("search_type").value);
-		        createNodeAndInsertText(xmlDom, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-		        createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-		        createNodeAndInsertText(xmlDom, objNode, "TYPE", "user");
-
-		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
-		        var usedefault;
-		        if (browserIE) {
-		            usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
-		        } else {
-		            usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
-		        }
-		        g_xmlHTTP.onreadystatechange = event_displayUserList2;
-		        g_xmlHTTP.send(xmlDom);
+		   	 $.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "xml",
+					data : {
+						search : document.getElementById("search_type").value + "::" + keyword.value,
+						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						//page : CurPage ,
+						type : "user"
+					} ,
+   				success : function(data, textStatus, jqXHR) {
+   					pListXML_Info = data;
+					pSeach = true;
+		            DisplayUserImageList();
+		            makePageSelPage();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code="ezResource.t2"/>" + textStatus);
+					}
+				}); 
 		    }
 
 		    function event_displayUserList2() {
@@ -233,7 +218,7 @@ alert(data.OuterXml);
 		            g_xmlHTTP = null;
 		        }
 		    }
-
+			
 		    var checkdeptname_cross_dialogArguments = new Array();
 		    function deptsearch_click() {
 		        if (document.getElementById("deptkeyword").value == "") {
@@ -241,36 +226,26 @@ alert(data.OuterXml);
 		            document.getElementById("deptkeyword").focus();
 		            return;
 		        }
-
-		        var xmlHTTP = createXMLHttpRequest();
+		        
 		        var xmlDOM = createXmlDom();
-
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayName::"+ document.getElementById("deptkeyword").value);
-		        createNodeAndInsertText(xmlDOM, objNode, "CELL", "extensionAttribute3;displayName;extensionAttribute9");
-		        createNodeAndInsertText(xmlDOM, objNode, "PROP", "");
-		        createNodeAndInsertText(xmlDOM, objNode, "TYPE", "group");
-
-		        try {	
-		            xmlHTTP.open("POST","/ezOrgan/getSearchList.do",false);
-		            xmlHTTP.send(xmlDOM);
-
-		            if (xmlHTTP.statusText != "OK") {
-		                alert("<spring:message code="ezResource.t4"/>" + xmlHTTP.statusText);
-		                xmlDOM = null;
-		                xmlHTTP = null;
-		            } else {
-		                xmlDOM = xmlHTTP.responseXML;
-		                var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
-		                adCount = row.length;
-		            }
-		        } catch(e)  {
-		            alert("<spring:message code="ezResource.t4"/>" + e.description);
-		            xmlDOM = null;
-		            xmlHTTP = null;
-		        }
-
+		        
+		        $.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "xml",
+					async : false,
+					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+   					success : function(result) {
+   						xmlDOM = result
+   						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
+	                	adCount = row.length;
+						},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code="ezResource.t2"/>" + textStatus);
+						xmlDOM = null;
+					}
+				}); 
+		        
 		        if (adCount == 0) {
 		            alert("<spring:message code="ezResource.t130"/>");
 		            return;
@@ -283,15 +258,15 @@ alert(data.OuterXml);
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
-		            
 		        } else  {
 		            var rgParams = new Array();
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
+		            
 
 		            if (CrossYN()) {
-		                checkdeptname_cross_dialogArguments[0] = rgParams;
-		                checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
+		            	checkdeptname_cross_dialogArguments[0] = rgParams;
+		            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
 		                DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
 		            } else {
 		                var feature =  GetShowModalPosition(609, 352);
@@ -317,7 +292,7 @@ alert(data.OuterXml);
 		        }
 		        DivPopUpHidden();
 		    }
-
+			
 		    function event_getDeptFullTree() {
 		        if(g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 		            if (g_xmlHTTP.statusText == "OK") {
@@ -331,7 +306,7 @@ alert(data.OuterXml);
 		                treeView.SetRequestData("TreeViewRequestData");
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.SetNodeDblClick("TreeViewNodeDbClick");
-		                treeView.DataSource(g_xmlHTTP.responseXML);
+		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            } else {
 		                alert("<spring:message code="ezResource.t6"/>" + g_xmlHTTP.statusText)
@@ -390,13 +365,12 @@ alert(data.OuterXml);
 
 		    var pSeach = false;
 		    function DisplayUserImageList() {
-alert("!!");
 		        var xmlRtn = pListXML_Info;
-alert(xmlRtn);
+
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
 		        totalPage = 1;
-		        //totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
+		        totalPage = Math.ceil(new Number(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length / 50));
 
 		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
 		        while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
@@ -407,7 +381,7 @@ alert(xmlRtn);
 		        }
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang400 + "</span>]";
+		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo","1")
 		        }
 		        if (pListType == "IMG") {
@@ -416,7 +390,7 @@ alert(xmlRtn);
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang400 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        } else {
@@ -428,7 +402,7 @@ alert(xmlRtn);
 		            } else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang400 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -455,10 +429,10 @@ alert(xmlRtn);
 		                M_TR.ondblclick = function () { select_member(); };
 		                
 		                if (CrossYN()) {
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
-		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
-		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
-		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
+		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
 	                    }  else {
@@ -546,11 +520,10 @@ alert(xmlRtn);
 		                M_TR.onclick = function () { event_listclick(this); };
 		                M_TR.ondblclick = function () { select_member(); };
 		                if (CrossYN()) {
-alert(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length);
-		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.length; NodeCount++) {
-		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName != "#text") {
-		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).nodeName,
-		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).childNodes.item(NodeCount).textContent));
+		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+		                                              trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
 		                        }
 		                    }
 		                } else {
@@ -599,8 +572,7 @@ alert(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(1).ch
 		                    M_TR_TD1.style.whiteSpace = "nowrap";
 		                    M_TR_TD1.style.width = "150px";
 		                    
-		                    if ("${useOCS}" == "YES") {
-alert(M_TR.getAttribute("_DATA3"));		                    	
+		                    if ("${useOCS}" == "YES") {		                    	
 		                    	M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
 		                    } else {
 		                    	M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
