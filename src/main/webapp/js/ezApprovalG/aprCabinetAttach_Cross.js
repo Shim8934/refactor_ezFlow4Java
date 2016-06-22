@@ -81,53 +81,48 @@
     }
 }
 function AttachList() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
-
-    xmlhttp.open("POST", "aspx/getAttachInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
     var DocList = new ListView();
     DocList.SetID("lvTDocLV");
     DocList.SetMulSelectable(true);
     DocList.SetRowOnClick("lvTDoc_onSel_Click");
     DocList.SetRowOnDblClick("lvTDoc_onSel_DBclick");
-    DocList.DataSource(xmlhttp.responseXML);
+    DocList.DataSource(result);
     DocList.DataBind("lvTDoc");
     if (DocList.GetRowCount() > 0)
         DocList.SetSelectFlag(true);
 }
 function delAttachDoc() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
-
-    xmlhttp.open("POST", "aspx/delAttachDoc.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
-}
-function delAttachDoc() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
-
-    xmlhttp.open("POST", "aspx/delAttachDoc.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/delAttachDoc.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
+    return result;
 }
 function DocMoveParser() {
     var count1;
@@ -166,14 +161,14 @@ function DocMoveParser() {
         x_DOCID = createNodeAndAppandNodeText(xmlpara, x_ROW, x_DOCID, "DATA16", GetAttribute(totalList[i], "DATA16"));
     }
 
-    xmlhttp.open("Post", "aspx/updateDocattach.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/updateDocAttach.do", false);
     xmlhttp.send(xmlpara);
 
     var rtnval = xmlhttp.responseXML;
     if (SelectSingleNodeValue(rtnval, "RESULT") == "TRUE") {
         rtnXML = getXmlString(xmlpara);
     }
-    else rtnXML = "<ROWS></ROWS>"
+    else rtnXML = "<ROWS></ROWS>";
 
     return rtnXML;
 }

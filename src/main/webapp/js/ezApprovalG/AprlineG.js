@@ -2012,8 +2012,8 @@ function APRLINEXMLParsing()
 		        GetXml = GetXml + "<COLUMN>" + MakeXMLString(pAprTypeName_) + "</COLUMN>";
 		    }
 		    else {
-		        var rep1 = /⊙/g
-		        var rep2 = /★/g
+		        var rep1 = /⊙/g;
+		        var rep2 = /★/g;
 		        if (CrossYN())
 		            GetXml = GetXml + "<COLUMN>" + MakeXMLString(AprLineRow[i].cells[j].textContent.replace(rep1, "").replace(rep2, "")) + "</COLUMN>";
 		        else
@@ -3971,5 +3971,6 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
         GetXml = GetXml + "</ROW>";
     }
     GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
+    
     return GetXml;
 }

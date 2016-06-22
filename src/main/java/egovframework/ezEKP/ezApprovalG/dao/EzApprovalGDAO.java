@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -22,6 +24,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
@@ -218,6 +221,36 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGCabCodeVO> getCodeInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabCodeVO>) list("EzApprovalG.getCodeInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocAttachInfoVO> getAttachDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocAttachInfoVO>) list("EzApprovalG.getAttachDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getEA5Value(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzApprovalG.getEA5Value", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getMyTaskCode(Map<String, Object> map) throws Exception{
+		return (List<ApprGTaskVO>) list("EzApprovalG.getMyTaskCode", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCabinetInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCabinetInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -263,6 +296,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getDocHrefYear", map);
 	}
 	
+	public String getSepAttachSN(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getSepAttachSN", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
@@ -298,6 +335,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int isCabCharger(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.isCabCharger", map);
+		return (int)map.get("v_Result");
+	}
+	
+	public int receiverChk(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.receiverChk", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -316,6 +363,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateHistoryForAttach(Map<String, Object> map1) throws Exception{
 		update("EzApprovalG.updateHistoryForAttach", map1);
+	}
+	
+	public void saveRecReadHist(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.saveRecReadHist", map);
+	}
+	
+	public void setMyTaskCode(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.setMytaskCode", map);
 	}
 
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
@@ -336,6 +391,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public void deleteAttachFileInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteAttachFileInfo", map);
+	}
+
+	public void deleteAttachDocInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteAttachDocInfo", map);
 	}
 
 }

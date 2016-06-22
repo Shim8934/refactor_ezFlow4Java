@@ -1,7 +1,7 @@
 ﻿var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -27,18 +27,24 @@ function OpenAlertUI_Complete() {
 }
 
 function ISCabCharger(pCabClassNo, pUserID) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();	
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "CABCLASSNO", pCabClassNo);
-    createNodeAndInsertText(xmlpara, objNode, "USERID", pUserID);
-
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_ISCabCharger.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    var ResultXML = XmlHttp.responseXML;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/iSCabCharger.do",
+		data : {
+			companyID : CompanyID,
+			cabClassNo: pCabClassNo,
+			userID    : pUserID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var ResultXML = result;
     var rtnVal = getNodeText(GetChildNodes(ResultXML)[0]);
 
     if (rtnVal == "FALSE" || rtnVal == "") {
@@ -87,7 +93,7 @@ function IsDocDept(pDeptCode) {
     createNodeAndInsertText(xmlpara, objNode, "CN", pDeptCode);
     createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute4");
 
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfo.aspx", false);
+    xmlhttp.open("POST", "/ezOrgan/getADInfo.aspx", false);
     xmlhttp.send(xmlpara);
 
     var ResultXML = xmlhttp.responseXML;

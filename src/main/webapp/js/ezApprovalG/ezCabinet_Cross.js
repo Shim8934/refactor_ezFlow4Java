@@ -733,7 +733,7 @@ function GetRecordListXml() {
     g_szParamXml = getXmlString(xmlpara);
 
     g_CabListXmlhttp = createXMLHttpRequest();
-    g_CabListXmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetRecordList.aspx", true);
+    g_CabListXmlhttp.open("POST", "/ezApprovalG/getRecordList.do", true);
     g_CabListXmlhttp.onreadystatechange = onreadystatechange_RecList;
     g_CabListXmlhttp.send(xmlpara);
 }
@@ -1139,7 +1139,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                 para2[0] = selRow.getAttribute("DATA6");
                 para2[1] = selRow.getAttribute("DATA8");
 
-                var url = "/myoffice/ezApprovalG/FormContainer/contDocView_NoDoc.aspx?DocID=" + escape(DocID) + "&g_RecID=" + escape(para2[0]) + "&g_SepAttNo=" + escape(para2[1]);
+                var url = "/myoffice/ezApprovalG/FormContainer/contDocView_NoDoc.aspx?DocID=" + encodeURI(DocID) + "&g_RecID=" + encodeURI(para2[0]) + "&g_SepAttNo=" + encodeURI(para2[1]);
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;
                 var left = 0;
@@ -1163,10 +1163,10 @@ function ViewDoc_onclick_Complete(Rtn) {
             var openLocation = "";
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
                 if (g_uFlag == "m03") {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&formID=&orgDocid=";
+                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=&orgDocid=";
                 }
                 else {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocid=";
+                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
                 }
             }
             else {
@@ -1179,7 +1179,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                         else
                             openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                     }
-                    openLocation = openLocation + "?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&formID=&orgDocid=&uFlag=" + g_uFlag;
+                    openLocation = openLocation + "?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=&orgDocid=&uFlag=" + g_uFlag;
                 }
                 else {
                     if (CrossYN() || NonActiveX == "YES") {
@@ -1193,7 +1193,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                             openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                         }
                     }
-                    openLocation = openLocation + "?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocid=";
+                    openLocation = openLocation + "?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
                 }
             }
             openwindow(openLocation, "", 880, 570);
@@ -1339,7 +1339,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/SearchRec_Cross.aspx";
+    var url = "/ezApprovalG/searchRec.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         searchrec_cross_dialogArguments[0] = para;

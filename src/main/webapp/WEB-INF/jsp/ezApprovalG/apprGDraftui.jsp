@@ -972,7 +972,7 @@
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
 		
-		        var url = "/myoffice/ezApprovalG/ezCabinet/InsSepAttach_Cross.aspx";
+		        var url = "/ezApprovalG/insSepAttach.do";
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 		
@@ -1121,6 +1121,7 @@
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
 		                    savexmlhttp = createXMLHttpRequest();
 		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
+		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                    savexmlhttp.send(ret[2]);
 		
 		                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */

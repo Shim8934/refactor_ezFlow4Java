@@ -174,7 +174,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         int pMode = 0;
         
-        if (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1) {
+        if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
         	pMode = 0;
         } else {
         	pMode = 1;
@@ -239,7 +239,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         for (int i = 0; i < brdBoardTreeList.size(); i++) {
-        	if (strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+        	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
                 if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
                 	continue;
                 }
@@ -675,7 +675,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+		} else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -768,7 +768,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+		} else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -2581,7 +2581,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 	    int pMode = 0;
 	
-	    if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+	    if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 	    	pMode = 0;
 	    } else {
 	    	pMode = 1;
@@ -2683,7 +2683,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String rootBoardID = "top";
         String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
         
-        if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+        if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
             return true;
         }
         else{

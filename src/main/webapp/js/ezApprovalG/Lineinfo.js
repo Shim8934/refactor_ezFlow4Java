@@ -631,17 +631,23 @@ function isgetUser(DeptID) {
 //############################################################################################################################################# 부서에 수발신담당자 존재 여부 확인
 function isReceiverChk(DeptID)
 {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");		
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ezLine/aspx/Receiver_Chk.aspx", false);
-	xmlhttp.send(xmlpara);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/receiverChk.do",
+		data : {
+				deptID   : DeptID 
+				},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
 			
-	if(xmlhttp.responseText == "False") 
+	if(result == "False") 
 	    return false;
 	else
 	    return true;

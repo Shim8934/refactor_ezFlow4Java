@@ -30,7 +30,7 @@
     <script src="/js/ezApprovalG/TempReceptinfo.js" type="text/javascript"></script>
     <script src="/js/ezApprovalG/Cabinetinfo.js" type="text/javascript"></script>
     <script src="/js/ezApprovalG/CabCategoryInfo.js" type="text/javascript"></script>
-    <script src="/js/ezApprovalG/CabRoleInfo.js" type="text/javascript"></script>
+    <script src="/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript"></script>
     <script src="/js/ezApprovalG/Docinfo.js" type="text/javascript"></script>
     <script src="/js/ezApprovalG/composeappt.js" type="text/javascript" ></script>
     <script src="/js/ezApprovalG/datepicker.htc.js" type="text/javascript" ></script>
@@ -703,60 +703,60 @@
         var pAPRLINE = new ListView();
         pAPRLINE.LoadFromID("lvAPRLINE");
 
-        var xmlpara = createXmlDom();
-        xmlhttp = createXMLHttpRequest();
         var msg = "";
-        var objNode;
 
         for (var i = 0; i < pAPRLINE.GetRowCount() ; i++) {
             msg += "'" + document.getElementById("lvAPRLINE").childNodes[1].childNodes[i].getAttribute("DATA4") + "',";
         }
   
         msg = msg.substring(0, msg.lastIndexOf(','));
-
-        createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "CELL", msg);
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/CheckAprPerson.aspx", false);
-        xmlhttp.onreadystatechange = resultCheckAprPerson;
-        xmlhttp.send(xmlpara);
+        
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/checkAprPerson.do",
+    		data : {
+    			cell : msg
+    		},
+    		success: function(text){
+    			resultCheckAprPerson(text);
+    		}        			
+    	});
     }
 
-    function resultCheckAprPerson() {
-
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            
-            var temp = loadXMLString(xmlhttp.responseText);
-            alertMsg = "";
-            var selNodes = SelectNodes(temp, "DATA/ROW");
-            for (var i = 0; i < selNodes.length; i++) {
-                var StartDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[3];
-                var EndDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[4];
-                var NowDT = new Date();
-                if (NowDT.getFullYear() >= StartDT.split('-')[0] && NowDT.getFullYear() <= EndDT.split('-')[0] && NowDT.toLocaleString().split(' ')[1].split('월')[0] >= Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] <= Number(EndDT.split('-')[1])) {
-                    if (StartDT.split('-')[1] != EndDT.split('-')[1]) {
-                        if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(StartDT.split('-')[1]) && NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0])) {
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
-                        }
-                        else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] > Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] < Number(EndDT.split('-')[1])) {
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
-                        }
-                        else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(EndDT.split('-')[1]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
-                            alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
-                        }
+    function resultCheckAprPerson(text) {
+        var temp = loadXMLString(text);
+        alertMsg = "";
+        var selNodes = SelectNodes(temp, "DATA/ROW");
+        for (var i = 0; i < selNodes.length; i++) {
+            var StartDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[3];
+            var EndDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[4];
+            var NowDT = new Date();
+            if (NowDT.getFullYear() >= StartDT.split('-')[0] && NowDT.getFullYear() <= EndDT.split('-')[0] && NowDT.toLocaleString().split(' ')[1].split('월')[0] >= Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] <= Number(EndDT.split('-')[1])) {
+                if (StartDT.split('-')[1] != EndDT.split('-')[1]) {
+                    if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(StartDT.split('-')[1]) && NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0])) {
+                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
+                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
                     }
-                    else if (NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
+                    else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] > Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] < Number(EndDT.split('-')[1])) {
+                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
+                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
+                    }
+                    else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(EndDT.split('-')[1]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
                         alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
                         alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
                     }
                 }
+                else if (NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
+                    alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
+                    alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
+                }
             }
+        }
 
-            if (alertMsg != "") {
-                alert(alertMsg);                 
-            }
+        if (alertMsg != "") {
+            alert(alertMsg);                 
         }
     }
 

@@ -68,25 +68,30 @@
     //document.getElementById("DivTaskSCateList_TH_2").style.textOverflow = "ellipsis‎";
 }
 function GetCabinetClassInfo(pCabID) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getCabinetInfo.do",
+		data : {
+			cabinetID  : pCabID,
+			companyID  : CompanyID,
+			strType    : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "CABINETID", pCabID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang);
-
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetInfo.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(XmlHttp.responseXML);
+    var dataNodes = GetChildNodes(result);
     var rtnXml = getNodeText(dataNodes[0]);
 
     if (rtnXml == "FALSE") {
         alert(strLang483);
     }
-    return XmlHttp.responseXML;
+    return result;
 }
 function InitCabClassInfo(objCabInfoXml) {
     g_arrInitValue[0] = getNodeText(SelectSingleNode(objCabInfoXml.documentElement, "CATECODE"));// objCabInfoXml.documentElement.selectSingleNode("CATECODE").text;
@@ -483,54 +488,48 @@ function CabinetSearch_onclick() {
 }
 
 // 기록물철 즐겨 찾기
-var XmlHttp3 = null;
 function MyCabinet_List() {
-    if (XmlHttp3 == null) {
-        XmlHttp3 = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-        createNodeAndInsertText(xmlpara, objNode, "USERID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
-        XmlHttp3.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/GetMyTaskCode.aspx", true);
-        XmlHttp3.onreadystatechange = MyCabinet_ini;
-        XmlHttp3.send(xmlpara);
-    }
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezApprovalG/getMyTaskCode.do",
+		data : {
+			deptID    : arr_userinfo[4],
+			userID    : arr_userinfo[1]
+		},
+		success: function(xml){
+			MyCabinet_ini(xml);
+		}        			
+	});
 }
 
-function MyCabinet_ini() {
-    if (XmlHttp3.readyState == 4 && XmlHttp3.status == 200) {
-        try {
-            var rtnXml = XmlHttp3.responseXML;
-            var TaskXml = loadXMLString(GetTaskXml(rtnXml));
-            var headerData = createXmlDom();
-            headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
+function MyCabinet_ini(xml) {
+    var rtnXml = xml;
+    var TaskXml = loadXMLString(GetTaskXml(rtnXml));
+    var headerData = createXmlDom();
+    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
 
-            if (CrossYN()) {
-                var xmlRtn = GetElementsByTagName(TaskXml, "ROWS")[0];
-                var Node = headerData.importNode(xmlRtn, true);
-                headerData.documentElement.appendChild(Node);
-            }
-            else {
-                var xmlRtn = GetElementsByTagName(TaskXml, "ROWS")[0];
-                headerData.documentElement.appendChild(xmlRtn);
-            }
-
-            if (document.getElementById("MyTaskSCateList").innerHTML != "") document.getElementById("MyTaskSCateList").innerHTML = "";
-            var SelListView = new ListView();
-            SelListView.SetID("DivMyTaskSCateList");
-            SelListView.SetSelectFlag(false);
-            SelListView.SetMulSelectable(false);
-            SelListView.SetRowOnClick("MyTaskSCateList_onclick");
-            SelListView.DataSource(headerData);
-            SelListView.DataBind("MyTaskSCateList");
-
-            XmlHttp3 = null;
-        }
-        catch (ErrMsg) {
-            alert(" MyCabinet_ini : " + ErrMsg.description + ErrMsg);
-        }
+    if (CrossYN()) {
+        var xmlRtn = GetElementsByTagName(TaskXml, "ROWS")[0];
+        var Node = headerData.importNode(xmlRtn, true);
+        headerData.documentElement.appendChild(Node);
     }
+    else {
+        var xmlRtn = GetElementsByTagName(TaskXml, "ROWS")[0];
+        headerData.documentElement.appendChild(xmlRtn);
+    }
+
+    if (document.getElementById("MyTaskSCateList").innerHTML != "") document.getElementById("MyTaskSCateList").innerHTML = "";
+    var SelListView = new ListView();
+    SelListView.SetID("DivMyTaskSCateList");
+    SelListView.SetSelectFlag(false);
+    SelListView.SetMulSelectable(false);
+    SelListView.SetRowOnClick("MyTaskSCateList_onclick");
+    SelListView.DataSource(headerData);
+    SelListView.DataBind("MyTaskSCateList");
+
 }
 
 function MyTaskSCateList_onclick()
@@ -606,18 +605,24 @@ function Set_MyTask(type) {
             }
         }
     }
+    var result = "";
+   
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/setMyTaskCode.do",
+		data : {
+			cabinetID : GetAttribute(selRows[0], "data1"),
+			taskCode  : GetAttribute(selRows[0], "data2"),
+			type      : type
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
         
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "CABINETID", GetAttribute(selRows[0], "data1"));
-    createNodeAndInsertText(xmlpara, objNode, "TASKCODE", GetAttribute(selRows[0], "data2"));
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", type);
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/SetMyTaskCode.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    if (XmlHttp.responseText == "OK") {
+    if (result == "OK") {
         if (type == "INS")
             OpenAlertUI(strLang1003);
         else

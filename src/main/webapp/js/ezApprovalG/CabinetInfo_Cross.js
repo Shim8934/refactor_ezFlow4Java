@@ -56,25 +56,30 @@ function GetSelIdxForCabinet(Rows, len, pCabID) {
 }
 
 function GetCabinetClassInfo(pCabID) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "CABINETID", pCabID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "STRTYPE", UserLang);
-
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetInfo.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(XmlHttp.responseXML);
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getCabinetInfo.do",
+		data : {
+			cabinetID : pCabID,
+			companyID : CompanyID,
+			strType   : UserLang
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    var dataNodes = GetChildNodes(result);
     var rtnXml = getNodeText(dataNodes[0]);
 
     if (rtnXml == "FALSE") {
         alert(strLang483);
     }
-    return XmlHttp.responseXML;
+    return result;
 }
 
 var addvolume_cross_dialogArguments = new Array();

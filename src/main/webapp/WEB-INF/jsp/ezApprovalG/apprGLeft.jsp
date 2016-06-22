@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pListTypeValue = "${listType}";
 		    var PresentOpen = "APPROVAL";

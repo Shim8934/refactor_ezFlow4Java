@@ -129,6 +129,32 @@ public interface EzApprovalGService {
 	public String getListInfoXml(String listFlag, String listType, String companyID, String lang) throws Exception;
 	
 	public String getRecordList(Document doc, String lang) throws Exception;
+	
+	public String getCodeInfo(String companyID, String lang) throws Exception;
+	
+	public String getAttachDocInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String isCabCharger(String companyID, String cabClassNo, String userID) throws Exception;
+	
+	public String updateAttachDocInfo(Document doc, String companyID, String lang) throws Exception;
+	
+	public String deleteAttachDocInfo(String docID, String companyID, String lang) throws Exception;
+	
+	public String getDocInfo(String docID, String mode, String selected, String companyID) throws Exception;
+	
+	public String saveRecReadHist(String readRecXML) throws Exception;
+	
+	public String receiverChk(String deptID, String companyID) throws Exception;
+	
+	public String getEA5Value(String msg) throws Exception;
+	
+	public String getMyTaskCode(String userID, String deptID, String companyID, String lang) throws Exception;
+	
+	public String setMyTaskCode(String userID, String deptID, String cabinetID, String taskCode, String type, String companyID) throws Exception;
+	
+	public String getCabinetInfo(String cabinetID, String companyID, String strType) throws Exception;
+	
+	public String registerSepAttach(Document doc) throws Exception;
 
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 

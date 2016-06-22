@@ -51,6 +51,32 @@ public class ApprGTaskVO {
 	private String processDeptName2;
 	/** 소기능명(다국어)*/
 	private String scName2;
+	/** */
+	private String cabinetID;
+	/** */
+	private String cabinetClassNo;
+	/** */
+	private String ownerID;
+	/** */
+	private String title;
+	/** */
+	private String title2;
+	/** */
+	private String recTypeCode;
+	/** */
+	private String regSerialNo;
+	/** */
+	private String volumeNo;
+	/** */
+	private String productionYear;
+	/** */
+	private String cabinetTransferFlag;
+	/** */
+	private String tcabinetID;
+	/** */
+	private String tDeptCode;
+	/** */
+	private String displayEndDate;
 	
 	public String getCategoryCode() {
 		return categoryCode;
@@ -201,6 +227,84 @@ public class ApprGTaskVO {
 	}
 	public void setScName2(String scName2) {
 		this.scName2 = scName2;
+	}
+	public String getCabinetID() {
+		return cabinetID;
+	}
+	public void setCabinetID(String cabinetID) {
+		this.cabinetID = cabinetID;
+	}
+	public String getCabinetClassNo() {
+		return cabinetClassNo;
+	}
+	public void setCabinetClassNo(String cabinetClassNo) {
+		this.cabinetClassNo = cabinetClassNo;
+	}
+	public String getOwnerID() {
+		return ownerID;
+	}
+	public void setOwnerID(String ownerID) {
+		this.ownerID = ownerID;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getTitle2() {
+		return title2;
+	}
+	public void setTitle2(String title2) {
+		this.title2 = title2;
+	}
+	public String getRecTypeCode() {
+		return recTypeCode;
+	}
+	public void setRecTypeCode(String recTypeCode) {
+		this.recTypeCode = recTypeCode;
+	}
+	public String getRegSerialNo() {
+		return regSerialNo;
+	}
+	public void setRegSerialNo(String regSerialNo) {
+		this.regSerialNo = regSerialNo;
+	}
+	public String getVolumeNo() {
+		return volumeNo;
+	}
+	public void setVolumeNo(String volumeNo) {
+		this.volumeNo = volumeNo;
+	}
+	public String getProductionYear() {
+		return productionYear;
+	}
+	public void setProductionYear(String productionYear) {
+		this.productionYear = productionYear;
+	}
+	public String getCabinetTransferFlag() {
+		return cabinetTransferFlag;
+	}
+	public void setCabinetTransferFlag(String cabinetTransferFlag) {
+		this.cabinetTransferFlag = cabinetTransferFlag;
+	}
+	public String getTcabinetID() {
+		return tcabinetID;
+	}
+	public void setTcabinetID(String tcabinetID) {
+		this.tcabinetID = tcabinetID;
+	}
+	public String gettDeptCode() {
+		return tDeptCode;
+	}
+	public void settDeptCode(String tDeptCode) {
+		this.tDeptCode = tDeptCode;
+	}
+	public String getDisplayEndDate() {
+		return displayEndDate;
+	}
+	public void setDisplayEndDate(String displayEndDate) {
+		this.displayEndDate = displayEndDate;
 	}
 	
 }
