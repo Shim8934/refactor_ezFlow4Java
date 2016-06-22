@@ -529,22 +529,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
-		String filePath = config.getProperty("upload_mail.ROOT");
+		String filePath = config.getProperty("upload_mail.SIGNIMGS");
+		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
 		if (!file.exists()) {
-			file.mkdir();
-		}
-		
-		filePath = config.getProperty("upload_mail.SIGNIMGS");
-		file = new File(realPath + filePath);
-		if (!file.exists()) {
-			file.mkdir();
-		}
-
-		filePath = filePath + commonUtil.separator + today;
-		file = new File(realPath + filePath);
-		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 
 		int width = 0;

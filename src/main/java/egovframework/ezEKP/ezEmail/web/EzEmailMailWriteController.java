@@ -986,7 +986,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		File uploadMailRootFolder = new File(pDirPath);
 		if (!uploadMailRootFolder.exists()) {
 			logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
-			uploadMailRootFolder.mkdir();
+			uploadMailRootFolder.mkdirs();
 		}
 		
 		for (int i=0; i<cnt; i++) {
@@ -997,7 +997,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                 pDirTempPath = pDirPath + commonUtil.separator + pDate;
                 File file = new File(pDirTempPath);
                 if (!file.exists()) {
-                	file.mkdir();
+                	file.mkdirs();
                 }
                 pBigFileUpload = "Y";
                 
@@ -1021,7 +1021,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			
 			File f = new File(pDirTempPath);
 			if (!f.exists()) {
-				f.mkdir();
+				f.mkdirs();
             }
 			
 			if (fileSize[i] > bigMaxSize) {
@@ -1054,7 +1054,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         String xmlPath = pDirPath + commonUtil.separator + "templist";
         File f = new File(xmlPath);
         if (!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
         }
 
         xmlPath += commonUtil.separator + tempFolderName + ".txt";
@@ -2466,18 +2466,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
 		
 		File f = null;
-		String pDirPath = config.getProperty("upload_mail.ROOT");
-		pDirPath = realPath + pDirPath;
-		f = new File(pDirPath);
-		if (!f.exists()) {
-			f.mkdir();
-		}
 		
-		pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+		String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
 		pDirPath = realPath + pDirPath;
 		f = new File(pDirPath);
 		if (!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
 		}
 		
 		f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
