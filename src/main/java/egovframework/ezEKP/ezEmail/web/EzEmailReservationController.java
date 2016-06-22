@@ -380,6 +380,17 @@ public class EzEmailReservationController extends EgovFileMngUtil {
                 attachXmlList.append("</NODES></ROOT>");						
                 attachCK = attachXmlList.toString();	
 			}
+			
+			if (message.getHeader("X-Priority") != null) {
+    			String tempImportance = message.getHeader("X-Priority")[0];
+    			if (tempImportance.equals("1")) {
+    				importance = "2";
+    			} else if (tempImportance.equals("5")) {
+    				importance = "0";
+    			} else {
+    				importance = "1";
+    			}
+    		}
 		}
 		
 		int pBigAttachDownloadDaynum = 0;
