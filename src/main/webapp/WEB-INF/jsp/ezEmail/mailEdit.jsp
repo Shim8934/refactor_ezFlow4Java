@@ -793,9 +793,7 @@
 			<form id="Form1" name="form1" runat="server" style="display:none;"></form>
 		</div>
 	</body>
-	<xmp id="AttachXmlList" style="display:none;">
-	    ${attachCK}
-	</xmp>
+	<xmp id="AttachXmlList" style="display:none;">${attachCK}</xmp>
 </html>
 
 
