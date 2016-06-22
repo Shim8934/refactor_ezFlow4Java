@@ -459,7 +459,7 @@ function func_reject_Complete(retVal) {
 
         var xmlHTTP = new XMLHttpRequest();
 
-        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_set_inboxrule.aspx?mode=DENIAL", false);
+        xmlHTTP.open("POST", "/ezEmail/mailSetInboxRule.do?mode=DENIAL", false);
         xmlHTTP.setRequestHeader("Content-Type", "text/xml");
         xmlHTTP.send(objXml);
         var result = xmlHTTP.responseText;
