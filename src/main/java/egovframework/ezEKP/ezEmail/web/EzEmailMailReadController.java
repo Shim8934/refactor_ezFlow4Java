@@ -20,6 +20,7 @@ import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -849,7 +850,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String folderPath = null;
 		if (url != null) {
 			int index = url.lastIndexOf(commonUtil.separator);
-			if(index != -1){
+			if (index != -1) {
 				folderPath = url.substring(0, index);
 				uid = Long.parseLong(url.substring(index+1));
 			}
@@ -863,13 +864,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = "";
-		if(f != null){
+		if (f != null) {
 			f.open(Folder.READ_ONLY);
 			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
+			if (f.isOpen() && f instanceof IMAPFolder) {
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
-			if(message != null){
+			if (message != null) {
 				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
 				double size = Double.parseDouble(bodyInfoList.get(2));
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
@@ -900,6 +901,108 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		return "ezEmail/mailPreviewContent";
 	}	
+	
+	/**
+	 * 메일 인쇄
+	 */
+	@RequestMapping(value="/ezEmail/mailPrint.do")
+	public String mailPrint(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		String pSender = "";
+		String pReciveDT = "";
+		String pReciverTo = "";
+		String pReciverCc = "";
+		String pSubject = "";
+		String isAttach = "NO";
+		String pAttachListHtml = "";
+		String pBody = "";
+		
+		String url = null;
+		long uid = 0;
+		String folderPath = null;
+		
+		if (request.getParameter("URL") != null) {
+			url = request.getParameter("URL");
+		} else if (request.getParameter("iptURL") != null) {
+			url = request.getParameter("iptURL");
+		}
+		
+		if (url != null) {
+			int index = url.lastIndexOf(commonUtil.separator);
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index+1));
+			}
+		}
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		Folder f = ia.getFolder(folderPath);
+		if (f != null) {
+			f.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder)f).getMessageByUID(uid);
+			
+			if (message != null) {
+				
+				if (message.getFrom() != null && message.getFrom().length > 0) {
+					InternetAddress fromAddress = (InternetAddress)message.getFrom()[0];
+					pSender = fromAddress.getPersonal() == null ? "" : fromAddress.getPersonal();
+					pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
+				}
+				
+				Address[] toAddresses = message.getRecipients(RecipientType.TO);
+				Address[] ccAddresses = message.getRecipients(RecipientType.CC);
+				
+				if (toAddresses != null) {
+					for (Address address : toAddresses) {
+						pReciverTo += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+						pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+					}
+				}
+				
+				if (ccAddresses != null) {
+					for (Address address : ccAddresses) {
+						pReciverCc += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+						pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+					}
+				}
+				
+				if (message.getReceivedDate() != null) {
+					SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd a h:mm:ss");
+					pReciveDT = sdFormat.format(message.getReceivedDate());
+				}
+				
+				pSubject = message.getSubject() == null ? "" : message.getSubject();
+				
+				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+				pBody = bodyInfoList.get(0);
+				pAttachListHtml = bodyInfoList.get(1);
+				
+				if (bodyInfoList.get(4).equals("OK")) {
+					isAttach = "OK";
+				}
+				
+			}
+		}
+		
+		ia.close();
+		
+		model.addAttribute("pSender", pSender);
+		model.addAttribute("pReciveDT", pReciveDT);
+		model.addAttribute("pReciverTo", pReciverTo);
+		model.addAttribute("pReciverCc", pReciverCc);
+		model.addAttribute("pSubject", pSubject);
+		model.addAttribute("isAttach", isAttach);
+		model.addAttribute("pAttachListHtml", pAttachListHtml);
+		model.addAttribute("pBody", pBody);
+		
+		return "ezEmail/mailPrint";
+	}
+	
 	
 	/**
 	 * 메일 첨부파일 Part 반환 함수
