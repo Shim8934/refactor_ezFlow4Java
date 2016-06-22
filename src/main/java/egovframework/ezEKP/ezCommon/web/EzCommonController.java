@@ -255,7 +255,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
         
         int width = 0;
