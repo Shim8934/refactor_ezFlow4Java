@@ -1267,7 +1267,9 @@ function organtreeview(thisobjid, elobjid) {
     }
 
     function set_initvalue() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+//IE11때문에 navigator.userAgent.indexOf('rv:11.0') == -1) 추가
+        //return (navigator.userAgent.indexOf('MSIE') == -1 && navigator.userAgent.indexOf('rv:11.0') == -1) ?
+    	return (navigator.userAgent.indexOf('Trident') == -1) ?
         (function() {
             // safari
             var protocol = window.location.protocol;
@@ -1318,14 +1320,19 @@ function organtreeview(thisobjid, elobjid) {
         		
         (function() {
             // IE
-            var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+        	//var bimageNodes = SelectSingleNodeValue(g_configXML, "baseimage").childNodes;
+            //var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+        	var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
             var protocol = window.location.protocol;
             var serverName = window.location.hostname;
 
             var downloadPath = "";
+alert("length:"+bimageNodes.length);
             for (var i = 0; i < bimageNodes.length; i++) {
-                g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
-                downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
+                //g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
+                g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].attributes.getNamedItem("path").substr(bimageNodes[i].getAttribute("path").lastIndexOf("/") + 1);
+                //downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
+                downloadPath = protocol + "//" + serverName + bimageNodes[i].getAttribute("path");
                 g_baseImage[bimageNodes.item(i).nodeName] = downloadPath;
                 //for (var i=0; i<bimageNodes.length; i++)
                 //{	
@@ -1339,7 +1346,8 @@ function organtreeview(thisobjid, elobjid) {
 
             bimageNodes = null;
 
-            var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+            //var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+            var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
             for (var i = 0; i < imageNodes.length; i++) {
                 //var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
                 //var imagePath = ezUtil.GetTemporaryFilename2("");
@@ -1352,14 +1360,18 @@ function organtreeview(thisobjid, elobjid) {
 
             imageNodes = null;
 
-            var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+            //var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+            var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
             for (var i = 0; i < classNodes.length; i++)
                 g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
 
             classNodes = null;
 
-            g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
-            g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+            /*g_imageWidth = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("width").text;
+            g_imageHeight = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("height").text;*/
+            g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
+            g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+            
         }).call(this);
     }
     
