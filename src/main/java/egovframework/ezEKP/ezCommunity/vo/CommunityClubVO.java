@@ -123,6 +123,17 @@ public class CommunityClubVO {
 	String c_Type;
 	/** 게시판 글 수*/
 	int itemCnt;
+	/** 마스터 ID*/
+	String displayName;
+	/** 마스터 ID(다국어)*/
+	String displayName2;
+	/** 마스터 부서명*/
+	String description;
+	/** 마스터 부서명(다국어)*/
+	String description2;
+	/** 커뮤니티 검색시 커뮤니티수*/
+	int copCnt;
+	
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}
@@ -488,6 +499,36 @@ public class CommunityClubVO {
 	}
 	public void setItemCnt(int itemCnt) {
 		this.itemCnt = itemCnt;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	public String getDisplayName2() {
+		return displayName2;
+	}
+	public void setDisplayName2(String displayName2) {
+		this.displayName2 = displayName2;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription2() {
+		return description2;
+	}
+	public void setDescription2(String description2) {
+		this.description2 = description2;
+	}
+	public int getCopCnt() {
+		return copCnt;
+	}
+	public void setCopCnt(int copCnt) {
+		this.copCnt = copCnt;
 	}
 	
 }

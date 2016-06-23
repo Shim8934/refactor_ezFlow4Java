@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
@@ -35,6 +36,10 @@ public interface EzCommunityService {
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID) throws Exception;
+	
+	public List<CommunityCCategoryVO> mainPageGet4(String cat) throws Exception;
+	
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow) throws Exception;
 	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -83,6 +88,10 @@ public interface EzCommunityService {
 	public CommunityMemberInfoVO joinOkGet4(String companyID, String id) throws Exception;
 	
 	public CommunityClubVO joinOkGet3(String code, String lang) throws Exception;
+	
+	public CommunityClubVO todayCopGet2(int num) throws Exception;
+	
+	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat) throws Exception;
 	
 	public String getLeftCommunity(LoginVO userInfo) throws Exception;
 	
@@ -222,6 +231,14 @@ public interface EzCommunityService {
 
 	public String getACLGet2(String uID, String cID) throws Exception;
 
+	public String adminMemPermit(LoginVO userInfo, String code) throws Exception;
+	
+	public String todayCopGet1() throws Exception;
+	
+	public String todayCopGet3(String c_Cate, String type) throws Exception;
+
+	public String categoryListItemCntGet(String c_ClubNo) throws Exception;
+	
 	public Integer boardPropertyGet(String boardID) throws Exception;
 
 	public Integer adminOuterListGet1(String code) throws Exception;
@@ -302,6 +319,11 @@ public interface EzCommunityService {
 
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
 
+	public void okNoSet(String flag, String code, String cID) throws Exception;
+
+	
+
+	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception ;
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

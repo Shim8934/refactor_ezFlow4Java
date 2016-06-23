@@ -404,10 +404,10 @@
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -557,55 +557,50 @@
 	        }
 	        
 	        function get_categoryCommunity(type) {
-	            xmlhttp3 = createXMLHttpRequest();
-
-	            var xmlDom = createXmlDom();
-	            var objNode;
-
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            createNodeAndInsertText(xmlDom, objNode, "MODE", type);
-
-	            xmlhttp3.open("POST", "aspx/mycategorycop.aspx", true);
-	            xmlhttp3.onreadystatechange = event_get_categoryCommunity;
-	            xmlhttp3.send(xmlDom);
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/myCategoryCop.do",
+					data	:	{mode : type
+					},
+					success: function(result){
+						event_get_categoryCommunity(result);
+					}
+				});
 	        }
 	        
-	        function event_get_categoryCommunity() {
-	            if (xmlhttp3 == null || xmlhttp3.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp3.status >= 200 && xmlhttp3.status < 300) {
-	                document.getElementById("categorytab").innerHTML = "";
-	                var xmldom = loadXMLString(xmlhttp3.responseText);
-	                var ul = document.createElement("UL");
-	                ul.className = "left_tabpartLis";
-	                
-	                for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
-	                    var li = document.createElement("LI");
+	        function event_get_categoryCommunity(result) {
+                document.getElementById("categorytab").innerHTML = "";
 
-	                    var a = document.createElement("A");
-	                    a.style.cursor = "pointer";
-	                    a.setAttribute("type", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "CATE"));
-	                    a.setAttribute("cnt", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "CNT"));
-	                    a.onclick = function () { select_category(this); };
-	                    
-	                    if (i == 0) {
-	                        a.onclick();
-	                    }
-	                    
-	                    a.innerHTML = getcategoryname(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_NAME"));
+                var xmldom = loadXMLString(result);
+                var ul = document.createElement("UL");
+                ul.className = "left_tabpartLis";
+                
+                for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW").length; i++) {
+                    var li = document.createElement("LI");
 
-	                    var span = document.createElement("SPAN");
-	                    span.innerHTML = "(" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "CNT") + ")";
+                    var a = document.createElement("A");
+                    a.style.cursor = "pointer";
+                    a.setAttribute("type", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CATE"));
+                    a.setAttribute("cnt", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CNT"));
+                    a.onclick = function () { select_category(this); };
+                    
+                    if (i == 0) {
+                        a.onclick();
+                    }
+                    
+                    a.innerHTML = getcategoryname(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "C_NAME"));
 
-	                    a.appendChild(span);
-	                    li.appendChild(a);
-	                    ul.appendChild(li);
-	                }
-	                
-	                document.getElementById("categorytab").appendChild(ul);
-	            }
+                    var span = document.createElement("SPAN");
+                    span.innerHTML = "(" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CNT") + ")";
+
+                    a.appendChild(span);
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                }
+                
+                document.getElementById("categorytab").appendChild(ul);
 	        }
 	        
 	        function getcategoryname(val) {
@@ -704,316 +699,307 @@
 	            }
 	            
 	            search = false;
-	            xmlhttp5 = createXMLHttpRequest();
-
-	            var xmlDom = createXmlDom();
-	            var objNode;
-
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            
+	            var mode = "";
+     
 	            if(document.getElementById("work").className == "on") {
-	                createNodeAndInsertText(xmlDom, objNode, "MODE", "A");
+					mode = "A";
 	            } else {
-	                createNodeAndInsertText(xmlDom, objNode, "MODE", "B");
+	                mode = "B";
 	            }
 	            
-	            createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-	            createNodeAndInsertText(xmlDom, objNode, "TYPE", type);
-
-	            xmlhttp5.open("POST", "aspx/categorycoplist.aspx", true);
-	            xmlhttp5.onreadystatechange = event_select_category;
-	            xmlhttp5.send(xmlDom);
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/categoryCopList.do",
+					data	: {	mode	:	mode,
+								page	:	CurPage,
+								type 	:	type
+					},
+					success: function(result){
+						event_select_category(result);
+					}
+				});
+				
 	        }
 	        
 	        function event_select_category(val) {
-	            if (xmlhttp5 == null || xmlhttp5.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp5.status >= 200 && xmlhttp5.status < 300) {
-	                if (xmlhttp5.responseText == "NOITME") {
-	                    alert(strLang1);
-	                    return;
-	                }
-	                
-	                var xmldom = loadXMLString(xmlhttp5.responseText);
-	                document.getElementById("categorylist").innerHTML = "";
-	                var table = document.createElement("TABLE");
-	                table.className = "right_tabpartListLayout";
-	                table.style.width = "100%";
-	                table.style.border = "0";
-	                
-	                for (var i = 0; i < SelectNodes(xmldom, "DATA/ROW").length; i++) {
-	                    if (i == 0 && SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "COPCNT") != "") {
-	                        var totla = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "COPCNT");
-	                        
-	                        if (totla % 5 == 0) {
-	                            totalPage = totla / 5;
-	                        } else {
-	                            totalPage = parseInt(totla / 5) + 1;
-	                        }
-	                    }
-	                    
-	                    var tr = document.createElement("TR");
-	                    var td = document.createElement("TD");
-	                    var dl = document.createElement("DL");
-	                    dl.className = "right_tabpartList";
-	                    var dt = document.createElement("DT");
-	                    var img = document.createElement("IMG");
-	                    
-	                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
-	                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    } else {
-	                        img.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-	                    }
-	                    
-	                    img.style.width = "84px";
-	                    img.style.height = "60px";
-	                    var dd = document.createElement("DD");
-	                    var strong = document.createElement("STRONG");
-	                    
-	                    if (strlang == "" || strlang == "1") {
-	                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
-	                    } else {
-	                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
-	                    }
-	                    
-	                    dd.appendChild(strong);
-	                    var dd2 = document.createElement("DD");
-	                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                if (val == "NOITME") {
+                    alert(strLang1);
+                    return;
+                }
+                
+                var xmldom = loadXMLString(val);
+                document.getElementById("categorylist").innerHTML = "";
+                var table = document.createElement("TABLE");
+                table.className = "right_tabpartListLayout";
+                table.style.width = "100%";
+                table.style.border = "0";
 
-	                    var dd3 = document.createElement("DD");
-	                    
-	                    if (strlang == "" || strlang == "1") {
-	                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION") + ")";
-	                    } else {
-	                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME2") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION2") + ")";
-	                    }
+                for (var i = 0; i < SelectNodes(xmldom, "DATA/ROW").length; i++) {
+                    if (i == 0 && SelectSingleNodeValue(SelectNodes(xmldom, "DATA"), "COPCNT") != "") {
+                        var totla = SelectSingleNodeValue(SelectNodes(xmldom, "DATA"), "COPCNT");
+                        
+                        if (totla % 5 == 0) {
+                            totalPage = totla / 5;
+                        } else {
+                            totalPage = parseInt(totla / 5) + 1;
+                        }
+                    }
+                    
+                    var tr = document.createElement("TR");
+                    var td = document.createElement("TD");
+                    var dl = document.createElement("DL");
+                    dl.className = "right_tabpartList";
+                    var dt = document.createElement("DT");
+                    var img = document.createElement("IMG");
+                    
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                    } else {
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        
+                    }
+                    
+                    img.style.width = "84px";
+                    img.style.height = "60px";
+                    var dd = document.createElement("DD");
+                    var strong = document.createElement("STRONG");
+                    
+                    if (strlang == "" || strlang == "1") {
+                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
+                    } else {
+                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
+                    }
+                    
+                    dd.appendChild(strong);
+                    var dd2 = document.createElement("DD");
+                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
 
-	                    dt.appendChild(img);
-	                    dl.appendChild(dt);
-	                    dl.appendChild(dd);
-	                    dl.appendChild(dd2);
-	                    dl.appendChild(dd3);
-	                    td.appendChild(dl);
+                    var dd3 = document.createElement("DD");
+                    
+                    if (strlang == "" || strlang == "1") {
+                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION") + ")";
+                    } else {
+                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME2") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION2") + ")";
+                    }
 
-	                    tr.appendChild(td);
+                    dt.appendChild(img);
+                    dl.appendChild(dt);
+                    dl.appendChild(dd);
+                    dl.appendChild(dd2);
+                    dl.appendChild(dd3);
+                    td.appendChild(dl);
 
-	                    td = null;
-	                    dl = null;
-	                    dt = null;
-	                    dd = null;
+                    tr.appendChild(td);
 
-	                    td = document.createElement("TD");
-	                    td.style.width = "250px";
-	                    dl = document.createElement("DL");
-	                    dl.className = "right_tabpartList01";
-	                    dt = document.createElement("DT");
+                    td = null;
+                    dl = null;
+                    dt = null;
+                    dd = null;
 
-	                    var span = document.createElement("SPAN");
-	                    var span2 = document.createElement("SPAN");
-	                    var span3 = document.createElement("SPAN");
-	                    var span4 = document.createElement("SPAN");
+                    td = document.createElement("TD");
+                    td.style.width = "250px";
+                    dl = document.createElement("DL");
+                    dl.className = "right_tabpartList01";
+                    dt = document.createElement("DT");
 
-	                    span.className = "icon_community01";
-	                    span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT");
-	                    span2.className = "line";
-	                    span3.className = "icon_community02";
-	                    span3.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "CNT");
-	                    span4.className = "line";
+                    var span = document.createElement("SPAN");
+                    var span2 = document.createElement("SPAN");
+                    var span3 = document.createElement("SPAN");
+                    var span4 = document.createElement("SPAN");
 
-	                    var br = document.createElement("BR");
-	                    var br2 = document.createElement("BR");
+                    span.className = "icon_community01";
+                    span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT");
+                    span2.className = "line";
+                    span3.className = "icon_community02";
+                    span3.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "CNT");
+                    span4.className = "line";
 
-	                    dd = document.createElement("DD");
-	                    var span5 = document.createElement("SPAN");
-	                    span5.className = "btn_community01";
+                    var br = document.createElement("BR");
+                    var br2 = document.createElement("BR");
 
-	                    span5.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
-	                    span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
-	                    span5.onclick = function () { move_cop(this); };
+                    dd = document.createElement("DD");
+                    var span5 = document.createElement("SPAN");
+                    span5.className = "btn_community01";
 
-	                    var span6 = document.createElement("SPAN");
-	                    span6.innerHTML = strLang8;
+                    span5.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
+                    span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
+                    span5.onclick = function () { move_cop(this); };
 
-	                    span5.appendChild(span6);
-	                    dd.appendChild(span5);
+                    var span6 = document.createElement("SPAN");
+                    span6.innerHTML = strLang8;
 
-	                    dt.appendChild(span);
-	                    dt.appendChild(span2);
-	                    dt.appendChild(span3);
-	                    dt.appendChild(span4);
+                    span5.appendChild(span6);
+                    dd.appendChild(span5);
 
-	                    dl.appendChild(dt);
-	                    dl.appendChild(br);
-	                    dl.appendChild(br2);
-	                    dl.appendChild(dd);
-	                    td.appendChild(dl);
+                    dt.appendChild(span);
+                    dt.appendChild(span2);
+                    dt.appendChild(span3);
+                    dt.appendChild(span4);
 
-	                    tr.appendChild(td);
+                    dl.appendChild(dt);
+                    dl.appendChild(br);
+                    dl.appendChild(br2);
+                    dl.appendChild(dd);
+                    td.appendChild(dl);
 
-	                    table.appendChild(tr);
-	                }
-	                
-	                document.getElementById("categorylist").appendChild(table);
-	                makePageSelPage();
-	            }
+                    tr.appendChild(td);
+
+                    table.appendChild(tr);
+                }
+                
+                document.getElementById("categorylist").appendChild(table);
+                makePageSelPage();
 	        }
 
 	        function get_todaycop() {
-	            xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "aspx/todaycop.aspx", true);
-	            xmlhttp4.onreadystatechange = event_get_todaycop;
-	            xmlhttp4.send();
+	            $.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezCommunity/todayCop.do",
+					success: function(result){
+						event_get_todaycop(result);
+					}
+				});
 	        }
 	        
-	        function event_get_todaycop() {
-	            if (xmlhttp4 == null || xmlhttp4.readyState != 4) {
-	                return;
-	            }
-	            
-	            if (xmlhttp4.status >= 200 && xmlhttp4.status < 300) {
-	                if (xmlhttp4.responseText == "") {
-	                    return;
-	                }
+	        function event_get_todaycop(result) {
+                var h1 = document.createElement("H1");
+                var img = document.createElement("IMG");
+                img.style.width = "156px";
+                img.style.height = "28px";
+                img.src = "/images/kr/community/title_todayCommunity.png";
+                img.alt = "today Community";
 
-	                var xmldom = loadXMLString(xmlhttp4.responseText);
+                h1.appendChild(img);
 
-	                var h1 = document.createElement("H1");
-	                var img = document.createElement("IMG");
-	                img.style.width = "156px";
-	                img.style.height = "28px";
-	                img.src = "/images/kr/community/title_todayCommunity.png";
-	                img.alt = "today Community";
+                var div = document.createElement("DIV");
+                div.className = "todayCommunity";
 
-	                h1.appendChild(img);
+                var div2 = document.createElement("DIV");
+                div2.className = "todayCommunityLayout";
 
-	                var div = document.createElement("DIV");
-	                div.className = "todayCommunity";
+                var p = document.createElement("P");
+                p.className = "btn_CommunityMore";
 
-	                var div2 = document.createElement("DIV");
-	                div2.className = "todayCommunityLayout";
+                p.setAttribute("code", result["clubVO"]["c_ClubNo"]);
+                p.setAttribute("type", result["clubVO"]["c_ClubConfirmType"]);
+                p.style.cursor = "pointer";
+                p.onclick = function () { move_cop(this); };
 
-	                var p = document.createElement("P");
-	                p.className = "btn_CommunityMore";
+                var img2 = document.createElement("IMG");
+                img2.src = "/images/kr/community/btn_todayCommunity.png";
 
-	                p.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
-	                p.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
-	                p.style.cursor = "pointer";
-	                p.onclick = function () { move_cop(this); };
+                p.appendChild(img2);
 
-	                var img2 = document.createElement("IMG");
-	                img2.src = "/images/kr/community/btn_todayCommunity.png";
+                var ui = document.createElement("UI");
+                ui.className = "bg_todayCommunity";
 
-	                p.appendChild(img2);
+                var li = document.createElement("LI");
+                li.className = "bg_todayCommunityTL";
 
-	                var ui = document.createElement("UI");
-	                ui.className = "bg_todayCommunity";
+                var li2 = document.createElement("LI");
+                li2.className = "bg_todayCommunityTR";
 
-	                var li = document.createElement("LI");
-	                li.className = "bg_todayCommunityTL";
+                var li3 = document.createElement("LI");
+                li3.className = "bg_todayCommunityBL";
 
-	                var li2 = document.createElement("LI");
-	                li2.className = "bg_todayCommunityTR";
+                var li4 = document.createElement("LI");
+                li4.className = "bg_todayCommunityBR";
 
-	                var li3 = document.createElement("LI");
-	                li3.className = "bg_todayCommunityBL";
+                ui.appendChild(li);
+                ui.appendChild(li2);
+                ui.appendChild(li3);
+                ui.appendChild(li4);
 
-	                var li4 = document.createElement("LI");
-	                li4.className = "bg_todayCommunityBR";
+                var p2 = document.createElement("P");
+                p2.className = "todayCommunity_img";
 
-	                ui.appendChild(li);
-	                ui.appendChild(li2);
-	                ui.appendChild(li3);
-	                ui.appendChild(li4);
+                var img3 = document.createElement("IMG");
+                img3.style.width = "198px";
+                img3.style.height = "140px";
+                
+                if (result["clubVO"]["c_Logo_Thumbnail"].indexOf("default_logo_type") > -1) {
+                    img3.src = "/images/ezCommunity/logo/" + result["clubVO"]["c_Logo_Thumbnail"];
+                } else {
+                    img3.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + result["clubVO"]["c_Logo_Thumbnail"];
+                }
 
-	                var p2 = document.createElement("P");
-	                p2.className = "todayCommunity_img";
+                p2.appendChild(img3);
 
-	                var img3 = document.createElement("IMG");
-	                img3.style.width = "198px";
-	                img3.style.height = "140px";
-	                
-	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
-	                    img3.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
-	                } else {
-	                    img3.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
-	                }
+                var dl = document.createElement("DL");
+                dl.className = "todayCommunity_list";
 
-	                p2.appendChild(img3);
+                var dt = document.createElement("DT");
+                
+                if(strlang == "" || strlang == "1") {
+                    dt.innerHTML = result["clubVO"]["c_ClubName"];
+                } else {
+                    dt.innerHTML = result["clubVO"]["c_ClubName2"];
+                }
 
-	                var dl = document.createElement("DL");
-	                dl.className = "todayCommunity_list";
+                var dd = document.createElement("DD");
 
-	                var dt = document.createElement("DT");
-	                
-	                if(strlang == "" || strlang == "1") {
-	                    dt.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
-	                } else {
-	                    dt.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME2");
-	                }
+                var span = document.createElement("SPAN");
+                span.className = "icon_community01";
+                span.innerHTML = result["clubVO"]["c_MemberCnt"];
+                var span2 = document.createElement("SPAN");
+                span2.className = "line";
+                var span3 = document.createElement("SPAN");
+                span3.className = "icon_community02";
+                span3.innerHTML = result["itemCnt"];
+                var span4 = document.createElement("SPAN");
+                span4.className = "line";
+                var span5 = document.createElement("SPAN");
+                
+                if (strlang == "" || strlang == "1") {
+                    span5.innerHTML = strLang2 + " : " + result["clubVO"]["displayName"];
+                } else {
+                    span5.innerHTML = strLang2 + " : " + result["clubVO"]["displayName2"];
+                }
+                
+                dd.appendChild(span);
+                dd.appendChild(span2);
+                dd.appendChild(span3);
+                dd.appendChild(span4);
+                dd.appendChild(span5);
 
-	                var dd = document.createElement("DD");
+                var dd2 = document.createElement("DD");
+                dd2.innerHTML = strLang3 + " : ";
+                
+                if (result["clubVO"]["c_Cate_A"].trim() != "0") {
+                    dd2.innerHTML += getcategoryname(result["cCateAName"]);
+                }
 
-	                var span = document.createElement("SPAN");
-	                span.className = "icon_community01";
-	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_MEMBERCNT");
-	                var span2 = document.createElement("SPAN");
-	                span2.className = "line";
-	                var span3 = document.createElement("SPAN");
-	                span3.className = "icon_community02";
-	                span3.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "ITEMCNT");
-	                var span4 = document.createElement("SPAN");
-	                span4.className = "line";
-	                var span5 = document.createElement("SPAN");
-	                
-	                if (strlang == "" || strlang == "1") {
-	                    span5.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "DISPLAYNAME");
-	                } else {
-	                    span5.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "DISPLAYNAME2");
-	                }
-	                
-	                dd.appendChild(span);
-	                dd.appendChild(span2);
-	                dd.appendChild(span3);
-	                dd.appendChild(span4);
-	                dd.appendChild(span5);
+                if (result["clubVO"]["c_Cate_A"].trim() != "0" && result["clubVO"]["c_Cate_B"].trim() != "0") {
+                    dd2.innerHTML += ", " + getcategoryname(result["cCateBName"]);
+                } else {
+                    dd2.innerHTML += getcategoryname(result["cCateBName"]);
+                }
 
-	                var dd2 = document.createElement("DD");
-	                dd2.innerHTML = strLang3 + " : ";
-	                
-	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_A").trim() != "0") {
-	                    dd2.innerHTML += getcategoryname(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_A_NAME"));
-	                }
+                dl.appendChild(dt);
+                dl.appendChild(dd);
+                dl.appendChild(dd2);
 
-	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_A").trim() != "0" && SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_B").trim() != "0") {
-	                    dd2.innerHTML += ", " + getcategoryname(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_B_NAME"));
-	                } else {
-	                    dd2.innerHTML += getcategoryname(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CATE_B_NAME"));
-	                }
+                var p3 = document.createElement("P");
+                p3.className = "todayCommunity_text";
 
-	                dl.appendChild(dt);
-	                dl.appendChild(dd);
-	                dl.appendChild(dd2);
+                var span6 = document.createElement("SPAN");
+                span6.innerHTML = result["clubVO"]["c_ClubDesc"];
 
-	                var p3 = document.createElement("P");
-	                p3.className = "todayCommunity_text";
+                p3.appendChild(span6);
 
-	                var span6 = document.createElement("SPAN");
-	                span6.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+                div2.appendChild(p);
+                div2.appendChild(ui);
+                div2.appendChild(p2);
+                div2.appendChild(dl);
+                div2.appendChild(p3);
+                div.appendChild(div2);
 
-	                p3.appendChild(span6);
-
-	                div2.appendChild(p);
-	                div2.appendChild(ui);
-	                div2.appendChild(p2);
-	                div2.appendChild(dl);
-	                div2.appendChild(p3);
-	                div.appendChild(div2);
-
-	                document.getElementById("todaycop").appendChild(h1);
-	                document.getElementById("todaycop").appendChild(div);
-	            }
+                document.getElementById("todaycop").appendChild(h1);
+                document.getElementById("todaycop").appendChild(div);
 	        }
 
 	        function key_down(e) {
@@ -1024,7 +1010,7 @@
 	        
 	        var search = false;
 	        var searchoption;
-	        var searchvalue
+	        var searchvalue;
 	        
 	        function copsearch() {
 	            var sel = document.getElementById("search").selectedIndex;
@@ -1038,37 +1024,38 @@
 	            search = true;
 
 	            CurPage = "1";
-	            xmlhttp5 = createXMLHttpRequest();
-
-	            var xmlDom = createXmlDom();
-	            var objNode;
-
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            createNodeAndInsertText(xmlDom, objNode, "OPTION", searchoption);
-	            createNodeAndInsertText(xmlDom, objNode, "KEYWORD", searchvalue);
-	            createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-
-	            xmlhttp5.open("POST", "aspx/searchcop.aspx", true);
-	            xmlhttp5.onreadystatechange = event_select_category;
-	            xmlhttp5.send(xmlDom);
+	            
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/searchCop.do",
+					data	: {	option	:	searchoption,
+								keyword	:	searchvalue,
+								page 	:	CurPage
+					},
+					success: function(result){
+						event_select_category(result);
+					}
+				});
 	        }
 
 	        function copsearchpage() {
 	            search = true;
 
-	            xmlhttp5 = createXMLHttpRequest();
-
-	            var xmlDom = createXmlDom();
-	            var objNode;
-
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            createNodeAndInsertText(xmlDom, objNode, "OPTION", searchoption);
-	            createNodeAndInsertText(xmlDom, objNode, "KEYWORD", searchvalue);
-	            createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-
-	            xmlhttp5.open("POST", "aspx/searchcop.aspx", true);
-	            xmlhttp5.onreadystatechange = event_select_category;
-	            xmlhttp5.send(xmlDom);
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/searchCop.do",
+					data	: {	option	:	searchoption,
+								keyword	:	searchvalue,
+								page 	:	CurPage
+					},
+					success: function(result){
+						event_select_category(result);
+					}
+				});
 	        }
 
 	        function ItemRead_onclick(val) {

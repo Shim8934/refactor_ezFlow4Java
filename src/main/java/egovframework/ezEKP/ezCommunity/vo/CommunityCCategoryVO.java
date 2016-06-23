@@ -9,6 +9,11 @@ public class CommunityCCategoryVO {
 	String c_Name;
 	/** 표시정렬순서*/
 	int c_Order;
+	/** 카테고리별 커뮤니티 수*/
+	int cnt;
+	/** 카테고리코드*/
+	String cate;
+	
 	public String getC_Code() {
 		return c_Code;
 	}
@@ -33,4 +38,18 @@ public class CommunityCCategoryVO {
 	public void setC_Order(int c_Order) {
 		this.c_Order = c_Order;
 	}
+	public int getCnt() {
+		return cnt;
+	}
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+	public String getCate() {
+		return cate;
+	}
+	public void setCate(String cate) {
+		this.cate = cate;
+	}
+	
+	
 }

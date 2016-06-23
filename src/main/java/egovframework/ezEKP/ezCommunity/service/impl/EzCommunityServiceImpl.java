@@ -549,7 +549,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 //        		joinFlag = true;
         	}
         	
-        	//TODO
+        	//TODO 이효진 2016-06-22 사용하는 곳 없음
         	/*String newMemberConfirmtype = ezCommunityDAO.leftCommunityGet2(code);
         	
         	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
@@ -1915,12 +1915,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String myCopNewBoardItem(LoginVO userInfo, int startRow, int endRow) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
-		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST");
 		
+		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST");
+
 		rtnVal.append("<ITEM><DATA>");
 		
 		for (String clubNo : clubNoList) {
-			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(clubNo);
+			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(clubNo.trim());
 
 			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
 				rtnVal.append(commonUtil.getQueryResult(myCommunity));
@@ -4184,135 +4185,126 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.getACLGet2(map);
 	}
+	
+	@Override
+	public String adminMemPermit(LoginVO userInfo, String code) throws Exception {
+		int iCount = 1, curPage = 0;
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CODE", code);
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+		
+		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
 
-	/*public void SndMail(string code)
-	{
-        try
-        {
-            string PositionNM = userinfo.Title;			//  직위
-            string DeptNM = userinfo.DeptName;		//  부서명
-            string CompanyNM = userinfo.CompanyName;		//  회사명
-            string mailSendServer = "\"" + userinfo.DisplayName + "\" <" + userinfo.Email + ">";
-            string strSql = "";
-
-
-#if USE_MSSQL
-            SqlConnection conn2 = new SqlConnection(GetSystemConfigValue("ezCommunity"));
-            SqlCommand comm2 = new SqlCommand("EZSP_COMM_OUT_OK_GET2", conn2);
-            comm2.CommandType = CommandType.StoredProcedure;
-            comm2.Parameters.Add("@CODE", SqlDbType.NChar, 20).Value = code;
-            comm2.Parameters.Add("@USERINFO_LANG", SqlDbType.NChar, 1).Value = GetMultiData(userinfo.lang);
-            conn2.Open();
-            SqlDataReader EMailRS = comm2.ExecuteReader();
-#elif USE_ORACLE
-            OracleConnection conn2 = new OracleConnection(GetSystemConfigValue("ezCommunityOra"));
-            OracleCommand comm2 = new OracleCommand("EZSP_COMM_OUT_OK_GET2", conn2);
-            comm2.CommandType = CommandType.StoredProcedure;
-            comm2.Parameters.Add("v_CODE", OracleType.NChar, 20).Value = code;
-            comm2.Parameters.Add("v_USERINFO_LANG", OracleType.NChar, 1).Value = GetMultiData(userinfo.lang);
-            comm2.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
-            conn2.Open();
-            OracleDataReader EMailRS = comm2.ExecuteReader();
-#endif
-            while (EMailRS.Read())
-            {
-                if (EMailRS["EMail"].ToString() != "")
-                {
-                    string CommunityUser = "\"" + EMailRS["UserName"].ToString() + "\" <" + EMailRS["EMail"].ToString() + ">";
-                    string content = "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] " + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t587") + "< " + reason + " > " + RM.GetString("t721");
-                    string strXML = "<DATA>";
-                    strXML += "<FROM><![CDATA[" + mailSendServer + "]]></FROM>";
-                    strXML += "<TO><![CDATA[" + CommunityUser + "]]></TO>";
-                    strXML += "<CC></CC>";
-                    strXML += "<BCC></BCC>";
-                    strXML += "<SUBJECT><![CDATA[" + "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] Community" + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t722") + "]]></SUBJECT>";
-                    strXML += "<BODY><![CDATA[" + content + "]]></BODY>";
-                    strXML += "</DATA>";
-
-                    // 2011.06 : 메일 노티 페이지 변경
-                    string WebServerName = Server.MachineName;
-                    string url = Request.Url.Scheme + "://" + WebServerName + "/myoffice/ezEmail/remote/mail_send_noti.aspx";
-
-                    string[] HeaderOption = new string[10];
-                    HeaderOption[0] = "Authorization\n" + Request.ServerVariables["HTTP_AUTHORIZATION"];
-                    HeaderOption[1] = "Content-Type\ntext/xml; charset=utf-8";
-                    HeaderOption[2] = "Accept-Language\nutf-8";
-
-                    string rtnStatus = "";
-                    Stream ResponseStream = null;
-                    long StreamSize = 0;
-
-                    if (ExecuteWebURL("POST", url, strXML, HeaderOption, ref rtnStatus, ref ResponseStream, ref StreamSize))
-                    {
-                        if (ResponseStream != null) { ResponseStream.Close(); }
-                        if (ResponseStream != null) { ResponseStream = null; }
-                    }
-                }
+		for (CommunityCClubUserVO user : userList) {
+			sb.append("<tr>");
+            sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
+            sb.append("<td class=\"white\">");
+            
+            if (userInfo.getLang().equals("2")) {
+            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName2().trim() + "</a>");
+            }else {
+            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName().trim() + "</a>");
             }
-            conn2.Close();
-            comm2.Dispose();
-            conn2.Dispose();
-        }
-        catch (Exception ex)
-        {
-            WriteTextLog("ezcomm_comm_out_ok", "SndMail", ex.ToString());
-        }
-	}*/
-	
-	
-	
-	
-	
-/*	@Override
-	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
-		int pos1 = pSource.indexOf(pStarts);
-		int pos2 = pSource.indexOf(pEnds, pos1 + pStarts.length());
-		
-		if(pos1 == -1){
-			return "";
-		}
-		if(pos2 == -1){
-			return "";
+            
+            sb.append("</td>");
+            sb.append("<td class=\"white\" align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
+            sb.append("<td class=\"white\" align=\"center\">");
+            
+            if (userInfo.getLang().equals("2")) {
+            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</a>/");
+                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+            } else {
+            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</a>/");
+                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+            }
+            
+            sb.append("</td>");
+            sb.append("</tr>");
+            
+            iCount ++;
 		}
 		
-		return pSource.substring(pos1, pos2 - pos1 + pEnds.length());
+		return sb.toString();
+	}
+	
+	@Override
+	public void okNoSet(String flag, String code, String cID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_FLAG", flag);
+		map.put("v_CODE", code);
+		map.put("v_C_ID", cID);
+		
+		ezCommunityDAO.okNoSet(map);
 	}
 
 	@Override
-	public String sortXML(String pXML, String pSortBy) throws Exception{
-		String temp = "1";
-		String[] sortInfo = new String[1000];
-		int iCount = 0;
+	public String todayCopGet1() throws Exception {
+		return ezCommunityDAO.todayCopGet1();
+	}
+
+	@Override
+	public CommunityClubVO todayCopGet2(int num) throws Exception {
+		return ezCommunityDAO.todayCopGet2(num);
+	}
+
+	@Override
+	public String todayCopGet3(String c_Cate, String type) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		while(iCount < 1000){
-			temp = extractString(pXML, "<ROW>", "</ROW>");
-			
-			if(!temp.equals("")){
-				String sortNum = extractString(temp, "<" + pSortBy + ">", "</" + pSortBy + ">").replace("<" + pSortBy + ">", "").replace("</" + pSortBy + ">", "").trim();
-				
-				while(sortNum.length() < 4){
-					sortNum = "0" + sortNum;
-				}
-				
-				sortInfo[iCount] = sortNum + temp;
-				pXML = pXML.replace(temp, "");
-			}
-			
-			iCount++;
-		}
+		map.put("v_CATE", c_Cate);
+		map.put("v_TYPE", type);
 		
-		Arrays.sort(sortInfo);
+		return ezCommunityDAO.todayCopGet3(map);
+	}
+
+	@Override
+	public String categoryListItemCntGet(String c_ClubNo) throws Exception {
+		return ezCommunityDAO.categoryListItemCntGet(c_ClubNo);
+	}
+
+	@Override
+	public List<CommunityCCategoryVO> mainPageGet4(String cat) throws Exception {
+		return ezCommunityDAO.mainPageGet4(cat);
+	}
+
+	@Override
+	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		StringBuilder sb = new StringBuilder("<DATA>");
+		map.put("v_PC_CAT", c_Code);
+		map.put("v_CAT", cat);
 		
-		for(String info : sortInfo){
-			sb.append(info.substring(4));
-		}
+		return ezCommunityDAO.mainPageCategory(map);
+	}
+
+	@Override
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		sb.append("</DATA>");
+		map.put("v_PC_CAT", type);
+		map.put("v_CAT", mode);
+		map.put("v_PSTART", startRow);
+		map.put("v_PEND", endRow);
 		
-		return sb.toString();
-	}*/
+		return ezCommunityDAO.categoryListGet(map);
+	}
+
+	@Override
+	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SEARCHNAME", search);
+		map.put("v_SEARCHVALUE", keyword);
+		map.put("v_PSTART", startRow);
+		map.put("v_PEND", endRow);
+		map.put("v_MODE", mode);
+		
+		return ezCommunityDAO.searchCop(map);
+	}
+
 
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5291,4 +5283,132 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         
         FileCopyUtils.copy(orgFile, destFile);
 	}
+	
+	
+	/*public void SndMail(string code)
+	{
+        try
+        {
+            string PositionNM = userinfo.Title;			//  직위
+            string DeptNM = userinfo.DeptName;		//  부서명
+            string CompanyNM = userinfo.CompanyName;		//  회사명
+            string mailSendServer = "\"" + userinfo.DisplayName + "\" <" + userinfo.Email + ">";
+            string strSql = "";
+
+
+#if USE_MSSQL
+            SqlConnection conn2 = new SqlConnection(GetSystemConfigValue("ezCommunity"));
+            SqlCommand comm2 = new SqlCommand("EZSP_COMM_OUT_OK_GET2", conn2);
+            comm2.CommandType = CommandType.StoredProcedure;
+            comm2.Parameters.Add("@CODE", SqlDbType.NChar, 20).Value = code;
+            comm2.Parameters.Add("@USERINFO_LANG", SqlDbType.NChar, 1).Value = GetMultiData(userinfo.lang);
+            conn2.Open();
+            SqlDataReader EMailRS = comm2.ExecuteReader();
+#elif USE_ORACLE
+            OracleConnection conn2 = new OracleConnection(GetSystemConfigValue("ezCommunityOra"));
+            OracleCommand comm2 = new OracleCommand("EZSP_COMM_OUT_OK_GET2", conn2);
+            comm2.CommandType = CommandType.StoredProcedure;
+            comm2.Parameters.Add("v_CODE", OracleType.NChar, 20).Value = code;
+            comm2.Parameters.Add("v_USERINFO_LANG", OracleType.NChar, 1).Value = GetMultiData(userinfo.lang);
+            comm2.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
+            conn2.Open();
+            OracleDataReader EMailRS = comm2.ExecuteReader();
+#endif
+            while (EMailRS.Read())
+            {
+                if (EMailRS["EMail"].ToString() != "")
+                {
+                    string CommunityUser = "\"" + EMailRS["UserName"].ToString() + "\" <" + EMailRS["EMail"].ToString() + ">";
+                    string content = "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] " + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t587") + "< " + reason + " > " + RM.GetString("t721");
+                    string strXML = "<DATA>";
+                    strXML += "<FROM><![CDATA[" + mailSendServer + "]]></FROM>";
+                    strXML += "<TO><![CDATA[" + CommunityUser + "]]></TO>";
+                    strXML += "<CC></CC>";
+                    strXML += "<BCC></BCC>";
+                    strXML += "<SUBJECT><![CDATA[" + "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] Community" + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t722") + "]]></SUBJECT>";
+                    strXML += "<BODY><![CDATA[" + content + "]]></BODY>";
+                    strXML += "</DATA>";
+
+                    // 2011.06 : 메일 노티 페이지 변경
+                    string WebServerName = Server.MachineName;
+                    string url = Request.Url.Scheme + "://" + WebServerName + "/myoffice/ezEmail/remote/mail_send_noti.aspx";
+
+                    string[] HeaderOption = new string[10];
+                    HeaderOption[0] = "Authorization\n" + Request.ServerVariables["HTTP_AUTHORIZATION"];
+                    HeaderOption[1] = "Content-Type\ntext/xml; charset=utf-8";
+                    HeaderOption[2] = "Accept-Language\nutf-8";
+
+                    string rtnStatus = "";
+                    Stream ResponseStream = null;
+                    long StreamSize = 0;
+
+                    if (ExecuteWebURL("POST", url, strXML, HeaderOption, ref rtnStatus, ref ResponseStream, ref StreamSize))
+                    {
+                        if (ResponseStream != null) { ResponseStream.Close(); }
+                        if (ResponseStream != null) { ResponseStream = null; }
+                    }
+                }
+            }
+            conn2.Close();
+            comm2.Dispose();
+            conn2.Dispose();
+        }
+        catch (Exception ex)
+        {
+            WriteTextLog("ezcomm_comm_out_ok", "SndMail", ex.ToString());
+        }
+	}*/
+	
+	
+/*	@Override
+	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
+		int pos1 = pSource.indexOf(pStarts);
+		int pos2 = pSource.indexOf(pEnds, pos1 + pStarts.length());
+		
+		if(pos1 == -1){
+			return "";
+		}
+		if(pos2 == -1){
+			return "";
+		}
+		
+		return pSource.substring(pos1, pos2 - pos1 + pEnds.length());
+	}
+
+	@Override
+	public String sortXML(String pXML, String pSortBy) throws Exception{
+		String temp = "1";
+		String[] sortInfo = new String[1000];
+		int iCount = 0;
+		
+		while(iCount < 1000){
+			temp = extractString(pXML, "<ROW>", "</ROW>");
+			
+			if(!temp.equals("")){
+				String sortNum = extractString(temp, "<" + pSortBy + ">", "</" + pSortBy + ">").replace("<" + pSortBy + ">", "").replace("</" + pSortBy + ">", "").trim();
+				
+				while(sortNum.length() < 4){
+					sortNum = "0" + sortNum;
+				}
+				
+				sortInfo[iCount] = sortNum + temp;
+				pXML = pXML.replace(temp, "");
+			}
+			
+			iCount++;
+		}
+		
+		Arrays.sort(sortInfo);
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		
+		for(String info : sortInfo){
+			sb.append(info.substring(4));
+		}
+		
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}*/
+
 }

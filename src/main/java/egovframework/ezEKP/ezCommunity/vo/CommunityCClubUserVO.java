@@ -33,6 +33,8 @@ public class CommunityCClubUserVO {
 	String companyID;
 	/** 사용자이름*/
 	String userName;
+	/** 사용자이름(다국어)*/
+	String userName2;
 	public String getC_clubNo() {
 		return c_clubNo;
 	}
@@ -129,4 +131,11 @@ public class CommunityCClubUserVO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	
 }
