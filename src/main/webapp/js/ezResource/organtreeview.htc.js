@@ -1320,57 +1320,119 @@ function organtreeview(thisobjid, elobjid) {
         		
         (function() {
             // IE
-        	//var bimageNodes = SelectSingleNodeValue(g_configXML, "baseimage").childNodes;
-            //var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
-        	var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
-            var protocol = window.location.protocol;
-            var serverName = window.location.hostname;
+        	if(navigator.userAgent.indexOf('MSIE') == -1){  //IE11
+        	 	//var bimageNodes = SelectSingleNodeValue(g_configXML, "baseimage").childNodes;
+                //var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+            	var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
+                var protocol = window.location.protocol;
+                var serverName = window.location.hostname;
 
-            var downloadPath = "";
-alert("length:"+bimageNodes.length);
-            for (var i = 0; i < bimageNodes.length; i++) {
-                //g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
-                g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].attributes.getNamedItem("path").substr(bimageNodes[i].getAttribute("path").lastIndexOf("/") + 1);
-                //downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
-                downloadPath = protocol + "//" + serverName + bimageNodes[i].getAttribute("path");
-                g_baseImage[bimageNodes.item(i).nodeName] = downloadPath;
-                //for (var i=0; i<bimageNodes.length; i++)
-                //{	
-                //	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-                //	g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
-                //	var imagePath = ezUtil.GetTemporaryFilename2("");
-                //	imagePath = imagePath.substr(0, imagePath.length-4) + g_baseImageName[bimageNodes.item(i).nodeName];
-                //	ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + bimageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
-                //	g_baseImage[bimageNodes.item(i).nodeName] = "file://" + imagePath;
-            }
+                var downloadPath = "";
+                for (var i = 0; i < bimageNodes.length; i++) {
+                	if(bimageNodes.item(i).nodeType == 1){
+                		//g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
+                        g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].getAttribute("path").substr(bimageNodes[i].getAttribute("path").lastIndexOf("/") + 1);
+                    	//g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].path.substr(bimageNodes[i].path.lastIndexOf("/") + 1);
+                        //downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
+                        downloadPath = protocol + "//" + serverName + bimageNodes[i].getAttribute("path");
+                        g_baseImage[bimageNodes.item(i).nodeName] = downloadPath;
+                        //for (var i=0; i<bimageNodes.length; i++)
+                        //{	
+                        //	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+                        //	g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
+                        //	var imagePath = ezUtil.GetTemporaryFilename2("");
+                        //	imagePath = imagePath.substr(0, imagePath.length-4) + g_baseImageName[bimageNodes.item(i).nodeName];
+                        //	ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + bimageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
+                        //	g_baseImage[bimageNodes.item(i).nodeName] = "file://" + imagePath;	
+                	}
+                }
 
-            bimageNodes = null;
+                bimageNodes = null;
 
-            //var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
-            var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
-            for (var i = 0; i < imageNodes.length; i++) {
-                //var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-                //var imagePath = ezUtil.GetTemporaryFilename2("");
-                //imagePath = imagePath.substr(0, imagePath.length-4) + imageNodes.item(i).attributes.getNamedItem("path").text.substr(imageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
-                //ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + imageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
-                //g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = "file://" + imagePath;
-                downloadPath = protocol + "//" + serverName + imageNodes.item(i).attributes.getNamedItem("path").text;
-                g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = downloadPath;
-            }
+                //var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+                var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
+                for (var i = 0; i < imageNodes.length; i++) {
+                    //var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+                    //var imagePath = ezUtil.GetTemporaryFilename2("");
+                    //imagePath = imagePath.substr(0, imagePath.length-4) + imageNodes.item(i).attributes.getNamedItem("path").text.substr(imageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
+                    //ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + imageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
+                    //g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = "file://" + imagePath;
+                	
+                    //downloadPath = protocol + "//" + serverName + imageNodes.item(i).attributes.getNamedItem("path").text;
+                	if(imageNodes.item(i).nodeType == 1){
+                		downloadPath = protocol + "//" + serverName + imageNodes[i].getAttribute("path");
+                        //g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = downloadPath;
+                        g_images[imageNodes[i].getAttribute("idx")] = downloadPath;
+                	}
+                }
 
-            imageNodes = null;
+                imageNodes = null;
 
-            //var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
-            var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
-            for (var i = 0; i < classNodes.length; i++)
-                g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+                //var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+                var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
+                for (var i = 0; i < classNodes.length; i++)
+                	if(classNodes.item(i).nodeType == 1){
+                		//g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+                    	g_baseClass[classNodes.item(i).nodeName] = classNodes[i].getAttribute("name");
+                	}
+                classNodes = null;
 
-            classNodes = null;
+                /*g_imageWidth = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("width").text;
+                g_imageHeight = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("height").text;*/
+                g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
+                g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+        	} else {
+        		var bimageNodes = SelectSingleNodeValue(g_configXML, "baseimage").childNodes;
+        		var protocol = window.location.protocol;
+                var serverName = window.location.hostname;
 
-            /*g_imageWidth = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("width").text;
-            g_imageHeight = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("height").text;*/
-            g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
-            g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+                var downloadPath = "";
+                for (var i = 0; i < bimageNodes.length; i++) {
+                    g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/") + 1);
+                    //g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].getAttribute("path").substr(bimageNodes[i].getAttribute("path").lastIndexOf("/") + 1);
+                	//g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes[i].path.substr(bimageNodes[i].path.lastIndexOf("/") + 1);
+                    downloadPath = protocol + "//" + serverName + bimageNodes.item(i).attributes.getNamedItem("path").text;
+                    //downloadPath = protocol + "//" + serverName + bimageNodes[i].getAttribute("path");
+                    g_baseImage[bimageNodes.item(i).nodeName] = downloadPath;
+                    //for (var i=0; i<bimageNodes.length; i++)
+                    //{	
+                    //	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+                    //	g_baseImageName[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text.substr(bimageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
+                    //	var imagePath = ezUtil.GetTemporaryFilename2("");
+                    //	imagePath = imagePath.substr(0, imagePath.length-4) + g_baseImageName[bimageNodes.item(i).nodeName];
+                    //	ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + bimageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
+                    //	g_baseImage[bimageNodes.item(i).nodeName] = "file://" + imagePath;
+                }
+
+                bimageNodes = null;
+
+                var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+                //var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
+                for (var i = 0; i < imageNodes.length; i++) {
+                    //var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+                    //var imagePath = ezUtil.GetTemporaryFilename2("");
+                    //imagePath = imagePath.substr(0, imagePath.length-4) + imageNodes.item(i).attributes.getNamedItem("path").text.substr(imageNodes.item(i).attributes.getNamedItem("path").text.lastIndexOf("/")+1);
+                    //ezUtil.DownloadToFile(window.location.protocol + "//" + g_serverName + imageNodes.item(i).attributes.getNamedItem("path").text, imagePath)
+                    //g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = "file://" + imagePath;
+                    downloadPath = protocol + "//" + serverName + imageNodes.item(i).attributes.getNamedItem("path").text;
+                    g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = downloadPath;
+                }
+
+                imageNodes = null;
+
+                var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+                //var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
+                for (var i = 0; i < classNodes.length; i++)
+                    g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+
+                classNodes = null;
+
+                g_imageWidth = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("width").text;
+                g_imageHeight = g_configXML.getElementByTagName("tree/config/size").attributes.getNamedItem("height").text;
+                //g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
+                //g_imageHeight = g_configXML.getElements
+        	}
+       
             
         }).call(this);
     }
