@@ -344,7 +344,7 @@
 	            param["href"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 	            mail_import_cross_dialogArguments[0] = param;
 	            mail_import_cross_dialogArguments[1] = mail_import_Complete;
-	            var OpenWin = window.open("/myoffice/ezEmail/htm/mail_import_cross.aspx", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
+	            var OpenWin = window.open("/ezEmail/mailImport.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function mail_import_Complete() {

@@ -1,13 +1,18 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,10 +23,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -383,5 +393,128 @@ public class EzEmailMenuController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * PC에서 메일 가져오기 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailImport.do")
+	public String mailImport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String pNonActivX = "YES";
+		model.addAttribute("pNonActivX", pNonActivX);
 
+		return "ezEmail/mailImport";
+	}
+	
+	/**
+	 * PC에서 메일 가져오기 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailImportUpload.do")
+	public String mailImportUpload(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, MultipartHttpServletRequest request) throws Exception{
+		String strResult = "ERROR";
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		List<MultipartFile> multiFile = request.getFiles("file1");
+		String folderId = request.getParameter("folderid");
+		String cnt = request.getParameter("cnt");
+		
+		if (multiFile != null) {
+			
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password);
+			
+			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(folderId);
+			if (folder != null && folder.exists()) {
+				folder.open(Folder.READ_WRITE);
+				
+				Message[] messages = new Message[multiFile.size()];
+				
+				for (int i=0; i<multiFile.size(); i++) {
+					InputStream inputStream = multiFile.get(i).getInputStream();
+					MimeMessage message = sa.readMimeMessage(inputStream);
+					inputStream.close();
+					
+					if (message != null) {
+						messages[i] = message;
+					}
+				}
+				
+				folder.appendMessages(messages);
+				folder.close(true);
+				
+				strResult = "OK";
+			}
+			ia.close();
+		}
+		
+		model.addAttribute("strResult", strResult);
+		return "ezEmail/mailImportUpload";
+	}
+	
+	/**
+	 * PC에 메일 저장하기 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailExport.do")
+	public void mailExport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		String url = request.getParameter("url");
+		long uid = 0;
+		String folderPath = null;
+		
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+			
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+		
+		String filename = request.getParameter("filename");
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		Folder folder = ia.getFolder(folderPath);
+		
+		String mimetype = "message/rfc822";	
+		response.setContentType(mimetype);
+		response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8").replaceAll("\\+","\\ ") + ";");
+		
+		if (folder != null && folder.exists()) {
+			folder.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+			
+			if (message != null) {
+				OutputStream outputStream = null;
+				try{
+					response.setContentLength(message.getSize());
+					
+					outputStream = response.getOutputStream();
+					message.writeTo(outputStream);
+					
+				} catch(IOException e){
+				} finally {
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			}
+			
+			folder.close(true);
+		}
+		
+		ia.close();
+		
+	}
+	
 }

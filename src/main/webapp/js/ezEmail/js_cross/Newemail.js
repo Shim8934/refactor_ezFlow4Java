@@ -1174,7 +1174,7 @@ function PC_Eml_FileDownload() {
         if (tmp.indexOf("&lt;br/&gt;&lt;span id='_mailpreview'") != -1) // 추가 (safari)
             tmp = tmp.substring(0, tmp.indexOf("&lt;br/&gt;&lt;span id='_mailpreview'"));
         var pItemSubject = tmp + ".eml";
-        var fullpath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_readattach.aspx?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURI(pItemSubject);
+        var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURI(pItemSubject);
         AttachDownFrame.location.href = fullpath;
         AttachDownFrame.target = "_blank"
         suffix++;
