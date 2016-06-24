@@ -686,7 +686,7 @@
 	
 	    function ChangeSenderName(obj) {
 	        if (obj.value != "NONE")
-	            g_showdisplay = "";
+	            g_showdisplay = obj.value;
 	        else
 	            g_showdisplay = "";
 	    }

@@ -72,6 +72,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -270,31 +271,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		
 		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
 
-//		OracleCommand comd = new OracleCommand("EZSP_GETMAILGENERAL");
-//		comd.CommandType = CommandType.StoredProcedure;
-//		comd.Parameters.Add("v_PUSERID", OracleType.VarChar, 20).Value = userinfo.UserID;
-//		comd.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
-//		string infoXML = GetQueryResultSP(ref comd, false);
-//		comd.Dispose();
-//		comd = null;
-//
-//		XmlDocument xmlDoc = new XmlDocument();
-//		xmlDoc = GetXmlReaderString(infoXML);
-//		if (xmlDoc.InnerText == "")
-		pAutoSaveTime = "0";
-//		else
-//			pAutoSaveTime = xmlDoc.SelectSingleNode("DATA/KEEPDELETELENGTH").InnerText.Trim();
-
-//		string _PmailSenderNM = xmlDoc.SelectNodes("DATA/MAILSENDERNM").Count > 0 ?
-//				string.IsNullOrEmpty(xmlDoc.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ?
-//						userinfo.DisplayName2 : xmlDoc.SelectSingleNode("DATA/MAILSENDERNM").InnerText : userinfo.DisplayName2;
-//		string[] DivStrstr = new string[] { "|!-@-!|" };
-//		string[] SenderList = _PmailSenderNM.Split(DivStrstr, StringSplitOptions.RemoveEmptyEntries);
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
+		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
+		
+		//TODO: userinfo.DisplayName2 가져오기.
+		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
+		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
+		
+		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
-//		foreach (string pSenderNM in SenderList)
-//		{
-//			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
-//		}
+		for (String pSenderNM : senderList) {
+			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+		}
 		
 		String _cmd = "";
 		if (request.getParameter("cmd") != null) {
@@ -1882,10 +1870,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	            rtnStatus = "OK";
 	        } else {                        
 	            if (!eShowDisplayName.equals("")) {
-	            	//eShowDisplayName = Base64Encode(eShowDisplayName);
-	                //message.SetExtendedProperty(new ExtendedPropertyDefinition(DefaultExtendedPropertySet.InternetHeaders, "X-NEW-DISPLAYNAME", MapiPropertyType.String), eShowDisplayName);
+	            	eShowDisplayName = MimeUtility.encodeText(eShowDisplayName, "UTF-8", null);
+	            	message.setHeader("X-NEW-DISPLAYNAME", eShowDisplayName);
 	            }
-	            //message.Update(ConflictResolutionMode.AlwaysOverwrite);
 	
 	//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
 	//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);

@@ -141,10 +141,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		//TODO: userinfo.DisplayName2 가져오기.
-		String pmailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
+		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
 		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
 		
-		String[] senderList = pmailSenderNM.split("\\|!\\-@\\-!\\|");
+		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (String pSenderNM : senderList) {
 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
 		}
