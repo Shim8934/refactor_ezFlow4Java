@@ -235,7 +235,7 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList){
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint){
 		List<String> resultList = new ArrayList<String>();
 		
 		try {
@@ -270,10 +270,17 @@ public class EzEmailUtil {
 					attachedFileList.add(attachedFileInfo);
 				}
 				
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-				pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+				if (forPrint) {
+					pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+					pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
+					pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+				} else {
+					String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+					pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+				}
+				
 				isAttach = "OK";
 				filesize = (Double.parseDouble(filesize) + size) + "";
 				filecnt = (Integer.parseInt(filecnt) + 1) + "";
@@ -334,7 +341,7 @@ public class EzEmailUtil {
 					p = mp.getBodyPart(i);
 					logger.debug("contentType=" + p.getContentType());
 					if(!p.isMimeType("text/plain")){
-						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -358,7 +365,7 @@ public class EzEmailUtil {
 				Part p = null;
 				for (int i = 0; i < count; i++) {
 					p = mp.getBodyPart(i);
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -373,7 +380,7 @@ public class EzEmailUtil {
 				for(int i = 0; i < count; i++) {
 					Part p = mp.getBodyPart(i);
 					if(!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))){
-						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -388,7 +395,7 @@ public class EzEmailUtil {
 				int count = mp.getCount();
 				for(int i = 0; i < count; i++) {
 					Part p = mp.getBodyPart(i);
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -406,9 +413,17 @@ public class EzEmailUtil {
 				String filename = nestedMessage.getSubject();
 				filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-				pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+				
+				if (forPrint) {
+					pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+					pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
+					pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+				} else {
+					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+					pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+				}
+				
 				isAttach = "OK";
 				filesize = (Double.parseDouble(filesize) + size) + "";
 				filecnt = (Integer.parseInt(filecnt) + 1) + "";				

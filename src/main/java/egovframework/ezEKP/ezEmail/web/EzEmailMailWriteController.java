@@ -405,7 +405,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					
 					// analyze the message and retrieve the attached file list.
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
 					tempBody = bodyInfoList.get(0);
 					
 					if (attachedFileList.size() > 0) {
@@ -497,7 +497,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					subject = (subject != null) ? subject : "";
 	        		
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
 					bodyValue = bodyInfoList.get(0);
 	        		
 	        		if (attachedFileList.size() > 0) {
@@ -640,7 +640,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					
 					// analyze the message and retrieve the attached file list.
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList);					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
 					String tmphtmlbody = bodyInfoList.get(0);
 		            
 		            bodyValue = sb.toString() + tmphtmlbody;

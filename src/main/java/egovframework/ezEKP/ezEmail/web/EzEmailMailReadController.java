@@ -382,7 +382,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
 				double size = Double.parseDouble(bodyInfoList.get(2));
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -453,7 +453,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
 			}
 		}
 		
@@ -871,7 +871,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				message = ((IMAPFolder)f).getMessageByUID(uid);
 			}
 			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
 				double size = Double.parseDouble(bodyInfoList.get(2));
 				String strSize = ezEmailUtil.getSizeWithUnit(size);
 				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -978,7 +978,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				pSubject = message.getSubject() == null ? "" : message.getSubject();
 				
-				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null);
+				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true);
 				pBody = bodyInfoList.get(0);
 				pAttachListHtml = bodyInfoList.get(1);
 				
