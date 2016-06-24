@@ -36,7 +36,7 @@
 		        TreeView.attachEvent('nodedblclick', TreeView_onNodeDblClick);
 
 		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/ezResource/organtree_config2.xml", false);
+		        xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
 		        xmlHTTP.send();
 
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
