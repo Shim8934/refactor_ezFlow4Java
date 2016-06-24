@@ -66,7 +66,24 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		ezEmailDAO.setMailGeneral(map);		
 	}
-	
+
+	@Override
+	public void setMailGeneral2(String userId, MailGeneralVO mailGeneral) throws Exception {
+Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userId);
+		map.put("v_PLISTCNT", mailGeneral.getListCount());
+		map.put("v_PREFRESHINTERVAL", mailGeneral.getRefreshInterval());
+		map.put("v_PKEEPDELETELENGTH", mailGeneral.getKeepDeleteLength());
+		map.put("v_PREVIEWMODE", mailGeneral.getPreviewMode());
+		map.put("v_PREVIEWWLIST", mailGeneral.getPreviewWList());
+		map.put("v_PREVIEWWCONTENT", mailGeneral.getPreviewWContent());
+		map.put("v_PREVIEWHLIST", mailGeneral.getPreviewHList());
+		map.put("v_PREVIEWHCONTENT", mailGeneral.getPreviewHContent());
+		map.put("v_MAILSENDERNM", mailGeneral.getMailSenderNm());
+		
+		ezEmailDAO.setMailGeneral2(map);	
+	}
 	@Override
 	public MailSignatureVO getMailSignature(String pUserID, String pIsUse) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

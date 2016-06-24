@@ -27,7 +27,7 @@
 		        });
 		       
                 xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_get_use.aspx", true);
+                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
                 xmlhttp.onreadystatechange = detailbox_after;
                 xmlhttp.send();
 		    }
@@ -87,7 +87,7 @@
 			    }
 
 				var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-				xmlHTTP.open("POST", "mail_general_save.aspx?MODE=ALL", false );
+				xmlHTTP.open("POST", "/ezEmail/mailGeneralSave.do?MODE=ALL", false );
 				xmlHTTP.setRequestHeader("Accept-Language:","ko");
 				xmlHTTP.setRequestHeader("Content-type:", "text/xml");
 				xmlHTTP.send(
@@ -374,9 +374,7 @@
 		  <tr>
 		      <th><spring:message code='ezEmail.t99000032' /></th>
 		      <td>
-		          <select style="width:300px;height:20px;" id="ExtSenderNM">
-		              ${mailSendObject}
-		          </select>
+		          <select style="width:300px;height:20px;" id="ExtSenderNM">${mailSendObject}</select>
 		          <a class="imgbtn" onclick="MailOutNameModify();"><span><spring:message code='ezEmail.t149' /></span></a>
 		      </td>
 		  </tr>

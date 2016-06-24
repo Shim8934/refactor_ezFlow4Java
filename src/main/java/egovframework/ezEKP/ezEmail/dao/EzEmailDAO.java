@@ -26,6 +26,10 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		update("EzEmailDAO.setMailGeneral", map);
 	}
 	
+	public void setMailGeneral2(Map<String, Object> map) throws Exception {
+		update("EzEmailDAO.setMailGeneral2", map);
+	}
+	
 	public MailSignatureVO getMailSignature(Map<String, Object> map) throws Exception {
 		return (MailSignatureVO)select("EzEmailDAO.getMailSignature", map);
 	}

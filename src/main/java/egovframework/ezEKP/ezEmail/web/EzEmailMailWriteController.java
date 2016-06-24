@@ -1491,27 +1491,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 		}
 		
+		if (root.getElementsByTagName("SHOW-DISPLAYNAME") != null) {
+			tempNode = root.getElementsByTagName("SHOW-DISPLAYNAME").item(0);
+			if (tempNode != null) {
+				eShowDisplayName = tempNode.getTextContent();
+			}
+		}
+		
 //		// 다국어 발송 관련 변수들
 //      string eCharSet = xmlDoc.GetElementsByTagName("CHARSET").Item(0).InnerText;
 //      string eContentTransferEncoding = xmlDoc.GetElementsByTagName("CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
 //      string eSimpleMIME = xmlDoc.GetElementsByTagName("SIMPLE-MIME").Item(0).InnerText;
 //      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
-//      string eShowDisplayName = xmlDoc.GetElementsByTagName("SHOW-DISPLAYNAME").Item(0).InnerText;
-        
-//		string newwindowid = url;
-//      string messageid; 
-//		//messageid로 메시지 있으면 가져오고 없으면 새로운 message객체 생성.
-//      EmailMessage message = apiesb.getemailmessage(esb, newwindowid, out messageid);
-//		if (cmd.Equals("SAVE") && url != "")
-//        {
-//            bool isdraftmsg = message.IsDraft;
-//            if (!isdraftmsg)
-//            {
-//                message = apiesb.getemailmessage(esb, "", out messageid);
-//            }
-//        }
-		
-		
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password);
@@ -1718,7 +1709,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
         logger.debug("url=" + url);
         long uid = 0;
-                
+        
         // merge the existing message in the Drafts folder into a new message.
         Message oldMessage = null;
         if (!url.trim().equals("")) {

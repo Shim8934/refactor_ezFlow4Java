@@ -125,35 +125,25 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
-
-		String listCount = "";
-		String previewMode = "OFF";
-		String previewHListSize = "50";
-		String previewHContentSize = "50";
-		String previewWListSize = "50";
-		String previewWContentSize = "50";
-		String refreshInterval = "";
-		String keepDeleteLength = "";
+		
+		String listCount = mailGeneralVO.getListCount() == null ? "" : mailGeneralVO.getListCount();
+		String previewMode = mailGeneralVO.getPreviewMode() == null ? "OFF" : mailGeneralVO.getPreviewMode();
+		String previewHListSize = mailGeneralVO.getPreviewHList() == null ? "50" : mailGeneralVO.getPreviewHList();
+		String previewHContentSize = mailGeneralVO.getPreviewHContent() == null ? "50" : mailGeneralVO.getPreviewHContent();
+		String previewWListSize = mailGeneralVO.getPreviewWList() == null ? "50" : mailGeneralVO.getPreviewWList();
+		String previewWContentSize = mailGeneralVO.getPreviewWContent() == null ? "50" : mailGeneralVO.getPreviewWContent();
+		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
+		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String mailSendObject = "";
-
-		listCount = mailGeneralVO.getListCount();
-		previewMode = mailGeneralVO.getPreviewMode();
-		previewHListSize = mailGeneralVO.getPreviewHList();
-		previewHContentSize = mailGeneralVO.getPreviewHContent();
-		previewWListSize = mailGeneralVO.getPreviewWList();
-		previewWContentSize = mailGeneralVO.getPreviewWContent();
-		refreshInterval = mailGeneralVO.getRefreshInterval();
-		keepDeleteLength = mailGeneralVO.getKeepDeleteLength();
-		mailSendObject = "";
 
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
-
+		
 		//TODO: userinfo.DisplayName2 가져오기.
 		String pmailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
 		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
-
+		
 		String[] senderList = pmailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (String pSenderNM : senderList) {
 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
@@ -185,9 +175,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			Model model) throws Exception {
 		logger.debug("mailGeneralSave started");		
 		logger.debug("bodyData=" + bodyData);
-
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userInfo.get(0);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String userId = doc.getElementsByTagName("USERID").item(0).getTextContent();
+		
 		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
 		String refreshInterval = doc.getElementsByTagName("REFRESHINTERVAL").item(0).getTextContent();
 		String keepDeleteLength = doc.getElementsByTagName("KEEPDELETELENGTH").item(0).getTextContent();
@@ -222,9 +215,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewWContent(previewWContent);
 			mailGeneral.setPreviewHList(previewHList);
 			mailGeneral.setPreviewHContent(previewHContent);	
-			mailGeneral.setMailSenderNm(mailSenderNm);
-
-			ezEmailService.setMailGeneral(userId, mailGeneral);
+			
+			if (mode != null && mode.equals("ALL")) {
+				mailGeneral.setMailSenderNm(mailSenderNm);
+				ezEmailService.setMailGeneral2(userId, mailGeneral);
+			} else {
+				ezEmailService.setMailGeneral(userId, mailGeneral);
+			}
 		}
 		catch (Exception e) {
 			rtnValue = "ERROR:" + e.getMessage();
@@ -234,7 +231,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		return rtnValue;
 	}
-
+	
+	/**
+	 * 메일 기본 환경설정 내부 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailGetUse(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		//TODO: data setting
+		return "";
+	}
+	
+	
 	/**
 	 * 메일 자동 전달 설정 화면 표시 함수
 	 */
