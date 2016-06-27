@@ -369,6 +369,7 @@ public class EzResourceAdminServiceImpl implements EzResourceAdminService {
 		return returnXML;
 	}
 	
+	
 	public boolean saveACLLst(String xmlStr) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		boolean bDelete = false;
