@@ -27,7 +27,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
-	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 	
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception;
 
@@ -247,7 +247,7 @@ public interface EzCommunityService {
 
 	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
 
-	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 
 	public int bbsAdminCheck(String userID, String rollInfo) throws Exception;
 	

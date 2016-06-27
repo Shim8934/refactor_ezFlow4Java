@@ -253,7 +253,7 @@
 						break;
 						
 					case 4:
-						if (${club.c_ClubConfirmType == '3'}) {
+						if ("${club.c_ClubConfirmType == '3'}") {
 							url = "/ezCommunity/adminMemPermit.do?code=${code}";
 						} else {
 							openalert();								

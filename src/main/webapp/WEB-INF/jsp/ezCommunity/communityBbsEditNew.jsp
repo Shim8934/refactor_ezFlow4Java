@@ -26,13 +26,12 @@
 			var pGant = "<c:out value='${cBoard.no}'/>";
 			var pSradio = "<c:out value='${sRadio}'/>";
 			var pKeyword = "<c:out value='${keyword}'/>";
-			var pID = "<c:out value='${grsID}'/>";
+			var pID = "<c:out value='${cBoardVO.id}'/>";
 			var pGoToPage = "<c:out value='${pagec}'/>";
 			var pNowBlock = "<c:out value='${block}'/>";
 			var pRef = "<c:out value='${gref}'/>";
 			var pStep  = "<c:out value='${step}'/>";
 			var pLevel = "<c:out value='${level}'/>";
-			var pName  = "<c:out value='${userInfo.id}'/>";
 			var pCode  = "<c:out value='${code}'/>";	
 			var pBname  = "<c:out value='${bName}'/>";	
 			var pUserNM = "<c:out value='${userInfo.displayName1}'/>";
@@ -98,7 +97,7 @@
                     } else {
 // 					    tbContentElement.editor.DOM.body.innerHTML = '<div style=\"font-family: <spring:message code = "ezCommunity.t150"/> \">' + i_mhtml.htmlData + '</div>';
                     }
-                    
+
 					var retVal = tbContentElement.editor.DOM.body.createTextRange();
 					retVal.collapse(true);
 					retVal.select();

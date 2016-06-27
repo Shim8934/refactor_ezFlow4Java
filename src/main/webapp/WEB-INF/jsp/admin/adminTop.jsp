@@ -36,7 +36,7 @@
 					    parent.frames["bottom"].location.href = "/admin/ezBoard/boardMain.do";
 						break;
 					case "menu07":		
-					    parent.frames["bottom"].location.href = "/Myoffice/ezCommunity/admin/default_1.aspx";
+					    parent.frames["bottom"].location.href = "/admin/ezCommunity/main.do";
 						break;
 					case "menu08":		
 					    parent.frames["bottom"].location.href = "index_schedule.aspx";

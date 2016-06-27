@@ -77,8 +77,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityCBoardVO> getBBSListGet2(Map<String, Object> map) throws Exception {
-		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getBBSListGet2", map);
+	public List<CommunityCBoardVO> bbsListGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityCBoardVO>) list("EzCommunityDAO.bbsListGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -609,8 +609,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) map.get("v_pCount");
 	}
 	
-	public Integer getBBSListGet1(Map<String, Object> map) throws Exception {
-		select("EzCommunityDAO.getBBSListGet1", map);
+	public Integer bbsListGet1(Map<String, Object> map) throws Exception {
+		select("EzCommunityDAO.bbsListGet1", map);
 		return (Integer) map.get("v_pCount");
 	}
 	

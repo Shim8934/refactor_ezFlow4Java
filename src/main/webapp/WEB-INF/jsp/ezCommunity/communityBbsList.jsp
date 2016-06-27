@@ -248,7 +248,7 @@
 			}
 			
 			function btn_list(bname) {
-				url = "/ezCommunity/board/bbsList.do?bName=${bName}";
+				url = "/ezCommunity/board/bbsList.do?bName=<c:out value = '${bName}' />";
 				location.href = url;
 			}
 		</script>

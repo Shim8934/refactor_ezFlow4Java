@@ -19,6 +19,10 @@ public class CommunityCComCloseVO {
 	String closeState;
 	/** 폐쇄상태(다국어)*/
 	String closeState2;
+	/** 사용자ID*/
+	String userName;
+	/** 사용자ID(다국어)*/
+	String userName2;
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}
@@ -73,4 +77,17 @@ public class CommunityCComCloseVO {
 	public void setCloseState2(String closeState2) {
 		this.closeState2 = closeState2;
 	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	
 }

@@ -27,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,10 +68,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-/**
- * @author DC363
- *
- */
+
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl implements EzCommunityService{
 	@Resource(name="EzCommunityDAO")
@@ -117,9 +112,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 /*		String pRootBoardID = "top";
 		String pSubFlag = "0";
 		int pSelectBy = 0;
-		String pExcludeBoardID = "";
-		Document xmlret;
-        Document xmlcop;*/
+		String pExcludeBoardID = "";*/
         boolean checkSysop = false;
         //TODO 사용하는곳이 없음
 //        boolean	joinFlag = false;
@@ -169,10 +162,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         		checkSysop = true;
         	}
         }
-
-        //TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-        /*String rtnVal = commonUtil.getQueryResult(ezCommunityService.leftCommunityGet3(userInfo.getID()));
-		xmlcop = commonUtil.convertStringToDocument(rtnVal);*/
 		
 		model.addAttribute("userLevel",userLevel);
 		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
@@ -180,7 +169,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		model.addAttribute("checkSysop",checkSysop);
 	}
 
-	
 	@Override
 	public String getLeftCommunity(LoginVO userInfo) throws Exception {
 		String userID = "";
@@ -423,7 +411,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, fileSize);
 		}
 		
-		//배너파일 생성
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
 		if (!cClubBanner.isEmpty()) {
 			fileName = code;
@@ -817,7 +804,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("strXML", strXML);
 	}
-
 	
 	@Override
 	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, ModelMap model) throws Exception {
@@ -873,7 +859,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		model.addAttribute("item", item);
 		model.addAttribute("strWriterFakeName", strWriterFakeName);
 	}
-
 
 	@Override
 	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1063,7 +1048,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		model.addAttribute("pVersionUse", pVersionUse);
 	}
 
-
 	@Override
 	public String confirmPassword(String itemID, String newPassword) throws Exception {
 		String prm = egovFileScrty.getPrm();
@@ -1082,9 +1066,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			return "NO";
 		}
 	}
-
 	
-
 	@Override
 	public String pollMain(LoginVO userInfo, String code) throws Exception {
 		String pollState = "", pollManager = "";
@@ -1249,7 +1231,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return sb.toString();
 	}
 
-
 	@Override
 	public void pollAddGo(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String questionID = "";
@@ -1264,8 +1245,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String selectedNo = request.getParameter("selectedNo");
 		String answerViewType = request.getParameter("answerViewType");
 		String answerCount = request.getParameter("answerCount");
-		
-		
+				
 		switch (mode) {
 			case "write" :
 				int maxNo = Integer.parseInt(ezCommunityDAO.pollAddOkGoGet1(code));
@@ -1407,7 +1387,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
-
 
 	@Override
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1582,7 +1561,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		model.addAttribute("isSave", isSave);
 		model.addAttribute("idSpanValue", strHTML.toString());
 	}
-
 	
 	@Override
 	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception {
@@ -1647,7 +1625,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 	}
 
-
 	@Override
 	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, HttpServletResponse response) throws Exception {
 		pollEditOkUpdate(subject, startDate, endDate, managerID);
@@ -1660,8 +1637,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
-
-	
 
 	@Override
 	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception {
@@ -1710,7 +1685,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return sb.toString();
 	}
-
 
 	@Override
 	public void adminLogoOk(MultipartHttpServletRequest request) throws Exception {
@@ -1959,7 +1933,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return rtnVal.toString();
 	}
 
-
 	@Override
 	public String leftCommunityGet1(String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1991,7 +1964,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public int getBBSListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception {
+	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_BNAME", bName);
@@ -1999,11 +1972,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		
-		return ezCommunityDAO.getBBSListGet1(map);
+		return ezCommunityDAO.bbsListGet1(map);
 	}
 
 	@Override
-	public List<CommunityCBoardVO> getBBSListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception {
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_BNAME", bName);
@@ -2011,7 +1984,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		
-		return ezCommunityDAO.getBBSListGet2(map);
+		return ezCommunityDAO.bbsListGet2(map);
 	}
 
 	@Override
@@ -2391,9 +2364,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception {
 		return ezCommunityDAO.getBoardProperty(pBoardID);
-	}
-
-	
+	}	
 	
 	@Override
 	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception {
@@ -2743,7 +2714,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return sb.toString();
 	}
-	
 
 	@Override
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
@@ -2894,8 +2864,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.deleteOneLineReply(map);
 	}
 	
-	
-
 	@Override
 	public String bbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage,
 			String bName, int comNoPerPage) throws Exception {
@@ -2944,7 +2912,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				strClubRecordNo = Integer.toString(cBoard.getC_No()).trim();
 			}
 			
-			if (!bName.equals("c_clubnodice") && !bName.equals("c_notice")) {
+			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
 				if (cBoard.getRe_Level() > 0) {
 					strHTML.append("<font color=\"#A4A4A4\">" + strClubRecordNo + "</font>");
 				} else {
@@ -3012,9 +2980,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return strHTML.toString();
 	}
 	
-	
-
-
 	@Override
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
 		int myRef = 0, myStep = 0, myLevel = 0;
@@ -3230,7 +3195,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}		
 	}
 
-
 	@Override
 	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception {
 		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang()));
@@ -3272,8 +3236,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return sb.toString();
 	}
 
-	
-
 	@Override
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
 		switch (mode) {
@@ -3307,7 +3269,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return bIsMyContent;
 	}
-
 
 	@Override
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception {
@@ -3593,7 +3554,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (!cateB.equals("0")) {
 			if (caca == 1) {
-				sb.append(",&nbsp");
+				sb.append(", ");
 			}
 			
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateB, new Locale(globals.getProperty("Globals.language"))));

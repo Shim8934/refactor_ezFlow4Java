@@ -95,6 +95,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	/**
+	 * 커뮤니티 메인화면 호출함수
+	 */
 	@RequestMapping(value="/ezCommunity/communityMain.do")
 	public String  main() {
 		return "/ezCommunity/communityMain";
@@ -901,8 +904,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int prevPage = 0, nextPage = 0 , totalBlock = 0, goPage = 0;
 		int comNoPerPage = 17;
 		
-//		request.setCharacterEncoding("UTF-8");
-		
 		bName = request.getParameter("bName").toLowerCase();
 		
 		if (request.getParameter("sRadio") != null) {
@@ -919,7 +920,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		if (request.getParameter("keyword") != null) {
 			keyword = request.getParameter("keyword");
-			pKeyword = new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
 		}
 		if (request.getParameter("goToPage") != null) {
 			curPage = Integer.parseInt(request.getParameter("goToPage"));
@@ -932,7 +932,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code);
 		}
 
-		keywordCount = ezCommunityService.getBBSListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), pKeyword, sRadio);
+		keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -940,7 +940,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.getBBSListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), pKeyword, sRadio);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
 		
 		String strHTML = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 
@@ -1142,6 +1142,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("no", no);
 		model.addAttribute("pagec", pagec);
@@ -1153,9 +1154,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("grsUserName", grsUserName);
 		model.addAttribute("writerFakerName", writeFakerName);
 		model.addAttribute("fileName", fileName);
-		model.addAttribute("userInfoUserNM1", userInfo.getDisplayName1());
-		model.addAttribute("userInfoUserNM2", userInfo.getDisplayName2());
-		model.addAttribute("userInfoUserID", userInfo.getId());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("cBoard", cBoardVO);
 		model.addAttribute("step", step);
@@ -2751,7 +2749,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityJoin1";
 	}
 	
-	//TODO 2016-06-16 이효진 승인 필요한 회원가입
 	/**
 	 * 회원가입화면 호출함수
 	 */

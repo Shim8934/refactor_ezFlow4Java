@@ -38,4 +38,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGAdmin_SQL_Oracle.xml"/>
 	<!-- 자원관리 관리자-->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResourceAdmin_SQL_Oracle.xml"/>
+	<!-- 커뮤니티 관리자 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunityAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

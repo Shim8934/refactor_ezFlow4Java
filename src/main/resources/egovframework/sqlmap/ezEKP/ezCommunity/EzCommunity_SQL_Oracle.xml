@@ -125,7 +125,7 @@
 		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getBBSListGet2"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+	<procedure id="EzCommunityDAO.bbsListGet2"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET2(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -605,7 +605,7 @@
 		{CALL EZCOMMUNITY.EZSP_CHECKIFLEAFBOARD_GET(#v_pBoardID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getBBSListGet1"				parameterClass="Map"		resultClass="Integer">
+	<procedure id="EzCommunityDAO.bbsListGet1"					parameterClass="Map"		resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET1(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	

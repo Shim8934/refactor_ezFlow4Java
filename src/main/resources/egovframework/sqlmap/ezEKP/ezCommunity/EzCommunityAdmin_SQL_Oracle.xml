@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezCommunityAdmin">
+	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
+	<typeAlias alias="CommunityClubVO" 					type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
+	
+	
+	<resultMap class="CommunityCComCloseVO" id="CommunityCComClose">
+		<result property="c_ClubNo"						column="C_CLUBNO"					columnIndex="1"/>
+		<result property="closeState"					column="CLOSESTATE"					columnIndex="2"/>
+		<result property="c_ClubName"					column="C_CLUBNAME"					columnIndex="3"/>
+		<result property="userName"						column="userName"					columnIndex="4"/>
+		<result property="c_SysopID"					column="C_SYSOPID"					columnIndex="5"/>
+		<result property="applicationDate"				column="APPLICATIONDATE"			columnIndex="6"/>
+	</resultMap>
+
+	<procedure id="EzCommunityAdminDAO.aspCloseComGet1"					parameterClass="Map"			resultMap="CommunityCComClose">
+		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet1"				parameterClass="Map"			resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET1(#v_USERINFO_LANG#, #v_IQUERYCOUNT#, #v_STRSELECT#, #v_STRQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT(#v_USERINFO_LANG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer">
+		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET2(#v_USERINFO_LANG#, #v_STRSELECT#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="String"			resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="String"			resultClass="String">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommCloseAllUpdate"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_UPDATE(#v_CODE#, #v_PCLOSESTATE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet1"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet2"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET2(#v_CODE#, #v_USERINFO_LANG#, #v_USE_EZKMS#, #v_COMNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.admCommunityInfoEditOk"			parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)}
+	</procedure>
+	
+	<procedure id="EzCommunityAdminDAO.aspCommCloseAllDel"				parameterClass="String"	>
+		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_DEL(#v_CODE#)}
+	</procedure>
+	
+	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="String"			resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERNAME
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO
+			WHERE
+				RTRIM(USERID) = #v_ID#
+		]]>
+	</select>
+</sqlMap>

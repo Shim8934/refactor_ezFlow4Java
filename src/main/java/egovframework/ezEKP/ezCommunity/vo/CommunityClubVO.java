@@ -133,6 +133,10 @@ public class CommunityClubVO {
 	String description2;
 	/** 커뮤니티 검색시 커뮤니티수*/
 	int copCnt;
+	/** 마스터 이름 */
+	String userName;
+	/** 마스터 이름(다국어) */
+	String userName2;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -529,6 +533,18 @@ public class CommunityClubVO {
 	}
 	public void setCopCnt(int copCnt) {
 		this.copCnt = copCnt;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
 	}
 	
 }
