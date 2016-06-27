@@ -21,7 +21,8 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript">
-		
+			var lang = "${userInfo.lang}";
+			
 		    function windows_close() {
 		        window.close();
 		    }
@@ -98,7 +99,7 @@
 	        	} else {
 	            	try {
 		                SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
-		                EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);                              
+		                EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
 	    	        } catch (e) {
 	                	SDate = new Date(m_dlgArgs["startTime"]);
 	                	EDate = new Date(m_dlgArgs["endTime"]);
@@ -118,7 +119,7 @@
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
 	    	}
 	    	
-	    	if ("${userInfo.lang}" == "1") {
+	    	if (lang == "1") {
 	    		function datetimepicker() {
 	        		$.datepicker.regional['ko'] = {
 	            		closeText: '닫기',
