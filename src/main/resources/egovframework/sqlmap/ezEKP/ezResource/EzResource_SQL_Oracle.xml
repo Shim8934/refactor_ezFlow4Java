@@ -108,7 +108,7 @@
 		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
 		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
 		<result property="reWay"					column="REWAY"					columnIndex="6"/>
-		<result property="reNum"					column="RENUM"					columnIndex="7"/>
+		<result property="reNum"					column="RENUM"					columnIndex="7" 		nullValue="NULL"/>
 		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue="NULL"/>
 		<result property="reYoil"					column="REYOIL"					columnIndex="9"			nullValue="NULL"/>
 		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue="NULL"/>

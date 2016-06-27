@@ -85,6 +85,8 @@ public interface EzResourceService {
 	
 	public String modifyResSch(String xmlStr) throws Exception;
 	
+	public String addMinutes(String sDate, int minute, String dateFormat) throws Exception;
+	
 	public boolean deleteRepetition(String xmlStr) throws Exception;
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd) throws Exception;
