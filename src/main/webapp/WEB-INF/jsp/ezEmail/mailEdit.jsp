@@ -40,7 +40,7 @@
 			var g_charset = "utf-8";
 			var g_encoding = "BASE64";
 			var g_font = "<spring:message code='ezEmail.t409' />";
-			var g_showdisplay = "1";
+			var g_showdisplay = "${showDisplay}";
 			var g_simplemimeencoding = "7bit";
 			var g_simplemime = "";
 			var g_xmldoc = createXMLHttpRequest();
@@ -240,7 +240,7 @@
 				g_charset = getNodeText(g_xmldoc.getElementsByTagName("charset")[0]);
 				g_encoding = getNodeText(g_xmldoc.getElementsByTagName("content-transfer-encoding")[0]);
 				g_font = getNodeText(g_xmldoc.getElementsByTagName("font")[0]);
-				g_showdisplay = getNodeText(g_xmldoc.getElementsByTagName("show-displayname")[0]);
+				//g_showdisplay = getNodeText(g_xmldoc.getElementsByTagName("show-displayname")[0]);
 				g_simplemimeencoding = getNodeText(g_xmldoc.getElementsByTagName("simple-mime-content-transfer-encoding")[0]);
 				g_simplemime = "0";
 			}

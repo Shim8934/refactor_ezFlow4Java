@@ -1857,6 +1857,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
 			String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
 	        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+	        
+	        if (!eShowDisplayName.equals("")) {
+            	eShowDisplayName = MimeUtility.encodeText(eShowDisplayName, "UTF-8", null);
+            	message.setHeader("X-NEW-DISPLAYNAME", eShowDisplayName);
+            }
+	        
 	        if (!delaySendTime.equals("")) {
 	        	//예약발송
 	            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
@@ -1869,10 +1875,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	            
 	            rtnStatus = "OK";
 	        } else {                        
-	            if (!eShowDisplayName.equals("")) {
-	            	eShowDisplayName = MimeUtility.encodeText(eShowDisplayName, "UTF-8", null);
-	            	message.setHeader("X-NEW-DISPLAYNAME", eShowDisplayName);
-	            }
 	
 	//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
 	//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);

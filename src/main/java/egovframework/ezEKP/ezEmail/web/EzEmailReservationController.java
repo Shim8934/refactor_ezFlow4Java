@@ -189,6 +189,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String from = "";
 		String pAttachWarning = "";
 		String attachCK = "";
+		String showDisplay = "";
 		
 		long uid = 0;
 		// get user credentials
@@ -391,6 +392,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     				importance = "1";
     			}
     		}
+			
+			if (message.getHeader("X-NEW-DISPLAYNAME") != null) {
+				showDisplay = message.getHeader("X-NEW-DISPLAYNAME")[0];
+			}
 		}
 		
 		int pBigAttachDownloadDaynum = 0;
@@ -459,6 +464,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("pSecurity", pSecurity);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("strSelectHtml", strSelectHtml);
+		model.addAttribute("showDisplay", showDisplay);
 		
 		return "ezEmail/mailEdit";
 	}
