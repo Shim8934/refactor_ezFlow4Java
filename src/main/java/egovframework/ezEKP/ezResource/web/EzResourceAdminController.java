@@ -153,7 +153,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				strXML.append("<ISCOMPANY>Y</ISCOMPANY>");
 				strXML.append("</PARADATA>");
 				
-				boolean returnValue = ezResourceAdminService.addClsData(strXML.toString());
+				ezResourceAdminService.addClsData(strXML.toString());
 				
 				ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
 				
@@ -449,6 +449,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String upCount = "";
 		String companyID = "";
 		int intSubClsCnt = 0;
+		
 		try {
 			brdID = req.getParameter("brdID");
 			upNm = req.getParameter("brdNm");
@@ -473,7 +474,6 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			if (strErrChk.equals("True")) {
 				if (intSubClsCnt <= 1) {
 					pWrnMsg = egovMessageSource.getMessage("ezResource.t103", locale);
-
 				} else {
 					StringBuilder tempStr2 = new StringBuilder();
 					tempStr2.append("<PARA_DATA>");
@@ -486,7 +486,6 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					Document objXML2 = commonUtil.convertStringToDocument(strRtnXML);
 					
 					for (int i=0; i<objXML2.getDocumentElement().getChildNodes().getLength(); i++) {
-
 						strBrdStep = objXML2.getElementsByTagName("BRDSTEP").item(i).getTextContent();
 						strBrdCount = objXML2.getElementsByTagName("BRDCOUNT").item(i).getTextContent();
 						strBrdID = objXML2.getElementsByTagName("BRDID").item(i).getTextContent();
@@ -497,6 +496,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 						} else {
 							strTmp = "";
 						}
+						
 						pSubBrdLst = pSubBrdLst + "<OPTION STEP= " + strBrdStep;
 						pSubBrdLst = pSubBrdLst + "  COUNT= " + strBrdCount;
 	                    pSubBrdLst = pSubBrdLst + "  VALUE= " + strBrdID + " " + strTmp + ">";
