@@ -32,6 +32,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -52,6 +53,9 @@ public class EzEmailScheduler {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
@@ -174,4 +178,17 @@ public class EzEmailScheduler {
 		}
 	}
 
+	/**
+	 * Processes Mail Statistics Logs.
+	 */
+	@Scheduled(cron = "30 00 00 * * *")
+	public void processMailStatLogs() throws Exception{
+		logger.debug("오전 00:00:30에 호출이 됩니다.");
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, null);
+
+		logger.debug("response=" + response);		
+	}
+	
 }
