@@ -45,6 +45,7 @@
 	        var sDT2 = "${startDateTime2}";
 	        var eDT2 = "${endDateTime2}";
 	        var pNoneActiveX = "${pNoneActiveX}";
+	        
 	        window.onload = function () {
 	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 
@@ -354,15 +355,12 @@
 								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}">
 									<c:choose>
 										<c:when test="${savedApproveFlag eq '1'}">
-											${ApprovalMenu} = <spring:message code='ezResource.t190' />
-                                  			${ReverseFlag} = "0";
+                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 0)"> <spring:message code='ezResource.t190' /></span></li>
 										</c:when>
 										<c:otherwise>
-											${ApprovalMenu} = <spring:message code='ezResource.t191' />
-                                  			${ReverseFlag} = "1";
+                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
 										</c:otherwise>
 									</c:choose>
-                     				<li><span  onClick="SetApproval_onClick2('${cmdStr}', '${reverseFlag})"> ${approvalMenu}</span></li>
 								</c:if>
 							</c:if>	                            
                     	</ul>
