@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.task;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,8 +21,8 @@ import javax.mail.search.ComparisonTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
-import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Component
 public class EzEmailScheduler {
@@ -181,14 +183,67 @@ public class EzEmailScheduler {
 	/**
 	 * Processes Mail Statistics Logs.
 	 */
-	@Scheduled(cron = "30 00 00 * * *")
+	@Scheduled(cron = "30 01 00 * * *")
 	public void processMailStatLogs() throws Exception{
-		logger.debug("오전 00:00:30에 호출이 됩니다.");
+		logger.debug("오전 00:01:30에 호출이 됩니다.");
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, null);
 
 		logger.debug("response=" + response);		
+	}
+	
+	/**
+	 * 만료된 대용량 메일 첨부폴더 삭제 스케줄러
+	 */
+	@Scheduled(cron = "30 00 00 * * *")
+	public void deleteExpireAttach() throws Exception{
+		logger.debug("오전 00:00:30에 호출이 됩니다.");
+		
+		String pUploadPath = config.getProperty("upload_mail.ROOT");
+		String realPath = config.getProperty("data_root");
+		
+		File file = new File(realPath + pUploadPath);
+		if (file.exists()) {
+			File[] files = file.listFiles(new FilenameFilter() {
+				String today = EgovDateUtil.getToday("");
+				int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
+				
+				@Override
+				public boolean accept(File dir, String name) {
+					if (name != null && dir.isDirectory()) {
+						if (NumberUtils.isNumber(name)) {
+							return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
+						}
+					}
+					return false;
+				}
+			});
+			
+			for (File expiredFile : files) {
+				if (deleteDirectory(expiredFile)) {
+					logger.debug(expiredFile.getName() + "is deleted.");
+				}
+			}
+		}
+	}
+	
+	/**
+	 * recursive하게 파일/폴더 삭제하는 함수
+	 */
+	public boolean deleteDirectory(File path) {
+		if(path.exists()) {
+			File[] files = path.listFiles();
+			for(int i=0; i<files.length; i++) {
+				if(files[i].isDirectory()) {
+					deleteDirectory(files[i]);
+				}
+				else {
+					files[i].delete();
+				}
+			}
+		}
+		return path.delete();
 	}
 	
 }
