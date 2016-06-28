@@ -5,8 +5,7 @@
 <html>
     <head>
     <title><spring:message code='ezStatistics.t2' /></title>
-    <meta name="CODE_LANGUAGE" Content="C#">
-    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -22,7 +21,7 @@
     window.onload = function()
     {
         parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
-    }
+    };
 	
     function menu_change(Item) 
     {
@@ -36,7 +35,7 @@
 	    switch(this_menu)
 	    {
 	        case "MAIL":
-	            parent.frames[1].location.href = "Mail/stat_mail_main.aspx";
+	            parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
 	            break;
 	        case "APPROVAL":
 	            parent.frames[1].location.href = "Approval/ezStatistics_Main.aspx";
@@ -56,10 +55,10 @@
 	    switch(idx)
 	    {
 		    case 1:
-		        url = "Mail/stat_Mail_dept.aspx";
+		        url = "/ezStatistics/statisticsMailDept.do";
 			    break;
 	        case 2:
-	            url = "Mail/stat_Mail_user.aspx";
+	            url = "/ezStatistics/statisticsMailUser.do";
 	            break;
 	        case 4:
 	            url = "Mail/stat_quantity_dept.aspx";
