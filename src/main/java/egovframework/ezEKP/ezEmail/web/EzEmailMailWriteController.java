@@ -1876,10 +1876,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	            rtnStatus = "OK";
 	        } else {                        
 	
-	//            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
-	//            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
-	//            else
-	//            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+//	            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
+//	            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
+//	            else
+//	            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
 	            
 	            //InnterMailSend 변환 시작
 	            if (isEachMailB) {
@@ -2113,6 +2113,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 				
 				if (oldMessage != null) {
+					
+					//TODO: rows에 filename대신 index넣기, 
+					//deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) 부르기
+					
+					//
 					MimeMessage newMessage = sa.createMimeMessage();
 					Multipart multipart = new MimeMultipart();
 					
@@ -2144,6 +2149,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 						Header header = e.nextElement();
 						newMessage.setHeader(header.getName(), header.getValue());
 					}
+					//
 					
 					if (multipart.getCount() != 0) {
 						newMessage.setContent(multipart);

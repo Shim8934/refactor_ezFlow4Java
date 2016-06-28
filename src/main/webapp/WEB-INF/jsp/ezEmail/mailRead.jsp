@@ -378,6 +378,15 @@
 		    function SuccessBoard() {
 		        // 게시 완료 후 페이지 리로드 방지
 		    }
+		    
+		    function reloadReadContent(url) {
+		    	g_paramURL = url;
+		    	form1.iptFolderPath.value = url.split('/')[0];
+		        form1.iptURL.value = url.split('/')[1];
+		        form1.submit();
+		        window.opener.MailListRefresh();
+		        window.opener.reloadReadContent(url);
+		    }
 		</script>
 	</head>
 

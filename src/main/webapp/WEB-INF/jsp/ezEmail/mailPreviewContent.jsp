@@ -86,7 +86,7 @@
 		        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
 	
 		        var xmlHTTP = new XMLHttpRequest();
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_del_interattach.aspx", false);
+		        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
 		        xmlHTTP.send(xml);
 	
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -94,10 +94,7 @@
 		            var ret = oRoot.childNodes[0].nodeValue;
 	
 		            if (ret != "FAIL") {
-		                obj.parentNode.outerHTML = "";
-		                if (document.getElementById("PreviewAttachList").childNodes.length == 0) {
-		                    document.getElementById("ifrmPreViewRayer").style.display = "none";
-		                }
+		            	window.parent.reloadReadContent(ret);
 		            }
 		            else {
 		                alert(strLang183);

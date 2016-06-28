@@ -378,8 +378,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	                attachXmlList.append("</NODE>");
 				}
 				
-                attachXmlList.append("</NODES></ROOT>");						
-                attachCK = attachXmlList.toString();	
+                attachXmlList.append("</NODES></ROOT>");
+                attachCK = attachXmlList.toString();
 			}
 			
 			if (message.getHeader("X-Priority") != null) {

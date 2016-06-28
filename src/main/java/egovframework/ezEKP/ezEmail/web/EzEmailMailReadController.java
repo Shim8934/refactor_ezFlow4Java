@@ -26,6 +26,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
@@ -39,10 +40,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.sun.mail.dsn.DispositionNotification;
 import com.sun.mail.dsn.MultipartReport;
+import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -344,6 +348,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);
 		model.addAttribute("useEzKMS", useEzKMS);
+		
 		return "ezEmail/mailRead";
 	}
 	
@@ -352,6 +357,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReadContent.do")
 	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		String rejectKeyWord = "";
+		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
@@ -363,7 +370,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// retrieve the passed in parameters
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
-
+		String url = folderPath + "/" + request.getParameter("iptURL");
+		
 		String myEmailAddress = id+"@"+config.getProperty("config.DomainName");
 		
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -410,6 +418,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
+		model.addAttribute("url", url);
+		model.addAttribute("rejectKeyWord", rejectKeyWord);
 		
 		return "ezEmail/mailReadContent";
 	}
@@ -899,6 +909,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 		model.addAttribute("isAttach", bodyInfoList.get(4));
+		
 		return "ezEmail/mailPreviewContent";
 	}	
 	
@@ -1001,6 +1012,63 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pBody", pBody);
 		
 		return "ezEmail/mailPrint";
+	}
+	
+	/**
+	 * 메일읽기 - 첨부파일 삭제
+	 */
+	@RequestMapping(value="/ezEmail/mailDelReadInterAttach.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+		
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Element root = xmlDoc.getDocumentElement();
+		
+		String strFileId = root.getElementsByTagName("NAME").item(0).getTextContent();
+		int fileId = Integer.parseInt(strFileId);
+		
+		String folderPath = null;
+		long uid = 0;
+		String url = root.getElementsByTagName("ITEMID").item(0).getTextContent();
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+		
+		String returnValue = "<DATA><![CDATA[";
+		
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password);
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		
+		Folder folder = ia.getFolder(folderPath);
+		folder.open(Folder.READ_WRITE);
+		Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+		
+		if (oldMessage != null) {
+			MimeMessage newMessage = ezEmailUtil.deleteAttach(sa, oldMessage, new int[] {fileId});
+			if (newMessage != null) {
+				newMessage.setFlag(Flags.Flag.SEEN, true);
+				AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+				returnValue += folderPath + "/" + uids[0].uid;
+			}
+			oldMessage.setFlag(Flags.Flag.DELETED, true);
+		}
+		
+		folder.close(true);
+		ia.close();
+		
+		returnValue += "]]></DATA>";
+		
+		return returnValue;
 	}
 	
 	

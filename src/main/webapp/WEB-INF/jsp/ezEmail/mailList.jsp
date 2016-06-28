@@ -251,6 +251,19 @@
 		        else if (radiosearch.item(1).checked)
 		            return radiosearch.item(1).value + "=" + key;
 		    }
+		    
+		    function reloadReadContent(url) {
+		    	g_moveUrl = url.split('/')[0];
+		    	if (pPreviewShow_HOW == "H") {
+	                PrevViewFormH.iptURL.value = url;
+	                PrevViewFormH.submit();
+	            }
+	            else {
+	                PrevViewFormW.iptURL.value = url;
+	                PrevViewFormW.submit();
+	            }
+		        MailListRefresh();
+		    }
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">

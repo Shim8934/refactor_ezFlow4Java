@@ -12,8 +12,8 @@
 	        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    	<script language="javascript" type="text/javascript">
-			    var g_rejectWord = "${_rejectKeyWord}";
-			    var g_paramURL = decodeURIComponent('${System.Web.HttpUtility.UrlEncode(url)}');
+			    var g_rejectWord = "${rejectKeyWord}";
+			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
 				if( objLink != null )
 				{
@@ -162,18 +162,14 @@
 			        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
 			
 			        var xmlHTTP = new XMLHttpRequest();
-			        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_del_interattach.aspx", false);
+			        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
 			        xmlHTTP.send(xml);
 			
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 			            var oRoot = xmlHTTP.responseXML.documentElement;
 			            var ret = oRoot.childNodes[0].nodeValue;
-			
 			            if (ret != "FAIL") {
-			                obj.parentNode.outerHTML = "";
-			                if (document.getElementById("PreviewAttachList").childNodes.length == 0) {
-			                    document.getElementById("ifrmPreViewRayer").style.display = "none";
-			                }
+			            	window.parent.reloadReadContent(ret);
 			            }
 			            else {
 			                alert(strLang183);
@@ -241,7 +237,7 @@
 		</span>
 		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;">
 			<p class="title"><spring:message code='ezEmail.t99000003' />
-				<span>${ pAttachListHtmlSub}</span>
+				<span>${pAttachListHtmlSub}</span>
 				<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
 				<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span>
 			</p>
@@ -254,7 +250,7 @@
 	</body>
 	<script language="javascript" type="text/javascript">
 	    try {
-	        var pisAttach = "${ isAttach }";
+	        var pisAttach = "${isAttach}";
 	        if (pisAttach == "OK")
 	            document.getElementById("ifrmPreViewRayer").style.display = "";
 	        else

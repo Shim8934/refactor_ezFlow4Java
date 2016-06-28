@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -27,11 +28,14 @@ import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
@@ -47,6 +51,7 @@ import org.springframework.stereotype.Component;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -278,7 +283,7 @@ public class EzEmailUtil {
 					String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-					pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+					pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 				}
 				
 				isAttach = "OK";
@@ -421,7 +426,7 @@ public class EzEmailUtil {
 				} else {
 					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-					pAttachListHtml += " <span class='icon_rbtn' fileid='fileID(추후수정)' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+					pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 				}
 				
 				isAttach = "OK";
@@ -588,6 +593,45 @@ public class EzEmailUtil {
 		}
 		
 		return messages;
+	}
+	
+	public MimeMessage deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) {
+		MimeMessage newMessage = null;
+		
+		try {
+			newMessage = sa.createMimeMessage();
+			
+			//set body
+			Multipart mp = (Multipart)oldMessage.getContent();
+			BodyPart p = null;
+			int length = index.length;
+			for (int i = 0; i < length; i++) {
+				if (index[i] < 0) {
+					continue;
+				}
+				p = mp.getBodyPart(index[i]);
+				if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) || 
+						p.isMimeType("message/rfc822")) {
+					mp.removeBodyPart(index[i]);
+				}
+			}
+			if (mp.getCount() == 0) {
+				return null;
+			}
+			newMessage.setContent(mp);
+			
+			//set header
+			Enumeration<Header> e = oldMessage.getAllHeaders();
+			while(e.hasMoreElements()){
+				Header header = e.nextElement();
+				newMessage.setHeader(header.getName(), header.getValue());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return newMessage;
 	}
 	
 	public boolean copyInlineParts(Part src, Multipart dest) throws MessagingException, IOException {
