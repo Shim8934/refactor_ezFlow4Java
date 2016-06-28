@@ -412,8 +412,6 @@
 				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
        										</c:otherwise>
        									</c:choose>
-        									
-          								<%-- <li><span  onClick="SetApproval_onClick('${cmdStr}', '${reverseFlag}')">${approvalMenu}</span></li> --%>
         					 		</c:if> 
           							
           						</div>          
