@@ -61,10 +61,10 @@
 	            url = "/ezStatistics/statisticsMailUser.do";
 	            break;
 	        case 4:
-	            url = "Mail/stat_quantity_dept.aspx";
+	            url = "/ezStatistics/statisticsQuantityDept.do";
 	            break;
 	        case 5:
-	            url = "Mail/stat_quantity_user.aspx";
+	            url = "/ezStatistics/statisticsQuantityUser.do";
 	            break;
 	        case 6:
 	            url = "Approval/ezStatistics_Mon_Form.aspx";

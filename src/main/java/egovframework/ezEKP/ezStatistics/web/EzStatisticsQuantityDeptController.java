@@ -35,9 +35,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzStatisticsMailUserController {
+public class EzStatisticsQuantityDeptController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsMailUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsQuantityDeptController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -49,33 +49,33 @@ public class EzStatisticsMailUserController {
 	private EzEmailUtil ezEmailUtil;
 	
 	/**
-	 * 개인별 통계 현황 표시 함수
+	 * 부서별 사서함 용량 사용 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
-	public String statisticsMailUser() throws Exception{		
-		return "ezStatistics/statisticsMailUser";
+	@RequestMapping(value="/ezStatistics/statisticsQuantityDept.do")
+	public String statisticsQuantityDept() throws Exception{		
+		return "ezStatistics/statisticsQuantityDept";
 	}
 
 	/**
-	 * 개인별 통계 현황 데이터 반환 함수
+	 * 부서별 사서함 용량 사용 현황 데이터 반환 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezStatistics/getMailUser.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezStatistics/getQuantityDept.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String getMailUser(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("getMailUser started");		
+	public String getQuantityDept(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("getQuantityDept started");		
 		logger.debug("bodyData=" + bodyData);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
-		String userId = doc.getElementsByTagName("USERID").item(0).getTextContent();
+		String deptId = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
 		
 		String sDateParam = "sDate=" + sDate + "01";
 		String eDateParam = "eDate=" + eDate + "12";
-		String searchIdParam = "searchId=" + userId;
-		String typeParam = "type=3";
+		String searchIdParam = "searchId=" + deptId;
+		String typeParam = "type=4";
 		String userLangParam = "userLang=1";
 		
 		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
@@ -126,7 +126,7 @@ public class EzStatisticsMailUserController {
 		
 		String returnData = sb.toString();
 		
-		logger.debug("getMailUser ended");
+		logger.debug("getQuantityDept ended");
 		
 		return returnData;				
 	}

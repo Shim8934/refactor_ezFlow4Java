@@ -35,9 +35,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzStatisticsMailUserController {
+public class EzStatisticsQuantityUserController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsMailUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsQuantityUserController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -49,22 +49,22 @@ public class EzStatisticsMailUserController {
 	private EzEmailUtil ezEmailUtil;
 	
 	/**
-	 * 개인별 통계 현황 표시 함수
+	 * 개인별 사서함 용량 사용 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
-	public String statisticsMailUser() throws Exception{		
-		return "ezStatistics/statisticsMailUser";
+	@RequestMapping(value="/ezStatistics/statisticsQuantityUser.do")
+	public String statisticsQuantityUser() throws Exception{		
+		return "ezStatistics/statisticsQuantityUser";
 	}
 
 	/**
-	 * 개인별 통계 현황 데이터 반환 함수
+	 * 개인별 사서함 용량 사용 현황 데이터 반환 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezStatistics/getMailUser.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezStatistics/getQuantityUser.do",method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String getMailUser(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("getMailUser started");		
+	public String getQuantityUser(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("getQuantityUser started");		
 		logger.debug("bodyData=" + bodyData);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -75,7 +75,7 @@ public class EzStatisticsMailUserController {
 		String sDateParam = "sDate=" + sDate + "01";
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + userId;
-		String typeParam = "type=3";
+		String typeParam = "type=5";
 		String userLangParam = "userLang=1";
 		
 		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
@@ -126,7 +126,7 @@ public class EzStatisticsMailUserController {
 		
 		String returnData = sb.toString();
 		
-		logger.debug("getMailUser ended");
+		logger.debug("getQuantityUser ended");
 		
 		return returnData;				
 	}
