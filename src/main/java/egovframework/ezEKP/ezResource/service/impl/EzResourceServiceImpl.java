@@ -2494,7 +2494,7 @@ System.out.println("endDateTime1:"+endDateTime);
 			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 			num = xmlRes.getElementsByTagName("NUM").item(0).getTextContent().trim();
 			ownerID = xmlRes.getElementsByTagName("OWNERID").item(0).getTextContent().trim();
-			companyID = xmlRes.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+			companyID = xmlRes.getElementsByTagName("companyID").item(0).getTextContent().trim();
 			
 			List<ResGetScheduleRepetitionVO> getScheduleRepetition = getScheduleRepetition(Integer.parseInt(num), ownerID, companyID);
 			
@@ -2525,7 +2525,7 @@ System.out.println("endDateTime1:"+endDateTime);
 				}
 				
 				freq = reWay.substring(0, 1);
-				sel = reWay.substring(reWay.length()-1, 1);
+				sel = reWay.substring(reWay.length()-1, reWay.length());
 				
 				resultXml.append("<recurrence>");
 				resultXml.append("<frequency>"+freq+"</frequency>");
@@ -2567,7 +2567,7 @@ System.out.println("endDateTime1:"+endDateTime);
 				
 			}
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		return resultXml.toString();
 	}

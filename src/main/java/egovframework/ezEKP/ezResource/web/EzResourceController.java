@@ -1604,6 +1604,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (cmd.equals("get")) {
+System.out.println("xmlStr:"+xmlStr);
 				String ret = ezResourceService.getRepetition(xmlStr);
 				Document xmlRet = commonUtil.convertStringToDocument(ret);
 				String startDate = xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent();

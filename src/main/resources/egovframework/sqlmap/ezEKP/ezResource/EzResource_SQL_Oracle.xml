@@ -463,6 +463,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
+		<![CDATA[
+			{CALL EZRESOURCE.EZSP_GETSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
