@@ -747,8 +747,13 @@ public class EzCommonController extends EgovFileMngUtil{
                 	byteOutStream.write(buf, 0, len);
                 }
             } else {
-            	File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
-            	in = new FileInputStream(file);
+            	try {
+            		File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
+            		in = new FileInputStream(file);
+				} catch (Exception e) {
+					File file = new File(m_ImageList[i].replace("&amp;", "&"));
+					in = new FileInputStream(file);
+				}
                 int len = 0;
                 byte[] buf = new byte[1024];
                 
@@ -756,7 +761,11 @@ public class EzCommonController extends EgovFileMngUtil{
                 	byteOutStream.write(buf, 0, len);
                 }
                 if (m_ImageList[i].length() > 1) {
-                	deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
+                	try {
+                		deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
+					} catch (Exception e) {
+						deleteFile(m_ImageList[i].replace("&amp;", "&"));
+					}
                 }
             }
             

@@ -229,6 +229,14 @@ public class CommonUtil {
 		}
 	}
 	
+	public String getPrimaryData(String lang){
+		if(lang.equals(config.getProperty("config.primary"))){
+			return "1";
+		}else{
+			return "2";
+		}
+	}
+	
 	public String getLangData(String lang){
 		if(lang.equals("1")){
 			return "";

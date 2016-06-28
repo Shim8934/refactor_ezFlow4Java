@@ -16,7 +16,7 @@ function setDeptLinesXML(tempXML) {
 function checkLines() {
     if (CheckAprLinesXML != "") {
         var xmlHTTP = createXMLHttpRequest();
-        xmlHTTP.open("POST", "/myoffice/ezApprovalG/ezaprline/aspx/CheckAprLines.aspx", false);
+        xmlHTTP.open("POST", "/ezApprovalG/checkAprLines.do", false);
         xmlHTTP.send(CheckAprLinesXML);
 
         var dataNodes = GetChildNodes(xmlHTTP.responseXML, OpenAlertUILong_Complete);
@@ -30,7 +30,7 @@ function checkLines() {
 
     if (CheckDeptLinesXML != "") {
         var xmlHTTP2 = createXMLHttpRequest();
-        xmlHTTP2.open("POST", "/myoffice/ezApprovalG/ezaprline/aspx/CheckDeptLines.aspx", false);
+        xmlHTTP2.open("POST", "/ezApprovalG/checkDeptLines.do", false);
         xmlHTTP2.send(CheckDeptLinesXML);
 
         var dataNodes = GetChildNodes(xmlHTTP2.responseXML, OpenAlertUILong_Complete2);

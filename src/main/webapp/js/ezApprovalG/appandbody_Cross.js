@@ -1,6 +1,6 @@
-﻿var eopi = "false"
-var eattach = "false"
-var balsongopi = ""
+﻿var eopi = "false";
+var eattach = "false";
+var balsongopi = "";
 var tempType;
 function PrintClick(Type, DocID, Mode) {
     var rtnVal = "";
@@ -23,28 +23,37 @@ function PrintClick(Type, DocID, Mode) {
     PrtBodyContent = bodycontent;
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
     feature = feature + GetOpenPosition(800, 500);
-    window.open("/myoffice/ezApprovalG/printer/ezApproval_Print_Cross.aspx", "", feature);
+    window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
 }
 
 function addOpinion(DocID, pFlag) {
-    var rowidx, rtnString, colidx;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlrtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", DocID);
-    if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING")
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "APR");
-    else
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "END");
+	var rowidx, rtnString, colidx;
+	var pFlag = "";
+	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
+		pFlag = "APR";
+	} else {
+		pFlag = "END";
+	}
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getOpinionInfo.do",
+		data : {
+			docID : DocID,
+			mode  : pFlag
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getOpinionInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-    xmlrtn = xmlhttp.responseXML;
+    xmlrtn = result;
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     if (Rows.length == 0)
-        eopi = "false"
+        eopi = "false";
 
     rtnString = "";
     for (rowidx = 0; rowidx < Rows.length; rowidx++) {
@@ -53,15 +62,15 @@ function addOpinion(DocID, pFlag) {
         rtnString = rtnString + "<TR style='height:25px'>";
         for (colidx = 0; colidx < GetChildNodes(Rows[rowidx]).length; colidx++) {
             if (colidx == 0)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;' bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;' bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 1)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 3)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 4)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px'>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px'>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
         }
         rtnString = rtnString + "</TR>";
     }
@@ -73,24 +82,33 @@ function addOpinion(DocID, pFlag) {
 }
 function addAttach(DocID, pFlag) {
     var rowidx, rtnString, colidx;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlrtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", DocID);
-    if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING")
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "APR");
-    else
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "END");
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    xmlrtn = xmlhttp.responseXML;
+	var result = "";
+	var pFlag = "";
+	
+	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
+		pFlag = "APR";
+	} else {
+		pFlag = "END";
+	}
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getTotalAttachInfo.do",
+		data : {
+			docID : DocID,
+			mode  : pFlag
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    xmlrtn = result;
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     if (Rows.length == 0)
-        eattach = "false"
+        eattach = "false";
 
     rtnString = "";
     for (rowidx = 0; rowidx < Rows.length; rowidx++) {
@@ -101,9 +119,9 @@ function addAttach(DocID, pFlag) {
         for (colidx = 0; colidx < GetChildNodes(Rows[rowidx]).length; colidx++) {
 
             if (colidx == 0)
-                rtnString = rtnString + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
         }
         rtnString = rtnString + "</TR>";
     }
@@ -112,22 +130,30 @@ function addAttach(DocID, pFlag) {
 
 function addLineInfo(DocID, pFlag) {
     var rowidx, rtnString, colidx;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlrtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", DocID);
-    if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING")
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "APR");
-    else
-        createNodeAndInsertText(xmlpara, objNode, pFlag, "END");
+    var result = "";
+	var pFlag = "";
+	
+	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
+		pFlag = "APR";
+	} else {
+		pFlag = "END";
+	}
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getLineList.do",
+		data : {
+			docID : DocID,
+			mode  : pFlag
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRLINE/aspx/GetLineList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    xmlrtn = xmlhttp.responseXML;
+    xmlrtn = result;
 
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     rtnString = "";
@@ -138,14 +164,14 @@ function addLineInfo(DocID, pFlag) {
 
             if (getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) != "") {
                 if (colidx == 0)
-                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
                 else if (colidx == 1)
-                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid;' width=60 align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
                 else
-                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                    rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             }
             else
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>"
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
         }
         rtnString = rtnString + "</TR>";
     }
@@ -198,8 +224,8 @@ function getdetail(DocID, pFlag) {
 
 var ezprtquestion_cross_dialogArguments = new Array();
 function OpenQuestionUI() {
-    var parameter = ""
-    var url = "/myoffice/ezApprovalG/printer/ezprtQuestion_Cross.aspx?opinion=" + escape(eopi) + "&Attach=" + escape(eattach);
+    var parameter = "";
+    var url = "/ezApprovalG/ezprtQuestion.do?opinion=" + encodeURI(eopi) + "&attach=" + encodeURI(eattach);
 
     if (CrossYN() || NonActiveX == "YES") {
         ezprtquestion_cross_dialogArguments[0] = parameter;
@@ -212,7 +238,7 @@ function OpenQuestionUI() {
         feature = feature + GetShowModalPosition(380, 260);
         var RtnVal = window.showModalDialog(url, parameter, feature);
 
-        return RtnVal
+        return RtnVal;
     }
 }
 
@@ -253,5 +279,5 @@ function OpenQuestionUI_Complete(ret) {
     PrtBodyContent = bodycontent;
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
     feature = feature + GetOpenPosition(800, 500);
-    window.open("/myoffice/ezApprovalG/printer/ezApproval_Print_Cross.aspx", "", feature);
+    window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
 }

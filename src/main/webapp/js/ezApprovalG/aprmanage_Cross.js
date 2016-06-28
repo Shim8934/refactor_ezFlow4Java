@@ -2509,7 +2509,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     if (CrossYN() || NonActiveX == "YES") {
-        openLocation = "/myoffice/ezApprovalG/DraftUI/draftui_Cross.aspx?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     }
     else {
         if (pUse_Editor == "TAGFREE") {
@@ -2522,26 +2522,30 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 
 
     
-    openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&DocState=" + encodeURI(pArgument[5]) + "&ListType=" + encodeURI(pListTypeValue) + "&AprState=" + encodeURI(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&DocSN=" + encodeURI(pDocSN)
+    openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN)
 
 
     openwindow(openLocation, "", 890, 560);
 }
 
 function RemoveTmpDoc(pDocID) {
-
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-    xmlhttp = null;
-    xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "aspx/RemoveTMPDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var RtnVal = xmlhttp.responseText;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/removeTMPDocInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
+    var RtnVal = result;
     if (RtnVal.indexOf("TRUE") == -1) {
         var pAlertContent = strLang872;
         OpenAlertUI(pAlertContent);

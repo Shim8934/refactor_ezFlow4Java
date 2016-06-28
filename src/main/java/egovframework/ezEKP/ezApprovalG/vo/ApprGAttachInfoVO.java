@@ -46,6 +46,10 @@ public class ApprGAttachInfoVO {
 	private String attachUserJobTitle2;
 	/** 첨부자부서이름(다국어)*/
 	private String attachUserDeptName2;
+	/** */
+	private String totalSize;
+	/** */
+	private String flag;
 	
 	public String getAttachType() {
 		return attachType;
@@ -179,5 +183,16 @@ public class ApprGAttachInfoVO {
 	public void setAttachUserDeptName2(String attachUserDeptName2) {
 		this.attachUserDeptName2 = attachUserDeptName2;
 	}
-	
+	public String getTotalSize() {
+		return totalSize;
+	}
+	public void setTotalSize(String totalSize) {
+		this.totalSize = totalSize;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
 }

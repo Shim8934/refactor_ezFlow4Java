@@ -40,6 +40,12 @@ public class ApprGReceiptVO {
 	private String deptID;
 	/** */
 	private String deptSN;
+	/** */
+	private String deptName;
+	/** */
+	private String deptName2;
+	/** */
+	private String companyID;
 	
 	public String getDocid() {
 		return docid;
@@ -154,5 +160,23 @@ public class ApprGReceiptVO {
 	}
 	public void setDeptSN(String deptSN) {
 		this.deptSN = deptSN;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	public String getDeptName2() {
+		return deptName2;
+	}
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 }

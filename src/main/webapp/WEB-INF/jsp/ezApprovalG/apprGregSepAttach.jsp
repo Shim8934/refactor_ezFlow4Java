@@ -5,7 +5,6 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1076'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=9" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -176,9 +175,10 @@
 		        var Root, objNode;
 		
 		        var objCodeInfo = createXmlDom();
+alert(g_CodeInfoXml);
 		        objCodeInfo = loadXMLString(g_CodeInfoXml);
 		
-		        if (CrossYN()) {
+		        if (navigator.userAgent.indexOf('Trident') == -1) {
 		            Root = "<REGISTERTYPE>";
 		            switch (g_RecTypeCode) {
 		                case "1":
@@ -208,30 +208,34 @@
 		                    Root += getXmlString(nodes.iterateNext());
 		                    break;
 		            }
-		            Root += "</REGISTERTYPE>"
+		            Root += "</REGISTERTYPE>";
 		            RegTypeCodeXml = loadXMLString(Root);
 		        }
 		        else {
 		            Root = createNodeInsert(RegTypeCodeXml, Root, "REGISTERTYPE");
 		            switch (g_RecTypeCode) {
 		                case "1":
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='1']"));
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='2']"));
+// 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='1']"));
+// 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='2']"));
+							Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+							Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
 		                    break;
 		                case "2":
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='3']"));
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='4']"));
+		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[3]);
+// 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='3']"));
+// 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='4']"));
 		                    break;
 		                case "3":
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='5']"));
+		                    Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
 		                    break;
 		                case "4":
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='6']"));
+		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
 		                    break;
 		                case "5":
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='7']"));
-		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='8']"));
-		                    break;
+		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+		                    Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[7]);
+		                    break; 
 		            }
 		        }
 		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);

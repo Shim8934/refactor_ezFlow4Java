@@ -2451,7 +2451,7 @@ function getSignDate() {
     return xmlhttp.responseText;
 }
 function getHistory() {
-    var URL = "../ezAPRHISTORY/ezAPRHISTORY_Cross.aspx?DocID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
     centerOpenWindow(URL, 730, 430);
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
@@ -2570,25 +2570,29 @@ function getOpinionCount() {
 
 var AutoSave;
 function SaveTMPFile(AutoSave) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
+	
     var mhtBody = "";
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
     mhtBody = ConvertHTMLtoMHT(mhtBody);
 
-    createNodeAndInsertText(xmlpara, objNode, "Html", mhtBody);
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/saveTmpFile.do",
+		data : {
+			docID : pDocID,
+			html  : mhtBody
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
 
-    xmlhttp.open("POST", "../aspx/saveTmpFile.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
+    return result;
 }
 
 function SaveTMPDocInfo(AutoSave) {
@@ -2696,7 +2700,7 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
 
-        xmlhttp.open("POST", "aspx/dodraft.aspx", false);
+        xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
         return xmlhttp.responseText;
@@ -2768,7 +2772,7 @@ function setFirstDrafterAuto() {
 
     xmlpara = loadXMLString(pxml);
 
-    xmlhttp.open("POST", "../ezaprline/aspx/AprLineSave.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/aprLineSave.do", false);
     xmlhttp.send(xmlpara);
     //	if(xmlhttp.responseXML.text == "TRUE")
     //	{

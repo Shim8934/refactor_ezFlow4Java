@@ -5,8 +5,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t30'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-		<META HTTP-EQUIV="Expires" CONTENT="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -390,15 +390,23 @@
 		    }
 		    function btnSendDraft_onclick() {
 		        try {
-		            var xmlpara3 = createXmlDom();
-		            var xmlhttp3 = createXMLHttpRequest();
-		            var objNode;
-		            createNodeInsert(xmlpara3, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara3, objNode, "pDocID", pDocID);
-		            xmlhttp3.open("Post", "/myoffice/ezApprovalG/ezAPRATTACH/aspx/GetExtTotalAttachSize.aspx", false);
-		            xmlhttp3.send(xmlpara3);
+		        	var result = "";
+		        	
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		data : {
+			    			docID : pDocID
+			    		},
+			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
+			    		success: function(text){
+			    			result = text;
+			    		}        			
+			    	});
+			    	
 		            var rtnAttachXML = createXmlDom();
-		            rtnAttachXML = loadXMLString(xmlhttp3.responseText);
+		            rtnAttachXML = loadXMLString(result);
 		            if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG")[0]) == "Y") {
 		                OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
 		                return;

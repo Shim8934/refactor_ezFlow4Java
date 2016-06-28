@@ -155,6 +155,25 @@ public interface EzApprovalGService {
 	public String getCabinetInfo(String cabinetID, String companyID, String strType) throws Exception;
 	
 	public String registerSepAttach(Document doc) throws Exception;
+	
+	public String getHistoryForDoc(String docID, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getHistoryForLine(String docID, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String getHistoryForLineDetail(String docID, String modifySN, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
+	
+	public String deleteTmpDocInfo(String userID, String sn, String path, String companyID, String lang) throws Exception;
+	
+	public String doProcess(String aprState, String docID, String userID, String userName, String userName2, String dirPath, String deptID, String html,
+			Document strXML, String proxyUserID, String companyID, String lang) throws Exception;
+	
+	public String getTotalAttachSize(String docID, String companyID) throws Exception;
+	
+	public String chkAprLines(Document doc, String lang) throws Exception;
+	
+	public String chkDeptLines(Document doc, String companyID, String lang) throws Exception;
 
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
