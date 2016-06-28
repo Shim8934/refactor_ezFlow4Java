@@ -903,7 +903,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
 			cnt = Integer.parseInt(request.getParameter("cnt"));
 		}
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		String[] pFileName = new String[cnt];
 		Long[] fileSize = new Long[cnt];
 		String[] fileLocation = new String[cnt];
@@ -1143,7 +1143,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			uid = Long.parseLong(uidStr);
 		}
 				
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
 				
 		MimeMessage newMessage = null;
@@ -1339,7 +1339,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String isEachMail = "";
 		String isReserve = "";
 		String reservedId = "";
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
@@ -2044,7 +2044,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
 		
 		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
     	
@@ -2180,7 +2180,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
 		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
 		

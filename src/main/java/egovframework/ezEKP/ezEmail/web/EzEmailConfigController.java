@@ -533,7 +533,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		

@@ -570,7 +570,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		
 		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + fileDate + commonUtil.separator + fileId;
 		

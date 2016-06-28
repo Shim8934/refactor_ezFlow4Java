@@ -127,7 +127,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
 		ezEmailService.deleteMailReserved(messageId);
 
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = config.getProperty("data_root");
 		String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
 		pDirPath = realPath + pDirPath;
 		File f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
@@ -229,7 +229,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 			//eml파일 읽기
 			FileInputStream fis = null;
-			String realPath = request.getServletContext().getRealPath("");
+			String realPath = config.getProperty("data_root");
 			String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
 			pDirPath = realPath + commonUtil.separator + pDirPath;
 			File f = new File(pDirPath + commonUtil.separator + pCDOMessageID + ".eml");
