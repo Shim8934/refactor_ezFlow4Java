@@ -1882,7 +1882,7 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	var xmlHTTP = createXMLHttpRequest();
 	var xmlDOM = createXmlDom();
 	var objNode ;
-	
+
 	createNodeInsert(xmlDOM, objNode, "DATA");	
 	createNodeAndInsertText(xmlDOM, objNode, "RESID", pResID);
 	createNodeAndInsertText(xmlDOM, objNode, "STIME", pSTime);

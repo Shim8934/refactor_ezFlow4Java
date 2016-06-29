@@ -438,8 +438,7 @@ function AppendNode( xmlDom, item )
 	}
 }
 var rtvString = "";
-function event_btnOk_onclick()
-{
+function event_btnOk_onclick() {
 	var xmlDoc = null;
 	var Root = null;
 	

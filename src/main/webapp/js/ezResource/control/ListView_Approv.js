@@ -654,11 +654,11 @@ function ListView() {
                 if (j == 1) {
                     oText = document.createElement("IMG");
                     if (strValue == 1) {
-                        oText.src = "Calendar/images/calendar/icon_resource_ok.png";
+                        oText.src = "/images/calendar/icon_resource_ok.png";
                         oText.style.paddingLeft = "5px";
                     }
                     else {
-                        oText.src = "Calendar/images/calendar/icon_resource_no.png";
+                        oText.src = "/images/calendar/icon_resource_no.png";
                         oText.style.paddingLeft = "5px";
                     }
                 }
