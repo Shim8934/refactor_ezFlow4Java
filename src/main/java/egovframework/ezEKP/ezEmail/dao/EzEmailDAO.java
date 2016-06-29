@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
@@ -123,6 +124,23 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getMailReceiveAddress(Map<String, Object> map) throws Exception {
 		return (List<String>)list("EzEmailDAO.getMailReceiveAddress", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailPOP3VO> getMailPOP3(Map<String, Object> map) throws Exception {
+		return (List<MailPOP3VO>)list("EzEmailDAO.getMailPOP3", map);
+	}
+	
+	public void deletePop3ByUserId(Map<String, Object> map) throws Exception {
+		delete("EzEmailDAO.deletePop3ByUserId", map);
+	}
+	
+	public void insertPop3(Map<String, Object> map) throws Exception {
+		insert("EzEmailDAO.insertPop3", map);
+	}
+	
+	public void deletePop3List(Map<String, Object> map) throws Exception {
+		delete("EzEmailDAO.deletePop3List", map);
 	}
 	
 }

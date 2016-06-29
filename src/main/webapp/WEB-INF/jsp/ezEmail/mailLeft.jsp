@@ -209,7 +209,7 @@
 	                window.showModalDialog("/myoffice/ezEmail/mail_getpop3.aspx", "check pop3", feature);
 	            }
 	            else {
-	                var OpenWin = window.open("/myoffice/ezEmail/mail_getpop3_cross.aspx", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
+	                var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	        }

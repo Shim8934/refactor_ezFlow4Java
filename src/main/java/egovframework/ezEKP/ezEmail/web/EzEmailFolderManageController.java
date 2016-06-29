@@ -58,15 +58,6 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
-	
-	@Autowired
-	private EzOrganService ezOrganService;
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
-	
 	/**
 	 * 편지함 관리 화면 호출 함수
 	 */

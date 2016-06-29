@@ -40,6 +40,7 @@ public class IMAPAccess {
 	private String password;
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
+	private final int TIMEOUT = 10000;
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale){
 		this.host = host;
@@ -62,12 +63,15 @@ public class IMAPAccess {
 			//If set to true, failure to create a socket using the specified socket factory class will 
 			//cause the socket to be created using the java.net.Socket class. Defaults to true.
 			properties.setProperty("mail.imap.socketFactory.fallback", "false");
-			properties.setProperty("mail.imap.socketFactory.port", String.valueOf(port));
+			properties.setProperty("mail.imap.socketFactory.port", port);
 			
 			// these properties are required to be set to false, otherwise
 			// big mail body part(in-line image, attachment, etc) fetching may be very slow.
 			properties.setProperty("mail.imap.partialfetch", "false");
 			properties.setProperty("mail.imaps.partialfetch", "false");
+			
+			properties.put("mail.pop3s.connectiontimeout", TIMEOUT);
+			properties.put("mail.pop3s.timeout", TIMEOUT);
 			
 			Session session = Session.getDefaultInstance(properties);
 

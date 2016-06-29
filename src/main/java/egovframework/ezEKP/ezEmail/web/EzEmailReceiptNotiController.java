@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.io.StringReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -11,11 +10,6 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -37,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -47,8 +40,6 @@ import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /**
@@ -76,12 +67,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
-
-	@Autowired
-	private EzOrganService ezOrganService;
 
 	@Autowired
 	private EzEmailService ezEmailService;
@@ -306,7 +291,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			return "메일 회수는 수신자 수가 " + maxRecAllCount + " 명 이상인 메일은 회수 할 수 없습니다.";
 		}
 		
-		String internetMessageId = ((IMAPMessage)message).getMessageID();
+		String internetMessageId = ((MimeMessage)message).getMessageID();
 		String subject = message.getSubject();
 		
 		DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");

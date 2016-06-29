@@ -86,9 +86,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	private EzOrganAdminService ezOrganAdminService;
 
 	@Autowired
-	private EzOrganService ezOrganService;
-
-	@Autowired
 	private EzEmailService ezEmailService;
 
 	@Autowired

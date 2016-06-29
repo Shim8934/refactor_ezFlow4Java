@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.util.Calendar;
+import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,17 +43,22 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.sun.mail.iap.Response;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.string.EgovStringUtil;
 
 /**
@@ -81,17 +88,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	private EgovMessageSource egovMessageSource;
 
 	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
-
-	@Autowired
-	private EzOrganService ezOrganService;
-
-	@Autowired
 	private EzEmailService ezEmailService;
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+	
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
@@ -1119,4 +1123,186 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		return returnValue;
 		
 	}
+	
+	/**
+	 * 외부메일 설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailPop3.do")
+	public String mailPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		
+		String publicModulus = egovFileScrty.getPbm();
+		
+		String infoXML = "";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		
+		List<MailPOP3VO> pop3VoList = ezEmailService.getMailPOP3(userId);
+		for (MailPOP3VO pop3Vo : pop3VoList) {
+			
+			String pop3UserId = EgovFileScrty.decryptRsa(pk, pop3Vo.getPop3UserId());
+			String pop3Pw = EgovFileScrty.decryptRsa(pk, pop3Vo.getPop3Pw());
+			
+			String pop3SslYN = "false";
+			if (pop3Vo.getPop3SslYN().equals("1")) {
+				pop3SslYN = "true";
+			}
+			
+			sb.append("<ROW>");
+			sb.append("<POP3SERVER>" + pop3Vo.getPop3Server() + "</POP3SERVER>");
+			sb.append("<POP3PORTNO>" + pop3Vo.getPop3PortNo() + "</POP3PORTNO>");
+			sb.append("<POP3USERID>" + pop3UserId + "</POP3USERID>");
+			sb.append("<POP3PW>" + pop3Pw + "</POP3PW>");
+			sb.append("<SAVETO>" + pop3Vo.getSaveTo() + "</SAVETO>");
+			sb.append("<DELETEYN>" + pop3Vo.getDeleteYN() + "</DELETEYN>");
+			sb.append("<POP3SSLYN>" + pop3SslYN + "</POP3SSLYN>");
+			sb.append("<SAVETOFOLDER>" + pop3Vo.getSaveTofolder() + "</SAVETOFOLDER>");
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</DATA>");
+		infoXML = sb.toString();
+		
+		model.addAttribute("infoXML", infoXML);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", "10001");
+		
+		return "ezEmail/mailPop3";
+	}
+	
+	/**
+	 * 외부메일 설정 저장 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailPop3Save.do")
+	@ResponseBody
+	public String mailPop3Save(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		return ezEmailService.savePop3(userId, ret);
+	}
+	
+	/**
+	 * 외부메일 설정 접속확인 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailPop3Connect.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
+		String returnValue = "<DATA>ERROR</DATA>";
+		
+		Document doc = commonUtil.convertStringToDocument(ret);
+		String server = doc.getElementsByTagName("SERVER").item(0).getTextContent();
+		String port = doc.getElementsByTagName("PORT").item(0).getTextContent();
+		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
+		String pw = doc.getElementsByTagName("PW").item(0).getTextContent();
+		String useSsl = doc.getElementsByTagName("SSL").item(0).getTextContent();
+		
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		
+		id = EgovFileScrty.decryptRsa(pk, id);
+		pw = EgovFileScrty.decryptRsa(pk, pw);
+		
+		POP3Access pa = null;
+		try {
+			pa = POP3Access.getInstance(server, port, id, pw, useSsl);
+			if (pa.checkConnect()) {
+				returnValue = "<DATA>OK</DATA>";
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		} finally {
+			if (pa != null) {
+				pa.close();
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	/**
+	 * 외부메일 설정 접속확인 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetPop3.do")
+	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response, @RequestBody String ret) throws Exception{
+		
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		
+		response.setContentType("text/html; charset=utf-8");
+		
+		PrintWriter out = response.getWriter();
+		out.write("<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'><head>");
+		out.write("<title>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</title>");
+		out.write("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>");
+		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("ezEmail.c1", locale) + "' type=text/css>");
+		out.write("<script type='text/javascript' src='/js/mouseeffect.js'></script>"
+        		+ "</head>"
+        		+ "<body scroll=no class='popup'>");
+		out.write("<h1>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</h1>");
+		out.write("<div id='close'><ul><li onClick='window.close()'><span>" + egovMessageSource.getMessage("ezEmail.t63", locale) + "</span></li></ul>");
+		out.write("</div>"
+        		+ "<script type='text/javascript'>"
+        		+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"
+        		+ "</script>"
+        		+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#B6B6B6; overflow-y:auto; height:265px; overflow-x:auto; width:100%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
+		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
+		
+		out.flush();
+		
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		
+		List<MailPOP3VO> pop3Settinglist = ezEmailService.getMailPOP3(userId);
+		for (MailPOP3VO vo : pop3Settinglist) {
+			String boxId = vo.getSaveTo();
+			String boxName = vo.getSaveTofolder();
+			String host = vo.getPop3Server();
+			String port = vo.getPop3PortNo();
+			String useSsl = vo.getPop3SslYN(); //0,1
+			String id = vo.getPop3UserId();
+			String pw = vo.getPop3Pw();
+			String deleteYN = vo.getDeleteYN(); //Y,N
+			
+			id = EgovFileScrty.decryptRsa(pk, id);
+			pw = EgovFileScrty.decryptRsa(pk, pw);
+			
+			if (useSsl.equals("1")) {
+				useSsl = "true";
+			} else {
+				useSsl = "false";
+			}
+			
+			out.write("<BR><BR>" + egovMessageSource.getMessage("ezEmail.t492", locale) + host + ", "
+					+ egovMessageSource.getMessage("ezEmail.t493", locale) + id
+					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t494", locale) + boxName
+					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t495", locale));
+			out.flush();
+			
+			POP3Access pa = POP3Access.getInstance(host, port, id, pw, useSsl);
+			
+			
+			pa.close();
+		}
+		
+		for (int i=0; i<100; i++) {
+			out.write(i + "</BR>");
+			out.flush();
+			Thread.sleep(100);
+		}
+		
+		out.write("<span id='forscroll'></span>"
+				+ "</div>"
+				+ "<script type='text/javascript'>"
+				+ "forscroll.scrollIntoView(false);"
+				+ "</script></body>");
+		
+		out.flush();
+		
+		out.close();
+	}
+	
 }

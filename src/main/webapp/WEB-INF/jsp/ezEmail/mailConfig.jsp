@@ -47,19 +47,13 @@
 	                        document.getElementById("MailEnv_ifrm").src = "/myoffice/ezAddress/address_config.aspx";
 	                    break;
 	                case "MailEnv_div3":
-	                    if (CrossYN() || (pNoneActiveX == "YES"))
-	                        document.getElementById("MailEnv_ifrm").src = "mail_pop3_cross.aspx";
-	                    else
-	                        document.getElementById("MailEnv_ifrm").src = "mail_pop3.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailPop3.do";
 	                    break;
 	                case "MailEnv_div4":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoForward.do";
 	                    break;
 	                case "MailEnv_div5":
-	                    if (CrossYN())
-	                        document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailInboxRule.do";
-	                    else
-	                        document.getElementById("MailEnv_ifrm").src = "mail_InboxRule.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailInboxRule.do";
 	                    break;
 	                case "MailEnv_div6":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";

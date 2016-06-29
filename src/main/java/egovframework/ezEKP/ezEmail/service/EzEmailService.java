@@ -6,6 +6,7 @@ import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
@@ -37,5 +38,6 @@ public interface EzEmailService {
 	public String getMailReceiveMessageId(String pNum) throws Exception;
 	public void updateMailReceiveDetailInfo(String pNum, String pEmail, String pCode) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
-	
+	public List<MailPOP3VO> getMailPOP3(String pUserId) throws Exception;
+	public String savePop3(String pUserId, String pRet) throws Exception;
 }

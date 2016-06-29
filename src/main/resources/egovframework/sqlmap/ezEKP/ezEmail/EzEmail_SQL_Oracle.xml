@@ -9,6 +9,7 @@
 	<typeAlias  alias="MailColorVO" type="egovframework.ezEKP.ezEmail.vo.MailColorVO"/>
 	<typeAlias  alias="MailReadVO" type="egovframework.ezEKP.ezEmail.vo.MailReadVO"/>
 	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
+	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -79,6 +80,17 @@
 	<resultMap id="mailCancel" class="MailCancelVO">
 		<result property="readerEmail" column="READEREMAIL" columnIndex="1"/>
 		<result property="status" column="STATUS" columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="mailPOP3" class="MailPOP3VO">
+		<result property="pop3Server" column="POP3Server" columnIndex="1"/>
+		<result property="pop3PortNo" column="POP3PortNo" columnIndex="2"/>
+		<result property="pop3UserId" column="POP3UserID" columnIndex="3"/>
+		<result property="pop3Pw" column="POP3PW" columnIndex="4"/>
+		<result property="saveTo" column="SaveTo" columnIndex="5"/>
+		<result property="deleteYN" column="DeleteYN" columnIndex="6"/>
+		<result property="pop3SslYN" column="POP3SSLYN" columnIndex="7"/>
+		<result property="saveTofolder" column="SAVETOFOLDER" columnIndex="8"/>
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -177,6 +189,10 @@
 		{CALL EZEMAIL.EZSP_MAIL_SELECT_MAILRECEIVE_A(#v_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.getMailPOP3" parameterClass="Map" resultMap="mailPOP3">
+		{CALL EZEMAIL.EZSP_GETMAILPOP3(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 
@@ -187,4 +203,26 @@
 	       		senddate <= (SELECT SYSDATE FROM DUAL)
        	]]>
 	</select>
+	
+	<insert id="EzEmailDAO.insertPop3" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO ezEmail.TBLMAILPOP3 (UserID, POP3Server, POP3PortNo, POP3UserID, POP3PW, SaveTo, DeleteYN, POP3SSLYN, SAVETOFOLDER) 
+			VALUES (#v_USERID#, #v_POP3SERVER#, #v_POP3PORTNO#, #v_POP3USERID#, #v_POP3PW#, #v_SAVETO#, #v_DELETEYN#, #v_POP3SSLYN#, #v_SAVETOFOLDER#)
+       	]]>
+	</insert>
+	
+	<delete id="EzEmailDAO.deletePop3ByUserId" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM ezEmail.TBLMAILPOP3 
+			WHERE UserID=#v_USERID#
+       	]]>
+	</delete>
+	
+	<delete id="EzEmailDAO.deletePop3List" parameterClass="Map">
+		<![CDATA[
+			DELETE ezEmail.TBLMAILPOP3LIST
+			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
+       	]]>
+	</delete>
+	
 </sqlMap>
