@@ -351,6 +351,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> compareLineHistory1(Map<String, Object> map1) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.compareLineHistory1", map1);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -550,6 +555,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int getOpinionCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getOpinionCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int compareLineHistory(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.compareLineHistory", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -584,6 +599,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateDocInfoDocTitle(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateDocInfoDocTitle", map);
+	}
+	
+	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateHistoryForLine", map);
 	}
 
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{

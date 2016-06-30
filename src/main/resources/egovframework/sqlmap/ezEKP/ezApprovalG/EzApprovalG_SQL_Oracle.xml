@@ -31,7 +31,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getAprDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+	<procedure id="EzApprovalG.getAprDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLIST(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #iv_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -263,6 +263,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETTOTALATTACHSIZE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.compareLineHistory1" parameterClass="Map" resultClass="ApprGAprLineVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_COMPARELINEHISTORY1(#v_DOCID#, #v_FLAG#, #v_MODIFYSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -427,6 +431,14 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETMAXTMPDOCSN(#v_PUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getOpinionCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETOPINIONCOUNT(#v_DOCID#, #v_USERID#, #v_INGFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.compareLineHistory" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_COMPARELINEHISTORY(#v_DOCID#, #v_FLAG#, #v_MODIFYSN#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
 	</procedure>
@@ -453,6 +465,10 @@
 	
 	<procedure id="EzApprovalG.updateDocInfoDocTitle" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_UPDATEDOCINFO_DOCTITLE(#v_DOCID#, #v_DOCTITLE#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.updateHistoryForLine" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_UPDATEHISTORYFORLINE(#v_DOCID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.delUserFormInfo" parameterClass="Map">

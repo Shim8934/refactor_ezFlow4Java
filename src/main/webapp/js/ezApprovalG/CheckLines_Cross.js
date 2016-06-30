@@ -47,7 +47,7 @@ function checkLines() {
 var ezapralertlong_cross_dialogArguments = new Array();
 function OpenAlertUILong(pAlertContent) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERTLong_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlertLong.do";
 
     ezapralertlong_cross_dialogArguments[0] = parameter;
     ezapralertlong_cross_dialogArguments[1] = OpenAlertUILong_Complete;

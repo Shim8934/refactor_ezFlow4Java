@@ -726,7 +726,7 @@ System.out.println(strSQL + strSize);
 		String strXML = commonUtil.getQueryResult(ezOrganDAO.getUserInfo(map));
 		Document xmldom = commonUtil.convertStringToDocument(strXML);
 		
-		if(xmldom.getElementsByTagName("ROW").getLength() == 0){
+		if(xmldom == null || xmldom.getElementsByTagName("ROW").getLength() == 0){
 			map = new HashMap<String, Object>();
 			map.put("userID", id);
 			map.put("primary", primary);
@@ -744,7 +744,7 @@ System.out.println(strSQL + strSize);
                 propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
             }else if (propname.toUpperCase() != ""){
             	
-                if (xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0){
+                if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0){
                     propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
                 }else{
                     propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");

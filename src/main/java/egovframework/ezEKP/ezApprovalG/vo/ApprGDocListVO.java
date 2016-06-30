@@ -48,7 +48,7 @@ public class ApprGDocListVO {
 	/** 기안자부서이름(다국어)*/
 	private String writerDeptName2;
 	/** 결재순번*/
-	private String aprMemberSn;
+	private String aprMemberSN;
 	/** 결재방법*/
 	private String aprType;
 	/** 결재상태*/
@@ -210,11 +210,11 @@ public class ApprGDocListVO {
 	public void setWriterDeptName2(String writerDeptName2) {
 		this.writerDeptName2 = writerDeptName2;
 	}
-	public String getAprMemberSn() {
-		return aprMemberSn;
+	public String getAprMemberSN() {
+		return aprMemberSN;
 	}
-	public void setAprMemberSn(String aprMemberSn) {
-		this.aprMemberSn = aprMemberSn;
+	public void setAprMemberSN(String aprMemberSN) {
+		this.aprMemberSN = aprMemberSN;
 	}
 	public String getAprType() {
 		return aprType;
