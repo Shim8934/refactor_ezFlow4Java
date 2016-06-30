@@ -93,6 +93,8 @@ public interface EzCommunityService {
 	
 	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat) throws Exception;
 	
+	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID) throws Exception;
+	
 	public String getLeftCommunity(LoginVO userInfo) throws Exception;
 	
 	public String getLeftBoardList() throws Exception;
@@ -239,13 +241,21 @@ public interface EzCommunityService {
 
 	public String categoryListItemCntGet(String c_ClubNo) throws Exception;
 	
+	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception;
+	
+	public String getNewItemListCount(String id) throws Exception;
+	
+	public String getBoardListItemPhotoXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception;
+	
+	public String getBoardTotalItemCount(String pBoardID) throws Exception;
+	
 	public Integer boardPropertyGet(String boardID) throws Exception;
 
 	public Integer adminOuterListGet1(String code) throws Exception;
 	
 	public Integer adminMemberListGet1(String code) throws Exception;
 
-	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;
+	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;	
 
 	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
 
@@ -324,6 +334,8 @@ public interface EzCommunityService {
 	
 
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception ;
+
+	
 
 //	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
 

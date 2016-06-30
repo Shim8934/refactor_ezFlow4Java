@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hpsf.Thumbnail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -915,7 +916,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			if (pFileName.indexOf(commonUtil.separator) > 0) {
 				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
 			}
-			
+
 			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
 			int fileSize = (int) file.getSize();
 			
@@ -927,47 +928,25 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 						resultUpload = "denied";
 					} else {
 						pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
-						file.transferTo(new File(pAttachPath));
+						File thumbnailFile = new File(pAttachPath);
+						file.transferTo(thumbnailFile);
 						resultUpload = "true";
 					}
-					//TODO 2016-05-16 이효진 포토게시판에서 쓸꺼같음
 				} else if (pMode.equals("PHOTO")) {
 					pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
-					file.transferTo(new File(pAttachPath));
+					File thumbnailFile = new File(pAttachPath);
+					file.transferTo(thumbnailFile);
 					
-					//TODO 썸네일 생성소스 만들어논거
-					/*BufferedImage inputImage = ImageIO.read(file);
+					BufferedImage inputImage = ImageIO.read(thumbnailFile);
 					BufferedImage outputImage = null;
 					Graphics2D saveImage = null;
-					//로고파일 생성			
-					outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+					//썸네일 생성		
+					outputImage= new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 					saveImage = outputImage.createGraphics();
-					saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+					saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 					
-					File newLogo = new File(logoPath + fileName + "_logo" + ".png");
-					ImageIO.write(outputImage, "png", newLogo);*/
-					
-					
-/*					System.Drawing.Image.GetThumbnailImageAbort myCallBack = new System.Drawing.Image.GetThumbnailImageAbort(ThumbnailCallback);
-                    System.Drawing.Image image = System.Drawing.Image.FromFile(pAttachPath);
-
-                    int nImgWidth = image.Width;
-                    int nImgHeight = image.Height;
-                    int nWidth = 0, nHeight = 0;
-                    if (nImgWidth > nImgHeight)
-                    {
-                        nWidth = 200;
-                        nHeight = (image.Height * nWidth) / image.Width;
-                    }
-                    else
-                    {
-                        nHeight = 200;
-                        nWidth = (image.Width * nHeight) / image.Height;
-                    }
-                    System.Drawing.Image imageThumbnail = image.GetThumbnailImage(100, 100, myCallBack, (IntPtr)0);
-                    imageThumbnail.Save(pDirPath + "\\TempUploadFile\\s_" + pUploadSN[i] + pFileName[i].Substring(pFileName[i].LastIndexOf('.')));
-                    imageThumbnail.Dispose();
-                    image.Dispose();*/
+					File tempTumbbail = new File(pDirPath + "TempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf(".")));
+					ImageIO.write(outputImage, "png", tempTumbbail);
 					
 					resultUpload = "true";
 					strXML += "<NODE><PUPLOADSN>" + commonUtil.cleanValue(pUploadSN + pFileName.substring(pFileName.lastIndexOf('.'))) + "</PUPLOADSN>";
@@ -2266,6 +2245,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		boardInfo.setSs_Board_MaxRows(10);
 		boardInfo.setSs_SearchBoard_MaxRows(10);
 		
+		
 		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
@@ -2324,7 +2304,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
-			boardInfo.setSs_Board_MaxRows(10);
+			boardInfo.setSs_Board_MaxRows(12);
+			boardInfo.setSs_SearchBoard_MaxRows(12);
 		}
 		
 		boardInfo.setBoardID(pBoardID);
@@ -2566,8 +2547,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		item.setWriteDate(EgovDateUtil.getTodayTime());
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		item.setTitle(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().trim());
-		
-		
+
 		if (pMode.equals("copy")) {
 			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();
 		} else {
@@ -2634,11 +2614,18 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		if (!pMode.equals("copy")) {
+
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
 			
 			if (saveMHTResult == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj04", new Locale(globals.getProperty("Globals.language")));
 			}
+		}
+		
+		if (item.getAttachments().length() > 0) {
+			pHasAttach = "1";
+		} else {
+			pHasAttach = "0";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2682,7 +2669,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		ezCommunityDAO.newItemDel(item.getItemID());
 		
 		if (item.getAttachments().length() > 0) {
-			if (saveAttachmentsInfo(item.getAttachments(), item.getItemID(), item.getBoardID(), pUploadFilePath, item.getExtensionAttribute5(), realPath) == false) {
+			if (saveAttachmentsInfo(item, pUploadFilePath, realPath) == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", new Locale(globals.getProperty("Globals.language")));
 			}
 			pHasAttach = "1";
@@ -4265,7 +4252,141 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return ezCommunityDAO.searchCop(map);
 	}
+	
+	@Override
+	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", id);
+		map.put("v_PSORTBY", pSortBy);
+		
+		if (pEndRow > 0){
+			map.put("v_PENDROW", pEndRow);
+		} else {
+			map.put("v_PENDROW", 0);
+		}
+		
+		int count = 0;
+		StringBuilder sb = new StringBuilder();
+		
+		List<CommunityBoardItemVO> list = ezCommunityDAO.getNewItemListXML(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardItemVO itemList : list) {
+			count ++;
+			
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
+				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
+				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
+				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
+				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
+				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
+				sb.append("<Title>" + itemList.getTitle() + "</Title>");
+				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
+				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
+				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
+				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String getNewItemListCount(String id) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pUserID", id);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
+		
+		return ezCommunityDAO.brdNewItemCount(map);
+	}
 
+	@Override
+	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERINFO_USERID", id);
+		map.put("v_PBOARDID", boardID);
+		
+		return ezCommunityDAO.boardItemListPhotoGet1(map);
+	}
+
+	@Override
+	public String getBoardTotalItemCount(String pBoardID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", pBoardID);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		
+		return ezCommunityDAO.getBoardTotalItemCount(map);
+	}
+	
+	@Override
+	public String getBoardListItemPhotoXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", id);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("v_PSORTBY", pSortBy);
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_PENDROW", pEndRow);
+		
+		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
+		
+		sb.append("<NODES>");
+		
+		for (CommunityBoardItemVO item : itemList) {
+			count ++;
+			if (count >= pStartRow) {
+				sb.append("<NODE>");
+				
+				sb.append("<ItemID>" + item.getItemID().trim() + "</ItemID>");
+	            sb.append("<WriterID>" + commonUtil.cleanValue(item.getWriterID()).trim() + "</WriterID>");
+	            sb.append("<WriterName>" + commonUtil.cleanValue(item.getWriterName()).trim() + "</WriterName>");
+	            sb.append("<WriterDeptName>" + commonUtil.cleanValue(item.getWriterDeptName()).trim() + "</WriterDeptName>");
+	            sb.append("<WriterCompanyName>" + commonUtil.cleanValue(item.getWriterCompanyName()).trim() + "</WriterCompanyName>");
+	
+	            if (EgovDateUtil.getDaysDiff(item.getWriteDate().substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
+	            	sb.append("<WriteDate>" + item.getWriteDate().substring(0, 10) + "</WriteDate>");
+	            } else {
+	            	sb.append("<WriteDate>" + item.getParentWriteDate().substring(0, 10) + "</WriteDate>");
+	            }
+	            
+	            sb.append("<Importance>" + item.getImportance() + "</Importance>");
+	            sb.append("<Title>" + commonUtil.cleanValue(item.getTitle()).trim() + "</Title>");
+	            if (item.getAttachments() == null)
+	                sb.append("<Attachments></Attachments>");
+	            else
+	                sb.append("<Attachments>" + commonUtil.cleanValue(item.getAttachments()) + "</Attachments>");
+	
+	            sb.append("<ReadCount>" + item.getReadCount() + "</ReadCount>");
+	            sb.append("<ItemLevel>" + item.getItemLevel() + "</ItemLevel>");
+	            sb.append("<ReadFlag>" + item.getReadFlag() + "</ReadFlag>");
+	            sb.append("<Abstract>" + commonUtil.cleanValue(item.getAbsTract()) + "</Abstract>");
+	            // 수정(200700228) : 포토게시판 기능 추가 관련 ExtensionAttribute5(Small 이미지 경로) 값 가져오도록 수정함.
+	            sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(item.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+				sb.append("</NODE>");
+			}
+		}
+		
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
 
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4658,63 +4779,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 	}
 	
-	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PUSERID", id);
-		map.put("v_PSORTBY", pSortBy);
-		
-		if (pEndRow > 0){
-			map.put("v_PENDROW", pEndRow);
-		} else {
-			map.put("v_PENDROW", 0);
-		}
-		
-		int count = 0;
-		StringBuilder sb = new StringBuilder();
-		
-		List<CommunityBoardItemVO> list = ezCommunityDAO.getNewItemListXML(map);
-		
-		sb.append("<NODES>");
-		
-		for (CommunityBoardItemVO itemList : list) {
-			count ++;
-			
-			if (count >= pStartRow) {
-				sb.append("<NODE>");
-				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
-				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
-				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
-				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
-				sb.append("<WriteDate>" + itemList.getWriteDate() + "</WriteDate>");
-				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
-				sb.append("<Title>" + itemList.getTitle() + "</Title>");
-				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
-				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
-				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
-				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
-				sb.append("</NODE>");
-			}
-		}
-		
-		sb.append("</NODES>");
-		
-		return sb.toString();
-	}
-	
-	public String getNewItemListCount(String id) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pUserID", id);
-		map.put("v_pNow", EgovDateUtil.getTodayTime());
-		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
-		
-		return ezCommunityDAO.brdNewItemCount(map);
-	}
-	
 	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -4755,15 +4819,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		sb.append("</NODES>");
 		
 		return sb.toString();
-	}
-	
-	public String getBoardTotalItemCount(String pBoardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pBoardID", pBoardID);
-		map.put("v_pNow", EgovDateUtil.getTodayTime());
-		
-		return ezCommunityDAO.getBoardTotalItemCount(map);
 	}
 	
 	public String getProperSizeDisplay(int pSize) throws Exception {
@@ -4894,13 +4949,17 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 	}
 	
-	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String pUploadFilePath, String thumbPath, String realPath) throws Exception {
+	public boolean saveAttachmentsInfo(CommunityBoardItemVO item, String pUploadFilePath, String realPath) throws Exception {
 		String fileSize = "";
 		String filePath = "";
-		String[] temps = null;
-		String fileName = "";
 		Map<String, Object> map;
 		
+		String attachments = item.getAttachments();
+		String itemID = item.getItemID();
+		String boardID = item.getBoardID();
+		String thumbPath = item.getExtensionAttribute5();
+		String fileName = item.getExtensionAttribute4();
+
 		try {
 			if (!attachments.substring(attachments.length() - 1).equals(";")) {
 				attachments += ";";
@@ -4918,12 +4977,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					FileUtils.moveFile(file, destFile);
 					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
 				}
-				
-				temps = attachments.split(";")[i].split("_");
-				fileName = temps[temps.length-1];
 
 				if (!thumbPath.equals("")) {
-					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";"));
+					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";")[i]);
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("TempUpload") > -1) {
@@ -4933,6 +4989,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					} else {
 						map.put("filePath", thumbPath.split(";")[i]);
 					}
+					
 					ezCommunityDAO.updateAttachInfo(map);
 				}
 				

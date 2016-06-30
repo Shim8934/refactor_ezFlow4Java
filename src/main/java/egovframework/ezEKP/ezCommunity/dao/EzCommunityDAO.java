@@ -878,6 +878,15 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		
 	}
 
+	public CommunityClubVO boardItemListPhotoGet1(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.boardItemListPhotoGet1", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> boardItemListPhotoGet2 (Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
+	}
+
 
 
 }

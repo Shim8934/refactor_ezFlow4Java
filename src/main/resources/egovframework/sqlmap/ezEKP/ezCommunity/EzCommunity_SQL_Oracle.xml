@@ -277,6 +277,14 @@
 		{CALL EZCOMMUNITY.EZSP_SEARCHCOP(#v_SEARCHNAME#, #v_SEARCHVALUE#, #v_PSTART#, #v_PEND#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.boardItemListPhotoGet1"		parameterClass="Map"		resultClass="CommunityClubVO">
+		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET1(#v_USERINFO_USERID#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET2(#v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_USERINFO_LANG#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>

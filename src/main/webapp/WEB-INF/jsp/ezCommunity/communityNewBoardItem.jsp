@@ -522,7 +522,6 @@
 		        } else {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");
 		        }
-				
 		        
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
 		        xmlhttp.send(xmlDom);
@@ -570,7 +569,6 @@
 		        var start = new Date().getTime();
 		        
 		        while (new Date().getTime() < start + sTime) {
-		        	
 		        };
 		    }
 	
@@ -905,13 +903,14 @@
                 document.getElementById("boardID").value = pBoardID;
                 document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
                 document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-                var frm = document.getElementById('form');
   				
                 if( document.getElementById("cnt").value > 0) {
                 	var formData = new FormData();
-                	 $.each($('#file1')[0].files, function(i, file) {          
-                		 formData.append('file-' + i, file);
-                     });
+                	
+                	$.each($('#file1')[0].files, function(i, file) {          
+                		formData.append('file-' + i, file);
+                    });
+                	
                 	formData.append('mode',  document.getElementById('mode').value);
                 	formData.append("boardID", document.getElementById("boardID").value);
                 	formData.append("maxSize", document.getElementById("maxSize").value);
@@ -928,8 +927,6 @@
 						}
 	 				});
                 	
-//                 	frm.action = "/ezCommunity/upload.do";
-//                     frm.submit();
                     document.form.file1.value = "";	
                 }
                 
@@ -964,8 +961,8 @@
                 
                 AttachFileInfo(strXML);
 
-                document.getElementById("file1").type = "text";
-                document.getElementById("file1").type = "file";
+//                 document.getElementById("file1").type = "text";
+//                 document.getElementById("file1").type = "file";
             }
 		</script>
 	</head>

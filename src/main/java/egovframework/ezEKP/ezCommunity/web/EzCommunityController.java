@@ -149,7 +149,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티 로고 출력함수(ezCommon_Interface)
+	 * 커뮤니티 이미지 출력함수(ezCommon_Interface)
 	 */
 	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do")
 	public void getCommunityThumInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -179,7 +179,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 
 	/**
-	 * 커뮤니티만들기 화면 호출함수
+	 * 커뮤니티 만들기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commMake.do")
 	public String commMake(@CookieValue("loginCookie")String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
@@ -3148,6 +3148,289 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return sb.toString();
 	}
 	
+	/**
+	 * 포토게시판 목록화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardItemListPhoto.do")
+	public String boardItemListPhoto(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useEditor = config.getProperty("config.EDITOR");
+		
+		String useIE11Browser = "";
+		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
+		int pPage = 1, totalPage = 1, totalCount = 0;
+		
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+            useIE11Browser = "CK";
+		}
+		
+		if (request.getParameter("sortBy") != null) {
+			pSortBy = request.getParameter("sortBy");
+		}
+		if (request.getParameter("page") != null) {
+			pPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		String boardID = request.getParameter("boardID");
+		String code = request.getParameter("code");
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response);
+		
+		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID);
+		
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+			userInfo.setDisplayName1(userInfo.getDisplayName2());
+		}
+		
+		if (club == null) {
+			userLevel = "0";
+		} else {
+			if (club.getPermit().equals("0")) {
+				userLevel = "9";
+			} else {
+				userLevel = club.getPermit();
+			}
+		}
+		
+		int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
+	    int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+	    
+	    if (boardInfo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+	    	strXML = ezCommunityService.getNewItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy);
+	    	totalCount = Integer.parseInt(ezCommunityService.getNewItemListCount(userInfo.getId()));
+	    } else {
+	    	showAdjacent = "1";
+	    	strXML = ezCommunityService.getBoardListItemPhotoXML(userInfo.getId(), boardInfo.getBoardID(), pStartRow, pEndRow, pSortBy, commonUtil.getMultiData(userInfo.getLang()));
+	    	totalCount = Integer.parseInt(ezCommunityService.getBoardTotalItemCount(boardInfo.getBoardID()));
+	    }
+	    
+	    if (totalCount > 0) {
+			if (totalCount > boardInfo.getSs_Board_MaxRows()) {
+				if(totalCount % boardInfo.getSs_Board_MaxRows() > 0) {
+					totalPage = totalCount / boardInfo.getSs_Board_MaxRows() + 1;
+				} else {
+					totalPage = totalCount / boardInfo.getSs_Board_MaxRows();
+				}
+			} else {
+				totalPage = 1;
+			}
+		} else {
+			totalPage = 1;
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("code", code);
+		model.addAttribute("pSortBy", pSortBy);
+		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("boardInfo", boardInfo); //boardID, boardName, gubun
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("strXML", strXML);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("page", pPage);
+		
+		return "/ezCommunity/communityBoardItemListPhoto";
+	}
 	
+	/**
+	 * 포토게시판 쓰기화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto")
+	public String newBoardItemPhoto (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String editor = config.getProperty("config.EDITOR");
+		String pUploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		CommunityBoardItemVO item = null;
+		CommunityBoardPropertyVO boardInfo = null;
+		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "", strAbstract = "";
+		
+		/*폼프로세서 맞춤법 검사 버튼 display 여부 1(display:inline), 0(display:none)
+		String formProcSpelling = config.getProperty("config.FormProcSpelling");
+		
+		if (!formProcSpelling.equals("1")) {
+			formProcSpelling = "0";
+		}*/
+		
+		
+		String boardID = request.getParameter("boardID");
+		String mode = request.getParameter("mode");
+		
+		if (request.getParameter("itemID") != null) {
+			itemID = request.getParameter("itemID");
+		}
+		if (request.getParameter("url") != null) {
+			url = request.getParameter("url");
+		}
+		
+		// 20100119 보안처리 관련 추가작업(권한체크)
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response);
+		
+		String strNow = EgovDateUtil.getTodayTime();
+		
+		if (!url.equals("")) {
+			startDateTime = EgovDateUtil.getToday("-");
+			endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd");
+			expireDays = "-1";
+		} else {
+			boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+			
+			if (userInfo.getLang().equals("2")) {
+				boardInfo.setBoardName(boardInfo.getBoardName2());
+			}
+			
+			expireDays = boardInfo.getExpireDays();
+			
+			if (!mode.equals("new")) {
+				item = ezCommunityService.getItemXML(boardID, itemID);
+				
+				if (userInfo.getLang().equals("2")) {
+					item.setWriterName(item.getWriterName2());
+					item.setWriterDeptName(item.getWriterDeptName2());
+					item.setWriterCompanyName(item.getWriterCompanyName2());
+				}
+				
+				if (mode.equals("reply")) {
+					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", new Locale(globals.getProperty("Globals.language"))) + item.getTitle());
+					item.setItemLevel(item.getItemLevel() + 1);
+				} else {
+					strAbstract = item.getAbsTract();
+				}				
+			}
+			
+			startDateTime = EgovDateUtil.getToday("-");
+			
+			//만료일을 설정하는 부분
+			if (mode.equals("modify")) { // 수정인 경우
+				if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
+					if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
+						endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd");
+					} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
+						endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd");
+					}
+				} else { // 수정 전에 설정되었던 만료일로 세팅함
+					endDateTime = item.getEndDate().split(" ")[0];
+				}
+			} else { //새 게시나 답변인 경우
+				if (expireDays.equals("-1")) {
+					endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"); 
+				} else {
+					endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd");
+				}
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("editor", editor);
+		model.addAttribute("pUploadPath", pUploadFilePath);
+		model.addAttribute("pMode", mode);
+		model.addAttribute("pUrl", url);
+		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("item", item);
+		model.addAttribute("expireDays", expireDays);
+		
+		return "/ezCommunity/communityNewBoardItemPhoto";
+	}
+	
+	/**
+	 * 포토게시판 쓰기 실행함수
+	 */
+	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do")
+	@ResponseBody
+	public String saveItemPhoto (@RequestBody String xmlData, ModelMap model, HttpServletRequest request) throws Exception {
+		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+		String mode = request.getParameter("mode");
+		
+		String ret = "";
+		
+		String attachList = xmlDom.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
+		String smallName = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		String fileName = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String itemID = xmlDom.getElementsByTagName("ITEMID").item(0).getTextContent();
+		
+		String[] attachArray = attachList.split(";");
+        String[] smallArray = smallName.split(";");
+        String[] itemIDArray = itemID.split(";");
+        String[] fileNameArray = fileName.split(";");
+
+        if (attachArray.length == smallArray.length) {
+        	for (int i = 0; i < attachArray.length; i++) {
+        		xmlDom.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attachArray[i] + ";");
+        		xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
+        		xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).setTextContent(fileNameArray[i]);
+        		xmlDom.getElementsByTagName("ITEMID").item(0).setTextContent(itemIDArray[i]);
+        		xmlDom.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemIDArray[i]);
+        		
+        		if (attachArray.length > 2) {
+        			xmlDom.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + Integer.toString(i + 1));
+        		}
+        		
+        		if (i > 0) {
+        			mode = "New";
+        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.getTodayTime());
+        		}
+        		
+        		ret = ezCommunityService.newItem(xmlDom, mode, request.getServletContext().getRealPath(""));
+        	}
+        }
+        
+		return ret;
+	}
+	
+	//TODO 미완
+	/**
+	 * 포토게시판 앍기화면 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do")
+	public String boardItemViewPhoto(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useEditor = config.getProperty("config.EDITOR");
+		String oneLineReplyFlag = config.getProperty("config.ONELINE_REPLY_ENABLE");
+        String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
+        
+        String useIE11Browser = "", showAdjacent = "", pReservedItem = "", itemID = "";
+        
+		String boardID = request.getParameter("boardID");
+		String boardName = request.getParameter("boardName");
+		String code = request.getParameter("code");
+		
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+            useIE11Browser = "CK";
+		}
+		
+		if (request.getParameter("itemID") != null) {
+			itemID = request.getParameter("itemID");
+		}
+		if (request.getParameter("pReservedItem") != null) {
+			pReservedItem = request.getParameter("pReservedItem");
+		}
+		
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if (!boardInfo.getRead_FG().equals("true")) {
+			response.getWriter().print("<html><head><title>" + egovMessageSource.getMessage("ezCommunity.t175", new Locale(globals.getProperty("Globals.language"))) + "</title></head><body><table border=0 width=100% height=100%><tr><td align=center valign=center>" + egovMessageSource.getMessage("ezCommunity.t980", new Locale(globals.getProperty("Globals.language"))) + "</td></tr></table></body></html>");
+			response.getWriter().flush();
+		}
+		
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
+		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
+		
+		
+		return "/ezCommunity/communityBoardItemViewPhoto";
+	}
+	
+
 }
 

@@ -137,6 +137,8 @@ public class CommunityClubVO {
 	String userName;
 	/** 마스터 이름(다국어) */
 	String userName2;
+	/** 권한*/
+	String permit;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -546,5 +548,12 @@ public class CommunityClubVO {
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
 	}
+	public String getPermit() {
+		return permit;
+	}
+	public void setPermit(String permit) {
+		this.permit = permit;
+	}
+	
 	
 }

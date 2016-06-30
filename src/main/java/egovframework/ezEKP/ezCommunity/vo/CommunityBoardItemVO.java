@@ -71,6 +71,8 @@ public class CommunityBoardItemVO {
 	String docPassword;
 	/** 게시판 구분(일반(0), 그룹(1), 익명(2))*/
 	String gubun;
+	/** 읽음표시*/
+	int readFlag;
 	public String getItemID() {
 		return itemID;
 	}
@@ -281,4 +283,11 @@ public class CommunityBoardItemVO {
 	public void setGubun(String gubun) {
 		this.gubun = gubun;
 	}
+	public int getReadFlag() {
+		return readFlag;
+	}
+	public void setReadFlag(int readFlag) {
+		this.readFlag = readFlag;
+	}
+	
 }
