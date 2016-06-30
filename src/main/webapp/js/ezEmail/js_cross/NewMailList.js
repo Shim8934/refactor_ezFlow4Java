@@ -19,6 +19,7 @@ var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
 var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
+
 function HeaderIni(HeaderObject) {
     MakeHeaderHTML(HeaderObject);
 }
@@ -610,6 +611,8 @@ function GetListIevent_ongetxmlcomplete() {
             MakeListInfoHTML(GetListInfo_HeaderObject, GetListInfo_ContentObject);
 
             if (GetList_HTTP.responseXML != null) {
+            	parent.reloadRetryCount = 1;
+            	
                 if (SelectNodes(GetList_HTTP.responseXML, "maillist/response").length == 0) {
                     if (parseInt(document.getElementById("MailList").getAttribute("curPage")) > 1) {
                         goToPageByNum(parseInt(document.getElementById("MailList").getAttribute("curPage")) - 1);
@@ -623,7 +626,11 @@ function GetListIevent_ongetxmlcomplete() {
                 } catch (e) { }
             }
             else {
-                location.reload(true);
+            	parent.reloadRetryCount--;
+            	
+            	if (parent.reloadRetryCount >= 0) {
+            		location.reload(true);
+            	}
             }
 
             HiddenMailProgress();

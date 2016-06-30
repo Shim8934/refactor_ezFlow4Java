@@ -5,6 +5,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script type="text/javascript">
+		    var reloadRetryCount = 1;
+		</script>
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
