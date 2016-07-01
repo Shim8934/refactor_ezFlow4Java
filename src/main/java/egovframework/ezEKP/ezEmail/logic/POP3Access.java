@@ -38,8 +38,6 @@ public class POP3Access {
 		try {
 			Properties properties = new Properties();
 			
-			System.out.println("port : " + port);
-			
 			if (useSsl.equals("true")) {
 				properties.put("mail.pop3s.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 				properties.put("mail.pop3s.socketFactory.fallback", "false");
