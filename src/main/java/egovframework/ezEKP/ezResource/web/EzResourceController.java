@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -279,7 +280,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		String groupID = "";
 		String startDate = "";
 		String endDate = "";
-		//int page = 0;
+		String resultXML = "";
+		String resultXML1 = "";
+		int page = 0;
 		
 		try {
 			if (req.getParameter("resID") != null) {
@@ -295,7 +298,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				viewType = req.getParameter("viewType");
 			}
 			if (req.getParameter("page") != null) {
-				//page = Integer.parseInt(req.getParameter("page"));
+				page = Integer.parseInt(req.getParameter("page"));
 			}
 			
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -350,15 +353,138 @@ public class EzResourceController extends EgovFileMngUtil {
 						ownerNm = "owner_nm2";
 						deptName = "dept_name2";
 					}
+					
+					// 승인 or 비승인 보기
 					if (!approveFlag.trim().equals("")) {
+						resultXML += "<root>";
+						for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
+							if (orderXML.getElementsByTagName("approveFlag").item(i).getTextContent().equals(approveFlag)) {
+System.out.println("temp["+i+"]:"+orderXML.getElementsByTagName("appointment").item(i).getTextContent());
+								resultXML += "<appointment>";
+								resultXML += "<number>"+orderXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
+								resultXML += "<pnumber>"+orderXML.getElementsByTagName("pnumber").item(i).getTextContent()+"</pnumber>";
+								resultXML += "<owner_id>"+orderXML.getElementsByTagName("owner_id").item(i).getTextContent()+"</owner_id>";
+								resultXML += "<writer_id>"+orderXML.getElementsByTagName("writer_id").item(i).getTextContent()+"</writer_id>";
+								resultXML += "<subject>"+orderXML.getElementsByTagName("subject").item(i).getTextContent()+"</subject>";
+								resultXML += "<instancetype>"+orderXML.getElementsByTagName("instancetype").item(i).getTextContent()+"</instancetype>";
+								resultXML += "<location>"+orderXML.getElementsByTagName("location").item(i).getTextContent()+"</location>";
+								resultXML += "<dtstart>"+orderXML.getElementsByTagName("dtstart").item(i).getTextContent()+"</dtstart>";
+								resultXML += "<dtend>"+orderXML.getElementsByTagName("dtend").item(i).getTextContent()+"</dtend>";
+								resultXML += "<dstartTime>"+orderXML.getElementsByTagName("dstartTime").item(i).getTextContent()+"</dstartTime>";
+								resultXML += "<dendTime>"+orderXML.getElementsByTagName("dendTime").item(i).getTextContent()+"</dendTime>";
+								resultXML += "<dsDaytype>"+orderXML.getElementsByTagName("dsDaytype").item(i).getTextContent()+"</dsDaytype>";
+								resultXML += "<deDaytype>"+orderXML.getElementsByTagName("deDaytype").item(i).getTextContent()+"</deDaytype>";
+								resultXML += "<alldayevent>"+orderXML.getElementsByTagName("alldayevent").item(i).getTextContent()+"</alldayevent>";
+								resultXML += "<busystatus>"+orderXML.getElementsByTagName("busystatus").item(i).getTextContent()+"</busystatus>";
+								resultXML += "<groupflag>"+orderXML.getElementsByTagName("groupflag").item(i).getTextContent()+"</groupflag>";
+								resultXML += "<gubunFlag>"+orderXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
+								resultXML += "<importance>"+orderXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
+								resultXML += "<approveFlag>"+orderXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+								resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
+								resultXML += "<dept_name>"+orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"</dept_name>";
+								resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
+								resultXML += "<owner_nm2>"+orderXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
+								resultXML += "<dept_name2>"+orderXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"</dept_name2>";
+								resultXML += "<jobtitle>"+orderXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"</jobtitle>";
+								resultXML += "<jobtitle2>"+orderXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"</jobtitle2>";
+								resultXML += "</appointment>";
+							} 
+						}
+						resultXML += "</root>";
 						
+System.out.println("resultXML:"+resultXML);
+					// 전체 보기
+					} else {
+						resultXML = commonUtil.convertDocumentToString(orderXML);
 					}
-					//
-					int listCnt = xmlDom2.getElementsByTagName("appointment").getLength();
-
+					
+					
+					Document tempXML = commonUtil.convertStringToDocument(resultXML);
+					
+					for (int i=0; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
+						Element count = tempXML.createElement("count");
+						count.setTextContent(i + "");
+						tempXML.getElementsByTagName("appointment").item(i).appendChild(count);
+					
+					}
+//					for (int i=1; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
+//							for (int j=1; j<tempXML.getElementsByTagName("appointment").getLength(); j++) {
+								
+//								String startTemp = tempXML.getElementsByTagName("dtstart").item(j-1).getTextContent().substring(0,4)+tempXML.getElementsByTagName("dtstart").item(j-1).getTextContent().substring(5,7)+tempXML.getElementsByTagName("dtstart").item(j-1).getTextContent().substring(8,10);
+//								String endTemp = tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(0,4)+tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(5,7)+tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(8,10);
+//								int countArray[] = null;
+//								String temp;
+//	System.out.println("startTemp["+j+"]:"+startTemp);
+//	System.out.println("endTemp["+j+"]:"+endTemp);
+//								if (Integer.parseInt(startTemp) > Integer.parseInt(endTemp)) {
+									//tempXML.getElementsByTagName("appointment").item(j).appendChild(count);
+//									temp = tempXML.getElementsByTagName("appointment").item(j).getTextContent();
+//									tempXML.getElementsByTagName("appointment").item(j).setTextContent(tempXML.getElementsByTagName("appointment").item(j-1).getTextContent());
+//									tempXML.getElementsByTagName("appointment").item(j-1).setTextContent(temp);
+//								}
+//							}
+							//tempXML.getElementsByTagName("appointment").item(i).appendChild(count);	
+//					}
+					
+					/*for (int i=0; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
+						Element count = tempXML.createElement("count");
+						count.setTextContent(i + "");
+						
+						
+						}*/
+						//tempXML.getElementsByTagName("appointment").item(i).appendChild(count);
+					//}
+					
+					//tempXML = commonUtil.convertDocumentToString(orderXML);
+					
+					
+					reVal = commonUtil.convertDocumentToString(tempXML);
+					
+					resultXML1 += "<root>";
+					for (int i=0; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
+						int startCount = (page -1) * 20;
+						int endCount = page * 20;
+System.out.println("startCount:"+startCount);
+System.out.println("endCount:"+endCount);
+						if (Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent()) >= startCount && Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent())< endCount) {
+							resultXML1 += "<appointment>";
+							resultXML1 += "<number>"+tempXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
+							resultXML1 += "<pnumber>"+tempXML.getElementsByTagName("pnumber").item(i).getTextContent()+"</pnumber>";
+							resultXML1 += "<owner_id>"+tempXML.getElementsByTagName("owner_id").item(i).getTextContent()+"</owner_id>";
+							resultXML1 += "<writer_id>"+tempXML.getElementsByTagName("writer_id").item(i).getTextContent()+"</writer_id>";
+							resultXML1 += "<subject>"+tempXML.getElementsByTagName("subject").item(i).getTextContent()+"</subject>";
+							resultXML1 += "<instancetype>"+tempXML.getElementsByTagName("instancetype").item(i).getTextContent()+"</instancetype>";
+							resultXML1 += "<location>"+tempXML.getElementsByTagName("location").item(i).getTextContent()+"</location>";
+							resultXML1 += "<dtstart>"+tempXML.getElementsByTagName("dtstart").item(i).getTextContent()+"</dtstart>";
+							resultXML1 += "<dtend>"+tempXML.getElementsByTagName("dtend").item(i).getTextContent()+"</dtend>";
+							resultXML1 += "<dstartTime>"+tempXML.getElementsByTagName("dstartTime").item(i).getTextContent()+"</dstartTime>";
+							resultXML1 += "<dendTime>"+tempXML.getElementsByTagName("dendTime").item(i).getTextContent()+"</dendTime>";
+							resultXML1 += "<dsDaytype>"+tempXML.getElementsByTagName("dsDaytype").item(i).getTextContent()+"</dsDaytype>";
+							resultXML1 += "<deDaytype>"+tempXML.getElementsByTagName("deDaytype").item(i).getTextContent()+"</deDaytype>";
+							resultXML1 += "<alldayevent>"+tempXML.getElementsByTagName("alldayevent").item(i).getTextContent()+"</alldayevent>";
+							resultXML1 += "<busystatus>"+tempXML.getElementsByTagName("busystatus").item(i).getTextContent()+"</busystatus>";
+							resultXML1 += "<groupflag>"+tempXML.getElementsByTagName("groupflag").item(i).getTextContent()+"</groupflag>";
+							resultXML1 += "<gubunFlag>"+tempXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
+							resultXML1 += "<importance>"+tempXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
+							resultXML1 += "<approveFlag>"+tempXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+							resultXML1 += "<owner_nm>"+tempXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
+							resultXML1 += "<dept_name>"+tempXML.getElementsByTagName("dept_name").item(i).getTextContent()+"</dept_name>";
+							resultXML1 += "<writeDay>"+tempXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
+							resultXML1 += "<owner_nm2>"+tempXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
+							resultXML1 += "<dept_name2>"+tempXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"</dept_name2>";
+							resultXML1 += "<jobtitle>"+tempXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"</jobtitle>";
+							resultXML1 += "<jobtitle2>"+tempXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"</jobtitle2>";
+							resultXML1 += "<count>"+tempXML.getElementsByTagName("count").item(i).getTextContent()+"</count>";
+							resultXML1 += "</appointment>";
+						}
+					}
+					resultXML1 += "<totalcount>"+tempXML.getElementsByTagName("appointment").getLength()+"</totalcount>";
+					resultXML1 += "</root>";
+					reVal = resultXML1;
 				} else {
 					
 				}
+				
 			} else if (cmd.equals("update")) {
 				reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID());
 			}

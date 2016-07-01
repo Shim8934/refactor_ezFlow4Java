@@ -1031,6 +1031,7 @@ System.out.println("returnStr:"+returnStr);
 			String interval2 = xmlRes.getElementsByTagName("interval").item(0).getTextContent().trim();
 			int interval = Integer.parseInt(interval2);
 			String daysOfWeek = xmlRes.getElementsByTagName("daysOfWeek").item(0).getTextContent().trim();
+System.out.println("dayOfWeek:"+daysOfWeek);
 			String endRecurType = xmlRes.getElementsByTagName("endRecurType").item(0).getTextContent().trim();
 			String instances = xmlRes.getElementsByTagName("instances").item(0).getTextContent().trim();
 			
@@ -1044,6 +1045,8 @@ System.out.println("returnStr:"+returnStr);
 			String tmpEDTStr1 = tmpEDTStr;
 
 System.out.println("startDateTime:"+startDateTime);
+System.out.println("tmpSTime:"+tmpSTime);
+System.out.println("tmpETime"+tmpETime);
 			if (number(tmpSTime) > number(tmpETime)) {
 				startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 				tmpSDTStr = startDateTime.substring(0, 10);
@@ -1058,7 +1061,7 @@ System.out.println("startDateTime:"+startDateTime);
 			String[] wDay;
 			wDay = daysOfWeek.split(",");
 			int wDayCnt = wDay.length;
-			
+System.out.println("wDayCnt:"+wDayCnt);
 			returnXML.append("<DATA>");
 			
 			boolean whileFlag = true;
@@ -1071,12 +1074,13 @@ System.out.println("startDateTime:"+startDateTime);
 							wDay[i] = "0";
 						}
 						if (orgTmpDTStr.equals(selDTStr) && weekDay(tmpDTStr) == Integer.parseInt(wDay[i] + 1) && isFirst == true) {
+System.out.println("1111111");
 							isFirst = false;
 							secondWhileFlag = false;
 							break;
 						} else if (weekDay(tmpDTStr) < Integer.parseInt(wDay[i]) + 1 || !selDTStr.equals(tmpDTStr)) {
+System.out.println("2222222");
 							int tmpWeekDay = weekDay(tmpDTStr);
-							
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
@@ -1093,6 +1097,7 @@ System.out.println("startDateTime:"+startDateTime);
 					tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (interval * 7), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 					
 					if (weekDay(tmpDTStr) != 1) {
+System.out.println("3333333");
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
 						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (1- weekDay(tmpDTStr)), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
@@ -1103,7 +1108,10 @@ System.out.println("startDateTime:"+startDateTime);
 						if (wDay[i].equals("")) {
 							wDay[i] = "0";
 						}
+System.out.println("1:"+weekDay(tmpDTStr));
+System.out.println("2:"+Integer.parseInt(wDay[i]) + 1);
 						if (weekDay(tmpDTStr) != (Integer.parseInt(wDay[i]) + 1)) {
+System.out.println("4444444");
 							int tmpWeekDay = weekDay(tmpDTStr);
 							
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
@@ -1116,7 +1124,8 @@ System.out.println("startDateTime:"+startDateTime);
 						break;
 					}
 				}
-				
+System.out.println("tmpDTStr"+tmpDTStr);
+System.out.println("endRecurType:"+endRecurType);				
 				if (endRecurType.equals("0")) {
 					if (number(tmpDTStr) > number(eDate)) {
 						break;
@@ -1126,6 +1135,7 @@ System.out.println("startDateTime:"+startDateTime);
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
 							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
+System.out.println("@@@@@:"+returnXML);
 						}
 					}
 				} else if (endRecurType.equals("1")) {
@@ -1147,7 +1157,7 @@ System.out.println("startDateTime:"+startDateTime);
 					if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
 						break;
 					} else  {
-						if ((number(tmpDTStr) > number(eDate) || number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1))) {
+						if ((number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1))) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
 							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
@@ -1161,6 +1171,7 @@ System.out.println("startDateTime:"+startDateTime);
 				}
 			}
 			returnXML.append("</DATA>");
+System.out.println("returnXML:"+returnXML.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2757,6 +2768,8 @@ System.out.println("!!");
 				attachFlag = "0";
 			}
 			
+			//timedisplay = 1
+			timeDisplay = "1";
 			addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
 					entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID);
 			String returnStr = "";

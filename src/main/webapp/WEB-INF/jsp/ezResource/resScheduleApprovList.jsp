@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript">
+			var lang = "${userInfo.lang}";
 			var pBrdid = "${resID}";
 	    	var xmlhttp;
 	    	var ss_companyID = "${userInfo.companyID}";
@@ -56,7 +57,7 @@
 	        	$("#Sdatepicker2").datepicker('setDate', NowDate2);
 	    	});
 	    	
-	    	if("${userInfo.lang}" == "1") {
+	    	if(lang == "1") {
 	    		$(function () {
 			        $.datepicker.regional['ko'] = {
 		            	closeText: '닫기',
@@ -99,8 +100,9 @@
 	    	}
 
 	    	function getCalendarList(type) {
-		        if (type == "search")
+		        if (type == "search") {
 	            	CurPage = "1";
+		        }
 
 	        	document.getElementById("listviewtype").selectedIndex
 	        	var listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
@@ -128,7 +130,7 @@
 	            	var list = "<ROWS>";
 
 	            	totalPage = Math.ceil(new Number(getNodeText(SelectNodes(listxml, "root/totalcount")[0]) / 20));
-
+					
 	            	if(totalPage == 0){
 		                document.getElementById("ApprovList").innerHTML = "";
 	                	var listheader = loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase());
@@ -166,7 +168,7 @@
 	                	list += "</CELL><CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "subject")[i]) + "]]></VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
-	                	if ("${userInfo.lang}" == "1") {
+	                	if (lang == "1") {
 		                    list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "</VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm")[i]) + "</VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "jobtitle")[i]) + "</VALUE></CELL>";
@@ -572,7 +574,7 @@
 		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 		            PagingHTML += strtext;
 	    	    } else {
-	            	strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > BlockSize) {

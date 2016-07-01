@@ -45,13 +45,15 @@
 	        var sDT2 = "${startDateTime2}";
 	        var eDT2 = "${endDateTime2}";
 	        var pNoneActiveX = "${pNoneActiveX}";
+	        var brdName = "${brdName}";
+	        var resID = "${resID}";
 	        
 	        window.onload = function () {
 	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 
-	            if ("${brdName}" != "" && "${resID}" != "") {
-	                ItemArray[0] = Array("${resID}");
-	                ItemArray[1] = Array("${brdName}");
+	            if (brdName != "" && resID != "") {
+	                ItemArray[0] = Array(resID);
+	                ItemArray[1] = Array(brdName);
 	                //brdNm에 trim
 	                //document.getElementById('itemList').innerHTML = encodeURIComponent("${brdName}");
 	                document.getElementById('itemList').innerHTML = "${brdName}";
@@ -64,19 +66,19 @@
 	            createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
 	            createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
 	            createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
+	            
 	            if (reFlagVal == "1") {
 	                if (org_num != "" && org_ownerID != "") {
 	                    xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
 	                    xmlHttp.send(xmlpara);
-
 	                    resultXML = xmlHttp.responseXML;
-	                    if (resultXML.xml != "") {
+
+	                    if (resultXML != "") {
 	                        g_data["recurrence"] = getXmlString(resultXML);
 	                    }
 	                }
 	                show_repetition_info2();
-	            }
-	            else {
+	            } else {
 	                document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
 	            }
 	            
