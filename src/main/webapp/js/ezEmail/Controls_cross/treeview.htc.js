@@ -491,7 +491,7 @@
 
             var depth = g_nodeArray["depth"][nodeIdx].length;
             var node = document.getElementById(g_nodeid + nodeIdx)
-            var childNodes = document.getElementById(g_nodeid + nodeIdx).parentElement.parentElement.children.item(0);
+            var childNodes = document.getElementById(g_nodeid + nodeIdx).parentElement.parentElement.children.item(1);
 
             if (childNodes.innerHTML == "") {
                 var imgnode = node.parentElement.children.item(depth - 1);
