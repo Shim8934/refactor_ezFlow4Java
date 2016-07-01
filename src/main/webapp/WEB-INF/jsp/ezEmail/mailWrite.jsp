@@ -725,8 +725,8 @@
 	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
 	                        <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li>
-	                        <li><span onclick="LoadFormat_onClick()">
-	                            <spring:message code='ezEmail.t824' /></span></li>
+	                        <!-- <li><span onclick="LoadFormat_onClick()">
+	                            <spring:message code='ezEmail.t824' /></span></li> -->
 	                        <li><span onclick="NameCertify_onClick()">
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li style="margin-left:5px;"><span onclick="Option_onClick()" id="Span1">
