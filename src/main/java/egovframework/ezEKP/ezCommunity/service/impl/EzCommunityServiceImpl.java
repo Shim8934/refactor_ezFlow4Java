@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.hpsf.Thumbnail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2084,7 +2083,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String pSignatureDir = ""; 
 		
 		if (pType.equals("COMMUNITYTHUM")) {
-			pSignatureDir = config.getProperty("upload_community.ROOT") + commonUtil.separator + pBoardID + commonUtil.separator + "uploadFile";
+			pSignatureDir = config.getProperty("upload_community.ROOT");
 		} else {
 			pSignatureDir = config.getProperty("upload_community.LOGO");
 		}
@@ -2751,7 +2750,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pUserID", id);
-		map.put("v_pNow", EgovDateUtil.convertDate(EgovDateUtil.getTodayTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", ""));
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		String result = ezCommunityDAO.getReservedItemListCount(map); 
 		
@@ -4386,6 +4385,56 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		sb.append("</NODES>");
 		
 		return sb.toString();
+	}
+
+	
+	
+	@Override
+	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO pItem) throws Exception {
+		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
+		Map<String, Object> map;
+		List<CommunityBoardItemVO> list;
+		
+		if (previousItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_PBOARDID", boardID);
+			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
+			
+			list = ezCommunityDAO.getAdjacentItemsGet2Pho(map);
+
+			for (CommunityBoardItemVO item : list) {
+				if (item.getItemID().equals(pItem.getItemID()) && list.indexOf(item) > 0) {					
+					previousItemID = list.get(list.indexOf(item) - 1).getItemID().trim();
+					previousTitle = list.get(list.indexOf(item) - 1).getTitle().trim();
+				}
+			}
+		}
+		
+		if (nextItemID.equals("")) {
+			map = new HashMap<String, Object>();
+			
+			map.put("v_PBOARDID", boardID);
+			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
+			
+			list = ezCommunityDAO.getAdjacentItemsGet3Pho(map);
+
+			for (CommunityBoardItemVO item : list) {
+				if (item.getItemID().equals(pItem.getItemID()) && list.indexOf(item) < list.size() - 1) {
+					nextItemID = list.get(list.indexOf(item) + 1).getItemID().trim();
+					nextTitle = list.get(list.indexOf(item) + 1).getTitle().trim();
+				}
+			}
+		}
+		
+		Map<String, String> ret = new HashMap<String, String>();
+		
+		ret.put("previousItemID", previousItemID);
+		ret.put("previousTitle", previousTitle);
+		ret.put("nextItemID", nextItemID);
+		ret.put("nextTitle", nextTitle);
+		
+		return ret;
 	}
 
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {

@@ -1,10 +1,15 @@
 package egovframework.ezEKP.ezCommunity.web;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -171,7 +176,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
 			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM");
-			
+
 	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 	        }
@@ -1837,7 +1842,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
 		if (sysopCheck != 1) {
-			return "/error";
+			return "/error.do";
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
@@ -3006,8 +3011,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 오늘의 커뮤니티 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/todayCop.do", method = RequestMethod.POST)
-	public String todayCop(@CookieValue("loginCookie") String loginCookie, ModelMap model) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	public String todayCop(ModelMap model) throws Exception {
 		int num = 0;
 		String cCatecAName = "", cCatecBName = "";
 		
@@ -3382,7 +3386,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return ret;
 	}
 	
-	//TODO 미완
 	/**
 	 * 포토게시판 앍기화면 호출함수
 	 */
@@ -3394,6 +3397,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
         
         String useIE11Browser = "", showAdjacent = "", pReservedItem = "", itemID = "";
+        String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
+        String gImageUrl = "", gWidth = "", gHeight = "";
         
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
@@ -3409,6 +3414,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("pReservedItem") != null) {
 			pReservedItem = request.getParameter("pReservedItem");
 		}
+		if (request.getParameter("showAdjacent") != null) {
+			showAdjacent = request.getParameter("showAdjacent");
+		}
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
@@ -3419,18 +3427,83 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID);
+		ezCommunityService.setAsRead(userInfo, boardID, itemID);
+		
+		if (item == null) {
+			return response.encodeRedirectURL("/error.do");
+		}
+		
+		if (EgovDateUtil.getDaysDiff(EgovDateUtil.getToday("-"), item.getParentWriteDate().substring(0, 10)) > 0) {
+			pReservedItem = "true";
+		}
+		
+		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
+			item.setWriteDate(item.getParentWriteDate());
+		}
+		
+		if (item.getEndDate().substring(0, 4).equals("9999")) {
+			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", new Locale(globals.getProperty("Globals.language"))));
+		}
+		
+		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+			Map<String, String> map = ezCommunityService.getAdjacentItemsPhoto(boardID, item);
+			
+            previousItemID = map.get("previousItemID");
+            previousTitle = map.get("previousTitle");
+            nextItemID = map.get("nextItemID");
+            nextTitle = map.get("nextTitle");
+
+			if (previousTitle.equals("")) {
+				previousTitle = egovMessageSource.getMessage("ezCommunity.t193", new Locale(globals.getProperty("Globals.language")));
+			}
+			
+			if (nextTitle.equals("")) {
+				nextTitle = egovMessageSource.getMessage("ezCommunity.t191", new Locale(globals.getProperty("Globals.language")));
+			}
+		}
+		
+		if (item.getExtensionAttribute5().length() > 0) {
+			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile//s_", "/UploadFile//"));
+			String pFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
+			
+			File file = new File(pFilePath);
+			
+			if (file.exists()) {
+				BufferedImage image = ImageIO.read(file);
+				
+				if (image.getWidth() > 600) {
+					gWidth = "600";
+					gHeight = Integer.toString(image.getHeight() * Integer.parseInt(gWidth) / image.getWidth());
+				} else {
+					gWidth = Integer.toString(image.getWidth());
+					gHeight = Integer.toString(image.getHeight());
+				}
+			} else {
+				gWidth = "600";
+				gHeight = "450";
+			}
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("pReservedItem", pReservedItem);
 		model.addAttribute("boardInfo", boardInfo);
-		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
-		
+		model.addAttribute("item", item);
+		model.addAttribute("previousItemID", previousItemID);
+		model.addAttribute("previousTitle", previousTitle);
+		model.addAttribute("nextItemID", nextItemID);
+		model.addAttribute("nextTitle", nextTitle);
+		model.addAttribute("gImageUrl", gImageUrl);
+		model.addAttribute("gWidth", gWidth);
+		model.addAttribute("gHeight", gHeight);
 		
 		return "/ezCommunity/communityBoardItemViewPhoto";
 	}
-	
 
 }
 

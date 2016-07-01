@@ -236,6 +236,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityClubVO>) list("EzCommunityDAO.categoryListGet", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> searchCop(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.searchCop", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> boardItemListPhotoGet2 (Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -374,6 +384,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public CommunityCCategoryVO mainPageCategory(Map<String, Object> map) throws Exception {
 		return (CommunityCCategoryVO) select("EzCommunityDAO.mainPageCategory", map);
+	}
+	
+	public CommunityClubVO boardItemListPhotoGet1(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.boardItemListPhotoGet1", map);
 	}
 	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
@@ -873,18 +887,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityClubVO> searchCop(Map<String, Object> map) throws Exception {
-		return (List<CommunityClubVO>) list("EzCommunityDAO.searchCop", map);
-		
-	}
-
-	public CommunityClubVO boardItemListPhotoGet1(Map<String, Object> map) throws Exception {
-		return (CommunityClubVO) select("EzCommunityDAO.boardItemListPhotoGet1", map);
+	public List<CommunityBoardItemVO> getAdjacentItemsGet2Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet2Pho", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> boardItemListPhotoGet2 (Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
+	public List<CommunityBoardItemVO> getAdjacentItemsGet3Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
 	}
 
 

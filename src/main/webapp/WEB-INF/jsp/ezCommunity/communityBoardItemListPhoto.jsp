@@ -101,7 +101,7 @@
     						listXML += "<table width='146' border='0' cellspacing='0' cellpadding='0' style='margin-right:10px'>";
     						listXML += "<tr>";
     						var imgUrl = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE5").trim();
-                            listXML += "<td width='146' height='116' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + pBoardID + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1] + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";
+                            listXML += "<td width='146' height='116' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + pBoardID + "&fileName=" + imgUrl + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";
                             
                             listXML += "</tr></table>";
                             listXML += "<table width='146' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";

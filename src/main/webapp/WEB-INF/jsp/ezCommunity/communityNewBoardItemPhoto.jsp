@@ -120,7 +120,7 @@
 		        if( pMode == "modify") {												
 		            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
 		            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
-			        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("<c:out value = '${extensionAttribute4}' />");
+			        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("<c:out value = '${item.extensionAttribute4}' />");
 		            document.getElementById("file1").multiple = false;
 		        }
 							
@@ -231,10 +231,11 @@
 		        for(i=0;i<xmldomNodes.length;i++) {
 		            filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
 		            filename = MakeXMLString(filepath.substr(89, filepath.length - 88));
-		            filepath = MakeXMLString("/Upload_Community/" + filepath);		
+		            filepath = MakeXMLString("/upload_Community/" + filepath);
+		            
 		            str += "<ROW><CELL>";	
-		            str += "<VALUE>" + "<c:out value = '${extensionAttribute4}' />" + "</VALUE>";
-		            str += "<DATA1>" + "<c:out value = '${extensionAttribute4}' />" + "</DATA1>";
+		            str += "<VALUE>" + "<c:out value = '${item.extensionAttribute4}' />" + "</VALUE>";
+		            str += "<DATA1>" + "<c:out value = '${item.extensionAttribute4}' />" + "</DATA1>";
 		            str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";
@@ -246,7 +247,7 @@
 		        }
 		        
 		        str += "</ROWS></LISTVIEWDATA>";
-alert(str);
+		        
 		        return str;
 		    }
 	
@@ -698,7 +699,7 @@ alert(str);
 		        InitializeSettings();
 						
 		        if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/common/downloadattach.aspx?filepath=" + escape(pUrl) + "&filename=test.mht";
+		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/common/downloadattach.aspx?filepath=" + encodeURIComponent(pUrl) + "&filename=test.mht";
 		            document.getElementById('docContent').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
 		            
 		            if (gubun == "3") {
@@ -775,7 +776,7 @@ alert(str);
 		        str = ReplaceText(str, "&quot;", "\"");
 		        return str;
 		    }
-	
+		    
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
@@ -785,7 +786,7 @@ alert(str);
 		                message.SetEditorContent("");
 		            } else {
 		                if (pUrl == "") {
-		                    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+		                    var fullPath = strContentLocation;
 		                    
 		                    if (pMode == "reply") {
 		                        var htmlData = message.SetEditorContentURL2(fullPath);

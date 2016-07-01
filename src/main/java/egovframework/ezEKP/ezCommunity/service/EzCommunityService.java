@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommunity.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,8 @@ public interface EzCommunityService {
 	public List<CommunityCCategoryVO> mainPageGet4(String cat) throws Exception;
 	
 	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow) throws Exception;
+	
+	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception ;
 	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -331,9 +334,10 @@ public interface EzCommunityService {
 
 	public void okNoSet(String flag, String code, String cID) throws Exception;
 
+
 	
 
-	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception ;
+	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item) throws Exception;
 
 	
 

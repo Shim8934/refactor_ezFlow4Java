@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>		
 		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
  		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
@@ -18,17 +18,17 @@
 	
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		    var curFontSize = 1;
-		    var pItemID = "<c:out value = '${pItemID}' />";
-		    var pBoardID = "<c:out value = '${pBoardID}' />";
-		    var pBoardName = "<c:out value = '${pBoardName}' />";
-		    var strWriterID = "<c:out value = '${strWriterID}' />";
-		    var strWriterName = "<c:out value = '${strWriterName}' />";
-		    var strWriterDeptName = "<c:out value = '${strWriterDeptName}' />";
-		    var strWriterCompanyName = "<c:out value = '${strWriterCompanyName}' />";
-		    var strWriteDate = "<c:out value = '${strWriteDate}' />";
-		    var strImportance = "<c:out value = '${strImportance}' />";
-		    var strEndDate = "<c:out value = '${strEndDate}' />";
-		    var strContentLocation = "<c:out value = '${strContentLocation}' />";
+		    var pItemID = "<c:out value = '${item.itemID}' />";
+		    var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
+		    var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
+		    var strWriterID = "<c:out value = '${item.writerID}' />";
+		    var strWriterName = "<c:out value = '${item.writerName}' />";
+		    var strWriterDeptName = "<c:out value = '${item.writerDeptName}' />";
+		    var strWriterCompanyName = "<c:out value = '${item.writerCompanyName}' />";
+		    var strWriteDate = "<c:out value = '${item.writeDate}' />";
+		    var strImportance = "<c:out value = '${item.importance}' />";
+		    var strEndDate = "<c:out value = '${item.endDate}' />";
+		    var strContentLocation = "<c:out value = '${item.contentLocation}' />";
 		    var strAttachList = "<c:out value = '${strAttachments}' />";
 		    var SSUserID = "<c:out value = '${userInfo.id}' />";
 		    var SSUserName = "<c:out value = '${userInfo.displayName1}' />";
@@ -43,7 +43,7 @@
 		    var pReservedItem = "<c:out value = '${pReservedItem}' />";
 		    var g_progresswin;
 		    var OneLineReplyFlag = "<c:out value = '${ oneLineReplyFlag }' />";
-		    var gubun = "<c:out value = '${ gubun }' />";
+		    var gubun = "<c:out value = '${boardInfo.gubun }' />";
 		    var lang = "<c:out value = '${ strUserLang }' />";
 		    var pUse_Editor = "<c:out value = '${ userEditor}' />";
 		    
@@ -122,12 +122,12 @@
 		    }
 	
 		    function MhtConvert() {
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(strContentLocation);
+		        var fullPath = "/ezCommon/downloadAttach.do?filepath=" + encodeURIComponent(strContentLocation);
 		        objMHT.sync = true;
 		        var strMht = objMHT.DownloadURL(fullPath);
 		        
 		        if (strMht.length > 200000) {
-		            g_progresswin = window.showModelessDialog("show_progress.aspx?fileinfo=" + escape("<spring:message code = 'ezCommunity.t206' />"), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
+		            g_progresswin = window.showModelessDialog("show_progress.aspx?fileinfo=" + encodeURIComponent("<spring:message code = 'ezCommunity.t206' />"), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken;");
 		        }
 	
 		        objMHT.mhtData = strMht;
@@ -146,12 +146,12 @@
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
 		            
-		            return false;
+		            return true;
 		        }
 		        
 		        xmlhttp = null;
 		        
-		        return true;
+		        return false;
 		    }
 	
 		    function btn_Delete_Onclick() {
@@ -241,7 +241,7 @@
 	                }
 	            }
 
-				window.location.href = "/ezCommunity/newBoardItemPhotoCross.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+				window.location.href = "/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	            
 	            
 	        }
@@ -275,6 +275,7 @@
 
 	            xmldom.async = false;
 	            xmldom.preserveWhiteSpace = true;
+
 	            xmldom = loadXMLString(xmlhttp.responseText);
 	            xmlhttp = null;
 
@@ -293,8 +294,8 @@
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
 
-	                filepath = "/Upload_BoardSTD/" + filepath;
-	                filesize = SelectSingleNodeValue(xmldomNodes[i], "filesize");
+	                filepath = "/upload_community/" + filepath;
+	                filesize = SelectSingleNodeValue(xmldomNodes[i], "FileSize");
 
 	                var target = "_blank";
 	                var Ext = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -303,8 +304,8 @@
 	                    target = "";
 	                }
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref='/myoffice/Common/downloadattach.aspx?filename=" + escape(filename) + "&filepath=" + escape(filepath) + "'>";
-	                strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='/myoffice/Common/downloadattach.asp?filename=" + escape(filename) + "&filepath=" + escape(filepath) + "' target='" + target + "'>";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref='/ezCommon/downloadAttach.do?filename=" + encodeURIComponent(filename) + "&filepath=" + encodeURIComponent(filepath) + "'>";
+	                strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='/ezCommon/downloadAttach.do?filename=" + encodeURIComponent(filename) + "&filepath=" + encodeURIComponent(filepath) + "' target='" + target + "'>";
 
 	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 	            }
@@ -472,18 +473,23 @@
 	            strXML += "<PASSWORD></PASSWORD>";
 	            strXML += "</DATA>";
 
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/saveOneLineReply.do", false);
-	            xmlhttp.send(strXML);
-
-	            if (xmlhttp.status == 200) {
-	                xmlhttp = null;
-	                alert("<spring:message code = 'ezCommunity.t943' />");
-	                document.getElementById("onelinereply").value = "";
-	                getOneLineReply();
-	            }
-
-	            xmlhttp = null;
+	            $.ajax({
+					type : "POST",
+					async : false,
+					url : "/ezCommunity/saveOneLineReply.do",
+					data : { "strXML"	:	strXML, 
+						   },
+					success: function(){
+						alert("<spring:message code='ezCommunity.t943'/>");
+						document.getElementById('onelinereply').value = "";
+						
+						if (gubun == "2") {
+							document.getElementById('txtPassWord').value = "";
+						}
+						    
+						getOneLineReply();
+					}
+	            });
 	        }
 
 	        function delete_onelinereply(pReplyID) {
@@ -507,31 +513,38 @@
 	        }
 
 	        function getOneLineReply() {
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-	            xmlhttp.send();
-
-	            var xmldom = createXmlDom();
-	            xmldom = loadXMLString(xmlhttp.responseText);
-	            xmlhttp = null;
-
-	            strHTML = "";
-	            var temp;
-
-	            for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-	                temp = i + 1;
-	                
-	                if (gubun != "2") {
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-	                } else {
-	                    strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
-	                }
-	            }
-
-	            if (i == 0)
-	                strHTML = "<spring:message code = 'ezCommunity.t946' />";
-
-	            document.getElementById("onelinereplylist").innerHTML = strHTML;
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCommunity/readOneLineReply.do",
+					data : { boardID	:	pBoardID, 
+							 itemID		:	pItemID
+						   },
+					success: function(result){
+						strHTML = "";
+		 	            var temp = 0;
+		 	            
+		 	           $.each(result["oneLineReplyList"], function(idx, item){
+		 	            	temp = temp+1;
+		 	            	if (gubun != "2") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	} else if (gubun == "2") {
+		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
+		 	            	}
+		 	           });
+		 	           
+		 	           if (temp == 0){
+		 	        	  strHTML = "<spring:message code='ezCommunity.t946'/>";
+		 	           }
+		 	                
+		 	           try {
+		 	               document.getElementById('onelinereplylist').innerHTML = strHTML;
+		 	           }
+		 	           catch (e) {
+		 	           }
+					}
+				});
 	        }
 
 	        function ReplaceText(orgStr, findStr, replaceStr) {
@@ -582,12 +595,13 @@
 	<body class="popup" style ="overflow-x:hidden">
 		<table class="layout">
 			<tr>
+			
 		    	<td style="height:20px">
 		    		<div id="menu">
 			        	<ul>
 			        	
 					        <c:choose>
-					        	<c:when test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
+					        	<c:when test="${boardInfo.boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					        		<li ID='btn_Reply' style="display:none"><span onclick='btn_Reply_Onclick()'><spring:message code = 'ezCommunity.t207' /></span></li>
 					          		<li ID='btn_Move' style="display:none"><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code = 'ezCommunity.t20' /></span></li>
 					        	</c:when>
@@ -599,7 +613,7 @@
 					        	</c:when>
 					        	<c:otherwise>
 					        		<c:choose>
-					        			<c:when test="${gubun == '2' }">
+					        			<c:when test="${boardInfo.gubun == '2' }">
 					        				<li ID='Li2' style="display:none"><span onclick='btn_Reply_Onclick()'><spring:message code = 'ezCommunity.t207' /></span></li>
 											<li ID='Li3'><span onclick='btn_Modify_Onclick()'><spring:message code = 'ezCommunity.t6' /></span></li>
 											<li ID='Li4'><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
@@ -608,9 +622,9 @@
 											<li ID='btn_Print' style="display:none"><span onclick='btn_Print_Onclick()'><spring:message code = 'ezCommunity.t951' /></span></li>
 					        			</c:when>
 					        			
-					        			<c:when test=" ${strWriterID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' }">
+					        			<c:when test="${item.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' }">
 					        				<c:choose>
-					        					<c:when test="${gubun != '2' }">
+					        					<c:when test="${boardInfo.gubun != '2' }">
 					        						<li ID='Li7' style="display:none"><span onclick='btn_Reply_Onclick()'> <spring:message code = 'ezCommunity.t207' /></span></li>
 													<li ID='Li8'><span onclick='btn_Modify_Onclick()'><spring:message code = 'ezCommunity.t6' /></span></li>
 													<li ID='Li9'><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
@@ -638,7 +652,7 @@
 											<li ID='Li15' style="display:none"><span onclick='btn_Reply_Onclick()'><spring:message code = 'ezCommunity.t207' /></span></li>
 									        <li ID='Li16' style="display:none"><span onclick='mail_boarditem()'><spring:message code = 'ezCommunity.t950' /></span></li>
 									        
-									        <c:if test="${gubun != 2 }">
+									        <c:if test="${boardInfo.gubun != 2 }">
 									        	<li ID='Li17' style="display:none"><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code = 'ezCommunity.t20' /></span></li>
 									        </c:if>
 			
@@ -668,15 +682,15 @@
 		    		<table class="content">
 			        	<tr>
 				        	<th><spring:message code = 'ezCommunity.t138' /></th>
-				          	<td id="WriteUserNM" style="white-space:nowrap"><div id = title style="OVERFLOW-Y:auto;WIDTH:%;cursor:pointer;HEIGHT:16px;vertical-align:middle" onclick='OpenUserInfo("${strWriterID}")'><c:out value = '${strWriterName}' /></div></td>
+				          	<td id="WriteUserNM" style="white-space:nowrap"><div id = title style="OVERFLOW-Y:auto;WIDTH:%;cursor:pointer;HEIGHT:16px;vertical-align:middle" onclick='OpenUserInfo("${item.writerID}")'><c:out value = '${item.writerName}' /></div></td>
 				          	<th><spring:message code = 'ezCommunity.t932' /></th>
-				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${strWriterDeptName }' /></span></td>
+				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${item.writerDeptName }' /></span></td>
 				          	<th><spring:message code = 'ezCommunity.t960' /></th>
-				          	<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${extensionAttribute3}' /></span></td>
+				          	<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
 				        </tr>
 				        <tr>
 				        	<th><spring:message code = 'ezCommunity.t210' /></th>
-				          	<td width="100%" id="cTitle" colSpan="5"><div id="Div1" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; overflow-y:auto;"><c:out value = '${strTitle}' /></div></td>
+				          	<td width="100%" id="cTitle" colSpan="5"><div id="Div1" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; overflow-y:auto;"><c:out value = '${item.title}' /></div></td>
 				        </tr>
 			    	</table>
 			   	</td>
@@ -684,7 +698,7 @@
 			<tr>
 			
 			<c:choose>
-				<c:when test="${gubun != '3' }">
+				<c:when test="${boardInfo.gubun != '3' }">
 					<td class="pad1">
 				        <iframe id="message" class="margin" name="message" style="padding:0; height:100%; width:100%; overflow:auto;border:0px"></iframe>
 				    </td>
@@ -692,7 +706,7 @@
 				
 				<c:otherwise>
 				    <td class="pad1">
-				    	<div class="viewbox"><img src='${g_ImageUrl}' border=0 width='${g_Width }' height ='${g_Height}' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src, "_blank", "", "false") >
+				    	<div class="viewbox"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src,"_blank","","false") >
 				        	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;height:100%;border:0px"></iframe>      
 				    	</div>
 				    </td>
@@ -765,7 +779,7 @@
 		          					</c:otherwise>
 		          				</c:choose>
 		          				
-		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('{previousItemID}')"><c:out value = '${previousTitle}' /></div>
+		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('${previousItemID}')"><c:out value = '${previousTitle}' /></div>
 		          				</td>
 		        			</tr>
 		        			<tr>
@@ -781,7 +795,7 @@
 		          					</c:otherwise>
 		          				</c:choose>
 		          				
-		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('{nextItemID}')"><c:out value = '${nextTitle }' /></div>
+		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('${nextItemID}')"><c:out value = '${nextTitle }' /></div>
 		          				</td>
 		        			</tr>
 		      			</table>
