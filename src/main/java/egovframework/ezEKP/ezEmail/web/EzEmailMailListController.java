@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -399,8 +401,15 @@ public class EzEmailMailListController {
 				((IMAPMessage)message).setPeek(true);
 				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false);
 				String htmlBody = bodyInfoList.get(0);
-				htmlBody = htmlBody.replaceAll("(?i)<style((.|\\n|\\r)*?)<\\/style>", "");
-				htmlBody = htmlBody.replaceAll("<.*?>", "");
+				
+				Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+				Matcher m = p.matcher(htmlBody);
+				htmlBody = m.replaceAll("");
+				
+				p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+				m = p.matcher(htmlBody);
+				htmlBody = m.replaceAll("").trim();
+
 				int minLen = Math.min(200, htmlBody.length());
 				htmlBody = htmlBody.substring(0, minLen);
 				
