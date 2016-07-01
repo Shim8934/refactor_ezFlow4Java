@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.logic;
 
 import java.util.Properties;
 
+import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
@@ -115,6 +116,18 @@ public class POP3Access {
 		return returnValue;
 	}
 	
+	public Folder getFolder(String folderName) {
+		Folder folder = null;
+		
+		try {
+			folder = getStore().getFolder(folderName);
+		} catch (MessagingException e) {
+			logger.error("Error get folder: " + e.getMessage());
+		}
+		
+		return folder;
+	}
+	
 	
 //	public int getUnreadCount(String folderName){
 //		int unreadCount = 0;
@@ -124,18 +137,6 @@ public class POP3Access {
 //			logger.error("Error get unread message count: " + e.getMessage());
 //		}
 //		return unreadCount;
-//	}
-//	
-//	public Folder getFolder(String folderName) {
-//		Folder folder = null;
-//		
-//		try {
-//			folder = getStore().getFolder(folderName);
-//		} catch (MessagingException e) {
-//			logger.error("Error get folder: " + e.getMessage());
-//		}
-//		
-//		return folder;
 //	}
 //	
 //	public void createFolder(String folderName, String folderPath) {

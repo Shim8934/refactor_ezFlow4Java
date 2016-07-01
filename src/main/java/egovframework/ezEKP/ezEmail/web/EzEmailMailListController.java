@@ -734,7 +734,7 @@ public class EzEmailMailListController {
 			}
 			
 			folder.close(true);
-			ia.close();
+			
 		} catch (MessagingException e) {
 			logger.error(e.getMessage());
 		} finally {

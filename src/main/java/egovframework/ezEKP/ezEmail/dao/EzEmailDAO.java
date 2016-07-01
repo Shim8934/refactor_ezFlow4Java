@@ -143,4 +143,13 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		delete("EzEmailDAO.deletePop3List", map);
 	}
 	
+	public void setMailPOP3(Map<String, Object> map) throws Exception {
+		insert("EzEmailDAO.setMailPOP3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getMailPOP3List(Map<String, Object> map) throws Exception {
+		return (List<String>)list("EzEmailDAO.getMailPOP3List", map);
+	}
+	
 }

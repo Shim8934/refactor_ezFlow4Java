@@ -125,10 +125,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		String contentClass = request.getParameter("CONTENTCLASS");
 
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		Folder f = ia.getFolder(folderPath);
-		
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
@@ -149,185 +145,198 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		boolean isSentItems = false;
 		String pIsCCFg = "Y";
 		String useEzKMS = config.getProperty("config.Use_ezKMS") == null ? "" : config.getProperty("config.Use_ezKMS");
+		IMAPAccess ia = null;
 		
-		if(f != null){
-			f.open(Folder.READ_WRITE);
+		try {
 			
-			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
-				message = ((IMAPFolder)f).getMessageByUID(uid);
-			}
-			if(message != null){
-				// From
-				arrFroms = message.getFrom();
-				if(arrFroms != null){
-					fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
-					if(fromStr == null){
-						fromStr = ((InternetAddress)arrFroms[0]).getAddress();
-					}
-					else{
-						fromStr = MimeUtility.decodeText(fromStr);
-						fromStr = commonUtil.trimDoubleQuotes(fromStr);
-					}
-					fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-				}
-				else{
-					String[] fromHeaders = message.getHeader("From");
-					if(fromHeaders != null){
-						fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
-					}
-				}
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			Folder f = ia.getFolder(folderPath);
+			
+			if(f != null){
+				f.open(Folder.READ_WRITE);
 				
-				// TO
-				arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-				if(arrRecipientsTo != null){
-					boolean toListme = false;
-					for(int i=0; i<arrRecipientsTo.length; i++){
-						if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
-							toListme = true;
-							break;
-						}
-					}
-					String name = null;
-					for(int i=0; i<arrRecipientsTo.length; i++){
-						name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-						if(name == null){
-							name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				if(message != null){
+					// From
+					arrFroms = message.getFrom();
+					if(arrFroms != null){
+						fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
+						if(fromStr == null){
+							fromStr = ((InternetAddress)arrFroms[0]).getAddress();
 						}
 						else{
-							name = MimeUtility.decodeText(name);
-							name = commonUtil.trimDoubleQuotes(name);
+							fromStr = MimeUtility.decodeText(fromStr);
+							fromStr = commonUtil.trimDoubleQuotes(fromStr);
 						}
-						if(toListme){
+						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+					}
+					else{
+						String[] fromHeaders = message.getHeader("From");
+						if(fromHeaders != null){
+							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+						}
+					}
+					
+					// TO
+					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+					if(arrRecipientsTo != null){
+						boolean toListme = false;
+						for(int i=0; i<arrRecipientsTo.length; i++){
 							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
-								if(arrRecipientsTo.length > 1){
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-								} else {
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+								toListme = true;
+								break;
+							}
+						}
+						String name = null;
+						for(int i=0; i<arrRecipientsTo.length; i++){
+							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
+							if(name == null){
+								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+							}
+							else{
+								name = MimeUtility.decodeText(name);
+								name = commonUtil.trimDoubleQuotes(name);
+							}
+							if(toListme){
+								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
+									if(arrRecipientsTo.length > 1){
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									} else {
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+									}
 								}
-							}
-							if(toHiddenStr == null){
-								toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							} else{
-								toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							}
-						} else {
-							if(i == 0){
-								if(arrRecipientsTo.length > 1){
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-								} else {
-									toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+								if(toHiddenStr == null){
+									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+								} else{
+									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
-							}
-							if(toHiddenStr == null){
-								toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 							} else {
-								toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							}
-						}
-					}
-				}
-
-				// CC
-				arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-				if(arrRecipientsCC != null){
-					boolean ccListme = false;
-					for(int i=0; i<arrRecipientsCC.length; i++){
-						if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
-							ccListme = true;
-							break;
-						}
-					}
-					String name = null;
-					for(int i=0; i<arrRecipientsCC.length; i++){
-						name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-						if(name == null) {
-							name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
-						} else {
-							name = MimeUtility.decodeText(name);
-							name = commonUtil.trimDoubleQuotes(name);
-						}
-						if (ccListme) {
-							if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))) {
-								if (arrRecipientsCC.length > 1) {
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+								if(i == 0){
+									if(arrRecipientsTo.length > 1){
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									} else {
+										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
+									}
+								}
+								if(toHiddenStr == null){
+									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								} else {
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
 								}
 							}
-							if (ccHiddenStr == null) {
-								ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-							} else {
-								ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+						}
+					}
+	
+					// CC
+					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+					if(arrRecipientsCC != null){
+						boolean ccListme = false;
+						for(int i=0; i<arrRecipientsCC.length; i++){
+							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
+								ccListme = true;
+								break;
 							}
-						} else {
-							if (i == 0) {
-								if (arrRecipientsCC.length > 1) {
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+						}
+						String name = null;
+						for(int i=0; i<arrRecipientsCC.length; i++){
+							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
+							if(name == null) {
+								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
+							} else {
+								name = MimeUtility.decodeText(name);
+								name = commonUtil.trimDoubleQuotes(name);
+							}
+							if (ccListme) {
+								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))) {
+									if (arrRecipientsCC.length > 1) {
+										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+									} else {
+										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+									}
+								}
+								if (ccHiddenStr == null) {
+									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								} else {
-									ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+								}
+							} else {
+								if (i == 0) {
+									if (arrRecipientsCC.length > 1) {
+										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:hand;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+									} else {
+										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+									}
+								}
+								if (ccHiddenStr == null) {
+									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+								} else {
+									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
 								}
 							}
-							if (ccHiddenStr == null) {
-								ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+						}
+					}
+	
+					// BCC
+					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+					if (arrRecipientsBCC != null) {
+						String name = null;
+						for (int i=0; i<arrRecipientsBCC.length; i++){
+							name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+							if (name == null) {
+								name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
 							} else {
-								ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
+								name = MimeUtility.decodeText(name);
+								name = commonUtil.trimDoubleQuotes(name);
+							}						
+							if (i != 0) {
+								bccStr += ", ";
 							}
+							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
 						}
 					}
-				}
-
-				// BCC
-				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-				if (arrRecipientsBCC != null) {
-					String name = null;
-					for (int i=0; i<arrRecipientsBCC.length; i++){
-						name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
-						if (name == null) {
-							name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
-						} else {
-							name = MimeUtility.decodeText(name);
-							name = commonUtil.trimDoubleQuotes(name);
-						}						
-						if (i != 0) {
-							bccStr += ", ";
-						}
-						bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
+					
+					if (ccStr == null || ccStr.equals("")) {
+						pIsCCFg = "N";
 					}
+					
+					// received date
+					date = message.getReceivedDate();
+					if (date != null) {
+						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
+					}
+	
+					// subject
+					subject = message.getSubject();
+					if (subject != null) {
+						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+					}
+					
+					if (!message.isSet(Flag.SEEN)) {
+						message.setFlag(Flag.SEEN, true);
+						pReadFlag = "N";
+					}
+					
+					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+						isSentItems = true;
+					}
+					
+					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
+						isDelete = "BDELETE";
+					}				
 				}
-				
-				if (ccStr == null || ccStr.equals("")) {
-					pIsCCFg = "N";
-				}
-				
-				// received date
-				date = message.getReceivedDate();
-				if (date != null) {
-					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
-				}
-
-				// subject
-				subject = message.getSubject();
-				if (subject != null) {
-					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-				}
-				
-				if (!message.isSet(Flag.SEEN)) {
-					message.setFlag(Flag.SEEN, true);
-					pReadFlag = "N";
-				}
-				
-				if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-					isSentItems = true;
-				}
-				
-				if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
-					isDelete = "BDELETE";
-				}				
+				f.close(true);
 			}
-			f.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		ia.close();
 		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
@@ -374,45 +383,54 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		String myEmailAddress = id+"@"+config.getProperty("config.DomainName");
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-												myEmailAddress, password, egovMessageSource, locale);
-		Folder f = ia.getFolder(folderPath);
-
+		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
-		String pAttachListHtmlSub = "";
+		String pAttachListHtmlSub = null;
 		
-		if (f != null) {
-			f.open(Folder.READ_ONLY);
-			Message message = null;
+		try {
+		
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+													myEmailAddress, password, egovMessageSource, locale);
+			Folder f = ia.getFolder(folderPath);
 			
-			if (f.isOpen() && f instanceof IMAPFolder) {
-				message = ((IMAPFolder)f).getMessageByUID(uid);
-			}
-			
-			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
-				double size = Double.parseDouble(bodyInfoList.get(2));
-				String strSize = ezEmailUtil.getSizeWithUnit(size);
-				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+			if (f != null) {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
 				
-				if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-					// send an MDN to the sender.
-					if (!ezEmailUtil.hasMDNSentFlag(message)) {
-						logger.debug("MDNSentFlag isn't set");
-						
-						SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-																myEmailAddress, password);
-						
-						processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
-					}
-					else {
-						logger.debug("MDNSentFlag is set");
+				if (f.isOpen() && f instanceof IMAPFolder) {
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message != null) {
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+					double size = Double.parseDouble(bodyInfoList.get(2));
+					String strSize = ezEmailUtil.getSizeWithUnit(size);
+					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+					
+					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+						// send an MDN to the sender.
+						if (!ezEmailUtil.hasMDNSentFlag(message)) {
+							logger.debug("MDNSentFlag isn't set");
+							
+							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+																	myEmailAddress, password);
+							
+							processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
+						}
+						else {
+							logger.debug("MDNSentFlag is set");
+						}
 					}
 				}
 			}
-		}
 		
-		ia.close();
+		} catch (MessagingException e) { 
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
 		
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -447,27 +465,35 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				uid = Long.parseLong(url.substring(index + 1));
 			}
 		}
-
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		Folder f = ia.getFolder(folderPath);
-
+		
+		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
 		
-		if (f != null) {
-			f.open(Folder.READ_ONLY);
-			Message message = null;
+		try {
 			
-			if (f.isOpen() && f instanceof IMAPFolder){
-				message = ((IMAPFolder)f).getMessageByUID(uid);
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f != null) {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				
+				if (f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message != null) {
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+				}
 			}
-			
-			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
 		}
-		
-		ia.close();
 		
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		
@@ -499,66 +525,79 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			index = Integer.parseInt(strIndex);
 		}
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-
-		Folder f = ia.getFolder(folderPath);
-		if(f != null){
-			f.open(Folder.READ_ONLY);
-			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
-				message = ((IMAPFolder)f).getMessageByUID(uid);
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+	
+			Folder f = ia.getFolder(folderPath);
+			if(f != null){
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				if(message != null){
+					Part part = null;
+					if(index == -1){
+						part = message;
+					}
+					else{
+						part = getAttachPart(message, index);
+					}
+					if(part != null){
+						response.setContentType(part.getContentType());
+						
+						// in case of IE
+						// the filename needs to be UTF-8 and URL-encoded.
+						// URI class is more appropriate than URLEncoder class for this purpose.
+						if (request.getHeader("User-Agent").contains("Trident")) {
+							URI uri = new URI(null, null, filename, null);
+							filename = uri.toASCIIString();
+						}
+						// in case of Chrome, Safari
+						// the filename consists of UTF-8 encoded bytes.
+						else {
+							filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+						}
+						
+						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
+						
+						InputStream input = part.getInputStream();
+						OutputStream output = response.getOutputStream();
+						byte[] buffer = new byte[4096];
+						int byteRead;
+						
+						try{
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						} catch(IOException e){
+							try {
+								output.close();
+							} catch (IOException e1) {
+							}
+							
+							if (ia != null) {
+								ia.close();
+							}
+							
+							return;
+						}
+						
+						output.flush();
+						output.close();
+					}
+				}
 			}
-			if(message != null){
-				Part part = null;
-				if(index == -1){
-					part = message;
-				}
-				else{
-					part = getAttachPart(message, index);
-				}
-				if(part != null){
-					response.setContentType(part.getContentType());
-					
-					// in case of IE
-					// the filename needs to be UTF-8 and URL-encoded.
-					// URI class is more appropriate than URLEncoder class for this purpose.
-					if (request.getHeader("User-Agent").contains("Trident")) {
-						URI uri = new URI(null, null, filename, null);
-						filename = uri.toASCIIString();
-					}
-					// in case of Chrome, Safari
-					// the filename consists of UTF-8 encoded bytes.
-					else {
-						filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-					}
-					
-					response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
-					
-					InputStream input = part.getInputStream();
-					OutputStream output = response.getOutputStream();
-					byte[] buffer = new byte[4096];
-					int byteRead;
-					
-					try{
-						while ((byteRead = input.read(buffer)) != -1) {
-							output.write(buffer, 0, byteRead);
-						}
-					} catch(IOException e){
-						try {
-							output.close();
-						} catch (IOException e1) {
-						}
-						ia.close();
-						return;
-					}
-					
-					output.flush();
-					output.close();
-				}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
 		}
-		ia.close();
+		
 	}
 	
 	/**
@@ -621,45 +660,56 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			contentId = URLDecoder.decode(contentId, "UTF-8");
 			contentId = EgovStringUtil.getHtmlStrCnvr(contentId);
 		}	
-
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-
-		Folder f = ia.getFolder(folderPath);
-		if(f != null){
-			f.open(Folder.READ_ONLY);
-			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
-				message = ((IMAPFolder)f).getMessageByUID(uid);
-			}
-			if(message != null){
-				Part part = getInlinePart(message, contentId);
-				if(part != null){
-					response.setContentType(part.getContentType());
-					response.addHeader("content-disposition", "inline");
-					InputStream input = part.getInputStream();
-					OutputStream output = response.getOutputStream();
-					byte[] buffer = new byte[4096];
-					int byteRead;
-					try{
-						while ((byteRead = input.read(buffer)) != -1) {
-							output.write(buffer, 0, byteRead);
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+	
+			Folder f = ia.getFolder(folderPath);
+			if(f != null){
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				if(message != null){
+					Part part = getInlinePart(message, contentId);
+					if(part != null){
+						response.setContentType(part.getContentType());
+						response.addHeader("content-disposition", "inline");
+						InputStream input = part.getInputStream();
+						OutputStream output = response.getOutputStream();
+						byte[] buffer = new byte[4096];
+						int byteRead;
+						try{
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						} catch(IOException e){
+							try {
+								output.close();
+							} catch (IOException e1) {
+							}
+							
+							if (ia != null) {
+								ia.close();
+							}
+							
+							return;
 						}
-					} catch(IOException e){
-						try {
-							output.close();
-						} catch (IOException e1) {
-						}
-						ia.close();
-						return;
+						output.flush();
+						output.close();
 					}
-					output.flush();
-					output.close();
 				}
 			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-
-		ia.close();
 	}
 
 	/**
@@ -690,10 +740,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		logger.debug(folderPath);
-
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		Folder f = ia.getFolder(folderPath);
+		
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
@@ -708,114 +755,127 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String dateStr = null;
 		int unread = 0;
 		int importance = 1;
-		if(f != null){
-			f.open(Folder.READ_WRITE);
-			Message message = null;
-			if(f.isOpen() && f instanceof IMAPFolder){
-				message = ((IMAPFolder)f).getMessageByUID(uid);
-			}
-			if(message != null){
-				arrFroms = message.getFrom();
-				if(arrFroms != null){
-					fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
-					if(fromStr == null){
-						fromStr = ((InternetAddress)arrFroms[0]).getAddress();
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			Folder f = ia.getFolder(folderPath);
+			
+			if(f != null){
+				f.open(Folder.READ_WRITE);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				if(message != null){
+					arrFroms = message.getFrom();
+					if(arrFroms != null){
+						fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
+						if(fromStr == null){
+							fromStr = ((InternetAddress)arrFroms[0]).getAddress();
+						} else {
+							fromStr = MimeUtility.decodeText(fromStr);
+						}
+						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
 					} else {
-						fromStr = MimeUtility.decodeText(fromStr);
+						String[] fromHeaders = message.getHeader("From");
+						if(fromHeaders != null){
+							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+						}
 					}
-					fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-				} else {
-					String[] fromHeaders = message.getHeader("From");
-					if(fromHeaders != null){
-						fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
+					if(arrRecipientsTo != null){
+						InternetAddress iAddress = null;
+						String name = null;
+						for(int i=0; i<arrRecipientsTo.length; i++){
+							iAddress = ((InternetAddress)arrRecipientsTo[i]);
+							name = iAddress.getPersonal();
+							if (name == null) {
+								name = iAddress.getAddress();
+							}
+							else {
+								name = MimeUtility.decodeText(name);
+							}
+							
+							if (i != 0) {
+								toStr += ";";
+	                        }												
+							toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+	
+					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
+					if(arrRecipientsCC != null){
+						InternetAddress iAddress = null;
+						String name = null;
+						for(int i=0; i<arrRecipientsCC.length; i++){
+							iAddress = ((InternetAddress)arrRecipientsCC[i]);
+							name = iAddress.getPersonal();
+							if (name == null) {
+								name = iAddress.getAddress();
+							}
+							else {
+								name = MimeUtility.decodeText(name);
+							}
+							
+							if (i != 0) {
+								ccStr += ";";
+	                        }
+							ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+	
+					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+					if(arrRecipientsBCC != null){
+						InternetAddress iAddress = null;
+						String name = null;
+						for(int i=0; i<arrRecipientsBCC.length; i++){
+							iAddress = ((InternetAddress)arrRecipientsBCC[i]);
+							name = iAddress.getPersonal();
+							if (name == null) {
+								name = iAddress.getAddress();
+							}
+							else {
+								name = MimeUtility.decodeText(name);
+							}
+							
+							if (i != 0) {
+								bccStr += ";";
+	                        }						
+							bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+						}
+					}
+	
+					date = message.getReceivedDate();
+					if(date != null){
+						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
+					}
+	
+					subject = message.getSubject();
+					
+					if(!message.isSet(Flag.SEEN)){
+						unread = 1;
+					}
+					message.setFlag(Flag.SEEN, true);
+					
+					String[] headers = message.getHeader("importance");
+					String header = headers != null ? headers[0] : "normal";
+					if (header.equalsIgnoreCase("high")) {
+						importance = 2;
+					} else if (header.equalsIgnoreCase("low")) {
+						importance = 0;
 					}
 				}
-				arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-				if(arrRecipientsTo != null){
-					InternetAddress iAddress = null;
-					String name = null;
-					for(int i=0; i<arrRecipientsTo.length; i++){
-						iAddress = ((InternetAddress)arrRecipientsTo[i]);
-						name = iAddress.getPersonal();
-						if (name == null) {
-							name = iAddress.getAddress();
-						}
-						else {
-							name = MimeUtility.decodeText(name);
-						}
-						
-						if (i != 0) {
-							toStr += ";";
-                        }												
-						toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-					}
-				}
-
-				arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-				if(arrRecipientsCC != null){
-					InternetAddress iAddress = null;
-					String name = null;
-					for(int i=0; i<arrRecipientsCC.length; i++){
-						iAddress = ((InternetAddress)arrRecipientsCC[i]);
-						name = iAddress.getPersonal();
-						if (name == null) {
-							name = iAddress.getAddress();
-						}
-						else {
-							name = MimeUtility.decodeText(name);
-						}
-						
-						if (i != 0) {
-							ccStr += ";";
-                        }
-						ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-					}
-				}
-
-				arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-				if(arrRecipientsBCC != null){
-					InternetAddress iAddress = null;
-					String name = null;
-					for(int i=0; i<arrRecipientsBCC.length; i++){
-						iAddress = ((InternetAddress)arrRecipientsBCC[i]);
-						name = iAddress.getPersonal();
-						if (name == null) {
-							name = iAddress.getAddress();
-						}
-						else {
-							name = MimeUtility.decodeText(name);
-						}
-						
-						if (i != 0) {
-							bccStr += ";";
-                        }						
-						bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
-					}
-				}
-
-				date = message.getReceivedDate();
-				if(date != null){
-					dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
-				}
-
-				subject = message.getSubject();
-				
-				if(!message.isSet(Flag.SEEN)){
-					unread = 1;
-				}
-				message.setFlag(Flag.SEEN, true);
-				
-				String[] headers = message.getHeader("importance");
-				String header = headers != null ? headers[0] : "normal";
-				if (header.equalsIgnoreCase("high")) {
-					importance = 2;
-				} else if (header.equalsIgnoreCase("low")) {
-					importance = 0;
-				}
+				f.close(true);
 			}
-			f.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		ia.close();
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -868,41 +928,50 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 		String myEmailAddress = id+"@"+config.getProperty("config.DomainName");
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-												myEmailAddress, password, egovMessageSource, locale);
-		Folder f = ia.getFolder(folderPath);
-
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = "";
-		if (f != null) {
-			f.open(Folder.READ_ONLY);
-			Message message = null;
-			if (f.isOpen() && f instanceof IMAPFolder) {
-				message = ((IMAPFolder)f).getMessageByUID(uid);
-			}
-			if (message != null) {
-				bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
-				double size = Double.parseDouble(bodyInfoList.get(2));
-				String strSize = ezEmailUtil.getSizeWithUnit(size);
-				pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
-
-				if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-					// send an MDN to the sender.
-					if (!ezEmailUtil.hasMDNSentFlag(message)) {
-						logger.debug("MDNSentFlag isn't set");
-						
-						SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-																myEmailAddress, password);
-						
-						processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+													myEmailAddress, password, egovMessageSource, locale);
+			Folder f = ia.getFolder(folderPath);
+	
+			if (f != null) {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if (f.isOpen() && f instanceof IMAPFolder) {
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				if (message != null) {
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+					double size = Double.parseDouble(bodyInfoList.get(2));
+					String strSize = ezEmailUtil.getSizeWithUnit(size);
+					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+	
+					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+						// send an MDN to the sender.
+						if (!ezEmailUtil.hasMDNSentFlag(message)) {
+							logger.debug("MDNSentFlag isn't set");
+							
+							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+																	myEmailAddress, password);
+							
+							processAutoMDN(sa, message, myEmailAddress, userVO.getDisplayName());
+						}
+						else {
+							logger.debug("MDNSentFlag is set");
+						}				
 					}
-					else {
-						logger.debug("MDNSentFlag is set");
-					}				
 				}
 			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		ia.close();
 		
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
@@ -949,58 +1018,65 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		Folder f = ia.getFolder(folderPath);
-		if (f != null) {
-			f.open(Folder.READ_ONLY);
-			Message message = ((IMAPFolder)f).getMessageByUID(uid);
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			if (message != null) {
+			Folder f = ia.getFolder(folderPath);
+			if (f != null) {
+				f.open(Folder.READ_ONLY);
+				Message message = ((IMAPFolder)f).getMessageByUID(uid);
 				
-				if (message.getFrom() != null && message.getFrom().length > 0) {
-					InternetAddress fromAddress = (InternetAddress)message.getFrom()[0];
-					pSender = fromAddress.getPersonal() == null ? "" : fromAddress.getPersonal();
-					pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
-				}
-				
-				Address[] toAddresses = message.getRecipients(RecipientType.TO);
-				Address[] ccAddresses = message.getRecipients(RecipientType.CC);
-				
-				if (toAddresses != null) {
-					for (Address address : toAddresses) {
-						pReciverTo += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
-						pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+				if (message != null) {
+					
+					if (message.getFrom() != null && message.getFrom().length > 0) {
+						InternetAddress fromAddress = (InternetAddress)message.getFrom()[0];
+						pSender = fromAddress.getPersonal() == null ? "" : fromAddress.getPersonal();
+						pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
 					}
-				}
-				
-				if (ccAddresses != null) {
-					for (Address address : ccAddresses) {
-						pReciverCc += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
-						pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+					
+					Address[] toAddresses = message.getRecipients(RecipientType.TO);
+					Address[] ccAddresses = message.getRecipients(RecipientType.CC);
+					
+					if (toAddresses != null) {
+						for (Address address : toAddresses) {
+							pReciverTo += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+							pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+						}
 					}
+					
+					if (ccAddresses != null) {
+						for (Address address : ccAddresses) {
+							pReciverCc += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+							pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+						}
+					}
+					
+					if (message.getReceivedDate() != null) {
+						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd a h:mm:ss");
+						pReciveDT = sdFormat.format(message.getReceivedDate());
+					}
+					
+					pSubject = message.getSubject() == null ? "" : message.getSubject();
+					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true);
+					pBody = bodyInfoList.get(0);
+					pAttachListHtml = bodyInfoList.get(1);
+					
+					if (bodyInfoList.get(4).equals("OK")) {
+						isAttach = "OK";
+					}
+					
 				}
-				
-				if (message.getReceivedDate() != null) {
-					SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd a h:mm:ss");
-					pReciveDT = sdFormat.format(message.getReceivedDate());
-				}
-				
-				pSubject = message.getSubject() == null ? "" : message.getSubject();
-				
-				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true);
-				pBody = bodyInfoList.get(0);
-				pAttachListHtml = bodyInfoList.get(1);
-				
-				if (bodyInfoList.get(4).equals("OK")) {
-					isAttach = "OK";
-				}
-				
+			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
 		}
-		
-		ia.close();
 		
 		model.addAttribute("pSender", pSender);
 		model.addAttribute("pReciveDT", pReciveDT);
@@ -1046,25 +1122,33 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password);
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		Folder folder = ia.getFolder(folderPath);
-		folder.open(Folder.READ_WRITE);
-		Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
-		
-		if (oldMessage != null) {
-			MimeMessage newMessage = ezEmailUtil.deleteAttach(sa, oldMessage, new int[] {fileId});
-			if (newMessage != null) {
-				newMessage.setFlag(Flags.Flag.SEEN, true);
-				AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-				returnValue += folderPath + "/" + uids[0].uid;
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(folderPath);
+			folder.open(Folder.READ_WRITE);
+			Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+			
+			if (oldMessage != null) {
+				MimeMessage newMessage = ezEmailUtil.deleteAttach(sa, oldMessage, new int[] {fileId});
+				if (newMessage != null) {
+					newMessage.setFlag(Flags.Flag.SEEN, true);
+					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+					returnValue += folderPath + "/" + uids[0].uid;
+				}
+				oldMessage.setFlag(Flags.Flag.DELETED, true);
 			}
-			oldMessage.setFlag(Flags.Flag.DELETED, true);
+			
+			folder.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		
-		folder.close(true);
-		ia.close();
 		
 		returnValue += "]]></DATA>";
 		

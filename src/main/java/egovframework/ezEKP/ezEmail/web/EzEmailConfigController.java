@@ -2,21 +2,29 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.FetchProfile;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.UIDFolder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,10 +51,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.mail.iap.Response;
+import com.sun.mail.pop3.POP3Folder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -54,8 +63,6 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -92,10 +99,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-	
+
 	@Resource(name="crypto") 
-    private EgovFileScrty egovFileScrty;
-	
+	private EgovFileScrty egovFileScrty;
+
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
@@ -129,7 +136,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
-		
+
 		String listCount = mailGeneralVO.getListCount() == null ? "" : mailGeneralVO.getListCount();
 		String previewMode = mailGeneralVO.getPreviewMode() == null ? "OFF" : mailGeneralVO.getPreviewMode();
 		String previewHListSize = mailGeneralVO.getPreviewHList() == null ? "50" : mailGeneralVO.getPreviewHList();
@@ -143,14 +150,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
-		
+
 		//TODO: userinfo.DisplayName2 가져오기.
 		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
 		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
-		
+
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
-		for (String pSenderNM : senderList) {
-			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+		for (int i=0; i<senderList.length; i++) {
+			if (i == 0) {
+				mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i] + "</option>";
+			} else {
+				mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+			}
 		}
 
 		model.addAttribute("listCount", listCount);
@@ -179,12 +190,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			Model model) throws Exception {
 		logger.debug("mailGeneralSave started");		
 		logger.debug("bodyData=" + bodyData);
-		
+
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userInfo.get(0);
-		
+
 		Document doc = commonUtil.convertStringToDocument(bodyData);
-		
+
 		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
 		String refreshInterval = doc.getElementsByTagName("REFRESHINTERVAL").item(0).getTextContent();
 		String keepDeleteLength = doc.getElementsByTagName("KEEPDELETELENGTH").item(0).getTextContent();
@@ -219,7 +230,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewWContent(previewWContent);
 			mailGeneral.setPreviewHList(previewHList);
 			mailGeneral.setPreviewHContent(previewHContent);	
-			
+
 			if (mode != null && mode.equals("ALL")) {
 				mailGeneral.setMailSenderNm(mailSenderNm);
 				ezEmailService.setMailGeneral2(userId, mailGeneral);
@@ -235,7 +246,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		return rtnValue;
 	}
-	
+
 	/**
 	 * 메일 기본 환경설정 내부 화면 호출 함수
 	 */
@@ -245,8 +256,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		//TODO: data setting
 		return "";
 	}
-	
-	
+
+
 	/**
 	 * 메일 자동 전달 설정 화면 표시 함수
 	 */
@@ -536,11 +547,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		
+
 		String realPath = config.getProperty("data_root");
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
-		
+
 		String filePath = config.getProperty("upload_mail.SIGNIMGS");
 		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
@@ -669,7 +680,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		userId = userId + "@" + config.getProperty("config.DomainName");
 		sb.append("&userId=" + URLEncoder.encode(userId, "UTF-8"));
-		
+
 		//condition
 		Node condition = doc.getElementsByTagName("CONDITION").item(0);
 		NodeList conRows = condition.getChildNodes();
@@ -708,7 +719,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					}
 					sb.append("&type=action");
 					sb.append("&kind=" + URLEncoder.encode(rowChilds.item(j).getTextContent().toLowerCase(), "UTF-8"));
-					
+
 					if (rowChilds.item(j).getTextContent().equalsIgnoreCase("IMPORTANCE")) {
 						sb.append("&value=" + rowChilds.item(j+1).getTextContent().toLowerCase());
 						break;
@@ -716,7 +727,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						sb.append("&value=");
 						break;
 					}
-					
+
 				} else if (rowChilds.item(j).getNodeName().equals("ACTVALUE") || rowChilds.item(j).getNodeName().equals("URL")) {
 					if (rowChilds.item(j).getTextContent().equals("null")) {
 						sb.append("&value=");
@@ -761,7 +772,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} else if (mode.equalsIgnoreCase("MOD")) { //룰 수정
 			String ruleId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			inputParams += "&ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
-			
+
 			strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateInboxRule", inputParams);
 		}
 
@@ -783,7 +794,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnValue = "Error";
-		
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
@@ -805,46 +816,46 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 			for (int i=0; i<array.size(); i++) {
 				JSONObject obj = (JSONObject)array.get(i);
-				
+
 				if (!ruleMap.containsKey(Integer.parseInt(obj.get("ruleId").toString()))) {
 					Element row = doc.createElement("ROWS");
 					data.appendChild(row);
-					
+
 					Element id = doc.createElement("ID");
 					id.appendChild(doc.createCDATASection(obj.get("ruleId").toString()));
 					row.appendChild(id);
-					
+
 					Element name = doc.createElement("NAME");
 					name.appendChild(doc.createCDATASection(obj.get("ruleName").toString()));
 					row.appendChild(name);
-					
+
 					Element use = doc.createElement("USE");
 					use.appendChild(doc.createCDATASection(obj.get("isUse").toString().toUpperCase()));
 					row.appendChild(use);
-					
+
 					Element priority = doc.createElement("PRIORITY");
 					priority.appendChild(doc.createCDATASection(obj.get("priority").toString()));
 					row.appendChild(priority);
-					
+
 					Element condition = doc.createElement("CONDITION");
 					row.appendChild(condition);
-					
+
 					Element action = doc.createElement("ACTION");
 					row.appendChild(action);
-					
+
 					Element exception = doc.createElement("EXCEPTION");
 					row.appendChild(exception);
-					
+
 					ruleMap.put(Integer.parseInt(obj.get("ruleId").toString()), row);
 				}
-				
+
 				Element tRow = ruleMap.get(Integer.parseInt(obj.get("ruleId").toString()));
 				Element tCondition = null;
 				Element tAction = null;
 				Element tException = null;
-				
+
 				NodeList rowChilds = tRow.getChildNodes();
-				
+
 				for (int j=0; j<rowChilds.getLength(); j++) {
 					if (rowChilds.item(j).getNodeName().equalsIgnoreCase("CONDITION")) {
 						tCondition = (Element)rowChilds.item(j);
@@ -854,17 +865,17 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						tException = (Element)rowChilds.item(j);
 					}
 				}
-				
+
 				if (obj.get("type").toString().equalsIgnoreCase("CONDITION")) {
 					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
-						Element kind = doc.createElement("KIND");
-						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
-						tCondition.appendChild(kind);
-						
-						Element values = doc.createElement("VALUES");
-						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
-						tCondition.appendChild(values);
-						
+					Element kind = doc.createElement("KIND");
+					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
+					tCondition.appendChild(kind);
+
+					Element values = doc.createElement("VALUES");
+					values.appendChild(doc.createCDATASection(obj.get("value").toString()));
+					tCondition.appendChild(values);
+
 				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION")) {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
@@ -873,40 +884,40 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);
-						
+
 						Element values = doc.createElement("VALUES");
 						values.appendChild(doc.createCDATASection(obj.get("value").toString()));
 						tAction.appendChild(values);
-						
+
 					} else if (obj.get("kind").toString().equalsIgnoreCase("IMPORTANCE")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);
-						
+
 						Element values = doc.createElement("VALUES");
 						values.appendChild(doc.createCDATASection(obj.get("value").toString().toUpperCase()));
 						tAction.appendChild(values);
-						
+
 					} else if (obj.get("kind").toString().equalsIgnoreCase("READ")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);
-						
+
 						Element values = doc.createElement("VALUES");
 						values.appendChild(doc.createCDATASection("READ"));
 						tAction.appendChild(values);
-						
+
 					} else if (obj.get("kind").toString().equalsIgnoreCase("MOVE") || obj.get("kind").toString().equalsIgnoreCase("COPY")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);
-						
+
 						Element folderId = doc.createElement("FOLDERID");
 						folderId.appendChild(doc.createCDATASection(obj.get("value").toString()));
 						tAction.appendChild(folderId);
-						
+
 						Element folderName = doc.createElement("FOLDERNAME");
-						
+
 						String folderNameStr = (String)obj.get("value");
 						if (folderNameStr.equals(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
 							folderNameStr = egovMessageSource.getMessage("ezEmail.t99000025", locale);
@@ -916,7 +927,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						}
 						folderName.appendChild(doc.createCDATASection(folderNameStr));
 						tAction.appendChild(folderName);
-						
+
 						Element values = doc.createElement("VALUES");
 						values.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(values);
@@ -926,16 +937,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					Element kind = doc.createElement("KIND");
 					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 					tException.appendChild(kind);
-					
+
 					Element values = doc.createElement("VALUES");
 					values.appendChild(doc.createCDATASection(obj.get("value").toString()));
 					tException.appendChild(values);
 				}
 			}
-			
+
 			returnValue = commonUtil.convertDocumentToString(doc);
 		}
-		
+
 		return returnValue;
 	}
 
@@ -946,23 +957,23 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailDeleteInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnValue = "Error";
-		
+
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String ruleId = doc.getElementsByTagName("RULEID").item(0).getTextContent();
-		
+
 		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteInboxRule", inputParams);
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		
+
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
 
 		return returnValue;
 	}
-	
+
 	/**
 	 * 메일 자동분류 룰 우선순위 변경 실행 함수
 	 */
@@ -970,30 +981,30 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailSetRulePriority(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnValue = "Error";
-		
+
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String aRuleId = doc.getElementsByTagName("ARULEID").item(0).getTextContent();
 		String aPriority = doc.getElementsByTagName("APRIORITY").item(0).getTextContent();
 		String bRuleId = doc.getElementsByTagName("BRULEID").item(0).getTextContent();
 		String bPriority = doc.getElementsByTagName("BPRIORITY").item(0).getTextContent();
-		
+
 		String inputParams = "aRuleId=" + URLEncoder.encode(aRuleId, "UTF-8");
 		inputParams += "&aPriority=" + URLEncoder.encode(aPriority, "UTF-8");
 		inputParams += "&bRuleId=" + URLEncoder.encode(bRuleId, "UTF-8");
 		inputParams += "&bPriority=" + URLEncoder.encode(bPriority, "UTF-8");
-		
+
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRulePriority", inputParams);
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		
+
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
 
 		return returnValue;
 	}
-	
+
 	/**
 	 * 메일 자동분류 룰 사용여부 변경 실행 함수
 	 */
@@ -1001,26 +1012,26 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailSetRuleStatus(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnValue = "Error";
-		
+
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String ruleId = doc.getElementsByTagName("RULEID").item(0).getTextContent();
 		String status = doc.getElementsByTagName("STATUS").item(0).getTextContent().toLowerCase();
-		
+
 		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
 		inputParams += "&status=" + URLEncoder.encode(status, "UTF-8");
 
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRuleStatus", inputParams);
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		
+
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
 
 		return returnValue;
 	}
-	
+
 	/**
 	 * 메일 자동분류 룰 자세히보기 화면 호출 함수
 	 */
@@ -1028,7 +1039,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailDetailInboxRule";
 	}
-	
+
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
@@ -1040,19 +1051,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String gExternalAudience = "known";
 		String gInternal = "";
 		String gExternal = "";
-		
+
 		//TODO: 디비에서 가져오도록?
 		String userLang = "1";
-		
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
-		
+
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getOutOfOffice", inputParams);
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		
+
 		if (object.get("result") != null) {
 			JSONObject resultObject = (JSONObject)object.get("result");
 			gOofState = resultObject.get("oofState").toString();
@@ -1062,15 +1073,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			gInternal = resultObject.get("internal").toString();
 			gExternal = resultObject.get("external").toString();
 		}
-		
+
 		if (!gOofState.equals("scheduled")) {
 			String date = EgovDateUtil.getToday("-");
 			String hour = EgovDateUtil.getTodayTime().substring(11, 13);
-			
+
 			gStartDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 0, 1, 0, "yyyy-MM-dd HH:mm");
 			gEndDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 1, 0, 0, "yyyy-MM-dd HH:mm");
 		}
-		
+
 		model.addAttribute("gOofState", gOofState);
 		model.addAttribute("gStartDate", gStartDate);
 		model.addAttribute("gEndDate", gEndDate);
@@ -1078,10 +1089,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gInternal", gInternal);
 		model.addAttribute("gExternal", gExternal);
 		model.addAttribute("userLang", userLang);
-		
+
 		return "ezEmail/mailOutOfOfficeCK";
 	}
-	
+
 	/**
 	 * 메일 부재중 설정 저장 함수
 	 */
@@ -1089,7 +1100,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnValue = "ERROR";
-		
+
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String oofState = doc.getElementsByTagName("OOFSTATE").item(0).getTextContent();
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
@@ -1097,10 +1108,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String internal = doc.getElementsByTagName("INTERNAL").item(0).getTextContent();
 		String external = doc.getElementsByTagName("EXTERNAL").item(0).getTextContent();
 		String externalAudience = doc.getElementsByTagName("EXTERNALAUDIENCE").item(0).getTextContent();
-		
+
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
 		sb.append("&oofState=" + URLEncoder.encode(oofState, "UTF-8"));
@@ -1112,46 +1123,46 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String inputParams = sb.toString();
 
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setOutOfOffice", inputParams);
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		
+
 		if (object.get("resultCode") != null) {
 			returnValue = object.get("resultCode").toString();
 		}
 
 		return returnValue;
-		
+
 	}
-	
+
 	/**
 	 * 외부메일 설정 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailPop3.do")
 	public String mailPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
+
 		String publicModulus = egovFileScrty.getPbm();
-		
+
 		String infoXML = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
-		
+
 		String prm = egovFileScrty.getPrm();
-    	String pre = egovFileScrty.getPre();
+		String pre = egovFileScrty.getPre();
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		
+
 		List<MailPOP3VO> pop3VoList = ezEmailService.getMailPOP3(userId);
 		for (MailPOP3VO pop3Vo : pop3VoList) {
-			
+
 			String pop3UserId = EgovFileScrty.decryptRsa(pk, pop3Vo.getPop3UserId());
 			String pop3Pw = EgovFileScrty.decryptRsa(pk, pop3Vo.getPop3Pw());
-			
+
 			String pop3SslYN = "false";
 			if (pop3Vo.getPop3SslYN().equals("1")) {
 				pop3SslYN = "true";
 			}
-			
+
 			sb.append("<ROW>");
 			sb.append("<POP3SERVER>" + pop3Vo.getPop3Server() + "</POP3SERVER>");
 			sb.append("<POP3PORTNO>" + pop3Vo.getPop3PortNo() + "</POP3PORTNO>");
@@ -1163,17 +1174,17 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			sb.append("<SAVETOFOLDER>" + pop3Vo.getSaveTofolder() + "</SAVETOFOLDER>");
 			sb.append("</ROW>");
 		}
-		
+
 		sb.append("</DATA>");
 		infoXML = sb.toString();
-		
+
 		model.addAttribute("infoXML", infoXML);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", "10001");
-		
+
 		return "ezEmail/mailPop3";
 	}
-	
+
 	/**
 	 * 외부메일 설정 저장 실행 함수
 	 */
@@ -1183,7 +1194,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		return ezEmailService.savePop3(userId, ret);
 	}
-	
+
 	/**
 	 * 외부메일 설정 접속확인 실행 함수
 	 */
@@ -1191,21 +1202,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
 		String returnValue = "<DATA>ERROR</DATA>";
-		
+
 		Document doc = commonUtil.convertStringToDocument(ret);
 		String server = doc.getElementsByTagName("SERVER").item(0).getTextContent();
 		String port = doc.getElementsByTagName("PORT").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		String pw = doc.getElementsByTagName("PW").item(0).getTextContent();
 		String useSsl = doc.getElementsByTagName("SSL").item(0).getTextContent();
-		
+
 		String prm = egovFileScrty.getPrm();
-    	String pre = egovFileScrty.getPre();
+		String pre = egovFileScrty.getPre();
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		
+
 		id = EgovFileScrty.decryptRsa(pk, id);
 		pw = EgovFileScrty.decryptRsa(pk, pw);
-		
+
 		POP3Access pa = null;
 		try {
 			pa = POP3Access.getInstance(server, port, id, pw, useSsl);
@@ -1219,90 +1230,230 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pa.close();
 			}
 		}
-		
+
 		return returnValue;
 	}
-	
+
 	/**
-	 * 외부메일 설정 접속확인 실행 함수
+	 * 외부메일 확인 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailGetPop3.do")
 	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response, @RequestBody String ret) throws Exception{
-		
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
+
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userInfo.get(0);
+		String password  = userInfo.get(1);
+
 		response.setContentType("text/html; charset=utf-8");
-		
+
 		PrintWriter out = response.getWriter();
 		out.write("<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'><head>");
 		out.write("<title>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</title>");
 		out.write("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>");
 		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("ezEmail.c1", locale) + "' type=text/css>");
 		out.write("<script type='text/javascript' src='/js/mouseeffect.js'></script>"
-        		+ "</head>"
-        		+ "<body scroll=no class='popup'>");
+				+ "</head>"
+				+ "<body scroll=no class='popup'>");
 		out.write("<h1>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</h1>");
 		out.write("<div id='close'><ul><li onClick='window.close()'><span>" + egovMessageSource.getMessage("ezEmail.t63", locale) + "</span></li></ul>");
 		out.write("</div>"
-        		+ "<script type='text/javascript'>"
-        		+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"
-        		+ "</script>"
-        		+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#B6B6B6; overflow-y:auto; height:265px; overflow-x:auto; width:100%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
+				+ "<script type='text/javascript'>"
+				+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"
+				+ "</script>"
+				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#B6B6B6; overflow-y:auto; height:265px; overflow-x:auto; width:100%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
 		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
-		
 		out.flush();
-		
+
 		String prm = egovFileScrty.getPrm();
-    	String pre = egovFileScrty.getPre();
+		String pre = egovFileScrty.getPre();
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		
+
 		List<MailPOP3VO> pop3Settinglist = ezEmailService.getMailPOP3(userId);
-		for (MailPOP3VO vo : pop3Settinglist) {
-			String boxId = vo.getSaveTo();
-			String boxName = vo.getSaveTofolder();
-			String host = vo.getPop3Server();
-			String port = vo.getPop3PortNo();
-			String useSsl = vo.getPop3SslYN(); //0,1
-			String id = vo.getPop3UserId();
-			String pw = vo.getPop3Pw();
-			String deleteYN = vo.getDeleteYN(); //Y,N
+		
+		if (pop3Settinglist.size() == 0) {
+			out.write("<BR> " + egovMessageSource.getMessage("ezEmail.t504", locale)
+					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t505", locale) + " > "
+					+ egovMessageSource.getMessage("ezEmail.t506", locale));
 			
-			id = EgovFileScrty.decryptRsa(pk, id);
-			pw = EgovFileScrty.decryptRsa(pk, pw);
+			out.write("<span id='forscroll'></span>"
+					+ "</div>"
+					+ "<script type='text/javascript'>"
+					+ "forscroll.scrollIntoView(false);"
+					+ "</script></body>");
+			out.write("<BR><BR> " + egovMessageSource.getMessage("ezEmail.t507", locale));
+			out.flush();
+
+			out.close();
 			
-			if (useSsl.equals("1")) {
-				useSsl = "true";
-			} else {
-				useSsl = "false";
+			return;
+		}
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+			for (MailPOP3VO vo : pop3Settinglist) {
+				String boxId = vo.getSaveTo();
+				String boxName = vo.getSaveTofolder();
+				String host = vo.getPop3Server();
+				String port = vo.getPop3PortNo();
+				String useSsl = vo.getPop3SslYN(); //0,1
+				String id = vo.getPop3UserId();
+				String pw = vo.getPop3Pw();
+				String deleteYN = vo.getDeleteYN(); //Y,N
+	
+				String dId = EgovFileScrty.decryptRsa(pk, id);
+				String dPw = EgovFileScrty.decryptRsa(pk, pw);
+	
+				if (useSsl.equals("1")) {
+					useSsl = "true";
+				} else {
+					useSsl = "false";
+				}
+	
+				out.write("<BR><BR>" + egovMessageSource.getMessage("ezEmail.t492", locale) + host + ", "
+						+ egovMessageSource.getMessage("ezEmail.t493", locale) + dId
+						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t494", locale) + boxName
+						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t495", locale));
+				out.flush();
+	
+				POP3Access pa = null;
+	
+				try {
+					pa = POP3Access.getInstance(host, port, dId, dPw, useSsl);
+					if (!pa.checkConnect()) {
+						out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.t99000091", locale));
+						out.flush();
+					} else {
+						final Folder folder = pa.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+	
+						if (deleteYN.equals("Y")) {
+							folder.open(Folder.READ_WRITE);
+						} else {
+							folder.open(Folder.READ_ONLY);
+						}
+	
+						Message[] messages = folder.getMessages();
+						int mailCount = messages.length;
+	
+						// pre-fetch fields needed for searching
+						FetchProfile fp = new FetchProfile();
+						fp.add(UIDFolder.FetchProfileItem.UID);
+						folder.fetch(messages, fp);
+						
+						// Throw exception when the pop3 server does not support UIDL.
+						String testUID = ((POP3Folder)folder).getUID(messages[0]);
+						if (testUID == null) {
+							throw new Exception("Unsupported");
+						}
+						
+						List<String> messageIdList = ezEmailService.getMailPOP3List(userId, host, id);
+						final Set<String> messageIds = new HashSet<String>(messageIdList);
+						SearchTerm searchTerm= new SearchTerm() {
+							@Override
+							public boolean match(Message message) {
+								try {
+									String thisUID = ((POP3Folder)folder).getUID(message); 
+	
+									if (!messageIds.contains(thisUID)) {
+										return true;
+									}
+								} catch (MessagingException e) {
+									e.printStackTrace();
+								}
+								return false;
+							}
+						};
+	
+						messages = folder.search(searchTerm);
+						int newCount = messages.length;
+	
+						out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t498", locale) + mailCount 
+								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
+						out.flush();
+						
+						int downCount = newCount;
+						if (downCount > 40) {
+							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
+							out.flush();
+							
+							downCount = 40;
+						}
+						
+						Folder innerFolder = null;
+						try {
+							innerFolder = ia.getFolder(boxId);
+							innerFolder.open(Folder.READ_WRITE);
+		
+							for (int i=0; i<downCount; i++) {
+								if (i%10 == 0) {
+									if (downCount < i + 10) {
+										out.write("<BR>" + (i+1) + " - " + downCount + egovMessageSource.getMessage("ezEmail.t501", locale));
+									}
+									else {
+										out.write("<BR>" + (i+1) + " - " + (i+10) + egovMessageSource.getMessage("ezEmail.t501", locale));
+									}
+									out.flush();
+								}
+		
+								innerFolder.appendMessages(new Message[]{messages[i]});
+								
+								if (deleteYN.equals("Y")) {
+									messages[i].setFlag(Flags.Flag.DELETED, true);
+								}
+								
+								String messageId = ((POP3Folder)folder).getUID(messages[i]);
+								String dupMsg = egovMessageSource.getMessage("ezEmail.t503", locale);
+								ezEmailService.setMailPOP3(userId, host, id, messageId, dupMsg);
+								
+							}
+		
+						} catch (MessagingException e) {
+							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
+							+ egovMessageSource.getMessage("ezEmail.t502", locale));
+							e.printStackTrace();
+							out.flush();
+						} finally {
+							if (innerFolder != null) {
+								innerFolder.close(true);
+							}
+						}
+						
+						folder.close(true);
+					}
+					
+				} catch (Exception e) {
+					out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
+					out.flush();
+					e.printStackTrace();
+				} finally {
+					if (pa != null) {
+						pa.close();
+					}
+				}
+	
 			}
-			
-			out.write("<BR><BR>" + egovMessageSource.getMessage("ezEmail.t492", locale) + host + ", "
-					+ egovMessageSource.getMessage("ezEmail.t493", locale) + id
-					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t494", locale) + boxName
-					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t495", locale));
+		
+		} catch (Exception e) {
+			out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 			out.flush();
-			
-			POP3Access pa = POP3Access.getInstance(host, port, id, pw, useSsl);
-			
-			
-			pa.close();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
 		
-		for (int i=0; i<100; i++) {
-			out.write(i + "</BR>");
-			out.flush();
-			Thread.sleep(100);
-		}
-		
+		out.write("<BR><BR> " + egovMessageSource.getMessage("ezEmail.t507", locale));
 		out.write("<span id='forscroll'></span>"
 				+ "</div>"
 				+ "<script type='text/javascript'>"
 				+ "forscroll.scrollIntoView(false);"
 				+ "</script></body>");
-		
 		out.flush();
-		
+
 		out.close();
 	}
-	
+
 }

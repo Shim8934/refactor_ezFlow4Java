@@ -20,6 +20,7 @@ import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 import javax.security.auth.Subject;
@@ -232,6 +233,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			File f = new File(pDirPath + commonUtil.separator + pCDOMessageID + ".eml");
 			
 			if (f.exists()) {
+				
+				IMAPAccess ia = null;
 				try {
 					fis = new FileInputStream(f);
 					
@@ -241,10 +244,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 					message = sa.readMimeMessage(fis);
 
 					//임시보관함에 저장
-					IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-					
 					
 					if (folder.exists()) {
 						folder.open(Folder.READ_WRITE);
@@ -257,16 +259,21 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		        		url = urlOwn;
 						folder.close(true);
 					}
-					ia.close();
-					
+				
+				} catch (MessagingException e) {
+					e.printStackTrace();
 				} catch (IOException e) {
 					logger.error("IOException has occurred");
 					e.printStackTrace();
 				} finally {
+					if (ia != null) {
+						ia.close();
+					}
 					if (fis != null) {
 						fis.close();
 					}
 				}
+				
 			} else {
 				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
 				return "ezEmail/mailMessage";

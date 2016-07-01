@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
+import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzEmailService")
 public class EzEmailServiceImpl implements EzEmailService {
@@ -31,7 +34,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name="EzEmailDAO")
 	private EzEmailDAO ezEmailDAO;
-
+	
+	@Resource(name="crypto") 
+	private EgovFileScrty egovFileScrty;
+	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
@@ -288,15 +294,24 @@ Map<String, Object> map = new HashMap<String, Object>();
 		String rtnVal = "";
 		
 		try {
+			
 			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_PUSERID", pUserId);
+			List<MailPOP3VO> pop3VoList = ezEmailDAO.getMailPOP3(map);
+			
+			map = new HashMap<String, Object>();
 			map.put("v_USERID", pUserId);
 			ezEmailDAO.deletePop3ByUserId(map);
 			
-			List<MailPOP3VO> pop3VoList = getMailPOP3(pUserId);
-			
 			Document doc = commonUtil.convertStringToDocument(pRet);
 			NodeList rows = doc.getElementsByTagName("ROW");
-	
+			
+			String prm = egovFileScrty.getPrm();
+			String pre = egovFileScrty.getPre();
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+			
+			List<MailPOP3VO> pop3OldVoList = new ArrayList<MailPOP3VO>();
+			
 			for (int i=0; i<rows.getLength(); i++) {
 				NodeList children = rows.item(i).getChildNodes();
 				String server = children.item(0).getTextContent();
@@ -308,13 +323,6 @@ Map<String, Object> map = new HashMap<String, Object>();
 				String saveToFolder = children.item(6).getTextContent();
 				String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
 	
-				for (MailPOP3VO vo : pop3VoList) {
-					if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
-							&& vo.getPop3UserId().toLowerCase().equals(id.toLowerCase())) {
-						vo.setPop3Server("");
-					}
-				}
-				
 				map = new HashMap<String, Object>();
 				map.put("v_USERID", pUserId);
 				map.put("v_POP3SERVER", server);
@@ -326,18 +334,25 @@ Map<String, Object> map = new HashMap<String, Object>();
 				map.put("v_POP3SSLYN", useSsl);
 				map.put("v_SAVETOFOLDER", saveToFolder);
 				
+				for (MailPOP3VO vo : pop3VoList) {
+					if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
+							&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
+						map.put("v_POP3USERID", vo.getPop3UserId());
+					} else {
+						pop3OldVoList.add(vo);
+					}
+				}
+				
 				ezEmailDAO.insertPop3(map);
 			}
 	
-			for (MailPOP3VO vo : pop3VoList) {
-				if (!vo.getPop3Server().equals("")) {
-					map = new HashMap<String, Object>();
-					map.put("v_USERID", pUserId);
-					map.put("v_POP3SERVER", vo.getPop3Server());
-					map.put("v_POP3USERID", vo.getPop3UserId());
-					
-					ezEmailDAO.deletePop3List(map);
-				}
+			for (MailPOP3VO vo : pop3OldVoList) {
+				map = new HashMap<String, Object>();
+				map.put("v_USERID", pUserId);
+				map.put("v_POP3SERVER", vo.getPop3Server());
+				map.put("v_POP3USERID", vo.getPop3UserId());
+				
+				ezEmailDAO.deletePop3List(map);
 			}
 		
 			rtnVal = "OK";
@@ -348,6 +363,31 @@ Map<String, Object> map = new HashMap<String, Object>();
 		}
 		
 		return rtnVal;
+	}
+
+	@Override
+	public void setMailPOP3(String pUserId, String pPop3Server, String pPop3UserId, String pMessageId,
+			String pPop3DupMsg) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserId);
+		map.put("v_PPOP3SERVER", pPop3Server);
+		map.put("v_PPOP3USERID", pPop3UserId);
+		map.put("v_PMESSAGEID", pMessageId);
+		map.put("v_PPOP3DUPMSG", pPop3DupMsg);
+		
+		ezEmailDAO.setMailPOP3(map);
+	}
+
+	@Override
+	public List<String> getMailPOP3List(String pUserId, String pPop3Server, String pPop3UserId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserId);
+		map.put("v_PPOP3SERVER", pPop3Server);
+		map.put("v_PPOP3USERID", pPop3UserId);
+		
+		return ezEmailDAO.getMailPOP3List(map);
 	}
 	
 }

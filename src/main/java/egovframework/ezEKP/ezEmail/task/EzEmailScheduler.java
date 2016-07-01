@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.AndTerm;
@@ -69,6 +70,8 @@ public class EzEmailScheduler {
 		List<MailDeleteVO> list = ezEmailService.getMailDeleteList();
 
 		for (MailDeleteVO vo : list) {
+			IMAPAccess ia = null;
+			
 			try {
 				String userId = vo.getUserId();
 				int index = userId.indexOf("@");
@@ -87,7 +90,7 @@ public class EzEmailScheduler {
 				logger.debug("deleteUnread : " + deleteUnread);
 				logger.debug("expireTime : " + expireTime);
 
-				IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 				Folder f = ia.getFolder(path);
 
@@ -108,10 +111,14 @@ public class EzEmailScheduler {
 					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 					f.close(true);
 				}
-				ia.close();
 			} catch (Exception e) {
-				logger.error("Exception has occurred.");
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
+			
 		}
 	}
 	
@@ -142,6 +149,8 @@ public class EzEmailScheduler {
 
 			File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 			if (f.exists()) {
+				
+				IMAPAccess ia = null;
 				try {
 					fis = new FileInputStream(f);
 
@@ -152,7 +161,7 @@ public class EzEmailScheduler {
 					Transport.send(message);
 
 					//보낸편지함에 저장
-					IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 					if (folder.exists()) {
@@ -160,12 +169,15 @@ public class EzEmailScheduler {
 						folder.appendMessages(new Message[]{message});
 						folder.close(true);
 					}
-					ia.close();
-
+					
+				} catch (MessagingException e) {
+					e.printStackTrace();
 				} catch (IOException e) {
-					logger.error("IOException has occurred");
 					e.printStackTrace();
 				} finally {
+					if (ia != null) {
+						ia.close();
+					}
 					if (fis != null) {
 						fis.close();
 					}

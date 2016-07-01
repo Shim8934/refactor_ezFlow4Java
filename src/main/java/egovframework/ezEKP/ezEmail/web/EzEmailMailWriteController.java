@@ -81,6 +81,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import oracle.net.aso.f;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -357,283 +358,47 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 			logger.debug("folderPath=" + folderPath + ",url=" + url);
         	
-    		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-    				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-			
-    		Folder orgFolder = ia.getFolder(folderPath);
-    		orgFolder.open(Folder.READ_ONLY);       
-    		
-			// retrieve the Drafts folder name
-        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
-    		
-        	// retrieve the Sent folder name
-        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
-        	
-    		// retrieve the specified message.
-			Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
-			
-			if (orgMessage != null) {				        	
-	        	// in case of editing a message in Drafts folder.
-	        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
-					// retrieve the TO addresses from the message.
-					Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
-					to = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the CC addresses from the message.
-					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
-					cc = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the BCC addresses from the message.
-					addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
-					bcc = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the subject from the message.
-					subject = orgMessage.getSubject();
-					subject = (subject != null) ? subject : "";
-					
-					// analyze the message and retrieve the attached file list.
-					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
-					tempBody = bodyInfoList.get(0);
-					
-					if (attachedFileList.size() > 0) {
-		                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
-		                
-						for (int i = 0; i < attachedFileList.size(); i++) {
-							Map<String, String> fileInfo = attachedFileList.get(i);
-							
-			                attachXmlList.append("<NODE>");
-			                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
-			                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-			                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
-			                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
-			                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
-			                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
-			                attachXmlList.append("</NODE>");
-						}
-						
-		                attachXmlList.append("</NODES></ROOT>");						
-		                attach = attachXmlList.toString();	
-					}
-					
-					MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-					if (mailSignatureVO != null) {
-	                	mailSign1 = mailSignatureVO.getContent1();
-	                    mailSign2 = mailSignatureVO.getContent2();
-	                    mailSign3 = mailSignatureVO.getContent3();
-	                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-	                    
-	                } else {
-	                    mailSignSel = "0";
-	                }
-					
-	        	}
-	        	// in case of resending
-	        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
-	        		//임시보관함에 메시지 임시저장
-	        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-	        				userId+"@"+config.getProperty("config.DomainName"), password);
-	        		MimeMessage resendMessage = sa.createMimeMessage();
-	        		
-	        		resendMessage.setFlag(Flags.Flag.SEEN, true);
-	        		
-	        		if (orgMessage.isMimeType("multipart/related")) {
-		        		MimeMultipart relatedPart = new MimeMultipart("related");
-		        		
-		        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
-		        			resendMessage.setContent(relatedPart);
-		        		}	        			
-		        		else {
-		        			resendMessage.setText("placeholder");
-		        		}	        					        		
-        			}
-        			else if (orgMessage.isMimeType("multipart/*")) {
-		                MimeMultipart mixedPart = new MimeMultipart();
-		                
-		                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
-		                
-		                resendMessage.setContent(mixedPart);	    
-        			}
-        			else {
-        				resendMessage.setText("placeholder");
-        			}
-	        		
-	        		Folder draftsFolder = ia.getFolder(draftsFolderName);
-	        		draftsFolder.open(Folder.READ_WRITE);       
-	        		long draftUID = 0;
-	        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{resendMessage});
-	        		if (uids != null && uids[0] != null) {
-	        			draftUID = uids[0].uid;
-	        		} 	        		
-	        		url = String.valueOf(draftUID);
-	        		logger.debug("draftUID=" + draftUID);
-	        		draftsFolder.close(true);
-	        		//END: 임시보관함에 메시지 임시저장
-	        		
-	        		reSendFlag = "Y";
-	        		
-	        		Address[] addresses = orgMessage.getAllRecipients();
-	        		for (Address address : addresses) {
-	        			System.out.println(address);
-	        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
-							to = ezEmailUtil.getStringListOfAddresses(new Address[]{address});
-							break;
-	        			}
-	        		}
-	        		
-	        		subject = orgMessage.getSubject();
-					subject = (subject != null) ? subject : "";
-	        		
-					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
-					bodyValue = bodyInfoList.get(0);
-	        		
-	        		if (attachedFileList.size() > 0) {
-		                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
-		                
-						for (int i = 0; i < attachedFileList.size(); i++) {
-							Map<String, String> fileInfo = attachedFileList.get(i);
-							
-			                attachXmlList.append("<NODE>");
-			                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
-			                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-			                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
-			                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
-			                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
-			                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
-			                attachXmlList.append("</NODE>");
-						}
-						
-		                attachXmlList.append("</NODES></ROOT>");						
-		                attach = attachXmlList.toString();				                
-					}
-	        		
-	        		if (orgMessage.getHeader("X-Priority") != null) {
-	        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
-	        			if (tempImportance.equals("1")) {
-	        				importance = "2";
-	        			} else if (tempImportance.equals("5")) {
-	        				importance = "0";
-	        			} else {
-	        				importance = "1";
-	        			}
-	        		}
-	        		
-	                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
-	                
-	                //TODO: Sensitivity?
-	                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
-	        		
-	                //TODO: 서명
-
-	        	}
-	        	// in case of replying
-	        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
-	        		Message replyMessage = null; 
-	        		
-	        		// reply call is needed to create 'References' & 'In-Reply-To' headers.
-	        		if (_cmd.equals("REPLY") || _cmd.equals("FORWARD")) {
-	        			replyMessage = orgMessage.reply(false);
-	        		}
-	        		else {
-	        			replyMessage = orgMessage.reply(true);
-	        		}
-	        		
-	        		// ANSWERED flag needs to be cleared since the above reply method sets it.
-	        		orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-	        		
-	        		replyMessage.setFlag(Flags.Flag.SEEN, true);
-
-	        		if (_cmd.equals("FORWARD")) {
-	        			if (orgMessage.isMimeType("multipart/related")) {
-			        		MimeMultipart relatedPart = new MimeMultipart("related");
-			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
-			        			replyMessage.setContent(relatedPart);
-			        		}	        			
-			        		else {
-			        			replyMessage.setText("placeholder");
-			        		}	        					        		
-	        			}
-	        			else if (orgMessage.isMimeType("multipart/*")) {
-			                MimeMultipart mixedPart = new MimeMultipart();
-			                
-			                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
-			                
-			                replyMessage.setContent(mixedPart);	    
-	        			}
-	        			else {
-	        				replyMessage.setText("placeholder");
-	        			}
-	        		}
-	        		else {
-		        		MimeMultipart relatedPart = new MimeMultipart("related");
-		        		
-		        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
-		        			replyMessage.setContent(relatedPart);
-		        		}
-		        		else {
-		        			replyMessage.setText("placeholder");
-		        		}	        		
-	        		}
-
-	        		Address[] addresses = null;
-	        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
-						// retrieve the TO addresses from the reply message.
-						addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+			IMAPAccess ia = null;
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	    				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				
+	    		Folder orgFolder = ia.getFolder(folderPath);
+	    		orgFolder.open(Folder.READ_ONLY);       
+	    		
+				// retrieve the Drafts folder name
+	        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+	    		
+	        	// retrieve the Sent folder name
+	        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+	        	
+	    		// retrieve the specified message.
+				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+				
+				if (orgMessage != null) {				        	
+		        	// in case of editing a message in Drafts folder.
+		        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
+						// retrieve the TO addresses from the message.
+						Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
 						to = ezEmailUtil.getStringListOfAddresses(addresses);
-
-						// retrieve the CC addresses from the reply message.
-						addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+						
+						// retrieve the CC addresses from the message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
 						cc = ezEmailUtil.getStringListOfAddresses(addresses);
 						
-						// retrieve the BCC addresses from the reply message.
-						addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
+						// retrieve the BCC addresses from the message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
 						bcc = ezEmailUtil.getStringListOfAddresses(addresses);
-	        		}
-					
-					// retrieve the subject from the message.
-					subject = orgMessage.getSubject();
-					subject = (subject != null) ? subject : "";
-					String reStr = ""; 
-							
-					if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {		
-						reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
-					}
-					else if (_cmd.equals("FORWARD")) {
-						reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
-					}
-					
-					if (!subject.startsWith(reStr)) {
-						subject = reStr + ": " + subject;
-					}
-	        		
-					// retrieve the TO addresses from the original message.
-					addresses = orgMessage.getRecipients(Message.RecipientType.TO);
-					String orgTo = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-					// retrieve the CC addresses from the original message.
-					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
-					String orgCc = ezEmailUtil.getStringListOfAddresses(addresses);
-					
-		            StringBuilder sb = new StringBuilder();
-		            sb.append("<hr tabindex=\"-1\">");
-		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
-		            
-		            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( Z )");
-		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate())));
-		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-		            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
-		            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessage.getSubject())));
-					
-					// analyze the message and retrieve the attached file list.
-					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
-					String tmphtmlbody = bodyInfoList.get(0);
-		            
-		            bodyValue = sb.toString() + tmphtmlbody;
-	    			
-		            if (_cmd.equals("FORWARD")) {
+						
+						// retrieve the subject from the message.
+						subject = orgMessage.getSubject();
+						subject = (subject != null) ? subject : "";
+						
+						// analyze the message and retrieve the attached file list.
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						tempBody = bodyInfoList.get(0);
+						
 						if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 			                
@@ -651,62 +416,308 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 							}
 							
 			                attachXmlList.append("</NODES></ROOT>");						
+			                attach = attachXmlList.toString();	
+						}
+						
+						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+						if (mailSignatureVO != null) {
+		                	mailSign1 = mailSignatureVO.getContent1();
+		                    mailSign2 = mailSignatureVO.getContent2();
+		                    mailSign3 = mailSignatureVO.getContent3();
+		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
+		                    
+		                } else {
+		                    mailSignSel = "0";
+		                }
+						
+		        	}
+		        	// in case of resending
+		        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
+		        		//임시보관함에 메시지 임시저장
+		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+		        				userId+"@"+config.getProperty("config.DomainName"), password);
+		        		MimeMessage resendMessage = sa.createMimeMessage();
+		        		
+		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
+		        		
+		        		if (orgMessage.isMimeType("multipart/related")) {
+			        		MimeMultipart relatedPart = new MimeMultipart("related");
+			        		
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			resendMessage.setContent(relatedPart);
+			        		}	        			
+			        		else {
+			        			resendMessage.setText("placeholder");
+			        		}	        					        		
+	        			}
+	        			else if (orgMessage.isMimeType("multipart/*")) {
+			                MimeMultipart mixedPart = new MimeMultipart();
+			                
+			                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+			                
+			                resendMessage.setContent(mixedPart);	    
+	        			}
+	        			else {
+	        				resendMessage.setText("placeholder");
+	        			}
+		        		
+		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+		        		draftsFolder.open(Folder.READ_WRITE);       
+		        		long draftUID = 0;
+		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{resendMessage});
+		        		if (uids != null && uids[0] != null) {
+		        			draftUID = uids[0].uid;
+		        		} 	        		
+		        		url = String.valueOf(draftUID);
+		        		logger.debug("draftUID=" + draftUID);
+		        		draftsFolder.close(true);
+		        		//END: 임시보관함에 메시지 임시저장
+		        		
+		        		reSendFlag = "Y";
+		        		
+		        		Address[] addresses = orgMessage.getAllRecipients();
+		        		for (Address address : addresses) {
+		        			System.out.println(address);
+		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
+								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address});
+								break;
+		        			}
+		        		}
+		        		
+		        		subject = orgMessage.getSubject();
+						subject = (subject != null) ? subject : "";
+		        		
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						bodyValue = bodyInfoList.get(0);
+		        		
+		        		if (attachedFileList.size() > 0) {
+			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+			                
+							for (int i = 0; i < attachedFileList.size(); i++) {
+								Map<String, String> fileInfo = attachedFileList.get(i);
+								
+				                attachXmlList.append("<NODE>");
+				                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
+				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+				                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+				                attachXmlList.append("</NODE>");
+							}
+							
+			                attachXmlList.append("</NODES></ROOT>");						
 			                attach = attachXmlList.toString();				                
-						}											            	
-		            }
-		            
-	        		Folder draftsFolder = ia.getFolder(draftsFolderName);
-	        		draftsFolder.open(Folder.READ_WRITE);       
-	        		
-	        		long draftUID = 0;
-	        		// TODO: 에러 발생 시 처리
-	        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
-	        		if (uids != null && uids[0] != null) {
-	        			draftUID = uids[0].uid;
-	        		} 	        		
-	        		url = String.valueOf(draftUID);
-	        		
-	        		logger.debug("draftUID=" + draftUID);
-	        		
-	        		draftsFolder.close(true);
-	                
-	                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-	                
-	                if (mailSignatureVO != null) {
-	                	mailSign1 = mailSignatureVO.getContent1();
-	                    mailSign2 = mailSignatureVO.getContent2();
-	                    mailSign3 = mailSignatureVO.getContent3();
-	                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-	                    
-	                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
-	                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
-	                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
-	                    
-	                } else {
-	                    mailSignSel = "0";
-	                }
-	                
-	                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
-	                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
-	                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
-	                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
-	                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
-	                }
-	                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
-	                bodyValue = bodyValue.replaceAll("DIV id='MailSign'", "DIV ");
-	                
-	                bodyValue = bodyValue.replaceAll("id=msgbody", "");
-
-	                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
-	                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
-	                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
-	                	bodyValue = "<body free>" + bodyValue + "</body>";
-	                }
-	        	}
+						}
+		        		
+		        		if (orgMessage.getHeader("X-Priority") != null) {
+		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        			if (tempImportance.equals("1")) {
+		        				importance = "2";
+		        			} else if (tempImportance.equals("5")) {
+		        				importance = "0";
+		        			} else {
+		        				importance = "1";
+		        			}
+		        		}
+		        		
+		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
+		                
+		                //TODO: Sensitivity?
+		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
+		        		
+		                //TODO: 서명
+	
+		        	}
+		        	// in case of replying
+		        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
+		        		Message replyMessage = null; 
+		        		
+		        		// reply call is needed to create 'References' & 'In-Reply-To' headers.
+		        		if (_cmd.equals("REPLY") || _cmd.equals("FORWARD")) {
+		        			replyMessage = orgMessage.reply(false);
+		        		}
+		        		else {
+		        			replyMessage = orgMessage.reply(true);
+		        		}
+		        		
+		        		// ANSWERED flag needs to be cleared since the above reply method sets it.
+		        		orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+		        		
+		        		replyMessage.setFlag(Flags.Flag.SEEN, true);
+	
+		        		if (_cmd.equals("FORWARD")) {
+		        			if (orgMessage.isMimeType("multipart/related")) {
+				        		MimeMultipart relatedPart = new MimeMultipart("related");
+				        		
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        			replyMessage.setContent(relatedPart);
+				        		}	        			
+				        		else {
+				        			replyMessage.setText("placeholder");
+				        		}	        					        		
+		        			}
+		        			else if (orgMessage.isMimeType("multipart/*")) {
+				                MimeMultipart mixedPart = new MimeMultipart();
+				                
+				                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+				                
+				                replyMessage.setContent(mixedPart);	    
+		        			}
+		        			else {
+		        				replyMessage.setText("placeholder");
+		        			}
+		        		}
+		        		else {
+			        		MimeMultipart relatedPart = new MimeMultipart("related");
+			        		
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			replyMessage.setContent(relatedPart);
+			        		}
+			        		else {
+			        			replyMessage.setText("placeholder");
+			        		}	        		
+		        		}
+	
+		        		Address[] addresses = null;
+		        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+							// retrieve the TO addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+							to = ezEmailUtil.getStringListOfAddresses(addresses);
+	
+							// retrieve the CC addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+							cc = ezEmailUtil.getStringListOfAddresses(addresses);
+							
+							// retrieve the BCC addresses from the reply message.
+							addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
+							bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+		        		}
+						
+						// retrieve the subject from the message.
+						subject = orgMessage.getSubject();
+						subject = (subject != null) ? subject : "";
+						String reStr = ""; 
+								
+						if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {		
+							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+						}
+						else if (_cmd.equals("FORWARD")) {
+							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+						}
+						
+						if (!subject.startsWith(reStr)) {
+							subject = reStr + ": " + subject;
+						}
+		        		
+						// retrieve the TO addresses from the original message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+						String orgTo = ezEmailUtil.getStringListOfAddresses(addresses);
+						
+						// retrieve the CC addresses from the original message.
+						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses);
+						
+			            StringBuilder sb = new StringBuilder();
+			            sb.append("<hr tabindex=\"-1\">");
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+			            
+			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( Z )");
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate())));
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessage.getSubject())));
+						
+						// analyze the message and retrieve the attached file list.
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						String tmphtmlbody = bodyInfoList.get(0);
+			            
+			            bodyValue = sb.toString() + tmphtmlbody;
+		    			
+			            if (_cmd.equals("FORWARD")) {
+							if (attachedFileList.size() > 0) {
+				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+				                
+								for (int i = 0; i < attachedFileList.size(); i++) {
+									Map<String, String> fileInfo = attachedFileList.get(i);
+									
+					                attachXmlList.append("<NODE>");
+					                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
+					                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
+					                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+					                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
+					                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
+					                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					                attachXmlList.append("</NODE>");
+								}
+								
+				                attachXmlList.append("</NODES></ROOT>");						
+				                attach = attachXmlList.toString();				                
+							}											            	
+			            }
+			            
+		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+		        		draftsFolder.open(Folder.READ_WRITE);       
+		        		
+		        		long draftUID = 0;
+		        		// TODO: 에러 발생 시 처리
+		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
+		        		if (uids != null && uids[0] != null) {
+		        			draftUID = uids[0].uid;
+		        		} 	        		
+		        		url = String.valueOf(draftUID);
+		        		
+		        		logger.debug("draftUID=" + draftUID);
+		        		
+		        		draftsFolder.close(true);
+		                
+		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+		                
+		                if (mailSignatureVO != null) {
+		                	mailSign1 = mailSignatureVO.getContent1();
+		                    mailSign2 = mailSignatureVO.getContent2();
+		                    mailSign3 = mailSignatureVO.getContent3();
+		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
+		                    
+		                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
+		                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
+		                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
+		                    
+		                } else {
+		                    mailSignSel = "0";
+		                }
+		                
+		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
+		                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
+		                }
+		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
+		                bodyValue = bodyValue.replaceAll("DIV id='MailSign'", "DIV ");
+		                
+		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
+	
+		                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
+		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
+		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
+		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                }
+		        	}
+				}
+	        	        	
+				orgFolder.close(true);
+				
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();        	
+				}
 			}
-        	        	
-			orgFolder.close(true);			
-			ia.close();        	
+			
         }
         
 //        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")))
@@ -1151,137 +1162,146 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		Folder folder = null;
 		Multipart multipart = null;
 		
-		if (hasAttachFile) {
-			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password);
-			newMessage = sa.createMimeMessage();
+		try {
 			
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-			
-			folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-			folder.open(Folder.READ_WRITE);
-			multipart = new MimeMultipart();
-		}
-		
-		if (cmd.equals("ADD")) {
-			NodeList fileNodes = xmldom.getElementsByTagName("FILE");
-			
-			if (hasAttachFile && uid != 0) {
-				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
-				if (oldMessage != null) {
-					if (oldMessage.getContent() instanceof Multipart) {
-						Multipart mp = (Multipart)oldMessage.getContent();
-						int count = mp.getCount();
-						BodyPart p = null;
-						
-						if (oldMessage.isMimeType("multipart/related")) {
-							Multipart relatedPart = new MimeMultipart("related");
-							
-							for (int i = 0; i < count; i++) {
-								p = mp.getBodyPart(i);
-								relatedPart.addBodyPart(p);
-							}
-							
-							MimeBodyPart wrap = new MimeBodyPart();
-							wrap.setContent(relatedPart);
-							multipart.addBodyPart(wrap, 0);
-						}
-						else {
-							for (int i = 0; i < count; i++) {
-								p = mp.getBodyPart(i);
-								multipart.addBodyPart(p);
-							}
-						}
-					}
-					
-					Enumeration<Header> e = oldMessage.getAllHeaders();
-					while(e.hasMoreElements()){
-						Header header = e.nextElement();
-						newMessage.setHeader(header.getName(), header.getValue());
-					}
-					
-					oldMessage.setFlag(Flags.Flag.DELETED, true);
-				}
+			if (hasAttachFile) {
+				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+						id+"@"+config.getProperty("config.DomainName"), password);
+				newMessage = sa.createMimeMessage();
+				
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				
+				folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+				folder.open(Folder.READ_WRITE);
+				multipart = new MimeMultipart();
 			}
 			
-			for (int i=0; i<fileNodes.getLength(); i++) {
-				Node subNode = fileNodes.item(i);
-				NodeList childNodes = subNode.getChildNodes();
-				String fileName = childNodes.item(0).getTextContent();
-				String path = childNodes.item(1).getTextContent();
-				String bigBool = childNodes.item(2).getTextContent();
+			if (cmd.equals("ADD")) {
+				NodeList fileNodes = xmldom.getElementsByTagName("FILE");
 				
-				if (hasAttachFile && bigBool.equals("N")) {
-					BodyPart messageBodyPart = new MimeBodyPart();
-			        File f = new File(pDirTempPath + commonUtil.separator + path);
-			        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
-			        messageBodyPart.setDataHandler(new DataHandler(source));
-			        
-			        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
-			        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-			        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
-			        
-					// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
-					// and some mailers (Daum, etc) may not understand it.			        
-			        encodedFileName = MimeUtility.fold(0, encodedFileName);
-			        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
-			        
-			        String contentType = "application/octet-stream";
-			        
-			        if (Files.probeContentType(f.toPath()) != null) {
-			        	contentType = Files.probeContentType(f.toPath());
-			        } else {
-			        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
-			        		contentType = "message/rfc822";
-			        	}
-			        }
-			        
-			        messageBodyPart.setHeader("Content-Type", contentType);
-			        multipart.addBodyPart(messageBodyPart);
-					
-			        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
-			        //메일에서 첨부파일 삭제할 때 attachCount 필요함.
-			        childNodes.item(4).setTextContent(fileName);
-			        
-				} else {
-					if (!path.equals("")) {
-						String[] newPath = path.split("\\|!\\|");
-						childNodes.item(1).setTextContent(newPath[1]);
-						childNodes.item(4).setTextContent(newPath[0] + commonUtil.separator + newPath[1]);
+				if (hasAttachFile && uid != 0) {
+					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+					if (oldMessage != null) {
+						if (oldMessage.getContent() instanceof Multipart) {
+							Multipart mp = (Multipart)oldMessage.getContent();
+							int count = mp.getCount();
+							BodyPart p = null;
+							
+							if (oldMessage.isMimeType("multipart/related")) {
+								Multipart relatedPart = new MimeMultipart("related");
+								
+								for (int i = 0; i < count; i++) {
+									p = mp.getBodyPart(i);
+									relatedPart.addBodyPart(p);
+								}
+								
+								MimeBodyPart wrap = new MimeBodyPart();
+								wrap.setContent(relatedPart);
+								multipart.addBodyPart(wrap, 0);
+							}
+							else {
+								for (int i = 0; i < count; i++) {
+									p = mp.getBodyPart(i);
+									multipart.addBodyPart(p);
+								}
+							}
+						}
+						
+						Enumeration<Header> e = oldMessage.getAllHeaders();
+						while(e.hasMoreElements()){
+							Header header = e.nextElement();
+							newMessage.setHeader(header.getName(), header.getValue());
+						}
+						
+						oldMessage.setFlag(Flags.Flag.DELETED, true);
 					}
 				}
+				
+				for (int i=0; i<fileNodes.getLength(); i++) {
+					Node subNode = fileNodes.item(i);
+					NodeList childNodes = subNode.getChildNodes();
+					String fileName = childNodes.item(0).getTextContent();
+					String path = childNodes.item(1).getTextContent();
+					String bigBool = childNodes.item(2).getTextContent();
+					
+					if (hasAttachFile && bigBool.equals("N")) {
+						BodyPart messageBodyPart = new MimeBodyPart();
+				        File f = new File(pDirTempPath + commonUtil.separator + path);
+				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
+				        messageBodyPart.setDataHandler(new DataHandler(source));
+				        
+				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
+				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
+				        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+				        
+						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
+						// and some mailers (Daum, etc) may not understand it.			        
+				        encodedFileName = MimeUtility.fold(0, encodedFileName);
+				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
+				        
+				        String contentType = "application/octet-stream";
+				        
+				        if (Files.probeContentType(f.toPath()) != null) {
+				        	contentType = Files.probeContentType(f.toPath());
+				        } else {
+				        	if (path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+				        		contentType = "message/rfc822";
+				        	}
+				        }
+				        
+				        messageBodyPart.setHeader("Content-Type", contentType);
+				        multipart.addBodyPart(messageBodyPart);
+						
+				        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
+				        //메일에서 첨부파일 삭제할 때 attachCount 필요함.
+				        childNodes.item(4).setTextContent(fileName);
+				        
+					} else {
+						if (!path.equals("")) {
+							String[] newPath = path.split("\\|!\\|");
+							childNodes.item(1).setTextContent(newPath[1]);
+							childNodes.item(4).setTextContent(newPath[0] + commonUtil.separator + newPath[1]);
+						}
+					}
+				}
+				
+				if (hasAttachFile) {
+					newMessage.setContent(multipart);
+					newMessage.setFlag(Flags.Flag.SEEN, true);
+					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
+				} else {
+					if (uid == 0) {
+						xmldom.getElementsByTagName("URL").item(0).setTextContent("");
+					} else {
+						xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
+					}
+				}
+	    		
+				for (int i=0; i<fileNodes.getLength(); i++) {
+					Node subNode = fileNodes.item(i);
+					NodeList childNodes = subNode.getChildNodes();
+					
+	                if (childNodes.item(2).getTextContent().equals("N")) {
+	                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+	                    if (file.exists()) {
+	                    	file.delete();
+	                    }
+	                }
+	            }
 			}
 			
 			if (hasAttachFile) {
-				newMessage.setContent(multipart);
-				newMessage.setFlag(Flags.Flag.SEEN, true);
-				AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-				xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
-			} else {
-				if (uid == 0) {
-					xmldom.getElementsByTagName("URL").item(0).setTextContent("");
-				} else {
-					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
-				}
+		        folder.close(true);
 			}
-    		
-			for (int i=0; i<fileNodes.getLength(); i++) {
-				Node subNode = fileNodes.item(i);
-				NodeList childNodes = subNode.getChildNodes();
-				
-                if (childNodes.item(2).getTextContent().equals("N")) {
-                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
-                    if (file.exists()) {
-                    	file.delete();
-                    }
-                }
-            }
-		}
 		
-		if (hasAttachFile) {
-	        folder.close(true);
-			ia.close();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
 		
 		String xmldomStr = commonUtil.convertDocumentToString(xmldom);
@@ -1496,507 +1516,515 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				id+"@"+config.getProperty("config.DomainName"), password);
 		MimeMessage message = sa.createMimeMessage();
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		// 메일 From,Recipient,CC,BCC
-		InternetAddress internetAddress = new InternetAddress();
-		String name = "";
-		String address = "";
-		
-		// From
-		logger.debug("from=" + from);
-		String pattern = "\"?([^\"]*)\"? <([^<>]+)>";
-		Pattern r = Pattern.compile(pattern);
-		Matcher m = r.matcher(from);
-		if (m.find()) {
-			name = m.group(1);
-			address = m.group(2);
-			internetAddress.setPersonal(name, "UTF-8");
-			internetAddress.setAddress(address);
-			message.setFrom(internetAddress);
-		}
-		
-		// To
-		logger.debug("to=" + to);
-		m = r.matcher(to);
-		while (m.find()) {
-			name = m.group(1);
-			address = m.group(2);
-			internetAddress.setPersonal(name, "UTF-8");
-			internetAddress.setAddress(address);
-			message.addRecipient(RecipientType.TO, internetAddress);
-		}
-		
-		// Cc
-		logger.debug("cc=" + cc);
-		m = r.matcher(cc);
-		while (m.find()) {
-			name = m.group(1);
-			address = m.group(2);
-			internetAddress.setPersonal(name, "UTF-8");
-			internetAddress.setAddress(address);
-			message.addRecipient(RecipientType.CC, internetAddress);
-		}
-		
-		// Bcc
-		logger.debug("bcc=" + bcc);
-		m = r.matcher(bcc);
-		while (m.find()) {
-			name = m.group(1);
-			address = m.group(2);
-			internetAddress.setPersonal(name, "UTF-8");
-			internetAddress.setAddress(address);
-			message.addRecipient(RecipientType.BCC, internetAddress);
-		}				
-		
-		// 메일 제목
-		message.setSubject(subject, "UTF-8");
-		
-		logger.debug("cmd=" + cmd + ",simpleMime=" + simpleMime);
-		
-		// 메일 본문 및 타입
-		MimeBodyPart content = new MimeBodyPart();
-		if (simpleMime.equals("1")) {
-            if (!cmd.toUpperCase().equals("SAVE")) {
-                if (!delaySendTime.equals("")) {
-                	message.setContent(textBody, "text/plain; charset=utf-8");
-                	content.setContent(textBody, "text/plain; charset=utf-8");
-                } else {
-                	message.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
-                	content.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
-                }
-            } else {
-            	message.setContent(textBody, "text/plain; charset=utf-8");
-            	content.setContent(textBody, "text/plain; charset=utf-8");
-            }
-        } else {
-            if (!cmd.toUpperCase().equals("SAVE")) {
-                if (!delaySendTime.equals("")) {
-                	message.setContent(htmlBody, "text/html; charset=utf-8");
-                	content.setContent(htmlBody, "text/html; charset=utf-8");
-                } else {
-                	message.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
-                	content.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
-                }
-            } else {
-            	message.setContent(htmlBody, "text/html; charset=utf-8");
-            	content.setContent(htmlBody, "text/html; charset=utf-8");
-            }
-
-        }
-		
-		// 보안메일
-		if (pSecurityMail.equals("3")) {
-			message.setHeader("Sensitivity", "company-confidential");
-        }
-		
-		// 메일 중요도
-		switch (importance) {
-            case "0": message.setHeader("X-Priority", "5");
-                break;
-            case "1": message.setHeader("X-Priority", "3");
-                break;
-            case "2": message.setHeader("X-Priority", "1");
-                break;
-            default: message.setHeader("X-Priority", "3");
-                break;
-        }
-		
-		// 추적(배달되면 알림)
-		logger.debug("replySendTime=" + replySendTime);
-        if (replySendTime.equals("1")) {
-        	message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-        } else {
-        	message.removeHeader("Return-Receipt-To");
-        }
-
-        // 추적(수신확인)
-        logger.debug("replyReadTime=" + replyReadTime);
-        if (replyReadTime.equals("1")) {
-        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-        } else {
-        	message.removeHeader("Disposition-Notification-To");
-        }
-        
-        //SentDate 설정
-        message.setSentDate(Calendar.getInstance().getTime());
-        
-        //User-Agent 설정
-        message.setHeader("User-Agent", "JMocha Mail 0.1");
-        
-        //inline image 처리
-        MimeMultipart relatedPart = null;
-        
-        if (!simpleMime.equals("1")) {
-        	// getElementsByTagName always returns non-null object even if
-        	// the tag doesn't exist, so its length must be checked.
-        	NodeList imageNameList = root.getElementsByTagName("IMAGENAME");
-        	NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-        	
-	        if (imageNameList != null && imageNameList.getLength() > 0
-	        		&& imagePathList != null && imagePathList.getLength() > 0) {
-	        	String imageName = "";
-	            String imagePath = "";
-	        	
-	            relatedPart = new MimeMultipart("related");
-	            
-	        	for (int i=0; true; i++) {
-	            	if (imageNameList.item(i) == null || imagePathList.item(i) == null) {
-	            		break;
-	            	}
-	            	
-	            	imageName = imageNameList.item(i).getTextContent();
-	            	imagePath = imagePathList.item(i).getTextContent();
-	            	
-	            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
-	                	//TODO: embedding제거
-	            		
-	                	imagePath = new URL(imagePath).getPath();
-	                	String pDirPath = realPath + imagePath;
-	                	
-	        	        File f = new File(pDirPath);
-	        	        if (f.exists()) {	            		
-		                	String cid = imageName + "@12345678.87654321";
-		                	String strContent = content.getContent().toString();
-		                	int index = strContent.indexOf("src=\"" + imageName);
-		                	if (index != -1) {
-		                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
-		                	}
-		                	content.setContent(strContent, "text/html; charset=utf-8");
-	                		        	        
-		                	MimeBodyPart messageBodyPart = new MimeBodyPart();
-		                	
-		        	        FileDataSource source = new FileDataSource(f);
-		        	        messageBodyPart.setDataHandler(new DataHandler(source));
-		        	        messageBodyPart.setFileName(imageName);
-		        	        
-		        	        String contentType = "application/octet-stream";
-		        	        
-		        	        if (Files.probeContentType(f.toPath()) != null) {
-		        	        	contentType = Files.probeContentType(f.toPath());
-		        	        }
-		        	        
-		        	        messageBodyPart.setHeader("Content-Type", contentType);
-		        	        messageBodyPart.setContentID("<" + cid + ">");
-		        	        messageBodyPart.setDisposition(Part.INLINE);
-		        	        
-		        	        relatedPart.addBodyPart(messageBodyPart);
-	        	        }
-	                }
-	            }
-	        	
-	        	relatedPart.addBodyPart(content, 0);
-	        	message.setContent(relatedPart);
-			}
-        }
-        
-        //첨부파일 처리
-        Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-        folder.open(Folder.READ_WRITE);
-        
-        logger.debug("url=" + url);
-        long uid = 0;
-        
-        // merge the existing message in the Drafts folder into a new message.
-        Message oldMessage = null;
-        if (!url.trim().equals("")) {
-        	uid = Long.parseLong(url);
-        
-        	MimeMultipart mixedPart = new MimeMultipart();
+		String pResult = null;
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			if (uid != 0) {
-				oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+			// 메일 From,Recipient,CC,BCC
+			InternetAddress internetAddress = new InternetAddress();
+			String name = "";
+			String address = "";
+			
+			// From
+			logger.debug("from=" + from);
+			String pattern = "\"?([^\"]*)\"? <([^<>]+)>";
+			Pattern r = Pattern.compile(pattern);
+			Matcher m = r.matcher(from);
+			if (m.find()) {
+				name = m.group(1);
+				address = m.group(2);
+				internetAddress.setPersonal(name, "UTF-8");
+				internetAddress.setAddress(address);
+				message.setFrom(internetAddress);
+			}
+			
+			// To
+			logger.debug("to=" + to);
+			m = r.matcher(to);
+			while (m.find()) {
+				name = m.group(1);
+				address = m.group(2);
+				internetAddress.setPersonal(name, "UTF-8");
+				internetAddress.setAddress(address);
+				message.addRecipient(RecipientType.TO, internetAddress);
+			}
+			
+			// Cc
+			logger.debug("cc=" + cc);
+			m = r.matcher(cc);
+			while (m.find()) {
+				name = m.group(1);
+				address = m.group(2);
+				internetAddress.setPersonal(name, "UTF-8");
+				internetAddress.setAddress(address);
+				message.addRecipient(RecipientType.CC, internetAddress);
+			}
+			
+			// Bcc
+			logger.debug("bcc=" + bcc);
+			m = r.matcher(bcc);
+			while (m.find()) {
+				name = m.group(1);
+				address = m.group(2);
+				internetAddress.setPersonal(name, "UTF-8");
+				internetAddress.setAddress(address);
+				message.addRecipient(RecipientType.BCC, internetAddress);
+			}				
+			
+			// 메일 제목
+			message.setSubject(subject, "UTF-8");
+			
+			logger.debug("cmd=" + cmd + ",simpleMime=" + simpleMime);
+			
+			// 메일 본문 및 타입
+			MimeBodyPart content = new MimeBodyPart();
+			if (simpleMime.equals("1")) {
+	            if (!cmd.toUpperCase().equals("SAVE")) {
+	                if (!delaySendTime.equals("")) {
+	                	message.setContent(textBody, "text/plain; charset=utf-8");
+	                	content.setContent(textBody, "text/plain; charset=utf-8");
+	                } else {
+	                	message.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
+	                	content.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
+	                }
+	            } else {
+	            	message.setContent(textBody, "text/plain; charset=utf-8");
+	            	content.setContent(textBody, "text/plain; charset=utf-8");
+	            }
+	        } else {
+	            if (!cmd.toUpperCase().equals("SAVE")) {
+	                if (!delaySendTime.equals("")) {
+	                	message.setContent(htmlBody, "text/html; charset=utf-8");
+	                	content.setContent(htmlBody, "text/html; charset=utf-8");
+	                } else {
+	                	message.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
+	                	content.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
+	                }
+	            } else {
+	            	message.setContent(htmlBody, "text/html; charset=utf-8");
+	            	content.setContent(htmlBody, "text/html; charset=utf-8");
+	            }
+	
+	        }
+			
+			// 보안메일
+			if (pSecurityMail.equals("3")) {
+				message.setHeader("Sensitivity", "company-confidential");
+	        }
+			
+			// 메일 중요도
+			switch (importance) {
+	            case "0": message.setHeader("X-Priority", "5");
+	                break;
+	            case "1": message.setHeader("X-Priority", "3");
+	                break;
+	            case "2": message.setHeader("X-Priority", "1");
+	                break;
+	            default: message.setHeader("X-Priority", "3");
+	                break;
+	        }
+			
+			// 추적(배달되면 알림)
+			logger.debug("replySendTime=" + replySendTime);
+	        if (replySendTime.equals("1")) {
+	        	message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+	        } else {
+	        	message.removeHeader("Return-Receipt-To");
+	        }
+	
+	        // 추적(수신확인)
+	        logger.debug("replyReadTime=" + replyReadTime);
+	        if (replyReadTime.equals("1")) {
+	        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+	        } else {
+	        	message.removeHeader("Disposition-Notification-To");
+	        }
+	        
+	        //SentDate 설정
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        //User-Agent 설정
+	        message.setHeader("User-Agent", "JMocha Mail 0.1");
+	        
+	        //inline image 처리
+	        MimeMultipart relatedPart = null;
+	        
+	        if (!simpleMime.equals("1")) {
+	        	// getElementsByTagName always returns non-null object even if
+	        	// the tag doesn't exist, so its length must be checked.
+	        	NodeList imageNameList = root.getElementsByTagName("IMAGENAME");
+	        	NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+	        	
+		        if (imageNameList != null && imageNameList.getLength() > 0
+		        		&& imagePathList != null && imagePathList.getLength() > 0) {
+		        	String imageName = "";
+		            String imagePath = "";
+		        	
+		            relatedPart = new MimeMultipart("related");
+		            
+		        	for (int i=0; true; i++) {
+		            	if (imageNameList.item(i) == null || imagePathList.item(i) == null) {
+		            		break;
+		            	}
+		            	
+		            	imageName = imageNameList.item(i).getTextContent();
+		            	imagePath = imagePathList.item(i).getTextContent();
+		            	
+		            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
+		                	//TODO: embedding제거
+		            		
+		                	imagePath = new URL(imagePath).getPath();
+		                	String pDirPath = realPath + imagePath;
+		                	
+		        	        File f = new File(pDirPath);
+		        	        if (f.exists()) {	            		
+			                	String cid = imageName + "@12345678.87654321";
+			                	String strContent = content.getContent().toString();
+			                	int index = strContent.indexOf("src=\"" + imageName);
+			                	if (index != -1) {
+			                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
+			                	}
+			                	content.setContent(strContent, "text/html; charset=utf-8");
+		                		        	        
+			                	MimeBodyPart messageBodyPart = new MimeBodyPart();
+			                	
+			        	        FileDataSource source = new FileDataSource(f);
+			        	        messageBodyPart.setDataHandler(new DataHandler(source));
+			        	        messageBodyPart.setFileName(imageName);
+			        	        
+			        	        String contentType = "application/octet-stream";
+			        	        
+			        	        if (Files.probeContentType(f.toPath()) != null) {
+			        	        	contentType = Files.probeContentType(f.toPath());
+			        	        }
+			        	        
+			        	        messageBodyPart.setHeader("Content-Type", contentType);
+			        	        messageBodyPart.setContentID("<" + cid + ">");
+			        	        messageBodyPart.setDisposition(Part.INLINE);
+			        	        
+			        	        relatedPart.addBodyPart(messageBodyPart);
+		        	        }
+		                }
+		            }
+		        	
+		        	relatedPart.addBodyPart(content, 0);
+		        	message.setContent(relatedPart);
+				}
+	        }
+	        
+	        //첨부파일 처리
+	        Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+	        folder.open(Folder.READ_WRITE);
+	        
+	        logger.debug("url=" + url);
+	        long uid = 0;
+	        
+	        // merge the existing message in the Drafts folder into a new message.
+	        Message oldMessage = null;
+	        if (!url.trim().equals("")) {
+	        	uid = Long.parseLong(url);
+	        
+	        	MimeMultipart mixedPart = new MimeMultipart();
 				
-				if (oldMessage != null) {
-					// copy existing headers that are needed.
-					String[] headers = oldMessage.getHeader("References");
-					if (headers != null) {
-						message.setHeader("References", headers[0]);
-					}
-					headers = oldMessage.getHeader("In-Reply-To");
-					if (headers != null) {
-						message.setHeader("In-Reply-To", headers[0]);
-					}
+				if (uid != 0) {
+					oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
-					if (oldMessage.getContent() instanceof Multipart) {
-						Multipart mp = (Multipart)oldMessage.getContent();
-						int count = mp.getCount();
-						BodyPart p = null;
-						boolean hasAttach = false;
+					if (oldMessage != null) {
+						// copy existing headers that are needed.
+						String[] headers = oldMessage.getHeader("References");
+						if (headers != null) {
+							message.setHeader("References", headers[0]);
+						}
+						headers = oldMessage.getHeader("In-Reply-To");
+						if (headers != null) {
+							message.setHeader("In-Reply-To", headers[0]);
+						}
 						
-						for (int i = 0; i < count; i++) {
-							p = mp.getBodyPart(i);
+						if (oldMessage.getContent() instanceof Multipart) {
+							Multipart mp = (Multipart)oldMessage.getContent();
+							int count = mp.getCount();
+							BodyPart p = null;
+							boolean hasAttach = false;
 							
-							// this case means it's editing an existing message in Drafts
-							if (p.isMimeType("multipart/related")) {
-								hasAttach = true;
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
 								
-								logger.debug("relatedPart=" + relatedPart);
-								if (relatedPart == null) {
-									relatedPart = new MimeMultipart("related");
-								}
-								// new related part is already created by the above routine
-								// for adding new in-line images.
-								else {
-									relatedPart.removeBodyPart(0);
-								}
-								
-								Multipart relatedPartContent = (Multipart)p.getContent();
-								int relatedPartCount = relatedPartContent.getCount();
-								BodyPart relatedSubPart = null;
-								
-								for (int j = 0; j < relatedPartCount; j++) {
-									relatedSubPart = relatedPartContent.getBodyPart(j);
+								// this case means it's editing an existing message in Drafts
+								if (p.isMimeType("multipart/related")) {
+									hasAttach = true;
 									
-									if (relatedSubPart instanceof MimePart) {
-										if (((MimePart)relatedSubPart).getContentID() != null) {
-											relatedPart.addBodyPart(relatedSubPart);						
-										}
-									}				
+									logger.debug("relatedPart=" + relatedPart);
+									if (relatedPart == null) {
+										relatedPart = new MimeMultipart("related");
+									}
+									// new related part is already created by the above routine
+									// for adding new in-line images.
+									else {
+										relatedPart.removeBodyPart(0);
+									}
+									
+									Multipart relatedPartContent = (Multipart)p.getContent();
+									int relatedPartCount = relatedPartContent.getCount();
+									BodyPart relatedSubPart = null;
+									
+									for (int j = 0; j < relatedPartCount; j++) {
+										relatedSubPart = relatedPartContent.getBodyPart(j);
+										
+										if (relatedSubPart instanceof MimePart) {
+											if (((MimePart)relatedSubPart).getContentID() != null) {
+												relatedPart.addBodyPart(relatedSubPart);						
+											}
+										}				
+									}
+									
+									String bodyContent = content.getContent().toString();
+									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
+									content.setContent(bodyContent, "text/html; charset=utf-8");
+									relatedPart.addBodyPart(content, 0);
+									
+									removeUnusedInlineImagePart(relatedPart);
 								}
+								else if (p.getDisposition() != null) { 
+									mixedPart.addBodyPart(p);
+									if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+										hasAttach = true;
+									}
+								}
+								else if (p.isMimeType("message/*")) {
+									mixedPart.addBodyPart(p);
+									hasAttach = true;
+								}							
+								else {
+									// there are cases where an in-line image part doesn't have
+									// a Content-Disposition header, but has a Content-ID header.
+									if (p instanceof MimePart) {
+										if (((MimePart)p).getContentID() != null) {
+											mixedPart.addBodyPart(p);			
+										}
+									}												
+								}
+							}
+							
+							if (hasAttach) {
+								if (relatedPart != null) {
+									MimeBodyPart wrap = new MimeBodyPart();
+									wrap.setContent(relatedPart);
+									mixedPart.addBodyPart(wrap, 0);
+								} else {
+									mixedPart.addBodyPart(content, 0);
+								}							
+								message.setContent(mixedPart);							
+							}
+							// this case means it's editing an existing message in Drafts.
+							else if (oldMessage.isMimeType("multipart/related")) {
+								logger.debug("relatedPart=" + relatedPart);
+								
+								// a new related part is already created by the above routine
+								// for adding new in-line images.						
+								if (relatedPart != null) {
+									relatedPart.removeBodyPart(0);
+									
+									BodyPart relatedSubPart = null;
+									for (int i = 0; i < relatedPart.getCount(); i++) {
+										relatedSubPart = relatedPart.getBodyPart(i);
+										mixedPart.addBodyPart(relatedSubPart);
+									}
+								}
+								
+								// this mixedPart is actually a related part.
+								mixedPart.setSubType("related");
 								
 								String bodyContent = content.getContent().toString();
 								bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
-								content.setContent(bodyContent, "text/html; charset=utf-8");
-								relatedPart.addBodyPart(content, 0);
-								
-								removeUnusedInlineImagePart(relatedPart);
-							}
-							else if (p.getDisposition() != null) { 
-								mixedPart.addBodyPart(p);
-								if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-									hasAttach = true;
-								}
-							}
-							else if (p.isMimeType("message/*")) {
-								mixedPart.addBodyPart(p);
-								hasAttach = true;
-							}							
-							else {
-								// there are cases where an in-line image part doesn't have
-								// a Content-Disposition header, but has a Content-ID header.
-								if (p instanceof MimePart) {
-									if (((MimePart)p).getContentID() != null) {
-										mixedPart.addBodyPart(p);			
-									}
-								}												
-							}
-						}
-						
-						if (hasAttach) {
-							if (relatedPart != null) {
-								MimeBodyPart wrap = new MimeBodyPart();
-								wrap.setContent(relatedPart);
-								mixedPart.addBodyPart(wrap, 0);
-							} else {
+								content.setContent(bodyContent, "text/html; charset=utf-8");							
 								mixedPart.addBodyPart(content, 0);
-							}							
-							message.setContent(mixedPart);							
-						}
-						// this case means it's editing an existing message in Drafts.
-						else if (oldMessage.isMimeType("multipart/related")) {
-							logger.debug("relatedPart=" + relatedPart);
-							
-							// a new related part is already created by the above routine
-							// for adding new in-line images.						
-							if (relatedPart != null) {
-								relatedPart.removeBodyPart(0);
 								
-								BodyPart relatedSubPart = null;
-								for (int i = 0; i < relatedPart.getCount(); i++) {
-									relatedSubPart = relatedPart.getBodyPart(i);
-									mixedPart.addBodyPart(relatedSubPart);
-								}
+								removeUnusedInlineImagePart(mixedPart);
+								
+								message.setContent(mixedPart);							
 							}
-							
-							// this mixedPart is actually a related part.
-							mixedPart.setSubType("related");
-							
-							String bodyContent = content.getContent().toString();
-							bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
-							content.setContent(bodyContent, "text/html; charset=utf-8");							
-							mixedPart.addBodyPart(content, 0);
-							
-							removeUnusedInlineImagePart(mixedPart);
-							
-							message.setContent(mixedPart);							
-						}
-					}					
+						}					
+					}
 				}
-			}
-        }        
-        
-        long draftUID = 0;
-        if (cmd.equalsIgnoreCase("SAVE")) {
-        	logger.debug("Saving the message");
-        	
-    		message.setFlag(Flags.Flag.SEEN, true);
-    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
-    		if (uids != null && uids[0] != null) {
-    			draftUID = uids[0].uid;
-    		} 
-    		
-            // this deletion code block has been moved here because
-            // it needs to be kept in Drafts if an error occurs during the above process.
-            if (oldMessage != null) {
-            	oldMessage.setFlag(Flags.Flag.DELETED, true);
-            }
-            
-        	rtnStatus = "OK";
-        } else if (cmd.equalsIgnoreCase("SEND")) {
-        	logger.debug("Sending the message");
-        	
-        	// TODO: 이후 예외 처리 필요
-        	// 편지함 용량 초과 메세지 확인을 위해 임시저장
-    		message.setFlag(Flags.Flag.SEEN, true);
-    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
-    		if (uids != null && uids[0] != null) {
-    			draftUID = uids[0].uid;
-    		} 
-        
-			String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
-	        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+	        }        
 	        
-	        if (!eShowDisplayName.equals("")) {
-            	eShowDisplayName = MimeUtility.encodeText(eShowDisplayName, "UTF-8", null);
-            	message.setHeader("X-NEW-DISPLAYNAME", eShowDisplayName);
-            }
-	        
-	        if (!delaySendTime.equals("")) {
-	        	//예약발송
-	            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
+	        long draftUID = 0;
+	        if (cmd.equalsIgnoreCase("SAVE")) {
+	        	logger.debug("Saving the message");
 	        	
+	    		message.setFlag(Flags.Flag.SEEN, true);
+	    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
+	    		if (uids != null && uids[0] != null) {
+	    			draftUID = uids[0].uid;
+	    		} 
+	    		
 	            // this deletion code block has been moved here because
 	            // it needs to be kept in Drafts if an error occurs during the above process.
 	            if (oldMessage != null) {
 	            	oldMessage.setFlag(Flags.Flag.DELETED, true);
 	            }
 	            
-	            rtnStatus = "OK";
-	        } else {                        
+	        	rtnStatus = "OK";
+	        } else if (cmd.equalsIgnoreCase("SEND")) {
+	        	logger.debug("Sending the message");
+	        	
+	        	// TODO: 이후 예외 처리 필요
+	        	// 편지함 용량 초과 메세지 확인을 위해 임시저장
+	    		message.setFlag(Flags.Flag.SEEN, true);
+	    		AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{message});
+	    		if (uids != null && uids[0] != null) {
+	    			draftUID = uids[0].uid;
+	    		} 
+	        
+				String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
+		        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+		        
+		        if (!eShowDisplayName.equals("")) {
+	            	eShowDisplayName = MimeUtility.encodeText(eShowDisplayName, "UTF-8", null);
+	            	message.setHeader("X-NEW-DISPLAYNAME", eShowDisplayName);
+	            }
+		        
+		        if (!delaySendTime.equals("")) {
+		        	//예약발송
+		            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
+		        	
+		            // this deletion code block has been moved here because
+		            // it needs to be kept in Drafts if an error occurs during the above process.
+		            if (oldMessage != null) {
+		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		            }
+		            
+		            rtnStatus = "OK";
+		        } else {                        
+		
+	//	            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
+	//	            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
+	//	            else
+	//	            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+		            
+		            //InnterMailSend 변환 시작
+		            if (isEachMailB) {
+		            	//개별발송에 따른 "X-READCHECK" 값  Update
+		            	String strRecvGuid = UUID.randomUUID().toString();
+		            	message.setHeader("x-readcheck", strRecvGuid);
+		            	message.setHeader("x-eachmail", "true");
+		            	
+		            	Address[] allRecipients = message.getAllRecipients();
+		            	
+		            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
+		            	message.removeHeader("TO");
+		        		message.removeHeader("CC");
+		        		message.removeHeader("BCC");
+		            	for(Address a : allRecipients){
+		            		message.setRecipient(RecipientType.TO, a);
+		            		
+		            		Transport.send(message);
+		            	}
+		            	
+		                // this deletion code block has been moved here because
+		                // it needs to be kept in Drafts if an error occurs during the above process.
+		                if (oldMessage != null) {
+		                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		                }
+		            } else {
+		            	Transport.send(message);
+		            	
+		                // this deletion code block has been moved here because
+		                // it needs to be kept in Drafts if an error occurs during the above process.
+		                if (oldMessage != null) {
+		                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		                }
+		                	            	
+		            	//보낸편지함에 저장
+		        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+		        		Message draftMessage = ((IMAPFolder)folder).getMessageByUID(draftUID);
+		        		folder.copyMessages(new Message[]{draftMessage}, sendFolder);
+		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
+		            }
+		            
+		            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
+		            logger.debug("reservedId=" + reservedId);
+		            if (reservedId != null && !reservedId.trim().equals("")) {
+			            ezEmailService.deleteMailReserved(reservedId);
+			            String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+			    		pDirPath = realPath + pDirPath;
+			            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
+						if (f.exists()) {
+							f.delete();
+						}
+		            }
+		            
+		            // set the ANSWERED flag of the original message to indicate it has been replied.
+		            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
+		    			int index = orgUrl.lastIndexOf("/");			
+		    			
+		    			if (index != -1) {
+		    				String orgMsgFolderPath = orgUrl.substring(0, index);
+		    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
 	
-//	            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
-//	            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
-//	            else
-//	            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+		    				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+		    				
+		    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+		    		        orgMsgFolder.open(Folder.READ_WRITE);
+		    				
+		    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+	    		        	
+		    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
+		    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+		    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
+		    		        }
+		    		        else {
+		    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
+		    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+		    		        }
+		    		        
+		    		        orgMsgFolder.close(true);
+		    			}
+		            }
+		            
+		            rtnStatus = "OK";
+		        }
+	        }
+	                
+	        folder.close(true);
+	        // sendmail_2010변환 끝
+	        
+	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
+	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+	        if (imagePathList != null && imagePathList.getLength() > 0) {
+	            String imagePath = "";
 	            
-	            //InnterMailSend 변환 시작
-	            if (isEachMailB) {
-	            	//개별발송에 따른 "X-READCHECK" 값  Update
-	            	String strRecvGuid = UUID.randomUUID().toString();
-	            	message.setHeader("x-readcheck", strRecvGuid);
-	            	message.setHeader("x-eachmail", "true");
-	            	
-	            	Address[] allRecipients = message.getAllRecipients();
-	            	
-	            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
-	            	message.removeHeader("TO");
-	        		message.removeHeader("CC");
-	        		message.removeHeader("BCC");
-	            	for(Address a : allRecipients){
-	            		message.setRecipient(RecipientType.TO, a);
-	            		
-	            		Transport.send(message);
+	        	for (int i=0; true; i++) {
+	            	if (imagePathList.item(i) == null) {
+	            		break;
 	            	}
 	            	
-	                // this deletion code block has been moved here because
-	                // it needs to be kept in Drafts if an error occurs during the above process.
-	                if (oldMessage != null) {
-	                	oldMessage.setFlag(Flags.Flag.DELETED, true);
-	                }
-	            } else {
-	            	Transport.send(message);
+	            	imagePath = imagePathList.item(i).getTextContent();
 	            	
-	                // this deletion code block has been moved here because
-	                // it needs to be kept in Drafts if an error occurs during the above process.
-	                if (oldMessage != null) {
-	                	oldMessage.setFlag(Flags.Flag.DELETED, true);
-	                }
-	                	            	
-	            	//보낸편지함에 저장
-	        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-	        		Message draftMessage = ((IMAPFolder)folder).getMessageByUID(draftUID);
-	        		folder.copyMessages(new Message[]{draftMessage}, sendFolder);
-	        		draftMessage.setFlag(Flags.Flag.DELETED, true);
-	            }
-	            
-	            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
-	            logger.debug("reservedId=" + reservedId);
-	            if (reservedId != null && !reservedId.trim().equals("")) {
-		            ezEmailService.deleteMailReserved(reservedId);
-		            String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
-		    		pDirPath = realPath + pDirPath;
-		            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
-					if (f.exists()) {
-						f.delete();
-					}
-	            }
-	            
-	            // set the ANSWERED flag of the original message to indicate it has been replied.
-	            if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL") || mailCmd.equals("FORWARD")) {
-	    			int index = orgUrl.lastIndexOf("/");			
-	    			
-	    			if (index != -1) {
-	    				String orgMsgFolderPath = orgUrl.substring(0, index);
-	    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
-
-	    				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
-	    				
-	    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
-	    		        orgMsgFolder.open(Folder.READ_WRITE);
-	    				
-	    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
-    		        	
-	    		        if (mailCmd.equals("REPLY") || mailCmd.equals("REPLYALL")) {
-	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-	    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-	    		        }
-	    		        else {
-	    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-	    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-	    		        }
-	    		        
-	    		        orgMsgFolder.close(true);
-	    			}
-	            }
-	            
-	            rtnStatus = "OK";
+	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
+	                	imagePath = new URL(imagePath).getPath();
+	                	String pDirPath = realPath + imagePath;
+	            		File f = new File(pDirPath);
+	            		if (f.exists()) {
+	            			f.delete();
+	            		}
+	            	}
+	        	}
 	        }
-        }
-                
-        folder.close(true);        
-        ia.close();
+	        
+	        pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
+	        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
         
-        // sendmail_2010변환 끝
-        
-        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
-        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-        if (imagePathList != null && imagePathList.getLength() > 0) {
-            String imagePath = "";
-            
-        	for (int i=0; true; i++) {
-            	if (imagePathList.item(i) == null) {
-            		break;
-            	}
-            	
-            	imagePath = imagePathList.item(i).getTextContent();
-            	
-            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
-                	imagePath = new URL(imagePath).getPath();
-                	String pDirPath = realPath + imagePath;
-            		File f = new File(pDirPath);
-            		if (f.exists()) {
-            			f.delete();
-            		}
-            	}
-        	}
-        }
-        
-        String pResult = null;
-        pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
-        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
-        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
 		return "<DATA>" + pResult + "</DATA>";
 	}
 	
@@ -2018,20 +2046,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			uid = Long.parseLong(uidStr);
 		}
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-		folder.open(Folder.READ_WRITE);
-		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-		logger.debug("message=" + message);
-		
-		if (message != null) {
-			message.setFlag(Flags.Flag.DELETED, true);
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+			folder.open(Folder.READ_WRITE);
+			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+			logger.debug("message=" + message);
+			
+			if (message != null) {
+				message.setFlag(Flags.Flag.DELETED, true);
+			}
+	        folder.close(true);
+	        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-        folder.close(true);
 		
-		ia.close();
 		return "";
 	}
 	
@@ -2105,65 +2142,73 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 						id+"@"+config.getProperty("config.DomainName"), password);
 				
-				IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-				
-				Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-				folder.open(Folder.READ_WRITE);
-				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
-				
-				if (oldMessage != null) {
+				IMAPAccess ia = null;
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 					
-					//TODO: rows에 filename대신 index넣기, 
-					//deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) 부르기
+					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+					folder.open(Folder.READ_WRITE);
+					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
-					//
-					MimeMessage newMessage = sa.createMimeMessage();
-					Multipart multipart = new MimeMultipart();
-					
-					Multipart mp = (Multipart)oldMessage.getContent();
-					int count = mp.getCount();
-					BodyPart p = null;
-					
-					for (int i = 0; i < count; i++) {
-						p = mp.getBodyPart(i);
+					if (oldMessage != null) {
 						
-						int length = rows.getLength();
-						boolean isRemoved = false;
-						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-							for (int j = 0; j < length; j++) {
-								if (rows.item(j).getFirstChild().getTextContent().equals(p.getFileName())) {
-									isRemoved = true;
-									break;
+						//TODO: rows에 filename대신 index넣기, 
+						//deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) 부르기
+						
+						//
+						MimeMessage newMessage = sa.createMimeMessage();
+						Multipart multipart = new MimeMultipart();
+						
+						Multipart mp = (Multipart)oldMessage.getContent();
+						int count = mp.getCount();
+						BodyPart p = null;
+						
+						for (int i = 0; i < count; i++) {
+							p = mp.getBodyPart(i);
+							
+							int length = rows.getLength();
+							boolean isRemoved = false;
+							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+								for (int j = 0; j < length; j++) {
+									if (rows.item(j).getFirstChild().getTextContent().equals(p.getFileName())) {
+										isRemoved = true;
+										break;
+									}
 								}
+							}
+							
+							if (!isRemoved) {
+								multipart.addBodyPart(p);
 							}
 						}
 						
-						if (!isRemoved) {
-							multipart.addBodyPart(p);
+						Enumeration<Header> e = oldMessage.getAllHeaders();
+						while(e.hasMoreElements()){
+							Header header = e.nextElement();
+							newMessage.setHeader(header.getName(), header.getValue());
 						}
+						//
+						
+						if (multipart.getCount() != 0) {
+							newMessage.setContent(multipart);
+							newMessage.setFlag(Flags.Flag.SEEN, true);
+							AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+							returnValue += uids[0].uid;
+						}
+						
+						oldMessage.setFlag(Flags.Flag.DELETED, true);
+						
 					}
+					folder.close(true);
 					
-					Enumeration<Header> e = oldMessage.getAllHeaders();
-					while(e.hasMoreElements()){
-						Header header = e.nextElement();
-						newMessage.setHeader(header.getName(), header.getValue());
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} finally {
+					if (ia != null) {
+						ia.close();
 					}
-					//
-					
-					if (multipart.getCount() != 0) {
-						newMessage.setContent(multipart);
-						newMessage.setFlag(Flags.Flag.SEEN, true);
-						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-						returnValue += uids[0].uid;
-					}
-					
-					oldMessage.setFlag(Flags.Flag.DELETED, true);
-					
 				}
-				folder.close(true);
-				
-				ia.close();
 			}
 		}
 		

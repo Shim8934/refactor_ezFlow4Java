@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -104,88 +105,48 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		uidStr = uidStr.split("/")[1];
 		long uid = Long.parseLong(uidStr); 
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-		folder.open(Folder.READ_ONLY);
-		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-		
-		if (message != null) {
-			String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
-			String outerReadCheck = "NONE"; //외부용 관련 변수
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			//TODO: 외부용 메일 처리
-//			if (message.ExtendedProperties.Count > 0)
-//            {
-//                OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
-//            }
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			folder.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<DATA>");
-			
-			//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
-			String userId = id + "@" + config.getProperty("config.DomainName");
-			String userId2 = id + "@" + config.getProperty("config.DomainName");
-			logger.debug("messageId = " + messageId);
-			List<MailReadVO> readList = ezEmailService.getMailReadList(userId, userId2, messageId, outerReadCheck);
-			
-			List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
-			
-			List<String> tempMailList = new ArrayList<String>();
-			
-			//수신table에서 가져옴
-			for (MailReadVO vo : readList) {
-				sb.append("<ROW>");
-				sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
-				sb.append("<READERNAME><![CDATA[" + vo.getReaderName() + "]]></READERNAME>");
-				sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
+			if (message != null) {
+				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
+				String outerReadCheck = "NONE"; //외부용 관련 변수
 				
-				String status = "";
-				for (MailCancelVO cvo : cancelList) {
-					if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
-						if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
-							status = cvo.getStatus();
-						} else {
-							status = "0";
-						}
-						break;
-					}
-				}
-				sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+				//TODO: 외부용 메일 처리
+	//			if (message.ExtendedProperties.Count > 0)
+	//            {
+	//                OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
+	//            }
 				
-				sb.append("</ROW>");
-				tempMailList.add(vo.getReaderEmail());
-			}
-			
-			//email message에서 가져옴
-			Address[] addresses = message.getAllRecipients();
-			for (Address address : addresses) {
-				String email = ((InternetAddress)address).getAddress();
-				String name = ((InternetAddress)address).getPersonal() == null ? 
-						((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
-						
-				if (email != null) {
-					boolean flag = false;
-					for (MailReadVO vo : readList) {
-						if (email.equals(vo.getReaderEmail())) {
-							flag = true;
-							break;
-						}
-					}
-					
-					if (flag) {
-						continue;
-					}
-					
+				StringBuilder sb = new StringBuilder();
+				sb.append("<DATA>");
+				
+				//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
+				String userId = id + "@" + config.getProperty("config.DomainName");
+				String userId2 = id + "@" + config.getProperty("config.DomainName");
+				logger.debug("messageId = " + messageId);
+				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, userId2, messageId, outerReadCheck);
+				
+				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
+				
+				List<String> tempMailList = new ArrayList<String>();
+				
+				//수신table에서 가져옴
+				for (MailReadVO vo : readList) {
 					sb.append("<ROW>");
-					sb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
-					sb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
-					sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+					sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
+					sb.append("<READERNAME><![CDATA[" + vo.getReaderName() + "]]></READERNAME>");
+					sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
 					
 					String status = "";
 					for (MailCancelVO cvo : cancelList) {
-						if (cvo.getReaderEmail() != null && cvo.getReaderEmail().equals(email)) {
+						if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
 							if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
 								status = cvo.getStatus();
 							} else {
@@ -195,40 +156,89 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						}
 					}
 					sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
-					sb.append("</ROW>");
 					
-					tempMailList.add(email);
+					sb.append("</ROW>");
+					tempMailList.add(vo.getReaderEmail());
 				}
 				
-			}
-			
-			//회수table에서 가져옴
-			for (MailCancelVO cvo : cancelList) {
-				
-				if (!tempMailList.contains(cvo.getReaderEmail())) {
-					sb.append("<ROW>");
-					sb.append("<READEREMAIL><![CDATA[" + cvo.getReaderEmail() + "]]></READEREMAIL>");
-					sb.append("<READERNAME><![CDATA[" + cvo.getReaderEmail() + "]]></READERNAME>");
-					sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
-					
-					String status = "";
-					if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
-						status = cvo.getStatus();
-					} else {
-						status = "0";
+				//email message에서 가져옴
+				Address[] addresses = message.getAllRecipients();
+				for (Address address : addresses) {
+					String email = ((InternetAddress)address).getAddress();
+					String name = ((InternetAddress)address).getPersonal() == null ? 
+							((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
+							
+					if (email != null) {
+						boolean flag = false;
+						for (MailReadVO vo : readList) {
+							if (email.equals(vo.getReaderEmail())) {
+								flag = true;
+								break;
+							}
+						}
+						
+						if (flag) {
+							continue;
+						}
+						
+						sb.append("<ROW>");
+						sb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
+						sb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
+						sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+						
+						String status = "";
+						for (MailCancelVO cvo : cancelList) {
+							if (cvo.getReaderEmail() != null && cvo.getReaderEmail().equals(email)) {
+								if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
+									status = cvo.getStatus();
+								} else {
+									status = "0";
+								}
+								break;
+							}
+						}
+						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						sb.append("</ROW>");
+						
+						tempMailList.add(email);
 					}
-					sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
-					sb.append("</ROW>");
+					
 				}
+				
+				//회수table에서 가져옴
+				for (MailCancelVO cvo : cancelList) {
+					
+					if (!tempMailList.contains(cvo.getReaderEmail())) {
+						sb.append("<ROW>");
+						sb.append("<READEREMAIL><![CDATA[" + cvo.getReaderEmail() + "]]></READEREMAIL>");
+						sb.append("<READERNAME><![CDATA[" + cvo.getReaderEmail() + "]]></READERNAME>");
+						sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+						
+						String status = "";
+						if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
+							status = cvo.getStatus();
+						} else {
+							status = "0";
+						}
+						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						sb.append("</ROW>");
+					}
+				}
+				
+				sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
+				sb.append("</DATA>");
+				returnValue = sb.toString();
 			}
 			
-			sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
-			sb.append("</DATA>");
-			returnValue = sb.toString();
+	        folder.close(true);
+	        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		
-        folder.close(true);
-		ia.close();
 		
 		if (!returnValue.contains("DATA")) {
 			returnValue = "<DATA>ERROR</DATA>";
@@ -269,111 +279,118 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		String emailAddress = id + "@" + config.getProperty("config.DomainName");
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-		folder.open(Folder.READ_ONLY);
-		Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-		
-		if (message == null) {
-			return "삭제 하려는 원본 메일이 보낸 편지함에 없습니다.\r\n직전발송한 메일 회수인 경우 잠시 후 다시 시도 하여 주십시오.";
-		}
-		
-		String from = ((InternetAddress)message.getFrom()[0]).getAddress();
-		if (!from.equals(emailAddress)) {
-			return "메일 회수는 자신이 보낸메일만 가능합니다.";
-		}
-		
-		int maxRecAllCount = 500;
-		Address[] addresses = message.getAllRecipients();
-		if (addresses.length > maxRecAllCount) {
-			return "메일 회수는 수신자 수가 " + maxRecAllCount + " 명 이상인 메일은 회수 할 수 없습니다.";
-		}
-		
-		String internetMessageId = ((MimeMessage)message).getMessageID();
-		String subject = message.getSubject();
-		
-		DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
-		String createDate = sdFormat.format(message.getSentDate());
-		
-		String isInsert = ezEmailService.checkDoubleMailReceive(emailAddress, subject, createDate, internetMessageId, localServerName);
-		logger.debug("isInsert = " + isInsert);
-		
-		if (pEachCancel.equals("NO")) {
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			String[] arrAddress = new String[addresses.length];
-			for (int i=0; i<addresses.length; i++) {
-				arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			folder.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+			
+			if (message == null) {
+				return "삭제 하려는 원본 메일이 보낸 편지함에 없습니다.\r\n직전발송한 메일 회수인 경우 잠시 후 다시 시도 하여 주십시오.";
 			}
 			
-			arrAddress = getMember(arrAddress);
+			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
+			if (!from.equals(emailAddress)) {
+				return "메일 회수는 자신이 보낸메일만 가능합니다.";
+			}
 			
-			//내부사용자 추출
-			List<String> innerAddresses = new ArrayList<String>();
-			for (String address : arrAddress) {
-				int index = address.indexOf("@");
-				String domain = "";
-				if (index > -1) {
-					domain = address.substring(index + 1);
+			int maxRecAllCount = 500;
+			Address[] addresses = message.getAllRecipients();
+			if (addresses.length > maxRecAllCount) {
+				return "메일 회수는 수신자 수가 " + maxRecAllCount + " 명 이상인 메일은 회수 할 수 없습니다.";
+			}
+			
+			String internetMessageId = ((MimeMessage)message).getMessageID();
+			String subject = message.getSubject();
+			
+			DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+			String createDate = sdFormat.format(message.getSentDate());
+			
+			String isInsert = ezEmailService.checkDoubleMailReceive(emailAddress, subject, createDate, internetMessageId, localServerName);
+			logger.debug("isInsert = " + isInsert);
+			
+			if (pEachCancel.equals("NO")) {
+				
+				String[] arrAddress = new String[addresses.length];
+				for (int i=0; i<addresses.length; i++) {
+					arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
 				}
-				if (domain.equals(config.getProperty("config.DomainName"))) {
-					innerAddresses.add(address);
+				
+				arrAddress = getMember(arrAddress);
+				
+				//내부사용자 추출
+				List<String> innerAddresses = new ArrayList<String>();
+				for (String address : arrAddress) {
+					int index = address.indexOf("@");
+					String domain = "";
+					if (index > -1) {
+						domain = address.substring(index + 1);
+					}
+					if (domain.equals(config.getProperty("config.DomainName"))) {
+						innerAddresses.add(address);
+					}
 				}
-			}
-			
-			if (isInsert == null) {
-				isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
-			}
-			
-			if (innerAddresses.size() == 0) {
-				return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
-			}
-			
-			for (String address : innerAddresses) {
-				ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
-			}
-			
-			//회수처리 함수 호출(비동기)
-			ezEmailAsync.cancelMailDelete(isInsert);
-		} else {
-			String[] emailAddressArray = pEachCancel.split("\\|!\\|");
-			
-			emailAddressArray = getMember(emailAddressArray);
-			
-			//내부사용자 추출
-			List<String> innerAddresses = new ArrayList<String>();
-			for (String address : emailAddressArray) {
-				int index = address.indexOf("@");
-				String domain = "";
-				if (index > -1) {
-					domain = address.substring(index + 1);
+				
+				if (isInsert == null) {
+					isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
 				}
-				if (domain.equals(config.getProperty("config.DomainName"))) {
-					innerAddresses.add(address);
+				
+				if (innerAddresses.size() == 0) {
+					return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
 				}
+				
+				for (String address : innerAddresses) {
+					ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
+				}
+				
+				//회수처리 함수 호출(비동기)
+				ezEmailAsync.cancelMailDelete(isInsert);
+			} else {
+				String[] emailAddressArray = pEachCancel.split("\\|!\\|");
+				
+				emailAddressArray = getMember(emailAddressArray);
+				
+				//내부사용자 추출
+				List<String> innerAddresses = new ArrayList<String>();
+				for (String address : emailAddressArray) {
+					int index = address.indexOf("@");
+					String domain = "";
+					if (index > -1) {
+						domain = address.substring(index + 1);
+					}
+					if (domain.equals(config.getProperty("config.DomainName"))) {
+						innerAddresses.add(address);
+					}
+				}
+				
+				if (isInsert == null) {
+					isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
+				}
+				
+				if (innerAddresses.size() == 0) {
+					return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+				}
+				
+				for (String address : innerAddresses) {
+					ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
+				}
+				
+				//회수처리 함수 호출(비동기)
+				ezEmailAsync.cancelMailDelete(isInsert);
 			}
 			
-			if (isInsert == null) {
-				isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
-			}
+			folder.close(true);
 			
-			if (innerAddresses.size() == 0) {
-				return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
-			
-			for (String address : innerAddresses) {
-				ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
-			}
-			
-			//회수처리 함수 호출(비동기)
-			ezEmailAsync.cancelMailDelete(isInsert);
 		}
-		
-		folder.close(true);
-		ia.close();
-		
-		
 		
 		return "OK";
 	}

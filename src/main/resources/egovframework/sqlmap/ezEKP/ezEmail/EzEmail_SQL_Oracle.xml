@@ -193,6 +193,14 @@
 		{CALL EZEMAIL.EZSP_GETMAILPOP3(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.setMailPOP3" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILPOP3(#v_PUSERID#, #v_PPOP3SERVER#, #v_PPOP3USERID#, #v_PMESSAGEID#, #v_PPOP3DUPMSG#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailPOP3List" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_GETMAILPOP3LIST(#v_PUSERID#, #v_PPOP3SERVER#, #v_PPOP3USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 
@@ -220,7 +228,7 @@
 	
 	<delete id="EzEmailDAO.deletePop3List" parameterClass="Map">
 		<![CDATA[
-			DELETE ezEmail.TBLMAILPOP3LIST
+			DELETE FROM ezEmail.TBLMAILPOP3LIST
 			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
        	]]>
 	</delete>
