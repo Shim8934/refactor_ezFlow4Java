@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -393,7 +394,22 @@ public class EzEmailMailListController {
 			// subject
 			String subject = message.getSubject();
 			subject = (subject != null) ? subject : "";
-			sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+			
+			if (viewSelectIndex.equals("1")) {
+				((IMAPMessage)message).setPeek(true);
+				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false);
+				String htmlBody = bodyInfoList.get(0);
+				htmlBody = htmlBody.replaceAll("(?i)<style((.|\\n|\\r)*?)<\\/style>", "");
+				htmlBody = htmlBody.replaceAll("<.*?>", "");
+				int minLen = Math.min(200, htmlBody.length());
+				htmlBody = htmlBody.substring(0, minLen);
+				
+				String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
+				sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+			}
+			else {
+				sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+			}
 			
 			// received date
 			Date receivedDate = message.getReceivedDate();
