@@ -41,6 +41,7 @@ import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
 import javax.mail.search.BodyTerm;
 import javax.mail.search.DateTerm;
+import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
@@ -455,7 +456,8 @@ public class EzEmailUtil {
 			Date startDate,
 			Date endDate,
 			boolean searchSubFolder,
-			SearchTerm existingSearchTerm
+			SearchTerm existingSearchTerm,
+			boolean isUnreadOnly
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
@@ -566,6 +568,10 @@ public class EzEmailUtil {
 				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.LT, endDate));
 			}
 			
+			if (isUnreadOnly) {
+				sTerm = new AndTerm(sTerm, new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+			}
+			
 			messages = folder.search(sTerm);
 			
 			Folder[] subFolders = folder.list();
@@ -574,7 +580,7 @@ public class EzEmailUtil {
 			if (searchSubFolder) {
 				for (Folder subFolder : subFolders) {
 					subFolder.open(Folder.READ_ONLY);
-					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm);
+					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly);
 					
 					if (subMessages.length > 0) {
 					   int mainLen = messages.length;
@@ -587,6 +593,11 @@ public class EzEmailUtil {
 					}
 				}
 			}
+		}		
+		else if (isUnreadOnly) {
+			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+			
+			messages = folder.search(sTerm);
 		}		
 		else {
 			return null;

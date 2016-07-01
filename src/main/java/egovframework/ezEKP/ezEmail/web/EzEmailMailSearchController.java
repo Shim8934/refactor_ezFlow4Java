@@ -200,7 +200,7 @@ public class EzEmailMailSearchController {
 				
 				tmpFolder.open(Folder.READ_ONLY);			
 				
-				Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null);
+				Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false);
 				
 				if (messages == null) {
 					messages = subMessages;
@@ -231,7 +231,7 @@ public class EzEmailMailSearchController {
 		else {
 			folder = imapAccess.getFolder(mailFolder);
 			folder.open(Folder.READ_ONLY);			
-			messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null);					
+			messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false);					
 		}
 				
 		if (messages.length > 0) {

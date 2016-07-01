@@ -184,7 +184,14 @@ public class EzEmailMailListController {
 		sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 		
 		Message[] messages = null; 
+		boolean isUnreadOnly = false;
+		
+		if (sortType.indexOf("\"urn:schemas:httpmail:read\" = false") >= 0) {
+			isUnreadOnly = true;
+		}
 				
+		logger.debug("isUnreadOnly=" + isUnreadOnly);
+		
 		if (!search.equals("")) {
 			int index = search.indexOf("=");
 			if (index >= 0) {
@@ -193,8 +200,11 @@ public class EzEmailMailListController {
 				
 				logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 				
-				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null);
+				messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly);
 			}
+		}
+		else if (isUnreadOnly) {
+			messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly);
 		}
 		
 		if (messages == null) {
@@ -205,40 +215,40 @@ public class EzEmailMailListController {
 		boolean isAscending = sortType.endsWith("ASC") ? true : false;
 		
 		// subject
-		if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")) {
+		if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"") >= 0) {
 			sortTypeSpecifier = "subject";
 		}
 		// sender
-		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")) {
+		else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"") >= 0) {
 			sortTypeSpecifier = "sender";
 		}
 		// recipient
-		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
+		else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:displayto\"") >= 0) {
 			sortTypeSpecifier = "recipient";
 		}
 		// attachment
-		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
+		else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:hasattachment\"") >= 0) {
 			sortTypeSpecifier = "attachment";
 		}
 		// read/unread
-		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")) {
+		else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"") >= 0) {
 			sortTypeSpecifier = "readFlag";
 		}
 		// bookmark
-		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"")) {
+		else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"") >= 0) {
 			sortTypeSpecifier = "flag";
 		}
 		// importance
-		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")) {
+		else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"") >= 0) {
 			sortTypeSpecifier = "importance";
 		}
 		// size
-		else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
+		else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"") >= 0) {
 			sortTypeSpecifier = "size";
 		}
 		// received date
-		else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
-				|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {
+		else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
+				|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {
 			sortTypeSpecifier = "receivedDate";
 		}		
 		
@@ -257,9 +267,9 @@ public class EzEmailMailListController {
 			FetchProfile fp = new FetchProfile();
 			
 			// subject or sender or recipient
-			if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"")
-					|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"")
-					|| sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:displayto\"")) {
+			if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"") >= 0
+					|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"") >= 0
+					|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:displayto\"") >= 0) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("X-Priority");
@@ -267,7 +277,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
 			// attachment
-			else if (sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:hasattachment\"")) {
+			else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:hasattachment\"") >= 0) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("X-Priority");
@@ -276,8 +286,8 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
 			// read/unread or bookmark
-			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"")
-						|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"")) {
+			else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"") >= 0
+						|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"") >= 0) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("X-Priority");
@@ -286,9 +296,9 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.SIZE);				
 			}
 			// importance (X-Priority) or received date or received date in sent mailbox
-			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"")
-						|| sortType.startsWith(" ORDER BY \"urn:schemas:httpmail:datereceived\"")
-						|| sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"")) {						
+			else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"") >= 0
+						|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
+						|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {						
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("X-Priority");
@@ -298,7 +308,7 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.FLAGS);				
 			}
 			// size
-			else if (sortType.startsWith(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"")) {
+			else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"") >= 0) {
 				// pre-fetch the remaining fields after pre-fetching fields for sorting
 				fp.add(UIDFolder.FetchProfileItem.UID);
 				fp.add("X-Priority");
