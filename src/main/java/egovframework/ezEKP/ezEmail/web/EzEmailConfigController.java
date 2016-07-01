@@ -3,8 +3,10 @@ package egovframework.ezEKP.ezEmail.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1373,23 +1375,22 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
 						out.flush();
 						
-						int downCount = newCount;
-						if (downCount > 40) {
+						if (newCount > 40) {
 							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
 							out.flush();
 							
-							downCount = 40;
+							messages = Arrays.copyOfRange(messages, 0, 40);
 						}
 						
 						Folder innerFolder = null;
 						try {
 							innerFolder = ia.getFolder(boxId);
 							innerFolder.open(Folder.READ_WRITE);
-		
-							for (int i=0; i<downCount; i++) {
+							
+							for (int i=0; i<messages.length; i++) {
 								if (i%10 == 0) {
-									if (downCount < i + 10) {
-										out.write("<BR>" + (i+1) + " - " + downCount + egovMessageSource.getMessage("ezEmail.t501", locale));
+									if (messages.length < i + 10) {
+										out.write("<BR>" + (i+1) + " - " + messages.length + egovMessageSource.getMessage("ezEmail.t501", locale));
 									}
 									else {
 										out.write("<BR>" + (i+1) + " - " + (i+10) + egovMessageSource.getMessage("ezEmail.t501", locale));
