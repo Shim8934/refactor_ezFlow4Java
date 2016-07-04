@@ -241,7 +241,7 @@ function organtreeview(thisobjid, elobjid) {
                     //noderequestdata.fire(oEvent);
                     this.onrequestdata(oEvent);
 
-                    if (getNodeText(childel.childNodes[0]).trim() == "") childel.childNodes[0].style.display = "none";
+                    //if (getNodeText(childel.childNodes[0]).trim() == "") childel.childNodes[0].style.display = "none";
                 }
             } else {
                 childel.style.display = "none";
@@ -377,7 +377,6 @@ function organtreeview(thisobjid, elobjid) {
     
     this.putchildxml = ex_putchildxml;
     function ex_putchildxml(nodeIdx, childxml) {
-
         return (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function(nodeIdx, childxml) {
             // safari
