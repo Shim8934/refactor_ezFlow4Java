@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -105,7 +105,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	
 	@Override
-	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, ModelMap model, String code) throws Exception {
+	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, Model model, String code) throws Exception {
 		String  userLevel = "";
 		int newMemberConfirmtype = 0;
 		//TODO 사용하지않음 
@@ -515,7 +515,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 
 	@Override
-	public void checkCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request) throws Exception {
+	public void checkCommHome(LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		String codeName = "", userLevel = "";
 		String pRootBoardID = "TOP";
 		
@@ -570,7 +570,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 
 	@Override
-	public void popupCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void popupCommHome(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String rootBoardID = "TOP";
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
@@ -744,7 +744,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void boardItemList(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception {
+	public void boardItemList(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception {
 		String url = "", pSortBy = "", strXML = "", showAdjacent = "";
 		int pPage = 1, totalCount = 0, totalPage = 0;
 		String pBoardID = request.getParameter("boardID");
@@ -806,7 +806,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 	@Override
-	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, ModelMap model) throws Exception {
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
 		String strWriterFakeName = "";
 		
 		if (!pUrl.equals("")) {
@@ -969,7 +969,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String showAdjacent, String adjacentItemsEnableFlag, ModelMap model) throws Exception {
+	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String showAdjacent, String adjacentItemsEnableFlag, Model model) throws Exception {
 		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", cAdmin = "", gcAdmin = "", pVersionUse = "";
 		if (item.getParentWriteDate().compareTo(item.getWriteDate()) > 0) {
 			item.setWriteDate(item.getParentWriteDate());
@@ -1095,7 +1095,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, ModelMap model) throws Exception {
+	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		if (sel == 0 && !selType.equals("3")) {
@@ -1403,7 +1403,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 	@Override
-	public void pollRes(LoginVO userInfo, ModelMap model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
+	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception {
 		int isSave = 0;
 		double responseCount = 0;
 		CommunityCPollManagerVO managerVO = ezCommunityDAO.pollResGet2(pollManagerID);

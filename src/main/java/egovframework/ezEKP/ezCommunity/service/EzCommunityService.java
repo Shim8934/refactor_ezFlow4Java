@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
@@ -124,7 +124,7 @@ public interface EzCommunityService {
 	
 	public String pollMain(LoginVO userInfo, String code) throws Exception;
 	
-	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, ModelMap model) throws Exception;
+	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model) throws Exception;
 	
 	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception;
 	
@@ -272,25 +272,25 @@ public interface EzCommunityService {
 	
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception;
 	
-	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, ModelMap model, String code) throws Exception;
+	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, Model model, String code) throws Exception;
 	
 	public void commMakeOk(LoginVO userInfo, CommunityClubVO clubVO, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	public void checkCommHome(LoginVO userInfo , ModelMap model, HttpServletRequest request) throws Exception;
+	public void checkCommHome(LoginVO userInfo , Model model, HttpServletRequest request) throws Exception;
 
-	public void popupCommHome(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public void popupCommHome(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	public void boardItemList(LoginVO userInfo, ModelMap model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception;
+	public void boardItemList(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception;
 	
-	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, ModelMap model) throws Exception;
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception;
 	
-	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String showAdjacent, String adjacentItemsEnableFlag, ModelMap model) throws Exception;
+	public void boardItemView(LoginVO userInfo, CommunityBoardPropertyVO boardInfo, CommunityBoardItemVO item, String pItemID, String pBoardID, String showAdjacent, String adjacentItemsEnableFlag, Model model) throws Exception;
 	
 	public void pollAddGo(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	public void pollRes(LoginVO userInfo, ModelMap model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
+	public void pollRes(LoginVO userInfo, Model model, String pollManagerID, String pollState, HttpServletResponse response) throws Exception;
 	
 	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception;
 	
