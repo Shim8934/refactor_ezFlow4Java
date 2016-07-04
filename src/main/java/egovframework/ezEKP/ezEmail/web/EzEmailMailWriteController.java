@@ -425,10 +425,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                    mailSign2 = mailSignatureVO.getContent2();
 		                    mailSign3 = mailSignatureVO.getContent3();
 		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-		                    
-		                } else {
-		                    mailSignSel = "0";
-		                }
+		                } 
+	                    mailSignSel = "0";
 						
 		        	}
 		        	// in case of resending
@@ -528,7 +526,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
 		                //TODO: 서명
-	
+		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+		                
+		                if (mailSignatureVO != null) {
+		                	mailSign1 = mailSignatureVO.getContent1();
+		                    mailSign2 = mailSignatureVO.getContent2();
+		                    mailSign3 = mailSignatureVO.getContent3();
+		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
+		                    
+		                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
+		                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
+		                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
+		                    
+		                } else {
+		                    mailSignSel = "0";
+		                }
+		                
 		        	}
 		        	// in case of replying
 		        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
@@ -696,7 +709,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
 		                }
 		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
-		                bodyValue = bodyValue.replaceAll("DIV id='MailSign'", "DIV ");
+		                bodyValue = bodyValue.replaceAll("div id=\"MailSign\"", "div ");
 		                
 		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
 	
