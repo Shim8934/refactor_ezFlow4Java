@@ -107,6 +107,7 @@ public class EzEmailMailListController {
 		String userLang = "1";
 		String domainName = config.getProperty("config.DomainName");
 		String useEditor = config.getProperty("config.EDITOR");
+		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
 		
 		if (dispname != null) {
@@ -142,6 +143,7 @@ public class EzEmailMailListController {
 		model.addAttribute("domainName", domainName);
 		model.addAttribute("mailGeneral", mailGeneral);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useOcs", useOcs);
 		
 		logger.debug("showMailList ended");
 		

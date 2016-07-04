@@ -33,7 +33,7 @@
 		    var g_foldertype = "${folderType}";
 		    var importanceColor = "#ff0000";
 		    var g_userLang = "${userLang}";
-		    var USE_OCS = "NO";
+		    var USE_OCS = "${useOcs}";
 		    var g_useremail = g_loginID + "@${domainName}";	    
 		    var searchMode = false;
 		    var SearchKeyword = "";
