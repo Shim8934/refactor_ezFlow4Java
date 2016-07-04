@@ -51,7 +51,7 @@
 		    	TreeView.attachEvent('nodedblclick', InsertReceiver);
 
 		    	var xmlHTTP = createXMLHttpRequest();
-		    	xmlHTTP.open("GET", "/xml/ezResource/organtree_config2.xml", false);
+		    	xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
 		    	xmlHTTP.send();
 
 		    	if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -197,7 +197,7 @@
 			}
 
 			function AddSubBrdTree(p_UserID, p_DeptID, p_BrdID, nodeIdx) {
-			    try {
+			   // try {
 			        var xmlhttp = createXMLHttpRequest();
 			        var xmlpara = createXmlDom();
 		    	    var xmlRtn = createXmlDom();
@@ -220,15 +220,16 @@
 		        	if (getXmlString(xmlRtn) == "") return;
 
 			        if (CrossYN()) {
-			            TreeView.putchildxml(nodeIdx, new XMLSerializer().serializeToString(xmlhttp.responseXML));
+			            //TreeView.putchildxml(nodeIdx, new XMLSerializer().serializeToString(xmlhttp.responseXML));
+			        	TreeView.putchildxml(nodeIdx, xmlhttp.responseXML);
 		        	} else {
 		            	if (xmlRtn.selectNodes("NODES/NODE/SELECT").length > 0) {
 			                xmlRtn.selectNodes("NODES/NODE")[0].removeChild(xmlRtn.selectNodes("NODES/NODE/SELECT")[0]);
 		            	}
 			            TreeView.putchildxml(nodeIdx, xmlRtn.xml);
 		        	}
-			    } catch (Err_Msg) {
-		    }
+			    //} catch (Err_Msg) {
+		    //}
 		}
 
 		var nodeIdx;
