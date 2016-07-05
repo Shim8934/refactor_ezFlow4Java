@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -430,6 +430,19 @@ public class EzEmailMenuController {
 		
 		String filename = request.getParameter("filename");
 		
+		// in case of IE
+		// the filename needs to be UTF-8 and URL-encoded.
+		// URI class is more appropriate than URLEncoder class for this purpose.
+		if (request.getHeader("User-Agent").contains("Trident")) {
+			URI uri = new URI(null, null, filename, null);
+			filename = uri.toASCIIString();
+		}
+		// in case of Chrome, Safari
+		// the filename consists of UTF-8 encoded bytes.
+		else {
+			filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+		}
+		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -439,7 +452,7 @@ public class EzEmailMenuController {
 			
 			String mimetype = "message/rfc822";	
 			response.setContentType(mimetype);
-			response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8").replaceAll("\\+","\\ ") + ";");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			
 			if (folder != null && folder.exists()) {
 				folder.open(Folder.READ_ONLY);
