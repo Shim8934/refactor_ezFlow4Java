@@ -383,7 +383,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			onlyFileName = attachFile;
 			iStart = onlyFileName.lastIndexOf(".");
 			extName = onlyFileName.substring(iStart);
-
+			
+			if (!new File(logoPath).exists()) {
+				new File(logoPath).mkdirs();
+			}
+			
 			File file = new File(logoPath + fileName + "_logo" + "." + extName);
 			cClubLogo.transferTo(file);
 			
@@ -5425,57 +5429,4 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             WriteTextLog("ezcomm_comm_out_ok", "SndMail", ex.ToString());
         }
 	}*/
-	
-	
-/*	@Override
-	public String extractString(String pSource, String pStarts, String pEnds) throws Exception {
-		int pos1 = pSource.indexOf(pStarts);
-		int pos2 = pSource.indexOf(pEnds, pos1 + pStarts.length());
-		
-		if(pos1 == -1){
-			return "";
-		}
-		if(pos2 == -1){
-			return "";
-		}
-		
-		return pSource.substring(pos1, pos2 - pos1 + pEnds.length());
-	}
-
-	@Override
-	public String sortXML(String pXML, String pSortBy) throws Exception{
-		String temp = "1";
-		String[] sortInfo = new String[1000];
-		int iCount = 0;
-		
-		while(iCount < 1000){
-			temp = extractString(pXML, "<ROW>", "</ROW>");
-			
-			if(!temp.equals("")){
-				String sortNum = extractString(temp, "<" + pSortBy + ">", "</" + pSortBy + ">").replace("<" + pSortBy + ">", "").replace("</" + pSortBy + ">", "").trim();
-				
-				while(sortNum.length() < 4){
-					sortNum = "0" + sortNum;
-				}
-				
-				sortInfo[iCount] = sortNum + temp;
-				pXML = pXML.replace(temp, "");
-			}
-			
-			iCount++;
-		}
-		
-		Arrays.sort(sortInfo);
-		
-		StringBuilder sb = new StringBuilder("<DATA>");
-		
-		for(String info : sortInfo){
-			sb.append(info.substring(4));
-		}
-		
-		sb.append("</DATA>");
-		
-		return sb.toString();
-	}*/
-
 }

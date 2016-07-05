@@ -6,6 +6,7 @@ function EmbedContentIntoXML(ConValue) {
     for (var i = 0; i < imgColl.length; i++) {
         if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0) {
             var OrgSrc = imgColl.item(i).src;
+            
             var ImgHeight = "0";
             var ImgWidth = "0";
 
@@ -26,17 +27,15 @@ function EmbedContentIntoXML(ConValue) {
 }
 
 function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlDom = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "URL", encodeURIComponent(pUrl));
-    createNodeAndInsertText(xmlDom, objNode, "HEIGHT", pImgHeight);
-    createNodeAndInsertText(xmlDom, objNode, "WIDTH", pImgWidth);
-    createNodeAndInsertText(xmlDom, objNode, "TYPE", "2");
-    try {
-        XmlHttp.open("POST", "/myoffice/Common/ConvertSaveImage.aspx", false);
-        XmlHttp.send(xmlDom);
-    }
-    catch (e) { }
+	$.ajax({
+		url : "/ezCommon/convertSaveImage.do",
+		type : "POST",
+		async : false,
+		data : {
+			"url" : pUrl,
+			"height" : pImgHeight,
+			"width" : pImgWidth,
+			"type" : 2
+		}
+	});
 }

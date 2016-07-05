@@ -98,6 +98,8 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID) throws Exception;
 	
+	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item) throws Exception;
+	
 	public String getLeftCommunity(LoginVO userInfo) throws Exception;
 	
 	public String getLeftBoardList() throws Exception;
@@ -333,15 +335,7 @@ public interface EzCommunityService {
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
 
 	public void okNoSet(String flag, String code, String cID) throws Exception;
-
-
+	
 	
 
-	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item) throws Exception;
-
-	
-
-//	public String extractString(String pSource, String pStarts, String pEnds) throws Exception;
-
-//	public String sortXML(String pXML, String pSortBy) throws Exception;
 }

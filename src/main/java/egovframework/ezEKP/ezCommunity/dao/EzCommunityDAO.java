@@ -246,6 +246,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> getAdjacentItemsGet2Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet2Pho", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> getAdjacentItemsGet3Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -885,17 +895,4 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void brdDeleteBoard(String v_pBoardID) throws Exception {
 		delete("EzCommunityDAO.brdDeleteBoard", v_pBoardID);
 	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> getAdjacentItemsGet2Pho(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet2Pho", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> getAdjacentItemsGet3Pho(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
-	}
-
-
-
 }

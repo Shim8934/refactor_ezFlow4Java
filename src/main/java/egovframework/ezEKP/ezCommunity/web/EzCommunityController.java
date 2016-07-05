@@ -509,7 +509,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 쓰기/수정/답변 실행함수
 	 */
-	@Transactional(propagation=Propagation.NESTED)
 	@RequestMapping(value = "/ezCommunity/saveItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveItem (@RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {

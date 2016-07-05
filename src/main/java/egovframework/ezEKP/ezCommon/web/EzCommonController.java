@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezCommon.web;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -1136,5 +1140,49 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 		
 		ezCommonService.responseAttach(filePath, fileName, true, request, response);
+	}
+	
+	/**
+	 * CKEditor SimpleUpload시 image파일용량 줄여주는 함수
+	 */
+	@RequestMapping(value = "/ezCommon/convertSaveImage.do")
+	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String realPath = request.getServletContext().getRealPath("");
+		
+		String pImgUrl = request.getParameter("url");
+		String width = request.getParameter("width");
+		String height = request.getParameter("height");
+		String type = request.getParameter("type");
+		
+		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
+		File file = new File(realFilePath);
+		
+		BufferedImage inputImage = ImageIO.read(file);
+		BufferedImage outputImage = null;
+		Graphics2D saveImage = null;
+		
+//		int nImgWidth = inputImage.getWidth();
+//      int nImgHeight = inputImage.getHeight();
+        int nWidth = 100, nHeight = 100;
+        
+        if (width != "") {
+            nWidth = Integer.parseInt(width);
+        }
+        
+        if (height != "") {
+            nHeight = Integer.parseInt(height);
+        }
+        
+		outputImage= new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_INT_RGB);
+		saveImage = outputImage.createGraphics();
+		saveImage.drawImage(inputImage, 0, 0, nWidth, nHeight, null);
+		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		
+		ImageIO.write(outputImage, realFilePath.substring(realFilePath.lastIndexOf(".") + 1), file);
+        
+		//TODO 2016-07-05 이효진 type1 로 들어오는 경우 있을때 추가 
+		/*if (type.equals("1")) {
+			response.getWriter().print();
+		}*/
 	}
 }
