@@ -173,7 +173,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		strResult = getMHTtoHTML(type, itemID, realPath);
+		strResult = getMHTtoHTML(type, itemID, realPath, request);
 		
 		return strResult;
 	}
@@ -205,7 +205,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
         
         String result = "";
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, request);
 
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
@@ -833,69 +833,47 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 html -> mht 변환 표출 Method
 	 */
-	public String getMHTtoHTML(String type, String itemID, String realPath) throws Exception{
+	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request) throws Exception{
         String filePath = "";
         String uploadModule = config.getProperty("config.LocalPath");
         
-        //TODO 2016-04-28 community부분 추가
         if (type.equals("COMMUNITYNOTI")) {
 			uploadModule = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator;
-			
-			filePath = realPath + uploadModule;
-	        File file = new File(filePath);
-	        
-	        if (!file.exists()) {
-	        	file.mkdir();
-	        }
-	        
-	        String url = ezCommonService.getContentInfo(type, itemID);
-	        String m_strMHT = "";
-	        
-	        try {
-	        	//
-	        	m_strMHT = loadMHTFile(filePath + url);
-			} catch (Exception e) {
-				m_strMHT= "";
-			}
-	        
-	        String strHTML = startMHT2HTML(realPath+config.getProperty("config.LocalPath"), m_strMHT, filePath);
-	        
-	        if (strHTML.trim().length() > 0) {
-	        	return strHTML;
-	        } else {
-	        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
-	        }
-		} else {
-			filePath = realPath + uploadModule;
-	        File file = new File(filePath);
-	        
-	        if (!file.exists()) {
-	        	file.mkdir();
-	        }
-	        
-	        String url = ezCommonService.getContentInfo(type, itemID);
-	        String m_strMHT = "";
-	        
-	        try {
-	        	m_strMHT = loadMHTFile(realPath + url);
-			} catch (Exception e) {
-				m_strMHT= "";
-			}
-	        
-	        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath);
-	        
-	        if (strHTML.trim().length() > 0) {
-	        	return strHTML;
-	        } else {
-	        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
-	        }
+        }
+        
+        filePath = realPath + uploadModule;
+        File file = new File(filePath);
+        
+        if (!file.exists()) {
+        	file.mkdir();
+        }
+        
+        String url = ezCommonService.getContentInfo(type, itemID);
+        String m_strMHT = "";
+        
+        try {
+        	if (type.equals("COMMUNITYNOTI")) {
+        		m_strMHT = loadMHTFile(realPath + uploadModule + url);
+        	} else {
+        		m_strMHT = loadMHTFile(realPath + url);
+        	}
+		} catch (Exception e) {
+			m_strMHT= "";
 		}
+        
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, request);
+        
+        if (strHTML.trim().length() > 0) {
+        	return strHTML;
+        } else {
+        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
+        }
 	}
 	
 	/**
 	 * 게시판 html -> mht 변환 실행 표출 Method
 	 */
-	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath) throws Exception{
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, HttpServletRequest request) throws Exception{
 		String m_strHTML = "";
 		String strBoundary = "";
 		String[] m_Mimechunk = null;
@@ -930,7 +908,11 @@ public class EzCommonController extends EgovFileMngUtil{
 
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i)); 
+						if (commonUtil.checkIE(request)) {
+							m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i));
+						} else {
+							m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(request.getServletContext().getRealPath(""), ""));
+						}
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));
@@ -994,7 +976,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		BufferedReader br = new BufferedReader(new FileReader(strMHTpath));
+		BufferedReader br = new BufferedReader(new FileReader(strMHTpath.trim()));
 	    try {
 	        StringBuilder sb = new StringBuilder();
 	        String line = br.readLine();

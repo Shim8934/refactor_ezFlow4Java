@@ -56,7 +56,6 @@
 	        var code = "<c:out value='${code}' />";
 	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
 	        var userinfo_lang = "<c:out value='${strUserLang}' />";
-	    	var objMHT = new ActiveXObject("MhtFormat.Convert");
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
 	    	
@@ -73,7 +72,7 @@
 							   },
 						success: function(result){
 							html = result;
-						}        			
+						}
 					});
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
@@ -167,62 +166,22 @@
 	                	return;
 	                }
 	            } else {
-	            	if (gubun == "2") {
-	                	if(CrossYN()) {
-	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
-	                        try {
-	                        	OpenWin.focus();
-	                        } catch (e) { }
-	                	} else {
-	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
-		                    
-	                		if (typeof (ret) == "undefined") {
-		                        alert("<spring:message code = 'ezCommunity.t939' />");
-		                        return;
-		                    }
-	                		
-		                    if (ret != "OK") {
-		                        alert("<spring:message code = 'ezCommunity.t939' />");
-		                        return;
-		                    }
-		                    
-		                    if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
-			            		return;
-		                    }
-		                    
-		                    var xmlhttp = createXMLHttpRequest();
-			 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
-			 			    xmlhttp.send();
-			 			    xmlhttp = null;
-			 			    
-			 			    try {
-			 			        window.opener.refresh_onclick();
-			 			    } catch (e) {
-			 			    }
-			 			    
-			 			    window.close();
-	                	}
-	                } else {
-		            	if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
-		            		return;
-		            	}
-						
-		 			    var xmlhttp = createXMLHttpRequest();
-		 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
-		 			    xmlhttp.send();
-		 			    xmlhttp = null;
-		 			    
-		 			    try {
-		 			        window.opener.refresh_onclick();
-		 			    } catch (e) {
-		 			    }
-		 			    
-		 			    window.close();
-	                }
-	            }
+	            	if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
+	            		return;
+	            	}
+					
+	 			    var xmlhttp = createXMLHttpRequest();
+	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	 			    xmlhttp.send();
+	 			    xmlhttp = null;
+	 			    
+	 			    try {
+	 			        window.opener.refresh_onclick();
+	 			    } catch (e) {
+	 			    }
+	 			    
+	 			    window.close();
+                }
 	        }
 	        
 	        function btn_Delete_Onclick_Complete(ret) {
@@ -683,7 +642,7 @@
 	                return;
 	            }
 
-	            xmlhttp.open("POST", "ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	            xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
 	            xmlhttp.send();
 	            getOneLineReply();
 	            xmlhttp = null;
@@ -1028,7 +987,7 @@
 	            
 	            	<c:choose>
 	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID="${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID=${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            		</c:when>
 	            		<c:otherwise>
 	            			<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>

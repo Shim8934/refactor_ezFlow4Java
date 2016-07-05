@@ -60,27 +60,6 @@
 			})
 		    
 			function search() {
-// 				var sRadio;
-// 				if (document.page.sRadio.value == "title" ) {
-// 					 sRadio = "title";
-// 				} else if (document.page.sRadio.value == "titleContent" ) {
-// 					sRadio = "titleContent";
-// 				} else {
-// 					sRadio = "writer";
-// 				}
-				
-// 				$.ajax({
-// 					type : "POST",
-// 					dataType : "text",
-// 					async : false,
-// 					url : "/ezCommunity/board/bbsList.do",
-// 					data : {sRadio	:	sRadio,
-// 							keyword	:	document.page.keyword.value,
-// 							code	:	"${code}",
-// 							bName	:	"${bName}"
-// 						   }      			
-// 				});
-				
 				if (document.page.sRadio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + document.page.keyword.value;
 				} else if (document.page.sRadio.value == "titleContent" ) {
@@ -91,7 +70,7 @@
 				
 				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}";
 				
-				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + encodeURI(strSearch);
+				window.location.href = "/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 
 			function comm_searchCheck() {

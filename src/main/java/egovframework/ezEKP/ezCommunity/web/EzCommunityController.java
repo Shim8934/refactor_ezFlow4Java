@@ -1195,42 +1195,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * mht파일 read 실행함수
-	 */
-	@RequestMapping(value = "/ezCommunity/getCommunityContentInfo.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
-	@ResponseBody
-	public String getCommunityContentInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String type = request.getParameter("type");
-		String itemID = request.getParameter("itemID");
-		String realPath = request.getServletContext().getRealPath("");
-		String uploadModule = config.getProperty("config.LocalPath");
-		String strUrl = ezCommonService.getContentInfo(type, itemID);
-		String filePath = "";
-		String m_strMHT = "";
-
-		if (type.equals("COMMUNITYNOTI")) {
-			filePath = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator; 
-		} else {
-			filePath = "";
-		}
-
-		try{
-			m_strMHT = ezCommonController.loadMHTFile(realPath + filePath + strUrl);
-		}catch(Exception e){
-			m_strMHT = "";
-		}
-		
-        String strHTML = ezCommonController.startMHT2HTML(realPath + uploadModule + commonUtil.separator, m_strMHT, realPath + uploadModule + commonUtil.separator);
-
-        
-        if (strHTML.trim().length() > 0) {
-        	return strHTML;
-        } else {
-        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
-        }
-	}
-	
-	/**
 	 * 알림마당 Delete 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
@@ -2696,7 +2660,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useIE11Browser = config.getProperty("config.IE11EDITOR");
-
+		
 		int totalPage = ezCommunityService.mainPage(userInfo);
 		
 		model.addAttribute("useIE11Brower", useIE11Browser);
@@ -3460,7 +3424,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (item.getExtensionAttribute5().length() > 0) {
-			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile//s_", "/UploadFile//"));
+			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile//s_", "/UploadFile/"));
+			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile/s_", "/UploadFile/"));
 			String pFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
 			

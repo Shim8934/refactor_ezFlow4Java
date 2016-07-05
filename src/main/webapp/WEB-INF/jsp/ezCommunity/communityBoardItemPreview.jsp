@@ -103,7 +103,7 @@
 	
 		        document.getElementById('txtTitle').innerHTML = MakeXMLString(Title);
 		        document.getElementById('txtContent').innerHTML = ExtractBetweenPattern(Content, "kaoni>", "</body>");
-		        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:dotum, arial, verdana'>" + txtContent.innerHTML + "</div>"
+		        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:dotum, arial, verdana'>" + txtContent.innerHTML + "</div>";
 		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onmouseover", "");
 		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onfocus", "");
 	

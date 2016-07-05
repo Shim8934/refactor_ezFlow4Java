@@ -2630,7 +2630,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		} else {
 			pHasAttach = "0";
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pItemID", item.getItemID());
@@ -3012,8 +3012,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
 
         	if (cBoard != null) {
-        		//TODO rollInfo에 t=1권한이 잇어야 자기 글을 삭제 할수 있으나 같은 계정의 글이라도 t=1이 없음
-    			//if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > 0) {
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                bbsEditOkSet1(bName.toUpperCase(), title, gant, code, attachList, textContent);
 	                String strPath = realPath + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
