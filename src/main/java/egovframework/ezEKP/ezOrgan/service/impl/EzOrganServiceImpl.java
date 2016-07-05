@@ -787,4 +787,13 @@ System.out.println(strSQL + strSize);
 		return null;
 	}
 
+	@Override
+	public String getEncPassword(String dUserID) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", dUserID);
+		
+		return ezOrganDAO.getEncPassword(map);
+	}
+
 }

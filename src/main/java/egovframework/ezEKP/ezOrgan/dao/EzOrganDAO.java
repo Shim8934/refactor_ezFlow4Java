@@ -59,6 +59,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getDeptFullPath(String deptID) throws Exception{
 		return (String) select("EzOrganDAO.getDeptFullPath", deptID);
 	}
+	
+	public String getEncPassword(Map<String, Object> map) throws Exception{
+		return (String) select("EzOrganDAO.getEncPassword", map);
+	}
 
 	public int deptSubDeptCnt(String deptID) throws Exception{
 		// TODO Auto-generated method stub

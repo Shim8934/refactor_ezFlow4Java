@@ -769,15 +769,15 @@ function openApprovUI(allFlag) {
 
         var formURL = GetAttribute(tr[0], "DATA3");
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + encodeURI(pArgument[0]);
-            openLocation = openLocation + "&uID=" + encodeURI(pArgument[1]) + "&uName=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&uDeptID=" + encodeURI(pArgument[3]) + "&AllFlag=" + encodeURI(allFlag);
+            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
+            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         }
         else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
             if (CrossYN() || NonActiveX == "YES") {
-                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + encodeURI(pArgument[0]);
-                openLocation = openLocation + "&uID=" + encodeURI(pArgument[1]) + "&uName=" + encodeURI(pArgument[2]);
-                openLocation = openLocation + "&uDeptID=" + encodeURI(pArgument[3]) + "&AllFlag=" + encodeURI(allFlag);
+                var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?docID=" + encodeURI(pArgument[0]);
+                openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+                openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
             }
             else {
                 var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP.aspx?DocID=" + encodeURI(pArgument[0]);
@@ -787,17 +787,17 @@ function openApprovUI(allFlag) {
         }
         else {
             if (CrossYN() || NonActiveX == "YES")
-                openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_Cross.aspx?DocID=";
+                openLocation = "/ezApprovalG/approvui.do?docID=";
             else
             {
                 if (pUse_Editor == "TAGFREE")
-                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_TFI.aspx?DocID=";
+                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_TFI.aspx?docID=";
                 else
-                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui.aspx?DocID=";
+                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui.aspx?docID=";
             }
             openLocation = openLocation + encodeURI(pArgument[0]);
-            openLocation = openLocation + "&uID=" + encodeURI(pArgument[1]) + "&uName=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&uDeptID=" + encodeURI(pArgument[3]) + "&AllFlag=" + encodeURI(allFlag);
+            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -2211,56 +2211,57 @@ var xmlhttp3;
 var temppDocID;
 function cancelYN(pDocID) {
     temppDocID = pDocID;
-    xmlhttp3 = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "ASSIGN");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-
-    xmlhttp3.open("POST", "aspx/doCancelYN.aspx", true);
-    xmlhttp3.onreadystatechange = cancelYN_after;
-    xmlhttp3.send(xmlpara);
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezApprovalG/doCanCelYN.do",
+		data : {
+			docID : pDocID,
+			userID : pUserID
+		},
+		success: function(xml){
+			cancelYN_after(xml);
+		}
+	});
 }
-function cancelYN_after() {
-    if (xmlhttp3.readyState == 4 && xmlhttp3.status == 200) {
-        try {
-            var RtnVal = getNodeText(xmlhttp3.responseXML.documentElement);
-            if (RtnVal == "CALLBACK" && pListTypeValue == "2" && !GetBujaeFlag()) {
-                document.getElementById("tbtncallback").style.display = "";
-                document.getElementById("tbtnforcecallback").style.display = "none";
-            }
-            else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
-                document.getElementById("tbtncallback").style.display = "";
-                document.getElementById("tbtnforcecallback").style.display = "none";
-            }
-            else {
-                var xmlhttp = createXMLHttpRequest();
-                var xmlpara = createXmlDom();
-
-                var objNode;
-                createNodeInsert(xmlpara, objNode, "ASSIGN");
-                createNodeAndInsertText(xmlpara, objNode, "pDocID", temppDocID);
-                createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-
-                xmlhttp.open("POST", "aspx/doForceCancelYN.aspx", false);
-                xmlhttp.send(xmlpara);
-                var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
-                if (RtnVal == "TRUE")
-                    document.getElementById("tbtnforcecallback").style.display = "";
-                else
-                    document.getElementById("tbtnforcecallback").style.display = "none";
-
-                document.getElementById("tbtncallback").style.display = "none";
-                temppDocID = null;
-            }
-        }
-        catch (e) {
-        }
+function cancelYN_after(xml) {
+    var RtnVal = getNodeText(xml.documentElement);
+    if (RtnVal == "CALLBACK" && pListTypeValue == "2" && !GetBujaeFlag()) {
+        document.getElementById("tbtncallback").style.display = "";
+        document.getElementById("tbtnforcecallback").style.display = "none";
     }
-    else
-        return;
+    else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
+        document.getElementById("tbtncallback").style.display = "";
+        document.getElementById("tbtnforcecallback").style.display = "none";
+    }
+    else {
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/doForceCancelYN.do",
+    		data : {
+    			docID : temppDocID,
+    			userID : pUserID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var RtnVal = getNodeText(result.documentElement);
+        if (RtnVal == "TRUE")
+            document.getElementById("tbtnforcecallback").style.display = "";
+        else
+            document.getElementById("tbtnforcecallback").style.display = "none";
+
+        document.getElementById("tbtncallback").style.display = "none";
+        temppDocID = null;
+    }
 }
 
 function returnYN(pDocID) {

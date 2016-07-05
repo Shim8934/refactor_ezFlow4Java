@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +37,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 사용자 - 전자결재G
@@ -60,6 +62,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@Autowired
 	private Properties globals;
+	
+	@Resource(name = "crypto") 
+    private EgovFileScrty egovFileScrty;
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
@@ -2168,19 +2173,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String userID = request.getParameter("userID");
 		String result = ezOrganService.getPropertyValue(userID, "extensionAttribute3");
-		String[] signText = result.split(";");
-		int tempLength = signText.length;
-		StringBuilder resultXML = new StringBuilder("<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t433", locale) + "</NAME><WIDTH>140</WIDTH></HEADER></HEADERS><ROWS>");
-		
-		for (int k = 0; k < tempLength; k++) {
-			if (!signText[k].equals("")) {
-				resultXML.append("<ROW><CELL><VALUE>" + messageSource.getMessage("ezApprovalG.t434", locale) + k + "</VALUE><DATA1>" + signText[k] + "</DATA1></CELL></ROW>");
+		if (result != null) {
+			String[] signText = result.split(";");
+			int tempLength = signText.length;
+			StringBuilder resultXML = new StringBuilder("<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t433", locale) + "</NAME><WIDTH>140</WIDTH></HEADER></HEADERS><ROWS>");
+			
+			for (int k = 0; k < tempLength; k++) {
+				if (!signText[k].equals("")) {
+					resultXML.append("<ROW><CELL><VALUE>" + messageSource.getMessage("ezApprovalG.t434", locale) + k + "</VALUE><DATA1>" + signText[k] + "</DATA1></CELL></ROW>");
+				}
 			}
+			
+			resultXML.append("</ROWS></LISTVIEWDATA>");
+			
+			return resultXML.toString();
+		} else {
+			StringBuilder resultXML = new StringBuilder("<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t433", locale) + "</NAME><WIDTH>140</WIDTH></HEADER></HEADERS><ROWS>");
+			
+			resultXML.append("</ROWS></LISTVIEWDATA>");
+			
+			return resultXML.toString();
 		}
-		
-		resultXML.append("</ROWS></LISTVIEWDATA>");
-		
-		return resultXML.toString();
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/aprSign.do")
@@ -2234,10 +2247,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String saveFileName = "";
 		String saveDir = "";
 		String ret = "";
+		String realPath =request.getServletContext().getRealPath("");
 		
-		saveFileName = path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
-		saveDir = path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
-		
+		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
+		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+
 		File file = new File(saveDir);
 		
 		if (!file.exists()) {
@@ -2287,6 +2301,349 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String chkFlag = request.getParameter("chkFlag");
 		
 		String result = ezApprovalGService.updateHistoryForLine(docID ,userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, chkFlag, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezchkPasswd.do")
+	public String ezchkPasswd(Model model) throws Exception{
+		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
+		model.addAttribute("publicModulus", publicModulus);
+        model.addAttribute("publicExponent", publicExponent);
+        
+		return "ezApprovalG/apprGezchkPasswd";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/chkPasswd.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String chkPasswd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "";
+		String orgPassword = "";
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		String eUserID = request.getParameter("userID");
+		String ePassWd = request.getParameter("passWd");
+		
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		
+		String dPassWd = EgovFileScrty.decryptRsa(pk, ePassWd);
+		String dUserID = EgovFileScrty.decryptRsa(pk, eUserID);
+		String password = EgovFileScrty.encryptPassword(dPassWd, "unknown");
+		String flag = ezApprovalGService.getApprovalPWD(dUserID);
+		
+		if (flag != null) {
+			if (flag.equals("Y")) {
+				String dbPassword = ezApprovalGService.getApprovalPWD1(dUserID);
+				
+				if (dbPassword.equals(password)) {
+					result = "1";
+				}
+			} else {
+				orgPassword = ezOrganService.getEncPassword(dUserID);
+				
+				if (orgPassword.equals(password)) {
+					result = "1";
+				}
+			}
+		} else {
+			orgPassword = ezOrganService.getEncPassword(dUserID);
+			
+			if (orgPassword.equals(password)) {
+				result = "1";
+			}
+		}
+		
+		if (result.equals("1")) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/approvui.do")
+	public String approvui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String crossEditor = config.getProperty("config.EDITOR");
+		String susinAdmin = "";
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String docID = request.getParameter("docID");
+		String uID = request.getParameter("id");
+		String name = request.getParameter("name");
+		String deptID = request.getParameter("deptID");
+		String allFlag = request.getParameter("allFlag");
+		String tempUserID = userInfo.getId();
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID());
+		String dirPath = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator;
+		String docDir = docID.substring(docID.length() - 3);
+		String approvalPWD = ezApprovalGService.getApprovalPWD(uID);
+		
+		if (docDir.substring(0, 1).equals("0")) {
+			docDir = docDir.substring(docDir.length() - 2);
+		} else if (docDir.substring(0, 2).equals("00")) {
+			docDir = docDir.substring(docDir.length() - 1);
+		} else if (docDir.equals("000")) {
+			docDir = "0";
+		}
+		
+		dirPath = dirPath + docDir + "." + docID + ".mht";
+		
+		if (!allFlag.equals("1") && !allFlag.equals("2")) {
+			allFlag = "0";
+		}
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		String optJunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
+		
+		if (docID != null && !docID.equals("")) {
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+			String[] proxyUserArray = proxyUser.split(",");
+			boolean checkPermission = true;
+			
+			if (proxyUserArray.length > 1) {
+				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID());
+				
+				Document docXML = commonUtil.convertStringToDocument(docList);
+				
+				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+						
+						for (int j = 0; j < proxyUserArray.length; j++) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+								checkPermission = false;
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			if (checkPermission) {
+				int check = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID());
+				
+				if (check <= 0) {
+					return "main/warning";
+				}
+			}
+		}
+		
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("optJunKyukInfo", optJunKyukInfo);
+		model.addAttribute("uID", uID);
+		model.addAttribute("name", name);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docID", docID);
+		model.addAttribute("tempUserID", tempUserID);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("allFlag", allFlag);
+		model.addAttribute("oldYear", oldYear);
+		model.addAttribute("tempUserID", tempUserID);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("crossEditor", crossEditor);
+		
+		return "ezApprovalG/apprGapprovui";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do")
+	public String approvUIcontent(Model model) throws Exception{
+		String editor = config.getProperty("config.EDITOR");
+		
+		model.addAttribute("editor", editor);
+		
+		return "ezApprovalG/apprGapprovUIcontent";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getApproveDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getApproveDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getApproveDocInfo(docID, userInfo.getCompanyID(), userInfo.getLang());
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getDocInfo(docID, "APR", "ALL", userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getLastOpinonCotent.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getLastOpinonCotent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getLastOpinionContent(docID, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return "<PARA><Row>" + result + "</Row></PARA>";
+	}
+
+	@RequestMapping(value = "/ezApprovalG/getSignInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getSignInfo(docID, userInfo.getCompanyID());
+		
+		Document xmlResult = commonUtil.convertStringToDocument(result);
+		
+		for (int k = 0; k < xmlResult.getElementsByTagName("CONTENT").getLength(); k++) {
+			String strCont = xmlResult.getElementsByTagName("CONTENT").item(k).getTextContent().toLowerCase();
+			
+			if (strCont.equals("b1") || strCont.equals("b2") || strCont.equals("b3") || strCont.equals("b4") || strCont.equals("b5") || strCont.equals("b6") || strCont.equals("b7") || strCont.equals("b8") || strCont.equals("b9") || strCont.equals("b10") || strCont.equals("b11") || strCont.equals("b12")) {
+				xmlResult.getElementsByTagName("CONTENT").item(k).setTextContent(messageSource.getMessage("ezApprovalG." + strCont, locale));
+			}
+		}
+		
+		result = commonUtil.convertDocumentToString(xmlResult);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getCabinetSN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String deptID = request.getParameter("deptID");
+		String result = ezApprovalGService.getCabinetNum(deptID, "", userInfo.getCompanyID(), docID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/rollbackCabinetSN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String rollbackCabinetSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String sn = request.getParameter("docNumber");
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.rollbackCabinetNum(deptID, "", sn, userInfo.getCompanyID(), docID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getSignDate.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSignDate() throws Exception{
+		String month = EgovDateUtil.getTodayTime().substring(6, 7);
+		String day = EgovDateUtil.getTodayTime().substring(9, 10);
+		String gyulJaeDate = month + "/" + day;
+		
+		return gyulJaeDate;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/setSignInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.updateSignInfo(xmlDom, userInfo.getCompanyID(), "SET");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/doApprov.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/doBansongApprov.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doBansongApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/doBoryuApprov.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doBoryuApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/sendAckforExch.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendAckforExch() throws Exception{
+		//TODO: aspx 파일 존재안함
+		return "";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/doCanCelYN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doCanCelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String tempUserID = request.getParameter("userID");
+		String result = ezApprovalGService.getCallBackYN(docID, tempUserID, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/doForceCancelYN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doForceCancelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String tempUserID = request.getParameter("userID");
+		String result = ezApprovalGService.getCallBackYNForceLine(docID, tempUserID, userInfo.getCompanyID());
 		
 		return result;
 	}

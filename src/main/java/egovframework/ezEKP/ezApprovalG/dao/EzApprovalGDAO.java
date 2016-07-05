@@ -356,6 +356,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getApproveDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getApproveDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGSignInfoVO> getSignInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGSignInfoVO>) list("EzApprovalG.getSignInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLineTempletVO> getCallBackYNLineList(Map<String, Object> map) throws Exception{
+		return (List<ApprGLineTempletVO>) list("EzApprovalG.getCallBackYNLineList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLineTempletVO> getCallBackYNForceLine(Map<String, Object> map) throws Exception{
+		return (List<ApprGLineTempletVO>) list("EzApprovalG.getCallBackYNForceLine", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -470,6 +490,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.chkDocDelete", map);
 	}
 	
+	public String getApprovalPWD1(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getApprovalPWD1", map);
+	}
+	
+	public String getLastOpinionContent(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getLastOpinionContent", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
@@ -571,6 +599,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void insertNotifyItem(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertNotifyItem", map);
+	}
+	
+	public void spRollbackSN(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.spRollbackSN", map);
 	}
 	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{

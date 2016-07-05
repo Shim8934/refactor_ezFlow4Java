@@ -676,6 +676,7 @@ function CrossYN() {
 // CK Editer 관련 함수 ////////////////////////////////////////////////
 function ConvertMHTtoHTML(pURL) {	
     var rtnVal = '';
+
     $.ajax({
 		type : "POST",
 		dataType : "text",

@@ -2,28 +2,32 @@
 function getDocNumber(pDeptID, pPrefix) {
     try {
         var fields = message.GetFieldsList();
-        var name, docnumber
-        var rtnval
+        var name, docnumber;
+        var rtnval;
 
-        name = pPrefix + "docnumber"
+        name = pPrefix + "docnumber";
         var field = message.GetListItem(fields, name);
         if (!field) return true;
 
         fractionsymbol = field.textContent;
 
-        var xmlhttp = createXMLHttpRequest();
-        var RtnValxml = createXmlDom();
-        var xmlpara = createXmlDom();
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
 
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-
-        xmlhttp.open("Post", "../docnum/aspx/getCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+        var dataNodes = GetChildNodes(result);
         var SN = getNodeText(dataNodes[0]);
 
         if (SN == "") {
@@ -54,7 +58,7 @@ function getDocNumber(pDeptID, pPrefix) {
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
-            rollbackDocNumber(pDeptID, pPrefix, pDocID)
+            rollbackDocNumber(pDeptID, pPrefix, pDocID);
             return false;
         }
     }
@@ -62,10 +66,10 @@ function getDocNumber(pDeptID, pPrefix) {
 function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     try {
         var fields = message.GetFieldsList();
-        var name, docnumber
-        var rtnval
+        var name, docnumber;
+        var rtnval;
 
-        name = pPrefix + "docnumber"
+        name = pPrefix + "docnumber";
 
         var field = message.GetListItem(fields, name);
         if (!field) return true;
@@ -73,18 +77,24 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         docnumber = field.textContent;
         docnumber = docnumber.replace(fractionsymbol, "");
 
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDocID);
-
-        xmlhttp.open("Post", "../docnum/aspx/rollbackCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/rollbackCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID,
+    			docNumber : docnumber
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var dataNodes = GetChildNodes(result);
         rtnval = getNodeText(dataNodes[0]);
         field.textContent = fractionsymbol;
 

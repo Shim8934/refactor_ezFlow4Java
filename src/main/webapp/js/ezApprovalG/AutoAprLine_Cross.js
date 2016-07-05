@@ -8,7 +8,6 @@
         retvalue[2] = "R";
         retvalue[3] = "";
 
-        var xmlhttp = createXMLHttpRequest();
         var result = "";
         
         $.ajax({
@@ -32,7 +31,7 @@
             xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
             xmlhttp.send(Resultxml);
 
-            var ret = SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
+            var ret = SelectSingleNodeValue(result, "RESULT");
             if (ret == "TRUE") {
                 retvalue[0] = getXmlString(Resultxml);
                 return retvalue;

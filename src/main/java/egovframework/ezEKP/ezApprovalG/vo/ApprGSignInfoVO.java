@@ -7,6 +7,8 @@ public class ApprGSignInfoVO {
 	private String signName;
 	/** 사인내용*/
 	private String content;
+	/** */
+	private String aprSN;
 	
 	public String getSignType() {
 		return signType;
@@ -25,6 +27,12 @@ public class ApprGSignInfoVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getAprSN() {
+		return aprSN;
+	}
+	public void setAprSN(String aprSN) {
+		this.aprSN = aprSN;
 	}
 
 }

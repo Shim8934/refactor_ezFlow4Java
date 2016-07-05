@@ -180,6 +180,24 @@ public interface EzApprovalGService {
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID) throws Exception;
 	
+	public String getApprovalPWD1(String dUserID) throws Exception;
+	
+	public String getApproveDocInfo(String docID, String companyID, String lang) throws Exception;
+	
+	public String getLastOpinionContent(String docID, String companyID, String lang) throws Exception;
+	
+	public String getSignInfo(String docID, String companyID) throws Exception;
+	
+	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang) throws Exception;
+	
+	public String rollbackCabinetNum(String deptID, String subID, String sn, String companyID, String docID, String lang) throws Exception;
+	
+	public String updateSignInfo(Document xmlDom, String companyID, String mode) throws Exception;
+	
+	public String getCallBackYN(String docID, String tempUserID, String companyID) throws Exception;
+	
+	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID) throws Exception;
+	
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 

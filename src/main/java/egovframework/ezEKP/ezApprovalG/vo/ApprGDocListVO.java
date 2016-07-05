@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
-import java.sql.Date;
 
 public class ApprGDocListVO {
 	/** 문서 아이디*/
@@ -26,9 +25,9 @@ public class ApprGDocListVO {
 	/** 의견여부*/
 	private String hasOpinionYn;
 	/** 기안일자*/
-	private Date startDate;
+	private String startDate;
 	/** 완료일자*/
-	private Date endDate;
+	private String endDate;
 	/** 기안자아이디*/
 	private String writerID;
 	/** 기안자이름*/
@@ -77,7 +76,47 @@ public class ApprGDocListVO {
 	private String urgentApproval;
 	/** 수신일자*/
 	private String receivedDate;
-	
+	/** 보안등급*/
+	private String securityCode;
+	/** 보존연한*/
+	private String storagePeriod;
+	/** 키워드*/
+	private String keyword;
+	/** 회사아이디*/
+	private String companyID;
+	/** 분류코드*/
+	private String itemCode;
+	/** 분류이름*/
+	private String itemName;
+	/** 보안결재설정날짜*/
+	private String securityApproval;
+	/** 임시필드*/
+	private String tempAttribute;
+	/** 상태*/
+	private String status;
+	/** 특수기록물코드*/
+	private String specialRecordCode;
+	/** 공개구분*/
+	private String publicityCode;
+	/** 공개제한부분표시*/
+	private String limitRange;
+	/** 쪽수*/
+	private String pageNum;
+	/** 기록물철아이디*/
+	private String cabinetID;
+	/** 단위업무코드*/
+	private String taskCode;
+	/** 단위번호코드*/
+	private String docNumCode;
+	/** 원문서번호코드*/
+	private String orgDocNumCode;
+	/** 분리첨부XML*/
+	private String seperateAttachXML;
+	/** 요약*/
+	private String summary;
+	/** 분류이름(다국어)*/
+	private String itemName2;
+
 	public String getDocID() {
 		return docID;
 	}
@@ -144,16 +183,16 @@ public class ApprGDocListVO {
 	public void setHasOpinionYn(String hasOpinionYn) {
 		this.hasOpinionYn = hasOpinionYn;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 	public String getWriterID() {
@@ -299,5 +338,125 @@ public class ApprGDocListVO {
 	}
 	public void setReceivedDate(String receivedDate) {
 		this.receivedDate = receivedDate;
+	}
+	public String getSecurityCode() {
+		return securityCode;
+	}
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+	public String getStoragePeriod() {
+		return storagePeriod;
+	}
+	public void setStoragePeriod(String storagePeriod) {
+		this.storagePeriod = storagePeriod;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getItemCode() {
+		return itemCode;
+	}
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+	public String getItemName() {
+		return itemName;
+	}
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	public String getSecurityApproval() {
+		return securityApproval;
+	}
+	public void setSecurityApproval(String securityApproval) {
+		this.securityApproval = securityApproval;
+	}
+	public String getTempAttribute() {
+		return tempAttribute;
+	}
+	public void setTempAttribute(String tempAttribute) {
+		this.tempAttribute = tempAttribute;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getSpecialRecordCode() {
+		return specialRecordCode;
+	}
+	public void setSpecialRecordCode(String specialRecordCode) {
+		this.specialRecordCode = specialRecordCode;
+	}
+	public String getPublicityCode() {
+		return publicityCode;
+	}
+	public void setPublicityCode(String publicityCode) {
+		this.publicityCode = publicityCode;
+	}
+	public String getLimitRange() {
+		return limitRange;
+	}
+	public void setLimitRange(String limitRange) {
+		this.limitRange = limitRange;
+	}
+	public String getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(String pageNum) {
+		this.pageNum = pageNum;
+	}
+	public String getCabinetID() {
+		return cabinetID;
+	}
+	public void setCabinetID(String cabinetID) {
+		this.cabinetID = cabinetID;
+	}
+	public String getTaskCode() {
+		return taskCode;
+	}
+	public void setTaskCode(String taskCode) {
+		this.taskCode = taskCode;
+	}
+	public String getDocNumCode() {
+		return docNumCode;
+	}
+	public void setDocNumCode(String docNumCode) {
+		this.docNumCode = docNumCode;
+	}
+	public String getOrgDocNumCode() {
+		return orgDocNumCode;
+	}
+	public void setOrgDocNumCode(String orgDocNumCode) {
+		this.orgDocNumCode = orgDocNumCode;
+	}
+	public String getSeperateAttachXML() {
+		return seperateAttachXML;
+	}
+	public void setSeperateAttachXML(String seperateAttachXML) {
+		this.seperateAttachXML = seperateAttachXML;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	public String getItemName2() {
+		return itemName2;
+	}
+	public void setItemName2(String itemName2) {
+		this.itemName2 = itemName2;
 	}
 }

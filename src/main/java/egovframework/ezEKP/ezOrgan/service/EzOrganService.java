@@ -28,6 +28,8 @@ public interface EzOrganService {
 	
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
+	public String getEncPassword(String dUserID) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;

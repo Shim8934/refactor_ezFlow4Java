@@ -48,7 +48,7 @@
 	</procedure>
 	
 	<procedure id="EzApprovalG.checkPermission" parameterClass="Map" resultClass="ApprGAprLineVO">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRUSERAPPLINEINFO(#v_DOCID#, #v_PAPRUSERID#, #v_PDEPTID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRUSERAPPLINEINFO(#v_PDOCID#, #v_PAPRUSERID#, #v_PDEPTID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
@@ -175,7 +175,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETATTACHDOCINFO(#v_DOCID#, #v_MODE#, #v_ORDERBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+	<procedure id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCINFO(#v_DOCID#, #v_MODE#, #v_COLS#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -265,6 +265,22 @@
 	
 	<procedure id="EzApprovalG.compareLineHistory1" parameterClass="Map" resultClass="ApprGAprLineVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_COMPARELINEHISTORY1(#v_DOCID#, #v_FLAG#, #v_MODIFYSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getApproveDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPPROVEDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETSIGNINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCALLBACKYN_LINELIST(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getCallBackYNForceLine" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCALLBACKYNFORCE_LINE(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
@@ -365,6 +381,10 @@
 	
 	<procedure id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="String">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DOBANSONG_APRTYPE(#v_DOCID#, #v_APRMEMBERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int">
@@ -623,6 +643,17 @@
 		<![CDATA[
 			SELECT 
 				flag 
+      		FROM 
+      			EZCOMMON.TBPWDINFO
+      		WHERE  
+      			userid = #v_PUSERID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getApprovalPWD1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PWD 
       		FROM 
       			EZCOMMON.TBPWDINFO
       		WHERE  

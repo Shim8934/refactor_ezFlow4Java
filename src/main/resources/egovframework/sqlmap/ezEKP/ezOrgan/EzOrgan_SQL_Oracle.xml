@@ -207,4 +207,15 @@
 				cn = #userID#
 		]]>
 	</select>
+	
+	<select id="EzOrganDAO.getEncPassword" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				password
+			FROM
+				ezHrmaster.TBLUSERMASTER
+			WHERE
+				cn = #userID#
+		]]>
+	</select>
 </sqlMap>

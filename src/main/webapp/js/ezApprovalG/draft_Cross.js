@@ -1978,40 +1978,46 @@ function OpenInformationUI_Complete() {
     DivPopUpHidden();
 }
 function getDocInfo() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-    xmlhttp.open("Post", "../aspx/getDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-    xmldoc = xmlhttp.responseXML;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getDocInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    xmldoc = result;
 
     var objNodes = xmldoc.documentElement.childNodes;
     if (objNodes) {
-        pOrgDocID = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/ORGDOCID");
-        if (SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/HASOPINIONYN") == "O")
+        pOrgDocID = SelectSingleNodeValueNew(result, "DATA/ORGDOCID");
+        if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
 
-        tempSecurity = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/SECURITYCODE");
-        tempKeep = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/STORAGEPERIOD");
-        tempUrgent = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/URGENTAPPROVAL");
-        tempPublic = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/ISPUBLIC");
-        tempKeyword = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/KEYWORD");
-        tempItemCode = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/ITEMCODE");
-        tempItemName = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/ITEMNAME");
+        tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");
+        tempKeep = SelectSingleNodeValueNew(result, "DATA/STORAGEPERIOD");
+        tempUrgent = SelectSingleNodeValueNew(result, "DATA/URGENTAPPROVAL");
+        tempPublic = SelectSingleNodeValueNew(result, "DATA/ISPUBLIC");
+        tempKeyword = SelectSingleNodeValueNew(result, "DATA/KEYWORD");
+        tempItemCode = SelectSingleNodeValueNew(result, "DATA/ITEMCODE");
+        tempItemName = SelectSingleNodeValueNew(result, "DATA/ITEMNAME");
 
-        pSummery = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/SUMMARY");
-        pSpecialRecordCode = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/SPECIALRECORDCODE");
-        pPublicityCode = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/PUBLICITYCODE");
-        pLimitRange = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/LIMITRANGE");
-        pPageNum = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/PAGENUM");
-        cabinetID = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/CABINETID");
-        TaskCode = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/TASKCODE");
+        pSummery = SelectSingleNodeValueNew(result, "DATA/SUMMARY");
+        pSpecialRecordCode = SelectSingleNodeValueNew(result, "DATA/SPECIALRECORDCODE");
+        pPublicityCode = SelectSingleNodeValueNew(result, "DATA/PUBLICITYCODE");
+        pLimitRange = SelectSingleNodeValueNew(result, "DATA/LIMITRANGE");
+        pPageNum = SelectSingleNodeValueNew(result, "DATA/PAGENUM");
+        cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
+        TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
 
-        tempSecurityDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/SECURITYAPPROVAL");
+        tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
     }
 }
 function changeEditMode() {
@@ -2136,7 +2142,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx");
+    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setDrafterAddress() {
@@ -2450,17 +2456,22 @@ function UndoDoc() {
 }
 function getSignDate() {
     var GyulJeDate;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignDate.do",
+		data : {
+			getDate : ""
+		},
+		success: function(text){
+			result = text;
+		}
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-    xmlhttp.open("POST", "../aspx/GetSignDate.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
+    return result;
 }
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
