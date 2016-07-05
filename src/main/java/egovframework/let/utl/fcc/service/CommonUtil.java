@@ -268,6 +268,15 @@ public class CommonUtil {
 		return src;
 	}
 	
+	public boolean checkIE(HttpServletRequest request) {
+		if (request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) {
+			return true;
+		} else if ( request.getHeader("User-Agent").indexOf("Chrome") > 0) {
+			return false;
+		} else {
+			return false;
+		}
+	}
 }
 
 
