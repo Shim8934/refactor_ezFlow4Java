@@ -274,6 +274,68 @@ public class EzOrganServiceImpl implements EzOrganService {
         return memberlist2.toString();
 	}
 	
+	@Override
+	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage) throws Exception {	
+		if (!pLangCode.equals("2")){
+			pLangCode = "1";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		map.put("v_CLASS", pClass);
+		map.put("v_CN", pDeptID);
+		map.put("v_LANGDATA", pLangCode);
+		map.put("v_PAGE", pPage);
+		
+		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
+		
+		int memberCount2 = 0;		
+		String[] memberInfo2 = new String[list.size()];
+		
+		for (int i = 0; i < list.size(); i++){
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
+			OrganDeptVO obj = list.get(i);			
+            
+            if (obj.getType().toLowerCase().equals("user")){
+            	map1.put("v_CN", obj.getCn());
+        		map1.put("v_DEPTCD", pDeptID);
+        		map1.put("v_LANGDATA", pLangCode);
+        		
+        		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
+                sb.append(commonUtil.getQueryResult(userVO));
+            }else{
+            	map1.put("v_CN", obj.getCn());
+        		map1.put("v_LANGDATA", pLangCode);
+        		                
+        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
+                sb.append(commonUtil.getQueryResult(userVO));
+            }
+            sb.append("</DATA>");
+            
+            String cn2 = obj.getCn();
+            String displayname2 = obj.getDisplayName();
+
+            //memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getCn());
+            memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getType());
+            memberCount2++;
+        }
+		
+		map2.put("v_CN", pDeptID);
+		String totalcount = ezOrganDAO.getMemberListCount(map2);
+        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+        memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+        for (int i = 0; i < memberCount2; i++){
+            memberlist2.append(memberInfo2[i]);
+        }
+        memberlist2.append("</ROWS></LISTVIEWDATA>");
+        
+        return memberlist2.toString();
+	}
+	
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pDeptID, String pDeptName, String pCategory){		
 		Document doc = commonUtil.convertStringToDocument(pXMLString);
 
@@ -760,9 +822,9 @@ System.out.println(strSQL + strSize);
 	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception {
 		String strXML = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("PCN", id);
-		map.put("PDEPT", pDeptID);
-		map.put("LANGDATA", primary);
+		map.put("v_PCN", id);
+		map.put("v_PDEPT", pDeptID);
+		map.put("v_LANGDATA", primary);
 		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
 		if(userVO!=null){
 			StringBuilder stb = new StringBuilder();		

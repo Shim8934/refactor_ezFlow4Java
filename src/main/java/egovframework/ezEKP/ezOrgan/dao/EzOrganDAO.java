@@ -28,6 +28,15 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getDeptMemberListPage(Map<String, Object> map) throws Exception {
+		return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);		
+	}
+	
+	public String getMemberListCount(Map<String, Object> map) throws Exception{
+		return (String) select("EzOrganDAO.getMemberListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> organSearch(Map<String, Object> map) throws Exception {		
 		return (List<OrganDeptVO>) list("EzOrganDAO.organSearch", map);
 	}	

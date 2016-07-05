@@ -63,7 +63,12 @@
 		<result property="sipUri" 								column="sipUri" 						columnIndex="41"/>
 		<result property="positionCD" 							column="positionCD" 					columnIndex="42"/>
 	</resultMap>
-		
+	
+	<resultMap id="userAddJobInfo" class="OrganUserVO">
+		<result property="title" 									column="title" 							columnIndex="1"/>
+		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
+	</resultMap>
+	
 	<procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -84,6 +89,14 @@
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
+		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		{CALL EZHRMASTER.EZSP_GETTBLDEPTMASTER(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -95,7 +108,11 @@
 	<procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
-		
+	
+	<procedure id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
+		{CALL EZHRMASTER.EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			SELECT 
