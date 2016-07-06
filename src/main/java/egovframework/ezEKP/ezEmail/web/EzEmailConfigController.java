@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.Arrays;
@@ -255,8 +254,61 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetUse(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		//TODO: data setting
-		return "";
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userIdAndPassword.get(0);
+		String password = userIdAndPassword.get(1);		
+		
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				
+		long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+		
+		double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+		double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+		int mailPercent;
+		String mailboxDetail;
+		String mailboxQuotaStr;
+		
+		logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+		
+		if (mailboxUsage < mailboxQuota) {
+			mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+		}
+		else {
+			mailPercent = 100;
+		}
+		
+		if (mailboxUsage > 1024) {
+			mailboxDetail = (int)(mailboxUsage/1024) + "MB";
+		}
+		else {
+			mailboxDetail = (int)mailboxUsage + "KB";
+		}
+
+		if (mailboxQuota > 1024*1024) {
+			mailboxQuotaStr = (int)(mailboxQuota/(1024*1024)) + "G";
+		}
+		else if (mailboxQuota > 1024) {
+			mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
+		}
+		else {
+			mailboxQuotaStr = (int)mailboxQuota + "KB";
+		}
+		
+		ia.close();
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		sb.append("<ROW>");
+		sb.append(String.format("<QUOTA>%s</QUOTA>", mailboxQuotaStr));
+		sb.append(String.format("<DETAIL>%s</DETAIL>", mailboxDetail));
+		sb.append(String.format("<PERCENT>%d</PERCENT>", mailPercent));
+		sb.append(String.format("<BAR1>%d</BAR1>", mailPercent * 2));
+		sb.append(String.format("<BAR2>%d</BAR2>", 211 - mailPercent * 2));
+		sb.append("</ROW>");
+		sb.append("</DATA>");
+				
+		return sb.toString();
 	}
 
 

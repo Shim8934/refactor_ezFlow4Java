@@ -19,6 +19,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
+import javax.mail.Quota;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
@@ -26,6 +27,8 @@ import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.mail.imap.IMAPStore;
 
 import egovframework.com.cmm.EgovMessageSource;
 
@@ -210,6 +213,39 @@ public class IMAPAccess {
 		}
 		
 		return folder;
+	}
+	
+	public Quota[] getQuota(String folder) {
+		IMAPStore imapStore = (IMAPStore)getStore();
+		Quota[] quotas = null;
+		
+		try {
+			quotas = imapStore.getQuota(folder);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		return quotas;
+	}
+	
+	public long[] getStorageUsageAndLimit() {
+		long[] returnValues = null;
+		
+		Quota[] quotas = getQuota("INBOX");		
+		
+		if (quotas != null) {
+			for (Quota quota : quotas) {
+				Quota.Resource[] resources = quota.resources;
+	
+				for (Quota.Resource resource : resources) {
+					if (resource.name.equals("STORAGE")) {
+						returnValues = new long[] {resource.usage, resource.limit};
+					}
+				}
+			}
+		}
+		
+		return returnValues;
 	}
 	
 	public void createFolder(String folderName, String folderPath) {
