@@ -96,6 +96,10 @@
 	    var inMailColor = "${inMailColor}";
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
+	    
+	    //TODO: delete
+	    var domainName = "${domainName}";
+	    
 	    window.onload = function () {
 	
 	        if (g_unread == "1") {
