@@ -1039,6 +1039,14 @@ function GetMailAddresses(name) {
         m_addrBook["dept"][count + adCount] = "";
         m_addrBook["title"][count + adCount] = "";
     }
+    
+    //TODO: delete
+    for (var count = 0 ; count < m_addrBook["email"].length ; count++) {
+    	if (m_addrBook["email"][count].indexOf("opensol2014.com") > -1) {
+    		m_addrBook["email"][count] = m_addrBook["email"][count].replace("opensol2014.com", domainName);
+    	}
+    }
+    
     xmlDOM = null;
     xmlHTTP = null;
 }
@@ -1258,7 +1266,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        checkname_cross_dialogArguments[4] = iType;
 	        checkname_cross_dialogArguments[5] = validDIV;
 	        checkname_cross_dialogArguments[6] = formName;
-	        DivPopUpShow(625, 410, "htm/checkName_cross.aspx");
+	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
 	    }
     }
     
@@ -2308,7 +2316,7 @@ function SelectReceiver_Complete(ReturnValue) {
     receiverData["window"] = this;
     mail_newreceiverchoose_dialogArguments[0] = receiverData;
     mail_newreceiverchoose_dialogArguments[1] = SelectReceiver_onClick_Complete;
-    var OpenWin = window.open("/myoffice/ezEmail/mail_NewreceiverChoose.aspx?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
     try { OpenWin.focus(); } catch (e) { }
 }
 function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
@@ -2398,7 +2406,7 @@ function NameChange_onClick() {
         checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
         checkname_cross_dialogArguments[2] = DivPopUpHidden;
         checkname_cross_dialogArguments[3] = event.target.parentElement;
-        DivPopUpShow(625, 410, "htm/checkName_cross.aspx");
+        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
     }
 }
 function NameChange_onClick_Complete(rgParams) {

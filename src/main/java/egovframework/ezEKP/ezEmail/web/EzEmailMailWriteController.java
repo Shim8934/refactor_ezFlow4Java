@@ -887,6 +887,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("serverName", serverName);
 		
+		//TODO: delete
+		model.addAttribute("domainName", config.getProperty("config.DomainName"));
+		
 		return "ezEmail/mailWrite";
 	}
 
@@ -2375,6 +2378,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 사원 이름으로 메일 찾기 화면 호출 함수 
+	 */
+	@RequestMapping(value="/ezEmail/mailCheckName.do")
+	public String mailCheckName(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailCheckName";
+	}
+	
+	/**
 	 * 메일 옵션화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/letterOption.do")
@@ -2391,6 +2402,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		
 		return "ezEmail/mailLetterOption";
+	}
+	
+	/**
+	 * 메일쓰기 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do")
+	public String mailNewReceiverChoose(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
+		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
+		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
+		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
+		
+		model.addAttribute("defaultWin", defaultWin);
+		model.addAttribute("type", type);
+		model.addAttribute("ruleKind", ruleKind);
+		model.addAttribute("useOcs", useOcs);
+		
+		//TODO: delete
+		model.addAttribute("domainName", config.getProperty("config.DomainName"));
+		
+		return "ezEmail/mailNewReceiverChoose";
 	}
 	
 	/**
