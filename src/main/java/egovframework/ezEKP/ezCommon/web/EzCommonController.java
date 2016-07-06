@@ -1023,11 +1023,11 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         
         if (request.getParameter("email") != null) {
-        	id = request.getParameter("email");
+        	email = request.getParameter("email");
         }
         
         if (request.getParameter("dept") != null) {
-        	id = request.getParameter("dept");
+        	pDeptID = request.getParameter("dept");
         }
         
         /*if (id.equals("")) {
@@ -1108,7 +1108,7 @@ public class EzCommonController extends EgovFileMngUtil{
         model.addAttribute("LiteralAddress", literalAddress);
         model.addAttribute("LiteralPhone", literalPhone);
         model.addAttribute("LiteralInfo", literalInfo);
-       
+        
         return "/ezCommon/showPersonInfo";
 	}
 	
