@@ -37,8 +37,27 @@
 
         makeoptionyear();
 
-        selDeptID = "OPENSOL";
-        getmailstatistics();
+        var xmlpara = createXmlDom();
+        var xmlTree = createXmlDom();
+        var xmlHTTP = createXMLHttpRequest();
+        var objNode;
+        createNodeInsert(xmlpara, objNode, "DATA");
+        createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+        createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
+        xmlHTTP.send(xmlpara);
+        xmlTree = loadXMLString(xmlHTTP.responseText);
+        var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
+        document.getElementById('TreeView').innerHTML = "";
+        var treeView = new TreeView();
+        treeView.SetConfig(treeXML);
+        treeView.SetID("FromTreeView");
+        treeView.SetUseAgency(true);
+        treeView.SetRequestData("RequestData");
+        treeView.SetNodeClick("TreeViewNodeClick");
+        treeView.DataSource(xmlTree);
+        treeView.DataBind("TreeView");
     }
 
     var selDeptID;
@@ -67,10 +86,10 @@
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 
 
-        xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
 
 
@@ -363,33 +382,25 @@
             deptkeyword.focus();
             return;
         }
-        var objNode;
-        var xmlHTTP = createXMLHttpRequest();
-        var xmlDom = createXmlDom();
-        createNodeInsert(xmlDom, objNode, "DATA");
-        createNodeAndInsertText(xmlDom, objNode, "SEARCH", "displayname::" + deptkeyword.value);
-        createNodeAndInsertText(xmlDom, objNode, "CELL", "extensionAttribute3;displayname;extensionAttribute9");
-        createNodeAndInsertText(xmlDom, objNode, "PROP", "");
-        createNodeAndInsertText(xmlDom, objNode, "TYPE", "group");
-        try {
-            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
-            xmlHTTP.send(xmlDom);
-            if (xmlHTTP.statusText != "OK") {
-                alert(strLang17 + xmlHTTP.statusText);
-                xmlDom = null;
-                xmlHTTP = null;
-            }
-            else {
-                xmlDom = xmlHTTP.responseXML;
+        
+		var xmlDom = createXmlDom();
+        
+        $.ajax({
+        	type : "POST",
+        	dataType : "xml",
+        	url : "/ezOrgan/getSearchList.do",
+        	async : false,
+        	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+        	success : function(result){	
+        		xmlDom = result;
                 adCount = xmlDom.getElementsByTagName("ROW").length;
-            }
-        }
-        catch (e) {
-            alert(strLang17 + e.description);
-            xmlDom = null;
-            xmlHTTP = null;
-        }
-
+        	},
+        	error : function(error){
+        		alert(strLang17 + error);
+        		xmlDom = null;
+        	}
+        });
+        
         if (adCount == 0) {
             alert("<spring:message code='ezStatistics.t1011' />");
             return;
@@ -403,7 +414,7 @@
             else
                 var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 
-            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
         }
@@ -413,13 +424,13 @@
             rgParams["deptid"] = "";
             var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
             feature = feature + GetShowModalPosition(540, 460);
-            window.showModalDialog("../checkName2_cross.aspx", rgParams, feature);
+            window.showModalDialog("/ezStatistics/statisticsCheckName2.do", rgParams, feature);
 
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
                 var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-                g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
             }
@@ -438,7 +449,7 @@
                     } catch (e) { }
                 }
 
-                var treeXML = loadXMLFile("/myoffice/common/organtree_config3.xml");
+                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
                 document.getElementById('TreeView').innerHTML = "";
 
                 var treeView = new TreeView();

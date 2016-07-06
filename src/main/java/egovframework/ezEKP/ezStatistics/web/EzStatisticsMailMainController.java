@@ -131,4 +131,11 @@ public class EzStatisticsMailMainController {
 		return returnData;				
 	}
 	
+	/**
+	 * 직원정보 검색 화면 호출(부서명 2개 이상일 경우)
+	 */
+	@RequestMapping(value="/ezStatistics/statisticsCheckName2.do")
+	public String mailCheckName2(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		return "ezStatistics/statisticsCheckName2";
+	}
 }

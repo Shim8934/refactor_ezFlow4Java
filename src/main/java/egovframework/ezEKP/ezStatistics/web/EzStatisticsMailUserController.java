@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -52,7 +53,9 @@ public class EzStatisticsMailUserController {
 	 * 개인별 통계 현황 표시 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
-	public String statisticsMailUser() throws Exception{		
+	public String statisticsMailUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("deptID", userInfo.getDeptID());
 		return "ezStatistics/statisticsMailUser";
 	}
 

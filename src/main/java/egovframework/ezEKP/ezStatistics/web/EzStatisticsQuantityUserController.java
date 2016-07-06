@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -52,7 +53,9 @@ public class EzStatisticsQuantityUserController {
 	 * 개인별 사서함 용량 사용 현황 표시 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsQuantityUser.do")
-	public String statisticsQuantityUser() throws Exception{		
+	public String statisticsQuantityUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("deptID", userInfo.getDeptID());
 		return "ezStatistics/statisticsQuantityUser";
 	}
 
