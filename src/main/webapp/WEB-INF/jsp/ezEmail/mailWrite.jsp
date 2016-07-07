@@ -421,7 +421,7 @@
 	        receiverData["window"] = this;
 	        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
-	        var OpenWin = window.open("mail_NewreceiverChoose.aspx?defaultwin=&type=" + type, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+	        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
 	        try { OpenWin.focus(); } catch (e) { }
 	    }
 	
@@ -443,7 +443,7 @@
 	        document.getElementById("SelectBCCAddress").options[0] = BCCnewoption1;
 	        document.getElementById("SelectBCCAddress").options[0].selected = true;
 	        Add_xmlhttp = createXMLHttpRequest();
-	        Add_xmlhttp.open("Post", "/myoffice/ezEmail/remote/mail_get_address.aspx", true);
+	        Add_xmlhttp.open("Post", "/ezEmail/mailGetAddress.do", true);
 	        Add_xmlhttp.onreadystatechange = Simple_Choice_complete;
 	        Add_xmlhttp.send("");
 	    }
@@ -473,17 +473,11 @@
 	                    for (var count = 0; count < Nodeslength; count++) {
 	                        //lastindex = document.all("SelectToAddress").length;
 	                        lastindex = document.getElementById("SelectToAddress").childNodes.length;
-	                        if (gubunGount == 1) {
-	                            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                        }
-	                        else {
-	                            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-	                        }
-	
+	                        
+                            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+                            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+                            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+
 	                        gubunGount = gubunGount + 2;
 	                        document.getElementById("SelectToAddress").options[lastindex] = newoption;
 	                        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;

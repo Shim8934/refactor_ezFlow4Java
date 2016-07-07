@@ -67,6 +67,9 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -81,7 +84,6 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
-import oracle.net.aso.f;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -117,6 +119,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
@@ -2423,6 +2428,46 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("domainName", config.getProperty("config.DomainName"));
 		
 		return "ezEmail/mailNewReceiverChoose";
+	}
+	
+	/**
+	 * 간편주소록 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String mailGetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userId);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<NewDataSet>");
+		
+		for (SimpleAddressVO vo : addressList) {
+			sb.append("<Table>");
+			sb.append("<NAME>" + vo.getName() + "</NAME>");
+			sb.append("<EMAIL>" + vo.getEmail() + "</EMAIL>");
+			sb.append("</Table>");
+		}
+		
+		sb.append("</NewDataSet>");
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * 간편주소록 정보 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String mailSetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		
+		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		String mailList = xmlDoc.getElementsByTagName("SMEMO").item(0).getTextContent();
+		
+		ezAddressService.setSimpleAddress(userId, mailList);
+		
+		return "<DATA>OK</DATA>";
 	}
 	
 	/**

@@ -4,14 +4,28 @@
 <sqlMap namespace="ezAddress">
 	
 	<typeAlias  alias="AddressVO"					type="egovframework.ezEKP.ezAddress.vo.AddressVO"/>
-		
+	<typeAlias  alias="SimpleAddressVO"					type="egovframework.ezEKP.ezAddress.vo.SimpleAddressVO"/>
+	
 	<resultMap id="addressList" class="AddressVO">
 		<result property="zipcode" 					column="zipcode" 				columnIndex="1"/>
 		<result property="sido" 					column="sido" 					columnIndex="2"/>
 		<result property="gugun" 					column="gugun" 					columnIndex="3"/>
 		<result property="dong" 					column="dong" 					columnIndex="4"/>
 		<result property="bunji" 					column="bunji" 					columnIndex="5"/>
-	</resultMap>	
+	</resultMap>
+	
+	<resultMap id="simpleAddressVO" class="SimpleAddressVO">
+		<result property="name" 					column="name" 				columnIndex="1"/>
+		<result property="email" 					column="email" 					columnIndex="2"/>
+	</resultMap>
+	
+	<procedure id="EzAddressDAO.getSimpleAddress" parameterClass="Map" resultMap="simpleAddressVO">
+		{CALL EZADDRESS.EZSP_GET_SIMPLE_ADDRESS(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.setSimpleAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_SET_SIMPLE_ADDRESS(#v_USERID#, #v_SN#, #v_NAME#, #v_EMAIL#, #v_STATUS#)}
+	</procedure>
 	
 	<select id="EzAddressDAO.getAddressInfo" resultMap="addressList">
 		<![CDATA[

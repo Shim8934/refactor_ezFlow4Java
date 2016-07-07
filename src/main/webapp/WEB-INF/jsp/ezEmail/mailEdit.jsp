@@ -17,6 +17,10 @@
 		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
 		<script>
+			
+			//TODO: delete
+			var domainName = "${domainName}";
+			
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
 			var g_cmd = "${cmd}";
@@ -349,7 +353,7 @@
 			    var type = "config";
 			    var receiverData = new Array();
 			    receiverData["window"] = this;
-			    window.showModalDialog("mail_NewreceiverChoose.aspx?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+			    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
 		        Simple_Choice();
 		    }
 		    function Simple_Choice()
@@ -363,7 +367,7 @@
 			    document.all("SelectCcAddress").options[0] = CCnewoption1;
 			    document.all("SelectCcAddress").options[0].selected =  true;
 			    Add_xmlhttp = createXMLHttpRequest();
-		        Add_xmlhttp.open("Post","/myoffice/ezEmail/remote/mail_get_address.aspx",true);
+		        Add_xmlhttp.open("Post","/ezEmail/mailGetAddress.do",true);
 		        Add_xmlhttp.onreadystatechange = Simple_Choice_complete;
 		        Add_xmlhttp.send("");     
 		       			
@@ -382,16 +386,9 @@
 				    for (var count = 0; count < Nodeslength; count++) {
 				        //lastindex = document.all("SelectToAddress").length;
 				        lastindex = document.getElementById("SelectToAddress").childNodes.length;
-				        if (gubunGount == 1) {
-				            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-				            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-				        }
-				        else {
-				            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-				            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent, xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(1).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(gubunGount).childNodes.item(3).textContent);
-				        }
+			            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+			            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
 		
-				        gubunGount = gubunGount + 2;
 				        document.getElementById("SelectToAddress").options[lastindex] = newoption;
 				        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
 				    }  

@@ -464,6 +464,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("strSelectHtml", strSelectHtml);
 		model.addAttribute("showDisplay", showDisplay);
 		
+		//TODO: delete
+		model.addAttribute("domainName", config.getProperty("config.DomainName"));
+		
 		return "ezEmail/mailEdit";
 	}
 	

@@ -693,7 +693,7 @@
 	            objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
 	            createNodeAndInsertText(xmlDom, objNode, "OWNERID", userid);
 	            createNodeAndInsertText(xmlDom, objNode, "SMEMO", addrlist);
-	            xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_address_save.aspx", false);
+	            xmlHTTP.open("POST", "/ezEmail/mailSetAddress.do", false);
 	            xmlHTTP.send(xmlDom);
 	            if (xmlHTTP.status != 200) {
 	                alert(strLang195);
@@ -707,7 +707,7 @@
 	        }
 	        function getOrganinfo() {
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("Post", "/myoffice/ezEmail/remote/mail_get_address.aspx", false);
+	            xmlhttp.open("Post", "/ezEmail/mailGetAddress.do", false);
 	            xmlhttp.send("");
 	
 	            return loadXMLString(xmlhttp.responseText);
