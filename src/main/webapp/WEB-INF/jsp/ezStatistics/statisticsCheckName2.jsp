@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ks_c_5601-1987">
+		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
