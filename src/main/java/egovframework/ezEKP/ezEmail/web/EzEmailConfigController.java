@@ -279,17 +279,17 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailPercent = 100;
 		}
 		
-		if (mailboxUsage > 1024) {
+		if (mailboxUsage >= 1024) {
 			mailboxDetail = (int)(mailboxUsage/1024) + "MB";
 		}
 		else {
 			mailboxDetail = (int)mailboxUsage + "KB";
 		}
 
-		if (mailboxQuota > 1024*1024) {
+		if (mailboxQuota >= 1024*1024) {
 			mailboxQuotaStr = (int)(mailboxQuota/(1024*1024)) + "G";
 		}
-		else if (mailboxQuota > 1024) {
+		else if (mailboxQuota >= 1024) {
 			mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
 		}
 		else {
