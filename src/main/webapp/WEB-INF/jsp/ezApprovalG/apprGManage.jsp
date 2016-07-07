@@ -1194,7 +1194,7 @@
 		        else
 		            pDocID = tr[0].getAttribute("DATA1");
 		
-		        var url = "TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR";
+		        var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
 		        feature = feature + GetOpenPosition(600, 450);
 		        window.open(url, "", feature);

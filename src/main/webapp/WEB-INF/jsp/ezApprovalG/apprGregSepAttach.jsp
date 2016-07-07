@@ -175,7 +175,6 @@
 		        var Root, objNode;
 		
 		        var objCodeInfo = createXmlDom();
-alert(g_CodeInfoXml);
 		        objCodeInfo = loadXMLString(g_CodeInfoXml);
 		
 		        if (navigator.userAgent.indexOf('Trident') == -1) {

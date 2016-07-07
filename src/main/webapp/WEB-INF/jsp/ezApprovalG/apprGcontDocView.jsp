@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalg/getDocAttach_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
@@ -32,7 +32,7 @@
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.userID}";
+		    arr_userinfo[1]  = "${userInfo.id}";
 		    arr_userinfo[2]  = "${userInfo.displayName1}";
 		    arr_userinfo[3]  = "${userInfo.title1}";
 		    arr_userinfo[4]  = "${userInfo.deptID}";
@@ -410,7 +410,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=END");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -438,7 +438,7 @@
 		  </tr>
 		  <tr>
 		    <td style="padding-bottom:10px;height:90%"> 
-		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocView_Content_Cross.aspx" frameborder="0"></iframe>                
+		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocViewContent.do" frameborder="0"></iframe>                
 		    </td>
 		  </tr>
 		  <tr>

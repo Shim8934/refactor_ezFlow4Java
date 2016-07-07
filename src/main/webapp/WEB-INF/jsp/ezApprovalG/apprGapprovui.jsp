@@ -643,6 +643,7 @@
 		                return;
 		            }
 		        }
+
 		        if (rtnVal) rtnVal = SaveApproveInfo("1");
 		        if (rtnVal != "TRUE") {
 		            if (pDraftFlag != "SUSIN") {
@@ -1053,7 +1054,7 @@
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 		
-		        DivPopUpShow(730, 630, "/myoffice/ezApprovalG/ezCabinet/InsSepAttach_Cross.aspx");
+		        DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
 		    }
 		
 		    function btnAddSepAttach_onclick_Complete(rtn) {
@@ -1266,7 +1267,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

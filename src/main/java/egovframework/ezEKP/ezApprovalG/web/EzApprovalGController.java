@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -1585,7 +1588,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = request.getServletContext().getRealPath("");
 		String result = "";
 		
-		if (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP")) {
+		if (docStatus != null && (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP"))) {
 			if (docID != null && !docID.equals("")) {
 				String checkMode = "";
 				
@@ -1601,13 +1604,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					result = "NOTPERMISSION";
 				}
 			}
-		} else if (docStatus.toUpperCase().equals("END")) {
+		} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
 			String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 			String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
 			
 			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 				result = "NOTPERMISSION";
 			}
+		}
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 		}
 		
 		if (!result.equals("NOTPERMISSION")) {
@@ -2247,7 +2254,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String saveFileName = "";
 		String saveDir = "";
 		String ret = "";
-		String realPath =request.getServletContext().getRealPath("");
+		String realPath = request.getServletContext().getRealPath("");
 		
 		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
@@ -2273,7 +2280,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				bos.write(buffer, 0, bytesRead);
 			}
 			
-			ret ="TRUE";
+			ret = "TRUE";
 		} catch (Exception e) {
 			ret = "FALSE";
 		} finally {
@@ -2646,5 +2653,288 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.getCallBackYNForceLine(docID, tempUserID, userInfo.getCompanyID());
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ConDocViewContent.do")
+	public String ConDocViewContent(Model model) {
+		String editor = config.getProperty("config.EDITOR");
+		
+		model.addAttribute("editor", editor);
+		
+		return "ezApprovalG/apprGConDocViewContent";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/totalSaveFileInfo.do")
+	public String totalSaveFileInfo(HttpServletRequest request, Model model) throws Exception{
+		String docID = request.getParameter("docID");
+		String type = request.getParameter("type");
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("type", type);
+		
+		return "ezApprovalG/apprGtotalSaveFileInfo";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getTotalDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		String result = ezApprovalGService.getTotalDownload(docID, mode, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/saveTotalDoc.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String saveTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
+		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent();
+		String path = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String path2 = realPath + config.getProperty("upload_common.ROOT") + commonUtil.separator;
+		String separators = "\\|\\|\\|";
+		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
+		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
+		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
+
+		File sourceDir = new File(realPath + config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID);
+		
+		if (sourceDir.exists()) {
+			sourceDir.delete();
+		}
+		
+		for (int k = 0; k < filePaths.length - 1; k++) {
+			String sourcePath = realPath + filePaths[k];
+			String targetPath = "";
+			String fileName = fileNames[k];
+			
+			if (fileTypes[k].equals("ATT")) {
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName; 
+			} else if (fileTypes[k].equals("ATTDOC")) {
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.split("\\.")[1]; 
+			} else {
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.split("\\.")[1]; 
+			}
+			
+			sourcePath = path + sourcePath.replace(realPath + config.getProperty("upload_approvalG.ROOT"), "");
+			targetPath = path2 + targetPath.replace(realPath + config.getProperty("upload_common.ROOT"), "");
+			
+			String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator) + 1);
+			File file1 = new File(dir);
+			
+			if (!file1.exists()) {
+				file1.mkdirs();
+			}
+			
+			File file2 = new File(targetPath);
+			
+			if (!file2.exists()) {
+				File file3 = new File(sourcePath);
+				FileUtils.copyFile(file3, file2);
+			}
+		}
+		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+
+		byte[] buffer = new byte[2048];
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+		
+		for (int k = 0; k < filePaths.length; k++) {
+			FileInputStream inpStream = new FileInputStream(realPath + filePaths[k]);
+
+			out.putNextEntry(new ZipEntry(fileNames[k]));
+			
+			int length = 0;
+			
+			while ((length = inpStream.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}
+			
+			out.closeEntry();
+			inpStream.close();
+		}
+		
+		out.close();
+		
+		return zipFilePath;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getReceivedDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getReceivedDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String deptID = request.getParameter("deptID");
+		String receiveDocMode = request.getParameter("mFlag");
+		String pageSize = request.getParameter("pageSize");
+		String pageNum = request.getParameter("pageNum");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String searchQuery = request.getParameter("searchQuery");
+		String userLang = userInfo.getLang();
+		Document xmlDomSub = null;
+		
+		if (searchQuery.length() > 10) {
+			String tempQuery = "";
+			String returnQuery = "(1 = 1) ";
+			xmlDomSub = commonUtil.convertStringToDocument(searchQuery);
+			
+			tempQuery = xmlDomSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+			
+			if (tempQuery.indexOf("DOCNO;") != -1) {
+				returnQuery += " AND DOCNO LIKE '%" + xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+			}
+			
+			if (tempQuery.indexOf("DOCTITLE;") != -1) {
+                returnQuery += " AND DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+            }
+
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
+            	returnQuery += " AND PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+            }
+            
+            if (tempQuery.indexOf("APRENDDATE;") != -1) {
+            	returnQuery += " AND PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+            }
+            
+            if (tempQuery.indexOf("FORMID;") != -1) {
+                returnQuery += " AND FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("KAPR;") != -1) {
+                returnQuery += " AND keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("KEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("CAPR;") != -1) {
+                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("CEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+            }
+            
+            if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
+                returnQuery += " AND URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            
+            searchQuery = returnQuery;
+		}
+		
+		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQuery, xmlDomSub);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/gongRamDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String gongRamDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID());
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/recevGSusin.do")
+	public String recevGSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String crossEditor = config.getProperty("config.EDITOR");
+		String docID = request.getParameter("docID");
+		String orgDocID = request.getParameter("uOrgID");
+		String isReDraft = request.getParameter("isReDraft");
+		String draftFlag = request.getParameter("draftFlag");
+		String retFlag = request.getParameter("retFlag");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+		
+		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID());
+		
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			docFile = dirPath + docFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(dir);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(docFile);
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(orgDocFile);
+				
+				FileUtils.copyFile(orgFile, newFile);
+			}
+		}
+		
+		if (docID != null && !docID.equals("")) {
+			int cp = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID());
+			
+			if (cp <= 0) {
+				return "main/warning";
+			}
+		}
+		
+		model.addAttribute("crossEditor", crossEditor);
+		model.addAttribute("docID", docID);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("isReDraft", isReDraft);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("retFlag", retFlag);
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("sihangURL", sihangURL);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		return "ezApprovalG/apprGrecevGSusin";
 	}
 }

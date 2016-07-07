@@ -198,6 +198,15 @@ public interface EzApprovalGService {
 	
 	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID) throws Exception;
 	
+	public String getTotalDownload(String docID, String mode, String companyID) throws Exception;
+	
+	public String getReceiveDocList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
+			String searchQuery, Document xmlDomSub) throws Exception;
+	
+	public String gongRamDocInfo(String docID, String companyID) throws Exception;
+	
+	public String getOrgDocInfo(String docID, String companyID) throws Exception;
+	
 	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 

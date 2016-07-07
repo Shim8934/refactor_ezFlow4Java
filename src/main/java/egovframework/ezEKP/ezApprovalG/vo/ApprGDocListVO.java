@@ -116,6 +116,8 @@ public class ApprGDocListVO {
 	private String summary;
 	/** 분류이름(다국어)*/
 	private String itemName2;
+	/** */
+	private String signCheck;
 
 	public String getDocID() {
 		return docID;
@@ -459,4 +461,11 @@ public class ApprGDocListVO {
 	public void setItemName2(String itemName2) {
 		this.itemName2 = itemName2;
 	}
+	public String getSignCheck() {
+		return signCheck;
+	}
+	public void setSignCheck(String signCheck) {
+		this.signCheck = signCheck;
+	}
+	
 }

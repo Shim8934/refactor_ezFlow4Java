@@ -50,6 +50,12 @@ public class ApprGAttachInfoVO {
 	private String totalSize;
 	/** */
 	private String flag;
+	/** */
+	private String fileName;
+	/** */
+	private String filePath;
+	/** */
+	private String type;
 	
 	public String getAttachType() {
 		return attachType;
@@ -194,5 +200,23 @@ public class ApprGAttachInfoVO {
 	}
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }

@@ -593,7 +593,7 @@ function makeOpinionList(OpinionXML) {
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
-    url = "/myoffice/ezApprovalG/ezAPRATTACH/Aprattach_Cross.aspx?FormID=" + escape(pFormID) + "&DocID=" + escape(pDocID);
+    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID);
 
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
@@ -1033,7 +1033,6 @@ function getCurApproverAprLine() {
         setMenuBar("btnJunKyul", false);
 }
 function SaveApproveInfo(pApproveFlag) {
-
     SaveFile();
     SignSave();
 
@@ -1151,7 +1150,6 @@ function SaveApproveInfo(pApproveFlag) {
     xmlhttp.send(xmlpara);
 
     var dataNodes = GetChildNodes(xmlhttp.responseXML);
-
     if (getNodeText(dataNodes[0]) != "TRUE") {
         SaveOrgFile();
     }
@@ -2089,7 +2087,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[0] = parameter;
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
 
-        DivPopUpShow(800, 370, "/myoffice/ezApprovalG/ezAprDocAttach/aprCabinetAttach_Cross.aspx");
+        DivPopUpShow(800, 370, "/ezApprovalG/aprCabinetAttach.do");
     } catch (e) {
         alert(e.description);
     }

@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -376,6 +377,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getTotalDownload(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalG.getTotalDownload", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiveDocVO> getReceiveDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiveDocVO>) list("EzApprovalG.getReceiveDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiveDocVO> getOrgDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiveDocVO>) list("EzApprovalG.getOrgDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -498,6 +514,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getLastOpinionContent", map);
 	}
 	
+	public String gongRamDocInfo(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.gongRamDocInfo", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
@@ -585,6 +605,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int getOpinionCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getOpinionCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getReceiveDocListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getReceiveDocListCount", map);
 		return (int)map.get("v_pCount");
 	}
 	

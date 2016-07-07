@@ -102,7 +102,7 @@ public class LoginController {
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-		
+
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
     	// 1. 일반 로그인 처리

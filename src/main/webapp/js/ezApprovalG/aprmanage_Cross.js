@@ -234,129 +234,126 @@ function getReceivedDocList(p_FormCd) {
     }
 
     CurrentDocList = "Receive";
-
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-    createNodeAndInsertText(xmlpara, objNode, "pSusinManagerFlag", manager);
-    createNodeAndInsertText(xmlpara, objNode, "pDocState", pSelMenu);
-    createNodeAndInsertText(xmlpara, objNode, "pPageSize", pageSize);
-    createNodeAndInsertText(xmlpara, objNode, "pPageNum", pageNum);
-    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
-    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-    createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
-
-    xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "aspx/getReceivedDocList.aspx", true);
-    xmlhttp.onreadystatechange = getReceivedDocList_after;
-    xmlhttp.send(xmlpara);
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezApprovalG/getReceivedDocList.do",
+		data : {
+				userID  : pUserID,
+				deptID  : arr_userinfo[4],
+				mFlag   : manager,
+				docState: pSelMenu,
+				pageSize: pageSize,
+				pageNum : pageNum,
+				orderCell : OrderCell,
+				orderOption : OrderOption,
+				searchQuery : SQLPARADATA
+				},
+		success: function(xml){
+			getReceivedDocList_after(xml);
+		}        			
+	});
 
     //ShowMailProgress();
     //DisplayWaitStat();
 
 }
 
-function getReceivedDocList_after() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-        try {
-            if (xmlhttp.responseText == "") return;
-
-            SelYearFlag = false;
-            var cntNode = SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/TOTALCNT");
-            var listNode = SelectSingleNodeNew(xmlhttp.responseXML, "DOCLIST/LISTVIEWDATA");
+function getReceivedDocList_after(xml) {
+//    try {
+//        if (xmlhttp.responseText == "") return;
+        SelYearFlag = false;
+        var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+        var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 
 
-            var lstCnt = getNodeText(cntNode);
-            totalPage = Math.ceil(new Number(lstCnt / pageSize));
-            pTotalCnt = lstCnt;
+        var lstCnt = getNodeText(cntNode);
+        totalPage = Math.ceil(new Number(lstCnt / pageSize));
+        pTotalCnt = lstCnt;
 
-            if (pageNum > totalPage) {
-                pageNum--;
-                if (CurrentDocList == "Receive")
-                    getReceivedDocList();
-                else
-                    getSimsaDocList();
-                return;
-            }
+        if (pageNum > totalPage) {
+            pageNum--;
+            if (CurrentDocList == "Receive")
+                getReceivedDocList();
+            else
+                getSimsaDocList();
+            return;
+        }
 
-            makePageSelPage();
+        makePageSelPage();
 
-            var xmlDoc;
-            if (CrossYN()) {
-                var xmlLIST = createXmlDom();
-                var nodeToImport = xmlLIST.importNode(listNode, true);
-                xmlLIST.appendChild(nodeToImport);
+        var xmlDoc;
+        if (CrossYN()) {
+            var xmlLIST = createXmlDom();
+            var nodeToImport = xmlLIST.importNode(listNode, true);
+            xmlLIST.appendChild(nodeToImport);
 
-                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-            }
-            else {
-                xmlDoc = createXmlDom();
-                xmlDoc.appendChild(listNode);
-            }
+            xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+        }
+        else {
+            xmlDoc = createXmlDom();
+            xmlDoc.appendChild(listNode);
+        }
 
 
-            if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
+        if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
+        var DocList = new ListView();
+        DocList.SetID("DocList");
+        DocList.SetMulSelectable(false);
+        DocList.SetHeaderOnClick("lvDocList_HeaderClick");
+        DocList.SetRowOnClick("lvDocList_SelChange");
+        DocList.SetRowOnDblClick("lvDocList_DBSelChange");
+        DocList.SetTitleIdx(0);
+        DocList.SetUrgentFlag(false);
+        DocList.DataSource(xmlDoc);
+        DocList.DataBind("lvDocList");
+        DocList = null;
+
+        HiddenMailProgress();
+
+        SearchFlag = false;
+        //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
+
+        chkUrgent();
+
+        setbuttonenable();
+
+        //DisplayAprLineStat(lstCnt);
+
+        if (pDocInfoValue == "1") {
+            InitlvAprLine();
+
+        }
+        else {
             var DocList = new ListView();
-            DocList.SetID("DocList");
-            DocList.SetMulSelectable(false);
-            DocList.SetHeaderOnClick("lvDocList_HeaderClick");
-            DocList.SetRowOnClick("lvDocList_SelChange");
-            DocList.SetRowOnDblClick("lvDocList_DBSelChange");
-            DocList.SetTitleIdx(0);
-            DocList.SetUrgentFlag(false);
-            DocList.DataSource(xmlDoc);
-            DocList.DataBind("lvDocList");
-            DocList = null;
+            DocList.LoadFromID("DocList");
+            var oArrRows = DocList.GetSelectedRows();
 
-            HiddenMailProgress();
+            if (oArrRows.length != "0") {
+                var tr = oArrRows[0];
 
-            SearchFlag = false;
-            //if (displayFlag) document.getElementById("tbtnUserInfo").style.display = "none";
-
-            chkUrgent();
-
-            setbuttonenable();
-
-            //DisplayAprLineStat(lstCnt);
-
-            if (pDocInfoValue == "1") {
-                InitlvAprLine();
-
-            }
-            else {
-                var DocList = new ListView();
-                DocList.LoadFromID("DocList");
-                var oArrRows = DocList.GetSelectedRows();
-
-                if (oArrRows.length != "0") {
-                    var tr = oArrRows[0];
-
-                    if (pDocInfoValue == "2") {
-                        getAprDocAproveInfo(tr);
-                    }
-                    else if (pDocInfoValue == "3") {
-                        getAprDocAproveInfo(tr);
-                    }
-                    else if (pDocInfoValue == "4") {
-                        getAprDocAproveInfo(tr);
-                    }
+                if (pDocInfoValue == "2") {
+                    getAprDocAproveInfo(tr);
                 }
-
+                else if (pDocInfoValue == "3") {
+                    getAprDocAproveInfo(tr);
+                }
+                else if (pDocInfoValue == "4") {
+                    getAprDocAproveInfo(tr);
+                }
             }
-            try {
-                parent.frames["left"].getAprCount();
-                parent.frames["left"].setPresentValue("");
-            } catch (e) { }
+
         }
-        catch (e) {
-            alert("getReceivedDocList_after" + " " + e.description);
-        }
-    }
-    else
-        return;
+        try {
+            parent.frames["left"].getAprCount();
+            parent.frames["left"].setPresentValue("");
+        } catch (e) { }
+//    }
+//    catch (e) {
+//        alert("getReceivedDocList_after" + " " + e.description);
+//    }
 }
 
 function getSendOutDocList() {    
@@ -1020,7 +1017,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 }
                 else {
                     if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_Susin_Cross.aspx";
+                        openLocation = "/ezApprovalG/recevGSusin.do";
                     }
                     else {
                         if (pUse_Editor == "")
@@ -1029,8 +1026,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                             openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_Susin_IE.aspx";
                     }
                 }
-                openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DraftFlag=" + encodeURI(pDraftFlag);
-                openLocation = openLocation + "&uorgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+                openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
+                openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             }
             else {
                 if (CrossYN() || NonActiveX == "YES") {
@@ -1038,7 +1035,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                     return;
                 }
                 else {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezRecevG_Susin_HWP.aspx?DocID=" + encodeURI(pDocID) + "&DraftFlag=" + encodeURI(pDraftFlag);
+                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezRecevG_Susin_HWP.aspx?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 }
             }
             openwindow(openLocation, "receive", 880, 550);
@@ -1064,7 +1061,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                     else
                         openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_IE.aspx";
                 }
-                openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DraftFlag=" + encodeURI(pDraftFlag);
+                openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             }
             openwindow(openLocation, "receive", 880, 550);
         }
@@ -2140,24 +2137,27 @@ function getSimsaDocList() {
     }
 
     CurrentDocList = "Simsa";
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-    createNodeAndInsertText(xmlpara, objNode, "pSusinManagerFlag", "simsa");
-    createNodeAndInsertText(xmlpara, objNode, "pDocState", pSelMenu);
-    createNodeAndInsertText(xmlpara, objNode, "pPageSize", pageSize);
-    createNodeAndInsertText(xmlpara, objNode, "pPageNum", pageNum);
-    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
-    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-    createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
-
-    xmlhttp = null;
-    xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "aspx/getReceivedDocList.aspx", true);
-    xmlhttp.onreadystatechange = getReceivedDocList_after;
-    xmlhttp.send(xmlpara);
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : "/ezApprovalG/getReceivedDocList.do",
+		data : {
+				userID  : pUserID,
+				deptID  : arr_userinfo[4],
+				mFlag   : "simsa",
+				docState: pSelMenu,
+				pageSize: pageSize,
+				pageNum : pageNum,
+				orderCell : OrderCell,
+				orderOption : OrderOption,
+				searchQuery : SQLPARADATA
+				},
+		success: function(xml){
+			getReceivedDocList_after(xml);
+		}        			
+	});
 }
 
 function doCancel(pDocID, tempListType) {
@@ -2265,24 +2265,27 @@ function cancelYN_after(xml) {
 }
 
 function returnYN(pDocID) {
-    xmlhttp2 = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "ASSIGN");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-    xmlhttp2.open("POST", "ReceivUI/aspx/GongRamDocInfo.aspx", false);
-    //xmlhttp2.onreadystatechange = returnYN_after;
-    xmlhttp2.send(xmlpara);
-
-    var RtnVal = getNodeText(xmlhttp2.responseXML.documentElement);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/gongRamDocInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    var RtnVal = getNodeText(result.documentElement);
     if (RtnVal == "NONE")
         document.getElementById("tbtnReturn").style.display = "";
     else
         document.getElementById("tbtnReturn").style.display = "none";
-
-    xmlhttp2 = null;
+    
 }
 
 function returnYN_after() {
