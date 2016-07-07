@@ -1234,11 +1234,11 @@
 	                g_xmlHTTP = createXMLHttpRequest();
 	
 	                if (CrossYN())
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>MAIL</PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
 	                else
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>MAIL</PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
 	
-	                g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                g_xmlHTTP.send(strQuery);
 	            }
@@ -1254,7 +1254,7 @@
 	                    bSearch = true;
 	                    g_xmlHTTP = createXMLHttpRequest();
 	                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-	                    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+	                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                    g_xmlHTTP.send(strQuery);
 	                }
@@ -1684,6 +1684,7 @@
 		                    M_TR.appendChild(M_TR_TD2);
 		                    M_TR.appendChild(M_TR_TD3);
 		                    M_TR.appendChild(M_TR_TD4);
+		                    
 		                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
 		                }
 		                else {
@@ -1703,7 +1704,7 @@
 		
 		                    var M_TR_TD3 = document.createElement("TD");
 		                    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
-		
+							
 		                    M_TR.appendChild(M_TR_TD1);
 		                    M_TR.appendChild(M_TR_TD2);
 		                    M_TR.appendChild(M_TR_TD3);

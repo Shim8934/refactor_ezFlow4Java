@@ -966,7 +966,7 @@ function GetMailAddresses(name) {
     }
 
     createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
-    createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayname");
+    createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
     createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3");
     createNodeAndInsertText(xmlDOM, objNode, "DLPROP", "mail");
     createNodeAndInsertText(xmlDOM, objNode, "ORGTYPE", "all");
