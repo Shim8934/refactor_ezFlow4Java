@@ -402,7 +402,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     String propvalue;
                     
                     for (int j = 0; j < proplist.length; j++){
-                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null){
+                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null && doc.getElementsByTagName(proplist[j].toUpperCase()).item(0) != null){
                             propvalue = doc.getElementsByTagName(proplist[j].toUpperCase()).item(0).getTextContent();
                         }else{
                             propvalue = "";

@@ -2477,7 +2477,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String pResult = "";
         try {
             pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, config.getProperty("config.primary"));
-        } catch (Exception Ex) {
+        } catch (Exception e) {
+        	e.printStackTrace();
             pResult = "EXCEPTION";
         }
         return pResult;
@@ -2492,7 +2493,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         	//TODO : ezOrganService에 getSearchListDL만들어지면 연결
             //pResult = ezOrganService.getSearchListDL(pSearchList, pCellList, pPropList, pListType, 100, "");
         	pResult = "<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>";
-        } catch (Exception Ex) {
+        } catch (Exception e) {
+        	e.printStackTrace();
             pResult = "EXCEPTION";
         }
         return pResult;
@@ -2519,7 +2521,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 //            }
 //            pResult = Rvalue.ToString();
         	pResult = "";
-        } catch (Exception Ex) {
+        } catch (Exception e) {
+        	e.printStackTrace();
             pResult = "EXCEPTION";
         }
         return pResult;
