@@ -79,7 +79,7 @@
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+lang);
 					html += "<spring:message code='ezCommunity.t587' />";
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
-					html += "<spring:message code='ezCommunity.t588' /></th>";
+					html += " " + "<spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;\">";
@@ -316,14 +316,14 @@
 	        function movePage(newPage) {	
 	            // 20060628 준호수정
 	            // 숫자 아닌 문자 들어갔을 경우 에러 남.
-	    		var href = "/ezCommunity/guestOne.do?bName=" + escape("${mode}")
-				            + "&sRadio=" + escape("${sRadio}")
-				            + "&code=" + escape("${code}")
+	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
+				            + "&sRadio=" + encodeURIComponent("${sRadio}")
+				            + "&code=" + encodeURIComponent("${code}")
 				            + "&keyword=" + "${keyword}"
-				            + "&block=" + escape("${nowBlock}");
+				            + "&block=" + encodeURIComponent("${nowBlock}");
 				            
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-	                document.location.href = href + "&gotoPage=" + escape(parseInt(newPage));
+	                document.location.href = href + "&gotoPage=" + encodeURIComponent(parseInt(newPage));
 	            }
 			}
 	        
@@ -333,21 +333,21 @@
 		    }
 
 		    function goToPage(page) {
-		        var href = "/ezCommunity/guestOne.do?bName=" + escape("${mode}")
-					+ "&sRadio=" + escape("${sRadio}")
-					+ "&code=" + escape("${code}")
+		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
+					+ "&sRadio=" + encodeURIComponent("${sRadio}")
+					+ "&code=" + encodeURIComponent("${code}")
 					+ "&keyword=" + "${keyword}"
-					+ "&block=" + escape("${nowBlock}");
+					+ "&block=" + encodeURIComponent("${nowBlock}");
 
 		        if (page == "front") {
 		            if (parseInt(CurPage) - 1 < 1)
 		                return;
-		            document.location.href = href + "&gotoPage=" + escape(parseInt(CurPage) - 1);
+		            document.location.href = href + "&gotoPage=" + encodeURIComponent(parseInt(CurPage) - 1);
 		        }
 		        else if (page == "next") {
 		            if (parseInt(CurPage) + 1 > parseInt(totalPage))
 		                return;
-		            document.location.href = href + "&gotoPage=" + escape(parseInt(CurPage) + 1);
+		            document.location.href = href + "&gotoPage=" + encodeURIComponent(parseInt(CurPage) + 1);
 		        }
 		        else if (page == "page") {
 		            if (event.keyCode == 13) {
@@ -356,7 +356,7 @@
 		                // 20060628 준호수정
 		                // 숫자 아닌 문자 들어갔을 경우 에러 남.
 		                if (parseInt(goPage) > 0 && parseInt(goPage) <= parseInt(totalPage)) {
-		                    document.location.href = href + "&gotoPage=" + escape(parseInt(goPage));
+		                    document.location.href = href + "&gotoPage=" + encodeURIComponent(parseInt(goPage));
 		                }
 		            }
 		        }

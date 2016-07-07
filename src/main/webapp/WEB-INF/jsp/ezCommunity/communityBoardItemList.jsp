@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -54,7 +54,7 @@
     			var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
     			
-    			for (i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
+    			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
 					var strSpace = '';
 					var strEmergent = '';
 					var bTag = '';
@@ -158,16 +158,16 @@
     				return;
     			}
 
-		       	var e = evt.currentTarget.innerHTML;
+// 		       	var e = evt.currentTarget.innerHTML;
   		        	
    		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
    		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
    		        }
 
-    		    var pheight = window.screen.availHeight;
+    		    /* var pheight = window.screen.availHeight;
     		    var pwidth = window.screen.availWidth;
     		    var pTop = (pheight - 720) / 2;
-    		    var pLeft = (pwidth - 765) / 2;
+    		    var pLeft = (pwidth - 765) / 2; */
     		    
    		    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + code + "&showAdjacent=" + ShowAdjacent, "", 750, 800);
     		}
@@ -230,10 +230,11 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassWord.do?itemID=" + pItemID, "checkPassWord", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
+   		                    	
    		                    } catch (e) {
    		                    	
    		                    }
@@ -268,7 +269,6 @@
     	 			    } catch (e) {
     	 			    }
     		    	}
-    		    	
     		    }
     		    
     		    if (CheckIfHasReplies()) {
@@ -311,7 +311,7 @@
     		    var xmlhttp = createXMLHttpRequest();
     			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
     			xmlhttp.send();	
-
+    			
     			if(xmlhttp.responseText == "FALSE") {
     				xmlhttp = null;	
     				return true;
@@ -357,7 +357,7 @@
 
     		function AddToMyBoards() {
     			var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    			xmlhttp.open("POST", "/ezCommunity/addToMyBoards.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName), false);
+    			xmlhttp.open("POST", "aspx/AddToMyBoards.aspx?BoardID=" + pBoardID + "&BoardName=" + escape(pBoardName), false);
     			xmlhttp.send();
     			
     			if(xmlhttp.responseXML.text == "OK") {
@@ -384,10 +384,10 @@
                 var pageNum = CurPage;
                 
                 if (totalPage > 1 && pageNum != 1) {
-                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -595,14 +595,18 @@
     					strItemList += arrList[i].split(",")[0] + ";";
     				}
     				
-    				arrList = null;		
-    			
-    				var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    				xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
-    				xmlhttp.send();
+    				arrList = null;
     				
-    				xmlhttp = null;
-
+    				$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/setRead.do",
+						data : { boardID	:	pBoardID, 
+								 itemIDList	:	strItemList
+						}
+					});
+    				
     				refresh_onclick();
     			}
     		}
@@ -634,7 +638,7 @@
     		document.onselectstart = function () {
     		    window.event.cancelBubble = true;
     		    window.event.returnValue = false;
-    		}
+    		};
 
     		function search_onclick() {
     			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {

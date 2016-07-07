@@ -108,7 +108,7 @@ public interface EzCommunityService {
 	
 	public String goAdminOk(String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception;
 	
-	public String commHomeInfo(LoginVO userInfo, String code) throws Exception;
+	public String commHomeInfo(LoginVO userInfo, String code, HttpServletRequest request) throws Exception;
 	
 	public String commHomeBoardInfo(HttpServletRequest request) throws Exception;
 	
@@ -274,13 +274,7 @@ public interface EzCommunityService {
 	
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception;
 	
-	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, Model model, String code) throws Exception;
-	
 	public void commMakeOk(LoginVO userInfo, CommunityClubVO clubVO, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception;
-	
-	public void checkCommHome(LoginVO userInfo , Model model, HttpServletRequest request) throws Exception;
-
-	public void popupCommHome(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	public void boardItemList(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response, CommunityBoardPropertyVO boardInfo, CommunityBoardListVO boardList) throws Exception;
 	
@@ -335,6 +329,12 @@ public interface EzCommunityService {
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
 
 	public void okNoSet(String flag, String code, String cID) throws Exception;
+
+	public String leftCommunityGet2(String code) throws Exception;
+
+	public CommunityClubVO leftCommunityGet4(String code)throws Exception;
+
+	public String checkPassword(String pItemID) throws Exception;
 	
 	
 

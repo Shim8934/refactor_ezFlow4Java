@@ -40,7 +40,7 @@ public class CommunityBoardPropertyVO {
 	/** 접근표시이름(다국어)*/
 	String accessName2;
 	/** 접근레벨*/
-	int accessLevel;
+	Integer accessLevel;
 	/** 트리뷰에서 보이는지 여부*/
 	int access_;
 	/** 상위게시판아이디	*/
@@ -193,10 +193,10 @@ public class CommunityBoardPropertyVO {
 	public void setAccessName2(String accessName2) {
 		this.accessName2 = accessName2;
 	}
-	public int getAccessLevel() {
+	public Integer getAccessLevel() {
 		return accessLevel;
 	}
-	public void setAccessLevel(int accessLevel) {
+	public void setAccessLevel(Integer accessLevel) {
 		this.accessLevel = accessLevel;
 	}
 	public int getAccess_() {

@@ -51,19 +51,21 @@ public class EzCommonServiceImpl implements EzCommonService {
         	if(cookie.getName().equals("UTF8_Option")){
         		isUTF8 = cookie.getValue();
         	}
-        }        
-        String filepath = pPhysicalFilePath;
-        String filename = pFileName;
-        String fileext = "";
-        
-        if (filename.lastIndexOf(".") > -1) {
-            fileext = filename.substring(filename.lastIndexOf(".")).toLowerCase();
         }
-        filename = getProperFileName(filename, fileext, isUTF8);
+        
+        String realPath = request.getServletContext().getRealPath("");
+        String filePath = pPhysicalFilePath;        
+        String fileName = pFileName;
+        String fileExt = "";
+        
+        if (fileName.lastIndexOf(".") > -1) {
+            fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        }
+        fileName = getProperFileName(fileName, fileExt, isUTF8);
         boolean bAttachment = false;
         
         if (pAttachment) {
-            switch (fileext) {
+            switch (fileExt) {
                 case ".eml":
                 case ".mht":
                 case ".xls":
@@ -97,31 +99,31 @@ public class EzCommonServiceImpl implements EzCommonService {
 
         if (bAttachment) {
             if (isUTF8 == "0" && usebrowser == "IE") {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"),"UTF-8") + "\"");
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"),"UTF-8") + "\"");
             } else if (isUTF8 == "0" && usebrowser != "IE") {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + (filename) + "\"");
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + (fileName) + "\"");
             } else {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             }
         } else {
             if (isUTF8 == "0" && usebrowser == "IE") {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             } else if (isUTF8 == "0" && usebrowser != "IE") {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             } else {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((filename).replace("+", "%20"), "UTF-8") + "\"");
+                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             }
         }
 
-        if (fileext == ".pdf") {
+        if (fileExt == ".pdf") {
             response.setContentType("application/pdf");
         } else {
             response.setContentType("application/octet-stream");
         }
                 
         try {
-	        filepath = request.getServletContext().getRealPath("") + filepath;
-	        File file = new File(filepath);
+	        filePath = realPath + filePath;
+	        File file = new File(filePath);
 	        is = new FileInputStream(file);
 	        
 	        IOUtils.copy(is,response.getOutputStream());

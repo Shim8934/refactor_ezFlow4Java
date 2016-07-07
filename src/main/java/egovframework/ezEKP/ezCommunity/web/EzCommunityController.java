@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.security.PrivateKey;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +47,6 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -83,9 +81,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@Resource(name="EzCommunityService")
 	private EzCommunityService ezCommunityService;
 	
-	@Resource(name="EzOrganService")
-	private EzOrganService ezOrganService;
-	
 	@Resource(name="EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -112,22 +107,47 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do")
 	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String code = "", codeName = "";
+		String code = "", userLevel = "";
+		int newMemberConfirmtype = 0;
+        boolean checkSysop = false;
 		
         if (request.getParameter("communityCD") != null) {
             code = request.getParameter("communityCD");
         }
-        if (request.getParameter("communityName") != null) {
-            codeName = request.getParameter("communityName");
+        if (request.getParameter("userLevel") != null) {
+            userLevel = request.getParameter("userLevel");
+        }
+        
+        if (code.equals("")) {
+        	String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId());
+        	
+        	if (vPermit==null) {
+        		userLevel = "0";
+        	} else {
+        		userLevel = vPermit;
+        	}
+        	
+        	String clubConfirmType = ezCommunityService.leftCommunityGet2(code);
+        	
+        	if (clubConfirmType != null) {
+        		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
+        	}
+        	
+        	CommunityClubVO club = ezCommunityService.leftCommunityGet4(code);
+        	
+        	if(club != null) {
+        		if (userInfo.getId().equals(club.getC_SysopID().trim())) {
+            		checkSysop = true;
+            	}
+        	}
         }
 		
-		ezCommunityService.communityLeftCommunity(userInfo, request, model, code);
-		
+		model.addAttribute("userLevel",userLevel);
+		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
+		model.addAttribute("checkSysop",checkSysop);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
-		model.addAttribute("codeName", codeName);
 		model.addAttribute("lang",userInfo.getLang());
-		
 		return "/ezCommunity/communityLeftCommunity";
 	}
 
@@ -174,7 +194,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
 			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM");
-
+			
 	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 	        }
@@ -244,8 +264,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/checkCommHome.do")
 	public String checkCommHome(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		ezCommunityService.checkCommHome(userInfo, model, request);
+		
+		String code = request.getParameter("communityCD");
+		String userLevel = request.getParameter("userLevel");
+		
+		if (!code.equals("")) {
+			String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId());
+        	
+        	if (vPermit == null) {
+        		userLevel = "0";
+        	} else {
+        		userLevel = vPermit;
+        	}
+		}
+		
+		model.addAttribute("code", code);
+		model.addAttribute("userLevel", userLevel);
 		
 		return "/ezCommunity/communityCheckCommHome";
 	}
@@ -256,8 +290,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commHome/popupCommHome.do")
 	public String popupCommHome(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean joinFlag = false, checkSysop = false;
+		int newMemberConfirmType = 0;
+		
 		String code = request.getParameter("code");
-		String codeName = request.getParameter("codeName");
+		String userLevel = request.getParameter("userLevel");
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
@@ -268,11 +305,59 @@ public class EzCommunityController extends EgovFileMngUtil{
 			ezCommunityService.updateLastDate(EgovDateUtil.getTodayTime(), code, userInfo.getId());
 		}
 		
-		ezCommunityService.popupCommHome(userInfo, model, request, response);
+		String copType = ezCommunityService.commHomeGet4(code);
+		
+		if (copType == null) {
+			copType = "type1";
+		}
+		
+		//사용하는곳이 없다
+//		int memberCount = commHomeGet2(code);
+		
+		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		int mode = 0;
+		
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+			mode = 0;
+		} else {
+			mode = 1;
+		}
+		
+		String retXML = ezCommunityService.getBoardTree("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		
+		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
+			retXML = "<RESULT>ERROR</RESULT>";
+		}
+		
+		String permit = ezCommunityService.leftCommunityGet1(code, userInfo.getId());
+
+		if (permit != null) {
+			userLevel = permit;
+			joinFlag = true;
+		} else {
+			userLevel = "0";
+		}
+		
+		String confirmType = ezCommunityService.leftCommunityGet2(code);
+		
+		if (confirmType != null) {
+			newMemberConfirmType = Integer.parseInt(confirmType);
+		}
+		
+		CommunityClubVO clubVO = ezCommunityService.leftCommunityGet4(code);
+		
+		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
+			checkSysop = true;
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
-		model.addAttribute("codeName", codeName);
+		model.addAttribute("copType", copType);
+		model.addAttribute("userLevel", userLevel);
+		model.addAttribute("joinFlag", joinFlag);
+		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
+		model.addAttribute("checkSysop", checkSysop);
+		model.addAttribute("retXML", retXML);
 		
 		return "/ezCommunity/communityPopupCommHome";
 	}
@@ -284,9 +369,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean checkIE = commonUtil.checkIE(request);
+		
 		String code = request.getParameter("code");
 		
-		return ezCommunityService.commHomeInfo(userInfo, code);
+		return ezCommunityService.commHomeInfo(userInfo, code, request);
 	}
 	
 	/** 
@@ -295,6 +382,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
+System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		return ezCommunityService.commHomeBoardInfo(request);
 	}
 	
@@ -502,6 +590,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		
+		System.out.println(pUrl);
 		
 		return "/ezCommunity/communityNewBoardItem";
 	}
@@ -585,14 +674,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/checkPassword.do")
 	public String checkPassword(Model model, HttpServletRequest request) throws Exception {
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
 		String pItemID = request.getParameter("itemID");
 		
+		String password = ezCommunityService.checkPassword(pItemID).trim();
+
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("itemID", pItemID);
+		model.addAttribute("password", password);
 		
 		return "/ezCommunity/communityCheckPassword";
 	}
@@ -603,10 +697,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/confirmPassword.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String confirmPassword(HttpServletRequest request) throws Exception {
-		String itemID = request.getParameter("itemID");
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	
 		String newPassword = request.getParameter("newPassword");
+		String oldPassword = request.getParameter("oldPassword");
 		
-		return ezCommunityService.confirmPassword(itemID, newPassword);
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
+		
+		if (EgovFileScrty.encryptPassword(rpwd, "unknown").equals(oldPassword)) {
+			return "OK";
+		} else {
+			return "FALSE";
+		}
 	}
 	
 	/**
@@ -668,6 +772,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/checkReplyPassword.do")
 	public String checkReplyPassword(Model model, HttpServletRequest request) throws Exception {
 		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
 		String pItemID = request.getParameter("itemID");
 		String pReplyID = request.getParameter("replyID");
 		
@@ -675,8 +781,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("password", password);
 		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
 		
-		return "/ezCommunity/communitycheckReplyPassword";
+		return "/ezCommunity/communityCheckReplyPassword";
 	}
 	
 	/**
@@ -883,10 +990,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		if (boardInfo.getGubun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGubun().equals("3")) {
-			ret = "anonyboard";
-		} else {
+//		if (boardInfo.getGubun().equals("2") || boardInfo.getUrl() != null || boardInfo.getGubun().equals("3")) {
+//			ret = "anonyboard";
+//		} else {
+//			ret = "normalboard";
+//		}
+//		
+		if  (boardInfo.getGubun() == null || boardInfo.getUrl () == null || !boardInfo.getGubun().equals("2")){
 			ret = "normalboard";
+		} else {
+			ret = "anonyboard";
 		}
 		
 		model.addAttribute("result", ret);
@@ -901,9 +1014,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String bbsList(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String bName = "c_Board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
-		String pKeyword = "", titleName = "";
+		String titleName = "";
 		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
-		int prevPage = 0, nextPage = 0 , totalBlock = 0, goPage = 0;
 		int comNoPerPage = 17;
 		
 		bName = request.getParameter("bName").toLowerCase();
@@ -954,7 +1066,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("titleName", titleName);
 		model.addAttribute("bName", bName);
 		model.addAttribute("block", nowBlock);
-		model.addAttribute("rollInfo", userInfo.getRollInfo());
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
 		
 		return "/ezCommunity/communityBbsList";
@@ -1044,7 +1156,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} 
         
 		model.addAttribute("bName", bName);
-		model.addAttribute("mode", mode);
 		model.addAttribute("no", no);
 		model.addAttribute("nowBlock", nowBlock);
 		model.addAttribute("strTitle", strTitle);
@@ -1843,7 +1954,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
-		
+
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
 		ezCommunityService.adminBasicOkUpdate(clubVO, code);
@@ -2482,9 +2593,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
+		String propList = "extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
 		int userMode = 0;
 		boolean existOutList = false;
-		String propList = "extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
 		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
@@ -3191,7 +3302,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("pSortBy", pSortBy);
 		model.addAttribute("userLevel", userLevel);
-		model.addAttribute("boardInfo", boardInfo); //boardID, boardName, gubun
+		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("strXML", strXML);
 		model.addAttribute("totalCount", totalCount);
@@ -3467,6 +3578,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityBoardItemViewPhoto";
 	}
 	
+	/**
+	 * 포토게시판 인쇄화면 호출함수
+	 */
 	@RequestMapping(value = "/ezCommunity/boardItemViewPrint.do")
 	public String boardItemViewPrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3503,5 +3617,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityBoardItemViewPrint";
 	}
 
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/ezCommunity/colorPicker.do")
+	public String colorPicker() {
+		
+		return "/ezCommunity/communityColorPicker";
+	}
 }
 

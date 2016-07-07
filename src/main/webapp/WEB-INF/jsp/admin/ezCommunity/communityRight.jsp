@@ -11,7 +11,7 @@
 		<frame src="" name="comm_top" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
 		<c:choose>
 			<c:when test="${cID == '' }">
-				<frame src="/admin/ezCommunity/bbsList.do?mode=list&bName=c_board&type=board" name="comm_main" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+				<frame src="/admin/ezCommunity/bbsList.do&bName=c_board&type=board" name="comm_main" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 			</c:when>
 			
 			<c:otherwise>

@@ -37,7 +37,6 @@ import org.w3c.dom.Node;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
-import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -86,9 +85,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Resource(name="EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 	
-	@Resource(name="EzBoardService")
-	private EzBoardService ezBoardService;
-	
 	@Autowired
 	private EgovFileScrty egovFileScrty;
 	
@@ -103,80 +99,21 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
 	
-	
 	@Override
-	public void communityLeftCommunity(LoginVO userInfo, HttpServletRequest request, Model model, String code) throws Exception {
-		String  userLevel = "";
-		int newMemberConfirmtype = 0;
-		//TODO 사용하지않음 
-/*		String pRootBoardID = "top";
-		String pSubFlag = "0";
-		int pSelectBy = 0;
-		String pExcludeBoardID = "";*/
-        boolean checkSysop = false;
-        //TODO 사용하는곳이 없음
-//        boolean	joinFlag = false;
-        
-        if (request.getParameter("userLevel") != null) {
-            userLevel = request.getParameter("userLevel");
-        }
-        
-        if (code.equals("")) {
-        	String vPermit = leftCommunityGet1(code, userInfo.getId());
-        	
-        	if (vPermit==null) {
-        		userLevel = "0";
-        	} else {
-        		userLevel = vPermit;
-//        		joinFlag = true;
-        	}
-        	
-        	String clubConfirmType = ezCommunityDAO.leftCommunityGet2(code);
-        	
-        	if (clubConfirmType != null) {
-        		newMemberConfirmtype = Integer.parseInt(clubConfirmType);
-        	}
-        	
-        	//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-        	/*//dll
-        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
-        	
-        	int pMode = 0;
-        	
-        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
-        		pMode = 0;
-        	} else {
-        		pMode = 1;
-        	}
-        	//dll
-        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
-        	
-        	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
-        		xmlret = commonUtil.convertStringToDocument(retXML);
-        	} else {
-        		xmlret = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
-        	}*/
-        	
+	public String leftCommunityGet2(String code) throws Exception {
+		return ezCommunityDAO.leftCommunityGet2(code);
+	}
 
-        	if (userInfo.getId().equals(ezCommunityDAO.leftCommunityGet4(code))) {
-        		checkSysop = true;
-        	}
-        }
-		
-		model.addAttribute("userLevel",userLevel);
-		model.addAttribute("newmemberConfirmType",newMemberConfirmtype);
-		model.addAttribute("chCommunityAdmin",userInfo.getRollInfo().indexOf("t=1"));
-		model.addAttribute("checkSysop",checkSysop);
+	@Override
+	public CommunityClubVO leftCommunityGet4(String code) throws Exception {
+		return ezCommunityDAO.leftCommunityGet4(code);
 	}
 
 	@Override
 	public String getLeftCommunity(LoginVO userInfo) throws Exception {
-		String userID = "";
         StringBuilder sb = new StringBuilder();
         
-        userID = userInfo.getId();
-        
-        List<CommunityLeftCommunityVO> leftCommunityList =leftCommunityGet3(userID);
+        List<CommunityLeftCommunityVO> leftCommunityList =leftCommunityGet3(userInfo.getId());
         
         sb.append("<DATA>");
         
@@ -192,7 +129,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getLeftBoardList() throws Exception {
 		StringBuilder sb = new StringBuilder();
+		
 		List<CommunityCBoardVO> leftBoardList= ezCommunityDAO.getLeftBoardList();
+		
 		sb.append("<DATA>");
 		
 		for (CommunityCBoardVO leftBoard : leftBoardList) {
@@ -517,127 +456,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return resultXML.toString();
 	}
 
-
 	@Override
-	public void checkCommHome(LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
-		String codeName = "", userLevel = "";
-		String pRootBoardID = "TOP";
-		
-		String code = request.getParameter("communityCD");
-		userLevel = request.getParameter("userLevel");
-		
-		if (request.getParameter("communityName") != null) {
-			codeName = request.getParameter("communityName");
-		}
-		
-		if (!code.equals("")) {
-			String vPermit = leftCommunityGet1(code, userInfo.getId());
-        	
-        	if (vPermit == null) {
-        		userLevel = "0";
-        	} else {
-        		userLevel = vPermit;
-//        		joinFlag = true;
-        	}
-        	
-        	//TODO 이효진 2016-06-22 사용하는 곳 없음
-        	/*String newMemberConfirmtype = ezCommunityDAO.leftCommunityGet2(code);
-        	
-        	String boardGroupAdminFG = brdCheckIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
-        	
-        	int pMode = 0;
-        	
-        	if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
-        		pMode = 0;
-        	} else {
-        		pMode = 1;
-        	}
-
-        	String retXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
-        	
-        	if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
-        		xmlret = commonUtil.convertStringToDocument(retXML);
-        	} else {
-        		xmlret = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
-        	}
-        	
-
-        	if (userInfo.getId().equals(ezCommunityDAO.leftCommunityGet4(code))) {
-        		checkSysop = true;
-        	}*/
-		}
-		
-		model.addAttribute("code", code);
-		model.addAttribute("codeName", codeName);
-		model.addAttribute("userLevel", userLevel);
-	}
-
-
-	@Override
-	public void popupCommHome(LoginVO userInfo, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String rootBoardID = "TOP";
-		boolean joinFlag = false, checkSysop = false;
-		int newMemberConfirmType = 0;
-		
-		String code = request.getParameter("code");
-		String userLevel = request.getParameter("userLevel");
-		
-		String copType = commHomeGet4(code);
-		
-		if (copType == null) {
-			copType = "type1";
-		}
-		
-		//사용하는곳이 없다
-		int memberCount = commHomeGet2(code);
-		
-		String boardGroupAdminFG = checkIfBoardGroupAdmin(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
-		int mode = 0;
-		
-		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
-			mode = 0;
-		} else {
-			mode = 1;
-		}
-		
-		String retXML = getBoardTree(rootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
-		
-		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
-			retXML = "<RESULT>ERROR</RESULT>";
-		}
-		
-		String permit = leftCommunityGet1(code, userInfo.getId());
-
-		if (permit != null) {
-			userLevel = permit;
-			joinFlag = true;
-		} else {
-			userLevel = "0";
-		}
-		
-		String confirmType = ezCommunityDAO.leftCommunityGet2(code);
-		
-		if (confirmType != null) {
-			newMemberConfirmType = Integer.parseInt(confirmType);
-		}
-		
-		CommunityClubVO clubVO = ezCommunityDAO.leftCommunityGet4(code);
-		
-		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
-			checkSysop = true;
-		}
-		
-		model.addAttribute("copType", copType);
-		model.addAttribute("userLevel", userLevel);
-		model.addAttribute("joinFlag", joinFlag);
-		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
-		model.addAttribute("checkSysop", checkSysop);
-		model.addAttribute("retXML", retXML);
-	}
-
-
-	@Override
-	public String commHomeInfo(LoginVO userInfo, String code) throws Exception {
+	public String commHomeInfo(LoginVO userInfo, String code, HttpServletRequest request) throws Exception {
 		String strSysopID = "";
 		
 		CommunityClubVO clubVO = aspCommInfoGet1(code);
@@ -660,6 +480,10 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String companyNM = xmldomMemberInfo.getElementsByTagName("COMPANY").item(0).getTextContent().trim();
 		String deptName = xmldomMemberInfo.getElementsByTagName("DESCRIPTION").item(0).getTextContent().trim();
 		String userImage = xmldomMemberInfo.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim();
+		
+		if (!commonUtil.checkIE(request)) {
+			userImage = userImage.replace(request.getServletContext().getRealPath(""), "");
+		}
 		
 		Node targetNode = xmlMainDom.getElementsByTagName("DATA").item(0);
 		Node newRow = xmlMainDom.createElement("MEMBER");
@@ -1040,7 +864,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
 		
 		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
-		oldPassword = ezCommunityDAO.checkPassword(itemID).trim();
+//		oldPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
 		
 		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
 			return "OK";
@@ -1651,9 +1475,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 			}
 			
-			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + memberInfo.getUserName() + "</a></td>");
-			sb.append("<td style=\"width:85\">" + getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang())) + "</td>");
-			sb.append("<td style=\"width:85\">" + user.getC_ID().trim() + "</td>");
+			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang()))) + "</td>");
+			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
 			sb.append("<td style=\"width:150\">");
 			
@@ -1672,13 +1496,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public void adminLogoOk(MultipartHttpServletRequest request) throws Exception {
 		String fileName = "", attachFile = "", extName = "";
 		int iStart = 0;
+		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
 		String imageSrc = request.getParameter("imageSrc");		
-		
 		MultipartFile logoFile = request.getFile("logo");
-		//TODO 배너 미사용
-//		MultipartFile bannerFile = request.getFile("banner");
 		
 		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
 		
@@ -1691,7 +1513,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			File file = new File(logoPath + fileName + logoFileName);
 			logoFile.transferTo(file);
-			
 			
 			BufferedImage inputImage = ImageIO.read(file);
 			BufferedImage outputImage = null;
@@ -1727,20 +1548,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				}
 			}
 		}
-
-		/*if (!bannerFile.isEmpty()) {
-			fileName = code;
-			attachFile = bannerFile.getOriginalFilename();
-			iStart = attachFile.lastIndexOf(".");
-			extName = attachFile.substring(iStart);
-			String bannerFileName = fileName + "_banner" + "." + extName;
-			
-			File file = new File(logoPath + fileName + bannerFileName);
-			bannerFile.transferTo(file);
-			
-			ezCommunityService.adminLogoOkUpdate2(bannerFileName, fileName);
-		}*/
-		
 	}
 
 	@Override
@@ -1761,8 +1568,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String adminHomeBoard2(LoginVO userInfo, String code)
-			throws Exception {
+	public String adminHomeBoard2(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
 		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "LEFT");
@@ -1779,8 +1585,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String adminHomeBoard3(LoginVO userInfo, String code)
-			throws Exception {
+	public String adminHomeBoard3(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
 		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "RIGHT");
@@ -1927,7 +1732,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void updateLastDate(String strNow, String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("STRNOW", strNow);
 		map.put("CODE", code);
 		map.put("ID", id);
@@ -1938,7 +1742,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getBoardTitleName(String strBoardName, String strClubNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_STRBOARDNAME", strBoardName);
 		map.put("v_STRCLUBNO", strClubNo);
 		
@@ -1948,7 +1751,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_KEYWORD", pKeyword);
@@ -1960,7 +1762,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_KEYWORD", pKeyword);
@@ -1972,12 +1773,12 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public int bbsAdminCheck(String userID, String rollInfo) throws Exception {
 		int adminCheck = 0;
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_STRUSERID", userID);
 		
 		String strAdminID = ezCommunityDAO.ezCommunityBaseGet2(map);
-		
+
 		if (strAdminID != null || rollInfo.indexOf("c=1") >= 0) {
 			adminCheck = 1;
 		}
@@ -1988,7 +1789,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String bbsEditGet1(String bName, String no) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
 		
@@ -1998,7 +1798,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
 		
@@ -2008,7 +1807,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
 		map.put("v_USERINFO_LANG", lang);
@@ -2024,7 +1822,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_DOG", itemNo);
 		map.put("v_CODE", code);
@@ -2035,7 +1832,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_USERNAME", userName);
@@ -2060,7 +1856,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String commHomeGet1(String id, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_CODE", code);
 		
@@ -2076,7 +1871,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityClubVO aspCommInfoGet1(String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		
 		return ezCommunityDAO.aspCommInfoGet1(map);
@@ -2101,10 +1895,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception {
 		String rtnValue = "";
 		boolean result = false;
-		
+
 		if (rollInfo.indexOf("c=1") < 0) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_PUSERID", id);
 			map.put("iv_PCLUBNO", clubID);
 			map.put("v_PBOARDID", boardID);
@@ -2231,15 +2024,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			return boardInfo;
 		}
 		
-		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
+		String userDeptPath = userInfo.getDeptPathCode() + ",EVERYONE";
 		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
 			CommunityBoardPropertyVO boardInfoTemp = brdGetACL(pBoardID, userDeptPath.split(",")[i].trim());
 			
-			if (boardInfoTemp == null) {
-				break;
-			} else {
+			if (boardInfoTemp != null) {
 				boardInfo = boardInfoTemp;
+				break;
 			}
 		}
 		
@@ -2247,7 +2039,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
 		boardInfo.setSs_Board_MaxRows(10);
 		boardInfo.setSs_SearchBoard_MaxRows(10);
-		
 		
 		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	boardInfo.setAccess_FG("1");
@@ -2273,7 +2064,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardAdmin_FG().equals("") || boardInfo.getBoardAdmin_FG() == null) {
+		} else if (boardInfo.getBoardAdmin_FG() == null || boardInfo.getBoardAdmin_FG().equals("")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("false");
@@ -2282,13 +2073,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			boardInfo.setReply_FG("false");
 			boardInfo.setDelete_FG("false");
 		} else {
-			boardInfo.setAccess_FG(boardInfo.getAccess_FG().trim());
-			boardInfo.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
-			boardInfo.setListView_FG(boardInfo.getListView_FG());
-			boardInfo.setRead_FG(boardInfo.getRead_FG());
-			boardInfo.setWrite_FG(boardInfo.getWrite_FG());
-			boardInfo.setReply_FG(boardInfo.getReply_FG());
-			boardInfo.setDelete_FG(boardInfo.getDelete_FG());
+			boardInfo.setAccess_FG(Integer.toString(boardInfo.getAccess_()));
+			boardInfo.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG().toLowerCase());
+			boardInfo.setListView_FG(boardInfo.getListView_FG().toLowerCase());
+			boardInfo.setRead_FG(boardInfo.getRead_FG().toLowerCase());
+			boardInfo.setWrite_FG(boardInfo.getWrite_FG().toLowerCase());
+			boardInfo.setReply_FG(boardInfo.getReply_FG().toLowerCase());
+			boardInfo.setDelete_FG(boardInfo.getDelete_FG().toLowerCase());
 		}
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID);
@@ -2319,7 +2110,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_USERINFO_USERID", id);
 		
@@ -2338,7 +2128,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityBoardPropertyVO brdGetACL(String pBoardID, String pAccessID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pAccessID", pAccessID);
 		
@@ -2373,7 +2162,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		int count = 0;
 		
 		if (!searchStart.trim().equals("")) {
@@ -2388,6 +2176,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             }
         }
         
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_PENDROW", pEndRow);
         map.put("v_STRLANG", strLang);
         map.put("v_PBOARDID", boardID);
@@ -2444,7 +2233,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String searchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PTITLE", title);
 		map.put("v_PWRITERNAME", writerName);
@@ -2459,7 +2247,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("iv_pBoardID", boardID);
 			map.put("v_pUserID", userInfo.getId());
 			map.put("v_pUserName", userInfo.getDisplayName1());
@@ -2475,6 +2262,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				map.put("v_pItemID", item);
 				ezCommunityDAO.setAsRead(map);
 			}
+			
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR";
@@ -2491,7 +2279,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			boardID = ezCommunityDAO.deleteItemGet(itemID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("boardID", boardID);
 			map.put("itemID", itemID);
 
@@ -2500,7 +2287,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			ezCommunityDAO.deleteItem3(itemID);
 			ezCommunityDAO.deleteItem5(itemID);
 			ezCommunityDAO.deleteItem4(map);
-			
 		}
 	}
 
@@ -2514,13 +2300,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				return "FALSE";
 			}
 		}
+		
 		return "TRUE";
 	}
 
 	@Override
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
 		
@@ -2617,7 +2403,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		if (!pMode.equals("copy")) {
-
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
 			
 			if (saveMHTResult == false) {
@@ -2632,7 +2417,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pItemID", item.getItemID());
 		map.put("v_pBoardID", item.getBoardID());
 		map.put("v_pWriterID", item.getWriterID());
@@ -2708,8 +2492,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_STRLANG", commonUtil.getMultiData(lang));
 		map.put("v_PUSERID", id);
@@ -2720,6 +2504,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		sb.append("<NODES>");
 		
 		int count = 0;
+		
 		for (CommunityBoardListVO boardList : list) {
 			count ++;
 			
@@ -2752,7 +2537,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public int getReservedItemListCount(String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pUserID", id);
 		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
@@ -2768,7 +2552,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PITEMID", pItemID);
@@ -2804,7 +2587,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		pContent = pContent.replace("'",  "''");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PITEMID", pItemID);
 		map.put("v_PREPLYID", pReplyID);
 		map.put("v_PBOARDID", pBoardID);
@@ -2820,8 +2602,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String checkReplyPassword(String pItemID, String pReplyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_PItemID", pItemID);
+		map.put("v_PITEMID", pItemID);
 		map.put("v_REPLYID", pReplyID);
 		
 		return ezCommunityDAO.checkReplyPassword(map);
@@ -2830,11 +2611,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String checkOneLineOwner(String pReplyID, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_pCount", 0);
-		
 		
 		if (ezCommunityDAO.checkOneLineOwner(map) > 0) {
 			return "OK_MINE";
@@ -2846,7 +2625,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String deleteOneLineReply(String id, String pReplyID, String gubun) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_GUBUN", gubun);
@@ -2855,8 +2633,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 	@Override
-	public String bbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage,
-			String bName, int comNoPerPage) throws Exception {
+	public String bbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception {
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
 		
@@ -3201,18 +2978,20 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         	if (i > comNoPerPage * curPage -5) {
 	        	sb.append("<ROW>");
 	        	sb.append("<NO>" + item.getNo() + "</NO>");
-	        	sb.append("<ID>" + item.getId().trim() + "</ID>");
-	        	sb.append("<USERNAME>" + item.getUserName() + "</USERNAME>");
-	        	sb.append("<USERNAME2>" + item.getUserName2() + "</USERNAME2>");
-	        	sb.append("<COMPANYID>" + item.getCompanyID() + "</COMPANYID>");
-	        	sb.append("<TITLE>" + item.getTitle() + "</TITLE>");
-	        	sb.append("<CONTENT>" + item.getContent().trim() + "</CONTENT>");
-	        	sb.append("<CONTENTURL>" + item.getContentURL() + "</CONTENTURL>");
+	        	sb.append("<ID>" + commonUtil.cleanValue(item.getId().trim()) + "</ID>");
+	        	sb.append("<USERNAME>" + commonUtil.cleanValue(item.getUserName()) + "</USERNAME>");
+	        	sb.append("<USERNAME2>" + commonUtil.cleanValue(item.getUserName2()) + "</USERNAME2>");
+	        	sb.append("<COMPANYID>" + commonUtil.cleanValue(item.getCompanyID()) + "</COMPANYID>");
+	        	sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
+	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
+	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
-	        	sb.append("<WRITEDAY>" + item.getWriteDay() + "</WRITEDAY>");
+	        	sb.append("<WRITEDAY>" + item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
+	        	
 	        	if (EgovDateUtil.getDaysDiff(EgovDateUtil.getToday("-"), item.getWriteDay().split(" ")[0]) >= 0 ) {
 	        		sb.append("<NEW>" + "NEW" + "</NEW>");
 	        	}
+	        	
 	        	sb.append("<C_NO>" + item.getC_No() + "</C_NO>");
 	        	sb.append("<C_CLUBNO>" + item.getC_clubNo() + "</C_CLUBNO>");
 	        	sb.append("</ROW>");
@@ -3261,7 +3040,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
 		
@@ -3271,7 +3049,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getACL(String id, String pComID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_PCOMID", pComID);
 		
@@ -3285,7 +3062,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
 		
@@ -3407,7 +3183,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_KEYWORD", keyword);
 		map.put("v_CODE", code);
@@ -3416,13 +3191,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ezCommunityDAO.guestOneGet1(map);
 	}
 
-	
-	
-
 	@Override
 	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_DOG", no);
@@ -3434,7 +3205,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String pollMainGet1(String id, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_CODE", code);
 		
@@ -3444,7 +3214,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String pollResGet1(String id, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_CODE",  code);
 		
@@ -3474,7 +3243,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_KEYWORD", keyword);
@@ -3491,7 +3259,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_C_SYSOPID", cSysopID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERINFO_LANG", lang);
@@ -3508,18 +3275,16 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String cateC = "0";
 		int caca = 0;
 		
-		
 		if (!c_Cate_A.equals("0")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_C_CODE", c_Cate_A);
 			map.put("v_C_CAT", "a");
+			
 			cateA = ezCommunityDAO.ezCommunityBaseGet3(map);
 		}
 		
 		if (!c_Cate_B.equals("0")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_C_CODE", c_Cate_B);
 			map.put("v_C_CAT", "b");
 			
@@ -3528,7 +3293,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (!c_Cate_C.equals("0")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_C_CODE", c_Cate_C);
 			map.put("v_C_CAT", "c");
 			
@@ -3563,8 +3327,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception {
 		String strReturn = "";
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		
@@ -3572,7 +3336,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
 		} else {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_CODE", code);
 			map.put("v_USERINFO_USERID", userInfo.getId());
 			map.put("v_DATETIME_NOW", EgovDateUtil.getTodayTime());
@@ -3630,7 +3393,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_RECORD_C_SYSOPID", sysopID);
 		
@@ -3655,7 +3417,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_C_CLUBNAME", clubVO.getC_ClubName());
 		map.put("v_C_CLUBNAME2", clubVO.getC_ClubName2());
 		map.put("v_C_CLUBGUBUN", clubVO.getC_ClubGubun());
@@ -3664,13 +3425,12 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_C_CLUBDESC", clubVO.getC_ClubDesc());
 		map.put("v_CODE", code);
 		
-		ezCommunityDAO.adminBasicOkIpdate(map);
+		ezCommunityDAO.adminBasicOkupdate(map);
 	}
 
 	@Override
 	public CommunityClubVO  adminLogoGet(String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		
@@ -3680,7 +3440,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CLEAR", clear);
 		map.put("v_POSITION", position);
 		map.put("v_SN", sn);
@@ -3693,7 +3452,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public Integer boardPropertyGet(String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BOARDID", boardID);
 		map.put("v_pCount", 0);
 		
@@ -3703,7 +3461,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_BOARDGROUPID", boardGroupID);
 		map.put("v_BOARDGROUPNAME", boardGroupName);
@@ -3721,7 +3478,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		int pBoardListCount = pBoardIDList.split(";").length;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardIDList", pBoardIDList);
 		map.put("v_pBoardListCount", pBoardListCount);
 		map.put("v_err_cd", 0);
@@ -3737,12 +3493,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void createBoardInsert(String code, String boardID,
-			String boardName, String boardName2, String parentBoardID,
-			String boardGroupID, String comatt, LoginVO userInfo)
-			throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception {
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_BOARDID", boardID);
 		map.put("v_BOARDNAME", boardName);
@@ -3761,7 +3514,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pOrgBoardID", orgBoardID);
 		map.put("v_pNewParentBoardID", newParentBoardID);
 		map.put("v_pNewBoardGroupID", newBoardGroupID);
@@ -3793,7 +3545,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PTITLE", title);
 		map.put("v_PWRITERNAME", writerName);
@@ -3810,7 +3561,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		int count = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_STRLANG", lang);
 		map.put("v_PBOARDID", boardID);
@@ -3874,7 +3624,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_FLAG", flag);
 		map.put("v_USERID", userID);
 		map.put("v_CODE", code);
@@ -3890,7 +3639,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_COMPANYID", companyID);
 		map.put("v_C_ID", cID);
 		
@@ -3900,7 +3648,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityCClubUserVO adminMemberListOkGet(String code, String cID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
 		map.put("v_COMPANYID", companyID);
@@ -3911,7 +3658,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public Integer adminMemberListOkGetE(String code, String cID) throws Exception {
 		Map<String , Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
 		map.put("v_pCount", 0);
@@ -3922,7 +3668,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_MODE", mode);
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
@@ -3937,7 +3682,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_pBoardName", xmlDom.getElementsByTagName("BOARDNAME").item(0).getTextContent());
 			map.put("v_pBoardName2", xmlDom.getElementsByTagName("BOARDNAME2").item(0).getTextContent());
 			map.put("v_pBoardID", xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
@@ -3973,7 +3717,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void adminCommCloseOkInser(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_COMMNAME", commName);
 		map.put("v_COMMNAME2", commName2);
@@ -3989,7 +3732,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String join1Get(String no, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_NO", no);
 		map.put("v_USERINFO_LANG", lang);
 		
@@ -3999,7 +3741,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String joinGet1(String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		
@@ -4014,7 +3755,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String joinGet2(String sysopID, String companyID, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_SYSOPID", sysopID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERINFO_LANG", lang);
@@ -4025,7 +3765,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String joinOkGet1(String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", id);
 		
@@ -4035,7 +3774,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void joinOkSet1(String code, String id, String todayTime, String companyID) throws Exception {
 		Map<String, Object> map =new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_DTNOW", todayTime);
@@ -4047,7 +3785,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String joinOkGet2(String code, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", id);
 		
@@ -4057,7 +3794,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityClubVO joinOkGet3(String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		
@@ -4067,7 +3803,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void JoinOkUpdate1(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openBirth, String openSex, String openHouse) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_CODE", code);
 		map.put("v_C_INTRO", cIntro);
@@ -4084,7 +3819,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityMemberInfoVO joinOkGet4(String companyID, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("v_USERINFO_USERID", id);
 		
@@ -4094,7 +3828,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void JoinOkUpdate3(String companyID, String id, String birthDay) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_BIRTHDAY", birthDay);
@@ -4105,7 +3838,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_CODE", code);
 		map.put("v_C_INTRO", cIntro);
@@ -4128,7 +3860,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getACLGet2(String uID, String cID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_UID", uID);
 		map.put("v_CID", cID);
 		
@@ -4139,8 +3870,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String adminMemPermit(LoginVO userInfo, String code) throws Exception {
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
 		
@@ -4181,7 +3912,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void okNoSet(String flag, String code, String cID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_FLAG", flag);
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
@@ -4202,7 +3932,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String todayCopGet3(String c_Cate, String type) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CATE", c_Cate);
 		map.put("v_TYPE", type);
 		
@@ -4222,7 +3951,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PC_CAT", c_Code);
 		map.put("v_CAT", cat);
 		
@@ -4232,7 +3960,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PC_CAT", type);
 		map.put("v_CAT", mode);
 		map.put("v_PSTART", startRow);
@@ -4244,7 +3971,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_SEARCHNAME", search);
 		map.put("v_SEARCHVALUE", keyword);
 		map.put("v_PSTART", startRow);
@@ -4257,7 +3983,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PUSERID", id);
 		map.put("v_PSORTBY", pSortBy);
 		
@@ -4305,7 +4030,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getNewItemListCount(String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pUserID", id);
 		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		map.put("v_pFromNow", EgovDateUtil.addDay(EgovDateUtil.getTodayTime(), -5, "yyyy-MM-dd HH:mm:ss"));
@@ -4316,7 +4040,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_PBOARDID", boardID);
 		
@@ -4326,7 +4049,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public String getBoardTotalItemCount(String pBoardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
@@ -4339,7 +4061,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		int count = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PUSERID", id);
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
@@ -4352,6 +4073,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		for (CommunityBoardItemVO item : itemList) {
 			count ++;
+			
 			if (count >= pStartRow) {
 				sb.append("<NODE>");
 				
@@ -4388,8 +4110,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		return sb.toString();
 	}
-
-	
 	
 	@Override
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO pItem) throws Exception {
@@ -4399,7 +4119,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (previousItemID.equals("")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_PBOARDID", boardID);
 			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
 			
@@ -4415,7 +4134,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (nextItemID.equals("")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_PBOARDID", boardID);
 			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
 			
@@ -4430,7 +4148,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		Map<String, String> ret = new HashMap<String, String>();
-		
 		ret.put("previousItemID", previousItemID);
 		ret.put("previousTitle", previousTitle);
 		ret.put("nextItemID", nextItemID);
@@ -4439,9 +4156,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		return ret;
 	}
 
+	@Override
+	public String checkPassword(String pItemID) throws Exception {
+		return ezCommunityDAO.checkPassword(pItemID);
+	}
+
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_KEYWORD", keyword);
 		map.put("v_CODE", code);
@@ -4452,7 +4173,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void guestEditOkInsert(String code, LoginVO userInfo, String memo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		map.put("v_USERINFO_DISPLAYNAME1", userInfo.getDisplayName1());
@@ -4465,7 +4185,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void pollResOkSet(String questionID, String pollSelect, String answerETC, String id, String companyID, String isSave, String answerType, String answerCount) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_QUESTIONID", questionID);
 		map.put("v_POLLSELECT", pollSelect);
 		map.put("v_ANSWERETC", answerETC);
@@ -4480,7 +4199,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERID", id);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERINFO_LANG", lang);
@@ -4494,7 +4212,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PROOTBOARDID", pRootBoardID);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PDEPTID", pDeptID);
@@ -4513,7 +4230,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_KEYWORD", keyword);
@@ -4524,7 +4240,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_LANG", lang);
 		map.put("v_POSITION", position);
@@ -4534,7 +4249,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_LANG", lang);
 		
@@ -4543,7 +4257,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_FLAG", flag);
 		map.put("v_USERINFO_LANG", lang);
@@ -4554,7 +4267,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERID", id);
 		map.put("v_PSTART", pStart);
 		map.put("v_PEND", pEnd);
@@ -4565,7 +4277,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public CommunityCBoardVO bbsEditOkGet1(String bName, String gant, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_GANT", gant);
 		map.put("v_CODE", code);
@@ -4575,7 +4286,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CLUBNAME", clubName);
 		map.put("v_C_CATE_A", cCateA);
 		map.put("v_C_CATE_B", cCateB);
@@ -4587,7 +4297,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public CommunityCPollResponseVO pollResGet5(int questionID, String id, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_QUESTIONID", questionID);
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_USERINFO_COMPANYID", companyID);
@@ -4601,7 +4310,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		List<CommunityBoardItemVO> list;
 		
 		map = new HashMap<String, Object>();
-		
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
 		map.put("v_PBOARDID", pBoardID);
@@ -4638,10 +4346,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			}
 		}
 		
-		
 		if (nextItemID.equals("")) {
 			map = new HashMap<String, Object>();
-			
 			map.put("v_PBOARDID", pBoardID);
 			map.put("v_PPARENTWRITEDATE", parentWriteDate);
 			map.put("v_PITEMID", pItemID);
@@ -4657,7 +4363,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		Map<String, String> ret = new HashMap<String, String>();
-		
 		ret.put("previousItemID", previousItemID);
 		ret.put("previousTitle", previousTitle);
 		ret.put("nextItemID", nextItemID);
@@ -4668,7 +4373,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PBOARDID", pRootBoardID);
 		map.put("v_PUSERID", id);
 		map.put("v_PDEPTID", deptID);
@@ -4743,7 +4447,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PROOTBOARDID", pRootBoardID);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PDEPTID", pDeptID);
@@ -4795,7 +4498,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String bbsEditOkGet2(String maxIdFieldName, String bName, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_BNAME", bName);	
 		map.put("v_CODE", code);
@@ -4805,7 +4507,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String bbsEditOkGet3(String maxIdFieldName, String bName, String code, String strMaxNum) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_BNAME", bName);	
 		map.put("v_CODE", code);
@@ -4816,9 +4517,9 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String commMakeOkGet6(String companyID, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_COMPANYID",	companyID);
 		map.put("v_USERINFO_USERID", id);
+		
 		return ezCommunityDAO.commMakeOkGet6(map);
 	}
 	
@@ -4833,8 +4534,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	public String getBoardListItemXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang) throws Exception {
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
 		map.put("v_PUSERID", id);
 		map.put("v_PBOARDID", pBoardID);
@@ -4884,7 +4585,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String pollAddOkGoGet2(String code, int maxNo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_MAXNO", maxNo);
 		
@@ -4893,7 +4593,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public String pollResGet4(String lang, String pollRegUser) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_POLLREGUSER", pollRegUser);
 		
@@ -4912,15 +4611,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public int checkIfLeafBoardGet(String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pBoardID", boardID);
 		map.put("v_pCount", 0);
+		
 		return ezCommunityDAO.checkIfLeafBoardGet(map);
 	}
 	
 	public int commMakeOkGet2() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.commMakeOkGet2(map);
@@ -4928,7 +4626,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public int commMakeOkGet4() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.commMakeOkGet4(map);
@@ -4936,7 +4633,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public int commHomeGet2(String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_pCount", 0);
 		
@@ -4955,10 +4651,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public int pollResGetCount(int questionID, int answerID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_QUESTIONID", questionID);
 		map.put("v_ANSWERID", answerID);
-		
 		
 		Integer temp = ezCommunityDAO.pollResGetCount(map);
 		
@@ -5067,7 +4761,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PROOTBOARDID", pRootBoardID);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PDEPTID", pDeptID);
@@ -5085,7 +4778,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void bbsEditOkSet1(String bName, String title, String gant, String code, String attachList, String textContent) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_TITLE", title);
 		map.put("v_GANT", gant);
@@ -5098,7 +4790,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void bbsEditOkSet2(String bName, int myRef, int myStep, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_MYREF", myRef);
 		map.put("v_MYSTEP", myStep);
@@ -5109,7 +4800,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BNAME", bName);
 		map.put("v_MYREF", myRef);
 		map.put("v_NEWSTEP", newStep);
@@ -5142,7 +4832,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void commMakeOkInsert2(int clubNo, String todayTime, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_TMP_CLUBID", clubNo);
 		map.put("v_DATETIME_NOW1", todayTime);
 		map.put("v_CLUBNAME", clubName);
@@ -5185,7 +4874,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LOGOFILENAME", logoFileName);
 		map.put("v_LOGOFILENAME_THUMBNAIL", thumbnailFileName);
 		map.put("v_FILENAME", fileName);
@@ -5196,7 +4884,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BANNERFILENAME", bannerFileName);
 		map.put("v_FILENAME", fileName);
 		map.put("v_FILESIZE", fileSize);
@@ -5206,7 +4893,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void guestEditOkDelete(String no, String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_C_NO", no);
 		map.put("v_CODE", code);
 		
@@ -5226,7 +4912,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void pollAddOkGoInsert1(String code, int maxNo, String subject, String startDate, String endDate, String id) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CODE", code);
 		map.put("v_MAXNO", maxNo);
 		map.put("v_SUBJECT", subject);
@@ -5239,7 +4924,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void pollAddOkGoInsert2(String managerID, String subject, String answerCount, String selType, String answerViewType) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_MANAGERID", managerID);
 		map.put("v_SUBJECT", subject);
 		map.put("v_ANSWERCOUNT", answerCount);
@@ -5251,7 +4935,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void pollAddOkGoInsert3(String questionID, int answerNo, String answerContent) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_POLLQUESTIONID", questionID);
 		map.put("v_ANSWERNO", answerNo);
 		map.put("v_ANSWERCONTENT", answerContent);
@@ -5261,7 +4944,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void pollDeleteDel1(int questionID, int answerID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_QUESTIONID", questionID);
 		map.put("v_ANSWERID", answerID);
 		
@@ -5278,7 +4960,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 
 	public void pollEditOkUpdate(String subject, String startDate, String endDate, String managerID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_SUBJECT", subject);
 		map.put("v_POLLSTARTDATE", startDate);
 		map.put("v_POLLENDDATE", endDate);
@@ -5289,7 +4970,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LOGOFILENAME", logoFileNameLogo);
 		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
 		map.put("v_FILENAME",  fileName);
@@ -5299,7 +4979,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void adminCommType(String copType, String fileName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_COPTYPE", copType);
 		map.put("v_FILENAME", fileName);
 		
@@ -5308,7 +4987,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	
 	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BANNERFILENAME", bannerFileName);
 		map.put("v_FILENAME", fileName);
 		

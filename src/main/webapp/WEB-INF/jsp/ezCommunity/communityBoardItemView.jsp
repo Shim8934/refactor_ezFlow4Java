@@ -16,8 +16,7 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
@@ -597,6 +596,7 @@
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 
 	                if (gubun == "2") {
+	                	alert(1);
                         checkreplypassword_dialogArguments = new Array();
                         checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
                         var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));

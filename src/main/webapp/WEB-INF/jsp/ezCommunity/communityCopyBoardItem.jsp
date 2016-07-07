@@ -150,7 +150,7 @@
 			    var treeNode = new TreeNode();
 			    treeNode.LoadFromID(TreeIdx);
 			
-			    xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
+			    xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1");
 			
 			    if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
 			        if (CrossYN()) {
@@ -176,7 +176,7 @@
 			    xmlhttp.send();
 			
 			    if (xmlhttp.responseText.indexOf("ERROR") == -1) {
-			        MakeTopBoardView(xmlhttp.responseText)
+			        MakeTopBoardView(xmlhttp.responseText);
 			    }
 			}
 			

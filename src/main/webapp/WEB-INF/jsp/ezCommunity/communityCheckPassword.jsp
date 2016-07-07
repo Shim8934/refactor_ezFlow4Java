@@ -37,18 +37,18 @@
 					return;
 				}
 				
-				 $.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezCommunity/confirmPassword.do",
-						data : { newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
-								 itemID : "${itemID}"	
-								},
-						success: function(result){
-							rtnVal = result;
-						}
-					});
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/confirmPassword.do",
+					data : { newPassword : rsa.encrypt(document.getElementById("inpPassword").value),
+							 oldPassword : "${password}"	
+					},
+					success: function(result){
+						rtnVal = result;
+					}
+				});
 	
 			    window.close();
 			}

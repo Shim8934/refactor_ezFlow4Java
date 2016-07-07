@@ -211,7 +211,7 @@
 			function goToPage(page) {
 				var href = "/ezCommunity/board/bbsList.do?bName=<c:out value = '${bName}' />&code="+ encodeURIComponent("<c:out value = '${code}' />") + "&keyword=" + make_searchstring(pKeyWord) + "&s_radio=" + encodeURIComponent("<c:out value = '${sRadio}' />") + "&block="+encodeURIComponent("<c:out value = '${nowBlock}' />");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
-					document.location.href = href + "&GotoPage=" + escape(parseInt(page));
+					document.location.href = href + "&GotoPage=" + encodeURIComponent(parseInt(page));
 				}
 			}				
 			

@@ -5,8 +5,138 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Insert title here</title>
+		<title><spring:message code = 'ezCommunity.t104' /></title>
+		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		
+		<script type="text/javascript">
+			var gUserID = "";
+			var rtnVal = "cancel";
+			var ReturnFunction;
+			var rsa = new RSAKey();
+			
+			function ReplaceText( orgStr, findStr, replaceStr ) {
+				var re = new RegExp( findStr, "gi" );
+				return ( orgStr.replace( re, replaceStr ) );
+			}
+			
+			function CheckPassword(NewPassword, OldPassword) {			    
+				var returnVal = "";
+				
+			    $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/confirmPassword.do",
+					data : { newPassword : NewPassword,
+							 oldPassword : OldPassword
+							},
+					success: function(result){
+						returnVal = result;
+					}
+				});
+			    
+			    return returnVal;
+			}
+			
+			function btn_OpinionOK_onclick() {
+				if (inpPassword.value == "") {
+					alert("<spring:message code = 'ezCommunity.t105' />");
+					return;
+				}
+			    
+				if (CheckPassword(rsa.encrypt(document.getElementById("inpPassword").value), "${password}") == "OK") {
+			        rtnVal = "OK";
+				} else {
+			        rtnVal = "NO";
+				}
+	
+				window.close();
+			}
+			
+			window.onunload = function() {
+			    if (ReturnFunction != null) {
+			        ReturnFunction(rtnVal);
+			    } else {
+				    window.returnValue = rtnVal;
+			    }
+			}
+	
+			function btn_OpinionCANCEL_onclick() {
+			  	window.returnValue = "cancel";
+				window.close();
+			}
+	
+			window.onload = function() {
+		        try {
+		            ReturnFunction = opener.checkreplypassword_dialogArguments[1];
+		        } catch (e) {
+		        }
+		        
+		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+				window.returnValue = "cancel";
+				gUserID = dialogArguments;
+	
+			    try {
+			        var ua = navigator.userAgent;
+			        
+			        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) { 
+			            KeEventControl(document.getElementById("inpPassword"));
+			        }
+			    } catch(e){
+			    }
+			}
+	
+			function KeEventControl(obj) {
+			    useragt = navigator.userAgent.toUpperCase();
+			    if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
+			    {
+			        useragt = useragt.substring(useragt.indexOf("VERSION/") + 8, useragt.indexOf("VERSION/") + 9);
+			        if (parseInt(useragt) > 5) {
+			            return;
+			        }
+			    }
+			    obj.onkeydown = function () {
+			        if (parseInt(window.event.keyCode) >= 48 && parseInt(window.event.keyCode) <= 126)
+			            return false;
+			        if (parseInt(window.event.keyCode) == 189 || parseInt(window.event.keyCode) == 187 ||
+			                parseInt(window.event.keyCode) == 220 || parseInt(window.event.keyCode) == 219 ||
+			                parseInt(window.event.keyCode) == 221 || parseInt(window.event.keyCode) == 222 ||
+			                parseInt(window.event.keyCode) == 186 || parseInt(window.event.keyCode) == 188 ||
+			                parseInt(window.event.keyCode) == 190 || parseInt(window.event.keyCode) == 191 || parseInt(window.event.keyCode) == 32)
+			            return false;
+			    };
+			}
+	
+	
+			function chkPasswd() {
+			  try{
+				var objRoot;
+				var objNode;
+				
+				var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				
+				xmlhttp.open("POST","/myoffice/ezApproval/aspx/chkPasswd.aspx",false);
+				xmlhttp.send(xmlpara);
+				
+				return xmlhttp.responseText;
+			  }catch(e){
+			    alert(e.description);
+			  }
+			}
+		</script>
 	</head>
+	
+	
 	<body class="popup">
 		<table width="100%" cellspacing="0" cellpadding="0" class="iconbg">
 			<tr>
@@ -41,6 +171,6 @@
 			</tr>
 		</table>
 		
-		<input id="publicModulus" value="<${publicModulus}" type="hidden"/>
+		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	</body>
 </html>

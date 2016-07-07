@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -15,9 +16,8 @@
 		<script type="text/javascript">
 			var ResultString;
 	        var code = "<c:out value='${code}'/>";
-	        var codeName = "<c:out value='${codeName}'/>";
 	        var UserLevel = "<c:out value='${userLevel}'/>";
-	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}'/>";
+	        var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 	        var newmember_confirmtype = "<c:out value='${newmemberConfirmType}'/>";
 	        var ch_CheckSysop = "<c:out value='${checkSysop}'/>";
 	        var lang = "<c:out value='${lang}'/>";
@@ -46,7 +46,7 @@
 			    }
 			    try {
 	                if (code != "") {
-	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel);
+	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel);
 
 	                    var dropdown = document.goMyCommForm.MyCommunityList;
 	                    var inx = document.goMyCommForm.MyCommunityList.length;
@@ -65,15 +65,15 @@
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Notice&type=notice&userLevel=" + UserLevel;
+		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Notice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board&userLevel=" + UserLevel;
+				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Board&type=board&userLevel=" + UserLevel;
 				            document.getElementById('Map520').click();
 				        }else if (funCode == "3") {
 				            GoTopNavigate("<spring:message code='ezCommunity.t1117' />");
-					        window.parent.frames.right.document.location.href = "/ezcommunity/searchKey.do?sRadio=c_ClubName&keyword=&amp;key";
+					        window.parent.frames.right.document.location.href = "/ezcommunity/searchKey.do?sRadio=c_ClubName&keyword=&key";
 					        document.getElementById('Map530').click();
 					    }else if (funCode == "4") {
 					        GoTopNavigate("<spring:message code='ezCommunity.t1011' />");
@@ -133,7 +133,6 @@
 	                                _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
 	                            else
 	                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
-	                                //_img.setAttribute("src", "/Upload_Community/logo/" + copLogo);
 
 	                            _span.appendChild(_img);
 	                            _li.innerHTML = _span.outerHTML + copName;
@@ -152,19 +151,26 @@
 	        }
 			
 			function getBoardList_after() {
-	            if (xmlhttp2 == null || xmlhttp2.readyState != 4) return;
+	            if (xmlhttp2 == null || xmlhttp2.readyState != 4) {
+	            	return;
+	            }
+	            
 	            var objXML = xmlhttp2.responseXML;
 
 	            document.getElementById("list_communitynoti").innerHTML = "";
 	            var totalCnt = GetChildNodes(SelectSingleNodeNew(objXML, "DATA")).length;
+	            
 	            if (totalCnt > 0) {
 	                for (var i = 0; i < totalCnt; i++) {
-	                    if ((screen.height <= 800 && i >= 4) || (screen.height < 1080 && i >= 7))
+	                    if ((screen.height <= 800 && i >= 4) || (screen.height < 1080 && i >= 7)) {
 	                        break;
+	                    }
+	                    
 	                    var title = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "TITLE");
 	                    var boardNum = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "NO");
 	                    var _li = document.createElement("li");
 	                    _li.setAttribute("onClick", "btn_bbsView(" + boardNum + ",'c_board')");
+	                    
 	                    if (CrossYN()){
 	                        _li.textContent = title;
 	                    }else{
@@ -310,7 +316,7 @@
 	            if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
 	                switch (btn.id) {
 	                    case "btn_QsPoll": 
-	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 	                        break;
 	                    case "btn_MemberInfo": 
 	                    	alert("<spring:message code='ezCommunity.t1102' />");
@@ -319,10 +325,10 @@
 			            	alert("<spring:message code='ezCommunity.t1102' />");
 			                break;
 			            case "btn_home": 
-			            	window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+			            	window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
 			                break;
 			            case "btn_Pims": 
-			            	window.open("schedule_main.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+			            	window.open("schedule_main.do?code=" + code + "&userLevel=" + UserLevel, "right");
 			                break;
 			            case "btn_guest": 
 			            	window.open("commhome/guest/guestOne.do?code=" + code, "right");
@@ -341,16 +347,16 @@
 			                alert("<spring:message code='ezCommunity.t1102' />");
 			                break;
 			            default: 
-			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
 			                break;
 			        }
 			    }else {
 			        switch (btn.id) {
 			            case "btn_QsPoll": 
-			            	window.open("/ezcommunity/commHome/poll/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+			            	window.open("/ezcommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 			                break;
 			            case "btn_MemberInfo": 
-			            	window.open("/ezcommunity/commHome/commViewMember.do?code=" + code + "&codeName=" + codeName, "right");
+			            	window.open("/ezcommunity/commHome/commViewMember.do?code=" + code, "right");
 			                break;
 			            case "btn_MemberOut":
 			                if (ch_CheckSysop.toUpperCase() == "TRUE"){
@@ -363,10 +369,10 @@
 		                	open_admin(code);
 		                    break;
 		                case "btn_home": 
-		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
 		                    break;
 		                case "btn_Pims": 
-		                	window.open("scheduleMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+		                	window.open("scheduleMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 		                    break;
 		                case "btn_guest": 
 		                	window.open("commhome/guest/guestOne.do?code=" + code, "right");
@@ -385,7 +391,7 @@
 		                    alert("<spring:message code='ezCommunity.t1102' />");
 		                    break;
 		                default: 
-		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + UserLevel, "right");
+		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
 		                    break;
 		            }
 		        }
@@ -402,13 +408,13 @@
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
 	                    case "<spring:message code = 'ezCommunity.t73' />":
-                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Notice&type=notice", "right");
+                            window.open("/ezCommunity/board/bbsList.do?bName=c_Notice&type=notice", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t74' />":
-                            window.open("/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board", "right");
+                            window.open("/ezCommunity/board/bbsList.do?bName=c_Board&type=board", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t1117' />":
-                            window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&amp;key", "right");
+                            window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&key", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t1011' />":
                             window.open("/ezCommunity/commMake.do", "right");
@@ -520,14 +526,14 @@
                 function open_admin(code) {
                     var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=800,height=500";
                     feature = feature + GetOpenPosition(800, 500);
-                    var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code + "&codeName=" + codeName, "", feature);
+                    var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code, "", feature);
                 }
 
             function goPage(idx) {
                 var url = "";
                 switch (idx) {
                     case 1:
-                        url = "/ezCommunity/Board/bbsList.do?mode=list&amp;bName=c_Notice&amp;type=notice";
+                        url = "/ezCommunity/Board/bbsList.do?bName=c_Notice&type=notice";
                         break;
 
                     case 2:
@@ -538,7 +544,7 @@
             }
             
             function List_more() {
-                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?mode=list&bName=c_Board&type=board&userLevel=" + UserLevel;
+                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Board&type=board&userLevel=" + UserLevel;
             }
             
             function make_Cop() {

@@ -70,7 +70,7 @@
 				
 				strSearch = strSearch + "&code=" + "${code}" + "&bName=" + "${bName}";
 				
-				window.location.href = "/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
+				window.location.href = "/ezCommunity/board/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 
 			function comm_searchCheck() {
@@ -82,127 +82,133 @@
 				return true;
 			}
 			
-	         var BlockSize = 10;
-	         function td_Create1(strtext) {
-	             document.getElementById("tblPageRayer").innerHTML = strtext;
-	         }
-	         function makePageSelPage() {
-	             var strtext;
-	             var PagingHTML = "";
-	             document.getElementById("tblPageRayer").innerHTML = "";
-	             document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
-	             strtext = "<div class='pagenavi'>";
-	             PagingHTML += strtext;
-	             var pageNum = curPage;
-	             if (totalPage > 1 && pageNum != 1) {
-	                 strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
-	                 PagingHTML += strtext;
-	             }
-	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
-	                 PagingHTML += strtext;
-	             }
-	             if (totalPage > BlockSize) {
-	                 if (pageNum > BlockSize) {
-	                     strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
-	                     PagingHTML += strtext;
-	                 }
-	                 else {
-	                     strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
-	                     PagingHTML += strtext;
-	                 }
-	             }
-	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
-	                 PagingHTML += strtext;
-	             }
-	             var MaxNum;
-	             var i;
-	             var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-	             if (totalPage >= (startNum + parseInt(BlockSize))) {
-	                 MaxNum = (startNum + parseInt(BlockSize)) - 1;
-	             }
-	             else {
-	                 MaxNum = totalPage;
-	             }
-	             for (i = startNum; i <= MaxNum; i++) {
-	                 if (i == pageNum) {
-	                     strtext = "<span class='on'>" + i + "</span>";
-	                     PagingHTML += strtext;
-	                 }
-	                 else {
-	                     strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-	                     PagingHTML += strtext;
-	                 }
-	             }
-	             if (totalPage > BlockSize) {
-	                 if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                     strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                     strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-	                     PagingHTML += strtext;
-	                 }
-	                 else {
-	                     strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                     strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	                     PagingHTML += strtext;
-	                 }
-	             }
-	             else {
-	                 strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                 strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	                 PagingHTML += strtext;
-	             }
-	             if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                 strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-	                 PagingHTML += strtext;
-	             }
-	             else {
-	                 strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-	                 PagingHTML += strtext;
-	             }
-	             PagingHTML += "</div>";
-	             td_Create1(PagingHTML);
-	         }
+			var BlockSize = 10;
+			
+	        function td_Create1(strtext) {
+	            document.getElementById("tblPageRayer").innerHTML = strtext;
+	        }
+	        
+	        function makePageSelPage() {
+	            var strtext;
+	            var PagingHTML = "";
+	            document.getElementById("tblPageRayer").innerHTML = "";
+	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
+	            strtext = "<div class='pagenavi'>";
+				PagingHTML += strtext;
+	            var pageNum = curPage;
+	            
+	            if (totalPage > 1 && pageNum != 1) {
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                PagingHTML += strtext;
+	            } else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                PagingHTML += strtext;
+	            }
+	            
+	            if (totalPage > BlockSize) {
+	                if (pageNum > BlockSize) {
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    PagingHTML += strtext;
+	                } else {
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	            } else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            
+	            var MaxNum;
+	            var i;
+	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	            
+	            if (totalPage >= (startNum + parseInt(BlockSize))) {
+	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	            } else {
+	                MaxNum = totalPage;
+	            }
+	            
+	            for (i = startNum; i <= MaxNum; i++) {
+	                if (i == pageNum) {
+	                    strtext = "<span class='on'>" + i + "</span>";
+	                    PagingHTML += strtext;
+	                } else {
+	                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	            }
+	            
+	            if (totalPage > BlockSize) {
+	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    PagingHTML += strtext;
+	                } else {
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    PagingHTML += strtext;
+	               }
+	            } else {
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            
+	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            } else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            
+	            PagingHTML += "</div>";
+	            td_Create1(PagingHTML);
+	        }
+	        
+	        function goToPageByNum(Value) {
+	            curPage = Value;
+	            makePageSelPage();
+				goToPage(curPage);
+	        }
+	        
+	        function selbeforeBlock() {
+	            var pageNum = parseInt(curPage);
+	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	            goToPageByNum(pageNum);    
+	        }
+	        
+	        function selbeforeBlock_one() {
+	            var pageNum = parseInt(curPage);
+	            
+	            if (parseInt(pageNum - 1) > 0) {
+	                goToPageByNum(parseInt(pageNum - 1));
+	            } else {
+	                return;
+	            }
+	        }
+	        
+	        function selafterBlock() {
+	            var pageNum = parseInt(curPage);
+	            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+	            goToPageByNum(pageNum);
+	        }
 	         
-	         function goToPageByNum(Value) {
-	             curPage = Value;
-	             makePageSelPage();
-					goToPage(curPage);
-	         }
-	         
-	         function selbeforeBlock() {
-	             var pageNum = parseInt(curPage);
-	             pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-	             goToPageByNum(pageNum);    
-	         }
-	         
-	         function selbeforeBlock_one() {
-	             var pageNum = parseInt(curPage);
-	             if (parseInt(pageNum - 1) > 0)
-	                 goToPageByNum(parseInt(pageNum - 1));
-	             else
-	                 return;
-	         }
-	         
-	         function selafterBlock() {
-	             var pageNum = parseInt(curPage);
-	             pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-	             goToPageByNum(pageNum);
-	         }
-	         
-	         function selafterBlock_one() {
-	             var pageNum = parseInt(curPage);
-	             if( parseInt(pageNum + 1) <= totalPage)
-	                 goToPageByNum(parseInt(pageNum + 1));
-	             else
-	                 return;
-	         }
-				
+			function selafterBlock_one() {
+	            var pageNum = parseInt(curPage);
+	            
+	            if( parseInt(pageNum + 1) <= totalPage) {
+	                goToPageByNum(parseInt(pageNum + 1));
+	            } else {
+	                return;
+	            }
+	        }
+			
 			function goToPage(page) {
-// 				var href = "/ezCommunity/board/bbsList.do?bName=${bName}&code="+ escape("${code}") + "&keyword=" + pKeyWord + "&sRadio=" + escape("${sRadio}");
-				var href = "/ezCommunity/board/bbsList.do?bName=${bName}&code="+ escape("${code}") + "&keyword=" + pKeyWord + "&sRadio=" + escape("${sRadio}") + "&block="+escape("${nowblock}");
+				var href = "/ezCommunity/board/bbsList.do?bName=${bName}&code="+ encodeURIComponent("${code}") + "&keyword=" + pKeyWord + "&sRadio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowblock}");
+				
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage))  {
-					document.location.href = href + "&goToPage=" + escape(parseInt(page));
+					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}	
 			}				
 			
@@ -216,7 +222,7 @@
 	            
 	            var feature = "width=760,height=720";
 	            feature = feature + GetOpenPosition(760, 720);
-	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "<spring:message code = 'ezCommunity.t166'/>", feature);						        
+	            window.open("/ezCommunity/board/bbsViewNew.do?no=" + sURL + "&bName=" + ttt, "<spring:message code = 'ezCommunity.t166'/>", feature);						        
 				
 			}
 			
@@ -227,7 +233,7 @@
 			}
 			
 			function btn_list(bname) {
-				url = "/ezCommunity/board/bbsList.do?bName=<c:out value = '${bName}' />";
+				url = "/ezCommunity/board/bbsList.do?bName=" + bname;
 				location.href = url;
 			}
 		</script>
@@ -251,7 +257,7 @@
 					<c:when test="${bName == 'c_board'}">
 						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
 					</c:when>
-					<c:when test="${(fn:indexOf(rollInfo, 'k=1') > -1 && fn:indexOf(rollInfo, 't=1') > -1) && bName == 'c_notice'}">
+					<c:when test="${(fn:indexOf(userInfo.rollInfo, 'k=1') > -1 && fn:indexOf(userInfo.rollInfo, 't=1') > -1) && bName == 'c_notice'}">
 						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
 					</c:when>
 				</c:choose>

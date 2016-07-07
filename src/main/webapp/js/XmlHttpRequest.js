@@ -381,7 +381,8 @@ function SelectSingleNodeValueNew(xmlDoc, elementPath) {
             }
             strValue = getNodeText(selNode);
         }
-        if (elements != null) {
+        
+        if (elements != null && elements.firstChild != null && elements.firstChild.nodeValue != null) {
             strValue = elements.firstChild.nodeValue;
         }
     }

@@ -44,7 +44,6 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-// 		        $("#tblList").html($("#tblList").html() + '${strXML}'); 
 			    makePageSelPage();
 			}
 			
@@ -223,9 +222,9 @@
 				}
 			}
 	        
-			function gopage() {
+/* 			function gopage() {
 				document.location.href="/ezCommunity/noticeOne.do?mode=list&code=${code}&goToPage="+document.page.sel.value;
-			}
+			} */
 
 			function goToPage(page) {
 				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURI("${sRadio}")

@@ -21,7 +21,6 @@
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
-			var codeName = "<c:out value='${codeName }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
@@ -126,6 +125,7 @@
 	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
 	            var _img = document.createElement("img");
+
 	            if (userImage != "") {
 	                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
 	            } else {
@@ -271,7 +271,7 @@
 		    function go_menu(btn) {
 		        if (chCommunityAdmin < 0 && (userLevel == "0" || userLevel == "9")) {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -291,7 +291,7 @@
 		                    break;
 		                case "btn_MemberOut": alert(strLang5);
 		                    break;
-		                case "btn_home": document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_home": document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -350,7 +350,7 @@
 		                    break;
 		                case "btn_Manager_home2": open_admin_home(code, "10");
 		                    break;
-		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -369,7 +369,7 @@
 		            }
 		        } else {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -385,7 +385,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code + "&codeName=" + codeName, "right";
+		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -415,7 +415,7 @@
 		                    break;
 		                case "btn_Manager_home2": open_admin_home(code,"10");
 		                    break;
-		                case "btn_home": document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                case "btn_home": document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -470,7 +470,7 @@
 		                case "btn_MemberJoinIng":
 		                    alert(strLang5);
 		                    break;
-		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&codeName=" + codeName + "&userLevel=" + userLevel, "right";
+		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -535,7 +535,7 @@
 		        var left = (width - wWeight) / 2;
 		        var top = (heigth - wHeight) / 2;
 
-		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&codeName=" + codeName, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		    }
 
 		    function open_admin_home(code, num) {
@@ -550,7 +550,7 @@
 		        var left = (width - wWeight) / 2;
 		        var top = (heigth - wHeight) / 2;
 
-		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&codeName=" + codeName + "&num=" + num, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		        var comm = window.open("/ezCommunity/admin/index.do?code=" + code + "&num=" + num, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		    }
 		    
 		    function event_get_homeboardinfo(result) {
@@ -645,7 +645,7 @@
 	                                        var img = document.createElement("IMG");
 	                                        var imgUrl = SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "EXTENSIONATTRIBUTE5");
 	                                        
-	                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl.split('/')[imgUrl.split('/').length - 1];
+	                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + SelectSingleNodeValue(GetChildNodes(SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i])[j], "BOARDID") + "&fileName=" + imgUrl;
 	                                        img.style.width = "68px";
 	                                        img.style.height = "68px";
 

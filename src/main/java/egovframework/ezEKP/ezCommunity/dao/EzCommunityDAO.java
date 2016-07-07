@@ -800,7 +800,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.saveBoardOrder", map);
 	}
 	
-	public void adminBasicOkIpdate(Map<String, Object> map) throws Exception {
+	public void adminBasicOkupdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminBasicOkUpdate", map);
 	}
 	

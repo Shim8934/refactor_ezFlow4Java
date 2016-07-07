@@ -21,9 +21,6 @@
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		
-		
-		
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		
 		<!-- data picker -->
@@ -120,7 +117,7 @@
 		            }
 		        }
 												
-		        if (ExpireDays == -1) {
+		        if (ExpireDays == "-1") {
 		        	document.getElementById('Makedate').style.display = "none";
 		        }
 							
@@ -643,7 +640,7 @@
 						
 		    function AutoAddtoExpireDate() {
 		        var temp = ExpireDays;
-		        if (temp == -1) temp = 30;
+		        if (temp == "-1") temp = "30";
 							
 		        idDatepicker.vtLocalEndDate = AddDate(idDatepicker.vtLocalDate, temp);			
 		    }
@@ -998,7 +995,7 @@
 	                    </tr>
 	                    
 	                    <c:choose>
-	                    	<c:when test="${(mode == 'new' || reservedItem == 'true' || url != '') && boardInfo.gubun != '2' }">
+	                    	<c:when test="${(pMode == 'new' || reservedItem == 'true' || pUrl != '') && boardInfo.gubun != '2' }">
 	                    		<tr id="tdReservationDate">
 	                    	</c:when>
 	                    	<c:otherwise>
@@ -1026,8 +1023,9 @@
 	                    <tr id="tdEndDate">
 	                        <th><spring:message code='ezCommunity.t384'/></th>
 	                        <td>
+	                        
 	                        	<c:choose>
-	                        		<c:when test="${(mode != 'modify' && boardInfo.expireDays =='-1') || (mode == 'modify' && fn:substring(strEndDate, 0, 4) == '9999') || url != '' }">
+	                        		<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(strEndDate, 0, 4) == '9999') || pUrl != '' }">
 	                        			<span id="Chkbox"><input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked><spring:message code='ezCommunity.t930'/></span>
 	                        			<span id="Makedate"><input type="text" id="Edatepicker" style="width:80px;text-align:center"></span>
 	                        		</c:when>
