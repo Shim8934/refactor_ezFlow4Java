@@ -27,7 +27,7 @@
 				        url = "/admin/ezOrgan/organRight.do";
 						break;
 				    case 2:
-				        url = "/myoffice/ezEmail/Admin/mail_distributionlist_Cross.aspx";
+				        url = "/admin/ezEmail/mailDistributionList.do";
 						break;
 					case 3:
 						url = "/myoffice/ezEmail/Admin/mail_mailboxstore_environ.aspx" ;
