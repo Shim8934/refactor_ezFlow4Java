@@ -382,7 +382,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
-System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		return ezCommunityService.commHomeBoardInfo(request);
 	}
 	
@@ -777,8 +776,9 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		String pItemID = request.getParameter("itemID");
 		String pReplyID = request.getParameter("replyID");
 		
-		String password = ezCommunityService.checkReplyPassword(pItemID, pReplyID);
+		String password = ezCommunityService.checkReplyPassword(pItemID, pReplyID).trim();
 		
+		model.addAttribute("pReplyID", pReplyID);
 		model.addAttribute("password", password);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
@@ -1913,10 +1913,6 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
-		if (sysopCheck != 1) {
-			return "/error.do";
-		}
-		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
 		
 		if (club != null) {
@@ -2020,6 +2016,8 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		
 		String code = request.getParameter("code");
 		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
 		String listHeader = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t1168", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
 		String listHeader2 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2015", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
 		String listHeader3 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2016", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
@@ -2033,12 +2031,14 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		returnVal3 = "<LISTVIEWDATA>" + listHeader3 + "<ROWS>" + returnVal3 + "</ROWS></LISTVIEWDATA>";
 		
 		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("returnVal", returnVal);
 		model.addAttribute("returnVal2", returnVal2);
 		model.addAttribute("returnVal3", returnVal3);
 		model.addAttribute("listHeader", listHeader);
 		model.addAttribute("listHeader2", listHeader2);
 		model.addAttribute("listHeader3", listHeader3);
+		
 		
 		return "/ezCommunity/communityAdminHomeBoard";
 	}
@@ -2098,6 +2098,8 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
 		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		CommunityBoardPropertyVO boardProp = ezCommunityService.getBoardProperty(boardID);
 		
@@ -2121,6 +2123,7 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("useMultiData", useMultiData);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
@@ -2508,11 +2511,7 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		
 		String code = request.getParameter("code");
 		
-		/*int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
-		
-		if (sysopCheck != 1) {
-			return "/error";
-		}*/
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
 		Integer postCount = ezCommunityService.adminOuterListGet1(code);
 		
@@ -2523,6 +2522,7 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		String idSpanValue = ezCommunityService.adminOuterList(userInfo, code);
 
 		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
 		
@@ -2694,6 +2694,7 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 		
 		String code = request.getParameter("code");
 		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code);
 		
 		ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), club.getC_SysopID().trim());
@@ -2714,6 +2715,7 @@ System.out.println(ezCommunityService.commHomeBoardInfo(request));
 				
 		model.addAttribute("code", code);
 		model.addAttribute("sysopName", sysopName);
+		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("club", club);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strCategoryPrint", strCategoryPrint);

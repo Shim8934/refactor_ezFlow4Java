@@ -11,6 +11,15 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
+		<c:if test="${sysopCheck != '1' }">
+			<spring:message code = 'ezCommunity.t447' />
+			<%
+				if (true) {
+					return;
+				}
+			 %>
+		</c:if>
+		
 		<script type="text/javascript">
 		var BoardID = "${boardID}";
 		var ParentBoardID = "${parentBoardID}";
@@ -348,7 +357,6 @@
 			    colorID.innerText = retValue;
 			    brd_color = retValue;
 			}
-			
 		}
 			
 		function OpenRightMenu(pIndex) {

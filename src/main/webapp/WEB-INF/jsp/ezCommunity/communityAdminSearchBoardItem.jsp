@@ -47,7 +47,6 @@
 			var code = "${code}";
 	        var iMenuNum = 7;
 	        var gubun = "${gubun}";
-	        var pNoneActiveX = "${NoneActiveX}";
 	        
 			window.onload = function() {
 			    var boardname = "${boardName}";
@@ -267,22 +266,18 @@
 				var pTop = (pheight - 720) / 2;
 				var pLeft = (pwidth - 765) / 2;
 				
-				if (CrossYN() || pNoneActiveX == "YES") {
+				if (CrossYN()) {
 				    if (gubun == "3") {
 				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent='1'&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 				    } else {
 				        GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + code, "", 720, 765);
 				    }
 				} else {
-				    if (pNoneActiveX == "YES") {
-				        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-				    } else {
-				        if (gubun == "3") {
-				            window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent='1'&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-				        } else {
-				            window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-				        }
-				    }
+			        if (gubun == "3") {
+			            window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent='1'&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+			        } else {
+			            window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID + "&code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+			        }
 				}
 			}
 	

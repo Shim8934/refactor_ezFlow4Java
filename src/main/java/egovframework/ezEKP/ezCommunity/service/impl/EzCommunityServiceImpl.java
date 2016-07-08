@@ -2562,11 +2562,19 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	@Override
 	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception {
 		String userName = "", userName2 = "";
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+		
 		String pItemID = xmlDoc.getElementsByTagName("ITEMID").item(0).getTextContent();
 		String pReplyID = xmlDoc.getElementsByTagName("REPLYID").item(0).getTextContent();
 		String pBoardID = xmlDoc.getElementsByTagName("BOARDID").item(0).getTextContent();
 		String pContent = xmlDoc.getElementsByTagName("CONTENT").item(0).getTextContent();
 		String pPassword = xmlDoc.getElementsByTagName("PASSWORD").item(0).getTextContent();
+
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String rpwd = EgovFileScrty.decryptRsa(pk, pPassword);
+		pPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
+		
 		String[] u_Name = egovMessageSource.getMessage("ezCommunity.t115", new Locale(globals.getProperty("Globals.language"))).split(";");
 		
 		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID);
@@ -2628,7 +2636,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_GUBUN", gubun);
-		
+System.out.println("@@@@@@@@@@@@@@@@@@@");
 		return ezCommunityDAO.deleteOneLineReply(map);
 	}
 	

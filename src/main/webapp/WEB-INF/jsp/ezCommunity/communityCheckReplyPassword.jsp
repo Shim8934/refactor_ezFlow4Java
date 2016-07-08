@@ -65,7 +65,7 @@
 			
 			window.onunload = function() {
 			    if (ReturnFunction != null) {
-			        ReturnFunction(rtnVal);
+			        ReturnFunction(rtnVal, '${pReplyID}');
 			    } else {
 				    window.returnValue = rtnVal;
 			    }
@@ -84,7 +84,7 @@
 		        
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 				window.returnValue = "cancel";
-				gUserID = dialogArguments;
+// 				gUserID = dialogArguments;
 	
 			    try {
 			        var ua = navigator.userAgent;
@@ -116,8 +116,7 @@
 			            return false;
 			    };
 			}
-	
-	
+			
 			function chkPasswd() {
 			  try{
 				var objRoot;
@@ -172,5 +171,6 @@
 		</table>
 		
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	</body>
 </html>

@@ -133,16 +133,19 @@
 	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
 		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
-		                    
+
 	                		if (typeof (ret) == "undefined") {
-		                        alert("<spring:message code = 'ezCommunity.t939' />");
+		                        alert("<spring:message code = 'ezCommunity.t901' />");
 		                        return;
 		                    }
-	                		
-		                    if (ret != "OK") {
-		                        alert("<spring:message code = 'ezCommunity.t939' />");
+
+		                    if (ret == "NO") {
+		                        alert("<spring:message code = 'ezCommunity.t921' />");
 		                        return;
-		                    }
+		                    } else if (ret == "cancel") {
+		    	            	alert("<spring:message code='ezCommunity.t60'/>");
+		    	                return;
+		    	            }
 		                    
 		                    if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
 			            		return;
@@ -189,8 +192,11 @@
 	                return;
 	            }
 
-	            if (ret != "OK") {
-	            	alert("<spring:message code='ezCommunity.t901'/>");
+	            if (ret == "NO") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 
@@ -270,7 +276,7 @@
 	                	alert("<spring:message code = 'ezCommunity.t941' />");
 	                    return;
 					}	                 
-	                 if (CrossYN() || pNoneActiveX == "YES") {
+	                 if (CrossYN()) {
 	                     window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	                 } else {
 	                     if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -594,15 +600,14 @@
 	            var xmlhttp = createXMLHttpRequest();
 
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-
 	                if (gubun == "2") {
-	                	alert(1);
                         checkreplypassword_dialogArguments = new Array();
                         checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
                         var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));
                         try {
                         	OpenWin.focus();
                         } catch (e) { }
+                        
 	                } else {
 	                    xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + pReplyID, false);
 	                    xmlhttp.send();
@@ -633,7 +638,7 @@
 				}
 	        }
 	        
-	        function delete_onelinereply_Complete(ret) {
+	        function delete_onelinereply_Complete(ret, pReplyID) {
 	            if (ret == "NO") {
 	            	alert("<spring:message code='ezCommunity.t921'/>");
 	                return;
@@ -642,10 +647,16 @@
 	                return;
 	            }
 
-	            xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
-	            xmlhttp.send();
+	            $.ajax({
+					type : "POST",
+					async : false,
+					url : "/ezCommunity/deleteOneLineReply.do",
+					data : { replyID	:	pReplyID, 
+							 gubun		:	gubun
+					}
+	            });
+	            
 	            getOneLineReply();
-	            xmlhttp = null;
 	        }
 
 	        function getOneLineReply() {
@@ -1131,6 +1142,6 @@
 	    </table>
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
-		<input id="publicExponent" value="${publicExponent }" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	</body>
 </html>

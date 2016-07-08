@@ -163,6 +163,6 @@
 		</table>
 		
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
-		<input id="publicExponent" value="${publicExponent }" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	</body>
 </html>

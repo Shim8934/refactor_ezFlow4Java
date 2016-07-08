@@ -908,11 +908,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
-						if (commonUtil.checkIE(request)) {
-							m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i));
-						} else {
-							m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(request.getServletContext().getRealPath(""), ""));
-						}
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));

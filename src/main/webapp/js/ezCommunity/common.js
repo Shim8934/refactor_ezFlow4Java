@@ -2,12 +2,17 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezCommunity/ezAPROPINION.do";
-    if (CrossYN() || NonActiveX == "YES") {
+
+    if (CrossYN()) {
+    	alert(1);
         ezapropinion_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
+        if (CompleteFunction != undefined) {
+alert(1);
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
-        else
+        } else {
+alert(2);
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        }
         DivPopUpShow(330, 205, url);
     }
     else {
@@ -15,7 +20,6 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
     }
-    
     return RtnVal;
 }
 
@@ -27,19 +31,13 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezCommunity/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-        else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-        DivPopUpShow(330, 205, url);
+    ezapralert_cross_dialogArguments[0] = parameter;
+    if (CompleteFunction != undefined) {
+        ezapralert_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
     }
-    else {
-        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-        feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
-    }
+    DivPopUpShow(330, 205, url);
 }
 
 function OpenAlertUI_Complete() {
