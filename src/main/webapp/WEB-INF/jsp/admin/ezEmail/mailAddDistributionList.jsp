@@ -293,20 +293,44 @@
 	                document.all("keyword").focus();
 	                return;
 	            }
-	            var xmlHTTP = createXMLHttpRequest();
-	            var xmlDOM = createXmlDom();
+				
+	            $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : true,
+		        	data : {
+		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", 
+		        		type : "user"
+		        	},
+		        	success : function(result){	
+		        		var headerData = createXmlDom();
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
+	                    if (CrossYN()) {
+	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        var Node = headerData.importNode(xmlRtn, true);
+	                        headerData.documentElement.appendChild(Node);
+	                    }
+	                    else {
+	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        headerData.documentElement.appendChild(xmlRtn);
+	                    }
+	                    pListXML_Info = headerData;
+	                    pSeach = true;
+	                    DisplayUserImageList();
 	
-	            var objNode = "";
-	            createNodeInsert(xmlDOM, objNode, "DATA");
-	            createNodeAndInsertText(xmlDOM, objNode, "SEARCH", document.all("search_type").value + "::" + document.all("keyword").value);
-	            createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;displayname;title;telephonenumber" + document.getElementById("search_type").value);
-	            createNodeAndInsertText(xmlDOM, objNode, "PROP", "mail;displayname;description;title;company;telephonenumber;extensionattribute2");
-	            createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-	
-	            g_xmlHTTP = createXMLHttpRequest();
-	            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", true);
-	
+	                    if ("${useOcs}" == "YES") {
+	                        check_presence();
+	                    }
+		        	},
+		        	error : function(error){
+		        		alert("<spring:message code='ezEmail.t9' />" + error);
+		        	}
+		        });
+	            
 	            var usedefault;
 	            if (browserIE) {
 	                usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -315,8 +339,6 @@
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
 	
-	            g_xmlHTTP.onreadystatechange = event_displayUserList2;
-	            g_xmlHTTP.send(xmlDOM);
 	        }
 	        var checkname2_cross_dialogArguments = new Array();
 	        var rgParams = new Array();
@@ -326,34 +348,30 @@
 	                document.all("deptkeyword").focus();
 	                return;
 	            }
-	            var xmlHTTP = createXMLHttpRequest();
+	            
 	            var xmlDOM = createXmlDom();
-	
-	            var objNode = "";
-	            createNodeInsert(xmlDOM, objNode, "DATA");
-	            createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + document.all("deptkeyword").value);
-	            createNodeAndInsertText(xmlDOM, objNode, "CELL", "extensionAttribute3;displayname;extensionAttribute9;");
-	            createNodeAndInsertText(xmlDOM, objNode, "PROP", "cn");
-	            createNodeAndInsertText(xmlDOM, objNode, "TYPE", "group");
-	
-	            try {
-	                xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
-	                xmlHTTP.send(xmlDOM);
-	
-	                if (xmlHTTP.statusText != "OK") {
-	                    alert("<spring:message code='ezEmail.t11' />" + xmlHTTP.statusText);
-	                    xmlDOM = null;
-	                    xmlHTTP = null;
-	                }
-	                else {
-	                    xmlDOM = xmlHTTP.responseXML;
-	                    adCount = xmlDOM.getElementsByTagName("ROW").length;
-	                }
-	            } catch (e) {
-	                alert("<spring:message code='ezEmail.t11' />" + e.description);
-	                xmlDOM = null;
-	                xmlHTTP = null;
-	            }
+	            
+	            $.ajax({
+		        	type : "POST",
+		        	dataType : "xml",
+		        	url : "/ezOrgan/getSearchList.do",
+		        	async : false,
+		        	data : {
+		        		search : "displayname::" + document.all("deptkeyword").value, 
+		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
+		        		prop : "cn", 
+		        		type : "group"
+		        	},
+		        	success : function(result){	
+		        		xmlDOM = result;
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		        	},
+		        	error : function(error){
+		        		alert("<spring:message code='ezEmail.t11' />" + error);
+		        		xmlDOM = null;
+		        	}
+		        });
+	            
 	            if (adCount == 0) {
 	                alert("<spring:message code='ezEmail.t12' />");
 	                return;
@@ -381,11 +399,11 @@
 	                if (CrossYN()) {
 	                    checkname2_cross_dialogArguments[0] = rgParams;
 	                    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-	                    var OpenWin = window.open("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", "checkName2_cross", GetOpenWindowfeature(609, 460));
+	                    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(609, 460));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	                else {
-	                    window.showModalDialog("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", rgParams, feature);
+	                    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 	
 	                    if (rgParams["deptid"] != "") {
 	                        bSearch = true;
@@ -1131,13 +1149,13 @@
 	                                            <td>
 	                                                <div style="float:right">
 	                                                    <select id="search_type">
-	                                                        <option selected value="displayname"><spring:message code='ezEmail.t31' /></option>
+	                                                        <option selected value="displayName"><spring:message code='ezEmail.t31' /></option>
 	                                                        <option value="description"><spring:message code='ezEmail.t26' /></option>
 	                                                        <option value="title"><spring:message code='ezEmail.t28' /></option>
 	                                                        <option value="extensionAttribute10"><spring:message code='ezEmail.t334' /></option>
-	                                                        <option value="telephonenumber"><spring:message code='ezEmail.t29' /></option>
+	                                                        <option value="telephoneNumber"><spring:message code='ezEmail.t29' /></option>
 	                                                        <option value="mobile"><spring:message code='ezEmail.t32' /></option>
-	                                                        <option value="HomePhone"><spring:message code='ezEmail.t33' /></option>
+	                                                        <option value="homePhone"><spring:message code='ezEmail.t33' /></option>
 	                                                        <option value="facsimileTelephoneNumber"><spring:message code='ezEmail.t34' /></option>
 	                                                        <option value="mail"><spring:message code='ezEmail.t35' /></option>
 	                                                        <option value="streetAddress"><spring:message code='ezEmail.t36' /></option>
@@ -1148,9 +1166,7 @@
 	                                                </div>
 	                                            </td>    
 	                                            <td>
-	
 	                                            </td>
-	                                                                            
 	                                        </tr>
 	                                    </table>
 	                                </div>
