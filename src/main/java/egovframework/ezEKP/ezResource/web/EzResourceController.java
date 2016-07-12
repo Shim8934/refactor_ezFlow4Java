@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezResource.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -13,8 +14,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import oracle.sql.STRUCT;
-
+import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,8 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.ibm.icu.impl.LocaleDisplayNamesImpl.DataTable;
-
+import antlr.MakeGrammar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -40,6 +39,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -2113,9 +2113,115 @@ System.out.println("xmlStr:"+xmlStr);
 	 */
 	@RequestMapping(value = "/ezResource/timeDupCheck.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String timeDupCheck(@RequestBody String xmlStr) throws Exception {
+	public String timeDupCheck(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String ret = "";
 		
-		return "False";
+		try {
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			
+			boolean isRep = xmlDom.getElementsByTagName("recurrence").getLength() != 0;
+			String resID = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
+			String sTime = xmlDom.getElementsByTagName("STIME").item(0).getTextContent();
+			String eTime = xmlDom.getElementsByTagName("ETIME").item(0).getTextContent();
+			String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
+			String cmd = xmlDom.getElementsByTagName("CMD").item(0).getTextContent();
+			String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+			
+			//반복예약시
+			String frequency = xmlDom.getElementsByTagName("frequency").getLength() == 0 ? "" : xmlDom.getElementsByTagName("frequency").item(0).getTextContent();
+			String selType = xmlDom.getElementsByTagName("selType").getLength() == 0 ? "" : xmlDom.getElementsByTagName("selType").item(0).getTextContent();
+			String endRecurType = xmlDom.getElementsByTagName("endRecurType").getLength() == 0 ? "" : xmlDom.getElementsByTagName("endRecurType").item(0).getTextContent();
+			String startDateTime = xmlDom.getElementsByTagName("startDateTime").getLength() == 0 ? "" : xmlDom.getElementsByTagName("startDateTime").item(0).getTextContent();
+			String endDateTime = xmlDom.getElementsByTagName("endDateTime").getLength() == 0 ? "" : xmlDom.getElementsByTagName("endDateTime").item(0).getTextContent();
+			String interval = xmlDom.getElementsByTagName("interval").getLength() == 0 ? "" : xmlDom.getElementsByTagName("interval").item(0).getTextContent();
+			String instances = xmlDom.getElementsByTagName("instances").getLength() == 0 ? "" : xmlDom.getElementsByTagName("instances").item(0).getTextContent();
+			String daysOfWeek = xmlDom.getElementsByTagName("daysOfWeek").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfWeek").item(0).getTextContent();
+			String byPosition = xmlDom.getElementsByTagName("byPosition").getLength() == 0 ? "" : xmlDom.getElementsByTagName("byPosition").item(0).getTextContent();
+			String daysOfMonth = xmlDom.getElementsByTagName("daysOfMonth").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfMonth").item(0).getTextContent();
+			String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
+			
+			String allDayStime = sTime.split(" ")[0] + " 00:00:00";
+			String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
+			StringBuilder strSQL = new StringBuilder();
+			
+			if (cmd.toLowerCase().equals("add")) {
+				strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
+				strSQL.append("FROM TB_Schedule");
+				strSQL.append("WHERE companyID ="+"'"+companyID+"'");
+				strSQL.append("AND ownerID ="+"'"+resID+"'");
+				strSQL.append("AND reFlag ="+0);
+				strSQL.append("AND approveFlag = '1'");
+				strSQL.append("AND NOT(  ");
+				strSQL.append("                (endDate <=  ");
+				strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
+				strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
+				strSQL.append("              ) or (");
+				strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
+				strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
+				strSQL.append("              )");
+			} else {
+				strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
+				strSQL.append("FROM TB_Schedule");
+				strSQL.append("WHERE companyID ="+"'"+companyID+"'");
+				strSQL.append("AND ownerID ="+"'"+resID+"'");
+				strSQL.append("AND reFlag = 0");
+				strSQL.append("AND approveFlag = '1'");
+				strSQL.append("AND NOT IN ("+num+")");
+				strSQL.append("AND NOT ( ");
+				strSQL.append("                 (endDate <=  ");
+				strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
+				strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
+				strSQL.append("              ) or (");
+				strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
+				strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
+				strSQL.append("              )");
+			}
+			
+			boolean isDupRep = false;
+			List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
+			//반복예약 데이터가 있을 때
+			if (isRep) {
+System.out.println("111");
+				try {
+					if (cmd.equals("add")) {
+						num = null;
+					}
+					isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//반복예약 데이터가 없을 때
+			if (!isRep) {
+System.out.println("222");
+				try {
+					if (cmd.equals("add")) {
+						num = null;
+					}
+					
+					if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
+						isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, cmd, companyID, dtResult);
+					} else {
+						isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, cmd, companyID, dtResult);
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (isDupRep) {
+				ret = "True";
+			} else {
+				ret = "False";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
 	}
 	
 	/**
