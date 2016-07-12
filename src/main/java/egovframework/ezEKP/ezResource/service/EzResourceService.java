@@ -8,12 +8,15 @@ import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
 public interface EzResourceService {
@@ -37,6 +40,10 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID) throws Exception;
 	
+	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID) throws Exception;
+	
+	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID) throws Exception;
+	
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID) throws Exception; 
 	
 	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num) throws Exception;
@@ -48,6 +55,8 @@ public interface EzResourceService {
 	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID) throws Exception;
 	
 	public ResSelectFormIDVO selectFormID(String resID) throws Exception;
+	
+	public ResGetRepResourceVO chkDeletedRepResource(String ownerID) throws Exception;
 	
 	public int getBrdCnt(int brdID, String companyID) throws Exception;
 
@@ -98,6 +107,11 @@ public interface EzResourceService {
 	public boolean addResData(String xmlStr) throws Exception;
 	
 	public boolean delResSch(String xmlStr) throws Exception;
+	
+	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
+			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult) throws Exception;
+
+	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult) throws Exception;
 	
 	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID) throws Exception;

@@ -11,6 +11,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
+import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
@@ -73,6 +75,16 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(Map<String, Object> map) {
+		return (List<ResGetRepResourceRepeatVO>) list("EzResourceDAO.getRepResourceRepeat", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetRepResourceVO> getRepResource(Map<String, Object> map) {
+		return (List<ResGetRepResourceVO>) list("EzResourceDAO.getRepResource", map);
+	}
+	
 	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
 		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
@@ -95,6 +107,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public ResSelectFormIDVO selectFormID(Map<String, Object> map) {
 		return (ResSelectFormIDVO) select("EzResourceDAO.selectFormID", map);
+	}
+	
+	public ResGetRepResourceVO chkDeletedRepResource(Map<String, Object> map) {
+		return (ResGetRepResourceVO) select("EzResourceDAO.chkDeletedRepResource", map);
 	}
 	
 	public String getAclTblBrd(Map<String, Object> map) {
