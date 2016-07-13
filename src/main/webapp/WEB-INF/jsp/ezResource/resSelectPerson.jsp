@@ -6,7 +6,6 @@
 	<head>
 		<title><spring:message code="ezResource.t128"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
