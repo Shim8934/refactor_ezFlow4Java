@@ -2980,7 +2980,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			recDuration.setFirstStartDateTime(firstStartDateTime);
 			recDuration.setLastStartDateTime(lastStartDateTime);
 			
-			List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, Integer.parseInt(pNum), pCmd, companyID);
+			List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID);
 			 for (ResGetRepResourceRepeatVO dr : retobjTable1) {
 				 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration);
 				 if (dt2 == null || dt2.size() == 0) {
@@ -3013,8 +3013,7 @@ System.out.println("strEndDateTime:"+strEndDateTime);
 			recParam.setRecEndDateTime(endDateTime);
 			
 			List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
-System.out.println("dt1Size:"+dt1.size());
-System.out.println("pOwnerID:"+pOwnerID);
+System.out.println("startDateTimeG:"+startDateTime);
 			List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID);
 			
 			ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID);
@@ -3032,7 +3031,7 @@ System.out.println("pOwnerID:"+pOwnerID);
 			String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 			//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
 			
-			String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
+			String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
 			ResRecDurationVO recDuration = new ResRecDurationVO();
 			recDuration.setFirstStartDateTime(firstStartDateTime);
 			recDuration.setLastStartDateTime(lastStartDateTime);
@@ -3091,8 +3090,9 @@ System.out.println("dtSSize:"+dtS.size());
 			for (ResMakeDupResultVO drS : dtS) {
 				String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				
+
 				for (ResGetRepResourceVO drT : dtT) {
+System.out.println("drTStartDate:"+drT.getStartDate());
 					String tStartDate = EgovDateUtil.convertDate(drT.getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					String tEndDate = EgovDateUtil.convertDate(drT.getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					int tAllDay = Integer.parseInt(drT.getAllDay());
@@ -3163,8 +3163,8 @@ System.out.println("4:"+getYearMonthDay(sStartDate));
 			boolean isDel = false;
 			boolean isShowDup = true;
 			
-			String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDateTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDateTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+			String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+			String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
 				" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
 				" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
@@ -3248,7 +3248,7 @@ System.out.println("4:"+getYearMonthDay(sStartDate));
 			s1.setStartDateTime(EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 			s1.setEndDateTime(EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 			dtOnce.add(0, s1);
-System.out.println("startDateTime:"+dtOnce.get(0).getStartDateTime());
+System.out.println("startDateTimeDT:"+dtOnce.get(0).getStartDateTime());
 			/*StringBuilder sb = new StringBuilder();
 			for (ResMakeDupResultVO dr : dtOnce) {
 				String startDt = dr.getStartDateTime();
@@ -3597,16 +3597,12 @@ System.out.println("startDateTime:"+dtOnce.get(0).getStartDateTime());
 			int recMondayOffsetAdd = 0;
 			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 			SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-System.out.println("endFlag:"+recParam.getRecEndFlag());
-			if (recParam.getRecEndFlag() == 1) {
-System.out.println("reCount:"+recParam.getRecReCount());
-				while (recLoop < recParam.getRecReCount()) {
 
+			if (recParam.getRecEndFlag() == 1) {
+				while (recLoop < recParam.getRecReCount()) {
 					//주에서 월,화,수,목,금,토,일
 					while (recMondayOffsetAdd < 7) {
-System.out.println("reyoil:"+recParam.getRecReYoil());
 						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(String.valueOf(recMondayOffsetAdd+1)) == -1) {
-System.out.println("recMondayOffsetAdd:"+recMondayOffsetAdd);
 							recMondayOffsetAdd++;
 							continue;
 						}
