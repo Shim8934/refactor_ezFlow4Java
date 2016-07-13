@@ -68,9 +68,9 @@
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/bbsDelOk.do",
-						data : {itemNo	:	grsNo,
-								goToPage	:	goToPage,
-								bName	:	bName,
+						data : {itemNo : grsNo,
+								goToPage : goToPage,
+								bName : bName,
 						},
 						success : function(result) {
 							if (result != "OK") {

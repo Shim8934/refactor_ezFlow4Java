@@ -34,15 +34,9 @@
 				xmlHttp.send(xmlDoc);
 					
 				var resultXML = loadXMLString(xmlHttp.responseText);
-	
-				if (CrossYN()) {
-				    rtnValue = SelectNodes(resultXML, "/RETURN/VALUE").item(0).textContent;
-				} else {
-				    var commNodes = new ActiveXObject("Microsoft.XMLDOM");
-				    commNodes = resultXML.documentElement.childNodes;
-	
-				    rtnValue = commNodes.item(0).text;
-				}
+
+				rtnValue = SelectNodes(resultXML, "/RETURN/VALUE").item(0).textContent;
+
 	
 				if( rtnValue == "1" ) {
 					alert("<spring:message code='ezCommunity.t716'/>");

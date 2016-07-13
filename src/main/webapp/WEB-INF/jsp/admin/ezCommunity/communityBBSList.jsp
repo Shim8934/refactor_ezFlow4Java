@@ -66,15 +66,15 @@
 		    
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
-					var strSearch = "s_radio=title&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
 				} else if (document.page.s_radio.value == "titleContent" ) {
-					var strSearch = "s_radio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
 				} else {
-					var strSearch = "s_radio=writer&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=writer&keyword=" + make_searchstring(document.page.keyword.value);
 				}
 				
 				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bname=" + "<c:out value = '${bname}' />" + "&key=" + make_searchstring(document.page.keyword.value);
-				window.location.href = "bbs_list.aspx" + "?" + encodeURI(strSearch);
+				window.location.href = "/admin/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 	
 			function comm_searchCheck() {
