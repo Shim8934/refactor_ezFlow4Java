@@ -16,7 +16,9 @@
 			var code = "<c:out value = '${code}' />";
 			function btn_CommSave() {
 				if (document.frmCommunityBasicInfo.txt_CommunityName.value == "") {
-					OpenAlertUI("<spring:message code = 'ezCommunity.t2' />");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+					//OpenAlertUI("<spring:message code = 'ezCommunity.t2' />");
+					alert("<spring:message code = 'ezCommunity.t2' />");
 					
 					document.frmCommunityBasicInfo.txt_CommunityName.focus();
 					
@@ -24,7 +26,9 @@
 				}
 				
 				if (document.frmCommunityBasicInfo.txt_CommunityName.value.length > 100) {
-					OpenAlertUI("<spring:message code = 'ezCommunity.t3' />");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+					//OpenAlertUI("<spring:message code = 'ezCommunity.t3' />");
+					alert("<spring:message code = 'ezCommunity.t3' />");
 					
 					document.frmCommunityBasicInfo.txt_CommunityName.focus();
 					
@@ -40,7 +44,10 @@
 				var xSelC = document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value;
 				
 				if (selA == 0 && selB == 0 && selC == 0) {
-					OpenAlertUI("<spring:message code = 'ezCommunity.t4' />");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+					//OpenAlertUI("<spring:message code = 'ezCommunity.t4' />");
+					alert("<spring:message code = 'ezCommunity.t4' />");
+					
 					frmCommunityBasicInfo.c_cate_a.focus();
 					
 					return;
@@ -63,7 +70,9 @@
 						success : function(result) {
 							if (result == "OK") {
 								//document.frmCommunityBasicInfo.submit();
-								OpenAlertUI("<spring:message code = 'ezCommunity.t8' />");
+								//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+								//OpenAlertUI("<spring:message code = 'ezCommunity.t8' />");
+								alert("<spring:message code = 'ezCommunity.t8' />");
 	 	 					}
 						}
 					});

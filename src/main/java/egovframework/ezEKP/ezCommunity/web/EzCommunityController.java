@@ -1060,6 +1060,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		model.addAttribute("idSpanVal", strHTML);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("sRadio", sRadio);
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("keywordCount", keywordCount);

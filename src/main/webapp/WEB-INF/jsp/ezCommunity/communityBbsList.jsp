@@ -28,12 +28,11 @@
 	        var curPage = "<c:out value='${curPage}'/>";
 		    var totalPage = "<c:out value='${totalPage}'/>";
 		    var totalCount = "<c:out value='${keywordCount}'/>";
-			function keyword_onkeydown(e) 
-			{
+			function keyword_onkeydown(e) {
 			    if (!window.ActiveXObject) {
 			        var keyCode = e.keyCode;
 			    }
-
+			    
 	            if (keyCode == 13) {
 					search();
 					return false;
@@ -75,7 +74,9 @@
 
 			function comm_searchCheck() {
 				if ( document.page.keyword.value.length < 2 || document.page.keyword.value.indexOf("%") != -1) {
-					OpenAlertUI("<spring:message code = 'ezCommunity.t164'/>");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+ 					//OpenAlertUI("<spring:message code = 'ezCommunity.t164'/>");
+					alert("<spring:message code = 'ezCommunity.t164'/>");
 					
 					return false;
 				}

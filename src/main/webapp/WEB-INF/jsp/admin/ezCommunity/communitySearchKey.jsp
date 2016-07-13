@@ -71,7 +71,9 @@
 			    var strQuery = document.getElementById("txt_SearchQuery").value;
 	
 				if( strQuery == "") {
-					OpenAlertUI("<spring:message code = 'ezCommunity.t75' />");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+ 					//OpenAlertUI("<spring:message code = 'ezCommunity.t75' />");
+					alert("<spring:message code = 'ezCommunity.t75' />");
 					return;
 				}
 				alert(strQuery)

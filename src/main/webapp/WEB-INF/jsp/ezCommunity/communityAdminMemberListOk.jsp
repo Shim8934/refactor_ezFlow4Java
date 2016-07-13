@@ -22,7 +22,9 @@
 		<c:choose>
 			<c:when test="${userMode == '1' }">
 				<script type="text/javascript">
-					OpenAlertUI("${userName} <spring:message code = 'ezCommunity.t514' />");
+					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+ 					//OpenAlertUI("${userName} <spring:message code = 'ezCommunity.t514' />");
+					alert("${userName} <spring:message code = 'ezCommunity.t514' />");
 					document.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
 				</script>
 			</c:when>
@@ -30,7 +32,9 @@
 			<c:otherwise>
 				<c:if test="${clubUser.permit == '3' }">
 					<script type="text/javascript">
-						OpenAlertUI("${userName} <spring:message code = 'ezCommunity.t515' />");
+						//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+ 						//OpenAlertUI("${userName} <spring:message code = 'ezCommunity.t515' />");
+						alert("${userName} <spring:message code = 'ezCommunity.t515' />");
 						document.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
 					</script>
 				</c:if>

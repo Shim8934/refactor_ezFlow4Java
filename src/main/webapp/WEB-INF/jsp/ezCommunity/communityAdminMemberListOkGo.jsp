@@ -24,7 +24,9 @@
 				<c:when test="${mode == 'master' }">
 					<script type="text/javascript">
 					 	window.onload = function () { 
-							OpenAlertUI("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
+					 		//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+ 							//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
+							alert("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
 							window.parent.parent.close();
 							try{
 								// 20060720 준호수정
@@ -37,7 +39,9 @@
 				
 				<c:otherwise>
 					<script type="text/javascript">
-						OpenAlertUI("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
+						//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+						//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
+						alert("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
 						window.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
 					</script>
 				</c:otherwise>
