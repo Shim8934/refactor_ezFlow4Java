@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGAdminDAO")
@@ -36,6 +37,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGAdminReceiveVO> getReceiveGroupInfo(Map<String, Object> map) {
 		return (List<ApprGAdminReceiveVO>) list("EzApprovalGAdmin.getReceiveGroupInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskCategotyTree(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskCategotyTree", map);
 	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
@@ -94,10 +100,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteReceiveGroupItemInfo", map);
 	}
 
-	public void deleteReceiveGroupInfo(Map<String, Object> map) throws Exception{
+	public void deleteReceiveGroupInfo(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteReceiveGroupInfo", map);
 	}
 
-
-
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskInSubCategoryForManage(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInSubCategoryForManage", map);
+	}
 }

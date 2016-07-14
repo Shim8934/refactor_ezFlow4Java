@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.stringtemplate.v4.compiler.CodeGenerator.conditional_return;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -18,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzApprovalGAdminService")
@@ -558,8 +560,72 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";			
 		}
 	}
-	
-	
 
-	
+	@Override
+	public String getTaskCategotyTree(String categoryType, String parentID, String companyID) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CATETYPE", categoryType);
+		map.put("v_PARENTID", parentID);
+		map.put("companyID", companyID);
+		
+		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskCategotyTree(map);
+		sb.append("<NODES>");
+		
+		for (ApprGTaskVO vo : list) {
+			sb.append("<NODE><EXPANDED>FALSE</EXPANDED><ISLEAF>FALSE</ISLEAF>");
+			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
+			sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");
+			
+			switch (categoryType) {
+				case "1":
+					sb.append("<DATA2>" + vo.getCategoryCode() + "</DATA2>");
+					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+					sb.append("<DATA4>" + "ROOT" + "</DATA4>");
+					break;
+				case "2":
+					sb.append("<DATA2>" + vo.getMcategoryCode() + "</DATA2>");
+					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+					sb.append("<DATA4>" + vo.getCategoryCode() + "</DATA4>");
+					break;
+				case "3":
+					sb.append("<DATA2>" + vo.getSubCategoryCode() + "</DATA2>");
+					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+					sb.append("<DATA4>" + vo.getMcategoryCode() + "</DATA4>");
+					break;
+			}
+			sb.append("</NODE>");
+		}
+		sb.append("</NODES>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getTaskInSubCategoryForManage(Document doc) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String pSCateCode = doc.getElementsByTagName("SCATECODE").item(0).getTextContent();
+		String langType = doc.getElementsByTagName("LANGTYPE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SUBCATECODE", pSCateCode);
+		map.put("companyID", companyID);
+		
+		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInSubCategoryForManage(map);
+        sb.append("<DATA>");
+        
+        for (ApprGTaskVO vo : list) {
+        	sb.append(commonUtil.getQueryResult(vo));
+        }
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType);
+		
+		return result;
+	}
 }

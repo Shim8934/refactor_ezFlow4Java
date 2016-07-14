@@ -225,6 +225,9 @@ public interface EzApprovalGService {
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
+	String makeTaskListXml(Document docXML, String companyID, String strType)
+			throws Exception;
+
 
 
 }

@@ -77,6 +77,14 @@ public class ApprGTaskVO {
 	private String tDeptCode;
 	/** */
 	private String displayEndDate;
+	/** */
+	private String categoryType;
+	/** */
+	private String description;
+	/** */
+	private String name;
+	/** */
+	private String name2;
 	
 	public String getCategoryCode() {
 		return categoryCode;
@@ -305,6 +313,30 @@ public class ApprGTaskVO {
 	}
 	public void setDisplayEndDate(String displayEndDate) {
 		this.displayEndDate = displayEndDate;
+	}
+	public String getCategoryType() {
+		return categoryType;
+	}
+	public void setCategoryType(String categoryType) {
+		this.categoryType = categoryType;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getName2() {
+		return name2;
+	}
+	public void setName2(String name2) {
+		this.name2 = name2;
 	}
 	
 }

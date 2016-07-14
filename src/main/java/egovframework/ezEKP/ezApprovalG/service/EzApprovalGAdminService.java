@@ -33,8 +33,14 @@ public interface EzApprovalGAdminService {
 	public String insertReceiveGroupInfo(String groupName, String companyID) throws Exception;
 	
 	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception;
+	
+	public String getTaskCategotyTree(String categoryType, String parentID, String companyID) throws Exception;
 
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	public String getTaskInSubCategoryForManage(Document doc) throws Exception;
+
+	
 
 
 }

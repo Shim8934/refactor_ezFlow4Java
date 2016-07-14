@@ -32,7 +32,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  *    수정일        수정자         수정내용
  *    ----------    ------    -------------------
  *    2016.05.04    장진혁         신규작성
- *
+ *	  2016.07.13	이효진		추가작성
  * @see
  */
 
@@ -426,5 +426,67 @@ public class EzApprovalGAdminController {
 		
 		return result;
 	}
+	
+	//장진혁과장 작성 이후 이효진사원 추가
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 메뉴 호출 함수 
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGTaskCodeManage.do")
+	public String apprGTaskCodeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezApprovalG/apprGTaskCodeManage";
+	}
+	
+	/**
+	 * 전자결재G관리 분류목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskCategoryTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		String categoryType = request.getParameter("categoryType");
+		String parentID = request.getParameter("parentID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCategotyTree(categoryType, parentID, companyID);
 
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류목록에따른 단위업무 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskInSubCategoryForManage(@RequestBody String data) throws Exception {
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(doc);
+
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류추가 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/taskCategoryInsert.do")
+	public String taskCategoryInsert(HttpServletRequest request) {
+		
+		return "admin/ezApprovalG/taskCategoryInsert";
+	}
 }

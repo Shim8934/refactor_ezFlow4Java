@@ -197,7 +197,6 @@
 	        
 	        function delContainer(selRow) {
 	            var ContID = listview.GetDataRows()[selRow].getAttribute("DATA1");
-	            var xmlRtn = createXmlDom();
 	            
 	            $.ajax({
 		        	type : "POST",
