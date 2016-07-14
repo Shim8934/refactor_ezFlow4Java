@@ -2626,24 +2626,30 @@ var NextDocHref = "";
 var NextDocExtended = "";
 function getNextDocInfo() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "UserID", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-
-        xmlhttp.open("Post", "aspx/GetNextDocInfo.aspx", false);
-        xmlhttp.send(xmlpara);
-
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getNextDocInfo.do",
+    		data : {
+    			docID : pDocID,
+    			userID  : pUserID,
+    			userDeptID  : arr_userinfo[4]
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
         NextDocID = "";
         NextDocUserID = "";
         NextDocUserName = "";
         NextDocUserName2 = "";
         NextDocDeptID = "";
-        if (xmlhttp.responseText != "") {
-            var objNodes = GetChildNodes(xmlhttp.responseXML.documentElement);
+        if (result != "") {
+            var objNodes = GetChildNodes(result.documentElement);
 
             if (objNodes.length > 0) {
                 NextDocID = getNodeText(objNodes[0]);
@@ -2738,17 +2744,15 @@ function EmbedContentIntoXML(bodyhtml) {
 }
 
 function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlDom = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "URL", encodeURIComponent(pUrl));
-    createNodeAndInsertText(xmlDom, objNode, "HEIGHT", pImgHeight);
-    createNodeAndInsertText(xmlDom, objNode, "WIDTH", pImgWidth);
-    createNodeAndInsertText(xmlDom, objNode, "TYPE", "2");
-    try {
-        XmlHttp.open("POST", "/myoffice/Common/ConvertSaveImage.aspx", false);
-        XmlHttp.send(xmlDom);
-    }
-    catch (e) { }
+	$.ajax({
+		url : "/ezCommon/convertSaveImage.do",
+		type : "POST",
+		async : false,
+		data : {
+			"url" : encodeURIComponent(pUrl),
+			"height" : pImgHeight,
+			"width" : pImgWidth,
+			"type" : 2
+		}
+	});
 }

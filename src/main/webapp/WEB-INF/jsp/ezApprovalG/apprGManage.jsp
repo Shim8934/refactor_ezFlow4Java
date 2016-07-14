@@ -123,7 +123,6 @@
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
-		
 		        if (Rtnval)
 		            setBujaeOff();
 		        else {
@@ -149,8 +148,10 @@
 		
 		        if (nowday < 10)
 		            nowday = "0" + nowday;
-		
-		        SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
+		        
+				if (SQLPARADATA == null || SQLPARADATA == "") {
+			        SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
+				}
 		
 		        if (pListTypeValue == "1") {
 		            getDocList();
@@ -221,7 +222,6 @@
 		    });
 		    
 		    function window_onload() {
-		
 		        CurrentHeight = document.documentElement.clientHeight;
 		        CurrenWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
@@ -1176,7 +1176,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("SecondApprovalInfo.aspx", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=300,width=400,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=300,width=400,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
@@ -1207,14 +1207,13 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		        var type = "APR";
-		        OpenWin2 = window.open("/myoffice/ezApprovalG/formContainer/setsearchInfo_Cross.aspx?TYPE=" + type, "setsearchInfo_Cross", GetOpenWindowfeature(510, 350));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type, "setsearchInfo_Cross", GetOpenWindowfeature(510, 350));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
 		    var SearchCond = new Array();
 		    var SQLPARADATA;
 		    function SearchCondi_onclick_Complete(returnvalue) {
-		
 		        condition = returnvalue;
 		        if (condition) {
 		            for (var i = 0; i < condition.length; i++) {
@@ -1313,6 +1312,7 @@
 		        }
 		
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+alert(SQLPARADATA);
 		    }
 		
 		    window.onresize = function () {

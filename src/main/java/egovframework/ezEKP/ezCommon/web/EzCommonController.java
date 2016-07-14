@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezCommon.web;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -188,7 +186,7 @@ public class EzCommonController extends EgovFileMngUtil{
         String uploadModule = config.getProperty("config.LocalPath");
         String realPath = request.getServletContext().getRealPath("");
         String strURL = request.getParameter("strURL");
-        
+
         filePath = realPath + uploadModule;
         
         File file = new File(filePath);

@@ -47,6 +47,8 @@ public class ApprGReceiveDocVO {
 	private String urgentApproval;
 	/** 예전경로*/
 	private String orgHref;
+	/** */
+	private String sn;
 	
 	public String getOrgDocID() {
 		return orgDocID;
@@ -185,5 +187,11 @@ public class ApprGReceiveDocVO {
 	}
 	public void setOrgHref(String orgHref) {
 		this.orgHref = orgHref;
+	}
+	public String getSn() {
+		return sn;
+	}
+	public void setSn(String sn) {
+		this.sn = sn;
 	}
 }

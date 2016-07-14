@@ -7,7 +7,7 @@ function btnSetTaskCode_onclick() {
         selectcabinet_cross_dialogArguments[0] = para;
         selectcabinet_cross_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
 
-        DivPopUpShow(850, 455, "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1");
+        DivPopUpShow(850, 455, "/ezApprovalG/selectCabinet.do?initFlag=1");
     } catch (e) {
         alert("btnSetTaskCode_onclick : " + e.description);
     }
@@ -77,15 +77,15 @@ function GetDraftAprLineInfo(ret) {
 
         var susinSN = "";
         if (pDraftFlag == "SUSIN" || pDocState == "011") {
-            susinSN = pSusinSN
+            susinSN = pSusinSN;
         }
 
         for (i = 1; i < 20; i++) {
-            name = susinSN + "habyuisign" + i
+            name = susinSN + "habyuisign" + i;
             field = message.GetListItem(fields, name);
 
             if (field) {
-                name = susinSN + "habyui" + i
+                name = susinSN + "habyui" + i;
                 field = message.GetListItem(fields, name);
 
                 if (field) {
@@ -159,7 +159,7 @@ function GetDraftAprLineInfo(ret) {
         if (isSplit == "Y")
             SplitSign(OrderType, OrderName, OrderDept, OrderStat, OrderJobtitle);
 
-        LastSignSN = OrderType.length
+        LastSignSN = OrderType.length;
 
         CurAprType = OrderType[1];
         if (OrderType.length > 2)
@@ -168,20 +168,20 @@ function GetDraftAprLineInfo(ret) {
         for (i = 1; i < OrderType.length; i++) {
             if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) {
                 LastSignSN = i;
-                i = OrderType.length
+                i = OrderType.length;
             }
             else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
                 LastSignSN = i;
         }
 
 
-        lastKyulName = OrderName[LastSignSN]
-        lastKyuljiwee = OrderJobtitle[LastSignSN]
+        lastKyulName = OrderName[LastSignSN];
+        lastKyuljiwee = OrderJobtitle[LastSignSN];
         var field = message.GetListItem(fields, "lastKyuljikwee");
         if (field)
             field.textContent = lastKyuljiwee;
 
-        var field = message.GetListItem(fields, "lastKyulName")
+        var field = message.GetListItem(fields, "lastKyulName");
         if (field)
             field.textContent = lastKyulName;
 
@@ -196,12 +196,12 @@ function GetDraftAprLineInfo(ret) {
 
 
         for (i = 1; i < 10; i++) {
-            fieldname = susinSN + "jikwe" + i
+            fieldname = susinSN + "jikwe" + i;
             field = message.GetListItem(fields, fieldname);
 
             if (field) {
                 field.textContent = " ";
-                fieldname = susinSN + "sign" + i
+                fieldname = susinSN + "sign" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field)
                     field.textContent = " ";
@@ -211,7 +211,7 @@ function GetDraftAprLineInfo(ret) {
         }
 
         for (i = 1; i < 10; i++) {
-            fieldname = "hjkwe" + i
+            fieldname = "hjkwe" + i;
             field = message.GetListItem(fields, fieldname);
 
             if (field) {
@@ -449,15 +449,15 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth
-        var signHeight = field.offsetHeight
+        var signWidth = field.offsetWidth;
+        var signHeight = field.offsetHeight;
 
         if (signWidth > signHeight) {
             signHeight = signHeight - 15;
             signWidth = signHeight;
         } else {
             signWidth = signWidth - 15;
-            sighHeight = signWidth
+            sighHeight = signWidth;
         }
         signWidth = 50;
         signHeight = 28;
@@ -488,17 +488,17 @@ function SendDraftMappingSign(ret) {
                     SignName[signCnt] = psigncell;
                     SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
                     //message.BodySetAttribute(psigncell, escape(ret));
-                    signCnt = signCnt + 1
+                    signCnt = signCnt + 1;
                     SingFlag = true;
                 }
                 else {
-                    strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>"
+                    strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     field.innerHTML = strLang7 + OpinionText + strimg;
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "HTML";
                     SignName[signCnt] = psigncell;
                     SignContent[signCnt] = strLang7 + OpinionText + strimg;
-                    signCnt = signCnt + 1
+                    signCnt = signCnt + 1;
                     SingFlag = false;
                 }
             }
@@ -524,7 +524,7 @@ function SendDraftMappingSign(ret) {
                 SignType[signCnt] = "TEXT";
                 SignName[signCnt] = psigncell;
                 SignContent[signCnt] = strLangAprType4;
-                signCnt = signCnt + 1
+                signCnt = signCnt + 1;
                 SingFlag = false;
             }
         }
@@ -549,12 +549,12 @@ function SendDraftMappingSign(ret) {
                     SignName[signCnt] = psigncell;
                     SignContent[signCnt] = ret + "::" + OpinionText;
                     //message.BodySetAttribute(psigncell, escape(ret));
-                    signCnt = signCnt + 1
+                    signCnt = signCnt + 1;
                     SingFlag = true;
                 }
                 else {
                     if (field) {
-                        strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>"
+                        strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                         if (CurAprType == strAprType4)
                             OpinionText = strLangAprType4 + OpinionText;
                         field.innerHTML = OpinionText + strimg;
@@ -562,7 +562,7 @@ function SendDraftMappingSign(ret) {
                         SignType[signCnt] = "HTML";
                         SignName[signCnt] = psigncell;
                         SignContent[signCnt] = OpinionText + strimg;
-                        signCnt = signCnt + 1
+                        signCnt = signCnt + 1;
                         SingFlag = false;
                     }
                 }
@@ -576,13 +576,13 @@ function SendDraftMappingSign(ret) {
 
 function UndoSignInfo(signInfo) {
     try {
-        var cnt
+        var cnt;
         var fields = message.GetFieldsList();
         var field;
 
         if (signInfo) {
             for (cnt = 0; cnt < signInfo.length; cnt++) {
-                field = message.GetListItem(fields, signInfo[cnt])
+                field = message.GetListItem(fields, signInfo[cnt]);
                 if (field)
                     field.textContent = " ";
             }
@@ -710,20 +710,24 @@ function createNewDoc() {
 
 function getDraftUserInfo() {
     try {
-        var objNode, objRoot;
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "CN", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "DisplayName;mail;Description;Company;facsimileTelephoneNumber;TelephoneNumber;streetaddress;postalcode");
-        createNodeAndInsertText(xmlpara, objNode, "CATE", "user");
-
-        xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        xmluserInfo = xmlhttp.responseXML;
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezOrgan/getADInfos.do",
+    		data : {
+    			cn : pUserID,
+    			prop : "displayName;mail;description;company;facsimileTelephoneNumber;telephoneNumber;streetaddress;postalcode",
+    			cate  : "user"
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
+        xmluserInfo = result;
 
     } catch (e) {
         alert("getDraftUserInfo()" + e.description);
@@ -829,13 +833,13 @@ function SetAutoPropertyValue() {
                         field.textContent = CurrentDate;
                         break;
                     case "susinhide":
-                        field.style.display = 'none'
+                        field.style.display = 'none';
                         break;
                     case "susinhideP":
-                        field.style.display = 'none'
+                        field.style.display = 'none';
                         break;
                     case "susinbody":
-                        field.style.display = ''
+                        field.style.display = '';
                         setMenuBar("btnEdit", true);
                         break;
                 }
@@ -927,27 +931,27 @@ function openReceivUI() {
     var parameter = new Array();
 
     isExtDoc = message.CKEDITOR.instances.editor1.document.$.body.getAttribute("EXTDOC", 0);
-    if (isExtDoc != "Y") isExtDoc = "N"
+    if (isExtDoc != "Y") isExtDoc = "N";
 
     parameter[0] = pFormID;
     parameter[1] = pDocID;
-    parameter[2] = "SEND"
+    parameter[2] = "SEND";
     parameter[3] = isExtDoc;
 
     var url = "../ezAPRDEPT/AprDept1_Cross.aspx";
     var feature = "status:no;dialogWidth:855px;dialogHeight:530px;help:no;scroll:no;edge:sunken";
     var ret = window.showModalDialog(url, parameter, feature);
 
-    return ret
+    return ret;
 }
 
 function setRecevInfo(ret) {
     setDeptLinesXML(ret);
 
-    var i
-    var strMailAdd = ""
-    var precipent = ""
-    var precipents = ""
+    var i;
+    var strMailAdd = "";
+    var precipent = "";
+    var precipents = "";
     var mailflag = true;
     var recipflag = true;
     var mailList = "";
@@ -1004,7 +1008,7 @@ function setRecevInfo(ret) {
 
         }
         else {
-            precipent = strLang92
+            precipent = strLang92;
 
             if (getNodeText(dataNodes[3]) == "Y")
                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -1034,7 +1038,7 @@ function openOpinionUI(pOpinionFlag) {
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-        DivPopUpShow(530, 520, "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion_Cross.aspx");
+        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
     } catch (e) {
         alert("openOpinionUI : " + e.description);
     }
@@ -1158,13 +1162,13 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
 
-        xmlhttp.open("POST", "../DraftUI/aspx/dodraft.aspx", false);
+        xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
         SetBtnStateFalse();
 
         var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        return getNodeText(dataNodes[0])
+        return getNodeText(dataNodes[0]);
 
     } catch (e) {
         alert("SaveDraftDocInfo_susin : " + e.description);
@@ -1286,22 +1290,24 @@ function getfieldValue(pfield) {
 var aprsign1_cross_dialogArguments = new Array();
 function openSignUI() {
     try {
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getSignRequest.do",
+    		data : {
+    			userID : pUserID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
-        var objRoot;
-        var objNode;
         var SignNodeList;
 
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-
-        xmlhttp.open("Post", "../ezAPRSIGN/aspx/GetSignRequest.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        SignNodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+        SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 
         if (SignNodeList.length != 0) {
             var parameter = pUserID;
@@ -1309,7 +1315,7 @@ function openSignUI() {
             aprsign1_cross_dialogArguments[0] = parameter;
             aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
 
-            DivPopUpShow(350, 310, "/myoffice/ezApprovalG/ezAPRSIGN/AprSign1_Cross.aspx");
+            DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
         } else {
             openSignUI_Complete("NAME");
         }
@@ -1337,7 +1343,7 @@ function openAprLineUI() {
         parameter[12] = "";
         parameter[13] = g_DraftFlag;
 
-        var url = "../ezAPRLINE/aprline_Cross.aspx";
+        var url = "/ezApprovalG/aprLine.do";
         var feature = "status:no;dialogWidth:990px;dialogHeight:720px;help:no;scroll:no;edge:sunken";
 
         var ret = window.showModalDialog(url, parameter, feature);
@@ -1351,19 +1357,24 @@ function openAprLineUI() {
 
 function GetAprDocFormID() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "Mode", "APR");
-        createNodeAndInsertText(xmlpara, objNode, "Sel", "FormID");
-
-        xmlhttp.open("Post", "../aspx/getDocData.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getDocData.do",
+    		data : {
+    			docID : pDocID,
+    			mode  : "APR",
+    			sel   : "FormID"
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
         pFormID = getNodeText(dataNodes[0]);
 
     } catch (e) {
@@ -1402,21 +1413,22 @@ function rtrim(parm_str) {
 
 function getGyulJeDate() {
     try {
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getDate.do",
+    		data : {
+    			getDate : ""
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
 
-        var objRoot;
-        var objNode;
-
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-        xmlhttp.open("POST", "../aspx/GetDate.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return xmlhttp.responseText;
+        return result;
 
     } catch (e) {
         alert("getGyulJeDate : " + e.description);
@@ -1425,19 +1437,25 @@ function getGyulJeDate() {
 
 function setSusinUpdataDocID() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", RECEIPTDEPTID.innerText);
-
-        xmlhttp.open("POST", "../DraftUI/aspx/setSusinUpdateDocID.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/setSusinUpdateDocID.do",
+    		data : {
+    			orgDocID : pOrgDocID,
+    			docID    : pDocID,
+    			deptID   : RECEIPTDEPTID.innerText
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
+        
         return getNodeText(dataNodes[0]);
 
     } catch (e) {
@@ -1448,7 +1466,7 @@ function setSusinUpdataDocID() {
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -1473,7 +1491,7 @@ function OpenAlertUI_Complete() {
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;
@@ -1496,17 +1514,24 @@ function OpenInformationUI_Complete() {
 }
 
 function getDocInfo() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+	var result = "";
+	
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getDocInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    xmldoc = result;
 
-    xmlhttp.open("Post", "../aspx/getDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-    xmldoc = xmlhttp.responseXML;
-
-    var objNodes = GetChildNodes(xmlhttp.responseXML.documentElement);
+    var objNodes = GetChildNodes(result.documentElement);
     if (objNodes) {
         pOrgDocID = getNodeText(objNodes[2]);
         if (getNodeText(objNodes[10]) == "Y" || getNodeText(objNodes[10]) == "O")
@@ -1548,7 +1573,7 @@ function HabyuiResultOpinion() {
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
 
-        var url = "../ezAPROPINION/AprOpinion_Cross.aspx";
+        var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
         feature = feature + GetShowModalPosition(530, 520);
         var ret = window.showModalDialog(url, parameter, feature);
@@ -1574,19 +1599,23 @@ function HabyuiResultOpinion() {
 
 function getReceiveDocInfo() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
+    	var result = "";
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getReceiveDocInfo.do",
+    		data : {
+    			docID : pDocID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+
         var pdocXML;
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-        xmlhttp.open("POST", "aspx/getReceiveDocInfo.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        xmlpara = createXmlDom();
-        pdocXML = SelectSingleNodeNew(xmlhttp.responseXML, "RECEIVEDATA/DOCINFO");
+        var xmlpara = createXmlDom();
+        pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/DOCINFO");
         xmlString = getXmlString(pdocXML);
         xmlpara = loadXMLString(xmlString);
         document.getElementById("DOCINFO").dataSource = xmlpara;
@@ -1599,13 +1628,13 @@ function getReceiveDocInfo() {
         }
 
         xmlpara = createXmlDom();
-        pdocXML = SelectSingleNodeNew(xmlhttp.responseXML, "RECEIVEDATA/ATTACHINFO");
+        pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/ATTACHINFO");
         xmlString = getXmlString(pdocXML);
         xmlpara = loadXMLString(xmlString);
         document.getElementById("ATTACHINFO").dataSource = xmlpara;
 
         xmlpara = createXmlDom();
-        pdocXML = SelectSingleNodeNew(xmlhttp.responseXML, "RECEIVEDATA/DOCFLAGINFO");
+        pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/DOCFLAGINFO");
         xmlString = getXmlString(pdocXML);
         xmlpara = loadXMLString(xmlString);
 
@@ -1614,11 +1643,11 @@ function getReceiveDocInfo() {
         var node = GetElementsByTagName(xmlpara, "Href");
         pFormHref = getNodeText(node[0]);
 
-        pOrgDocID = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "ORGDOCID")[0]);
-        var doctitle = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "DOCTITLE")[0]);
+        pOrgDocID = getNodeText(GetElementsByTagName(result, "ORGDOCID")[0]);
+        var doctitle = getNodeText(GetElementsByTagName(result, "DOCTITLE")[0]);
 
-        pWriterDeptID = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "WRITERDEPTID")[0]);
-        zFormID = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "FORMID")[0]);
+        pWriterDeptID = getNodeText(GetElementsByTagName(result, "WRITERDEPTID")[0]);
+        zFormID = getNodeText(GetElementsByTagName(result, "FORMID")[0]);
 
         pSusinSN = getNodeText(GetElementsByTagName(xmlpara, "RecieveSN")[0]);
         pDocType = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
@@ -1627,15 +1656,15 @@ function getReceiveDocInfo() {
         pSusinDocURL = pFormHref;
 
         if (CrossYN()) {
-            RECEIPTDEPTID.textContent = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "RECEIPTDEPTID")[0]);
+            RECEIPTDEPTID.textContent = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
         }
         else {
-            RECEIPTDEPTID.innerText = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "RECEIPTDEPTID")[0]);
+            RECEIPTDEPTID.innerText = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
         }
         pOrgAttach = "";
 
-        pRelayURL = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "RELAY")[0]);
-        pRelayURL2 = getNodeText(GetElementsByTagName(xmlhttp.responseXML, "RELAY2")[0]);
+        pRelayURL = getNodeText(GetElementsByTagName(result, "RELAY")[0]);
+        pRelayURL2 = getNodeText(GetElementsByTagName(result, "RELAY2")[0]);
     } catch (e) {
         alert("getReceiveDocInfo :: " + e.description);
     }
@@ -1760,7 +1789,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx");
+    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setFirstDrafter() {
@@ -1904,19 +1933,24 @@ function chkBtnConfirm(para) {
 
 function getOpinionCount() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "chkFlag", "ING");
-
-        xmlhttp.open("POST", "../ezAPROPINION/aspx/GetOpinionCount.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var tempValue = parseInt(xmlhttp.responseText)
+    	var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getOpinionCount.do",
+    		data : {
+    			docID : pDocID,
+    			userID : arr_userinfo[1],
+    			chkFlag : "ING"
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
+        
+        var tempValue = parseInt(result);
         if (tempValue > 0) {
             return true;
         }
@@ -1930,16 +1964,23 @@ function getOpinionCount() {
 
 function getSignDate() {
     var GyulJeDate;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-    xmlhttp.open("POST", "../aspx/GetSignDate.aspx", false);
-    xmlhttp.send(xmlpara);
-    GyulJeDate = xmlhttp.responseText;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignDate.do",
+		data : {
+			getDate : ""
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
+    GyulJeDate = result;
+    
     return GyulJeDate;
 }
 
@@ -1963,25 +2004,30 @@ function SignCheck() {
     var objNodes = getNodeText(xmldoc.documentElement);
     var SignXML = createXmlDom();
 
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", getNodeText(SelectSingleNodeNew(xmldoc, "DATA/ORGDOCID")));
-
-    xmlhttp.open("Post", "../ezAPRSIGN/aspx/getSignInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.responseXML == "")
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getSignInfo.do",
+		data : {
+			docID : getNodeText(SelectSingleNodeNew(xmldoc, "DATA/ORGDOCID"))
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    if (result == "")
         return;
 
     var NodeList;
-    NodeList = SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO");
+    NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
     if (NodeList.length <= 0)
         return;
 
-    SignXML = xmlhttp.responseXML;
+    SignXML = result;
 
     var rtnVal = putSignXML(SignXML);
 
@@ -2058,7 +2104,7 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
         }
-        xmlhttp.open("Post", "../ezAPRSIGN/aspx/setSignInfo.aspx", false);
+        xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
     }
 }

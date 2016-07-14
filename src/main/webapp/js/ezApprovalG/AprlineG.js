@@ -97,22 +97,26 @@ function setDraftUserFirst()
 //결재선초기화
 function InitListView() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-        var objNode;
-
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-        // 표준모듈 (2008.03.12) : 겸직별 마지막 결재선 가져오기 수정(WriterDeptID추가)
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-
-        xmlhttp.open("Post", "../aspx/AprLineRequest.aspx", false);
-        xmlhttp.send(xmlpara);
+    	var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/aprLineRequest.do",
+    		data : {
+    				docID    : pDocID, 
+    				userID 	 : pUserID,
+    				formID   : pFormID,
+    				deptID   : arr_userinfo[4]
+    				},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
         var NodeList = createXmlDom();
-        NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW"); //xmlhttp.responseXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+        NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW"); //xmlhttp.responseXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
         var nodeCnt;
 
         nodeCnt = NodeList.length;
@@ -147,7 +151,7 @@ function InitListView() {
             //APRLINE.dataSource = Resultxml;
         }
         else {
-            pAPRLINE.DataSource(xmlhttp.responseXML);   // DataSource 지정   
+            pAPRLINE.DataSource(result);   // DataSource 지정   
             pAPRLINE.DataBind("APRLINE");     // ListView DataBind 
             //APRLINE.dataSource = xmlhttp.responseXML;
             if (!pReDraftAprLineFlag)

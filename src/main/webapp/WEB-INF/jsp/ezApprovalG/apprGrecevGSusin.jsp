@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-	<html style="height:97%;">
+<html style="height:97%;">
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/RecevG_Susin_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
@@ -668,21 +668,26 @@
 		    }
 		    function getLastAprLine() {
 		        try {
-		            var xmlhttp = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-		            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-		
-		            xmlhttp.open("Post", "../ezaprline/aspx/AprLineRequest.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            var NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+		        	var result = "";
+		            
+		            $.ajax({
+		        		type : "POST",
+		        		dataType : "xml",
+		        		async : false,
+		        		url : "/ezApprovalG/aprLineRequest.do",
+		        		data : {
+		        				docID    : pDocID, 
+		        				userID 	 : pUserID,
+		        				formID   : pFormID
+		        				},
+		        		success: function(xml){
+		        			result = xml;
+		        		}        			
+		        	});
+		            
+		            var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 		            if (NodeList.length > 0) {
-		                var bResult = CheckFirstDrafter(xmlhttp.responseXML);
+		                var bResult = CheckFirstDrafter(result);
 		                return bResult;
 		            }
 		
@@ -757,7 +762,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 740, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx");
+		        DivPopUpShow(1000, 740, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -777,7 +782,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(460, 375, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx");
+		        DivPopUpShow(460, 375, "/ezApprovalG/ezReceiveAssignUI.do");
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {
@@ -824,7 +829,7 @@
 		        apropinion_cross_dialogArguments[0] = parameter;
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
-		        DivPopUpShow(530, 520, "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion_Cross.aspx");
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -940,7 +945,7 @@
 		
 		        Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
 		
-		        xmlhttp.open("Post", "../ezaprline/aspx/aprlinesave.aspx", false);
+		        xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
 		        xmlhttp.send(Resultxml);
 		
 		        if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0])) {
@@ -1046,20 +1051,22 @@
 		    }
 		    function getGongRamDocInfo() {
 		        try {
-		            var objRoot;
-		            var objNode;
-		
-		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		
-		            xmlhttp.open("Post", "aspx/GongRamDocInfo.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            var pGongRamDocID = getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+		        	var result = "";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "xml",
+		        		async : false,
+		        		url : "/ezApprovalG/gongRamDocInfo.do",
+		        		data : {
+		        			docID : pDocID
+		        		},
+		        		success: function(xml){
+		        			result = xml;
+		        		}
+		        	});
+		        	
+		            var pGongRamDocID = getNodeText(GetChildNodes(result)[0]);
 		            if (pGongRamDocID != "NONE" && pGongRamDocID != "" && pGongRamDocID.length == 20)
 		                JiJungBeBuDisable();
 		        }
@@ -1086,23 +1093,22 @@
 		    }
 		    function getDocRecevState() {
 		        try {
-		            var objRoot;
-		            var objNode;
-		            var result = "FALSE";
-		
-		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
-		
-		            xmlhttp.open("Post", "aspx/GetDocState.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            result = xmlhttp.responseText;
-		
+					var result = "FALSE";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/getDocState.do",
+		        		data : {
+		        			docID : pDocID,
+		        			deptID: arr_userinfo[4]
+		        		},
+		        		success: function(text){
+		        			result = text;
+		        		}
+		        	});
+		        	
 		            return result;
 		        }
 		        catch (e) {
@@ -1148,7 +1154,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
-		        var OpenWin = window.open("/myoffice/ezApprovalG/ezLINE/ezApprovalInfo.aspx?initFlag=1&Gubun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1000, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1000, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function btnApprovalInfo_Complete(ret) {
@@ -1158,7 +1164,7 @@
 		
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
-		                        savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRLINE/aspx/aprlinesave.aspx", false);
+		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
 		                        savexmlhttp.send(ret[1]);
 		
 		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
@@ -1174,7 +1180,7 @@
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
-		                    savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRDEPT/aspx/AprDeptSave.aspx", false);
+		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
 		                    savexmlhttp.send(ret[2]);
 		
 		                    btnReceivLineEnable = false;
@@ -1242,7 +1248,7 @@
 		  </tr>
 		  <tr>
 		    <td style="padding-bottom:10px;height:100%;">
-		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="Recev_End_Content_Cross.aspx" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="recevEndContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		    </td>
 		  </tr>
 		   <tr>

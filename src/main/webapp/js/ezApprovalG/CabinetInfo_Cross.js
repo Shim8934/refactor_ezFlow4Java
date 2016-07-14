@@ -1,22 +1,28 @@
 ﻿function GetCabinetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); 
-    createNodeAndInsertText(xmlpara, objNode, "PROCESSDEPTCODE", pDeptCode);
-    createNodeAndInsertText(xmlpara, objNode, "PRODUCTIONYEAR", pProduceYear);
-    createNodeAndInsertText(xmlpara, objNode, "TASKCODE", pTaskCode);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
-
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetSimpleList.aspx", false);
-    XmlHttp.send(xmlpara);
-
-    var rtnXml = XmlHttp.responseXML;
+	var result = "";
+	
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getCabinetSimpleList.do",
+		data : {
+			processDeptCode   : pDeptCode,
+			companyID         : CompanyID,
+			produceYear 	  : pProduceYear,
+			langType		  : UserLang,
+			flag			  : pFlag,
+			taskCode		  : pTaskCode
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    var rtnXml = result;
 
     var iSeledtedIdx = 0;
-    if (XmlHttp.responseText == "FALSE") {
+    if (result == "FALSE") {
         alert(strLang482);
     }
     else {

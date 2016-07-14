@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -207,7 +208,22 @@ public interface EzApprovalGService {
 	
 	public String getOrgDocInfo(String docID, String companyID) throws Exception;
 	
-	public int checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
+	public String getReceivedDocInfo(String docID, String companyID, String lang) throws Exception;
+	
+	public String getDocRecvState(String docID, String deptID, String companyID) throws Exception;
+	
+	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
+			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang) throws Exception;
+	
+	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID) throws Exception;
+	
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang) throws Exception;
+	
+	public String registerCabinet(Document xmlDom) throws Exception;
+	
+	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
+	
+	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 
 

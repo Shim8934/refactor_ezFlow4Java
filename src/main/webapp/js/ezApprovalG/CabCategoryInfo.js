@@ -351,7 +351,7 @@ function GetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
 		data : {
 			processDeptCode   : pDeptCode,
 			companyID         : CompanyID,
-			productionYear    : pProduceYear,
+			produceYear 	  : pProduceYear,
 			langType		  : UserLang,
 			flag			  : pFlag,
 			taskCode		  : pTaskCode

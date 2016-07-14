@@ -1,11 +1,11 @@
 ﻿var fractionsymbol;
 function setDocNumFormat() {
-    var Arr_Header = new Array()
-    var Header, Tail
-    var i
+    var Arr_Header = new Array();
+    var Header, Tail;
+    var i;
     var d = new Date();
 
-    var numHeader = ""
+    var numHeader = "";
     var DeptSymbol = arr_userinfo[5];
 
     var fields = message.GetFieldsList();
@@ -37,36 +37,36 @@ function setDocNumFormat() {
     else if (fieldValue == "") {
         fieldValue = getfieldValue(field);
     }
-    Arr_Header = fieldValue.split("@")
+    Arr_Header = fieldValue.split("@");
     for (i = 1; i < Arr_Header.length; i++) {
         Header = Arr_Header[i].substr(0, 2);
         Tail = Arr_Header[i].substr(2);
         switch (Header) {
             case "DP":
-                numHeader = numHeader + DeptSymbol + Tail
+                numHeader = numHeader + DeptSymbol + Tail;
                 break;
 
             case "dp":
-                numHeader = numHeader + DeptSymbol + Tail
+                numHeader = numHeader + DeptSymbol + Tail;
                 break;
 
             case "YY":
-                numHeader = numHeader + d.getYear() + Tail
+                numHeader = numHeader + d.getYear() + Tail;
                 break;
 
             case "yy":
-                var yyear = d.getYear()
-                numHeader = numHeader + yyear.toString().substr(2) + Tail
+                var yyear = d.getYear();
+                numHeader = numHeader + yyear.toString().substr(2) + Tail;
                 break;
 
             case "MM":
-                var mmonth = d.getMonth() + 1
+                var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader = numHeader + mmonth + Tail
+                numHeader = numHeader + mmonth + Tail;
                 break;
 
             case "mm":
-                numHeader = numHeader + (d.getMonth() + 1) + Tail
+                numHeader = numHeader + (d.getMonth() + 1) + Tail;
                 break;
 
             case "NN":
@@ -109,26 +109,30 @@ function getfieldValue(pfield) {
 function getRecvDocNumber(pDeptID) {
     try {
         var fields = message.GetFieldsList();
-        var name, docnumber
-        var rtnval
+        var name, docnumber;
+        var rtnval;
 
-        name = "receiptnumber"
+        name = "receiptnumber";
         var field = message.GetListItem(fields, name);
         if (!field) {
             var DeptSymbol = arr_userinfo[5];
-            var xmlhttp = createXMLHttpRequest();
-            var RtnValxml = createXmlDom();
-            var xmlpara = createXmlDom();
+        	var result = "";
+        	
+        	$.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : false,
+        		url : "/ezApprovalG/getCabinetSN.do",
+        		data : {
+        			docID : pDocID,
+        			deptID : pDeptID
+        		},
+        		success: function(xml){
+        			result = xml;
+        		}
+        	});
 
-            var objNode;
-            createNodeInsert(xmlpara, objNode, "PARAMETER");
-            createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-            createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-
-            xmlhttp.open("Post", "../docnum/aspx/getCabinetSN.aspx", false);
-            xmlhttp.send(xmlpara);
-
-            var SN = getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+            var SN = getNodeText(GetChildNodes(result)[0]);
             pDocNo = DeptSymbol + "-" + SN;
             var tempNumString = SN;
             var i = 0;
@@ -145,19 +149,23 @@ function getRecvDocNumber(pDeptID) {
 
         fractionsymbol = field.textContent;
 
-        var xmlhttp = new createXMLHttpRequest();
-        var RtnValxml = createXmlDom();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-
-        xmlhttp.open("Post", "../docnum/aspx/getCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var SN = getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var SN = getNodeText(GetChildNodes(result)[0]);
         if (SN == "") {
             pDocNumCode = "";
             pDocNo = "";
@@ -179,7 +187,7 @@ function getRecvDocNumber(pDeptID) {
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
-            rollbackDocNumber(pDeptID, pDocID)
+            rollbackDocNumber(pDeptID, pDocID);
             return false;
         }
         else {
@@ -191,10 +199,10 @@ function getRecvDocNumber(pDeptID) {
 function rollbackDocNumber(pDeptID, pDocID) {
     try {
         var fields = message.GetFieldsList();
-        var name, docnumber
-        var rtnval
+        var name, docnumber;
+        var rtnval;
 
-        name = "receiptnumber"
+        name = "receiptnumber";
         var field = message.GetListItem(fields, name);
         if (!field) return true;
 
@@ -236,23 +244,27 @@ function rollbackDocNumber(pDeptID, pDocID) {
 }
 function SaveFile() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
+    	var result = "";
         var mhtBody = "";
-        mhtBody = message.Get_EditorBodyHTML()
+        mhtBody = message.Get_EditorBodyHTML();
         mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
         mhtBody = ConvertHTMLtoMHT(mhtBody);
 
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "Html", mhtBody);
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/saveFile.do",
+    		data : {
+    			docID : pDocID,
+    			html  : mhtBody
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
 
-        xmlhttp.open("POST", "../aspx/saveFile.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return xmlhttp.responseText;
+        return result;
     } catch (e) {
         alert("SaveFile : " + e.description);
     }

@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
@@ -392,6 +393,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGReceiveDocVO> getReceivedDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiveDocVO>) list("EzApprovalG.getReceivedDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getNextDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getNextDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGSecondApprVO> getSecondApprovalInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGSecondApprVO>) list("EzApprovalG.getSecondApprovalInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -516,6 +532,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public String gongRamDocInfo(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.gongRamDocInfo", map);
+	}
+	
+	public String getDocRecvState(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getDocRecvState", map);
 	}
 	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
@@ -660,6 +680,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateHistoryForLine", map);
+	}
+	
+	public void setJijung(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.setJijung", map);
 	}
 
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
