@@ -953,7 +953,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String tmpETime = endDateTime.substring(11, 19);
 	
 			String tmpDTStr = startDateTime.substring(0, 10);
-			String tmpEDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = endDateTime.substring(0, 10);
 			
 			String tmpSDTStr = tmpDTStr;
 			String tmpEDTStr1 = tmpEDTStr;
@@ -1114,8 +1114,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 						if (wDay[i].equals("")) {
 							wDay[i] = "0";
 						}
-						if (orgTmpDTStr.equals(selDTStr) && weekDay(tmpDTStr) == Integer.parseInt(wDay[i] + 1) && isFirst == true) {
-
+						if (orgTmpDTStr.equals(selDTStr) && weekDay(tmpDTStr) == Integer.parseInt(wDay[i]) + 1 && isFirst == true) {
 							isFirst = false;
 							secondWhileFlag = false;
 							break;
@@ -1123,8 +1122,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 
 							int tmpWeekDay = weekDay(tmpDTStr);
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, Integer.parseInt(wDay[i]) + 1 - weekDay(tmpDTStr), "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i]) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, Integer.parseInt(wDay[i] ) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, Integer.parseInt(wDay[i] ) + 1 - tmpWeekDay, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							
 							secondWhileFlag = false;
 							break;
@@ -1180,7 +1179,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 						}
 					}
 				} else if (endRecurType.equals("1")) {
-					if (number(tmpDTStr) > number(eDate) || n > number(instances) * (wDayCnt-1)) {
+					if (number(tmpDTStr) > number(eDate) || n > number(instances) * (wDayCnt)) {
 						break;
 					} else {
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
@@ -1242,7 +1241,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String tmpSTime = startDateTime.substring(11, 19);
 			String tmpETime = endDateTime.substring(11, 19);
 			String tmpDTStr = startDateTime.substring(0, 10);
-			String tmpEDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = endDateTime.substring(0, 10);
 			String tmpSDTStr = tmpDTStr;
 			String tmpEDTStr1 = tmpEDTStr;
 			
@@ -1544,7 +1543,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String tmpSTime = startDateTime.substring(11, 19);
 			String tmpETime = endDateTime.substring(11, 19);
 			String tmpDTStr = startDateTime.substring(0, 10);
-			String tmpEDTStr = startDateTime.substring(0, 10);
+			String tmpEDTStr = endDateTime.substring(0, 10);
 			String tmpSDTStr = tmpDTStr;
 			String tmpEDTStr1 = tmpEDTStr;
 			
@@ -1577,12 +1576,13 @@ public class EzResourceServiceImpl implements EzResourceService{
 
 				if (selType.equals("0")) {
 					int datePartDay = format.parse(tmpDTStr).getDate();
-					int datePartYear = format.parse(tmpDTStr).getYear();
+					int datePartYear = format.parse(tmpDTStr).getYear()+1900;
 					int tmpDatePartMonth = format.parse(tmpDTStr).getMonth()+1;
 					boolean checkLastDate = true;
 					
 					if (daysOfMonth.equals("31") && (tmpDatePartMonth == 2 || tmpDatePartMonth == 4 || tmpDatePartMonth == 6 || tmpDatePartMonth == 9 || tmpDatePartMonth == 11)) {
 						checkLastDate = false;
+					} else if (daysOfMonth.equals("30") && tmpDatePartMonth == 2){
 						checkLastDate = false;
 					} else if (daysOfMonth.equals("29") && tmpDatePartMonth == 2 && !(datePartYear % 4 == 0 && datePartYear % 100 != 0 || datePartYear % 400 == 0)) {
 						checkLastDate = false;
@@ -1669,7 +1669,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
-						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDayCnt == 5) {
+						if (byPosition.equals("1") && weekDay(tmpDTStr) > 2 && weekDay(tmpDTStr) < 7 && wDay.length > 1) {
 							tmpDTStr = sTmpDTStr;
 							wDayCnt = count;
 						}
@@ -1700,7 +1700,6 @@ public class EzResourceServiceImpl implements EzResourceService{
 						if (format.parse(tmpDTStr).getMonth()+1 != Integer.parseInt(monthsOfYear)) {
 							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, -1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 						}
-						
 						
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
@@ -1799,14 +1798,14 @@ public class EzResourceServiceImpl implements EzResourceService{
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 									
-									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpDTStr) <= number(tmpEDTStr1)) {
+									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
 										returnXML.append("<ROW>");
 										returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
 										returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
 										returnXML.append("</ROW>");
 									}
 									
-									if (tmpDTStr.equals(tmpEDTStr1)) {
+									if (tmpDTStr.equals(tmpEDTStr)) {
 										break;
 									}
 								}
@@ -1822,8 +1821,8 @@ public class EzResourceServiceImpl implements EzResourceService{
 					}
 				}
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpEDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addYear(tmpSDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				
 				temp++;
 				if (temp > 1000) {
@@ -2958,7 +2957,7 @@ public class EzResourceServiceImpl implements EzResourceService{
 			String pNum = strPnum == null ? "0" : strPnum;
 			String pCmd = strPcmd.equals("") ? "" : strPcmd;
 			
-			List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, recStartDateTime, recEndDateTime, recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID);
+			List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID);
 		
 			ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID);
 			
