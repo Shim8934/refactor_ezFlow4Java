@@ -34,7 +34,7 @@
 //		          	var MsgTo = "\"" + document.getElementById("username").innerText  + "\" <" + document.getElementById("email").innerText + ">";
 		            var MsgTo = "\"" + username  + "\" <" + email + ">";
 				    
-				    window.open("/ezEmail/mail_write_Cross.do?cmd=NEW&msgTo=" + escape(MsgTo), "",
+				    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(MsgTo), "",
 		                               "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 				}
 			}

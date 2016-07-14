@@ -74,7 +74,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "CN", "${cn}");
 	
 	                xmlHTTP2 = createXMLHttpRequest();
-	                xmlHTTP2.open("POST", "/myoffice/ezEmail/Admin/remote/GetDistributionList.aspx", true);
+	                xmlHTTP2.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
 	                xmlHTTP2.send(xmlpara);
 	            }
@@ -469,6 +469,18 @@
 	                document.all("TextName").focus();
 	                return;
 	            }
+	            if (document.all("TextId").value.trim() == "") {
+	                alert("<spring:message code='ezEmail.t99000093' />");
+	                document.all("TextId").focus();
+	                return;
+	            }
+	            
+	            var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
+	            if(regex.test(document.all("TextId").value.trim()) === false) {
+	            	alert("<spring:message code='ezEmail.t99000096' />");
+	            	return;
+	            }
+	            
 	            var xmlDom = createXmlDom();
 	            var xmlHTTP = createXMLHttpRequest();
 	            var objNode = "";
@@ -476,22 +488,30 @@
 	            createNodeAndInsertText(xmlDom, objNode, "COMPID", companyid);
 	            createNodeAndInsertText(xmlDom, objNode, "CN", cn);
 	            createNodeAndInsertText(xmlDom, objNode, "NAME", document.all("TextName").value);
-	
+	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
+	            
 	            for (var i = 0; i < document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length; i++) {
 	                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data1"));
 	
 	            }
-	            xmlHTTP.open("POST", "mail_save_distributionlist.aspx", false);
+	            xmlHTTP.open("POST", "/admin/ezEmail/mailSaveDistributionList.do", false);
 	            xmlHTTP.send(xmlDom);
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-	                alert("<spring:message code='ezEmail.t23' />");
-	            else {
-	                alert("<spring:message code='ezEmail.t24' />");
+	            if (xmlHTTP.status == 200 && xmlHTTP.responseText == "OK") {
+	            	alert("<spring:message code='ezEmail.t24' />");
 	                if (ReturnFunction != null)
 	                    ReturnFunction(1);
 	                else
 	                    window.returnValue = 1;
 	                window.close();
+	            }
+	            else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_NAME") {
+	            	alert("<spring:message code='ezEmail.t99000094' />");
+	            }
+	            else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_ID") {
+	            	alert("<spring:message code='ezEmail.t99000095' />");
+	            }
+	            else {
+	            	alert("<spring:message code='ezEmail.t23' />");
 	            }
 	        }
 	
@@ -1010,48 +1030,52 @@
 	                    }
 	                }
 	                else {
-	                    var strId = p_ListOrderObject.getAttribute("_data2");
-	                    var strName = p_ListOrderObject.getAttribute("_data4");
-	                    var bFlag = getlistview.ExistRow("data1", strId);
-	
+	                	var organTree = new TreeView();
+		                organTree.LoadFromID("FromTreeView");
+		                var nodeIdx = organTree.GetSelectNode();
+		                
+	                	var strId = nodeIdx.GetNodeData("CN")
+		                var strName = nodeIdx.NodeName;
+		
+		                var bFlag = getlistview.ExistRow("data1", strId);
 	                    if (bFlag) {
 	                        pAddFlag = true;
 	                    }
 	                    else {
-	                        pparsingXML2 = "";
-	                        pparsingXML = "";
-	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
-	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                        Resultxml = loadXMLString(pparsingXML2);
-	
-	                        var listview = new ListView();
-	                        listview.LoadFromID(listid);
-	
-	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
-	                        var MaxCntNum = 0;
-	
-	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum) {
-	                                MaxID = curnum;
-	                                MaxCntNum = j;
-	                            }
-	                        }
-	
-	                        var objTr = listview.AddRow(InitTr.length);
-	                        if (MaxCntNum != 0)
-	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                        listview.AddDataRow(objTr, Resultxml);
-	
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                        for (var y = 0; y < _tdlength; y++) {
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                        }
+	                    	pparsingXML2 = "";
+		                    pparsingXML = "";
+		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                    Resultxml = loadXMLString(pparsingXML2);
+		
+		                    var listview = new ListView();
+		                    listview.LoadFromID(listid);
+		
+		                    var MaxID = 0;
+		                    var InitTr = listview.GetDataRows();
+		                    var MaxCntNum = 0;
+		
+		                    for (var j = 0  ; j < InitTr.length  ; j++) {
+		                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                        if (MaxID < curnum) {
+		                            MaxID = curnum;
+		                            MaxCntNum = j;
+		                        }
+		                    }
+		
+		                    var objTr = listview.AddRow(InitTr.length);
+		                    if (MaxCntNum != 0)
+		                        MaxCntNum = MaxCntNum + 1;
+		                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    listview.AddDataRow(objTr, Resultxml);
+		
+		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                    for (var y = 0; y < _tdlength; y++) {
+		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                    }
 	                    }
 	                }
 	
@@ -1130,6 +1154,12 @@
 	                <th><spring:message code='ezEmail.t710' /></th>
 	                <td>
 	                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:99%;" value="${textName}">
+	                </td>
+	            </tr>
+	            <tr>
+	                <th><spring:message code='ezEmail.t99000092' /></th>
+	                <td>
+	                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
 	                </td>
 	            </tr>
 	        </table>

@@ -481,7 +481,7 @@
 		        m_selectedTree = ListViewDL;
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "remote/mail_get_dllist.aspx", false);
+		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
 		            xmlHTTP.send("");
 		        } catch (e) {
 		            alert("<spring:message code='ezEmail.t574' />" + e.description);
@@ -1283,7 +1283,7 @@
 		        	type : "POST",
 		        	dataType : "xml",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
+		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
 		        	success : function(result){
 		                pListXML_Info = result;
 		        		
@@ -2002,11 +2002,11 @@
 	                mail_select_dlmember_cross_dialogArguments[0] = rtnValue;
 	                mail_select_dlmember_cross_dialogArguments[1] = dlmember_click_Complete;
 	                mail_select_dlmember_cross_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(601, 470, "/myoffice/ezEmail/mail_select_dlmember_cross.aspx?cn=" + GetAttribute(arrRows[0], "DATA1"));
+	                DivPopUpShow(601, 470, "/ezEmail/mailSelectDLMember.do?cn=" + GetAttribute(arrRows[0], "DATA1"));
 	            }
 	            else {
 	                var rtnValue = { "name": new Array(), "email": new Array() };
-	                var count = window.showModalDialog("/myoffice/ezEmail/mail_select_dlmember_cross.aspx?cn=" + GetAttribute(arrRows[0], "DATA1"), rtnValue, "dialogHeight:470px; dialogWidth:601px; status:no;scroll:auto; help:no; edge:sunken");
+	                var count = window.showModalDialog("/ezEmail/mailSelectDLMember.do?cn=" + GetAttribute(arrRows[0], "DATA1"), rtnValue, "dialogHeight:470px; dialogWidth:601px; status:no;scroll:auto; help:no; edge:sunken");
 	                var listid = "";
 	
 	                if (m_selectedWindow.id == "ListViewMsgTo") {

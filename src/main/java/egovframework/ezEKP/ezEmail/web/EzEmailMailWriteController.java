@@ -10,11 +10,13 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +49,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +73,6 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -79,6 +83,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -296,7 +301,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
 		String msgto = "";
 		if (request.getParameter("msgto") != null) {
-			msgto = request.getParameter("msgto").toUpperCase().trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
+			msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
 		}
         String _attach = "";
         if (request.getParameter("attach") != null) {
@@ -2428,6 +2433,151 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("domainName", config.getProperty("config.DomainName"));
 		
 		return "ezEmail/mailNewReceiverChoose";
+	}
+	
+	/**
+	 * 메일쓰기 - 공용배포그룹(받는사람,참조,숨은참조) 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String mailGetDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnData = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		
+		try {
+			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+
+			logger.debug("inputParams=" + inputParams);
+
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+			logger.debug("response=" + response);
+			
+			JSONArray resultArray = null;
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			if (resultArray != null) {
+				for (int i = 0; i < resultArray.size(); i++) {
+					sb.append("<ROW><CELL>");
+					
+					Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
+					
+					for (String colName : rowObject.keySet()) {
+						String colValue = rowObject.get(colName);
+						sb.append("<" + colName + ">");
+						sb.append(colValue);
+						sb.append("</" + colName + ">");
+					}
+					
+					sb.append("</CELL></ROW>");
+				}
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		return returnData;
+	}
+	
+	/**
+	 * 메일쓰기 - 공용배포그룹 구성원 보기 및 선택 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSelectDLMember.do")
+	public String mailSelectDLMember(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String isUser = "";
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String cn = request.getParameter("cn");
+		String domain = config.getProperty("config.DomainName");
+		
+		try {
+			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
+							   + "&domain=" + URLEncoder.encode(domain, "UTF-8");
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			JSONArray resultArray = null;
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+			
+			for (int i=0; i<resultArray.size(); i++) {
+				JSONObject address = (JSONObject)resultArray.get(i);
+				String pCn = (String)address.get("cn");
+				pCn = pCn.substring(0, pCn.indexOf("@"));
+				isUser = (String)address.get("class");
+				
+				logger.debug("pCn=" + pCn + ", isUser=" + isUser);
+				
+				if(isUser.equals("group")) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"));
+					
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("displayName", dept.getDisplayName());
+					map.put("mail", dept.getMail());
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", dept.getDisplayName());
+					map.put("title", "");
+					
+					list.add(map);
+				} else {
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"));
+					
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("displayName", user.getDisplayName());
+					map.put("mail", user.getMail());
+					map.put("company", user.getCompany());
+					map.put("dept", user.getDescription());
+					map.put("title", user.getTitle());
+					
+					list.add(map);
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("isUser", isUser);
+		model.addAttribute("list", list);
+		
+		return "ezEmail/mailSelectDLMember";
 	}
 	
 	/**

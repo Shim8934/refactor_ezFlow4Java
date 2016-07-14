@@ -86,7 +86,7 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "DATA1"));
-		        xmlHTTP.open("POST", "mail_View_distributionlist.aspx", true);
+		        xmlHTTP.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 		        xmlHTTP.onreadystatechange = getDistributionMember_after;
 		        xmlHTTP.send(xmlDom);
 		    }
@@ -101,7 +101,7 @@
 		        var Span = document.createElement("SPAN");
 		        var BR = document.createElement("BR");
 		        var IMG = document.createElement("IMG");
-		        IMG.src = '/images/imgicon/dot.gif';
+		        IMG.src = '/images/ImgIcon/dot.gif';
 		        IMG.align = "absmiddle";
 		        IMG.hspace = 5;
 		        Span.setAttribute("style", "color: #3b7cbe; font-weight: bold;");
@@ -146,7 +146,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 420) / 2;
-		        window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        window.open("/ezCommon/showPersonInfo.do?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		
 		    function del_dl() {
@@ -162,7 +162,7 @@
 		        for (i = 0; i < listview.GetSelectedIndexes().length; i++) {
 		            createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
 		        }
-		        xmlHTTP.open("POST", "mail_del_distributionlist.aspx", false);
+		        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
 		        xmlHTTP.send(xmlDom);
 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
 		            alert("<spring:message code='ezEmail.t53' />");
@@ -211,7 +211,7 @@
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + escape(selnode[0].innerText), "", GetOpenWindowfeature(970, 650));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURI(selnode[0].innerText), "", GetOpenWindowfeature(970, 650));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {

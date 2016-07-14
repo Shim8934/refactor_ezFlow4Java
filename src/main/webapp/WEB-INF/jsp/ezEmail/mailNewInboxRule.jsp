@@ -532,7 +532,7 @@
 		        receiverData["window"] = this;
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-		        var OpenWin = window.open("../mail_NewreceiverChoose.aspx?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function addReceiver(pListView) {
@@ -568,7 +568,7 @@
 		                }
 		            }
 		            if (ischeck) {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + CheckName(Name, Email) + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + Email + "</nobr><div>";
 		            }
 		        }
 		    }
