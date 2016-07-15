@@ -463,7 +463,7 @@ public class EzApprovalGAdminController {
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategotyTree(categoryType, parentID, companyID);
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID);
 
 		return result;
 	}
@@ -482,11 +482,113 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류추가 메뉴 화면 호출 함수
+	 * 전자결재G관리 분류추가,분류수정 메뉴 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCategoryInsert.do")
-	public String taskCategoryInsert(HttpServletRequest request) {
+	public String taskCategoryInsert(Locale locale, HttpServletRequest request, Model model) {
+		String tCheck = request.getParameter("tCheck");
+		String title = "";
 		
-		return "admin/ezApprovalG/taskCategoryInsert";
+		if (tCheck.equals("ins")) {
+			title = egovMessageSource.getMessage("ezApprovalG.t734",locale);
+		} else {
+			title = egovMessageSource.getMessage("ezApprovalG.t735",locale);
+		}
+		model.addAttribute("title", title);
+		
+		return "admin/ezApprovalG/apprGTaskCategoryInsert";
+	}
+	
+	/**
+	 * 전자결재G관리 분류추가  중복확인 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryDuplicate.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskCategoryDuplicate(HttpServletRequest request) throws Exception {
+		String categoryType = request.getParameter("cateType");
+		String categoryCode = request.getParameter("sCateCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCategoryDuplicate(categoryType, categoryCode, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류추가 분류선택 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/selectTaskCategory.do")
+	public String selectTaskCategory() {
+		return "admin/ezApprovalG/apprGSelectTaskCategory";
+	}
+	
+	/**
+	 * 전자결재G관리 분류추가,분류수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setTaskCategory.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String setTaskCategory(HttpServletRequest request) throws Exception {
+		String categoryType = request.getParameter("categoryType");
+		String categoryCode = request.getParameter("categoryCode");
+		String categoryName = request.getParameter("categoryName");
+		String categoryName2 = request.getParameter("categoryName2");
+		String categoryDesc = request.getParameter("categoryDesc");
+		String pCode = request.getParameter("pCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.setTaskCategory(categoryType, categoryCode, categoryName, categoryName2, categoryDesc, pCode, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류삭제 시 하위코드 여부 체크 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskCategoryNodeExist(HttpServletRequest request) throws Exception {
+		String categoryType = request.getParameter("cateType");
+		String categoryCode = request.getParameter("sCateCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCategoryNodeExist(categoryType, categoryCode, companyID);
+
+		return result;
+	}
+
+	/**
+	 * 전자결재G관리 분류삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String removeTaskCategory(HttpServletRequest request) throws Exception {
+		String categoryType = request.getParameter("cateType");
+		String categoryCode = request.getParameter("cateCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 코드추가 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
+	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String tCheck = request.getParameter("tCheck");
+		String title = "";
+		
+		if (tCheck.equals("ins")) {
+			title = egovMessageSource.getMessage("ezApprovalG.t763",locale);
+		} else {
+			title = egovMessageSource.getMessage("ezApprovalG.t764",locale);
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("title", title);
+		
+		return "admin/ezApprovalG/apprGTaskCodeInsert";
 	}
 }

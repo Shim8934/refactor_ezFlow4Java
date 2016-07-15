@@ -562,7 +562,7 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 	}
 
 	@Override
-	public String getTaskCategotyTree(String categoryType, String parentID, String companyID) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -628,4 +628,102 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 		
 		return result;
 	}
+
+	@Override
+	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CATETYPE", categoryType);
+		map.put("v_CATECODE", categoryCode);
+		map.put("v_pCount", 0);
+		map.put("companyID", companyID);
+		
+		try {
+			Integer result = ezApprovalGAdminDAO.getTaskCategoryDuplicate(map);
+			
+			if (result > 0) {
+				return "TRUE";
+			} else {
+				return "FALSE";
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID) throws Exception {
+		try {
+			String duplicate = getTaskCategoryDuplicate(categoryType, categoryCode, companyID);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			if (duplicate.equals("TRUE")) {
+				map.put("v_MODE", "U");
+			} else {
+				map.put("v_MODE", "I");
+			}
+			map.put("v_CATETYPE", categoryType);
+			map.put("v_CATECODE", categoryCode);
+			map.put("v_NAME", categoryName);
+			map.put("v_NAME2", categoryName2);
+			map.put("v_DESC", categoryDesc);
+			map.put("v_CODE", pCode);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.setTaskCategory(map);
+		
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";			
+		}
+	}
+
+	@Override
+	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CATETYPE", categoryType);
+		map.put("v_CATECODE", categoryCode);
+		map.put("v_pCount", 0);
+		map.put("companyID", companyID);
+		
+		try {
+			Integer result = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map);
+			
+			if (result > 0) {
+				return "TRUE";
+			} else {
+				return "FALSE";
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String removeTaskCategory(String categoryType, String categoryCode, String companyID) throws Exception {
+		try{
+			String duplicate = getTaskCategoryNodeExist(categoryType, categoryCode, companyID);
+			
+			if (duplicate.equals("TRUE")) {
+				return "EXIST";
+			} else {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_CATETYPE", categoryType);
+				map.put("v_CATECODE", categoryCode);
+				map.put("companyID", companyID);
+				
+				ezApprovalGAdminDAO.removeTaskCategory(map);
+				
+				return "TRUE";
+			}
+		} catch (Exception e){
+			return "FALSE";
+		}
+		
+	}
+	
+	
 }

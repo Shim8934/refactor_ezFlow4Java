@@ -34,13 +34,17 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception;
 	
-	public String getTaskCategotyTree(String categoryType, String parentID, String companyID) throws Exception;
-
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
-
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception;
+	
 	public String getTaskInSubCategoryForManage(Document doc) throws Exception;
 
-	
+	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception;
 
+	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID) throws Exception;
 
+	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID) throws Exception;
+
+	public String removeTaskCategory(String categoryType, String categoryCode, String companyID) throws Exception;
+
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 }

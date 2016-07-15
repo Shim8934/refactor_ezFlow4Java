@@ -148,19 +148,19 @@ function btnViewTaskHistoryInfo_onclick_Complete() {
 }
 
 function GetTaskCategoryNodeExist(pType, pGroupID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "CATETYPE", pType);
-    createNodeAndInsertText(xmlpara, objNode, "SCATECODE", pGroupID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-
-    xmlhttp.open("POST", "aspx/API_GetTaskCategoryNodeExist.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
+	var retVal = "";
+	
+	$.ajax({
+		type : "POST",
+    	url : "/admin/ezApprovalG/getTaskCategoryNodeExist.do",
+    	async : false,
+    	data : {cateType : pType, sCateCode : pGroupID, companyID : companyID},
+    	success : function(result) {
+    		retVal = result;
+    	}
+	});
+	
+	return retVal;
 }
 
 function GetTaskCodeNodeExist(TaskCode, DeptID) {

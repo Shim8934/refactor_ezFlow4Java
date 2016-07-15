@@ -43,6 +43,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGTaskVO> getTaskCategotyTree(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskCategotyTree", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskInSubCategoryForManage(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInSubCategoryForManage", map);
+	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
@@ -51,7 +56,17 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public String insertContainerContID(String companyID) throws Exception{
 		return (String) select("EzApprovalGAdmin.insertContainerContID", companyID);
 	}
+	
+	public Integer getTaskCategoryDuplicate(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.getTaskCategoryDuplicate", map);
+		return (Integer) map.get("v_pCount");
+	}
 
+	public Integer getTaskCategoryNodeExist(Map<String, Object> map) {
+		select("EzApprovalGAdmin.getTaskCategoryNodeExist", map);
+		return (Integer) map.get("v_pCount");
+	}
+	
 	public void insertContainerType(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertContainerType", map);
 	}
@@ -74,6 +89,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public void insertReceiveGroupInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalGAdmin.insertReceiveGroupInfo", map);
+	}
+	
+	public void setTaskCategory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setTaskCategory", map);
 	}
 	
 	public void updateContainer(Map<String, Object> map) throws Exception{
@@ -104,8 +123,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteReceiveGroupInfo", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<ApprGTaskVO> getTaskInSubCategoryForManage(Map<String, Object> map) throws Exception {
-		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInSubCategoryForManage", map);
+	public void removeTaskCategory(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.removeTaskCategory", map);
 	}
 }
