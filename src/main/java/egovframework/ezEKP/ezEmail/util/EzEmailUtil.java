@@ -2,12 +2,16 @@ package egovframework.ezEKP.ezEmail.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +39,6 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
@@ -237,6 +240,20 @@ public class EzEmailUtil {
 		return stringList;
 	}
 	
+	private boolean isCharEncRight(byte[] bytes, String charEnc) {
+		Charset charset = Charset.forName(charEnc);
+		CharsetDecoder decoder = charset.newDecoder();
+		decoder.reset();
+		
+		try {
+			decoder.decode(ByteBuffer.wrap(bytes));
+		} catch (Exception e){			
+			return false;
+		}
+
+		return true;
+	}
+	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
@@ -291,7 +308,37 @@ public class EzEmailUtil {
 				filesize = (Double.parseDouble(filesize) + size) + "";
 				filecnt = (Integer.parseInt(filecnt) + 1) + "";
 			} else if(part.isMimeType("text/html")){
-				String strContent = part.getContent().toString();
+				String strContent = null;
+				
+				try {
+					strContent = part.getContent().toString();
+				}
+				catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					
+					InputStream is = part.getInputStream();
+					
+					if (is.available() > 0) {
+						byte[] buf = new byte[is.available()];
+						is.read(buf);
+						
+						if (isCharEncRight(buf, "utf-8")) {							
+							strContent = new String(buf, "utf-8");
+							
+							logger.debug("it's UTF-8");
+						}
+						else if (isCharEncRight(buf, "euc-kr")) {
+							strContent = new String(buf, "euc-kr");
+							
+							logger.debug("it's EUC-KR");							
+						}
+						else {
+							strContent = new String(buf, "iso-8859-1");
+							
+							logger.debug("unknown encoding");														
+						}
+					}
+				}
 				
 				// process in-line images
 				int index1 = -1;
