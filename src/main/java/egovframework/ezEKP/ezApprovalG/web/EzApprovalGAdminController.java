@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -559,7 +560,7 @@ public class EzApprovalGAdminController {
 	/**
 	 * 전자결재G관리 분류삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String removeTaskCategory(HttpServletRequest request) throws Exception {
 		String categoryType = request.getParameter("cateType");
@@ -572,7 +573,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 코드추가 화면 호출 함수
+	 * 전자결재G관리 코드추가,수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
 	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) {
@@ -590,5 +591,47 @@ public class EzApprovalGAdminController {
 		model.addAttribute("title", title);
 		
 		return "admin/ezApprovalG/apprGTaskCodeInsert";
+	}
+	
+	/**
+	 * 전자결재G관리 코드추가 단위업무코드 중복확인 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeDuplicate.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getTaskCodeDuplicate(HttpServletRequest request) throws Exception {
+		String taskCode = request.getParameter("sCateCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCodeDuplicate(taskCode, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 코드수정 단위업무정보 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getTaskInfo(HttpServletRequest request) throws Exception {
+		String pTaskCode = request.getParameter("taskCode");
+		String pDeptCode = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskInfo(pTaskCode, pDeptCode, companyID);
+
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 추가, 수정 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setTaskCode.do")
+	@ResponseBody
+	public String setTaskCode (ApprGTaskVO vo, HttpServletRequest request) throws Exception {
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.setTaskCode(vo, companyID);
+		
+		return result;
 	}
 }

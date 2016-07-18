@@ -335,13 +335,14 @@
 		            	url : "/admin/ezApprovalG/removeTaskCategory.do",
 		            	async : false,
 		            	data : {cateType : pLevel, cateCode : pGroupID, companyID : companyID},
+						dataType : "text",
 		            	success : function(result) {
 		            		if (result == "TRUE") {
 		            			var pAlertContent = "<spring:message code = 'ezApprovalG.t776' />";
 								//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
 //		 	                    OpenAlertUI(pAlertContent);
 			                    alert(pAlertContent);
-			
+			                    
 			                    nodeIdx.DeleteNode(treeview.GetID());
 		            		}
 		            	}

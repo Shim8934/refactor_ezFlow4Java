@@ -85,6 +85,20 @@ public class ApprGTaskVO {
 	private String name;
 	/** */
 	private String name2;
+	/** */
+	private String createDate;
+	/** */
+	private String kpReason;
+	/** */
+	private String exDisplayFrequency;
+	/** */
+	private String displayUsage;
+	/** */
+	private String processDate;
+	/** */
+	private String applyDate;
+	
+	
 	
 	public String getCategoryCode() {
 		return categoryCode;
@@ -338,5 +352,42 @@ public class ApprGTaskVO {
 	public void setName2(String name2) {
 		this.name2 = name2;
 	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+	public String getKpReason() {
+		return kpReason;
+	}
+	public void setKpReason(String kpReason) {
+		this.kpReason = kpReason;
+	}
+	public String getExDisplayFrequency() {
+		return exDisplayFrequency;
+	}
+	public void setExDisplayFrequency(String exDisplayFrequency) {
+		this.exDisplayFrequency = exDisplayFrequency;
+	}
+	public String getDisplayUsage() {
+		return displayUsage;
+	}
+	public void setDisplayUsage(String displayUsage) {
+		this.displayUsage = displayUsage;
+	}
+	public String getProcessDate() {
+		return processDate;
+	}
+	public void setProcessDate(String processDate) {
+		this.processDate = processDate;
+	}
+	public String getApplyDate() {
+		return applyDate;
+	}
+	public void setApplyDate(String applyDate) {
+		this.applyDate = applyDate;
+	}
+	
 	
 }

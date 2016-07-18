@@ -78,7 +78,7 @@ function SelectOption(objSel, szVal) {
 }
 
 function SelOptionInSingleSelBox(objSelection, strValue) {
-    if (CrossYN()) {
+    /*if (CrossYN()) {
         if (objSelection.options[strValue])
             objSelection.selectedIndex = objSelection.options[strValue].index;
     }
@@ -87,6 +87,10 @@ function SelOptionInSingleSelBox(objSelection, strValue) {
             if (objSelection.options[i].id == strValue)
                 objSelection.selectedIndex = i;
         }
+    }*/
+	for (var i = 0; i < objSelection.options.length; i++) {
+        if (objSelection.options[i].id == strValue)
+            objSelection.selectedIndex = i;
     }
 }
 

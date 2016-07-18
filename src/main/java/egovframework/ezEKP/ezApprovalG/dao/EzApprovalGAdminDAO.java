@@ -48,6 +48,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGTaskVO> getTaskInSubCategoryForManage(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInSubCategoryForManage", map);
 	}
+	
+	public ApprGTaskVO getTaskInfo(Map<String, Object> map) throws Exception {
+		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskInfo", map);
+	}
+	
+	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
+		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
+	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
@@ -62,8 +70,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (Integer) map.get("v_pCount");
 	}
 
-	public Integer getTaskCategoryNodeExist(Map<String, Object> map) {
+	public Integer getTaskCategoryNodeExist(Map<String, Object> map) throws Exception {
 		select("EzApprovalGAdmin.getTaskCategoryNodeExist", map);
+		return (Integer) map.get("v_pCount");
+	}
+
+	public Integer getTaskCodeDuplicate(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.getTaskCodeDuplicate", map);
 		return (Integer) map.get("v_pCount");
 	}
 	
@@ -126,4 +139,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void removeTaskCategory(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.removeTaskCategory", map);
 	}
+
+	public void setTaskHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setTaskHistory", map);
+	}
+
+
+
+
+
+
 }

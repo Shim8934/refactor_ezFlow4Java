@@ -35,6 +35,18 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKINSUBCATEGORYFORMA(#v_SUBCATECODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskInfo"					parameterClass="Map" resultClass="ApprGTaskVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKINFO(#v_DEPTCODE#, #v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskCode"					parameterClass="Map" resultClass="ApprGTaskVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODE(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
 
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
@@ -63,6 +75,12 @@
 	<procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" 			parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>	
 	</procedure>
 	
@@ -166,7 +184,33 @@
 				containerid, 	usedepid
 			)VALUES(
 				#contID#,		#deptID#
-			)			
+			)
+	     ]]> 
+	</insert>
+	
+	<insert id="EzApprovalGAdmin.setTaskHistory" 					parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBTASKCODEHISTORY(
+				ApplyDate,
+				TaskCode,
+				TaskName,
+				TaskName2,
+				ChangeFactor,
+				ChangeFactor2,
+				BeforeValue,
+				AfterValue,
+				AfterValue2,
+			)VALUES(
+				#v_APPLYDATE#,
+				#v_TASKCODE#,
+				#v_TASKNAME#,
+				#v_TASKNAME2#,
+				#v_CHANGEFACTOR#,
+				#v_CHANGEFACTOR2#,
+				#v_BEFOREVALUE#,
+				#v_AFTERVALUE#,
+				#v_AFTERVALUE2#,
+			)
 	     ]]> 
 	</insert>
 	

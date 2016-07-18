@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezApprovalG.service;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+
 public interface EzApprovalGAdminService {
 
 	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception;
@@ -46,5 +48,12 @@ public interface EzApprovalGAdminService {
 
 	public String removeTaskCategory(String categoryType, String categoryCode, String companyID) throws Exception;
 
+	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception;
+
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception;
+
+	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception;
+	
 }

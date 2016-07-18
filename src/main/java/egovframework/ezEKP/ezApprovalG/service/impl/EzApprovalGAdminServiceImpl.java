@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.stringtemplate.v4.compiler.CodeGenerator.conditional_return;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -20,7 +19,9 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezSchedule.web.EzScheduleController;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzApprovalGAdminService")
 public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
@@ -723,6 +724,111 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";
 		}
 		
+	}
+
+	@Override
+	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TASKCODE", taskCode);
+		map.put("v_pCount", 0);
+		map.put("companyID", companyID);
+		
+		try {
+			Integer result = ezApprovalGAdminDAO.getTaskCodeDuplicate(map);
+			
+			if (result > 0) {
+				return "TRUE";
+			} else {
+				return "FALSE";
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DEPTCODE", pDeptCode);
+		map.put("v_TASKCODE", pTaskCode);
+		map.put("companyID", companyID);
+		
+		try {
+			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskInfo(map);
+	
+			if (vo == null) {
+				return "<RESULT>NOITEM</RESULT>";
+			}
+			
+			String result = commonUtil.getQueryResult(vo);
+			
+			return result;
+		} catch (Exception e) {
+			return "<RESULT>FLASE</RESULT>";
+		}
+	}
+
+	@Override
+	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception {
+		try {
+			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID).equals("TRUE")) {
+//				중복이니까 update
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_TASKCODE", vo.getTaskCode());
+				map.put("companyID", companyID);
+				
+				ApprGTaskVO item = ezApprovalGAdminDAO.getTaskCode(map);
+				
+				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
+				
+				String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
+									"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", 
+									"DISPLAYRECTRASTIME", "EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", 
+									"SC1", "SC2", "SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
+				
+				String[] NAMEDESC = {"단위업무명(한글)","단위업무명(영문)", "보존연한", "보존연한책정사유", 
+									"보존방법", "보존장소", "비치기록물", "비치기록물이관시기", 
+									"이관후예상열람빈도", "특수목록위치", "제1특수목록", "제2특수목록", 
+									"제3특수목록", "주요열람용도", "단위업무설명", "소기능"};
+                    
+                // 2010.08.23 다국어
+                String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KeepingReason", 
+									"KeepingMethod", "KeepingPlace", "DisplayREC", "DisplayRECTrastime", 
+									"EXDisplayFrequency", "SCPlace", "SC1", "SC2", 
+									"SC3", "DisplayUsage", "Description", "SubCategory"};
+
+			} else {
+//				insert
+			}
+		} catch (Exception e) {
+			
+		}
+		return null;
+	}
+	
+	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_APPLYDATE", EgovDateUtil.getCurrentDate("-"));
+		map.put("v_TASKCODE", taskCode);
+		map.put("v_TASKNAME", taskName);
+		map.put("v_TASKNAME2", taskName2);
+		map.put("v_CHANGEFACTOR", changeFactor);
+		map.put("v_CHANGEFACTOR2", changeFactor2);
+		map.put("v_BEFOREVALUE", beforeValue);
+		map.put("v_AFTERVALUE", afterValue);
+		map.put("v_AFTERVALUE2", afterValue2);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGAdminDAO.setTaskHistory(map);
+			return "TRUE";
+		} catch(Exception e) {
+			return "FALSE";
+		}
 	}
 	
 	
