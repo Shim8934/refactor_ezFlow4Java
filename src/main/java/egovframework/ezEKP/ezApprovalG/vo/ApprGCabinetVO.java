@@ -1,5 +1,9 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
+/**
+ * @author YOON
+ *
+ */
 public class ApprGCabinetVO {
 	/** 기록물철ID*/
 	private String cabinetID; 
@@ -49,6 +53,32 @@ public class ApprGCabinetVO {
 	private String title; 
 	/** 기록물철제목(다국어)*/
 	private String title2;
+	/** */
+	private String cName;
+	/** */
+	private String mcName;
+	/** */
+	private String scName;
+	/** */
+	private String createDate;
+	/** */
+	private String subCategoryCode;
+	/** */
+	private String keepingPeriod;
+	/** */
+	private String tempFlag;
+	/** */
+	private String diplayRecFlag;
+	/** */
+	private String sc1;
+	/** */
+	private String sc2;
+	/** */
+	private String sc3;
+	/** */
+	private String keepingMethod;
+	/** */
+	private String keepingPlace;
 	
 	public String getCabinetID() {
 		return cabinetID;
@@ -194,5 +224,82 @@ public class ApprGCabinetVO {
 	public void setTitle2(String title2) {
 		this.title2 = title2;
 	}
-	
+	public String getcName() {
+		return cName;
+	}
+	public void setcName(String cName) {
+		this.cName = cName;
+	}
+	public String getMcName() {
+		return mcName;
+	}
+	public void setMcName(String mcName) {
+		this.mcName = mcName;
+	}
+	public String getScName() {
+		return scName;
+	}
+	public void setScName(String scName) {
+		this.scName = scName;
+	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+	public String getSubCategoryCode() {
+		return subCategoryCode;
+	}
+	public void setSubCategoryCode(String subCategoryCode) {
+		this.subCategoryCode = subCategoryCode;
+	}
+	public String getKeepingPeriod() {
+		return keepingPeriod;
+	}
+	public void setKeepingPeriod(String keepingPeriod) {
+		this.keepingPeriod = keepingPeriod;
+	}
+	public String getTempFlag() {
+		return tempFlag;
+	}
+	public void setTempFlag(String tempFlag) {
+		this.tempFlag = tempFlag;
+	}
+	public String getDiplayRecFlag() {
+		return diplayRecFlag;
+	}
+	public void setDiplayRecFlag(String diplayRecFlag) {
+		this.diplayRecFlag = diplayRecFlag;
+	}
+	public String getSc1() {
+		return sc1;
+	}
+	public void setSc1(String sc1) {
+		this.sc1 = sc1;
+	}
+	public String getSc2() {
+		return sc2;
+	}
+	public void setSc2(String sc2) {
+		this.sc2 = sc2;
+	}
+	public String getSc3() {
+		return sc3;
+	}
+	public void setSc3(String sc3) {
+		this.sc3 = sc3;
+	}
+	public String getKeepingMethod() {
+		return keepingMethod;
+	}
+	public void setKeepingMethod(String keepingMethod) {
+		this.keepingMethod = keepingMethod;
+	}
+	public String getKeepingPlace() {
+		return keepingPlace;
+	}
+	public void setKeepingPlace(String keepingPlace) {
+		this.keepingPlace = keepingPlace;
+	}
 }

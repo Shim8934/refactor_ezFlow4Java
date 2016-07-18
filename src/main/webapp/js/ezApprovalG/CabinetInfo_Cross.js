@@ -95,7 +95,7 @@ function NewVolume(pCabID, pCabClassNo, opentype, CompleteFunction) {
     para[0] = pCabID;
     para[1] = pCabClassNo;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/AddVolume_Cross.aspx";
+    var url = "/ezApprovalG/addVolume.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         addvolume_cross_dialogArguments[0] = para;
@@ -103,7 +103,7 @@ function NewVolume(pCabID, pCabClassNo, opentype, CompleteFunction) {
             addvolume_cross_dialogArguments[1] = NewVolume_Complete;
         else
             addvolume_cross_dialogArguments[1] = CompleteFunction;
-        temppCabClassNo = pCabClassNo
+        temppCabClassNo = pCabClassNo;
 
         if (opentype == "OPEN") {
             var OpenWin = window.open(url, "AddVolume_Cross", GetOpenWindowfeature(360, 310));
@@ -134,19 +134,24 @@ function NewVolume_Complete(rtn) {
 }
 
 function AddNewVolume(pCabClassNo, pNewVolNo) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); 
-    createNodeAndInsertText(xmlpara, objNode, "CABCLASSNO", pCabClassNo);
-    createNodeAndInsertText(xmlpara, objNode, "NEWVOLNO", pNewVolNo);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_AddNewVolume.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/addNewVolume.do",
+		data : {
+			cabClassNO : pCabClassNo,
+			companyID  : CompanyID,
+			newVolNO   : pNewVolNo
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    var dataNodes = GetChildNodes(result);
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {

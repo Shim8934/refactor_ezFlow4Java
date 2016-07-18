@@ -329,7 +329,7 @@ function InitAprlineTemplet()
 function OpenInformationUI(pInformationContent)
 {
 	var parameter = pInformationContent;
-	var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+	var url = "/ezApprovalG/ezAprOpinion.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	feature =  feature + GetShowModalPosition(330, 205);
 	

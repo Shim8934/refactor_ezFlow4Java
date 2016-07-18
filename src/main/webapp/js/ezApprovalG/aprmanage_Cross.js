@@ -1165,7 +1165,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
-        var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion_Cross.aspx";
+        var url = "/ezApprovalG/aprOpinion.do";
 
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = OpenOpinionUI_Complete;
@@ -1239,33 +1239,42 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
 }
 
 function setHeSongDocInfo(pCurSelRow) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
+	var result = "";
+	var pReceiveSN = "";
+	var pDocState = "";
+	
+	if (pListTypeValue == "4") {
+		pReceiveSN = GetAttribute(pCurSelRow, "DATA2");
+	} else {
+		pReceiveSN = GetAttribute(pCurSelRow, "DATA9")
+	}
+	
+	if (pCurSelRow.cells[2].innerText == strLang879) {
+		pDocState = "REBACK";
+	} else {
+		pDocState = "RECEIVE";
+	}
+	
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/setHeSongDocInfo.do",
+		data : {
+			docID : GetAttribute(pCurSelRow, "DATA1"),
+			receiveSN : pReceiveSN,
+			deptID  : arr_userinfo[4],
+			docState : pDocState,
+			userID : pUserID,
+			userName : arr_userinfo[11],
+			userName2 : arr_userinfo[12]
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "ASSIGN");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", GetAttribute(pCurSelRow, "DATA1"));
-
-    if (pListTypeValue == "4")
-        createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", GetAttribute(pCurSelRow, "DATA2"));
-    else
-        createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", GetAttribute(pCurSelRow, "DATA9"));
-
-    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-
-    if (pCurSelRow.cells[2].innerText == strLang879)
-        createNodeAndInsertText(xmlpara, objNode, "pDocSate", "REBACK");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "pDocSate", "RECEIVE");
-
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-    createNodeAndInsertText(xmlpara, objNode, "pUserName2", arr_userinfo[12]);
-
-    xmlhttp.open("POST", "ezAPRRECEIVE/aspx/setHeSongDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
+    var RtnVal = getNodeText(result.documentElement);
 
     if (RtnVal == "FALSE") {
         var pAlertContent = strLang740;

@@ -483,7 +483,7 @@
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
 	
-		            var ezAPROPINION_Cross = window.open("/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx", "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";

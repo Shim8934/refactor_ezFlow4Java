@@ -3307,6 +3307,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			ezBoardService.brdNewItem(boardListVO);
 		}
+		//TODO: 한글 코드화
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
 			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath)) {
 				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";

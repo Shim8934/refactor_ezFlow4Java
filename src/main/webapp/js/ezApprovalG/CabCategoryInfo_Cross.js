@@ -310,7 +310,7 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode) {
 var findtask_cross_dialogArguments = new Array();
 function OpenTaskFindWin(opentype, CompleteFunction) {
     var para = new Array();
-    var url = "/myoffice/ezApprovalG/ezCabinet/FindTask_Cross.aspx";
+    var url = "/ezApprovalG/findTask.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         findtask_cross_dialogArguments[0] = para;
@@ -344,25 +344,34 @@ function OpenTaskFindWin_Complete(rtn) {
 }
 
 function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "TITLE", pTitle);
-    createNodeAndInsertText(xmlpara, objNode, "CODE", pCode); 
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", pDeptCode);	 
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);	        
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);	
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
-
-
-    if (pFlag == "1") {
-        createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
-        createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
-    }
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_FindTask.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseXML;
+	var result = "";
+	var pageSize = "";
+	var pageNO = "";
+	
+	if (pFlag == "1") {
+		pageSize = PageSize;
+		pageNO = curpage;
+	}
+	
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/findTaskList.do",
+		data : {
+			deptCode   : pDeptCode,
+			title 	   : pTitle,
+			code       : pCode,
+			flag       : pFlag,
+			companyID  : CompanyID,
+			langType   : UserLang,
+			pageSize   : pageSize,
+			pageNO     : pageNO
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    return result;
 }

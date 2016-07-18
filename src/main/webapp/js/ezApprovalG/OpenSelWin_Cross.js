@@ -101,7 +101,7 @@ function SelectUsert_Complete(rtn) {
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
     if (CrossYN() || NonActiveX == "YES") {
         ezapropinion_cross_dialogArguments[0] = parameter;

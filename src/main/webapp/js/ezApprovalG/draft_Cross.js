@@ -2032,7 +2032,7 @@ function HabyuiResultOpinion() {
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
 
-        var url = "../ezAPROPINION/AprOpinion_Cross.aspx";
+        var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
         feature = feature + GetShowModalPosition(530, 520);
         var ret = window.showModalDialog(url, parameter, feature);

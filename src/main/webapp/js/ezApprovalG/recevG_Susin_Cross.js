@@ -1196,7 +1196,7 @@ function btnAddSepAttach_onclick() {
     inssepattach_cross_dialogArguments[0] = para;
     inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
-    DivPopUpShow(730, 630, "/myoffice/ezApprovalG/ezCabinet/InsSepAttach_Cross.aspx");
+    DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
 }
 
 
@@ -1685,27 +1685,35 @@ function document_oncontextmenu() {
 
 function setHeSongDocInfo() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
+    	var result = "";
+        var docState = "";
+        
+    	if (pAprState == "015") {
+    		docState = "REACK";
+    	} else {
+    		docState = "RECEIVE";
+    	}
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/setHeSongDocInfo.do",
+    		data : {
+    			docID : pDocID,
+    			receiveSN : pSusinSN,
+    			deptID  : arr_userinfo[4],
+    			docState : docState,
+    			userID : pUserID,
+    			userName : arr_userinfo[11],
+    			userName2 : arr_userinfo[12]
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "ASSIGN");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "ReceiveSN", pSusinSN);
-        createNodeAndInsertText(xmlpara, objNode, "DeptID", arr_userinfo[4]);
-        if (pAprState == "015")
-            createNodeAndInsertText(xmlpara, objNode, "DocSate", "REBACK");
-        else
-            createNodeAndInsertText(xmlpara, objNode, "DocSate", "RECEIVE");
-
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName2", arr_userinfo[12]);
-
-        xmlhttp.open("POST", "../ezAPRRECEIVE/aspx/setHeSongDocInfo.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
+        var RtnVal = getNodeText(result.documentElement);
 
         if (RtnVal != "TRUE") {
             var pAlertContent = strLang740;

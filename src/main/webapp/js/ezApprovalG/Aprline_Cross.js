@@ -2372,7 +2372,7 @@ function AprLineBanSongChangeType() {
 
 function OpenInformationUI(pInformationContent) {
     var parameter = pInformationContent;
-    var url = "../ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
     feature = feature + GetShowModalPosition(330, 205);
     var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -2381,7 +2381,7 @@ function OpenInformationUI(pInformationContent) {
 
 function OpenAlertUI(pAlertContent) {
     var parameter = pAlertContent;
-    var url = "../ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
     feature = feature + GetShowModalPosition(330, 205);
     var RtnVal = window.showModalDialog(url, parameter, feature);

@@ -139,7 +139,7 @@
 	        }
 	        function initTreeInfo() {
 	            try {
-	                TreeViewinitialize(InitTreeVal, "${userInfo.companyID}", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname", "");
+	                TreeViewinitialize(InitTreeVal, "${userInfo.companyID}", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
 	            } catch (ErrMsg) {
 	                alert(ErrMsg.description);
 	            }
@@ -230,9 +230,9 @@
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", MakeXMLString(SelRow.getAttribute("DATA5")));
 	            }
 	            if ("${mode}" == "add") 
-	                xmlhttp.open("POST", "../ReceivUI/aspx/addBebu.aspx", false);
+	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
 	            else
-	                xmlhttp.open("POST", "../ReceivUI/aspx/setBebu.aspx", false);
+	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
 	            xmlhttp.send(xmlpara);
 	            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
 	        } catch (ErrMsg) {
@@ -249,34 +249,28 @@
 	        }
 	    }
 	    function GetEntryInfo(_DEPTID) {
-	        var XmlHttp = null;
-	        var XmlDom = null;
-	        var Node;
+        	var result = "";
 	        var ReceiveDocument = "";
+        	
+        	$.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : false,
+        		url : "/admin/ezOrgan/getEntryInfo.do",
+        		data : {
+        			cn 	  : _DEPTID,
+        			prop  : "extensionAttribute11",
+        			mode  : "dept"
+        		},
+        		success: function(xml){
+        			result = xml;
+        		}        			
+        	});
+	        	
 	
-	        try {
-	            XmlDom = createXmlDom();
-	            XmlHttp = createXMLHttpRequest();
+            XmlDom = result;
+            ReceiveDocument = SelectSingleNodeValueNew(XmlDom, "DATA/EXTENSIONATTRIBUTE11").trim();
 	
-	            createNodeInsert(XmlDom, Node, "DATA");
-	            createNodeAndInsertText(XmlDom, Node, "CN", _DEPTID);
-	            createNodeAndInsertText(XmlDom, Node, "PROP", "extensionAttribute11");
-	
-	            XmlHttp.open("POST", "/myoffice/ezOrgan/Admin/GetEntryInfo.aspx?pMode=dept", false);
-	            XmlHttp.send(XmlDom);
-	
-	            if (XmlHttp.status == 200) {
-	                XmlDom = XmlHttp.responseXML;
-	                ReceiveDocument = SelectSingleNodeValueNew(XmlDom, "DATA/EXTENSIONATTRIBUTE11").trim();
-	            }
-	
-	        } catch (e) {
-	            alert(e.description);
-	        } finally {
-	            XmlHttp = null;
-	            XmlDom = null;
-	            Node = null;
-	        }
 	        return ReceiveDocument;
 	    }
 	
@@ -424,7 +418,7 @@
 	    var ezapralert_cross_dialogArguments = new Array();
 	    function OpenAlertUI(pAlertContent, CompleteFunction) {
 	        var parameter = pAlertContent;
-	        var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+	        var url = "/ezApprovalG/ezAprAlert.do";
 	
 	        if (CrossYN()) {
 	            ezapralert_cross_dialogArguments[0] = parameter;
@@ -854,7 +848,7 @@
 	            }
 	
 	            if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRecSaveList_TR_noItems") {
-	                var windowName = "/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/AprLineTempletName_Cross.aspx";
+	                var windowName = "/ezApprovalG/aprLineTempletName.do";
 	                var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
 	                var dialogValue = new Array();
 	                dialogValue[0] = pUserID;
@@ -928,7 +922,7 @@
 	            }
 	
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/CreateAprDeptTemplet.aspx", false);
+	            xmlhttp.open("POST", "/ezApprovalG/createAprDeptTemplet.do", false);
 	            xmlhttp.send(AprDeptInfo);
 	
 	            var dataNodes = GetChildNodes(xmlhttp.responseXML);
@@ -1032,23 +1026,24 @@
 	    var xmlhttp;
 	    function GetReceptTempletList() {
 	        try {
-	            var xmlpara = createXmlDom();
-	            xmlhttp = createXMLHttpRequest();
-	            var objNode;
-	
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/GetReceptTemplist.aspx", true);
-	            xmlhttp.onreadystatechange = event_GetReceptTempletList;
-	            xmlhttp.send(xmlpara);
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : true,
+	        		url : "/ezApprovalG/getReceptTemplist.do",
+	        		data : {
+	        				userID : pUserID,
+	        				formID : pFormID
+	        				},
+	        		success: function(text){
+	        			event_GetReceptTempletList(text);
+	        		}        			
+	        	});
 	        } catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_GetReceptTempletList::" + e.description);
 	        }
 	    }
-	    function event_GetReceptTempletList() {
-	        if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	    function event_GetReceptTempletList(text) {
 	        try {
 	            if (document.getElementById("RecSaveList").innerHTML != "") document.getElementById("RecSaveList").innerHTML = "";
 	            var liveView = new ListView();
@@ -1056,7 +1051,7 @@
 	            liveView.SetRowOnClick("lvRecSaveList_onSel_Click");
 	            liveView.SetSelectFlag(true);
 	            liveView.SetHeightFree(true);
-	            liveView.DataSource(loadXMLString(xmlhttp.responseText));
+	            liveView.DataSource(loadXMLString(text));
 	            liveView.DataBind("RecSaveList");
 	
 	            var pCurSelRow = liveView.GetSelectedRows();
@@ -1066,7 +1061,6 @@
 	            else {
 	                document.getElementById("RecSaveDetail").innerHTML = "";
 	            }
-	            xmlhttp = null;
 	        }
 	        catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_event_GetReceptTempletList::" + e.description);
@@ -1087,25 +1081,26 @@
 	    var xmlHTTP;
 	    function GetReceptTempletInfo(p_AprLineTempletID) {
 	        try {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : true,
+	        		url : "/ezApprovalG/getAprDeptTempletListInfo.do",
+	        		data : {
+	        				userID : pUserID,
+	        				formID : pFormID,
+	        				aprSN  : p_AprLineTempletID
+	        				},
+	        		success: function(text){
+	        			event_GetReceptTempletInfo(text);
+	        		}        			
+	        	});
 	
-	            var xmlpara = createXmlDom();
-	            xmlHTTP = createXMLHttpRequest();
-	
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "APRTEMP"); // Root Node 생성	
-	            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-	            createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_AprLineTempletID);
-	
-	            xmlHTTP.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/GetAprDeptTempletListInfo.aspx ", true);
-	            xmlHTTP.send(xmlpara);
-	            xmlHTTP.onreadystatechange = event_GetReceptTempletInfo;
 	        } catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_GetReceptTempletInfo::" + e.description);
 	        }
 	    }
-	    function event_GetReceptTempletInfo() {
-	        if (xmlHTTP == null || xmlHTTP.readyState != 4) return;
+	    function event_GetReceptTempletInfo(text) {
 	        try {
 	            if (document.getElementById("RecSaveDetail").innerHTML != "")
 	                document.getElementById("RecSaveDetail").innerHTML = "";
@@ -1114,9 +1109,8 @@
 	            pAPRTEMP.SetMulSelectable(false);
 	            pAPRTEMP.SetHeightFree(true);
 	            pAPRTEMP.SetSelectFlag(false);
-	            pAPRTEMP.DataSource(loadXMLString(xmlHTTP.responseText));
+	            pAPRTEMP.DataSource(loadXMLString(text));
 	            pAPRTEMP.DataBind("RecSaveDetail");
-	            xmlHTTP = null;
 	        }
 	        catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_event_GetReceptTempletInfo::" + e.description);
@@ -1208,27 +1202,30 @@
 	    }
 	    function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	        try {
-	            var xmlpara = createXmlDom();
-	            var xmlhttp = createXMLHttpRequest();
+	        	var result = "";
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "xml",
+	        		async : false,
+	        		url : "/ezApprovalG/getAprDeptTempletListInfo.do",
+	        		data : {
+	        				userID : pUserID,
+	        				formID : pFormID,
+	        				aprSN  : p_CheckAprDeptTempletSN
+	        				},
+	        		success: function(xml){
+	        			result = xml;
+	        		}        			
+	        	});
 	
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "APRDEPT");
-	            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-	            createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_CheckAprDeptTempletSN);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/GetAprDeptTempletListInfo.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            SetBaeBuList(xmlhttp.responseXML);
+	            SetBaeBuList(result);
 	        } catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_AddToAprDeptFromAprDeptTemplet::" + e.description);
 	        }
 	    }
 	    function SetBaeBuList(pstrXML) {
-	
 	        try {
-	
 	            var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");
 	
 	            var strXML;
@@ -1395,7 +1392,7 @@
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/myoffice/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">

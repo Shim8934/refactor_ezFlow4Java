@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
@@ -408,6 +409,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> getFindSimpleCabinetList(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getFindSimpleCabinetList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprDocInfoVO> doSusinHesongAprDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprDocInfoVO>) list("EzApprovalG.doSusinHesongAprDocInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -538,6 +549,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getDocRecvState", map);
 	}
 	
+	public String getNewVolumeNo(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getNewVolumeNo", map);
+	}
+	
+	public String doSusinHesongSentDeptID(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.doSusinHesongSentDeptID", map);
+	}
+	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprDocListCount", map);
 		return (int)map.get("v_pCount");
@@ -638,6 +657,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int updateDeliveryListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.updateDeliveryListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int updateDeliveryListSNMax(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.updateDeliveryListSNMax", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -648,6 +677,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void spRollbackSN(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.spRollbackSN", map);
+	}
+	
+	public void addNewVolume(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.addNewVolume", map);
 	}
 	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{
