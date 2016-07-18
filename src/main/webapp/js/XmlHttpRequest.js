@@ -1,4 +1,4 @@
-﻿//XMLHttpRequest객체를 생성합니다.
+﻿﻿//XMLHttpRequest객체를 생성합니다.
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -658,6 +658,8 @@ function CrossYN() {
     // 크로스 브라우저 IE:false IE외: true    
 	if (/msie/i.test(ua)){
 		result = false;
+//	}else if (/rv:11.0/i.test(ua)){
+//		result = false;
 	}else if (/firefox/i.test(ua)){
 		result = true;
 	}else if (/chrome/i.test(ua)){
@@ -997,7 +999,7 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
-    } catch (e) { }
+    } catch (e) {alert(e.message); }
 }
 
 function DivPopUpHidden() {
@@ -1005,7 +1007,7 @@ function DivPopUpHidden() {
         document.getElementById("mailPanel").style.display = "none";
         document.getElementById("iFramePanel").style.display = "none";
         document.getElementById("iFrameLayer").src = "/blank.htm";
-    } catch (e) { }
+    } catch (e) {alert(e.message); }
 }
 
 function DivPopUpShow_sub(popUpW, popUpH, URL) {

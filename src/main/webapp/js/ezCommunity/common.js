@@ -7,10 +7,8 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     	alert(1);
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
-alert(1);
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         } else {
-alert(2);
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         }
         DivPopUpShow(330, 205, url);
