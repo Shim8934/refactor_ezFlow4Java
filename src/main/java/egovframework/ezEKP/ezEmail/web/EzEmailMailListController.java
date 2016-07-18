@@ -376,6 +376,9 @@ public class EzEmailMailListController {
 			else {
 				addresses = message.getRecipients(Message.RecipientType.TO);
 				if (addresses != null) {
+					String toHeader = message.getHeader("To")[0];
+					boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+					
 					StringBuilder addressBuilder = new StringBuilder();
 					for (Address address : addresses) {
 						addressStr = ((InternetAddress)address).getPersonal(); // name part
@@ -383,8 +386,15 @@ public class EzEmailMailListController {
 							addressStr = ((InternetAddress)address).getAddress(); // email address part
 						}
 						else {
-							// decoding is needed for the name part
-							addressStr = MimeUtility.decodeText(addressStr);
+							if (!isAscii) {
+								byte[] rawBytes = addressStr.getBytes("iso-8859-1");
+								
+								addressStr = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+							}
+							else {
+								// decoding is needed for the name part
+								addressStr = MimeUtility.decodeText(addressStr);
+							}
 						}						
 						addressBuilder.append(addressStr);
 						addressBuilder.append("; ");
@@ -394,11 +404,23 @@ public class EzEmailMailListController {
 				}								
 			}			
 			sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
-			
+						
 			// subject
 			String subject = message.getSubject();
-			subject = (subject != null) ? subject : "";
 			
+			if (subject != null && !subject.equals("")) {
+				String[] rawHeaders = message.getHeader("subject");
+				String rawHeader = rawHeaders[0];
+				
+				if (!ezEmailUtil.isPureAscii(rawHeader)) {
+					byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+					
+					subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+				}
+			}
+			
+			subject = (subject != null) ? subject : "";
+						
 			if (viewSelectIndex.equals("1")) {
 				((IMAPMessage)message).setPeek(true);
 				List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false);

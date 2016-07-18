@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -105,11 +104,20 @@ public class EzEmailUtil {
 					addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
 				}
 				else {
-					// decoding is needed for the name part
-					// ex) =?UTF-8?B?44WC44WC?=
-					//     =?utf-8?B?Z2lzYTE=?=
-					//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
-					addressStr = MimeUtility.decodeText(addressStr);
+					String fromHeader = message.getHeader("From")[0];
+					
+					if (!isPureAscii(fromHeader)) {
+						byte[] rawBytes = addressStr.getBytes("iso-8859-1");
+						
+						addressStr = decodeNonAsciiBytes(rawBytes);
+					}
+					else {
+						// decoding is needed for the name part
+						// ex) =?UTF-8?B?44WC44WC?=
+						//     =?utf-8?B?Z2lzYTE=?=
+						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
+						addressStr = MimeUtility.decodeText(addressStr);
+					}
 				}
 			}			
 			// in case there is only a name with no email address
@@ -240,7 +248,23 @@ public class EzEmailUtil {
 		return stringList;
 	}
 	
-	private boolean isCharEncRight(byte[] bytes, String charEnc) {
+	public boolean isPureAscii(String str) {
+		int length = str.length();
+		boolean result = true;
+		
+        for (int i = 0; i < length; i++) {
+            char character = str.charAt(i);
+            
+            if (character >= 128) {
+            	result = false;
+            	break;
+            }
+        }		
+        
+        return result;
+	}
+	
+	public boolean isCharEncRight(byte[] bytes, String charEnc) {
 		Charset charset = Charset.forName(charEnc);
 		CharsetDecoder decoder = charset.newDecoder();
 		decoder.reset();
@@ -252,6 +276,31 @@ public class EzEmailUtil {
 		}
 
 		return true;
+	}
+	
+	public String decodeNonAsciiBytes(byte[] rawBytes) {
+		String result = null;		
+		
+		try {
+			if (isCharEncRight(rawBytes, "utf-8")) {							
+				result = new String(rawBytes, "utf-8");
+				
+				logger.debug("it's UTF-8");
+			}
+			else if (isCharEncRight(rawBytes, "euc-kr")) {
+				result = new String(rawBytes, "euc-kr");
+				
+				logger.debug("it's EUC-KR");							
+			}
+			else {
+				result = new String(rawBytes, "iso-8859-1");
+				
+				logger.debug("unknown encoding");														
+			}		
+		} catch (UnsupportedEncodingException e) {			
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -322,21 +371,7 @@ public class EzEmailUtil {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
-						if (isCharEncRight(buf, "utf-8")) {							
-							strContent = new String(buf, "utf-8");
-							
-							logger.debug("it's UTF-8");
-						}
-						else if (isCharEncRight(buf, "euc-kr")) {
-							strContent = new String(buf, "euc-kr");
-							
-							logger.debug("it's EUC-KR");							
-						}
-						else {
-							strContent = new String(buf, "iso-8859-1");
-							
-							logger.debug("unknown encoding");														
-						}
+						strContent = decodeNonAsciiBytes(buf);						
 					}
 				}
 				
@@ -380,7 +415,25 @@ public class EzEmailUtil {
 				htmlBody = stripScriptTags(htmlBody);
 				htmlBody = addTargetBlank(htmlBody);				
 			} else if(part.isMimeType("text/plain")){
-				String strContent = part.getContent().toString();
+				String strContent = "";
+				String[] headers = part.getHeader("Content-Type");
+				
+				if (headers == null) {
+					logger.debug("no Content-Type header");
+					
+					InputStream is = part.getInputStream();
+					
+					if (is.available() > 0) {
+						byte[] buf = new byte[is.available()];
+						is.read(buf);
+						
+						strContent = decodeNonAsciiBytes(buf);						
+					}					
+				}
+				else {
+					strContent = part.getContent().toString();
+				}
+				
 				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 				
 				htmlBody = changeURLsToAnchorTags(htmlBody);	

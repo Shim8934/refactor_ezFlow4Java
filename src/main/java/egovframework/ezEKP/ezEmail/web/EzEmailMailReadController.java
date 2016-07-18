@@ -160,23 +160,19 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if(f.isOpen() && f instanceof IMAPFolder){
 					message = ((IMAPFolder)f).getMessageByUID(uid);
 				}
-				if(message != null){
+				
+				if (message != null) {
 					// From
 					arrFroms = message.getFrom();
-					if(arrFroms != null){
-						fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
-						if(fromStr == null){
-							fromStr = ((InternetAddress)arrFroms[0]).getAddress();
-						}
-						else{
-							fromStr = MimeUtility.decodeText(fromStr);
-							fromStr = commonUtil.trimDoubleQuotes(fromStr);
-						}
+					
+					if (arrFroms != null) {
+						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						fromStr = commonUtil.trimDoubleQuotes(fromStr);
+								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-					}
-					else{
+					} else {
 						String[] fromHeaders = message.getHeader("From");
-						if(fromHeaders != null){
+						if (fromHeaders != null) {
 							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
 						}
 					}
@@ -191,16 +187,29 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								break;
 							}
 						}
+						
+						String toHeader = message.getHeader("To")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
 						String name = null;
+						
 						for(int i=0; i<arrRecipientsTo.length; i++){
 							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
 							if(name == null){
 								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
 							}
 							else{
-								name = MimeUtility.decodeText(name);
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {
+									name = MimeUtility.decodeText(name);
+								}
+								
 								name = commonUtil.trimDoubleQuotes(name);
 							}
+							
 							if(toListme){
 								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))){
 									if(arrRecipientsTo.length > 1){
@@ -241,15 +250,28 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								break;
 							}
 						}
+						
+						String ccHeader = message.getHeader("Cc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
 						String name = null;
+						
 						for(int i=0; i<arrRecipientsCC.length; i++){
 							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
 							if(name == null) {
 								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
 							} else {
-								name = MimeUtility.decodeText(name);
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {								
+									name = MimeUtility.decodeText(name);
+								}
+								
 								name = commonUtil.trimDoubleQuotes(name);
 							}
+							
 							if (ccListme) {
 								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(id+"@"+config.getProperty("config.DomainName"))) {
 									if (arrRecipientsCC.length > 1) {
@@ -311,6 +333,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	
 					// subject
 					subject = message.getSubject();
+					
+					if (subject != null && !subject.equals("")) {
+						String[] rawHeaders = message.getHeader("subject");
+						String rawHeader = rawHeaders[0];
+						
+						if (!ezEmailUtil.isPureAscii(rawHeader)) {
+							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+							
+							subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+						}
+					}
+					
 					if (subject != null) {
 						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 					}
@@ -770,24 +804,25 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 				if(message != null){
 					arrFroms = message.getFrom();
-					if(arrFroms != null){
-						fromStr = ((InternetAddress)arrFroms[0]).getPersonal();
-						if(fromStr == null){
-							fromStr = ((InternetAddress)arrFroms[0]).getAddress();
-						} else {
-							fromStr = MimeUtility.decodeText(fromStr);
-						}
+					
+					if (arrFroms != null) {
+						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
 					} else {
 						String[] fromHeaders = message.getHeader("From");
-						if(fromHeaders != null){
+						if (fromHeaders != null) {
 							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
 						}
 					}
+					
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 					if(arrRecipientsTo != null){
 						InternetAddress iAddress = null;
+						String toHeader = message.getHeader("To")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);												
 						String name = null;
+						
 						for(int i=0; i<arrRecipientsTo.length; i++){
 							iAddress = ((InternetAddress)arrRecipientsTo[i]);
 							name = iAddress.getPersonal();
@@ -795,7 +830,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = iAddress.getAddress();
 							}
 							else {
-								name = MimeUtility.decodeText(name);
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {								
+									name = MimeUtility.decodeText(name);
+								}
 							}
 							
 							if (i != 0) {
@@ -808,7 +850,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
 					if(arrRecipientsCC != null){
 						InternetAddress iAddress = null;
+						String ccHeader = message.getHeader("Cc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);																		
 						String name = null;
+						
 						for(int i=0; i<arrRecipientsCC.length; i++){
 							iAddress = ((InternetAddress)arrRecipientsCC[i]);
 							name = iAddress.getPersonal();
@@ -816,7 +861,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = iAddress.getAddress();
 							}
 							else {
-								name = MimeUtility.decodeText(name);
+								if (!isAscii) {
+									byte[] rawBytes = name.getBytes("iso-8859-1");
+									
+									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {																
+									name = MimeUtility.decodeText(name);
+								}
 							}
 							
 							if (i != 0) {
@@ -852,7 +904,35 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
 					}
 	
+					String[] subjectHeaders = message.getHeader("subject");
+					if (subjectHeaders != null) {
+						String fileEncoding = System.getProperty("file.encoding");
+						logger.debug("fileEncoding=" + fileEncoding);
+						
+						String subjectHeader = subjectHeaders[0];
+						byte[] subjectBytes = subjectHeader.getBytes("iso-8859-1");
+						
+						StringBuilder sb = new StringBuilder();
+						
+						for (byte item : subjectBytes) {
+							sb.append(String.format("%02x", item));
+						}
+						
+						logger.debug("subjectBytes=" + sb.toString());
+					}
+					
 					subject = message.getSubject();
+					
+					if (subject != null && !subject.equals("")) {
+						String[] rawHeaders = message.getHeader("subject");
+						String rawHeader = rawHeaders[0];
+						
+						if (!ezEmailUtil.isPureAscii(rawHeader)) {
+							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+							
+							subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+						}
+					}
 					
 					if(!message.isSet(Flag.SEEN)){
 						unread = 1;
@@ -1031,8 +1111,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message != null) {
 					
 					if (message.getFrom() != null && message.getFrom().length > 0) {
-						InternetAddress fromAddress = (InternetAddress)message.getFrom()[0];
-						pSender = fromAddress.getPersonal() == null ? "" : fromAddress.getPersonal();
+						InternetAddress fromAddress = (InternetAddress)message.getFrom()[0];	
+						String personName = fromAddress.getPersonal();
+						personName = personName != null ? personName : "";
+						String fromHeader = message.getHeader("From")[0];
+						
+						if (!ezEmailUtil.isPureAscii(fromHeader)) {
+							byte[] rawBytes = personName.getBytes("iso-8859-1");
+							
+							personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+						}						
+						
+						pSender = personName;												
 						pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
 					}
 					
@@ -1040,15 +1130,39 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					Address[] ccAddresses = message.getRecipients(RecipientType.CC);
 					
 					if (toAddresses != null) {
+						String toHeader = message.getHeader("To")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+						
 						for (Address address : toAddresses) {
-							pReciverTo += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+							String personName = ((InternetAddress)address).getPersonal();
+							personName = personName != null ? personName : "";
+							
+							if (!isAscii) {
+								byte[] rawBytes = personName.getBytes("iso-8859-1");
+								
+								personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+							}
+							
+							pReciverTo += personName;
 							pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
 						}
 					}
 					
 					if (ccAddresses != null) {
+						String ccHeader = message.getHeader("Cc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
+						
 						for (Address address : ccAddresses) {
-							pReciverCc += ((InternetAddress)address).getPersonal() == null ? "" : ((InternetAddress)address).getPersonal();
+							String personName = ((InternetAddress)address).getPersonal();
+							personName = personName != null ? personName : "";
+							
+							if (!isAscii) {
+								byte[] rawBytes = personName.getBytes("iso-8859-1");
+								
+								personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+							}
+							
+							pReciverCc += personName;
 							pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
 						}
 					}
@@ -1059,6 +1173,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					pSubject = message.getSubject() == null ? "" : message.getSubject();
+					
+					if (pSubject != null && !pSubject.equals("")) {
+						String[] rawHeaders = message.getHeader("subject");
+						String rawHeader = rawHeaders[0];
+						
+						if (!ezEmailUtil.isPureAscii(rawHeader)) {
+							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+							
+							pSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+						}
+					}
 					
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true);
 					pBody = bodyInfoList.get(0);
