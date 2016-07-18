@@ -2419,6 +2419,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do")
 	public String mailNewReceiverChoose(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
 		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
@@ -2428,6 +2430,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("userInfo", userInfo);
 		
 		//TODO: delete
 		model.addAttribute("domainName", config.getProperty("config.DomainName"));
