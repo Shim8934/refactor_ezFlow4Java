@@ -41,9 +41,9 @@
 	        var agoNodeIdx = "";
 	        var agoNodeBool = false;
 	        var searchgubun = "N";
-	        var userid = "${userinfo.UserID}";
-	        var deptid = "${userinfo.DeptID}";
-	        var companyid = "${userinfo.CompanyID}";
+	        var userid = "${userInfo.id}";
+	        var deptid = "${userInfo.deptID}";
+	        var companyid = "${userInfo.companyID}";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
@@ -234,8 +234,7 @@
 	
 	            }
 	            else {
-	            	//TODO
-	                <%-- SelectReceiverWindow(<%= _defaultwin %>Title, ListViewMsg<%= _defaultwin %>); --%>
+	                SelectReceiverWindow(${defaultWin}Title, ListViewMsg${defaultWin});
 	            }
 	        }
 		    function recevieListview(pID, pListView) {
