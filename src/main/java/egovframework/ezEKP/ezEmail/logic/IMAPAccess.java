@@ -125,10 +125,6 @@ public class IMAPAccess {
 				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t648", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
-			}
 			
 			Folder[] f = getStore().getDefaultFolder().list();
 			
@@ -163,14 +159,8 @@ public class IMAPAccess {
 				}
 			}
 			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))){
-					topLevelFolders.add(fd);
-					break;
-				}
-			}
-			for(Folder fd : f){
 				if(!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027", locale))&&
-						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))){
+						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))){
 					topLevelFolders.add(fd);
 				}
 			}
