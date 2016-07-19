@@ -341,15 +341,21 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			// in case of editing a message in Drafts folder.
 			// retrieve the TO addresses from the message.
 			Address[] addresses = message.getRecipients(Message.RecipientType.TO);
-			to = ezEmailUtil.getStringListOfAddresses(addresses);
+			String[] rawHeaders = message.getHeader("To");
+			String rawHeader = rawHeaders != null ? rawHeaders[0] : ""; 
+			to = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 			
 			// retrieve the CC addresses from the message.
 			addresses = message.getRecipients(Message.RecipientType.CC);
-			cc = ezEmailUtil.getStringListOfAddresses(addresses);
+			rawHeaders = message.getHeader("Cc");
+			rawHeader = rawHeaders != null ? rawHeaders[0] : ""; 			
+			cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 			
 			// retrieve the BCC addresses from the message.
 			addresses = message.getRecipients(Message.RecipientType.BCC);
-			bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+			rawHeaders = message.getHeader("Bcc");
+			rawHeader = rawHeaders != null ? rawHeaders[0] : ""; 						
+			bcc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 			
 			// retrieve the subject from the message.
 			subject = message.getSubject();

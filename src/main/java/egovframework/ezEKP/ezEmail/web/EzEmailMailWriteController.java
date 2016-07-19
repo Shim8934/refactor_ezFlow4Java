@@ -390,15 +390,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
 						// retrieve the TO addresses from the message.
 						Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
-						to = ezEmailUtil.getStringListOfAddresses(addresses);
+						to = ezEmailUtil.getStringListOfAddresses(addresses, true);
 						
 						// retrieve the CC addresses from the message.
 						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
-						cc = ezEmailUtil.getStringListOfAddresses(addresses);
+						cc = ezEmailUtil.getStringListOfAddresses(addresses, true);
 						
 						// retrieve the BCC addresses from the message.
 						addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
-						bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+						bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
 						
 						// retrieve the subject from the message.
 						subject = orgMessage.getSubject();
@@ -487,7 +487,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		        		for (Address address : addresses) {
 		        			System.out.println(address);
 		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
-								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address});
+								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
 		        			}
 		        		}
@@ -607,19 +607,45 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
 							// retrieve the TO addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
-							to = ezEmailUtil.getStringListOfAddresses(addresses);
+							String[] rawHeaders = orgMessage.getHeader("From");
+							String rawHeader = rawHeaders != null ? rawHeaders[0] : "";		
+							boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+							if (isPureAscii) {
+								rawHeaders = orgMessage.getHeader("To");
+								rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+								isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+							}
+							to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
 	
 							// retrieve the CC addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
-							cc = ezEmailUtil.getStringListOfAddresses(addresses);
+							if (addresses != null) {
+								rawHeaders = orgMessage.getHeader("Cc");
+								rawHeader = rawHeaders != null ? rawHeaders[0] : "";																					
+								cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+							}
 							
 							// retrieve the BCC addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.BCC);
-							bcc = ezEmailUtil.getStringListOfAddresses(addresses);
+							bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
 		        		}
 						
 						// retrieve the subject from the message.
 						subject = orgMessage.getSubject();
+						
+						if (subject != null && !subject.equals("")) {
+							String[] rawHeaders = orgMessage.getHeader("subject");
+							String rawHeader = rawHeaders[0];
+							
+							// if the subject contains Non-Ascii characters(violating the standard), 
+							// try to decode it by examining the characters.							
+							if (!ezEmailUtil.isPureAscii(rawHeader)) {
+								byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+								
+								subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+							}
+						}
+						
 						subject = (subject != null) ? subject : "";
 						String reStr = ""; 
 								
@@ -636,11 +662,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		        		
 						// retrieve the TO addresses from the original message.
 						addresses = orgMessage.getRecipients(Message.RecipientType.TO);
-						String orgTo = ezEmailUtil.getStringListOfAddresses(addresses);
+						String[] rawHeaders = orgMessage.getHeader("To");
+						String rawHeader = rawHeaders != null ? rawHeaders[0] : "";													
+						String orgTo = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 						
 						// retrieve the CC addresses from the original message.
 						addresses = orgMessage.getRecipients(Message.RecipientType.CC);
-						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses);
+						rawHeaders = orgMessage.getHeader("Cc");
+						rawHeader = rawHeaders != null ? rawHeaders[0] : "";																			
+						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
@@ -650,7 +680,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate())));
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
-			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessage.getSubject())));
+			            
+			            String orgMessageSubject = orgMessage.getSubject();	
+						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
+							rawHeaders = orgMessage.getHeader("subject");
+							rawHeader = rawHeaders[0];
+							
+							// if the subject contains Non-Ascii characters(violating the standard), 
+							// try to decode it by examining the characters.							
+							if (!ezEmailUtil.isPureAscii(rawHeader)) {
+								byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+								
+								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+							}
+						}			            
+			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            

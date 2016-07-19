@@ -161,8 +161,20 @@ public class EzEmailUtil {
 				Address address = addresses[0];
 				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
 				String name = ((InternetAddress)address).getPersonal(); // name part
+				
 				if (name != null) {
-					name = MimeUtility.decodeText(name);
+					String fromHeader = message.getHeader("From")[0];
+					
+					// if the name contains Non-Ascii characters(violating the standard), 
+					// try to decode it by examining the characters.					
+					if (!isPureAscii(fromHeader)) {
+						byte[] rawBytes = name.getBytes("iso-8859-1");
+						
+						name = decodeNonAsciiBytes(rawBytes);
+					}
+					else {					
+						name = MimeUtility.decodeText(name);
+					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
@@ -219,7 +231,7 @@ public class EzEmailUtil {
 	/**
 	 * returns a comma separated string list containing the passed-in addresses. 
 	 */
-	public String getStringListOfAddresses(Address[] addresses) {
+	public String getStringListOfAddresses(Address[] addresses, boolean isPureAscii) {
 		String stringList = "";
 		
 		if (addresses != null) {
@@ -227,9 +239,19 @@ public class EzEmailUtil {
 			for (Address address : addresses) {
 				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
 				String name = ((InternetAddress)address).getPersonal(); // name part
+				
 				if (name != null) {
 					try {
-						name = MimeUtility.decodeText(name);
+						// if the name contains Non-Ascii characters(violating the standard), 
+						// try to decode it by examining the characters.
+						if (!isPureAscii) {
+							byte[] rawBytes = name.getBytes("iso-8859-1");
+							
+							name = decodeNonAsciiBytes(rawBytes);
+						}
+						else {						
+							name = MimeUtility.decodeText(name);
+						}
 					} catch (UnsupportedEncodingException e) {
 					}
 					
@@ -249,17 +271,20 @@ public class EzEmailUtil {
 	}
 	
 	public boolean isPureAscii(String str) {
-		int length = str.length();
 		boolean result = true;
 		
-        for (int i = 0; i < length; i++) {
-            char character = str.charAt(i);
-            
-            if (character >= 128) {
-            	result = false;
-            	break;
-            }
-        }		
+		if (str != null) {
+			int length = str.length();		
+			
+	        for (int i = 0; i < length; i++) {
+	            char character = str.charAt(i);
+	            
+	            if (character >= 128) {
+	            	result = false;
+	            	break;
+	            }
+	        }		
+		}
         
         return result;
 	}
@@ -570,6 +595,21 @@ public class EzEmailUtil {
 				        try {
 				        	String subject = message.getSubject();
 				        	
+							if (subject != null && !subject.equals("")) {
+								String[] rawHeaders = message.getHeader("subject");
+								String rawHeader = rawHeaders[0];
+								
+								// if the subject contains Non-Ascii characters(violating the standard), 
+								// try to decode it by examining the characters.								
+								if (!isPureAscii(rawHeader)) {
+									try {
+										byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+										
+										subject = decodeNonAsciiBytes(rawBytes);
+									} catch (UnsupportedEncodingException e) {										
+									}
+								}
+							}				        	
 				        	
 				            if (subject != null && subject.toLowerCase().contains(searchValue.toLowerCase())) {
 				                return true;
@@ -606,7 +646,9 @@ public class EzEmailUtil {
 					    	
 					    	// retrieve the TO addresses from the message.
 							Address[] addresses = message.getRecipients(Message.RecipientType.TO);
-							String to = getStringListOfAddresses(addresses);
+							String[] rawHeaders = message.getHeader("To");
+							String rawHeader = rawHeaders != null ? rawHeaders[0] : "";							
+							String to = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
 							
 							if (!to.equals("")) {
 								sb.append(to);
@@ -614,7 +656,9 @@ public class EzEmailUtil {
 							
 							// retrieve the CC addresses from the message.
 							addresses = message.getRecipients(Message.RecipientType.CC);
-							String cc = getStringListOfAddresses(addresses);
+							rawHeaders = message.getHeader("Cc");
+							rawHeader = rawHeaders != null ? rawHeaders[0] : "";														
+							String cc = getStringListOfAddresses(addresses, isPureAscii(rawHeader));
 							
 							if (!cc.equals("")) {
 								if (!to.equals("")) {
@@ -626,7 +670,7 @@ public class EzEmailUtil {
 							
 							// retrieve the BCC addresses from the message.
 							addresses = message.getRecipients(Message.RecipientType.BCC);
-							String bcc = getStringListOfAddresses(addresses);
+							String bcc = getStringListOfAddresses(addresses, true);
 	
 							if (!bcc.equals("")) {
 								if (!to.equals("") || !cc.equals("")) {
@@ -657,6 +701,7 @@ public class EzEmailUtil {
 			if (!searchField.equalsIgnoreCase("CONTENT")) {
 				FetchProfile fp = new FetchProfile();
 				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(IMAPFolder.FetchProfileItem.HEADERS);
 				folder.fetch(messages, fp);
 			}
 			

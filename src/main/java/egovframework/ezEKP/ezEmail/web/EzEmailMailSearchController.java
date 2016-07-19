@@ -342,6 +342,20 @@ public class EzEmailMailSearchController {
 				
 				// subject
 				String subject = message.getSubject();
+				
+				if (subject != null && !subject.equals("")) {
+					String[] rawHeaders = message.getHeader("subject");
+					String rawHeader = rawHeaders[0];
+					
+					// if the subject contains Non-Ascii characters(violating the standard), 
+					// try to decode it by examining the characters.					
+					if (!ezEmailUtil.isPureAscii(rawHeader)) {
+						byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+						
+						subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+					}
+				}
+				
 				subject = (subject != null) ? subject : "";
 				sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
 				
