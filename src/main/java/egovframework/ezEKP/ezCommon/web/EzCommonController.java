@@ -906,7 +906,8 @@ public class EzCommonController extends EgovFileMngUtil{
 
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i));
+						//절대경로에서 realPath "" 으로 대체
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(request.getServletContext().getRealPath(""), ""));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));

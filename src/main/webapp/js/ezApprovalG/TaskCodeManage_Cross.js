@@ -163,20 +163,20 @@ function GetTaskCategoryNodeExist(pType, pGroupID) {
 	return retVal;
 }
 
-function GetTaskCodeNodeExist(TaskCode, DeptID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "TaskCode", TaskCode);
-    createNodeAndInsertText(xmlpara, objNode, "DeptID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-
-    xmlhttp.open("POST", "aspx/API_GetTaskCodeNodeExist.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
+function GetTaskCodeNodeExist(taskCode, deptID) {
+	var retVal = "";
+	
+	$.ajax({
+		type : "POST",
+    	url : "/admin/ezApprovalG/getTaskCodeNodeExist.do",
+    	async : false,
+    	data : {taskCode : taskCode, deptID : deptID, companyID : companyID},
+    	success : function(result) {
+    		retVal = result;
+    	}
+	});
+	
+	return retVal;
 }
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent) {

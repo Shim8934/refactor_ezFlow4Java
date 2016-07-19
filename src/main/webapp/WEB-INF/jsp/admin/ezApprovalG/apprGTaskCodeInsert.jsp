@@ -90,7 +90,6 @@
 		        	url : "/ezApprovalG/getCodeList.do",
 		        	async : false,
 		        	data : {companyID : companyID},
-		        	dataType : "text",
 		        	success : function(result){
 		        		result = loadXMLString(result);
 		        		
@@ -174,7 +173,6 @@
 							deptCode : "",
 							companyID : companyID
 							},
-					dataType : "text",
 					success : function (result) {
 						tempRet = loadXMLString(result);
 					}
@@ -273,7 +271,6 @@
 			    	url : "/admin/ezApprovalG/getTaskCodeDuplicate.do",
 			    	async : false,
 			    	data :{sCateCode : tempCode, companyID : companyID},
-			    	dataType : "text",
 			    	success : function(result) {
 			    		tempRet = result;
 			    	}
@@ -473,7 +470,6 @@
 		    				subCategoryCode : document.getElementById("tbSubCode").value,
 		    				companyID : companyID
 		    				},
-		    		dataType : "text",
 		    		success : function (result) {
 		    			tempRet = result;
 		    		}

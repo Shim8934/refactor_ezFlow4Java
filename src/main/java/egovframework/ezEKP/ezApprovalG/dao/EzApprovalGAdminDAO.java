@@ -56,6 +56,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
 	}
+	
+	public ApprGTaskVO getTaskName(Map<String, Object> map) throws Exception {
+		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskName", map);
+	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
@@ -77,6 +81,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public Integer getTaskCodeDuplicate(Map<String, Object> map) throws Exception {
 		select("EzApprovalGAdmin.getTaskCodeDuplicate", map);
+		return (Integer) map.get("v_pCount");
+	}
+	
+	public Integer getTaskCodeNodeExist(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.getTaskCodeNodeExist", map);
 		return (Integer) map.get("v_pCount");
 	}
 	
@@ -115,6 +124,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void updateReceiveGroupInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalGAdmin.updateReceiveGroupInfo", map);
 	}
+	
+	public void updateTaskCode(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.updateTaskCode", map);
+	}
 
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
@@ -144,8 +157,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.setTaskHistory", map);
 	}
 
+	public void insertTaskCode(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertTaskCode", map);
+	}
 
-
+	public void removeTaskCode(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.removeTaskCode1", map);
+		update("EzApprovalGAdmin.removeTaskCode2", map);
+	}
 
 
 

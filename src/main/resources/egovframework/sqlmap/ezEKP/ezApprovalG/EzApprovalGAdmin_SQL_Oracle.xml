@@ -47,6 +47,12 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODE(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskName"					parameterClass="Map" resultClass="ApprGTaskVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKNAME(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
 
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
@@ -81,6 +87,12 @@
 	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" 			parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskCodeNodeExist" 			parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODENODEEXIST(#v_TASKCODE#, #v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>	
 	</procedure>
 	
@@ -191,15 +203,15 @@
 	<insert id="EzApprovalGAdmin.setTaskHistory" 					parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBTASKCODEHISTORY(
-				ApplyDate,
-				TaskCode,
-				TaskName,
-				TaskName2,
-				ChangeFactor,
-				ChangeFactor2,
-				BeforeValue,
-				AfterValue,
-				AfterValue2,
+				applydate,
+				taskcode,
+				taskname,
+				taskname2,
+				changefactor,
+				changefactor2,
+				beforevalue,
+				aftervalue,
+				aftervalue2
 			)VALUES(
 				#v_APPLYDATE#,
 				#v_TASKCODE#,
@@ -209,10 +221,54 @@
 				#v_CHANGEFACTOR2#,
 				#v_BEFOREVALUE#,
 				#v_AFTERVALUE#,
-				#v_AFTERVALUE2#,
+				#v_AFTERVALUE2#
 			)
 	     ]]> 
 	</insert>
+	
+	<update id="EzApprovalGAdmin.insertTaskCode" 					parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBTASKCODE(
+				taskcode,
+				taskname,
+				taskname2,
+				keepingperiod,
+				creationdate,
+				kpreason,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				exdisplayfrequency,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				displayusage,
+				description,
+				subcategorycode
+			)VALUES(
+				#v_TASKCODE#,
+				#v_TASKNAME#,
+				#v_TASKNAME2#,
+				#v_KEEPINGPERIOD#,
+				#v_CREATIONDATE#,
+				#v_KPREASON#,
+				#v_KEEPINGMETHOD#,
+				#v_KEEPINGPLACE#,
+				#v_DISPLAYRECFLAG#,
+				#v_DISPLAYRECTRASTIME#,
+				#v_EXDISPLAYFREQUENCY#,
+				#v_SPECIALCATALOGFLAG#,
+				#v_SC1#,
+				#v_SC2#,
+				#v_SC3#,
+				#v_DISPLAYUSAGE#,
+				#v_DESCRIPTION#,
+				#v_SUBCATEGORYCODE#
+			)
+	     ]]> 
+	</update>
 	
 	<update id="EzApprovalGAdmin.updateContainer" 					parameterClass="Map">
 		<![CDATA[
@@ -223,6 +279,52 @@
 			WHERE
 				containerid = #contID#					
 	     ]]> 
+	</update>
+	
+	<update id="EzApprovalGAdmin.updateTaskCode" 					parameterClass="Map">
+		<![CDATA[
+			UPDATE EZAPPROVALG_$companyID$.TBTASKCODE
+			SET
+				taskname = #v_TASKNAME#,
+				taskname2 = #v_TASKNAME2#,
+				keepingperiod = #v_KEEPINGPERIOD#,
+				kpreason = #v_KPREASON#,
+				keepingmethod = #v_KEEPINGMETHOD#,
+				keepingplace = #v_KEEPINGPLACE#,
+				displayrecflag = #v_DISPLAYRECFLAG#,
+				displayrectrastime = #v_DISPLAYRECTRASTIME#,
+				exdisplayfrequency = #v_EXDISPLAYFREQUENCY#,
+				specialcatalogflag = #v_SPECIALCATALOGFLAG#,
+				sc1 = #v_SC1#,
+				sc2 = #v_SC2#,
+				sc3 = #v_SC3#,
+				DisplayUsage = #v_DISPLAYUSAGE#,
+				Description = #v_DESCRIPTION#,
+				SubCategoryCode = #v_SUBCATEGORYCODE#
+			WHERE
+				taskcode = #v_TASKCODE#					
+	     ]]> 
+	</update>
+	
+	<update id="EzApprovalGAdmin.removeTaskCode1" 					parameterClass="Map">
+		<![CDATA[
+			UPDATE EZAPPROVALG_$companyID$.TBTASKCODE
+			SET
+				delflag = '1'
+			WHERE
+				taskcode = #taskCode#					
+	     ]]>
+	</update>
+	
+	<update id="EzApprovalGAdmin.removeTaskCode2" 					parameterClass="Map">
+		<![CDATA[
+			UPDATE EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
+			SET
+				delflag = '1',
+				deletedate = #now#
+			WHERE
+				taskcode = #taskCode#					
+	     ]]>
 	</update>
 	
 	<delete id="EzApprovalGAdmin.deleteContainerUseDep" 			parameterClass="Map">

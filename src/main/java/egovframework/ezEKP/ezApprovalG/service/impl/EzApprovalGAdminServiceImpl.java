@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -770,11 +771,11 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 		}
 	}
 
+	//TODO 다국어가 영어로 고정되어 있음.
 	@Override
 	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception {
 		try {
 			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID).equals("TRUE")) {
-//				중복이니까 update
 				Map<String, Object> map = new HashMap<String, Object>();
 				
 				map.put("v_TASKCODE", vo.getTaskCode());
@@ -783,32 +784,149 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 				ApprGTaskVO item = ezApprovalGAdminDAO.getTaskCode(map);
 				
 				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
+				Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
 				
 				String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
-									"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", 
-									"DISPLAYRECTRASTIME", "EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", 
-									"SC1", "SC2", "SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
-				
+									"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", "DISPLAYRECTRASTIME",
+									"EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", "SC1", "SC2", 
+									"SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
 				String[] NAMEDESC = {"단위업무명(한글)","단위업무명(영문)", "보존연한", "보존연한책정사유", 
 									"보존방법", "보존장소", "비치기록물", "비치기록물이관시기", 
 									"이관후예상열람빈도", "특수목록위치", "제1특수목록", "제2특수목록", 
 									"제3특수목록", "주요열람용도", "단위업무설명", "소기능"};
-                    
                 // 2010.08.23 다국어
-                String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KeepingReason", 
+                String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KPREASON", 
 									"KeepingMethod", "KeepingPlace", "DisplayREC", "DisplayRECTrastime", 
 									"EXDisplayFrequency", "SCPlace", "SC1", "SC2", 
 									"SC3", "DisplayUsage", "Description", "SubCategory"};
-
+                
+                for (int i=0; i<NAMETYPE.length; i++) {
+					if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
+                        String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID);
+						
+                        if (subSQL == "FALSE") {
+							return "FALSE";
+                        }
+					}
+				}
+                
+                Map<String, Object> map1 = new HashMap<String, Object>();
+                
+                map1.put("v_TASKCODE", vo.getTaskCode());
+                map1.put("v_TASKNAME", vo.getTaskName());
+                map1.put("v_TASKNAME2", vo.getTaskName2());
+                map1.put("v_KEEPINGPERIOD", vo.getKeepingPeriod());
+                map1.put("v_KPREASON", vo.getKpReason());
+                map1.put("v_KEEPINGMETHOD", vo.getKeepingMethod());
+                map1.put("v_KEEPINGPLACE", vo.getKeepingPlace());
+                map1.put("v_DISPLAYRECFLAG", vo.getDisplayRecFlag());
+                map1.put("v_DISPLAYRECTRASTIME", vo.getDisplayRecTrasTime());
+                map1.put("v_EXDISPLAYFREQUENCY", vo.getExDisplayFrequency());
+                map1.put("v_SPECIALCATALOGFLAG", vo.getSpecialCatalogFlag());
+                map1.put("v_SC1", vo.getSc1());
+                map1.put("v_SC2", vo.getSc2());
+                map1.put("v_SC3", vo.getSc3());
+                map1.put("v_DISPLAYUSAGE", vo.getDisplayUsage());
+                map1.put("v_DESCRIPTION", vo.getDescription());
+                map1.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
+                map1.put("companyID", companyID);
+                
+                ezApprovalGAdminDAO.updateTaskCode(map1);
 			} else {
-//				insert
+				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), "신규생성", "New creation", "", "", "", companyID);
+				
+                if (subSQL == "FALSE") {
+					return "FALSE";
+                }
+                
+                Map<String, Object> map2 = new HashMap<String, Object>();
+                
+                map2.put("v_TASKCODE", vo.getTaskCode());
+                map2.put("v_TASKNAME", vo.getTaskName());
+                map2.put("v_TASKNAME2", vo.getTaskName2());
+                map2.put("v_KEEPINGPERIOD", vo.getKeepingPeriod());
+                map2.put("v_KPREASON", vo.getKpReason());
+                map2.put("v_KEEPINGMETHOD", vo.getKeepingMethod());
+                map2.put("v_KEEPINGPLACE", vo.getKeepingPlace());
+                map2.put("v_DISPLAYRECFLAG", vo.getDisplayRecFlag());
+                map2.put("v_DISPLAYRECTRASTIME", vo.getDisplayRecTrasTime());
+                map2.put("v_EXDISPLAYFREQUENCY", vo.getExDisplayFrequency());
+                map2.put("v_SPECIALCATALOGFLAG", vo.getSpecialCatalogFlag());
+                map2.put("v_SC1", vo.getSc1());
+                map2.put("v_SC2", vo.getSc2());
+                map2.put("v_SC3", vo.getSc3());
+                map2.put("v_DISPLAYUSAGE", vo.getDisplayUsage());
+                map2.put("v_DESCRIPTION", vo.getDescription());
+                map2.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
+                map2.put("v_CREATIONDATE", EgovDateUtil.getCurrentDate("-"));
+                map2.put("companyID", companyID);
+               
+                ezApprovalGAdminDAO.insertTaskCode(map2);
 			}
+			return "TRUE";
 		} catch (Exception e) {
-			
+			return "FALSE";
 		}
-		return null;
 	}
 	
+	@Override
+	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TASKCODE", taskCode);
+		map.put("v_DEPTID", deptID);
+		map.put("v_pCount", 0);
+		map.put("companyID", companyID);
+		
+		try {
+			Integer result = ezApprovalGAdminDAO.getTaskCodeNodeExist(map);
+			
+			if (result > 0) {
+				return "TRUE";
+			} else {
+				return "FALSE";
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String removeTaskCode(String taskCode, String companyID) throws Exception {
+		try {
+			String tempFlag = getTaskCodeNodeExist(taskCode, "", companyID);
+			
+			if (tempFlag.equals("TRUE")) {
+				return "EXIST";
+			} else {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_TASKCODE", taskCode);
+				map.put("companyID", companyID);
+				
+				ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
+				
+				String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), "삭제", "Deleted", "", "", "", companyID);
+				
+				if (temp.equals("FALSE")) {
+					return "FALSE";
+				}
+				
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				
+				map1.put("taskCode", taskCode);
+				map1.put("now", EgovDateUtil.getCurrentDate("-"));
+				map1.put("companyID", companyID);
+				
+				ezApprovalGAdminDAO.removeTaskCode(map1);
+				
+				return "TRUE";
+			}
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		

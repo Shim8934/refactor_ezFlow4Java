@@ -543,7 +543,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류삭제 시 하위코드 여부 체크 실행 함수
+	 * 전자결재G관리 분류삭제 시 하위노드 여부 체크 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -560,7 +560,7 @@ public class EzApprovalGAdminController {
 	/**
 	 * 전자결재G관리 분류삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String removeTaskCategory(HttpServletRequest request) throws Exception {
 		String categoryType = request.getParameter("cateType");
@@ -596,7 +596,7 @@ public class EzApprovalGAdminController {
 	/**
 	 * 전자결재G관리 코드추가 단위업무코드 중복확인 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeDuplicate.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeDuplicate.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String getTaskCodeDuplicate(HttpServletRequest request) throws Exception {
 		String taskCode = request.getParameter("sCateCode");
@@ -610,7 +610,7 @@ public class EzApprovalGAdminController {
 	/**
 	 * 전자결재G관리 코드수정 단위업무정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String getTaskInfo(HttpServletRequest request) throws Exception {
 		String pTaskCode = request.getParameter("taskCode");
@@ -631,6 +631,35 @@ public class EzApprovalGAdminController {
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.setTaskCode(vo, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 단위업무의 소속 기록물철 여부 체크 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeNodeExist.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskCodeNodeExist(HttpServletRequest request) throws Exception {
+		String taskCode = request.getParameter("taskCode");
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCodeNodeExist(taskCode, deptID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 코드삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCode.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String removeTaskCode(HttpServletRequest request) throws Exception {
+		String taskCode = request.getParameter("taskCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.removeTaskCode(taskCode, companyID);
 		
 		return result;
 	}

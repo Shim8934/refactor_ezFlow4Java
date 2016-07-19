@@ -335,7 +335,6 @@
 		            	url : "/admin/ezApprovalG/removeTaskCategory.do",
 		            	async : false,
 		            	data : {cateType : pLevel, cateCode : pGroupID, companyID : companyID},
-						dataType : "text",
 		            	success : function(result) {
 		            		if (result == "TRUE") {
 		            			var pAlertContent = "<spring:message code = 'ezApprovalG.t776' />";
@@ -484,7 +483,7 @@
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
 	
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
@@ -498,7 +497,7 @@
 		        if (RtnVal) {
 		            listview.LoadFromID("lvtDocForm");
 		            var selRow = listview.GetSelectedRows();
-		            var xmlpara = createXmlDom();
+/* 		            var xmlpara = createXmlDom();
 		            var xmlhttp = createXMLHttpRequest();
 		            var objNode;
 	
@@ -516,7 +515,24 @@
 	                    alert(pAlertContent);
 
 	                    TreeView_onNodeSelect();
-		            }
+		            } */
+		            
+		            $.ajax({
+		            	type : "POST",
+		            	url : "/admin/ezApprovalG/removeTaskCode.do",
+		            	async : false,
+		            	data : {taskCode : selRow[0].getAttribute("DATA1"), companyID : companyID},
+		            	success : function(result) {
+		            		if (result == "TRUE") {
+		            			 var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
+		 		              	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
+//		  	                    OpenAlertUI(pAlertContent);
+		 	                    alert(pAlertContent);
+
+		 	                    TreeView_onNodeSelect();
+		            		}
+		            	}
+		            });
 		        }
 		    }
 	

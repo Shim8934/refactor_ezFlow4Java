@@ -50,10 +50,15 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception;
 
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
-
 	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception;
 
 	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception;
+
+	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception;
+
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	
+	public String removeTaskCode(String taskCode, String companyID) throws Exception;
 	
 }
