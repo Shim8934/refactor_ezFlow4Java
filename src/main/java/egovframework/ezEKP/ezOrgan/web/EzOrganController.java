@@ -183,7 +183,7 @@ public class EzOrganController {
 			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang);
 		} else {
 			/* TODO 2016-03-29 장진혁과장 pagination 작업 필요 */
-			//infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

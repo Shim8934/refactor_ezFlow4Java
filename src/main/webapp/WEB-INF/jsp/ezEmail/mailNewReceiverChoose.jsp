@@ -1773,7 +1773,12 @@
 		        	dataType : "xml",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
-		        	data : {search : document.getElementById("search_type").value + "::" + keyword.value, cell : "company;description;displayName;title;telephoneNumber;extensionAttribute2", prop : "", page : CurPage, type : "user"},
+		        	data : {
+		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
+		        			cell : "company;description;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
+		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2", 
+		        			page : CurPage, 
+		        			type : "user"},
 		        	success : function(result){	
 		        		if (result.getElementsByTagName("ROW").length == 0)
 	                        alert(strLang155);

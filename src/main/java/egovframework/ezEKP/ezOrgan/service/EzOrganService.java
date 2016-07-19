@@ -35,5 +35,7 @@ public interface EzOrganService {
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;
+
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page) throws Exception;
  
 }

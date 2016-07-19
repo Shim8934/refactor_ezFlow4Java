@@ -82,4 +82,15 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (OrganUserVO) select("EzOrganDAO.getUserAddjobInfo", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> organSearchListPage(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		return (List<OrganDeptVO>) list("EzOrganDAO.organSearchListPage", map);
+	}
+
+	public int getSearchListCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (int) select("EzOrganDAO.getSearchListCount", map);
+	}
+
 }

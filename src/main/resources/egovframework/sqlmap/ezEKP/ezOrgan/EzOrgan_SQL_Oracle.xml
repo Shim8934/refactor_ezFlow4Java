@@ -155,7 +155,108 @@
 	    		ezHrmaster.TBLDEPTMASTER $strSQL$
 	    </isEqual>
 	</select>
+	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
+		<isEqual property="type" compareValue="U">
+		
+	 SELECT 
+	 	* 
+	 FROM
+	 	(SELECT 
+		 	ROW_NUMBER() OVER(order by CN) as RNUM, 
+			cn, 
+			displayName,
+			extensionAttribute15, 
+			type 
+          FROM 
+          	(SELECT  
+             	cn, 
+                department as displayName, 
+                '' as extensionAttribute15,
+                'user' as type 
+             FROM  
+             	ezHrmaster.TBLUSERMASTER A   $strSQL$ 
+       
+       UNION ALL
+            
+        SELECT
+        	a.cn  , 
+            deptid as displayName , 
+            '' as extensionAttribute15,
+            'user' as type  
+         FROM 
+         	ezHrmaster.TBLUserMaster b   
+         INNER JOIN 
+         	ezHrmaster.TBLADDJOBMASTER A  
+         ON  
+         	a.cn = b.cn  $strSQL$ )  A)  
+              <![CDATA[
+              B where RNUM >= $startRow$ and RNUM < $endRow$
+               ]]>
+          </isEqual>
+          <isEqual property="class" compareValue="all">
+        
+			SELECT 
+				cn,
+				department as displayName,
+				'' as extensionAttribute15,
+				'user' as type				
+			FROM 
+	    		ezHrmaster.TBLUSERMASTER A $strSQL$ $strSize$
+	    		 
+	      	UNION ALL
+	      		      	
+	      	SELECT 
+	      		A.cn,
+	      		deptid as displayName,
+	      		'' as extensionAttribute15,
+	      		'user' as type
+	      	FROM	
+				ezHrmaster.TBLUSERMASTER B 
+			INNER JOIN 
+				ezHrmaster.TBLADDJOBMASTER A 
+			ON 
+				A.CN = B.CN $strSQL$
+				
+			UNION ALL
+				
+				SELECT
+					CN,
+					'' as displayName,
+					'' as extensionAttribute15,
+					'group' as type
+				FROM
+					ezHrmaster.TBLDEPTMASTER $strSize$	
+          </isEqual>
+		  <isEqual property="type" compareValue="G">
+	    	SELECT
+	    		cn,
+	    		'' as displayName,
+	    		'' as extensionAttribute15,
+	    		'group' as type
+	    	FROM
+	    		ezHrmaster.TBLDEPTMASTER $strSQL$ $strSize$
+	      </isEqual>
+	</select>
+	<select id="EzOrganDAO.getSearchListCount" parameterClass="Map" resultClass="int">
 	
+			SELECT 
+				COUNT(*) AS TOTALCOUNT 
+			FROM (
+			SELECT 
+				CN 
+			FROM  
+				ezHrmaster.TBLUSERMASTER  A  $strSQL$ 
+            
+            UNION ALL 
+            
+            SELECT 
+            	A.CN  
+            FROM 
+            	ezHrmaster.TBLUSERMASTER B   
+            INNER JOIN  ezHrmaster.TBLAddJobMaster A   
+            ON 
+            	a.cn = b.cn $strSQL$) A
+	</select>
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="String" resultClass="int">
 		<![CDATA[
 			SELECT 
