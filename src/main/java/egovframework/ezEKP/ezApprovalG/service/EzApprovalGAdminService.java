@@ -55,10 +55,15 @@ public interface EzApprovalGAdminService {
 	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception;
 
 	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception;
-
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
-
 	
 	public String removeTaskCode(String taskCode, String companyID) throws Exception;
+	
+	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang) throws Exception;
+
+	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
+	
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+	
+	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
 	
 }

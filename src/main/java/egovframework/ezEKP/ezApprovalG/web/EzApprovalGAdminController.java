@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 관리자 - 전자결재G
@@ -455,7 +457,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류목록 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 분류목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -470,7 +472,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류목록에따른 단위업무 목록 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 분류목록에따른 단위업무 목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -483,7 +485,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류추가,분류수정 메뉴 화면 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 분류추가,분류수정 메뉴 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCategoryInsert.do")
 	public String taskCategoryInsert(Locale locale, HttpServletRequest request, Model model) {
@@ -501,7 +503,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류추가  중복확인 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 분류추가  중복확인 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryDuplicate.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -516,7 +518,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류추가 분류선택 화면 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 분류추가 분류선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/selectTaskCategory.do")
 	public String selectTaskCategory() {
@@ -524,7 +526,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류추가,분류수정 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 분류추가,분류수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -543,7 +545,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 분류삭제 시 하위노드 여부 체크 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 분류삭제 시 하위노드 여부 체크 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -558,7 +560,7 @@ public class EzApprovalGAdminController {
 	}
 
 	/**
-	 * 전자결재G관리 분류삭제 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 분류삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -573,7 +575,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 코드추가,수정 화면 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
 	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) {
@@ -594,7 +596,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 코드추가 단위업무코드 중복확인 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 코드추가 단위업무코드 중복확인 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeDuplicate.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
@@ -608,7 +610,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 코드수정 단위업무정보 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 코드수정 단위업무정보 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
@@ -623,7 +625,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 추가, 수정 실행함수
+	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCode.do")
 	@ResponseBody
@@ -636,7 +638,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 단위업무의 소속 기록물철 여부 체크 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 단위업무의 소속 기록물철 여부 체크 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeNodeExist.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -651,7 +653,7 @@ public class EzApprovalGAdminController {
 	}
 	
 	/**
-	 * 전자결재G관리 코드삭제 실행 함수
+	 * 전자결재G관리분류,단위업무관리  코드삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCode.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -660,6 +662,63 @@ public class EzApprovalGAdminController {
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.removeTaskCode(taskCode, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 사용부서 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/taskDeptInfoManage.do")
+	public String taskDeptInfoManage() {
+		return "admin/ezApprovalG/apprGTaskDeptInfoManage";
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 사용부서 부서에 포함된 단위업무목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeDeptInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskCodeDeptInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String taskCode = request.getParameter("taskCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskCodeDeptInfo(taskCode, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 사용부서 부서추가 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/addTaskCodeDeptInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String addTaskCodeDeptInfo(HttpServletRequest request) throws Exception {
+		String taskCode = request.getParameter("taskCode");
+		String deptCode = request.getParameter("deptID");
+		String deptName = request.getParameter("deptName");
+		String deptName2 = request.getParameter("deptName2");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.addTaskCodeDeptInfo(taskCode, deptCode, deptName, deptName2, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 사용부서 부서삭제 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCodeDeptInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String removeTaskCodeDeptInfo(HttpServletRequest request) throws Exception {
+		String taskCode = request.getParameter("taskCode");
+		String deptCode = request.getParameter("deptID");
+		String deptName = request.getParameter("deptName");
+		String deptName2 = request.getParameter("deptName2");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.removeTaskCodeDeptInfo(taskCode, deptCode, deptName, deptName2, companyID);
 		
 		return result;
 	}

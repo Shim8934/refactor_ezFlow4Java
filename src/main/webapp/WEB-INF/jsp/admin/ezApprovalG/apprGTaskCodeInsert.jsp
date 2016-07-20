@@ -90,6 +90,7 @@
 		        	url : "/ezApprovalG/getCodeList.do",
 		        	async : false,
 		        	data : {companyID : companyID},
+		        	dataType : "text",
 		        	success : function(result){
 		        		result = loadXMLString(result);
 		        		

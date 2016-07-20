@@ -6,6 +6,7 @@
 	<typeAlias  alias="ApprGDocStateVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO"/>
 	<typeAlias  alias="ApprGAdminReceiveVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO"/>
 	<typeAlias  alias="ApprGTaskVO"						type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO"/>
+	<typeAlias  alias="ApprGTaskDeptInfoVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO"/>
 	
 	<!--
 	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
@@ -53,6 +54,12 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKNAME(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo"			parameterClass="Map" resultClass="ApprGTaskDeptInfoVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDEPTINFO(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
 
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
@@ -93,6 +100,12 @@
 	<procedure id="EzApprovalGAdmin.getTaskCodeNodeExist" 			parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODENODEEXIST(#v_TASKCODE#, #v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getTaskCodeDeptCnt" 			parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDEPTCNT(#v_TASKCODE#, #v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>	
 	</procedure>
 	
@@ -226,7 +239,7 @@
 	     ]]> 
 	</insert>
 	
-	<update id="EzApprovalGAdmin.insertTaskCode" 					parameterClass="Map">
+	<insert id="EzApprovalGAdmin.insertTaskCode" 					parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBTASKCODE(
 				taskcode,
@@ -268,7 +281,45 @@
 				#v_SUBCATEGORYCODE#
 			)
 	     ]]> 
-	</update>
+	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertDeptInfo" 					parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBTASK_DEPTINFO(
+				createdate,
+				description,
+				processdeptname,
+				processdeptname2,
+				tasktransferflag,
+				tdeptcode,
+				processdeptcode,
+				processdate,
+				applydate,
+				taskcode,
+				delflag,
+				deletedate,
+				organcode
+			)
+			SELECT
+				creationdate,
+				NULL,
+				#deptName#,
+				#deptName2#,
+				'0',
+				'NULL',
+				#deptCode#,
+				TO_CHAR(sysdate, 'yyyyMMDDHH24MI'),
+				TO_CHAR(sysdate, 'yyyyMMDD'),
+				taskcode,
+				'0',
+				NULL,
+				NULL
+			FROM
+				EZAPPROVALG_$companyID$.TBTASKCODE
+			WHERE
+				taskcode = #taskCode#
+	     ]]> 
+	</insert>
 	
 	<update id="EzApprovalGAdmin.updateContainer" 					parameterClass="Map">
 		<![CDATA[
@@ -324,6 +375,36 @@
 				deletedate = #now#
 			WHERE
 				taskcode = #taskCode#					
+	     ]]>
+	</update>
+	
+	<update id="EzApprovalGAdmin.updateDeptInfo" 					parameterClass="Map">
+		<![CDATA[
+			UPDATE EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
+			SET
+				processdate = TO_CHAR(sysdate, 'yyyyMMDDHH24MI'),
+				processdeptname = #deptName#,
+				processdeptname2 = #deptName2#,
+				delflag = '0',
+				deletedate = NULL
+			WHERE
+				taskcode = #taskCode#
+			AND
+				trim(processdeptcode) = #deptCode#
+	     ]]>
+	</update>
+	
+	<update id="EzApprovalGAdmin.removeDeptInfo" 					parameterClass="Map">
+		<![CDATA[
+			UPDATE EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
+			SET
+				processdate = TO_CHAR(sysdate, 'yyyyMMDDHH24MI'),
+				delflag = '1',
+				deletedate = TO_CHAR(sysdate, 'yyyy-MM-DD')
+			WHERE
+				taskcode = #taskCode#
+			AND
+				trim(processdeptcode) = #deptCode#
 	     ]]>
 	</update>
 	

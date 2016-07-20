@@ -553,10 +553,10 @@
 		                taskdeptinfomanage_cross_dialogArguments[0] = para;
 		                taskdeptinfomanage_cross_dialogArguments[1] = btnConItem_onclick_Complete;
 	
-		                var TaskDeptInfoManage_Cross = window.open("TaskDeptInfoManage_Cross.aspx", "TaskDeptInfoManage_Cross", GetOpenWindowfeature(460, 400));
+		                var TaskDeptInfoManage_Cross = window.open("/admin/ezApprovalG/taskDeptInfoManage.do", "TaskDeptInfoManage", GetOpenWindowfeature(460, 400));
 		                try { TaskDeptInfoManage_Cross.focus(); } catch (e) { }
 		            } else {
-		                var url = "TaskDeptInfoManage_Cross.aspx";
+		                var url = "/admin/ezApprovalG/taskDeptInfoManage.do";
 		                var retVal = window.showModalDialog(url, para, "dialogWidth:460px;dialogHeight:400px;status:no;help:no;scroll:no;edge:sunken");
 		                
 		                if (retVal == "TRUE") {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -47,6 +48,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGTaskVO> getTaskInSubCategoryForManage(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInSubCategoryForManage", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskDeptInfoVO> getTaskCodeDeptInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskDeptInfoVO>) list("EzApprovalGAdmin.getTaskCodeDeptInfo", map);
 	}
 	
 	public ApprGTaskVO getTaskInfo(Map<String, Object> map) throws Exception {
@@ -89,6 +95,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (Integer) map.get("v_pCount");
 	}
 	
+	public Integer getTaskCodeDeptCnt(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.getTaskCodeDeptCnt", map);
+		return (Integer) map.get("v_pCount");
+	}
+	
 	public void insertContainerType(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertContainerType", map);
 	}
@@ -117,6 +128,18 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.setTaskCategory", map);
 	}
 	
+	public void setTaskHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setTaskHistory", map);
+	}
+
+	public void insertTaskCode(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertTaskCode", map);
+	}
+	
+	public void insertDeptInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertDeptInfo", map);
+	}
+	
 	public void updateContainer(Map<String, Object> map) throws Exception{
 		update("EzApprovalGAdmin.updateContainer", map);
 	}
@@ -127,6 +150,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public void updateTaskCode(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.updateTaskCode", map);
+	}
+	
+	public void updateDeptInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.updateDeptInfo", map);
+	}
+	
+	public void removeTaskCode(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.removeTaskCode1", map);
+		update("EzApprovalGAdmin.removeTaskCode2", map);
 	}
 
 	public void deleteContainerDocState(String companyID) throws Exception {
@@ -153,19 +185,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.removeTaskCategory", map);
 	}
 
-	public void setTaskHistory(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.setTaskHistory", map);
+	public void removeDeptInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.removeDeptInfo", map);
 	}
-
-	public void insertTaskCode(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.insertTaskCode", map);
-	}
-
-	public void removeTaskCode(Map<String, Object> map) throws Exception {
-		update("EzApprovalGAdmin.removeTaskCode1", map);
-		update("EzApprovalGAdmin.removeTaskCode2", map);
-	}
-
-
 
 }
