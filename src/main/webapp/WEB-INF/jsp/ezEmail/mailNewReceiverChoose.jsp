@@ -1979,9 +1979,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA11");
+	            var dept = p_ListOrderObject.getAttribute("_DATA13");
 	            var rtn
-	
 	            var width = 420, height = 450;
 	            var leftPosition, topPosition;
 	            leftPosition = (window.screen.width / 2) - ((width / 2) + 10);

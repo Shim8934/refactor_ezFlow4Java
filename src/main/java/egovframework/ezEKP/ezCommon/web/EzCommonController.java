@@ -1034,7 +1034,7 @@ public class EzCommonController extends EgovFileMngUtil{
         }*/
         
         if (!id.equals("")) {
-        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary());
+        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getLang());
         	
         	Document xmldom = commonUtil.convertStringToDocument(infoXML);
         	if (xmldom.getElementsByTagName(email) == null) {
@@ -1049,7 +1049,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //        		}
         		
         		if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-        			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary());
+        			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang());
         			
         			if (!infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
         				Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
