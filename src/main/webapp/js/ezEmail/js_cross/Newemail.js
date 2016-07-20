@@ -15,6 +15,9 @@ function PreviewH_onMouserDown(e) {
     document.getElementById("ResizeBarH").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewH_Move = true;
+    
+    // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
+    document.onselectstart = function () { return false; };
 }
 var PreviewW_Move = false;
 function PreviewW_onMouserDown(e) {
@@ -33,6 +36,9 @@ function PreviewW_onMouserDown(e) {
     document.getElementById("ResizeBarW").style.display = "";
     document.getElementById("mailPanel").style.display = "";
     PreviewW_Move = true;
+    
+    // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
+    document.onselectstart = function () { return false; };
 }
 function MailPreviewEnd(e) {
     if (PreviewW_Move || PreviewH_Move) {
@@ -99,6 +105,10 @@ function MailPreviewEnd(e) {
             }
         }
     }
+    
+    // IE에서 Preview 프레임의 크기를 변경하기 위해 마우스를 드래그 후 놓을 때 메일 목록의 텍스트가 모두 선택되는 문제가 발생해 추가함.
+    // 이 부분은 사용자가 Preview 헤더 부분의 텍스트를 선택 가능하게 하기 위해 필요함.
+    document.onselectstart = null;
 }
 var SmallSizeList = false;
 var OldSmallSizeList = false;
