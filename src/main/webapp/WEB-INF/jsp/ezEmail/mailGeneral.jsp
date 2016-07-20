@@ -7,6 +7,7 @@
 	<head>
 		<title>mail_general</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
         <script src="/js/jquery/raphael.2.1.0.min.js"></script>
@@ -26,7 +27,7 @@
 		            levelColorsGradient : true
 		        });
 		       
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		        xmlhttp = createXMLHttpRequest();
                 xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
                 xmlhttp.onreadystatechange = detailbox_after;
                 xmlhttp.send();
@@ -36,10 +37,11 @@
 		    {
                 if(xmlhttp == null || xmlhttp.readyState != 4) return;
                 var result = xmlhttp.responseXML;
-                var resultvalue2 = "<spring:message code='ezEmail.t313' />" + result.selectNodes("DATA/ROW")[0].childNodes(0).text + "<spring:message code='ezEmail.t314' />";
-                resultvalue2 += result.selectNodes("DATA/ROW")[0].childNodes(1).text + "(" + result.selectNodes("DATA/ROW")[0].childNodes(2).text + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
-		        MailQuater.refresh(parseInt(result.selectNodes("DATA/ROW")[0].childNodes(2).text));
-		        MailQuater.refreshtitle(resultvalue2);
+                		        
+		        var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + "<spring:message code='ezEmail.t314' />";
+		        resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
+		        MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent))
+		        MailQuater.refreshtitle( resultvalue2);		        
 		    }
 			function Change_Click(Gubun)
 			{
