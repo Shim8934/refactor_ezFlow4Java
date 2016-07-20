@@ -55,8 +55,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (List<ApprGTaskDeptInfoVO>) list("EzApprovalGAdmin.getTaskCodeDeptInfo", map);
 	}
 	
-	public ApprGTaskVO getTaskInfo(Map<String, Object> map) throws Exception {
-		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskInfo", map);
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInfo", map);
 	}
 	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {

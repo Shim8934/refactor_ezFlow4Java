@@ -21,6 +21,7 @@
 		</baseclass>
 		<images>
 			<base path="/images/OrganTree_cross/folder.gif" />
+			<iconcomp path="/images/OrganTree_cross/ic-company.gif" />
 		</images>
 	</config>
 </tree>

@@ -762,16 +762,17 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 		map.put("companyID", companyID);
 		
 		try {
-			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskInfo(map);
+			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInfo(map);
 	
-			if (vo == null) {
+			if (list.get(0) == null) {
 				return "<RESULT>NOITEM</RESULT>";
 			}
 			
-			String result = commonUtil.getQueryResult(vo);
+			String result = commonUtil.getQueryResult(list.get(0));
 			
 			return result;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "<RESULT>FLASE</RESULT>";
 		}
 	}

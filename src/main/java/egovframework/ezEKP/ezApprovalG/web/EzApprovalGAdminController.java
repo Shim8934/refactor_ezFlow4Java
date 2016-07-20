@@ -722,4 +722,13 @@ public class EzApprovalGAdminController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/viewTaskInfo.do")
+	public String viewTaskInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "admin/ezApprovalG/apprGViewTaskInfo";
+	}
 }

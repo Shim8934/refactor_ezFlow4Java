@@ -110,7 +110,7 @@ function btnViewTaskInfo_onclick() {
         viewtaskinfo_cross_dialogArguments[0] = para;
         viewtaskinfo_cross_dialogArguments[1] = btnViewTaskInfo_onclick_Complete;
 
-        var ViewTaskInfo_Cross = window.open("/myoffice/ezApprovalG/ezCabinet/Manage/ViewTaskInfo_Cross.aspx", "ViewTaskInfo_Cross", GetOpenWindowfeature(450, 695));
+        var ViewTaskInfo_Cross = window.open("/admin/ezApprovalG/viewTaskInfo.do", "ViewTaskInfo", GetOpenWindowfeature(450, 695));
         try { ViewTaskInfo_Cross.focus(); } catch (e) {
         }
     }
