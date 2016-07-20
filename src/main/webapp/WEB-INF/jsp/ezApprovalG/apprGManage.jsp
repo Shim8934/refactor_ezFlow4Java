@@ -1148,6 +1148,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDERCELL", OrderCell);
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
+
 		        var wWeigth = 600;
 		        var wHeigth = 400;
 		        var heigth = window.screen.availHeight;
@@ -1159,7 +1160,7 @@
 		        var pop = window.open("", "POP", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWeigth + ",top=" + top + ",left =" + left);
 		        formAPP.APPXML.value = getXmlString(xmlpara);
 		        formAPP.method = "post";
-		        formAPP.action = "/myoffice/ezApprovalG/ApprovUI/doApprovAllselect_Cross.aspx";
+		        formAPP.action = "/ezApprovalG/doApprovAllselect.do";
 		        formAPP.target = "POP";
 		        formAPP.submit();
 		    }
@@ -1312,7 +1313,6 @@
 		        }
 		
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
-alert(SQLPARADATA);
 		    }
 		
 		    window.onresize = function () {

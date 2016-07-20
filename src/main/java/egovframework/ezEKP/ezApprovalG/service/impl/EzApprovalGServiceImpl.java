@@ -10458,6 +10458,128 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
+	@Override
+	public String getAprType_AprState(String docID, String userID, String companyID) throws Exception {
+		String sbVal = "NO/NO";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_PDOCID", docID);
+		map.put("v_PUSERID", userID);
+		
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfoAprState(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document infoXml = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (infoXml.getElementsByTagName("APRTYPE").getLength() > 0) {
+			sbVal = infoXml.getElementsByTagName("APRTYPE").item(0).getTextContent() + "/" + infoXml.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		} else {
+			sbVal = "NO/NO";
+		}
+		
+		return sbVal;
+	}
+
+	@Override
+	public String doCallBack(String docID, String userID, String companyID) throws Exception {
+		String rtnXML = getCallBackYN(docID, userID, companyID);
+		boolean rtnVal = true;
+		
+		if (!rtnXML.equals("<RESULT>CALLBACK</RESULT>") && !rtnXML.equals("<RESULT>CANCEL</RESULT>")) {
+			rtnVal = false;
+		}
+		
+		if (rtnVal) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", companyID);
+			map.put("v_DOCID", docID);
+			map.put("v_USERID", userID);
+			
+			try {
+				ezApprovalGDAO.doCallBack(map);
+				rtnVal = true;
+			} catch (Exception e) {
+				rtnVal = false;
+			}
+		}
+		
+		if (rtnVal) {
+			return "<RESULT>TRUE</RESULT>";
+		} else {
+			return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	@Override
+	public String getFormConnFlag(String docID, String companyID) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		String strResult = ezApprovalGDAO.getFormConnFlag(map);
+		
+		resultXML.append("<RESULT>");
+		
+		if (strResult != null && !strResult.equals("")) {
+			resultXML.append(strResult);
+		}
+		resultXML.append("</RESULT>");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID) throws Exception {
+		String rtnXML = "";
+		String rtnDocID = "";
+		String rtnDocFlag = "";
+		String rtnGDocID = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_DOCSTATE", docState);
+		map.put("v_DEPTID", deptID);
+		
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getInnerLineInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("DOCID").item(0) != null) {
+			docXML.getElementsByTagName("DOCID").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("FLAG").item(0) != null) {
+			docXML.getElementsByTagName("FLAG").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("GDOCID").item(0) != null) {
+			docXML.getElementsByTagName("GDOCID").item(0).getTextContent();
+		}
+		
+		rtnXML = "<RESULT><DOCID>" + rtnDocID + "</DOCID><FLAG>" + rtnDocFlag + "</FLAG><GDOCID>" + rtnGDocID + "</GDOCID></RESULT>"; 
+		
+		return rtnXML;
+	}
+
 	private String doSendHesongDoc(String docID, String dirPath, String companyID, String orgCompanyID) throws Exception{
 		// TODO 테스트를 꼮 해봐야함
 		StringBuilder strSQL = new StringBuilder();

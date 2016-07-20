@@ -1246,7 +1246,7 @@ function setHeSongDocInfo(pCurSelRow) {
 	if (pListTypeValue == "4") {
 		pReceiveSN = GetAttribute(pCurSelRow, "DATA2");
 	} else {
-		pReceiveSN = GetAttribute(pCurSelRow, "DATA9")
+		pReceiveSN = GetAttribute(pCurSelRow, "DATA9");
 	}
 	
 	if (pCurSelRow.cells[2].innerText == strLang879) {
@@ -2035,51 +2035,99 @@ function getDataInfo(jobState) {
 
     switch (jobState) {
         case "3":
-            
-            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
-            else if(pListTypeValue == "21")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+        	var pFlag = "";
+        	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+                pFlag = "END";
+            else if (pListTypeValue == "21")
+            	pFlag = "TMP";
             else
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
-
-            xmlhttp.open("POST", "aspx/getTotalAttachInfo.aspx", true);
+            	pFlag = "APR";
+            	
+            $.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : true,
+        		url : "/ezApprovalG/getTotalAttachInfo.do",
+        		data : {
+        				docID : pDocID,
+        				flag  : pFlag
+        				},
+        		success: function(xml){
+        			getdoclistSub_after(xml);
+        		}        			
+        	});
             break;
 
         case "4":
-            
-            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
+        	var pFlag = "";
+        	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+                pFlag = "END";
             else if (pListTypeValue == "21")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+            	pFlag = "TMP";
             else
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
-
-            xmlhttp.open("POST", "aspx/getOpinionInfo.aspx", true);
+            	pFlag = "APR";
+            	
+            $.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : true,
+        		url : "/ezApprovalG/getOpinionInfo.do",
+        		data : {
+        				docID : pDocID,
+        				flag  : pFlag
+        				},
+        		success: function(xml){
+        			getdoclistSub_after(xml);
+        		}        			
+        	});
             break;
 
         case "1":
-            
-            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
+        	var pFlag = "";
+        	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+                pFlag = "END";
             else if (pListTypeValue == "21")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+            	pFlag = "TMP";
             else
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
-
-            xmlhttp.open("POST", "ezaprline/aspx/GetLineList.aspx", false);
+            	pFlag = "APR";
+            	
+            $.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : false,
+        		url : "/ezApprovalG/getLineList.do",
+        		data : {
+        				docID : pDocID,
+        				flag  : pFlag
+        				},
+        		success: function(xml){
+        			getdoclistSub_after(xml);
+        		}        			
+        	});
             break;
 
         case "2":
-            
-            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
+        	var pFlag = "";
+        	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+                pFlag = "END";
             else if (pListTypeValue == "21")
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "TMP");
+            	pFlag = "TMP";
             else
-                createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
-
-            xmlhttp.open("POST", "aspx/getReceiptinfo.aspx", true);
+            	pFlag = "APR";
+            	
+            $.ajax({
+        		type : "POST",
+        		dataType : "xml",
+        		async : true,
+        		url : "/ezApprovalG/getReceiptinfo.do",
+        		data : {
+        				docID : pDocID,
+        				flag  : pFlag
+        				},
+        		success: function(xml){
+        			getdoclistSub_after(xml);
+        		}        			
+        	});
             break;
     }
     xmlhttp.onreadystatechange = getdoclistSub_after;
@@ -2175,17 +2223,23 @@ function getSimsaDocList() {
 }
 
 function doCancel(pDocID, tempListType) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "ASSIGN");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-
-    xmlhttp.open("POST", "aspx/doCancel.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/doCancel.do",
+		data : {
+			docID : pDocID,
+			userID : pUserID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    var RtnVal = getNodeText(result.documentElement);
 
     if (RtnVal == "TRUE") {
         if (tempListType == "3") {
@@ -2373,17 +2427,23 @@ function OpenReceiptHistory() {
 }
 
 function CheckFormConnFlag(pDocID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-
-    xmlhttp.open("POST", "aspx/GetFormConnFlag.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (getNodeText(xmlhttp.responseXML.documentElement) == "Y")
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getFormConnFlag.do",
+		data : {
+			docID : pDocID,
+			companyID : companyID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    if (getNodeText(result.documentElement) == "Y")
         return true;
     else
         return false;
@@ -2424,27 +2484,29 @@ function CheckAprLineInfo(tr) {
 }
 
 function getAprLineInfo(tr) {
-    var pDocID
+    var pDocID = "";
+    var result = "";
 
     if (pSelMenu == "hyubjo" || pSelMenu == "gamsa")
-        pDocID = tr.getAttribute("DATA7");
+    	pDocID = tr.getAttribute("DATA7");
     else
-        pDocID = tr.getAttribute("DATA1");
+    	pDocID = tr.getAttribute("DATA1");
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getLineList.do",
+		data : {
+				docID : pDocID,
+				mode  : "APR"
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "Mode", "APR");
-
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "ezaprline/aspx/GetLineList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.statusText == "OK")
-        return xmlhttp.responseXML;
-    else
-        return "";
+    return result;
 }
 
 function check_presence() {
@@ -2518,9 +2580,9 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = newDocID;
     }
     else {
-        pArgument[4] = "0"
-        pArgument[5] = ""
-        pArgument[6] = ""
+        pArgument[4] = "0";
+        pArgument[5] = "";
+        pArgument[6] = "";
         pArgument[7] = "";
     }
 
@@ -2541,7 +2603,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 
     
     openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN)
+    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 
 
     openwindow(openLocation, "", 890, 560);

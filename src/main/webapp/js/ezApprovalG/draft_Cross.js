@@ -1663,13 +1663,13 @@ function getfieldValue(pfield) {
     if (pfield) {
         switch (pfield.tagName) {
             case "TD":
-                rtnVal = getNodeText(pfield)
+                rtnVal = getNodeText(pfield);
                 break;
             case "SELECT":
-                rtnVal = getNodeText(pfield)
+                rtnVal = getNodeText(pfield);
                 break;
             case "INPUT":
-                rtnVal = getNodeText(pfield)
+                rtnVal = getNodeText(pfield);
                 break;
         }
     }
@@ -1745,7 +1745,7 @@ function openReceivUI() {
 
     parameter[0] = pFormID;
     parameter[1] = pDocID;
-    parameter[2] = "SEND"
+    parameter[2] = "SEND";
     parameter[3] = isExtDoc;
     parameter[4] = DocType;
 
@@ -1753,31 +1753,34 @@ function openReceivUI() {
     var feature = "status:no;dialogWidth:855px;dialogHeight:530px;help:no;scroll:no;edge:sunken";
     feature = feature + GetShowModalPosition(855, 530);
     var ret = window.showModalDialog(url, parameter, feature);
-    return ret
+    return ret;
 }
 
 function GetAprDocFormID() {
     try {
-        var objRoot;
-        var objNode;
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getAprDocFormID.do",
+    		data : {
+    			docID : pDocID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-        xmlhttp.open("Post", "aspx/GetAprDocFormID.aspx", false);
-        xmlhttp.send(xmlpara);
-        pFormID = SelectSingleNodeValueNew(xmlhttp.responseXML, "DATA/FORMID");
+        pFormID = SelectSingleNodeValueNew(result, "DATA/FORMID");
     } catch (e) {
         alert("GetAprDocFormID()" + e.description);
     }
 }
 function trim(parm_str) {
     if (parm_str == "")
-        return ""
+        return "";
     else
         return rtrim(ltrim(parm_str));
 }
@@ -1901,12 +1904,12 @@ function setInitLoadDocCellInfo() {
 
                         if (field) {
                             field.textContent = "";
-                            field = message.GetListItem(fields, fieldTmpseumyung)
+                            field = message.GetListItem(fields, fieldTmpseumyung);
                             if (field) {
                                 field.textContent = "";
                             }
 
-                            field = message.GetListItem(fields, fieldTmpseumyungdate)
+                            field = message.GetListItem(fields, fieldTmpseumyungdate);
                             if (field) {
                                 field.textContent = "";
                             }
@@ -2025,7 +2028,7 @@ function changeEditMode() {
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();
-        var rtnVal = true
+        var rtnVal = true;
 
         parameter[0] = "";
         parameter[1] = "N";
@@ -2033,7 +2036,7 @@ function HabyuiResultOpinion() {
         parameter[3] = pOrgDocID;
 
         var url = "/ezApprovalG/aprOpinion.do";
-        var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+        var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no";
         feature = feature + GetShowModalPosition(530, 520);
         var ret = window.showModalDialog(url, parameter, feature);
 
@@ -2055,23 +2058,23 @@ function HabyuiResultOpinion() {
     }
 }
 function setDocNumFormat(pPrefix) {
-    var Arr_Header = new Array()
-    var Header, Tail
-    var i
+    var Arr_Header = new Array();
+    var Header, Tail;
+    var i;
     var d = new Date();
 
-    var numHeader = ""
+    var numHeader = "";
 
     var fields = message.GetFieldsList();
 
     if (pDraftFlag == "REDRAFT") return;
 
-    var field = message.GetListItem(fields, pPrefix + "docnumber")
+    var field = message.GetListItem(fields, pPrefix + "docnumber");
     if (!field) return
 
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
-    Arr_Header = fieldValue.split("@")
+    Arr_Header = fieldValue.split("@");
 
     for (i = 1; i < Arr_Header.length; i++) {
         Header = Arr_Header[i].substr(0, 2);
@@ -2083,26 +2086,26 @@ function setDocNumFormat(pPrefix) {
                 break;
 
             case "dp":
-                numHeader = numHeader + DeptSymbol + Tail
+                numHeader = numHeader + DeptSymbol + Tail;
                 break;
 
             case "YY":
-                numHeader = numHeader + d.getYear() + Tail
+                numHeader = numHeader + d.getYear() + Tail;
                 break;
 
             case "yy":
-                var yyear = d.getYear()
-                numHeader = numHeader + yyear.toString().substr(2) + Tail
+                var yyear = d.getYear();
+                numHeader = numHeader + yyear.toString().substr(2) + Tail;
                 break;
 
             case "MM":
-                var mmonth = d.getMonth() + 1
+                var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader = numHeader + mmonth + Tail
+                numHeader = numHeader + mmonth + Tail;
                 break;
 
             case "mm":
-                numHeader = numHeader + (d.getMonth() + 1) + Tail
+                numHeader = numHeader + (d.getMonth() + 1) + Tail;
                 break;
 
             case "NN":
@@ -2270,15 +2273,15 @@ function getDeptSendName(DeptID) {
     return trim(SelectSingleNodeValue(result, "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
-    var strCmd, display_Value
+    var strCmd, display_Value;
 
     if (flag)
-        display_Value = ""
+        display_Value = "";
     else
-        display_Value = "none"
+        display_Value = "none";
 
 
-    strCmd = id + ".style.display='" + display_Value + "'"
+    strCmd = id + ".style.display='" + display_Value + "'";
     eval(strCmd);
 }
 function SaveFile() {

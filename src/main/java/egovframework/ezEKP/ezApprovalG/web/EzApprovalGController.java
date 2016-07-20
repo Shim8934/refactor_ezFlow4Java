@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -2326,6 +2327,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGezchkPasswd";
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/ezchkPasswdall.do")
+	public String ezchkPasswdall(Model model) throws Exception{
+		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+		
+		return "ezApprovalG/apprGezchkPasswdall";
+	}
+	
 	@RequestMapping(value = "/ezApprovalG/chkPasswd.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String chkPasswd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -3524,5 +3536,215 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doSusinHesong(docID, receiveSN, deptID, docState, userID, userName, userName2, dirPath, userInfo.getCompanyID(), userInfo.getLang());
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재G 일괄결재 호출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/doApprovAllselect.do")
+	public String doApprovAllselect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		StringBuilder sbStr = new StringBuilder();
+		int cnt = 0;
+		Document xmlDom = commonUtil.convertStringToDocument(request.getParameter("APPXML"));
+		String useAdditionalRole = config.getProperty("config.USE_AdditionalROle");
+		String listType = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String docType = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String userID = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String deptID = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+		String pageSize = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+		String companyID = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+		String orderCell = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+		String orderOption = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
+		String searchQuery = "";
+		String userLang = userInfo.getLang();
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
+		
+		Document xmlDomSub = null;
+				
+		if (xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent().length() > 10) {
+			String tempQuery = "";
+			String returnQuery = "(1 = 1) ";
+			xmlDomSub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent());
+
+			tempQuery = xmlDomSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+			
+			if (tempQuery.indexOf("DOCNO;") != -1)
+            {
+                returnQuery += " AND DOCNO LIKE '%" + xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+            }
+            if (tempQuery.indexOf("DOCTITLE;") != -1)
+            {
+                returnQuery += " AND DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+            }
+
+            //2012.05.23 작성자언어설정
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERNAME;") != -1) {
+                    returnQuery += " AND WRITERNAME LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+            //2012.05.23 부서언어설정
+            if (userLang.equals("2")) {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            } else {
+                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                    returnQuery += " AND WriterDeptName LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                }
+            }
+
+
+            if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
+                returnQuery += " AND STARTDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+            }
+            if (tempQuery.indexOf("APRENDDATE;") != -1) {
+                returnQuery += " AND STARTDATE <=  TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+            }
+            if (tempQuery.indexOf("FORMID;") != -1) {
+                returnQuery += " AND FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+            }
+            if (tempQuery.indexOf("KAPR;") != -1) {
+                returnQuery += " AND keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            if (tempQuery.indexOf("KEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+            }
+            if (tempQuery.indexOf("CAPR;") != -1) {
+                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            if (tempQuery.indexOf("CEND;") != -1) {
+                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+            }
+            if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
+                returnQuery += " AND URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            
+            searchQuery = returnQuery;
+		}
+		
+		String result = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), searchQuery, xmlDomSub);
+		Document xmlResult = commonUtil.convertStringToDocument(result);
+		NodeList docListNode = xmlResult.getElementsByTagName("ROW");
+		
+		if (docListNode != null) {
+			String strDocState = "";
+			String strAprState = "";
+			String aprType_aprState = "";
+
+			for (int k = 0; k < docListNode.getLength(); k++) {
+				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
+				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
+				
+				if (strDocState.equals("015") || (!strAprState.equals("002") && !strAprState.equals("005"))) {
+					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
+				} else {
+					String href = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+
+					if (!docListNode.item(k).getChildNodes().item(0).getChildNodes().item(7).getTextContent().equals(userInfo.getDeptID()) && useAdditionalRole.equals("YES")) {
+						docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
+					} else {
+						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), userID, companyID);
+						
+						String mhtOrHwp = "MHT";
+						
+						if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
+							mhtOrHwp = "HWP";
+						}
+						
+						if (!aprType_aprState.split("/")[0].equals("001") && !aprType_aprState.split("/")[0].equals("019") && !aprType_aprState.split("/")[0].equals("004")) {
+							docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
+						} else {
+							cnt++;
+							
+						    sbStr.append("<tr>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(17).getTextContent() + "|" + mhtOrHwp + "\")'></td>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent() +"</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent() + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent() + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent() + "</TD>");
+                            sbStr.append("</tr>");
+						}
+					}
+				}
+			}
+		}
+		
+		model.addAttribute("cnt", cnt);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("sbStr", sbStr.toString());
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		return "ezApprovalG/apprGdoApprovAllselect";
+	}
+	
+	/**
+	 * 전자결재G 회수 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/doCancel.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doCancel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		String result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 재기안 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getFormConnFlag.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormConnFlag(HttpServletRequest request) throws Exception{
+		String docID = request.getParameter("docID");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGService.getFormConnFlag(docID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 양식아이디 가져오기 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getAprDocFormID.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAprDocFormID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getDocInfo(docID, "APR", "FormID", userInfo.getCompanyID());
+		
+		return result;
+	}
+
+	/**
+	 * 전자결재G 공람정보 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezLineInfo.do")
+	public String ezLineInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String deptID = request.getParameter("deptID");
+		String docState = request.getParameter("docState");
+		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID());
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("docState", docState);
+		model.addAttribute("childDocInfo", childDocInfo);
+		
+		return "ezApprovalG/apprGezLineInfo";
 	}
 }

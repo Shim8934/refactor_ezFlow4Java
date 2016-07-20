@@ -314,6 +314,14 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_DOSUSINHESONG_APRDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getAprLineInfoAprState" parameterClass="Map" resultClass="ApprGAprLineVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRLINEINFO_APRSTATE(#v_PDOCID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -432,6 +440,10 @@
 	
 	<procedure id="EzApprovalG.doSusinHesongSentDeptID" parameterClass="Map" resultClass="String">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DOSUSINHESONG_SENTDEPTID(#v_DOCID#, #v_RECEIVESN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getFormConnFlag" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONNFLAG(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int">
@@ -584,6 +596,10 @@
 	
 	<procedure id="EzApprovalG.deleteAttachDocInfo" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DELETEATTACHDOCINFO(#v_DOCID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.doCallBack" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOCALLBACK(#v_DOCID#, #v_USERID#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">

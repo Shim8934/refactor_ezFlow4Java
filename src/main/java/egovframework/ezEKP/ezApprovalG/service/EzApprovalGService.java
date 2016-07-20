@@ -234,8 +234,17 @@ public interface EzApprovalGService {
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang) throws Exception;
 	
+	public String getAprType_AprState(String docID, String userID, String companyID) throws Exception;
+	
+	public String doCallBack(String docID, String userID, String companyID) throws Exception;
+	
+	public String getFormConnFlag(String docID, String companyID) throws Exception;
+	
+	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
+
 
 }

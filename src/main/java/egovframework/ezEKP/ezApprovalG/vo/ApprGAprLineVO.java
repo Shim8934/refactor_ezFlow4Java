@@ -65,6 +65,10 @@ public class ApprGAprLineVO {
 	private String processorID;
 	/** */
 	private String receivedDeptID;
+	/** */
+	private String flag;
+	/** */
+	private String gDocID;
 	
 	public String getUserID() {
 		return userID;
@@ -258,4 +262,17 @@ public class ApprGAprLineVO {
 	public void setReceivedDeptID(String receivedDeptID) {
 		this.receivedDeptID = receivedDeptID;
 	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	public String getgDocID() {
+		return gDocID;
+	}
+	public void setgDocID(String gDocID) {
+		this.gDocID = gDocID;
+	}
+	
 }
