@@ -582,19 +582,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if(part != null){
 						response.setContentType(part.getContentType());
 						
-						// in case of IE
-						// the filename needs to be UTF-8 and URL-encoded.
-						// URI class is more appropriate than URLEncoder class for this purpose.
-						if (request.getHeader("User-Agent").contains("Trident")) {
-							URI uri = new URI(null, null, filename, null);
-							filename = uri.toASCIIString();
-						}
-						// in case of Chrome, Safari
-						// the filename consists of UTF-8 encoded bytes.
-						else {
-							filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-						}
-						
+						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
 						
 						InputStream input = part.getInputStream();
@@ -672,7 +660,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			fileName = new String(Base64.decodeBase64(fileName), "UTF-8");
 		}
 		
-		downFile(response, xmlPath, fileName);
+		downFile(request, response, xmlPath, fileName);
 	}
 	
 	/**

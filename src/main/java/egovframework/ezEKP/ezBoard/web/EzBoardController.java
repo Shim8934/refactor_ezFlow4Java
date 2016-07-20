@@ -3691,9 +3691,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = request.getServletContext().getRealPath("");
 		
 		if (attID != null && !attID.equals("")) {
-			downFile(response, realPath + filePath, attID);
+			downFile(request, response, realPath + filePath, attID);
 		} else {
-			downFile(response, realPath + filePath, fileName);
+			downFile(request, response, realPath + filePath, fileName);
 		}
 	}
 	

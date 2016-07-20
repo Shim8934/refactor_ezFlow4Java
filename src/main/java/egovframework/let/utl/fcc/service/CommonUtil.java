@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -140,6 +141,26 @@ public class CommonUtil {
 		}
 	}	
 		
+	public static String getEncodedFileNameForDownload(String userAgentValue, String filename) {
+		try {
+			// in case of IE & Edge
+			// the filename needs to be UTF-8 and URL-encoded.
+			// URI class is more appropriate than URLEncoder class for this purpose.
+			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge")) {
+				URI uri = new URI(null, null, filename, null);
+				filename = uri.toASCIIString();
+			}
+			// in case of Chrome, Safari
+			// the filename consists of UTF-8 encoded bytes.
+			else {
+				filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+			}
+		} catch (Exception e) {			
+		}
+
+		return filename;
+	}
+	
 	public Document convertStringToDocument(String xmlStr) {		
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		

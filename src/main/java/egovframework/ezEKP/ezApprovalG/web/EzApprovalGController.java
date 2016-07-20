@@ -1622,7 +1622,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (!result.equals("NOTPERMISSION")) {
-			downFile(response, realPath + filePath, fileName);
+			downFile(request, response, realPath + filePath, fileName);
 		}
 	}
 	

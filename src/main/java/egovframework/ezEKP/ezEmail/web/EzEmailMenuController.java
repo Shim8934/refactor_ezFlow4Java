@@ -32,6 +32,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -53,7 +54,7 @@ public class EzEmailMenuController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-
+	
 	@Autowired
 	private Properties config;
 
@@ -429,20 +430,8 @@ public class EzEmailMenuController {
 		}
 		
 		String filename = request.getParameter("filename");
-		
-		// in case of IE
-		// the filename needs to be UTF-8 and URL-encoded.
-		// URI class is more appropriate than URLEncoder class for this purpose.
-		if (request.getHeader("User-Agent").contains("Trident")) {
-			URI uri = new URI(null, null, filename, null);
-			filename = uri.toASCIIString();
-		}
-		// in case of Chrome, Safari
-		// the filename consists of UTF-8 encoded bytes.
-		else {
-			filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-		}
-		
+		filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);
+				
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),

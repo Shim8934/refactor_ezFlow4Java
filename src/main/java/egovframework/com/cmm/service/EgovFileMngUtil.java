@@ -27,7 +27,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
-
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -381,12 +381,14 @@ public class EgovFileMngUtil {
      * @param orignFileNm
      * @throws Exception
      */
-    public void downFile(HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
+    public void downFile(HttpServletRequest request, HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
 	    //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
 	    //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
 	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
     	
+		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+		
 		File file = new File(downFileName);
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
@@ -409,7 +411,8 @@ public class EgovFileMngUtil {
 	    	    String mimetype = "text/html"; //"application/x-msdownload"	
 	    	    response.setBufferSize(fSize);
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
+//				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
 //				response.setHeader("Content-Transfer-Encoding","binary");
 				//response.setHeader("Pragma","no-cache");
