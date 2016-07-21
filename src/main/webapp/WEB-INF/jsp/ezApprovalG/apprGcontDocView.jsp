@@ -79,6 +79,7 @@
 		            }
 		            else {
 		                if (pDocHref != "") {
+alert(pDocHref);
 		                    message.Set_EditorContentURL(pDocHref);
 		                }
 		            }

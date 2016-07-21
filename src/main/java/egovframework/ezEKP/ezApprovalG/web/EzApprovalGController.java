@@ -3747,4 +3747,115 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return "ezApprovalG/apprGezLineInfo";
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getContainerInfo.do")
+	public String getContainerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String useEditor = config.getProperty("config.EDITOR");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String userEmail = userInfo.getEmail();
+		String userInfoEnforce = config.getProperty("config.UserInfo_Enforce");
+		String openYear = config.getProperty("config.Site_OpenYear");
+		String susinAdmin = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String contType = "END";
+		String dirPath = realPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator;
+		String propList = "extensionAttribute4";
+		String contID = request.getParameter("contID");
+		String sQuery = request.getParameter("sQuery");
+		String type = request.getParameter("type");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
+		
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
+		
+		Document xmlDom = commonUtil.convertStringToDocument(result);
+		
+		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("contType", contType);
+		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("type", type);
+		model.addAttribute("sQuery", sQuery);
+		model.addAttribute("contID", contID);
+		model.addAttribute("deptInfo", deptInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("userEmail", userEmail);
+		model.addAttribute("userInfoEnforce", userInfoEnforce);
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		return "ezApprovalG/apprGgetContainerInfo";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+        String docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        String drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+        String draftFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+        String draftFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String draftFromDAY = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+        String draftToYEAR = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        String draftToMONTH = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+        String draftToDAY = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
+        String apprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
+        String apprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
+        String apprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent();
+        String apprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
+        String apprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
+        String apprToDAY = xmlDom.getDocumentElement().getChildNodes().item(14).getTextContent();
+
+        String myApprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(15).getTextContent();
+        String myApprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
+        String myApprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
+        String myApprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
+        String myApprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
+        String myApprToDAY = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
+        String formID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        String draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent();
+
+        String containerID = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+        String userID = xmlDom.getDocumentElement().getChildNodes().item(25).getTextContent();
+        String pageNum = xmlDom.getDocumentElement().getChildNodes().item(28).getTextContent();
+        String pageSize = xmlDom.getDocumentElement().getChildNodes().item(29).getTextContent();
+        String docState = xmlDom.getDocumentElement().getChildNodes().item(30).getTextContent();
+
+        String subQuery = xmlDom.getDocumentElement().getChildNodes().item(31).getTextContent();
+        String orderCell = xmlDom.getDocumentElement().getChildNodes().item(32).getTextContent();
+        String orderOption = xmlDom.getDocumentElement().getChildNodes().item(33).getTextContent();
+        
+        String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
+        		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
+        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "");
+        
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezReceiptHistoryInfo.do")
+	public String ezReceiptHistoryInfo(HttpServletRequest request, Model model) throws Exception{
+		String docID = request.getParameter("docID");
+		String deptID = request.getParameter("deptID");
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("deptID", deptID);
+		//TODO: aspx 파일이 Cross 버젼으로 닷넷소스에는 걸려져있는데 파일이 존재안함 그래서 일단 일반으로 넣었으나 엑티브엑스 사용해서 수정해야됨
+		return "ezApprovalG/apprGezReceiptHistoryInfo";
+		
+	}
 }

@@ -4,6 +4,7 @@
 	<head>
 		<title></title>
 		<script type="text/javascript" src="/js/ezApprovalG/tse.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script language="javascript" type="text/javascript">
 		    var XmlBodyATT = createXmlDom();
@@ -51,8 +52,7 @@
 		            var tempXML = createXmlDom();
 		            var XmlBodyDATA = createXmlDom();
 		            var tempStr = "";
-		            var URL = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURI(url);
-		            tempStr = ConvertMHTtoHTML(URL);
+		            tempStr = ConvertMHTtoHTML(url);
 		            if (tempStr.indexOf("MIME-Version: 1.0") > 0) {
 		                Set_EditorContentURL(url);
 		            }

@@ -267,7 +267,6 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-    
     obj.childNodes[2].style.fontWeight = "normal";
 
     var pboardid = obj.getAttribute("DATA1");
@@ -377,7 +376,7 @@ function event_ItemPreviewRead() {
             	document.getElementById("PreViewBottom").style.display = "";
             }
             var result = xmlhttp.responseXML;
-            
+     
             if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
                 alert("권한이 없습니다");
                 return;
@@ -428,21 +427,22 @@ function event_ItemPreviewRead() {
             	$.ajax({
 					type : "POST",
 					dataType : "text",
-					async : false,
+					async : true,
 					url : "/ezCommon/mhtToHTMLContent.do",
 					data : { type   	 : boardType, 
 							 itemID 	 : ItemID
 						   },
 					success: function(result){
-						event_downContent(result);
+						event_downContent(result, xmlhttp2.responseText);
 					}        			
 				});	
-            }else {
+            } else {
                 document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
                 document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
                 document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
                 var readHTML = WriteContent(ContentLocation, ItemID);
                 var tempText = xmlhttp2.responseText;
+
                 if (xmlhttp2.readyState == 4) {
                     setTimeout(function () {
                         if (pPreviewShow_HOW.trim() == "W") {
@@ -461,7 +461,6 @@ function event_ItemPreviewRead() {
 }
 function loadsetInterval(readHTML, responseText) {
     try {
-
         if (pPreviewShow_HOW.trim() == "W") {
             if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined) {
                 if (document.getElementById("ifrmPreViewW").contentWindow.document.getElementById("txtContent") != null) {
@@ -483,14 +482,11 @@ function loadsetInterval(readHTML, responseText) {
 
     }
 }
-function event_downContent(result) {
+function event_downContent(result, result2) {
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
-        var doc = document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.document;
-    	doc.open();
-    	doc.write(result);
-    	doc.close();
+        document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(result, result2);
 }
 
 function PreviewH_onMouserDown(e) {

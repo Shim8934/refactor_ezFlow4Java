@@ -32,10 +32,17 @@ public interface EzOrganService {
 	
 	public String getEncPassword(String dUserID) throws Exception;
 	
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page) throws Exception;
+	
+	public String updateProperty(String userID, String propName, String propValue, String pClass) throws Exception;
+	
+	public String delProxyUserInfo(String userID) throws Exception;
+	
+	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;
 
-	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page) throws Exception;
  
 }

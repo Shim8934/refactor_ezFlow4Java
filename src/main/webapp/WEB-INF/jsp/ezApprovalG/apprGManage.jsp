@@ -197,14 +197,20 @@
 		    }
 		
 		    function setBujaeOff() {
-		        var xmlDom = createXmlDom();
-		        var xmlHTTP = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "BUJAE", "");
-		        createNodeAndInsertText(xmlDom, objNode, "PROXY", "");
-		        xmlHTTP.open("POST", "/myoffice/ezPersonal/BujaeConf/SaveBujae.aspx", false);
-		        xmlHTTP.send(xmlDom);
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "xml",
+		    		async : false,
+		    		url : "/ezPersonal/saveBujae.do",
+		    		data : {
+		    				buJae  : "",
+		    				proxy  : ""
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+		        
 		        arr_userinfo[7] = "";
 		    }
 		

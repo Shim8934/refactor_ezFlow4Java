@@ -997,6 +997,65 @@ System.out.println(strSQL + strSize);
          
  		return memberlist2.toString();
 	}
+
+	@Override
+	public String updateProperty(String userID, String propName, String propValue, String pClass) throws Exception {
+		String strFlag = "N";
+		
+		if (!pClass.equals("user")) {
+			if (propName.toLowerCase().indexOf("displayname") != -1) {
+				strFlag = "Y";
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userID);
+		map.put("v_CLASS", pClass);
+		map.put("v_PROPNAME", propName);
+		map.put("v_PROPVALUE", propValue);
+		map.put("v_FLAG", strFlag);
+		
+		try {
+			ezOrganDAO.updateProperty(map);
+			return "OK";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+
+	@Override
+	public String delProxyUserInfo(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		
+		try {
+			ezOrganDAO.delProxyUserInfo(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	@Override
+	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PROXYUSERID", userID);
+		map.put("v_PROXYUSERNAME", userID);
+		map.put("v_PROXYUSERDEPTID", userID);
+		map.put("v_STARTDATE", userID);
+		map.put("v_ENDDATE", userID);
+		
+		try {
+			ezOrganDAO.setProxyUserInfo(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
 }
 
 

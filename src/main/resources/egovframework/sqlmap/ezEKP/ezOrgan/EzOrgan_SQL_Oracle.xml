@@ -113,6 +113,18 @@
 		{CALL EZHRMASTER.EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
+	</procedure>
+	
+	<procedure id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
+		{CALL EZHRMASTER.EZSP_DELPROXYUSERINFO(#v_USERID#)}
+	</procedure>
+	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			SELECT 

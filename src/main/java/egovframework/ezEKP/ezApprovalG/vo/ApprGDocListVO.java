@@ -118,6 +118,10 @@ public class ApprGDocListVO {
 	private String itemName2;
 	/** */
 	private String signCheck;
+	/** */
+	private String edmsYN;
+	/** */
+	private String containerID;
 
 	public String getDocID() {
 		return docID;
@@ -466,6 +470,18 @@ public class ApprGDocListVO {
 	}
 	public void setSignCheck(String signCheck) {
 		this.signCheck = signCheck;
+	}
+	public String getEdmsYN() {
+		return edmsYN;
+	}
+	public void setEdmsYN(String edmsYN) {
+		this.edmsYN = edmsYN;
+	}
+	public String getContainerID() {
+		return containerID;
+	}
+	public void setContainerID(String containerID) {
+		this.containerID = containerID;
 	}
 	
 }

@@ -93,4 +93,16 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganDAO.getSearchListCount", map);
 	}
 
+	public void updateProperty(Map<String, Object> map) throws Exception{
+		update("EzOrganDAO.updateProperty", map);
+	}
+	
+	public void setProxyUserInfo(Map<String, Object> map) throws Exception{
+		update("EzOrganDAO.setProxyUserInfo", map);
+	}
+
+	public void delProxyUserInfo(Map<String, Object> map) throws Exception{
+		delete("EzOrganDAO.delProxyUserInfo", map);
+	}
+
 }

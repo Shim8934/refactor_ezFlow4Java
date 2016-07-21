@@ -64,7 +64,6 @@
 	
 	        function makeWriteContent(responseText, AttachText) {
 	            try {
-	
 	                nowZoom = 100;
 	                maxZoom = 200;
 	                minZoom = 80;
@@ -114,7 +113,6 @@
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
-	
 	            } catch (e) {}
 	        }
 	
@@ -143,7 +141,8 @@
 	
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = filepath.substr(89, filepath.length - 88);
+// 	                filename = filepath.substr(89, filepath.length - 88);
+	                filename = filepath.substr(filepath.lastIndexOf('_') + 1);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
 	                filename = ReplaceText(filename, "%7e", "~");
@@ -229,7 +228,7 @@
 	</head>
 	<body>
 		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
-		<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
+			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
 	</body>
 </html>

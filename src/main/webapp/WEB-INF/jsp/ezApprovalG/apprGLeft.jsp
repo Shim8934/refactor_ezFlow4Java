@@ -273,10 +273,12 @@
 		    function cmdOK_onclick(ContainerID, ContName) {
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-		            if (ContName == "<spring:message code='ezApprovalG.t1517'/>")
-		                window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/formContainer/getContainerInfo_Cross.aspx?contID=" + encodeURI(ContainerID) + "&SQuery=&type=1";
-		            else
-		                window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/formContainer/getContainerInfo_Cross.aspx?contID=" + encodeURI(ContainerID) + "&SQuery=";
+		            if (ContName == "<spring:message code='ezApprovalG.t1517'/>"){
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery=&type=1";
+		            }
+		            else {
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery=";
+		            }
 		        }
 		        else {
 		            try {
@@ -288,7 +290,7 @@
 		    function cmdOK_onclick2(ContainerID, ContName) {
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-		            window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/formContainer/getContainerInfo_Cross.aspx?contID=" + encodeURI(Containers) + "&SQuery=" + encodeURI(ContainerID);
+		            window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(Containers) + "&sQuery=" + encodeURI(ContainerID);
 		        }
 		        else {
 		            try {
