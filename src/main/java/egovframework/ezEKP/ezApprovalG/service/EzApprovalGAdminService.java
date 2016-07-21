@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
+import java.util.List;
+
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -62,8 +64,14 @@ public interface EzApprovalGAdminService {
 
 	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
 	
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
-	
 	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
+	
+	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception;
+	
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	
+
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception;
 	
 }

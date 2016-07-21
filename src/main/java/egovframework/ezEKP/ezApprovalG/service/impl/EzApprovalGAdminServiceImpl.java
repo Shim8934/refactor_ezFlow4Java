@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -19,9 +18,9 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezSchedule.web.EzScheduleController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -809,7 +808,7 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
                 for (int i=0; i<NAMETYPE.length; i++) {
 					if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
                         String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID);
-						
+                        
                         if (subSQL == "FALSE") {
 							return "FALSE";
                         }
@@ -937,46 +936,45 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
-		String listString = ezApprovalGService.getListHeader("102", companyID, lang);
-		
-		Document listXML = commonUtil.convertStringToDocument(listString);
-		
-		sb.append("<LISTVIEWDATA>");
-		sb.append("<HEADERS>");
-		
-		for (int i = 0; i < listXML.getElementsByTagName("NAME").getLength(); i++) {
-			sb.append("<HEADER>");
-			sb.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
-			sb.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
-//			sb.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
-			sb.append("</HEADER>");
-		}
-
-		sb.append("</HEADERS>");
-		sb.append("<ROWS>");
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_TASKCODE", taskCode);
+		map.put("v_LISTTYPE", "102");
+		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
 		
-		List<ApprGTaskDeptInfoVO> list = ezApprovalGAdminDAO.getTaskCodeDeptInfo(map);
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
-		for (ApprGTaskDeptInfoVO vo : list) {
-			sb.append("<ROW>");
-			sb.append("<CELL>");
+		sb.append("<LISTVIEWDATA><HEADERS>");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+			sb.append("</HEADER>");
+		}				
+		sb.append("</HEADERS><ROWS>");
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map1.put("v_TASKCODE", taskCode);
+		map1.put("companyID", companyID);
+		
+		List<ApprGTaskDeptInfoVO> listBody = ezApprovalGAdminDAO.getTaskCodeDeptInfo(map1);
+		
+		for (ApprGTaskDeptInfoVO vo : listBody) {
+			sb.append("<ROW><CELL>");
 			sb.append("<VALUE>" + vo.getProcessDeptCode() + "</VALUE>");
 			sb.append("<DATA1>" + vo.getProcessDeptName() + "</DATA1>");
 			sb.append("<DATA2>" + vo.getProcessDeptName2() + "</DATA2>");
-			sb.append("</CELL>");
-			sb.append("<CELL>");
+			sb.append("</CELL><CELL>");
 			sb.append("<VALUE>" + (lang.equals("1") ? vo.getProcessDeptName() : vo.getProcessDeptName2()) + "</VALUE>");
-			sb.append("</CELL>");
-			sb.append("</ROW>");
+			sb.append("</CELL></ROW>");
 		}
 		
-		sb.append("</ROWS>");
-		sb.append("</LISTVIEWDATA>");
+		sb.append("</ROWS></LISTVIEWDATA>");
 		
 		return sb.toString();
 	}
@@ -1054,6 +1052,86 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";
 		}
 	}
+	
+	@Override
+	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTTYPE", "093");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}				
+		sb.append("</HEADERS><ROWS>");
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map1.put("v_TASKCODE", taskCode);
+		map1.put("v_LANGTYPE", lang);
+		map1.put("companyID", companyID);
+		
+		List<ApprGTaskCodeHistoryVO> listBody = ezApprovalGAdminDAO.getTaskHistory(map1);
+		
+		for (int i = 0; i < listBody.size(); i++) {
+			ApprGTaskCodeHistoryVO bodyVo = listBody.get(i);
+			
+			sb.append("<ROW>");
+			
+			for (int j = 0; j < listHeader.size(); j++) {	
+				ApprGListHeaderVO headerVo = listHeader.get(j);
+				String fieldName = headerVo.getColName();
+				String fieldValue = "";
+				
+				for (Field field : bodyVo.getClass().getDeclaredFields()) {
+			        field.setAccessible(true);
+					
+					if (field.getName().toUpperCase().equals(fieldName.toUpperCase()) && field.get(bodyVo) != null) {
+						fieldValue = String.valueOf(field.get(bodyVo));
+					}
+			    }
+				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang) + "</VALUE></CELL>");
+			}
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		return sb.toString();
+	}
+	
+	//TODO 이효진하는중
+	@Override
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DEPTCODE", deptCode);
+		map.put("companyID", companyID);
+		
+		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
+		
+		for (ApprGTaskVO vo : list) {
+			sb.append(commonUtil.getQueryResult(vo));
+		}
+		
+		String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType);
+		
+		return result;
+	}
+
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1075,5 +1153,4 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 			return "FALSE";
 		}
 	}
-	
 }

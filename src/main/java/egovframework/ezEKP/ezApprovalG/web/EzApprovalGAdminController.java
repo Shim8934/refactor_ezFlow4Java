@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 관리자 - 전자결재G
@@ -723,6 +721,9 @@ public class EzApprovalGAdminController {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 코드정보 화면 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezApprovalG/viewTaskInfo.do")
 	public String viewTaskInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -730,5 +731,71 @@ public class EzApprovalGAdminController {
 		model.addAttribute("userInfo", userInfo);
 		
 		return "admin/ezApprovalG/apprGViewTaskInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 코드이력 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/taskHistoryInfo.do")
+	public String taskHistoryInfo() {
+		return "admin/ezApprovalG/apprGTaskHistoryInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 분류,단위업무관리 코드이력 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskHistory.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String taskCode = request.getParameter("taskCode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskHistory(taskCode, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 부서별 단위업무 조회 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/taskAdminDept.do")
+	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezApprovalG/apprGTaskAdminDept";
+	}
+	
+	/**
+	 * 전자결재G관리 부서별 단위업무 목록 호출 함수(분류기준표 정보를 가져온다.)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskFullList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getTaskFullList (HttpServletRequest request, Model model) throws Exception {
+		String deptCode = request.getParameter("deptCode");
+		String pageSize = request.getParameter("pageSize");
+		String pageNo = request.getParameter("pageNo");
+		String langType = request.getParameter("langType");
+		String companyID = request.getParameter("companyID");
+		
+		String resultXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType, companyID);
+		
+		
+		
+		return "";
 	}
 }

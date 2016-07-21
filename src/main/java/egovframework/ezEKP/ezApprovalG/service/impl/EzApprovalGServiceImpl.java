@@ -2474,7 +2474,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return resultXML;
 	}
 
-	private String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType) throws Exception{
+	@Override
+	public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType) throws Exception{
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		

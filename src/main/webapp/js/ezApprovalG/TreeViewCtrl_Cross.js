@@ -14,9 +14,9 @@
         treeView.SetID("FromTreeView");
         treeView.SetUseAgency(true);
         treeView.SetRequestData("RequestData");
-        treeView.SetNodeClick("TreeViewNodeClick");        
+        treeView.SetNodeClick("TreeViewNodeClick");
         treeView.DataSource(xmlDom);
-        treeView.DataBind("TreeView");        
+        treeView.DataBind("TreeView");
     } catch (ErrMsg) {
         alert(" TreeViewinitialize : " + ErrMsg.description);
     }

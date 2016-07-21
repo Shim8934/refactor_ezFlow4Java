@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -58,6 +59,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGTaskVO> getTaskInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskCodeHistoryVO> getTaskHistory(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskCodeHistoryVO>) list("EzApprovalGAdmin.getTaskHistory", map);
 	}
 	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
@@ -188,6 +194,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void removeDeptInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.removeDeptInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskFullList(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskFullList", map);
 	}
 
 }

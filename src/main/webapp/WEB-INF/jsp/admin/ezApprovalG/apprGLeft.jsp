@@ -39,7 +39,7 @@
 				        url = "/admin/ezApprovalG/apprGTaskCodeManage.do";
 						break;					
 					case 6:
-					    url = "/myoffice/ezApprovalG/ezCabinet/Manage/TaskAdmin_Dept_Cross.aspx";
+					    url = "/admin/ezApprovalG/taskAdminDept.do";
 						break;						
 					case 7:
 					    url = "/myoffice/ezApprovalG/ezSealInfo/ManageSeal_Cross.aspx";
