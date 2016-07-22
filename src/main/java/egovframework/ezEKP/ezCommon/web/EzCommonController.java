@@ -1051,7 +1051,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
         			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang());
         			
-        			if (!infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
+        			if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
         				Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
         				
         				literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
