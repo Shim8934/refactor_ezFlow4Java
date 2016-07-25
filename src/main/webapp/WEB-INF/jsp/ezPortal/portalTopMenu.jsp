@@ -55,7 +55,6 @@
 		var pwd = "";
 		document.onselectstart = function () { return false; };
 		window.onload = function() {
-alert("!!");
 		    if (navigator.userAgent.indexOf('Firefox') != -1) {
 		        document.body.style.MozUserSelect = 'none';
 		        document.body.style.WebkitUserSelect = 'none';
