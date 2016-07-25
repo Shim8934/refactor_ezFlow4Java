@@ -350,8 +350,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
 			try {				
-				InternetAddress InternetAddress = new InternetAddress(forwardAddress);
-				strResult = setMailForwardAddress(userEmail, InternetAddress.getAddress());
+				InternetAddress internetAddress = new InternetAddress(forwardAddress);
+				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
 			} catch (AddressException e) {
 			}
 		}
