@@ -59,5 +59,7 @@ public interface EzOrganAdminService {
 
 	public void restoreRetireEntry(String cn, String deptID) throws Exception;
 
+	public int userCountCheck(String cn)throws Exception;
+
 	 
 }

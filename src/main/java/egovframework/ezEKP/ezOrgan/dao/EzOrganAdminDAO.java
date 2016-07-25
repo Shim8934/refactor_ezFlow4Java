@@ -115,6 +115,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void setAddJob(Map<String, Object> map) throws Exception{
 		delete("EzOrganAdminDAO.setAddJob", map);
 	}
+
+	public int userCountCheck(String cn) {
+		// TODO Auto-generated method stub
+		return (int) select("EzOrganAdminDAO.userCountCheck", cn);
+	}
 		
 
 }

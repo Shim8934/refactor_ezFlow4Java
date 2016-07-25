@@ -390,6 +390,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		ezOrganAdminDao.restoreRetireEntry(map);
 	}
+
+	@Override
+	public int userCountCheck(String cn) throws Exception {
+		// TODO Auto-generated method stub
+		return  ezOrganAdminDao.userCountCheck(cn);
+	}
 	
 	
 }

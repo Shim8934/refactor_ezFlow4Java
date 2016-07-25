@@ -154,10 +154,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String result = "";
 		
 		int cnt = ezOrganAdminService.companyChildCheck(cn);
-		
+		int usercnt = ezOrganAdminService.userCountCheck(cn);
 		if (cnt > 0) {
 			result = "HASCHILD";
-		} else {			
+		} else if(usercnt>0){
+			result = "HASCHILD";
+		}else {			
 			ezOrganAdminService.deleteDBData(cn, pClass);			
 			result = "OK";
 		}

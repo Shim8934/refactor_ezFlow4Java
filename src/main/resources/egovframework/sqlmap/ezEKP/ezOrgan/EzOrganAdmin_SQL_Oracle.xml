@@ -187,6 +187,16 @@
 	     ]]>
 	</select>
 	
+	<select id="EzOrganAdminDAO.userCountCheck" parameterClass="String" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(cn)
+     		FROM 
+     			ezHrmaster.TBLUSERMASTER 
+      		WHERE  
+      			department = #cn#
+	     ]]>
+	</select>
 	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">
 		<![CDATA[
 			UPDATE 
