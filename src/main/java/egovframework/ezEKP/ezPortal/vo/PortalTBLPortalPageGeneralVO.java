@@ -1,0 +1,181 @@
+package egovframework.ezEKP.ezPortal.vo;
+
+public class PortalTBLPortalPageGeneralVO {
+	/** 아이디*/
+	private String uID;
+	/** 부모 아이디*/
+	private String parentUID;
+	/** 깊이*/
+	private int depth;
+	/** 이름*/
+	private String displayName;
+	/** 이름(다국어)*/
+	private String displayName2;
+	/** 생성자 아이디*/
+	private String creatorID;
+	/** 생성자 이름*/
+	private String creatorName;
+	/** 생성일*/
+	private String createDate;
+	/** 수정일*/
+	private String modifyDate;
+	/** 가로 길이*/
+	private int width;
+	/** 세로 길이*/
+	private int height;
+	/** Row 길이*/
+	private int rowLength;
+	/** Column 길이*/
+	private int columnLength;
+	/** Row 분리값*/
+	private String rowSplit;
+	/** Column 분리값*/
+	private String columnSplit;
+	/** 구분 플래그*/
+	private String gubunFlag;
+	/** 사용 플래그*/
+	private String useFlag;
+	/** 회사 아이디*/
+	private String companyID;
+	/** 기본타입*/
+	private String baseType;
+	/** 테마 아이디*/
+	private String themeUID;
+	/** 기본페이지*/
+	private String defaultPage;
+	/** 테이블뷰옵션*/
+	private String tableViewOption;
+	
+	public String getuID() {
+		return uID;
+	}
+	public void setuID(String uID) {
+		this.uID = uID;
+	}
+	public String getParentUID() {
+		return parentUID;
+	}
+	public void setParentUID(String parentUID) {
+		this.parentUID = parentUID;
+	}
+	public int getDepth() {
+		return depth;
+	}
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	public String getDisplayName2() {
+		return displayName2;
+	}
+	public void setDisplayName2(String displayName2) {
+		this.displayName2 = displayName2;
+	}
+	public String getCreatorID() {
+		return creatorID;
+	}
+	public void setCreatorID(String creatorID) {
+		this.creatorID = creatorID;
+	}
+	public String getCreatorName() {
+		return creatorName;
+	}
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+	public String getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(String modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	public int getRowLength() {
+		return rowLength;
+	}
+	public void setRowLength(int rowLength) {
+		this.rowLength = rowLength;
+	}
+	public int getColumnLength() {
+		return columnLength;
+	}
+	public void setColumnLength(int columnLength) {
+		this.columnLength = columnLength;
+	}
+	public String getRowSplit() {
+		return rowSplit;
+	}
+	public void setRowSplit(String rowSplit) {
+		this.rowSplit = rowSplit;
+	}
+	public String getColumnSplit() {
+		return columnSplit;
+	}
+	public void setColumnSplit(String columnSplit) {
+		this.columnSplit = columnSplit;
+	}
+	public String getGubunFlag() {
+		return gubunFlag;
+	}
+	public void setGubunFlag(String gubunFlag) {
+		this.gubunFlag = gubunFlag;
+	}
+	public String getUseFlag() {
+		return useFlag;
+	}
+	public void setUseFlag(String useFlag) {
+		this.useFlag = useFlag;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getBaseType() {
+		return baseType;
+	}
+	public void setBaseType(String baseType) {
+		this.baseType = baseType;
+	}
+	public String getThemeUID() {
+		return themeUID;
+	}
+	public void setThemeUID(String themeUID) {
+		this.themeUID = themeUID;
+	}
+	public String getDefaultPage() {
+		return defaultPage;
+	}
+	public void setDefaultPage(String defaultPage) {
+		this.defaultPage = defaultPage;
+	}
+	public String getTableViewOption() {
+		return tableViewOption;
+	}
+	public void setTableViewOption(String tableViewOption) {
+		this.tableViewOption = tableViewOption;
+	}
+}
