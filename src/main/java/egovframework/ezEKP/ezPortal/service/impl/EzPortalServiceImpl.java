@@ -624,9 +624,9 @@ System.out.println("strSQL:"+strSQL);
 						sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
 					}
 					if (menuItemMenuItemType.equals("0")) {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().subSequence(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'><B>" + menuItemDisplayName + "</B></TD>\n");
+						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'><B>" + menuItemDisplayName + "</B></TD>\n");
 					} else {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().subSequence(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo) + "</TD>\n");
+						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo) + "</TD>\n");
 					}
                     sb.append("</TR>\n");
 				} else { 
@@ -1058,14 +1058,9 @@ System.out.println("resultXML:"+resultXML);
 				String imageWindowOption = result.getWindowOption();
 				
 				if (imageNormalImagePath != null) {
-System.out.println("222222");
 					sb.append("<img src='" + imageNormalImagePath + "'");
 					if (imageOverImagePath != null) {
-System.out.println("333333");
-System.out.println("이건:"+imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1));
 						sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"" + " name=\'" + pContentsUID + "'");
-System.out.println("???:"+imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0]);
-
 					}
 					if (imageLinkURL != null) {
 						sb.append(" style='cursor:pointer'");
@@ -1092,7 +1087,6 @@ System.out.println("???:"+imageNormalImagePath.substring(imageNormalImagePath.la
 				}
 				
 			}
-System.out.println("sb:"+sb.toString());
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1143,7 +1137,7 @@ System.out.println("sb:"+sb.toString());
 			sb.append("<ul>\n");
 			
 			String lastLogout = "";
-System.out.println("resultSize:"+result.size());
+
 			for (int i=0; i<result.size(); i++) {
 				if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo))) {
 					continue;
@@ -1197,8 +1191,6 @@ System.out.println("resultSize:"+result.size());
             sb.append("<ul class='topmenu'>");
             
             for (int i=0; i<result.size(); i++) {
-System.out.println("boolean:"+!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)));
-System.out.println("boolean1:"+checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)));
 				if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo))) {
 					continue;
 				}
@@ -1210,18 +1202,13 @@ System.out.println("boolean1:"+checkViewRightBln(result.get(i).getuID(), getAcce
 				String menuitemLinkLocation = result.get(i).getLinkLocation();
 				String menuitemWindowOption = result.get(i).getWindowOption();
 				String menuitemNormalImagePath = result.get(i).getNormalImagePath();
-System.out.println("menuitemImageUID:"+menuitemImageUID);
-System.out.println("menuitemNormalImagePath:"+menuitemNormalImagePath);
-System.out.println("menuitemLinkURL:"+menuitemLinkURL);
-				if (menuitemImageUID != null && menuitemNormalImagePath != null) {
+
+				if (!menuitemImageUID.trim().equals("") && !menuitemNormalImagePath.trim().equals("")) {
 					sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
-System.out.println("111");
 				} else {
-System.out.println("222");
 					sb.append("<li ");
 					
-					if (menuitemLinkURL != "") {
-System.out.println("333");
+					if (!menuitemLinkURL.trim().equals("")) {
                         sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + loadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
 						sb.append(", \"" + menuitemWindowOption + "\")'");
@@ -1266,7 +1253,7 @@ System.out.println("333");
 					String menuitemLinkLocation = result2.get(j).getLinkLocation();
 					String menuitemWindowOption = result2.get(j).getWindowOption();
 					
-					if (menuitemImageUID != null) {
+					if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 						sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 					} else {
 						sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + loadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
@@ -1323,10 +1310,8 @@ System.out.println("333");
 			StringBuilder sb = new StringBuilder();
 			
 			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum));
-System.out.println("noramalImage:"+result.getNormalImagePath());
-System.out.println("ㅡㅡ0");			
+
 			if (result != null) {
-System.out.println("ㅡㅡ1");
 				String imageDisplayName = result.getDisplayName();
                 String imageImageType = result.getImageType();
                 String imageNormalImagePath = result.getNormalImagePath();
@@ -1338,14 +1323,11 @@ System.out.println("ㅡㅡ1");
                 String imageWindowOption = result.getWindowOption();
                 
                 if (imageNormalImagePath != null) {
-System.out.println("ㅡㅡ2");
                 	sb.append("<li><img src='" + imageNormalImagePath + "'");
                     if (imageOverImagePath != "") {
-System.out.println("ㅡㅡ3");
                     	sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"");
                     }
-                    if (imageLinkURL != "") {
-System.out.println("ㅡㅡ4");
+                    if (!imageLinkURL.equals("")) {
                         sb.append(" style='cursor:pointer'");
                         sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + loadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
                         sb.append(", \"" + imageLinkLocation + "\"");
@@ -1359,10 +1341,9 @@ System.out.println("ㅡㅡ4");
                     }
                     sb.append("></li>\n");
                     strHTML = sb.toString();
-System.out.println("sb1:"+sb.toString());
+
                     sb.delete(0, sb.length());
                     sb.append(strHTML);
-System.out.println("sb2:"+sb.toString());
                 }
 			}
 			
