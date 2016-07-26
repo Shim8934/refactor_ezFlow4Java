@@ -336,7 +336,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.useStartPageChack2" parameterClass="Map" resultClass="String">
+	<procedure id="EzPortalDAO.useStartPageChack2" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USESTARTPAGECHACK2(#v_pUSERID#, #v_pCOMPANYID#, #v_pPARENTUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -384,7 +384,11 @@
 		]]>
 	</procedure>
 	
-	
+	<procedure id="EzPortalDAO.getPortalConfigItem" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETPORTALCONFIGITEM(#v_pPITEMNAME#, #v_pPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
 	
 	
