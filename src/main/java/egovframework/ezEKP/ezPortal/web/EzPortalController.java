@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezPortal.web;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
@@ -35,7 +34,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  *    수정일        수정자         수정내용
  *    ----------    ------    -------------------
- *    2016.05.19    지정석    신규작성
+ *    2016.07.20    지정석    신규작성
  *
  * @see
  */
@@ -135,23 +134,30 @@ public class EzPortalController extends EgovFileMngUtil {
 								"</HTML>";
 								resp.setCharacterEncoding("UTF-8");
 								resp.setContentType("text/html; charset=UTF-8");
-								resp.getWriter().write(commentHtml);;
+								resp.getWriter().write(commentHtml);
 					}
 				}
 			}
 			String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID());
-System.out.println("strXML:"+strXML);
 			xmlDom = commonUtil.convertStringToDocument(strXML);
-System.out.println("xmlDom:"+xmlDom.getElementsByTagName("UID_").getLength());			
+System.out.println("strXML:"+strXML);
+System.out.println("length:"+xmlDom.getElementsByTagName("UID_").getLength());
 			if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
-				if (pageID.equals("")) {
+				if (("").equals(pageID.trim())) {
+System.out.println("rowLength:"+xmlDom.getElementsByTagName("ROW").getLength());
 					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+System.out.println("i1:"+i);
 						if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
+System.out.println("i2:"+i);
 							pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 							xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
-
-							if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
-								skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
+							
+							if (xmlDom != null) {
+System.out.println("i3:"+i);
+								if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
+System.out.println("i4:"+i);
+									skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
+								}
 							}
 						}
 					}
@@ -196,7 +202,7 @@ System.out.println("xmlDom:"+xmlDom.getElementsByTagName("UID_").getLength());
 			topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
 			topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 			String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
-System.out.println("mode:"+req.getParameter("mode"));
+
 			if ("new".equals(req.getParameter("mode"))) {
 				mainUrl = "/myoffice/main/index_environment2.htm";
 			} else if ("mail".equals(req.getParameter("mode"))) {
@@ -289,7 +295,7 @@ System.out.println("mode:"+req.getParameter("mode"));
 			if (!("").equals(req.getParameter("mode"))) {
 				mode = req.getParameter("mode");
 			}
-System.out.println("mode:"+mode);
+
 			if (("edit").equals(mode)) {
 				//관리자 권한체크
 				boolean auth = commonUtil.checkAdmin(loginCookie);
@@ -347,7 +353,6 @@ System.out.println("mode:"+mode);
 					//height
 				} else {
 					strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme);
-System.out.println("strHTML3:"+strHTML);
 					//width = ezPortalService.getTopMenuConfigItem(ezPortalService.gett)
 					//height
 				}
@@ -378,5 +383,111 @@ System.out.println("strHTML3:"+strHTML);
 		}
 		
 		return "/ezPortal/portalTopMenu";
+	}
+	
+	
+	@RequestMapping(value = "/ezPortal/portalPage.do")
+	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		String langPrimary = "";
+		String langSecondary = "";
+		String mode = "";
+		String pageID = "";
+		String parentPageID = "";
+		String myPortalPageID = "";
+		String editMode = "";
+		String viewMode = "";
+		String skinType = "";
+		String pClassID = "";
+		String pClassName = "";
+		String theme = "BASIC";
+		String tableViewOption = "D";
+		try {
+			userInfo = commonUtil.userInfo(loginCookie);
+			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
+			langSecondary = config.getProperty("config.lang_Secondary1" + userInfo.getLang());
+			mode = "edit";
+			
+			// 페이지 ID
+			if (!req.getParameter("pageID").trim().equals("")) {
+				pageID = req.getParameter("pageID");
+			} else {
+				pageID = UUID.randomUUID().toString();
+			}
+			
+			// 부모 페이지 ID
+			if (!req.getParameter("parentPageID").trim().equals("")) {
+				parentPageID = req.getParameter("parentPageID");
+			} else {
+				if (!req.getParameter("pageID").trim().equals("")) {
+//					parentPageID = ezPortalService.getPortalConfigItem(pageID, "ParentUID"); 
+				} else {
+					parentPageID = "top";
+				}
+			}
+			
+			// 마이포탈페이지 ID
+			if (!req.getParameter("myPortalPageID").trim().equals("")) {
+				myPortalPageID = req.getParameter("myPortalPageID");
+			}
+			
+			if (!req.getParameter("mode").trim().equals("")) {
+				mode = req.getParameter("mode");
+			}
+			
+			if (mode.equals("edit")) {
+				// 상속된경우
+				if (!req.getParameter("pageID").trim().equals("") && !req.getParameter("parentPageID").trim().equals("")) {
+					if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("pageID").trim().toLowerCase().equals("top")) {
+						editMode = "new_inherit";
+					}
+				}
+			}
+			
+			// 미리보기
+			if (!req.getParameter("viewMode").trim().equals("")) {
+				viewMode = req.getParameter("viewMode");
+			}
+			
+			// 스킨폴더 정의
+			if (!req.getParameter("skinNum").equals("")) {
+				//respons skinNum
+			}
+			skinType = req.getParameter("skinNum");
+			if (skinType.trim().equals("")) {
+				skinType = "1";
+			}
+			skinType = "skin_" + skinType;
+			
+			// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
+			if (viewMode.equals("preview")) {
+				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo));
+			}
+			
+			// 부문홈에서 호출한 경우 부문홈ID
+			if (!req.getParameter("pClassID").trim().equals("")) {
+				pClassID = req.getParameter("pClassID");
+				
+				pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+			}
+			
+			// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
+			if (!pClassID.trim().equals("")) {
+				userInfo.setId(pClassID);
+				userInfo.setDisplayName1(pClassName);
+			}
+			
+			// 새로만들기
+//			tableViewOption = ezPortalService.getPortalConfigItem(pageID, "TableViewOption").trim().equals("") ? "D" : ezPortalService.getPortalConfigItem(pageID, "TableViewOption");
+			if (mode.trim().equals("new")) {
+				// getDefaultPortalPage
+				//strHTML = ezPortalService.getd
+			}
+			
+			return "/ezPortal/portalPortalPage";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+		
 	}
 }
