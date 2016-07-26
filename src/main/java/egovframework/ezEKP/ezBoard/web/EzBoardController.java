@@ -5971,4 +5971,87 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return sb.toString();
 	}
+
+	/**
+	 * 게시판 게시판게시하기 첨부파일업로드 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/uploadApprovFile.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String uploadApprovFile(HttpServletRequest request, @RequestBody String xmlPara) throws Exception{
+		String strXML = "";
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String boardID = xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent();
+		String realPath = request.getServletContext().getRealPath("");
+		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
+		
+		String[] fileName = new String[cnt];
+		String[] orgFileName = new String[cnt];
+		String[] fileSize = new String[cnt];
+		String[] fileLocation = new String[cnt];
+		String[] type = new String[cnt];
+		String[] uploadSN = new String[cnt];
+		
+		for (int k = 0; k < cnt; k++) {
+			fileName[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
+			fileLocation[k] = xmlDom.getElementsByTagName("FILEPATH").item(k).getTextContent();
+			fileSize[k] = xmlDom.getElementsByTagName("FILESIZE").item(k).getTextContent();
+			orgFileName[k] = xmlDom.getElementsByTagName("ORGFILEPATH").item(k).getTextContent();
+			type[k] = xmlDom.getElementsByTagName("TYPE").item(k).getTextContent();
+			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
+		}
+		
+		String dirPath = realPath + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+		String dirPath2 = "";
+		
+		if (type[0].equals("APPROVAL")) {
+			dirPath2 = realPath + config.getProperty("upload_approval.ROOT");
+		} else {
+			dirPath2 = realPath + config.getProperty("upload_approvalG.ROOT");
+		}
+		
+		File file = new File(dirPath + boardID);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdir();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdir();
+		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		}
+		
+		for (int k = 0; k < fileName.length; k++) {
+			if (orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("MHT") > -1 ||
+				orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("HWP") > -1 ||
+				orgFileName[k].substring(orgFileName[k].lastIndexOf(".")).toUpperCase().indexOf("DOC") > -1 ) {
+				
+				fileName[k] = fileName[k] + orgFileName[k].substring(orgFileName[k].lastIndexOf("."));
+				
+				file = new File(dirPath2 + commonUtil.separator + fileLocation[k]);
+				fileSize[k] = String.valueOf(file.length());
+			}
+			
+			file = new File(dirPath2 + commonUtil.separator + fileLocation[k]);
+
+			if (file.exists()) {
+				FileUtils.copyFile(file, new File(dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+                        replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "")));
+			}
+		}
+		
+		strXML = "<ROOT><NODES>";
+		
+		for (int k = 0; k < cnt; k++) {
+			strXML += "<NODE><PUPLOADSN><![CDATA[" + uploadSN[k] + "_" + fileName[k] + "]]></PUPLOADSN>";
+            strXML += "<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>";
+            strXML += "<PFILENAME><![CDATA[" + fileName[k] + "]]></PFILENAME>";
+            strXML += "<FILESIZE>" + fileSize[k] + "</FILESIZE>";
+            strXML += "<FILELOCATION><![CDATA[" + dirPath + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName[k] + "]]></FILELOCATION>";
+            strXML += "</NODE>";
+		}
+		
+		strXML += "</NODES></ROOT>";
+		
+		return strXML;
+	}
 } 

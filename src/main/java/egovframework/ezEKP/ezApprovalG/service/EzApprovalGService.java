@@ -229,8 +229,7 @@ public interface EzApprovalGService {
 	
 	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang) throws Exception;
 	
-	public String makeTaskListXml(Document docXML, String companyID, String strType)
-			throws Exception;
+	public String makeTaskListXml(Document docXML, String companyID, String strType) throws Exception;
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang) throws Exception;
 	
@@ -246,6 +245,10 @@ public interface EzApprovalGService {
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
 			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser) throws Exception;
+	
+	public String updateSignCheck(String strSQL, String companyID) throws Exception;
+	
+	public String aprAttachMail(String docID, String flag, String companyID) throws Exception;
 	
 	public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType) throws Exception;
 	

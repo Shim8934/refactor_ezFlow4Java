@@ -133,7 +133,7 @@
 		
 		    function GetListItem(pList, str) {
 		        try{
-		            for (i = 0; i < pList.length; i++) {
+		            for (var i = 0; i < pList.length; i++) {
 		                if (pList[i].id == str)
 		                    return pList[i];
 		            }

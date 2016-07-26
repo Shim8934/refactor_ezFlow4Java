@@ -134,7 +134,7 @@
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
-		        DivPopUpShow(420, 500, "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG_View_Cross.aspx?DocID=" + DocID + "&IngFlag=APR");
+		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + DocID + "&ingFlag=APR");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -148,7 +148,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

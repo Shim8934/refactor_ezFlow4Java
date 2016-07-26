@@ -232,8 +232,6 @@
 		                    else
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
 		                    break;
-		
-		
 		                }
 		            default:
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
@@ -1015,7 +1013,7 @@
 		
 		
 		        if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(pUrl);
+		            var fullPath = encodeURI(pUrl);
 		            var tempXML = createXmlDom();
 		            var XmlBodyATT = createXmlDom();
 		            var XmlBodyDATA = createXmlDom();
@@ -1059,7 +1057,7 @@
 		        if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
 		            xmlHTTP.open("POST", "/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
 		        else
-		            xmlHTTP.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/aprattachMail.aspx", false);
+		            xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
 		        xmlHTTP.send(xmlpara);
 		        if (xmlHTTP.status == 200) {
 		            var xmldom = createXmlDom();
@@ -1071,7 +1069,7 @@
 		                var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
 		                for (var i = 0; i < SelectNodes(xmldom, "ATTACHNAME").length; i++) {
 		                    var temppath = getNodeText(SelectNodes(xmldom, "ATTACHFILEHREF")[i]);
-		                    temppath = temppath.substring(17, temppath.length);
+		                    temppath = temppath.substring(24, temppath.length);
 		                    var orgfile = temppath.split("/");
 		                    orgfile = orgfile[orgfile.length - 1];
 		                    xmlstring += "<ROW><FILENAME><![CDATA[" + getNodeText(SelectNodes(xmldom, "ATTACHNAME")[i]) + "]]></FILENAME>";
@@ -1086,11 +1084,11 @@
 		                if (pUrl.toLowerCase().indexOf(".hwp") > -1) {
 		                    xmlstring += "<ROW><FILENAME>" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "</FILENAME>";
 		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1) {
-		                        xmlstring += "<FILEPATH>" + pUrl.split("/Upload_Approval")[1] + "</FILEPATH>";
+		                        xmlstring += "<FILEPATH>" + pUrl.split("/upload_Approval")[1] + "</FILEPATH>";
 		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
 		                    }
 		                    else {
-		                        xmlstring += "<FILEPATH>" + pUrl.split("/Upload_ApprovalG")[1] + "</FILEPATH>";
+		                        xmlstring += "<FILEPATH>" + pUrl.split("/upload_ApprovalG")[1] + "</FILEPATH>";
 		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
 		                    }
 		                    xmlstring += "<ORGFILEPATH>" + "<spring:message code='ezBoard.t419' />" + "</ORGFILEPATH>";
@@ -1098,7 +1096,7 @@
 		                }
 		                xmlstring += "</ROWS></DATA>";
 		                xmldom2 = loadXMLString(xmlstring);
-		                xmlHTTP.open("POST", "interASP/uploadapprovfile.aspx", false);
+		                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
 		                xmlHTTP.send(xmldom2);
 		                returnvalue(xmlHTTP.responseText);
 		
@@ -1115,7 +1113,7 @@
 		    }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);

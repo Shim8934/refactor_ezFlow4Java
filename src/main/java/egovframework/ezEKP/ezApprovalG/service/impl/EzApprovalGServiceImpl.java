@@ -950,7 +950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LANGTYPE", lang);
+		map.put("v_LANGTYPE", commonUtil.getMultiData(lang));
 		map.put("companyID", companyID);
 		
 		List<ApprGLeftVO> apprGLeftVOlist = ezApprovalGDAO.getSecurityType(map); 
@@ -976,6 +976,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
 			}
 		}
+		
 		return rtnXML.toString();
 	}
 
@@ -1226,6 +1227,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} catch (Exception e) {
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
+		
 		return rtnVal;
 	}
 
@@ -3656,7 +3658,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String[] selecteds = selected.split(";");
-		
+	
 		if (selected.toUpperCase().equals("ALL")) {
 			selectSQL = "*";
 		} else {
@@ -3665,12 +3667,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (k == 0) {
 						selectSQL = selecteds[k];
 					} else {
-						selectSQL = ", " + selecteds[k];
+						selectSQL += ", " + selecteds[k];
 					}
 				}
 			}
 		}
-		
 		if (docID == null || docID.equals("")) {
 			return "<DATA></DATA>";
 		}
@@ -3681,6 +3682,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_COLS", selectSQL);
 
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfo(map);
+		
+		if (apprGDocListVOList.size() == 0) {
+			return "<DATA></DATA>";
+		}
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -10620,11 +10625,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		String tmpStartDate1 = makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true).trim();
-		String tmpStartDate2 = makeDate(draftToYEAR, draftToMONTH, draftToDAY, true).trim();
+		String tmpStartDate2 = makeDate(draftToYEAR, draftToMONTH, draftToDAY, false).trim();
 		String tmpEndDate1 = makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true).trim();
-		String tmpEndDate2 = makeDate(apprToYEAR, apprToMONTH, apprToDAY, true).trim();
+		String tmpEndDate2 = makeDate(apprToYEAR, apprToMONTH, apprToDAY, false).trim();
 		String tmpProcessDate1 = makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true).trim();
-		String tmpProcessDate2 = makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, true).trim();
+		String tmpProcessDate2 = makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false).trim();
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		int totalCount = getSearchDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
@@ -10714,6 +10719,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</DOCLIST>");
 		
 		return resultXML.toString();
+	}
+
+	@Override
+	public String updateSignCheck(String strSQL, String companyID) throws Exception {
+		String rtnVal = "";
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sqlString", strSQL);
+			map.put("companyID", companyID);
+			
+			ezApprovalGDAO.transactionSQL(map);
+			
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			rtnVal = "FALSE";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String aprAttachMail(String docID, String flag, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_FLAG", flag);
+		
+		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.aprAttachMail(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGAttachInfoVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAttachInfoVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 
 	private String getSearchDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
@@ -11255,7 +11299,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID);
-		
+	
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -11274,6 +11318,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(userLang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				if (fieldName.equals("DOCTITLE")) {
+					fieldValue = commonUtil.cleanValue(fieldValue);
+				}
+				
 				resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, userLang) + "</VALUE>");
 				
 				if (p == 0) {
@@ -11454,7 +11503,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
 		}
 		sb.append("</DATA>");
-		
+
 		return sb.toString();
 	}
 

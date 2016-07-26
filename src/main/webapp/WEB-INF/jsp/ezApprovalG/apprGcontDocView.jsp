@@ -64,7 +64,7 @@
 		
 		        aprendopinion_dialogArgument[0] = parameter;
 		        aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
-		        DivPopUpShow(530, 520, "/myoffice/ezApprovalG/formContainer/AprEndOpinion_Cross.aspx");
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprEndOpinion.do");
 		    }
 		    function openOpinionUI_Complete() {
 		        DivPopUpHidden();
@@ -79,7 +79,6 @@
 		            }
 		            else {
 		                if (pDocHref != "") {
-alert(pDocHref);
 		                    message.Set_EditorContentURL(pDocHref);
 		                }
 		            }
@@ -94,15 +93,22 @@ alert(pDocHref);
 		        window.close();
 		    }
 		    function CheckOpinionInfo() {
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "xml",
+		    		async : false,
+		    		url : "/ezApprovalG/getEndOpinionInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
 		
-		        xmlhttp.open("POST", "aspx/getEndOpinionInfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        Resultxml = xmlhttp.responseXML;
+		        Resultxml = result;
 		
 		        var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
 		
@@ -244,7 +250,7 @@ alert(pDocHref);
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -265,7 +271,7 @@ alert(pDocHref);
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=870,width=765,resizable=yes,scrollbars=no');
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', 'height=870,width=765,resizable=yes,scrollbars=no');
 		            }
 		        }
 		    }
@@ -281,7 +287,7 @@ alert(pDocHref);
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(730, 430, "/myoffice/ezApprovalG/ezAPRHISTORY/ezAPRHISTORY_Cross.aspx?DocID=" + pDocID);
+		        DivPopUpShow(730, 430, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
 		    }
 		   
 		    function btnhistory_onclick_Complete() {
@@ -293,32 +299,40 @@ alert(pDocHref);
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
-		        DivPopUpShow(420, 500, "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG_View_Cross.aspx?DocID=" + pDocID + "&IngFlag=END");
+		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
 		    function SignCheck() {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "xml",
+		    		async : false,
+		    		url : "/ezApprovalG/getSignInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
 		        var SignXML = createXmlDom();
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		        xmlhttp.open("Post", "../ezAPRSIGN/aspx/getSignInfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-		        if (xmlhttp.responseText == "") {
+		        
+		        if (result == "") {
 		            SaveSignCheck();
 		            return;
 		        }
 		        var NodeList;
-		        NodeList = SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO");
+		        NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
 		        if (NodeList.length <= 0) {
 		            SaveSignCheck();
 		            return;
 		        }
 		        return;
-		        SignXML = xmlhttp.responseXML;
+		        SignXML = result;
 		        var rtnVal = putSignXML(SignXML);
 		        if (rtnVal) {
 		            SaveFile();
@@ -355,9 +369,9 @@ alert(pDocHref);
 		
 		                            var strimg;
 		                            if (img.length >= 1) {
-		                                strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]) + "' border=0 embedding='1' ";
+		                                strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
+		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
 		                                message.BodySetAttribute(SignName, img[0]);
 		                            }
 		                            if (img.length >= 2 && img[1] != "") {
@@ -392,18 +406,23 @@ alert(pDocHref);
 		        return xmlhttp.responseText;
 		    }
 		    function SaveSignCheck() {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-		        createNodeAndInsertText(xmlpara, objNode, "SignCheck", "Y");
-		
-		        xmlhttp.open("POST", "../aspx/UpdateSignCheck.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        return xmlhttp.responseText;
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/updateSignCheck.do",
+		    		data : {
+		    			docID : pDocID,
+		    			signCheck : "Y"
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
+		        return result;
 		    }
 		
 		    var totalsavefileinfo_dialogArguments = new Array();

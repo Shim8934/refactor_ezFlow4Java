@@ -207,7 +207,7 @@
 		            if (PresentOpen != "APPROVAL" || pListTypeValue == "") {
 		                pListTypeValue = listtype;
 		                PresentOpen = "APPROVAL";
-		                window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/aprmanage_B_Cross.aspx?listType=" + listtype;
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype;
 		            }
 		            else {
 		                if (listtype == "1") {

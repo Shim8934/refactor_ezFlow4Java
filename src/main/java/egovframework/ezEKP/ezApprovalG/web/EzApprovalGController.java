@@ -372,7 +372,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String resultXML = ezApprovalGService.aprDocList(listType, userID, deptID, pageSize, pageNum, orderCell, orderOption, companyID, userLang, searchQuery, domSub);
-		
+	
 		return resultXML;
 	}
 	
@@ -1616,7 +1616,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				result = "NOTPERMISSION";
 			}
 		}
-		
+
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 		}
@@ -2712,8 +2712,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = request.getServletContext().getRealPath("");
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
 		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent();
-		String path = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
-		String path2 = realPath + config.getProperty("upload_common.ROOT") + commonUtil.separator;
+		String path = realPath + config.getProperty("upload_approvalG.ROOT");
+		String path2 = realPath + config.getProperty("upload_common.ROOT");
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
@@ -2725,58 +2725,61 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			sourceDir.delete();
 		}
 		
-		for (int k = 0; k < filePaths.length - 1; k++) {
+		for (int k = 0; k < filePaths.length; k++) {
 			String sourcePath = realPath + filePaths[k];
 			String targetPath = "";
 			String fileName = fileNames[k];
 			
 			if (fileTypes[k].equals("ATT")) {
-				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName; 
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName;
 			} else if (fileTypes[k].equals("ATTDOC")) {
-				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.split("\\.")[1]; 
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.substring(sourcePath.lastIndexOf(".") + 1); 
 			} else {
-				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.split("\\.")[1]; 
+				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName + "." + sourcePath.substring(sourcePath.lastIndexOf(".") + 1); 
 			}
-			
+
 			sourcePath = path + sourcePath.replace(realPath + config.getProperty("upload_approvalG.ROOT"), "");
-			targetPath = path2 + targetPath.replace(realPath + config.getProperty("upload_common.ROOT"), "");
+			targetPath = path2 + targetPath.replace(config.getProperty("upload_common.ROOT"), "");
 			
-			String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator) + 1);
+			String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator));
 			File file1 = new File(dir);
-			
+
 			if (!file1.exists()) {
 				file1.mkdirs();
 			}
-			
+
 			File file2 = new File(targetPath);
-			
+System.out.println(targetPath);
+System.out.println(sourcePath);
 			if (!file2.exists()) {
 				File file3 = new File(sourcePath);
 				FileUtils.copyFile(file3, file2);
 			}
 		}
-		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName.replace("#", "") + ".zip";
 
-		byte[] buffer = new byte[2048];
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+		byte[] buffer = new byte[1024];
+		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
 		
 		for (int k = 0; k < filePaths.length; k++) {
-			FileInputStream inpStream = new FileInputStream(realPath + filePaths[k]);
-
-			out.putNextEntry(new ZipEntry(fileNames[k]));
+			FileInputStream inpStream = new FileInputStream(new File(realPath + filePaths[k]));
+			String fileName = fileNames[k];
 			
+			fileName = fileName + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
+			zout.putNextEntry(new ZipEntry(fileName));
+
 			int length = 0;
 			
 			while ((length = inpStream.read(buffer)) > 0) {
-				out.write(buffer, 0, length);
+				zout.write(buffer, 0, length);
 			}
 			
-			out.closeEntry();
+			zout.closeEntry();
 			inpStream.close();
 		}
 		
-		out.close();
-		
+		zout.close();
+	
 		return zipFilePath;
 	}
 	
@@ -3550,7 +3553,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(request.getParameter("APPXML"));
 		String useAdditionalRole = config.getProperty("config.USE_AdditionalROle");
 		String listType = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String docType = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+//		String docType = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String userID = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		String deptID = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
 		String pageSize = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
@@ -3857,5 +3860,158 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//TODO: aspx 파일이 Cross 버젼으로 닷넷소스에는 걸려져있는데 파일이 존재안함 그래서 일단 일반으로 넣었으나 엑티브엑스 사용해서 수정해야됨
 		return "ezApprovalG/apprGezReceiptHistoryInfo";
 		
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoGView.do")
+	public String ezDocInfoGView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String summary = "";
+		String pageNum = "";
+		String limitRange = "";
+		String publicityCode = "";
+		String specialRecordCode = "";
+		String urgentApproval = "";
+		String securityCode = "";
+		String securityDate = "";
+		
+		String docID = request.getParameter("docID");
+		String ingFlag = request.getParameter("ingFlag");
+		String strXML = ezApprovalGService.getDocInfo(docID, ingFlag, "UrgentApproval;SpecialRecordCode;PublicityCode;LimitRange;PageNum;Summary;SecurityCode;SecurityApproval", userInfo.getCompanyID());
+		
+		Document docXML = commonUtil.convertStringToDocument(strXML);
+		
+		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
+			summary = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("PAGENUM").item(0) != null) {
+			pageNum = docXML.getElementsByTagName("PAGENUM").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
+			limitRange = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("PUBLICITYCODE").item(0) != null) {
+			publicityCode = docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("SPECIALRECORDCODE").item(0) != null) {
+			specialRecordCode = docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("URGENTAPPROVAL").item(0) != null) {
+			urgentApproval = docXML.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("SECURITYCODE").item(0) != null) {
+			securityCode = docXML.getElementsByTagName("SECURITYCODE").item(0).getTextContent();
+		}
+		
+		if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
+			securityDate = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent();
+		}
+		
+		if (securityDate.equals("")) {
+			securityDate = "N";
+		}
+		
+		String securityNode = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang());
+		
+		model.addAttribute("summary", summary);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("limitRange", limitRange);
+		model.addAttribute("publicityCode", publicityCode);
+		model.addAttribute("specialRecordCode", specialRecordCode);
+		model.addAttribute("urgentApproval", urgentApproval);
+		model.addAttribute("securityCode", securityCode);
+		model.addAttribute("securityDate", securityDate);
+		model.addAttribute("securityNode", securityNode);
+		
+		return "ezApprovalG/apprGezDocInfoGView";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getEndOpinionInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getEndOpinionInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getOpinionInfo(docID, "CEND", "", "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do")
+	public String aprEndOpinion() throws Exception{
+		return "ezApprovalG/apprGaprEndOpinion";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/updateSignCheck.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateSignCheck(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String signCheck = request.getParameter("signCheck");
+		StringBuilder sqlStr = new StringBuilder();
+		
+		sqlStr.append("BEGIN \n DECLARE v_pCount Number := 0; \n BEGIN SELECT COUNT(DOCID) INTO v_pCount FROM TBAPRDOCINFO WHERE ORGDOCID= '" + docID + "';\n");
+        sqlStr.append("IF v_pCount = 0 THEN \n");
+        sqlStr.append("BEGIN \n");
+        sqlStr.append("    UPDATE TBEXPENDAPRDOCINFO SET SIGNCHECK = '" + signCheck + "' WHERE DocID = '" + docID + "'; \n");
+        sqlStr.append("    DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "'; \n");
+        sqlStr.append("END; END IF; END; END;\n");
+        
+        String result = ezApprovalGService.updateSignCheck(sqlStr.toString(), userInfo.getCompanyID());
+        
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/aprAttachMail.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprAttachMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docID = xmlDom.getDocumentElement().getTextContent();
+		String ingFlag = ezApprovalGService.aprAttachMail(docID, "1", userInfo.getCompanyID());
+		
+		Document xmlQuery = commonUtil.convertStringToDocument(ingFlag);
+		
+		String rtnVal = "";
+		
+		if (xmlQuery.getDocumentElement().getTextContent().trim().equals("")) {
+			ingFlag = ezApprovalGService.aprAttachMail(docID, "2", userInfo.getCompanyID());
+			
+			xmlQuery = commonUtil.convertStringToDocument(ingFlag);
+			rtnVal = xmlQuery.getDocumentElement().getTextContent();
+			
+			if (!rtnVal.equals("")) {
+				ingFlag = ezApprovalGService.aprAttachMail(docID, "3", userInfo.getCompanyID());
+			} else {
+				ingFlag = ezApprovalGService.aprAttachMail(docID, "6", userInfo.getCompanyID());
+				
+				xmlQuery = commonUtil.convertStringToDocument(ingFlag);
+				rtnVal = xmlQuery.getDocumentElement().getTextContent();
+				
+				ingFlag = ezApprovalGService.aprAttachMail(docID, "7", userInfo.getCompanyID());
+			}
+			
+			rtnVal = "<ATTACHINFO><DOCTITLE>" + makeXMLString(rtnVal) + "</DOCTITLE>" + ingFlag + "</ATTACHINFO>";
+		} else {
+			ingFlag = ezApprovalGService.aprAttachMail(docID, "4", userInfo.getCompanyID());
+			
+			xmlQuery = commonUtil.convertStringToDocument(ingFlag);
+			rtnVal = xmlQuery.getDocumentElement().getTextContent();
+			
+			ingFlag = ezApprovalGService.aprAttachMail(docID, "5", userInfo.getCompanyID());
+			
+			rtnVal = "<ATTACHINFO><DOCTITLE>" + makeXMLString(rtnVal) + "</DOCTITLE>" + ingFlag + "</ATTACHINFO>";
+		}
+		
+		return rtnVal;
 	}
 }

@@ -434,6 +434,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> aprAttachMail(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalG.aprAttachMail", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}

@@ -142,7 +142,8 @@
 	            xmlhttp.open("Post", "/ezApprovalG/saveTotalDoc.do", false);
 	            xmlhttp.send(xmlpara);
 	            var URL = xmlhttp.responseText;
-	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURI(URL);
+
+	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL);
 	        }
 	
 	        var strPathInfo = "";

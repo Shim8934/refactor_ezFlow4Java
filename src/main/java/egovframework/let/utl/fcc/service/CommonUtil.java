@@ -18,6 +18,7 @@
 package egovframework.let.utl.fcc.service;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -161,7 +162,7 @@ public class CommonUtil {
 		return filename;
 	}
 	
-	public Document convertStringToDocument(String xmlStr) {		
+	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
@@ -170,10 +171,10 @@ public class CommonUtil {
         
         try {  
             builder = factory.newDocumentBuilder();  
-            doc = builder.parse(new InputSource(new StringReader(replaceData)));            
+            doc = builder.parse(new InputSource(new StringReader(replaceData)));
         } catch (Exception e) {}
         
-        return doc;        
+        return doc;
 	}
 	
 	public Document convertRequestToDocument(HttpServletRequest request) {
@@ -270,7 +271,7 @@ public class CommonUtil {
 		String value = ""; 
 				
 		if(pOrgString != null){
-			value = pOrgString.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			value = pOrgString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	        value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 	        value = value.replaceAll("'", "&#39;");
 	        value = value.replaceAll("eval\\((.*)\\)", "");

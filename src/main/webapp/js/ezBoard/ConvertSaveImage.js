@@ -26,17 +26,15 @@
 }
 
 function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
-    var XmlHttp = createXMLHttpRequest();
-    var xmlDom = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "URL", encodeURIComponent(pUrl));
-    createNodeAndInsertText(xmlDom, objNode, "HEIGHT", pImgHeight);
-    createNodeAndInsertText(xmlDom, objNode, "WIDTH", pImgWidth);
-    createNodeAndInsertText(xmlDom, objNode, "TYPE", "2");
-    try {
-        XmlHttp.open("POST", "/myoffice/Common/ConvertSaveImage.aspx", false);
-        XmlHttp.send(xmlDom);
-    }
-    catch (e) { }
+	$.ajax({
+		url : "/ezCommon/convertSaveImage.do",
+		type : "POST",
+		async : false,
+		data : {
+			"url" : encodeURIComponent(pUrl),
+			"height" : pImgHeight,
+			"width" : pImgWidth,
+			"type" : 2
+		}
+	});
 }

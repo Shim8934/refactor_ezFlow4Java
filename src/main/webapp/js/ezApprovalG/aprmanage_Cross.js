@@ -185,7 +185,7 @@ function getDocList_after(xml) {
 
     if (USE_OCS == "YES")
         check_presence2();
-
+    
     try {
         parent.frames["left"].getAprCount();
         parent.frames["left"].setPresentValue("");
@@ -974,8 +974,9 @@ function openViewDocInfo() {
             }
         }
         else {
-            if (CrossYN() || NonActiveX == "YES")
-                openLocation = "/ezApprovalG/aprDocView.do";
+            if (CrossYN() || NonActiveX == "YES") {
+            	openLocation = "/ezApprovalG/aprDocView.do";
+            }
             else {
                 if (pUse_Editor == "")
                     openLocation = "/myoffice/ezApprovalG/AprDocView.aspx";

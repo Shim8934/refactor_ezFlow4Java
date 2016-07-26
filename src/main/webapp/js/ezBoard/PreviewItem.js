@@ -23,7 +23,6 @@ function PreviewRayerChange(pGubun) {
     pGubun = pGubun.trim();
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
         ItemPreviewRead(selobj);
-
     if (pGubun == "OFF")
         pGubun = "NONE";
     if (clickPreviweType == "PHOTO") {
@@ -307,6 +306,13 @@ function ItemPreviewRead(obj) {
         xmlhttp2.send();
     }
 }
+var ItemID;
+var WriterID;
+var WriterName;
+var WriterDeptName;
+var WriterCompanyName;
+var ContentLocation;
+
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
         if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
@@ -319,13 +325,13 @@ function event_ItemPreviewRead_photo() {
                 alert("권한이 없습니다");
                 return;
             }
-            var WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
-            var WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
-            var WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
-            var WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
+            WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
+            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
+            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
             var WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             var Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
-            var ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -381,14 +387,14 @@ function event_ItemPreviewRead() {
                 alert("권한이 없습니다");
                 return;
             }
-            var ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
-            var WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
-            var WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
-            var WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
-            var WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
+            ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
+            WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
+            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
+            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
-            var ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -404,61 +410,64 @@ function event_ItemPreviewRead() {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
-            
-            pOCS = "";
-            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
-
-
-            if (document.getElementById('ifrmPreViewH_photo') != null) {
-                document.getElementById('ifrmPreViewH_photo').style.display = "none";
-                document.getElementById('ifrmPreViewW_photo').style.display = "none";
-                document.getElementById('ifrmPreViewH').style.display = "";
-                document.getElementById('ifrmPreViewW').style.display = "";
-            }
-            if (CrossYN() || pNoneActiveX == "YES") {
-            	var boardType = "";
-            	
-            	if(pMode == "temp"){
-            		boardType = "BOARDCONTENTTEMP";
-            	}else{
-            		boardType = "BOARDCONTENT";
-            	}
-            	
-            	$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : true,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type   	 : boardType, 
-							 itemID 	 : ItemID
-						   },
-					success: function(result){
-						event_downContent(result, xmlhttp2.responseText);
-					}        			
-				});	
-            } else {
-                document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
-                document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-                document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
-                var readHTML = WriteContent(ContentLocation, ItemID);
-                var tempText = xmlhttp2.responseText;
-
-                if (xmlhttp2.readyState == 4) {
-                    setTimeout(function () {
-                        if (pPreviewShow_HOW.trim() == "W") {
-                            if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined)
-                                document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent(readHTML, tempText);
-                        }
-                        else if (pPreviewShow_HOW.trim() == "H") {
-                            if (document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent != undefined)
-                                document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent(readHTML, tempText);
-                        }
-                    }, 100);
-                }
-            }
         }
     }
 }
+
+function previewItemSet() {
+	pOCS = "";
+    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
+
+
+    if (document.getElementById('ifrmPreViewH_photo') != null) {
+        document.getElementById('ifrmPreViewH_photo').style.display = "none";
+        document.getElementById('ifrmPreViewW_photo').style.display = "none";
+        document.getElementById('ifrmPreViewH').style.display = "";
+        document.getElementById('ifrmPreViewW').style.display = "";
+    }
+    if (CrossYN() || pNoneActiveX == "YES") {
+    	var boardType = "";
+    	
+    	if(pMode == "temp"){
+    		boardType = "BOARDCONTENTTEMP";
+    	}else{
+    		boardType = "BOARDCONTENT";
+    	}
+    	
+    	$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezCommon/mhtToHTMLContent.do",
+			data : { type   	 : boardType, 
+					 itemID 	 : ItemID
+				   },
+			success: function(result){
+				event_downContent(result, xmlhttp2.responseText);
+			}        			
+		});	
+    } else {
+        document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
+        var readHTML = WriteContent(ContentLocation, ItemID);
+        var tempText = xmlhttp2.responseText;
+
+        if (xmlhttp2.readyState == 4) {
+            setTimeout(function () {
+                if (pPreviewShow_HOW.trim() == "W") {
+                    if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined)
+                        document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent(readHTML, tempText);
+                }
+                else if (pPreviewShow_HOW.trim() == "H") {
+                    if (document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent != undefined)
+                        document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent(readHTML, tempText);
+                }
+            }, 100);
+        }
+    }
+}
+
 function loadsetInterval(readHTML, responseText) {
     try {
         if (pPreviewShow_HOW.trim() == "W") {

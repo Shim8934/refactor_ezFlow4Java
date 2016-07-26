@@ -56,6 +56,8 @@ public class ApprGAttachInfoVO {
 	private String filePath;
 	/** */
 	private String type;
+	/** */
+	private String docTitle;
 	
 	public String getAttachType() {
 		return attachType;
@@ -218,5 +220,11 @@ public class ApprGAttachInfoVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getDocTitle() {
+		return docTitle;
+	}
+	public void setDocTitle(String docTitle) {
+		this.docTitle = docTitle;
 	}
 }

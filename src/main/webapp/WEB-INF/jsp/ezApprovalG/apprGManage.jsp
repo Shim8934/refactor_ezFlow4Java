@@ -520,7 +520,7 @@
 		                        openLocation = "./formContainer/contDocView_IE.aspx";
 		                }
 		            }
-		            openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&ListSusin=";
+		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
