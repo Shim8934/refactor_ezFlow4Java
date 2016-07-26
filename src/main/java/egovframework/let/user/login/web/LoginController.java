@@ -147,8 +147,8 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	//return "redirect:/cmm/main/mainPage.do";
-	        	return "redirect:/ezPortal/portalMain.do";
+	        	return "redirect:/cmm/main/mainPage.do";
+	        	//return "redirect:/ezPortal/portalMain.do";
 			}
         }else{
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
