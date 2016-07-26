@@ -119,6 +119,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getLogoHtml", map);
 	}
 	
+	public String getPortalConfigItem (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getPortalConfigItem", map);
+	}
+	
 	public int getUserInfo4(Map<String, Object> map) {
 		select("EzPortalDAO.getUserInfo4", map);
 		return (int) map.get("v_pCount");
