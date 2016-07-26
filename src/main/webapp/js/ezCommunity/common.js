@@ -4,7 +4,6 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var url = "/ezCommunity/ezAPROPINION.do";
 
     if (CrossYN()) {
-    	alert(1);
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

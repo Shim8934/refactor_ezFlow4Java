@@ -44,81 +44,90 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 	private CommonUtil commonUtil;
 
 	@Override
-	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception {		
-		StringBuilder sb = new StringBuilder();
+	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception {
+		try {
+			StringBuilder sb = new StringBuilder();
 
-		if (!companyID.toUpperCase().equals("Top")) {
-			Map<String, Object> map1 = new HashMap<String, Object>();		
-			map1.put("v_DEPTID", deptID);
-			map1.put("companyID", companyID);
-			
-			List<ApprGLeftVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
-			
-			String strMultiData = commonUtil.getMultiData(lang);
-			
-			if (type.equals("LIST")){
-				Map<String, Object> map = new HashMap<String, Object>();
+			if (!companyID.toUpperCase().equals("TOP")) {
+				Map<String, Object> map1 = new HashMap<String, Object>();		
+				map1.put("v_DEPTID", deptID);
+				map1.put("companyID", companyID);
 				
-				map.put("v_LISTTYPE", "106");
-				map.put("v_LANGTYPE", lang);
-				map.put("companyID", companyID);
+				List<ApprGLeftVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 				
-				List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+				String strMultiData = commonUtil.getMultiData(lang);
 				
-				sb.append("<LISTVIEWDATA><HEADERS>");
-				
-				for (int i = 0; i < listHeader.size(); i++) {
-					ApprGListHeaderVO vo = listHeader.get(i);
+				if (type.equals("LIST")){
+					Map<String, Object> map = new HashMap<String, Object>();
 					
-					sb.append("<HEADER>");
-					sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
-					sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-					sb.append("</HEADER>");
-				}				
-				sb.append("</HEADERS><ROWS>");
-				
-				for (int i = 0; i < listBody.size(); i++) {
-					ApprGLeftVO vo = listBody.get(i);
+					map.put("v_LISTTYPE", "106");
+					map.put("v_LANGTYPE", lang);
+					map.put("companyID", companyID);
 					
-					sb.append("<ROW><CELL>");
-										
-					if(strMultiData.equals("")){
-						sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
-						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</DATA3>");
-					}else{
-						sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
-						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</DATA3>");
+					List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+					
+					sb.append("<LISTVIEWDATA><HEADERS>");
+					
+					for (int i = 0; i < listHeader.size(); i++) {
+						ApprGListHeaderVO vo = listHeader.get(i);
+						
+						sb.append("<HEADER>");
+						sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+						sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+						sb.append("</HEADER>");
+					}				
+					sb.append("</HEADERS><ROWS>");
+					
+					for (int i = 0; i < listBody.size(); i++) {
+						ApprGLeftVO vo = listBody.get(i);
+						
+						sb.append("<ROW><CELL>");
+											
+						if(strMultiData.equals("")){
+							sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
+							sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</DATA3>");
+						}else{
+							sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
+							sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</DATA3>");
+						}
+						sb.append("<DATA1>" + vo.getContainerID().trim() + "</DATA1>");
+						sb.append("<DATA2>" + vo.getContainerTypeID().trim() + "</DATA2>");
+						sb.append("<DATA4>" + vo.getContainerOwnDepID().trim() + "</DATA4>");
+						sb.append("</CELL></ROW>");
+					}				
+					sb.append("</ROWS></LISTVIEWDATA>");
+				}else{
+					sb.append("<PARAMETER>");
+					
+					for (int i = 0; i < listBody.size(); i++) {
+						ApprGLeftVO vo = listBody.get(i);
+						
+						sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
+											
+						if(strMultiData.equals("")){
+							sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
+						}else{
+							sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
+						}					
 					}
-					sb.append("<DATA1>" + vo.getContainerID().trim() + "</DATA1>");
-					sb.append("<DATA2>" + vo.getContainerTypeID().trim() + "</DATA2>");
-					sb.append("<DATA4>" + vo.getContainerOwnDepID().trim() + "</DATA4>");
-					sb.append("</CELL></ROW>");
-				}				
-				sb.append("</ROWS></LISTVIEWDATA>");
-			}else{
-				sb.append("<PARAMETER>");
-				
-				for (int i = 0; i < listBody.size(); i++) {
-					ApprGLeftVO vo = listBody.get(i);
-					
-					sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
-										
-					if(strMultiData.equals("")){
-						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
-					}else{
-						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
-					}					
+					sb.append("</PARAMETER>");
 				}
-				sb.append("</PARAMETER>");
-			}
-		}else{
-			if (type.equals("LIST")){
-				sb.append("<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>");
 			}else{
-				sb.append("<PARAMETER></PARAMETER>");
-			}			
+				if (type.equals("LIST")){
+					sb.append("<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>");
+				}else{
+					sb.append("<PARAMETER></PARAMETER>");
+				}			
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			if (type.equals("LIST")){
+				return "<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>";
+			}else{
+				return "<PARAMETER></PARAMETER>";
+			}		
 		}
-		return sb.toString();
+		
 	}
 
 	@Override
@@ -569,44 +578,48 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 
 	@Override
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CATETYPE", categoryType);
-		map.put("v_PARENTID", parentID);
-		map.put("companyID", companyID);
-		
-		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskCategotyTree(map);
-		sb.append("<NODES>");
-		
-		for (ApprGTaskVO vo : list) {
-			sb.append("<NODE><EXPANDED>FALSE</EXPANDED><ISLEAF>FALSE</ISLEAF>");
-			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
-			sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
-			sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");
+		try {
+			StringBuilder sb = new StringBuilder();
+			Map<String, Object> map = new HashMap<String, Object>();
 			
-			switch (categoryType) {
-				case "1":
-					sb.append("<DATA2>" + vo.getCategoryCode() + "</DATA2>");
-					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
-					sb.append("<DATA4>" + "ROOT" + "</DATA4>");
-					break;
-				case "2":
-					sb.append("<DATA2>" + vo.getMcategoryCode() + "</DATA2>");
-					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
-					sb.append("<DATA4>" + vo.getCategoryCode() + "</DATA4>");
-					break;
-				case "3":
-					sb.append("<DATA2>" + vo.getSubCategoryCode() + "</DATA2>");
-					sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
-					sb.append("<DATA4>" + vo.getMcategoryCode() + "</DATA4>");
-					break;
+			map.put("v_CATETYPE", categoryType);
+			map.put("v_PARENTID", parentID);
+			map.put("companyID", companyID);
+			
+			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskCategotyTree(map);
+			sb.append("<NODES>");
+			
+			for (ApprGTaskVO vo : list) {
+				sb.append("<NODE><EXPANDED>FALSE</EXPANDED><ISLEAF>FALSE</ISLEAF>");
+				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+				sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
+				sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");
+				
+				switch (categoryType) {
+					case "1":
+						sb.append("<DATA2>" + vo.getCategoryCode() + "</DATA2>");
+						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+						sb.append("<DATA4>" + "ROOT" + "</DATA4>");
+						break;
+					case "2":
+						sb.append("<DATA2>" + vo.getMcategoryCode() + "</DATA2>");
+						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+						sb.append("<DATA4>" + vo.getCategoryCode() + "</DATA4>");
+						break;
+					case "3":
+						sb.append("<DATA2>" + vo.getSubCategoryCode() + "</DATA2>");
+						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+						sb.append("<DATA4>" + vo.getMcategoryCode() + "</DATA4>");
+						break;
+				}
+				sb.append("</NODE>");
 			}
-			sb.append("</NODE>");
+			sb.append("</NODES>");
+			
+			return sb.toString();
+		} catch (Exception e) {
+			return "<NODES></NODES>";
 		}
-		sb.append("</NODES>");
-		
-		return sb.toString();
 	}
 
 	@Override
@@ -1112,24 +1125,31 @@ public class EzApprovalGAdminServiceImpl implements EzApprovalGAdminService{
 		return sb.toString();
 	}
 	
-	//TODO 이효진하는중
 	@Override
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_DEPTCODE", deptCode);
-		map.put("companyID", companyID);
-		
-		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
-		
-		for (ApprGTaskVO vo : list) {
-			sb.append(commonUtil.getQueryResult(vo));
+		try {
+			StringBuilder sb = new StringBuilder();
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_DEPTCODE", deptCode);
+			map.put("companyID", companyID);
+
+			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
+			
+			sb.append("<DATA>");
+			
+			for (ApprGTaskVO vo : list) {
+				sb.append(commonUtil.getQueryResult(vo));
+			}
+
+			sb.append("</DATA>");
+			
+			String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType);
+			
+			return result;
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
 		}
-		
-		String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType);
-		
-		return result;
 	}
 
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {

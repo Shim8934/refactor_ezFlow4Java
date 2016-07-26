@@ -422,7 +422,6 @@ function TreeView() {
 
                 //this.DisplaySelectNode();
 
-
                 var oFunc = new Function("node_select(\"" + _selectedNodeID + "\", \"" + _selectedNodeNM + "\", \"" + _thisID + "\", " + _nodeClick + ");");
                 oFunc.call();
             }

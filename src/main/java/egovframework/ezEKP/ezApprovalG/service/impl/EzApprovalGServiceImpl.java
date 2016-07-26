@@ -2498,7 +2498,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</HEADERS>");
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		int dlength = docXML != null ? docXML.getElementsByTagName("ROW").getLength() : 0;
 		int startNum = 0;
 		int endNum = dlength;
 		

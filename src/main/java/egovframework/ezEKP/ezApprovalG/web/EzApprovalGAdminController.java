@@ -785,17 +785,26 @@ public class EzApprovalGAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskFullList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskFullList (HttpServletRequest request, Model model) throws Exception {
+	public String getTaskFullList (HttpServletRequest request, Locale locale, Model model) throws Exception {
 		String deptCode = request.getParameter("deptCode");
 		String pageSize = request.getParameter("pageSize");
 		String pageNo = request.getParameter("pageNo");
 		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
 		
-		String resultXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType, companyID);
+		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType, companyID);
+
+		Document xmldoc = commonUtil.convertStringToDocument(listXML);
+	
+		if (xmldoc.getElementsByTagName("ROW") != null) {
+			for (int i = 0; i < xmldoc.getElementsByTagName("ROW").getLength(); i ++) {
+				if (!xmldoc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getChildNodes().item(0).getTextContent().trim().equals("")) {
+					xmldoc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getChildNodes().item(0).setTextContent(egovMessageSource.getMessage("ezApprovalG." + xmldoc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getChildNodes().item(0).getTextContent().trim(), locale));
+				}
+			}
+		}
 		
-		
-		
-		return "";
+		return commonUtil.convertDocumentToString(xmldoc);
 	}
+	
 }

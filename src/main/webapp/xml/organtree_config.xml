@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tree>
 	<config>
-    <iconsize width="18px" height="18px" />
+	    <iconsize width="18px" height="18px" />
 		<baseimage>
-      <dot_normal path="/images/OrganTree_cross/dot_normal.gif" />
-      <dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
-      <dot_end path="/images/OrganTree_cross/dot_end.gif" />
-      <node_plus path="/images/OrganTree_cross/plus_normal.gif" />
-      <node_minus path="/images/OrganTree_cross/minus_normal.gif" />
-      <node_end path="/images/OrganTree_cross/dot_end.gif" />
-      <node_space path="/images/OrganTree_cross/space.gif" />
-      <minus_end path="/images/OrganTree_cross/minus_end.gif" />
-      <minus_norma path="/images/OrganTree_cross/minus_normal.gif" />
-      <plus_end path="/images/OrganTree_cross/plus_end.gif" />
-    </baseimage>
+	      <dot_normal path="/images/OrganTree_cross/dot_normal.gif" />
+	      <dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
+	      <dot_end path="/images/OrganTree_cross/dot_end.gif" />
+	      <node_plus path="/images/OrganTree_cross/plus_normal.gif" />
+	      <node_minus path="/images/OrganTree_cross/minus_normal.gif" />
+	      <node_end path="/images/OrganTree_cross/dot_end.gif" />
+	      <node_space path="/images/OrganTree_cross/space.gif" />
+	      <minus_end path="/images/OrganTree_cross/minus_end.gif" />
+	      <minus_norma path="/images/OrganTree_cross/minus_normal.gif" />
+	      <plus_end path="/images/OrganTree_cross/plus_end.gif" />
+	    </baseimage>
 		<baseclass>
 			<normal name="node_normal" />
 			<selected name="node_selected" />
@@ -23,5 +23,5 @@
 			<base path="/images/OrganTree_cross/ic-open.gif" />
 			<iconcomp path="/images/OrganTree_cross/ic-company.gif" />
 		</images>
-	</config>
+		</config>
 </tree>

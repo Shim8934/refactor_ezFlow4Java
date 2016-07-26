@@ -144,6 +144,11 @@
 		        TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
+		        //2016-07-26 이효진 CompnayID 가 Top로 고정되어있어서 추가
+		        if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") != "") {
+		        	CompanyID = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        }
+		        
 		        var deptID = treeNode.GetNodeData("CN");
 		        var deptName = treeNode.GetNodeData("VALUE");
 		        GetTaskList(deptID, deptName);
@@ -174,9 +179,9 @@
 		                ListName = "<spring:message code = 'ezApprovalG.lhj01' />";
 		                break;
 		        }
-	
+
 		        if (getNodeText(Resultxml) != "") {
-		            if (getNodeText(Resultxml) == "FALSE") {
+		            if (getNodeText(SelectSingleNodeValue(Resultxml, "RESULT"))) {
 		                alert("<spring:message code = 'ezApprovalG.lhj02' />");
 		            } else {
 		                DisplayTaskList_Admin(Resultxml);

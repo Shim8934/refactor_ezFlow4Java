@@ -319,7 +319,6 @@
 	        }
 	
 	        function CheckIfHasReplies() {
-	        	alert(1);
 	            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	            xmlhttp.open("POST", "interASP/CheckIfHasReply.aspx?ItemList=" + strListInfo, false);
 	            xmlhttp.send();

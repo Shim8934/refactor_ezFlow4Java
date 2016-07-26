@@ -75,9 +75,9 @@
 							
 			        		if (pFirst) {
 				                var xmlDom2 = createXmlDom();
-			
+				                
 				                xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML);
-			
+
 				                if (SelectNodes(xmlTree, "NODES/NODE/VALUE").length > 0) {
 				                    if (CrossYN()) {
 				                        var xmlRtn = xmlTree.documentElement;

@@ -18,9 +18,9 @@ function GetTaskFullList() {
             break;
     }
 
-    if (getNodeText(Resultxml) != "")
+    if (Resultxml != null)
     {
-        if (getNodeText(Resultxml) == "FALSE")
+        if (SelectSingleNodeValue(Resultxml, "RESULT") == "FALSE")
         {
             alert(strLang443);
         }
@@ -93,11 +93,11 @@ function btnViewTaskInfo_onclick() {
         para[0] = DeptID;
         para[1] = selRow.getAttribute("DATA1");
 
-        var url = "/myoffice/ezApprovalG/ezCabinet/Manage/ViewTaskInfo_Cross.aspx";
+        var url = "/admin/ezApprovalG/viewTaskInfo.do";
 
         viewtaskinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewTaskInfo_Cross", GetOpenWindowfeature(450, 705));
+        var OpenWin = window.open(url, "ViewTaskInfo", GetOpenWindowfeature(450, 705));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -136,11 +136,11 @@ function FindFullTask(pTitle, pCode, pFlag, pDeptCode) {
 
 
 function DisplayTaskList(Resultxml) {
-    ListViewData = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
-    NodeList = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/ROWS");
-    Haders = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/HEADERS/HEADER");
+    ListViewData = SelectSingleNodeNew(Resultxml, "LISTVIEWDATA");
+    NodeList = SelectSingleNodeNew(Resultxml, "LISTVIEWDATA/ROWS");
+    Haders = SelectSingleNodeNew(Resultxml, "LISTVIEWDATA/HEADERS/HEADER");
 
-    Headers = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/HEADERS");
+    Headers = SelectSingleNodeNew(Resultxml, "LISTVIEWDATA/HEADERS");
     NodeListLen = 0;
 
     if (NodeList) {
@@ -516,34 +516,17 @@ function btnUpdateTaskReq_onclick() {
     }
 }
 
-//TODO 이효진
 function GetTaskFullListXml() {
-    /*var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
-    createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/Manage/aspx/API_GetTaskFullList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseXML;*/
-	var tempRet = "";
+	var tempRet;
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezApprovalG/getTaskFullList.do",
 		async : false,
 		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang},
 		success : function (result) {
-			tempRet = result;
+			tempRet = loadXMLString(result);
 		}
 	});
-	
 	return tempRet;
 }
 
@@ -607,10 +590,10 @@ function btnViewTaskHistoryInfo_onclick() {
         para[1] = selRow.getAttribute("DATA1");
         para[2] = CompanyID;
 
-        var url = "/myoffice/ezApprovalG/ezCabinet/Manage/TaskHistoryInfo_Cross.aspx";
+        var url = "/admin/ezApprovalG/taskHistoryInfo.do";
 
         taskhistoryinfo_cross_dialogArguments[0] = para;
-        var OpenWin = window.open(url, "TaskHistoryInfo_Cross", GetOpenWindowfeature(840, 326));
+        var OpenWin = window.open(url, "TaskHistoryInfo", GetOpenWindowfeature(840, 326));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -621,11 +604,11 @@ function btnViewTaskHistoryInfo_onclick() {
 
 
 function DisplayTaskList_Admin(Resultxml) {
-    ListView = Resultxml.selectSingleNode("DOCLIST/LISTVIEWDATA");
-    NodeList = Resultxml.selectNodes("DOCLIST/LISTVIEWDATA/ROWS/ROW");
-    Haders = Resultxml.selectNodes("DOCLIST/LISTVIEWDATA/HEADERS/HEADER");
+    ListView = Resultxml.selectSingleNode("LISTVIEWDATA");
+    NodeList = Resultxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
+    Haders = Resultxml.selectNodes("LISTVIEWDATA/HEADERS/HEADER");
 
-    Headers = Resultxml.selectSingleNode("DOCLIST/LISTVIEWDATA/HEADERS");
+    Headers = Resultxml.selectSingleNode("LISTVIEWDATA/HEADERS");
     NodeListLen = 0;
 
     if (NodeList) {
