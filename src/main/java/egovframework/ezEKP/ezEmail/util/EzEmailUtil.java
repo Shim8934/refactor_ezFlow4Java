@@ -358,7 +358,19 @@ public class EzEmailUtil {
 				}										
 				String strSize = getSizeWithUnit(size);
 				
-				filename = (filename != null) ? MimeUtility.decodeText(filename) : "";
+				if (filename != null) {
+					if (!isPureAscii(filename)) {
+						byte[] rawBytes = filename.getBytes("iso-8859-1");
+						
+						filename = decodeNonAsciiBytes(rawBytes);
+					}
+					else {
+						filename = MimeUtility.decodeText(filename);
+					}
+				}
+				else {
+					filename = "";
+				}
 				
 				if (attachedFileList != null) {
 					Map<String, String> attachedFileInfo = new HashMap<String, String>();
