@@ -331,6 +331,10 @@ public class EzEmailMailListController {
 				fp.add(FetchProfile.Item.FLAGS);
 			}
 			
+			fp.add("Subject");
+			fp.add("From");
+			fp.add("To");
+			
 			folder.fetch(fetchMessages, fp);					
 		}
 		
