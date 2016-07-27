@@ -98,7 +98,7 @@
 			        GetObject();
 			        ezNotieSetting();
 			    }
-				window.setInterval("update_connectinfo()", 30000);	
+//				window.setInterval("update_connectinfo()", 30000);	
 			}
 		}
 		function ezNotieSetting() {
