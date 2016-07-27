@@ -166,8 +166,9 @@
 
 		var xmlHTTP = null;
 		var blogout = false;
-		
-		function update_connectinfo()
+	
+	// 2016-07-27 임시로 주석	
+	/* 	function update_connectinfo()
 		{
 			if (blogout)
 				return;
@@ -176,7 +177,7 @@
 			xmlHTTP.open("POST", "/myoffice/main/update_connectinfo.aspx", true);
 			xmlHTTP.onreadystatechange = event_update_connectinfo;
 			xmlHTTP.send();
-		}
+		} */
 		
 		var bLogOutNOTICE = false;
 		function event_update_connectinfo()
