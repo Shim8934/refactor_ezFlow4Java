@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
@@ -25,6 +28,16 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalTBLTopMenuItemsVO> getTBLTopMenuItems (String strSQL) {
 		return (List<PortalTBLTopMenuItemsVO>) list("EzPortalDAO.getTBLTopMenuItems", strSQL);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageItemsVO> getTBLPortalPageItemsT (String strSQL) {
+		return (List<PortalTBLPortalPageItemsVO>) list("EzPortalDAO.getTBLPortalPageItemsT", strSQL);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageItemsVO> getTBLPortalPageItemsF (Map<String, Object> map) {
+		return (List<PortalTBLPortalPageItemsVO>) list("EzPortalDAO.getTBLPortalPageItemsF", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -67,12 +80,26 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalMenuItemItemsMenuItemsSVO>) list("EzPortalDAO.getSubMenuHtml2", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalGetThemeListVO> getThemeList (Map<String, Object> map) {
+		return (List<PortalGetThemeListVO>) list("EzPortalDAO.getThemeList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory () {
+		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalDAO.getPortalPageCategory"); 
+	}
+	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) {
 		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", uID);
+	}
+	
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (Map<String, Object> map) {
+		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedPortalPageHtml", map);
 	}
 	
 	public PortalTBLPortalPageGeneralVO getUserInfo5 (Map<String, Object> map) {
@@ -107,6 +134,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.topGetTopParentPageID", map);
 	}
 	
+	public String getTopParentPageID (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getTopParentPageID", map);
+	}
+	
 	public String useStartPageChack (Map<String, Object> map) {
 		return (String) select("EzPortalDAO.useStartPageChack", map);
 	}
@@ -121,6 +152,18 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public String getPortalConfigItem (Map<String, Object> map) {
 		return (String) select("EzPortalDAO.getPortalConfigItem", map);
+	}
+	
+	public String getPortletConfigItem (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getPortletConfigItem", map);
+	}
+	
+	public String getItemLastPageID (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getItemLastPageID", map);
+	}
+	
+	public String portalPageBaseType (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.portalPageBaseType", map);
 	}
 	
 	public int getUserInfo4(Map<String, Object> map) {
@@ -149,6 +192,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getParentUID", parentTopMenuID);
 	}
 	
+	public String getPortalParentUID (String temp) {
+		return (String) select("EzPortalDAO.getPortalParentUID", temp);
+	}
+	
 	public void deleteCacheValue(Map<String, Object> map) {
 		delete("EzPortalDAO.deleteCacheValue", map);
 	}
@@ -156,7 +203,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	public void getUserInfo3(Map<String, Object> map) {
 		insert("EzPortalDAO.getUserInfo3", map);
 	}
-		
+	
+	public void updateCacheValue(Map<String, Object> map) {
+		insert("EzPortalDAO.updateCacheValue", map);
+	}
+	
 	
 	
 }

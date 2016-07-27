@@ -1,13 +1,17 @@
 package egovframework.ezEKP.ezPortal.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
@@ -20,6 +24,10 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzPortalService {
 	//List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany) throws Exception;
 	public List<PortalTBLTopMenuItemsVO> getTBLTopMenuItems (String strSQL) throws Exception;
+	
+	public List<PortalTBLPortalPageItemsVO> getTBLPortalPageItemsT (String strSQL) throws Exception;
+	
+	public List<PortalTBLPortalPageItemsVO> getTBLPortalPageItemsF (String strSQL, String pUserID, String pTopParentPageID) throws Exception;
 
 	public List<PortalTBLPortalPageGeneralVO> searchMyPortalPage2 (String pAccessIDList, String pGubunFlag, String pStrRight, String pCompanyID) throws Exception;
 	
@@ -37,7 +45,11 @@ public interface EzPortalService {
 	
 	public List<PortalMenuItemItemsMenuItemsSVO> getSubMenuHtml2 (String pParentUID) throws Exception;
 	
+	public List<PortalGetThemeListVO> getThemeList (String pCompanyID) throws Exception;
+	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
+	
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID) throws Exception;
 	
 	public PortalTBLPortalPageGeneralVO getUserInfo5 (int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception;
 	
@@ -48,6 +60,8 @@ public interface EzPortalService {
 	public PortalTBLThemeGeneralVO getThemeInfo (String pUID, String pGubun) throws Exception;
 	
 	public PortalMenuItemItemsImageVO getImageHtml (String pUID, String pParentUID, int pSkinNum) throws Exception;
+	
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception;
 	
 	public String getTopMenuConfigItem (String itemName, String uID) throws Exception;
 	
@@ -61,7 +75,11 @@ public interface EzPortalService {
 	
 	public String topGetTopParentPageID (String uID) throws Exception;
 	
+	public String getTopParentPageID (String pTemp) throws Exception;
+	
 	public String getParentUID (String parentTopMenuID) throws Exception;
+	
+	public String getPortalParentUID (String temp) throws Exception;
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme) throws Exception;
 	
@@ -83,6 +101,20 @@ public interface EzPortalService {
 	
 	public String getLogoHtml (String pOwnerPageID, String pAccessID) throws Exception;
 	
+	public String getPortalConfigItem (String pItemName, String pPageID) throws Exception;
+	
+	public String getPortletConfigItem (String pItemName, String pPortletID) throws Exception;
+	
+	public String getDefaultPortalPage() throws Exception;
+	
+	public String getItemLastPageID (String temp) throws Exception;
+	
+	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption) throws Exception;
+	
+	public String portalPageBaseType (String uID, String pCompanyID) throws Exception;
+	
+	public String getThemeInfo(String pCompanyID, LoginVO userInfo) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
@@ -95,5 +127,6 @@ public interface EzPortalService {
 	
 	public void getUserInfo3 (String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName, String accessID, String accessName, int viewRight, int editRight, int depth, String companyID) throws Exception;
 	
+	public void updateCacheValue (String portalPageID, String accessIDList, String renderedHtml) throws Exception;
 	
 }

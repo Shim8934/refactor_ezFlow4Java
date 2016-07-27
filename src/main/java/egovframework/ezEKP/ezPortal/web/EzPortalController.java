@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPortal.web;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
@@ -12,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -401,6 +400,16 @@ System.out.println("i4:"+i);
 		String pClassName = "";
 		String theme = "BASIC";
 		String tableViewOption = "D";
+		String strHTML = "";
+		String width = "";
+		String height = "";
+		String baseType = "";
+		String displayName = "";
+		String displayName2 = "";
+		String pSelectThemeUID = "";
+		String pThemeSelectObject = "";
+		String gubunFlag = "";
+		String portalPageCategoryXML = "";
 		try {
 			userInfo = commonUtil.userInfo(loginCookie);
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
@@ -419,7 +428,7 @@ System.out.println("i4:"+i);
 				parentPageID = req.getParameter("parentPageID");
 			} else {
 				if (!req.getParameter("pageID").trim().equals("")) {
-//					parentPageID = ezPortalService.getPortalConfigItem(pageID, "ParentUID"); 
+					parentPageID = ezPortalService.getPortalConfigItem(pageID, "ParentUID"); 
 				} else {
 					parentPageID = "top";
 				}
@@ -477,11 +486,59 @@ System.out.println("i4:"+i);
 			}
 			
 			// 새로만들기
-//			tableViewOption = ezPortalService.getPortalConfigItem(pageID, "TableViewOption").trim().equals("") ? "D" : ezPortalService.getPortalConfigItem(pageID, "TableViewOption");
+			tableViewOption = ezPortalService.getPortalConfigItem(pageID, "TableViewOption").trim().equals("") ? "D" : ezPortalService.getPortalConfigItem(pageID, "TableViewOption");
 			if (mode.trim().equals("new")) {
-				// getDefaultPortalPage
-				//strHTML = ezPortalService.getd
+				strHTML = ezPortalService.getDefaultPortalPage();
+			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
+				if (editMode.equals("new_inherit")) {
+					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
+					width = ezPortalService.getPortalConfigItem(ezPortalService.getTopParentPageID(parentPageID), "width");
+					height = ezPortalService.getPortalConfigItem(ezPortalService.getTopParentPageID(parentPageID), "height");
+					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
+					
+					if (("").equals(width) || ("-1").equals(width) || ("0").equals(0)) {
+						width = "100%";
+					}
+					
+					if (("").equals(height) || ("-1").equals(height) || ("0").equals(height)) {
+						height = "100%";
+					}
+					
+					if (!mode.equals("view")) {
+						displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID);
+	                    displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID);
+	                    pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
+	                    pThemeSelectObject =  ezPortalService.getThemeInfo(userInfo.getCompanyID(), userInfo);
+	                    
+	                    //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
+	                    if (editMode.equals("new_inherit")) {
+	                    	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID);
+	                    } else {
+	                    	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID);
+	                    }
+	                    
+	                    List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+	                    portalPageCategoryXML = "<DATA>";
+	                    for (PortalTBLPortalPageCategoryVO result : list) {
+	                    	portalPageCategoryXML += commonUtil.getQueryResult(result);
+	                    }
+	                    portalPageCategoryXML += "</DATA>";
+	                    portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
+					}
+					
+				}
 			}
+			
+			model.addAttribute("strHTML", strHTML);
+			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+			model.addAttribute("displayName", displayName);
+			model.addAttribute("displayName2", displayName2);
+			model.addAttribute("mode", mode);
+			model.addAttribute("parentPageID", parentPageID);
+			model.addAttribute("baseType", baseType);
+			model.addAttribute("baseType", baseType);
+			model.addAttribute("langPrimary", langPrimary);
+			model.addAttribute("langSecondary", langSecondary);
 			
 			return "/ezPortal/portalPortalPage";
 		} catch (Exception e) {

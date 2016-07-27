@@ -14,6 +14,9 @@
 	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
 	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
 	<typeAlias  alias="PortalGetMainMenuHtmlVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO"/>
+	<typeAlias  alias="PortalTBLPortalPageItemsVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO"/>
+	<typeAlias  alias="PortalGetThemeListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
+	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -125,6 +128,22 @@
 		<result property="topHeight"					column="TOPHEIGHT"				columnIndex="15"/>
 	</resultMap>
 	
+	<resultMap class="PortalGetThemeListVO" id="portalGetThemeListVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
+		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"/>
+		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"/>
+		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"/>
+		<result property="topURL"						column="TOPURL"					columnIndex="8"/>
+		<result property="mainURL"					column="MAINURL"					columnIndex="9"/>
+		<result property="companayID"				column="COMPANAYID"			columnIndex="10"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="11"/>
+		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="13"/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"/>
+	</resultMap>
+	
 	<resultMap class="PortalTopSearchTopMenu2VO" id="portalTopSearchTopMenu2VO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
@@ -222,6 +241,36 @@
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
 	</resultMap>
 	
+	<resultMap class="PortalTBLPortalPageCategoryVO" id="portalTBLPortalPageCategoryVO">
+		<result property="category"					column="CATEGORY"				columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap class="PortalTBLPortalPageItemsVO" id="portalTBLPortalPageItemsVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="pageUID"					column="PAGEUID"					columnIndex="2"/>
+		<result property="parentPageUID"			column="PARENTPAGEUID"		columnIndex="3"/>
+		<result property="ownerPageUID"			column="OWNERPAGEUID"		columnIndex="4"/>
+		<result property="portletType"				column="PORTLETTYPE"			columnIndex="5"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
+		<result property="width"						column="WIDTH"					columnIndex="7"/>
+		<result property="height"						column="HEIGHT"					columnIndex="8"/>
+		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
+		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"/>
+		<result property="canResize"					column="CANRESIZE"				columnIndex="12"/>
+		<result property="canReplace"				column="CANREPLACE"			columnIndex="13"/>
+		<result property="align"						column="ALIGN"						columnIndex="14"		nullValue="middle"/>
+		<result property="vAlign"						column="VALIGN"					columnIndex="15"		nullValue="top"/>
+		<result property="topMargin"				column="TOPMARGIN"				columnIndex="16"		nullValue="0"/>
+		<result property="bottomMargin"			column="BOTTOMMARGIN"		columnIndex="17"		nullValue="0"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="18"		nullValue="0"/>
+		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"		nullValue="0"/>
+		<result property="mandatory"				column="MANDATORY"			columnIndex="20"/>
+	</resultMap>
+	
+	
+	
 	<procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETTOPMENUCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -249,6 +298,12 @@
 	<procedure id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_GETTOPPARENTPAGEID(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETTOPPARENTPAGEID(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -390,7 +445,47 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.getPortletConfigItem" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETPORTLETCONFIGITEM(#v_pPITEMNAME#, #v_pPORTLETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
+	<procedure id="EzPortalDAO.getItemLastPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETITEMLASTPAGEID(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.getRenderedPortalPageHtml" parameterClass="Map" resultMap="portalGetRenderedTopMenuInsertVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETRENDEREDPORTALPAGEHTML(#v_pPORTALPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.updateCacheValue" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_UPDATECACHEVALUE(#v_PORTALPAGEID#, #v_ACCESSIDLIST#, #v_RENDEREDHTML#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.portalPageBaseType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_PORTALPAGEBASETYPE(#v_pUID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.getThemeList" parameterClass="Map" resultMap="portalGetThemeListVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GET_THEME_LIST(#v_pUID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.getPortalPageCategory"  resultMap="portalTBLPortalPageCategoryVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETPORTALPAGECATEGORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
 	<select id="EzPortalDAO.getParentUID" parameterClass="String" resultClass="String">
 		<![CDATA[
@@ -400,6 +495,17 @@
       			EZPORTAL.TBL_TOPMENU_GENERAL
       		WHERE
       			UID_	=	#parentTopMenuID#
+		]]>
+	</select>
+	
+		<select id="EzPortalDAO.getPortalParentUID" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				ParentUID
+      		FROM
+      			EZPORTAL.TBL_PORTALPAGE_GENERAL
+      		WHERE
+      			UID_	=	#temp#
 		]]>
 	</select>
 	
@@ -413,6 +519,39 @@
       			A.RowPos
 		]]>
 	</select>
+	
+	<select id="EzPortalDAO.getTBLPortalPageItemsT" parameterClass="String" resultMap="portalTBLPortalPageItemsVO">
+		<![CDATA[
+			SELECT DISTINCT
+				*
+      		FROM
+      			($strSQL$) A
+      		ORDER BY
+      			A.RowPos
+		]]>
+	</select>
+	
+	<select id="EzPortalDAO.getTBLPortalPageItemsF" parameterClass="Map" resultMap="portalTBLPortalPageItemsVO">
+		<![CDATA[
+			SELECT DISTINCT
+				*
+      		FROM
+      			($strSQL$) A
+      		WHERE
+      			A.UID_ NOT IN (SELECT 
+      									UID_ 
+      								FROM 
+      									ezPortal.TBL_PortalPage_Items_Change
+      								WHERE 
+      									UID_ = A.UID_ AND PageUID = A.PageUID AND OwnerPageUID = A.OwnerPageUID AND CreatorID = $pUserID$ AND OwnerPageUID = $pTopParentPageID$ AND ChangeFlag = '2'
+      								)	
+      		ORDER BY
+      			A.RowPos
+		]]>
+	</select>
+	
+	
+	
 	
 </sqlMap>
 
