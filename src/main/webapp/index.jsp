@@ -16,4 +16,4 @@
 <%--
 <jsp:forward page="/cmm/main/mainPage.do"/>
 --%>
-<script type="text/javaScript">document.location.href="<c:url value='/ezPortal/portalMain.do'/>"</script> 
+<script type="text/javaScript">document.location.href="<c:url value='/user/login/login.do'/>"</script> 
