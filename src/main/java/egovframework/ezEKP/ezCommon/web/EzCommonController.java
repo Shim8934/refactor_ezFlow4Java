@@ -1115,7 +1115,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
 		}
-		
+
 		ezCommonService.responseAttach(filePath, fileName, true, request, response);
 	}
 	

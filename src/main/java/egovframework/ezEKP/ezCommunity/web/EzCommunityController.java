@@ -899,7 +899,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String gubun = request.getParameter("gubun");
 		String useEditor = config.getProperty("config.EDITOR");
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if (commonUtil.checkIE(request) && config.getProperty("config.IE11EDITOR").equals("CK")) {
                 useIE11Browser = "CK";
 		}
 		
@@ -3238,7 +3238,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if (commonUtil.checkIE(request) && config.getProperty("config.IE11EDITOR").equals("CK")) {
             useIE11Browser = "CK";
 		}
 		
@@ -3478,7 +3478,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardName = request.getParameter("boardName");
 		String code = request.getParameter("code");
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if (commonUtil.checkIE(request) && config.getProperty("config.IE11EDITOR").equals("CK")) {
             useIE11Browser = "CK";
 		}
 		
@@ -3615,7 +3615,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		
-		
 		return "/ezCommunity/communityBoardItemViewPrint";
 	}
 
@@ -3624,7 +3623,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/colorPicker.do")
 	public String colorPicker() {
-		
 		return "/ezCommunity/communityColorPicker";
 	}
 }

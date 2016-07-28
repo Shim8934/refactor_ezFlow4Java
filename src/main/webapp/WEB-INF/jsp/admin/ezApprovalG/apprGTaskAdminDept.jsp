@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TaskManage_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/OpenSelWin_Cross.js"></script>

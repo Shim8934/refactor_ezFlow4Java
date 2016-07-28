@@ -68,10 +68,19 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception;
 	
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception;
+	
+	public String getSealList(String listFlag, String companyID, String lang) throws Exception;
+
+	public String sealDelete(String realPath, String dirPath, String fileName) throws Exception;
+	
+	public String deleteSealInfo(String pSealNum, String companyID) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
 	
 
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception;
+
+	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID) throws Exception;
 	
 }

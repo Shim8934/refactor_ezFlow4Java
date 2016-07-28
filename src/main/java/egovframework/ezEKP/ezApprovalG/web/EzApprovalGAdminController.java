@@ -1,29 +1,38 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 관리자 - 전자결재G
@@ -38,7 +47,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzApprovalGAdminController {
+public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -807,4 +816,176 @@ public class EzApprovalGAdminController {
 		return commonUtil.convertDocumentToString(xmldoc);
 	}
 	
+	/**
+	 * 전자결재G관리 관인대장 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageSeal.do")
+	public String manageSeal (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezApprovalG/apprGManageSeal";
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 회사별 관인목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getSealList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getSealList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String listFlag = request.getParameter("listFlag");
+		String companyID = userInfo.getCompanyID();
+		
+		if (request.getParameter("companyID") != null) {
+			companyID = request.getParameter("companyID");
+		}
+		
+		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
+		String result = ezApprovalGAdminService.getSealList(listFlag, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인정보보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/ezSealInfo.do")
+	public String ezSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean checkIE = commonUtil.checkIE(request);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("checkIE", checkIE);
+		
+		return "admin/ezApprovalG/apprGEzSealInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/addSealInfo.do")
+	public String addSealInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String serverName = config.getProperty("config.ServerName");
+		boolean checkIE = commonUtil.checkIE(request);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("checkIE", checkIE);
+		
+		return "admin/ezApprovalG/apprGAddSealInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인등록 파일등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/sealUpload.do")
+	public String sealUpload(MultipartHttpServletRequest request, Model model) throws Exception {
+		MultipartFile multiFile = request.getFile("file1");
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
+		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
+		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
+		
+		File dir = new File(realPath + dirPath);
+        if (!dir.exists()) {
+        	dir.mkdirs();
+        }
+        
+        int width = 0;
+		int height = 0;
+		String fileName = companyID + "_" + currentDate + fileExt;
+		
+		writeUploadedFile(multiFile, fileName, realPath + dirPath);
+		
+		File imageFile = new File(realPath + dirPath + commonUtil.separator + fileName);
+	
+		if (imageFile.exists()) {
+			BufferedImage bi = ImageIO.read(new File(realPath + dirPath + commonUtil.separator + fileName));			    
+			width = bi.getWidth();
+			height = bi.getHeight();
+		}
+		
+		model.addAttribute("fileName", fileName);
+		model.addAttribute("path", dirPath + commonUtil.separator);
+		model.addAttribute("width", width);
+		model.addAttribute("height", height);
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/insertSealInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String insertSealInfo(HttpServletRequest request) throws Exception {
+		String pSealNum = request.getParameter("pSealNum");
+		String pSealName = request.getParameter("pSealName");
+		String pSealPath = request.getParameter("pSealPath");
+		String pSealWidth = request.getParameter("pSealWidth");
+		String pSealHeight = request.getParameter("pSealHeight");
+		String pRegUserID = request.getParameter("pRegUserID");
+		String pRegUserName = request.getParameter("pRegUserName");
+		String pRegUserName2 = request.getParameter("pRegUserName2");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.insertSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인등록 삭제 실행 함수 (등록하지 않고 종료시 파일 삭제)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/sealDelete.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String sealDelete(HttpServletRequest request) throws Exception {
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = request.getParameter("dirPath");
+		String fileName = request.getParameter("fileName");
+		
+		String result = ezApprovalGAdminService.sealDelete(realPath, dirPath, fileName);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 관인대장 관인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다.) 
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteSealInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deleteSealInfo(HttpServletRequest request) throws Exception {
+		String pSealNum = request.getParameter("pSealNum");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.deleteSealInfo(pSealNum, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageDeptSeal.do")
+	public String manageDeptSeal() {
+		
+		return "admin/ezApprovalG/apprGManageDeptSeal";
+	}
 }

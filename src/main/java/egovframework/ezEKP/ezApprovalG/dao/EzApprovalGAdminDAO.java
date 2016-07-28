@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -64,6 +65,16 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGTaskCodeHistoryVO> getTaskHistory(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskCodeHistoryVO>) list("EzApprovalGAdmin.getTaskHistory", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskFullList(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskFullList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGSealInfoVO> getSealList(Map<String, Object> map) throws Exception {
+		return (List<ApprGSealInfoVO>) list("EzApprovalGAdmin.getSealList", map);
 	}
 	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
@@ -167,7 +178,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.removeTaskCode1", map);
 		update("EzApprovalGAdmin.removeTaskCode2", map);
 	}
+	
+	public void removeDeptInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.removeDeptInfo", map);
+	}
 
+	public void deleteSealInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.deleteSealInfo", map);
+	}
+	
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
@@ -192,13 +211,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.removeTaskCategory", map);
 	}
 
-	public void removeDeptInfo(Map<String, Object> map) throws Exception {
-		update("EzApprovalGAdmin.removeDeptInfo", map);
-	}
 
-	@SuppressWarnings("unchecked")
-	public List<ApprGTaskVO> getTaskFullList(Map<String, Object> map) throws Exception {
-		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskFullList", map);
+
+	
+
+
+
+	public void insertSealInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertSealInfo", map);
 	}
 
 }
