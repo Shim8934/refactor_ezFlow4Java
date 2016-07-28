@@ -112,20 +112,20 @@
 	</resultMap>
 	
 	<resultMap class="PortalTBLThemeGeneralVO" id="portalTBLThemeGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
-		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"/>
-		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"/>
-		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"/>
-		<result property="topURL"						column="TOPURL"					columnIndex="8"/>
-		<result property="mainURL"					column="MAINURL"					columnIndex="9"/>
-		<result property="companayID"				column="COMPANAYID"			columnIndex="10"/>
-		<result property="creatorID"					column="CREATORID"				columnIndex="11"/>
-		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"/>
-		<result property="createDate"				column="CREATEDATE"			columnIndex="13"/>
-		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"/>
-		<result property="topHeight"					column="TOPHEIGHT"				columnIndex="15"/>
+		<result property="uID"							column="UID_"						columnIndex="1"			nullValue=""/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"			nullValue=""/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"			nullValue=""/>
+		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"			nullValue=""/>
+		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"			nullValue=""/>
+		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"			nullValue=""/>
+		<result property="topURL"						column="TOPURL"					columnIndex="8"			nullValue=""/>
+		<result property="mainURL"					column="MAINURL"					columnIndex="9"			nullValue=""/>
+		<result property="companayID"				column="COMPANAYID"			columnIndex="10"		nullValue=""/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="11"		nullValue=""/>
+		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"		nullValue=""/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="13"		nullValue=""/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"		nullValue=""/>
+		<result property="topHeight"					column="TOPHEIGHT"				columnIndex="15"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="PortalGetThemeListVO" id="portalGetThemeListVO">
@@ -439,7 +439,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getPortalConfigItem" parameterClass="Map" resultClass="String">
+	<procedure id="EzPortalDAO.getPortalConfigItem" parameterClass="Map" resultClass="String"	 remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORTALCONFIGITEM(#v_pPITEMNAME#, #v_pPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -484,6 +484,24 @@
 	<procedure id="EzPortalDAO.getPortalPageCategory"  resultMap="portalTBLPortalPageCategoryVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORTALPAGECATEGORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.newMyPortalPageCreate" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_NEWMYPOTALPAGE_CREATE(#v_pPARENTPAGEID#, #v_pPAGEID#, #v_pUSERID#, #v_pGUBUNFLAG#, #v_pNEWPAGEID#, #v_pDEPTH#, #v_pCOMPANYID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #v_pMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.newMyPortalPageCreate2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_NEWMYPORTALPAGE_CREATE2(#v_pUSERFLAG#, #v_pUSERID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.newMyPortalPageCreate3" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_NEWMYPORTALPAGE_CREATE3(#v_pUSEFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pUSERID#)}
 		]]>
 	</procedure>
 	
@@ -550,7 +568,27 @@
 		]]>
 	</select>
 	
+	<select id="EzPortalDAO.getTopUrl" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				TOPURL
+      		FROM
+      			EZPORTAL.TBL_THEME_GENERAL
+      		WHERE
+      			UID_	=	#pUID#
+		]]>
+	</select>
 	
+	<select id="EzPortalDAO.getMainUrl" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAINURL
+      		FROM
+      			EZPORTAL.TBL_THEME_GENERAL
+      		WHERE
+      			UID_	=	#pUID#
+		]]>
+	</select>
 	
 	
 </sqlMap>

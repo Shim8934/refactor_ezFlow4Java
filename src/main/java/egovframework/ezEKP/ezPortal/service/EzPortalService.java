@@ -115,6 +115,14 @@ public interface EzPortalService {
 	
 	public String getThemeInfo(String pCompanyID, LoginVO userInfo) throws Exception;
 	
+	public String newMyPortalPageCreate2 (String pUserFlag, String pUserID, String pCompanyID) throws Exception;
+	
+	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID) throws Exception;
+	
+	public String getMainUrl (String pUID) throws Exception;
+	
+	public String getTopUrl (String pUID) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
@@ -123,10 +131,14 @@ public interface EzPortalService {
 	
 	public int checkViewRight (String uID, String accessIDList) throws Exception;
 	
+	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
+	
 	public void deleteCacheValue (String uID, String accessListID) throws Exception;
 	
 	public void getUserInfo3 (String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName, String accessID, String accessName, int viewRight, int editRight, int depth, String companyID) throws Exception;
 	
 	public void updateCacheValue (String portalPageID, String accessIDList, String renderedHtml) throws Exception;
+	
+	public void newMyPortalPageCreate3 (String pUseFlag, String pUID, String pCompanyID, String pUserID) throws Exception;
 	
 }

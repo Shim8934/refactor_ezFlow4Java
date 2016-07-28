@@ -166,6 +166,18 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.portalPageBaseType", map);
 	}
 	
+	public String newMyPortalPageCreate2 (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.newMyPortalPageCreate2", map);
+	}
+	
+	public String getTopUrl (String pUID) {
+		return (String) select("EzPortalDAO.getTopUrl", pUID);
+	}
+	
+	public String getMainUrl (String pUID) {
+		return (String) select("EzPortalDAO.getMainUrl", pUID);
+	}
+	
 	public int getUserInfo4(Map<String, Object> map) {
 		select("EzPortalDAO.getUserInfo4", map);
 		return (int) map.get("v_pCount");
@@ -173,6 +185,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		select("EzPortalDAO.getMenuItemHtml", map);
+		return (int) map.get("v_pCount");
+	}
+	
+	public int newMyPortalPageCreate(Map<String, Object> map) {
+		select("EzPortalDAO.newMyPortalPageCreate", map);
 		return (int) map.get("v_pCount");
 	}
 	
@@ -208,7 +225,9 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		insert("EzPortalDAO.updateCacheValue", map);
 	}
 	
-	
+	public void newMyPortalPageCreate3(Map<String, Object> map) {
+		update("EzPortalDAO.newMyPortalPageCreate3", map);
+	}
 	
 }
 
