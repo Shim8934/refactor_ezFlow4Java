@@ -43,10 +43,7 @@
             <mvc:mapping path="/cmm/main/*.do"/>
             <mvc:mapping path="/user/login/*.do"/>
             <mvc:mapping path="/admin/**"/>
-            <mvc:mapping path="/ezBoard/**"/>
-            <mvc:mapping path="/ezOrgan/**"/>
-            <mvc:mapping path="/ezQuestion/**"/>
-            <mvc:mapping path="/ezEmail/**"/>
+            <mvc:mapping path="/ez*/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
