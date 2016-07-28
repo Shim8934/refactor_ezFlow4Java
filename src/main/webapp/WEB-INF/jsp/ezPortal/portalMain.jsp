@@ -43,7 +43,7 @@
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-    		<iframe src="blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+    		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	<script type="text/javascript">
