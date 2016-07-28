@@ -252,6 +252,8 @@ public interface EzApprovalGService {
 	
 	public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType) throws Exception;
 	
+	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;

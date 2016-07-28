@@ -2614,6 +2614,179 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		boolean publicFlag = false;
+		boolean securityFlag = false;
+		String userSecurityCode = "";
+		
+		if (getIsUse("A22", "001", companyID, lang).equals("1")) {
+			securityFlag = true;
+		}
+		
+		if (getIsUse("A22", "004", companyID, lang).equals("1")) {
+			publicFlag = true;
+		}
+		
+		if (securityFlag) {
+			userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6");
+		}
+		
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
+			userSecurityCode = "0";
+		}
+		
+		String listString = "";
+		
+		if (containerID.equals("ADMIN")) {
+			listString = getListHeader("082", companyID, lang);
+		} else {
+			listString = getListHeader("006", companyID, lang);
+		}
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		int totalCount = getContDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, companyID);
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+        int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+
+        if (querySize2 >= Integer.parseInt(pageSize)) {
+        	querySize2 = Integer.parseInt(pageSize);
+        }
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!orderCell.equals("") && orderCell.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (orderOption.equals("")) {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				} else {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		String docList = getContDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, querySize, querySize2, orderOption1, orderOption2, companyID);
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME") || fieldName.equals("WRITERJOBTITLE")) {
+					fieldName = fieldName + commonUtil.getMultiData(lang);
+				}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, lang) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
+					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
+				}
+				
+				if (fieldName.equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				if (fieldName.equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		return resultXML.toString();
+	}
+
+	private String getContDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int querySize, int querySize2, String orderOption1,
+			String orderOption2, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTID", containerID);
+		map.put("v_USERID", userID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N");
+		}
+		map.put("v_SUBQUERY", subQuery);
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTION2", orderOption2);
+		
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getContDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	private int getContDocListCount(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTID", containerID);
+		map.put("v_USERID", userID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N");
+		}
+		map.put("v_SUBQUERY", subQuery);
+		
+		int totalCount = ezApprovalGDAO.getContDocListCount(map);
+		
+		return totalCount;
+	}
+
+	@Override
 	public String deleteOpinionInfo(String docID, String companyID, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);

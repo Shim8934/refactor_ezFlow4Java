@@ -326,6 +326,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSEARCHDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCONTDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -540,6 +544,10 @@
 	
 	<procedure id="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSEARCHDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getContDocListCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCONTDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">

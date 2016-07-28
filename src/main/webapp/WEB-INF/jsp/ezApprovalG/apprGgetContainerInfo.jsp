@@ -625,25 +625,25 @@
 	        if (GamSaFlag)
 	            url = "../excelExportOutGS.aspx";
 	        else
-	            url = "../excelExportOut.aspx";
+	            url = "/ezApprovalG/excelExportOut.do";
 	
 	        if (DocListType == "DocList") {
-	            url += "?LISTTYPE=DOC&CONT=" + escape(ContainerID) + "&PN=" +
-	                escape(tempPageNum) + "&PS=" + escape(tempPageSize) + "&OC=" + escape(OrderCell) +
-	                "&OO=" + escape(OrderOption);
+	            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
+	                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
+	                "&OO=" + encodeURI(OrderOption);
 	        }
 	        else {
-	            url += "?LISTTYPE=SEARCH&P0=" + escape(condition[0]) + "&P1=" +
-	                escape(condition[1]) + "&P2=" + escape(condition[2]) + "&P3=" + escape(condition[3]) +
-	                "&P4=" + escape(condition[4]) + "&P5=" + escape(condition[5]) + "&P6=" + escape(condition[6]) +
-	                "&P7=" + escape(condition[7]) + "&P8=" + escape(condition[8]) + "&P9=" + escape(condition[9]) +
-	                "&P10=" + escape(condition[10]) + "&P11=" + escape(condition[11]) + "&P12=" + escape(condition[12]) +
-	                "&P13=" + escape(condition[13]) + "&P14=" + escape(condition[14]) + "&P15=" + escape(condition[15]) +
-	                "&P16=" + escape(condition[16]) + "&P17=" + escape(condition[17]) + "&P18=" + escape(condition[18]) +
-	                "&P19=" + escape(condition[19]) + "&P20=" + escape(condition[20]) + "&P21=" + escape(condition[21]) +
-	                "&P22=" + escape(condition[22]) + "&P23=" + escape(condition[23]) + "&P24=" + escape(ContainerID) +
-	                "&PN=" + escape(tempPageNum) + "&PS=" + escape(tempPageSize) + "&OC=" + escape(OrderCell) +
-	                "&OO=" + escape(OrderOption) + "&SQ=" + escape(subCondition);
+	            url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
+	                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
+	                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
+	                "&P7=" + encodeURI(condition[7]) + "&P8=" + encodeURI(condition[8]) + "&P9=" + encodeURI(condition[9]) +
+	                "&P10=" + encodeURI(condition[10]) + "&P11=" + encodeURI(condition[11]) + "&P12=" + encodeURI(condition[12]) +
+	                "&P13=" + encodeURI(condition[13]) + "&P14=" + encodeURI(condition[14]) + "&P15=" + encodeURI(condition[15]) +
+	                "&P16=" + encodeURI(condition[16]) + "&P17=" + encodeURI(condition[17]) + "&P18=" + encodeURI(condition[18]) +
+	                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
+	                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
+	                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
+	                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition);
 	        }
 	        window.frames["saveExcel"].location.href = url;
 	    }
@@ -947,7 +947,7 @@
 	        else
 	            pDocID = tr[0].getAttribute("DATA1");
 	
-	        var url = "../TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=END";
+	        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
 	        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
 	        feature = feature + GetOpenPosition(600, 450);
 	        window.open(url, "", feature);

@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -2711,7 +2712,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String realPath = request.getServletContext().getRealPath("");
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
-		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent();
+		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 		String path = realPath + config.getProperty("upload_approvalG.ROOT");
 		String path2 = realPath + config.getProperty("upload_common.ROOT");
 		String separators = "\\|\\|\\|";
@@ -2728,7 +2730,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		for (int k = 0; k < filePaths.length; k++) {
 			String sourcePath = realPath + filePaths[k];
 			String targetPath = "";
-			String fileName = fileNames[k];
+			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 			
 			if (fileTypes[k].equals("ATT")) {
 				targetPath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + fileName;
@@ -2749,23 +2752,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 
 			File file2 = new File(targetPath);
-System.out.println(targetPath);
-System.out.println(sourcePath);
+
 			if (!file2.exists()) {
 				File file3 = new File(sourcePath);
 				FileUtils.copyFile(file3, file2);
 			}
 		}
-		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName.replace("#", "") + ".zip";
+		
+		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName.replace("@%$^&!#()", "11") + ".zip";
 
 		byte[] buffer = new byte[1024];
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+		zout.setEncoding("EUC-KR");
 		
 		for (int k = 0; k < filePaths.length; k++) {
 			FileInputStream inpStream = new FileInputStream(new File(realPath + filePaths[k]));
-			String fileName = fileNames[k];
+			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 			
-			fileName = fileName + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
+			fileName = fileName.replace("@%$^&!#()", "11") + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
 			zout.putNextEntry(new ZipEntry(fileName));
 
 			int length = 0;
@@ -4013,5 +4018,102 @@ System.out.println(sourcePath);
 		}
 		
 		return rtnVal;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", produces = "application/x-msexcel;charset=utf-8")
+	@ResponseBody
+	public String excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		StringBuilder resultExcel = new StringBuilder(); 
+		String listType = "";
+		
+		listType = request.getParameter("listType");
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", locale)) + ".xls");
+		
+		String excelValue = "";
+		
+		if (listType.toUpperCase().equals("DOC")) {
+			String containerID = request.getParameter("cont");
+			String pageNum = request.getParameter("PN");
+			String pageSize = request.getParameter("PS");
+			String orderCell = request.getParameter("OC");
+			String orderOption = request.getParameter("OO");
+			
+			excelValue = ezApprovalGService.getContDocList(containerID, userInfo.getId(), "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang());
+		} else if (listType.toUpperCase().equals("PRINT")) {
+			excelValue = request.getParameter("saveExcelData");
+		} else {
+			String P0 = request.getParameter("P0");
+            String P1 = request.getParameter("P1");
+            String P2 = request.getParameter("P2");
+            String P3 = request.getParameter("P3");
+            String P4 = request.getParameter("P4");
+            String P5 = request.getParameter("P5");
+            String P6 = request.getParameter("P6");
+            String P7 = request.getParameter("P7");
+            String P8 = request.getParameter("P8");
+            String P9 = request.getParameter("P9");
+            String P10 = request.getParameter("P10");
+            String P11 = request.getParameter("P11");
+            String P12 = request.getParameter("P12");
+            String P13 = request.getParameter("P13");
+            String P14 = request.getParameter("P14");
+            String P15 = request.getParameter("P15");
+            String P16 = request.getParameter("P16");
+            String P17 = request.getParameter("P17");
+            String P18 = request.getParameter("P18");
+            String P19 = request.getParameter("P19");
+            String P20 = request.getParameter("P20");
+            String P21 = request.getParameter("P21");
+            String P22 = request.getParameter("P22");
+            String P23 = request.getParameter("P23");
+            String P24 = request.getParameter("P24");
+            String pageNum = request.getParameter("PN");
+            String pageSize = request.getParameter("PS");
+            String orderCell = request.getParameter("OC");
+            String orderOption = request.getParameter("OO");
+            String subQuery = request.getParameter("SQ");
+            
+            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "");
+		}
+		
+		Document objXML = commonUtil.convertStringToDocument(excelValue);
+		
+		resultExcel.append("<table><tr>");
+		
+		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
+			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
+			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
+			
+			int width = Integer.parseInt(headerWidth) * 2;
+			
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+		}
+		resultExcel.append("</tr></table>");
+		
+		resultExcel.append("<table>");
+
+		NodeList objRow = objXML.getElementsByTagName("ROW");
+		for (int k = 0; k < objRow.getLength(); k++) {
+			resultExcel.append("<tr>");
+			
+			Element row = (Element) objRow.item(k);
+			NodeList objCell = row.getElementsByTagName("CELL");
+			for (int p = 0; p < objCell.getLength(); p++) {
+				Element cell = (Element) objCell.item(p);
+				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
+				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
+				int width = Integer.parseInt(headerWidth) * 2;
+				
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+			}
+			resultExcel.append("</tr>");
+		}
+		resultExcel.append("</table>");
+		
+		return resultExcel.toString();
 	}
 }
