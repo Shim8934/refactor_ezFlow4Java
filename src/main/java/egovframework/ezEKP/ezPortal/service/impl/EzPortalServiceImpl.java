@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -199,8 +200,16 @@ public class EzPortalServiceImpl implements EzPortalService {
 		return ezPortalDAO.searchMyPortalPage2(map);
 	}
 	
-	@Override
+	/*@Override
 	public int checkViewRight(String uID, String accessIDList) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_ACCESSIDLIST", accessIDList);
+		return ezPortalDAO.checkViewRight(map);
+	}*/
+	
+	@Override
+	public String checkViewRight(String uID, String accessIDList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_ACCESSIDLIST", accessIDList);
@@ -451,6 +460,14 @@ public class EzPortalServiceImpl implements EzPortalService {
 	@Override
 	public String getTopUrl(String pUID) throws Exception {
 		return ezPortalDAO.getTopUrl(pUID);
+	}
+	
+	@Override
+	public PortalUrlPortletVO urlPortlet(String uID, String creatorID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_CREATORID", creatorID);
+		return ezPortalDAO.urlPortlet(map);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
@@ -908,23 +925,26 @@ System.out.println("22222");
 	
 	public boolean checkViewRightBln (String pUID, String pAccessIDList) {
 		try {
-//System.out.println("acceessIDList:"+pAccessIDList);
-//System.out.println("length:"+pAccessIDList.split("\\,").length);
+System.out.println("acceessIDList:"+pAccessIDList);
+System.out.println("length:"+pAccessIDList.split("\\,").length);
 			for (int i=0; i<pAccessIDList.split("\\,").length; i++) {
-				int right = checkViewRight(pUID, pAccessIDList.split(",")[i].trim());
-//System.out.println("[i]:"+i);
-//System.out.println("temp:"+pAccessIDList.split(",")[i].trim());
-//System.out.println("right:"+right);
-				if (right == 2) {
+System.out.println("accessIDList["+i+"]:"+pAccessIDList.split("\\,")[i].trim());
+				String right = checkViewRight(pUID, pAccessIDList.split("\\,")[i].trim());
+				
+System.out.println("[i]:"+i);
+System.out.println("temp:"+pAccessIDList.split(",")[i].trim());
+System.out.println("right:"+right);
+				if (right != null && right.equals("2")) {
 					return true;
 				}
-				if (right == 1) {
+				if (right != null && right.equals("1")) {
 					return false;
 				}
 			}
 			return false;
 		} catch (Exception e) {
-			return true;
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -1086,7 +1106,7 @@ System.out.println("resultXML:"+resultXML);
 			}
 			return resultXML;	
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			return "<DATA/>";
 		}
 	}
@@ -1116,7 +1136,7 @@ System.out.println("resultXML:"+resultXML);
 	
 	public String getMenuItemHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		try {
-			String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem(pUID, "URL") + "' frameborder=0 scrolling=no></iframe>";
+			String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID) + "' frameborder=0 scrolling=no></iframe>";
 			
 			int result = getMenuItemHtml(pUID);
 			
@@ -1148,7 +1168,7 @@ System.out.println("resultXML:"+resultXML);
 			return strHTML;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem(pUID, "URL") + "' frameborder=0 scrolling=no></iframe>";
+			return "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID) + "' frameborder=0 scrolling=no></iframe>";
 		}
 	}
 	
@@ -1200,7 +1220,7 @@ System.out.println("resultXML:"+resultXML);
 					if (imageOverImagePath != null) {
 						sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"" + " name=\'" + pContentsUID + "'");
 					}
-					if (imageLinkURL != null) {
+					if (imageLinkURL != null && !imageLinkURL.equals("")) {
 						sb.append(" style='cursor:pointer'");
 						sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + loadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
 						sb.append(", \"" + imageLinkLocation + "\"");
@@ -1513,7 +1533,6 @@ System.out.println("resultXML:"+resultXML);
 	
 	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption) {
 		try {
-System.out.println("ㅡㅡㅡㅡㅡ");
 			if (pTheme != null && !pTheme.trim().equals("")) {
 				this.gTheme = pTheme;
 			}
@@ -1523,29 +1542,33 @@ System.out.println("ㅡㅡㅡㅡㅡ");
 			}
 			
 			if (pMode.equals("view")) {
-				if (checkViewRightBln(pPortalPageID, getAccessList(userInfo)) != true) {
+				if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo))) {
 					return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
 				}
 				String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo));
-				
-				if (cacheValue != null && !cacheValue.trim().equals("")) {
+System.out.println("cacheValue:"+cacheValue);
+				/*if (cacheValue != null && !cacheValue.trim().equals("")) {
 					return cacheValue;
-				}
+				}*/
 			}
-			
+System.out.println("하하");			
 			StringBuilder sb = new StringBuilder();
             String strXML = "";
             String pageUID, pageParentUID, pageDisplayName, pageWidth, pageHeight, pageRowLength, pageColumnLength, pageRowSplit, pageColumnSplit;
+
+
             String RootParentUID = getTopParentPageIDStr(pPortalPageID);
+System.out.println("하하1");
             String boarderValue = "0";
             int i= 0;
             if (pPortalPageID.equals(RootParentUID)) {
             	bRootPage = true;
+
             }
             if (pMode.equals("edit")) {
             	boarderValue = "1";
             }
-            
+System.out.println("하하2");            
             StringBuilder dsb = new StringBuilder();
             dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
             dsb.append("<tr id='main_row'>\n");
@@ -1555,7 +1578,7 @@ System.out.println("ㅡㅡㅡㅡㅡ");
             dsb.append("</TBODY></table></td>");
             dsb.append("</tr></table>");
             String defaultValue = dsb.toString();
-            
+  System.out.println("dsb:"+dsb.toString());
             PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
             
             if (result == null) {
@@ -1571,7 +1594,7 @@ System.out.println("ㅡㅡㅡㅡㅡ");
             pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID);
             pageRowSplit = getPortalConfigItem("RowSplit",RootParentUID);
             pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID);
-            
+System.out.println("pMode:"+pMode);
             if (pMode.equals("edit")) {
             	sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
                 if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
@@ -1581,15 +1604,12 @@ System.out.println("ㅡㅡㅡㅡㅡ");
                 sb.append("style='table-layout:fixed;'>\n");
                 sb.append("<tr id='main_row'>\n");
             } else {
-System.out.println(1111111);
             	if (gTheme.equals("BASIC")) {
             		sb.append("<div id='Center'>");
             	}
             }
             	for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
-System.out.println(222222);
             		if (pMode.equals("edit")) {
-System.out.println(333333);
             			String columnWidth = "*";
             			if (i == Integer.parseInt(pageColumnLength) - 1) {
             				sb.append("<TD id=td0 vAlign=top");
@@ -1633,7 +1653,8 @@ System.out.println(333333);
                             sb.append("</tbody>\n</table>\n</td>\n");
                         }
             		} else {
-System.out.println("ㅡㅡ");
+System.out.println("여기");
+System.out.println("rendColumn:"+getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             		}
             	}
@@ -1753,7 +1774,9 @@ System.out.println("sb:"+sb.toString());
                             sb.append("</tbody>\n</table>\n</td>\n");
                         }
             		} else {
+System.out.println("여기");
             			if (gTableViewOption.equals("D")) {
+System.out.println("pCallingPageID:"+pCallingPageID);
             				sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
             			} else {
             				String columnWidth = "*";
@@ -1837,7 +1860,7 @@ System.out.println("sb:"+sb.toString());
             
             while (count < 10) {
             	parentPortalPageID = getPortalParentUID(parentPortalPageID);
-            	
+System.out.println("parentPortalPageID:"+parentPortalPageID);
             	if (parentPortalPageID.toLowerCase().trim().equals("top")) {
             		break;
             	}
@@ -1848,11 +1871,13 @@ System.out.println("sb:"+sb.toString());
             
             if (bRootPage == true) {
             	result = getTBLPortalPageItemsT(strSQL);
+System.out.println("resultT:"+result);
             } else {
+System.out.println("resultF:"+result);
             	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID));
             }
             
-            if (result != null) {
+            if (result == null) {
             	return "";
             }
             
@@ -1887,7 +1912,7 @@ System.out.println("sb:"+sb.toString());
             		} else {
             			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
             		}
-            		
+      		
             		if (portletType == 0) {
             			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
             				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
@@ -1897,11 +1922,16 @@ System.out.println("sb:"+sb.toString());
             		}
             		sb.append("</TR>\n");
             	} else {
+System.out.println("check1");
             		if (gTableViewOption.equals("D")) {
+System.out.println("check2");
             			if (i == 0) {
+System.out.println("check3");
             				sb.append("<div class='section1_bg'><section class='section1'>\n");
             			} else {
+System.out.println("check4");
             				if (!gTheme.equals("BASIC") && loadFlag) {
+System.out.println("check5");
             					sb.append("<div id='Center'>");
                                 loadFlag = false;
             				}
@@ -1909,24 +1939,31 @@ System.out.println("sb:"+sb.toString());
             				sb.append("<section class='section" + (i + 1) + "'>\n");
             			}
             			if (portletType == 0) {
+System.out.println("check6");
             				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem(portletUID, "URL");
+System.out.println("check7");
+            					portletMoveURL = getPortletConfigItem("URL",portletUID);
             					sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
             				}
             			} else {
+System.out.println("check8");
             				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
             			}
             			if (i == 0) {
+System.out.println("check9");
             				sb.append("</section></div>\n");
             			} else {
+System.out.println("check10");
             				sb.append("</section>\n");
             			}
             		} else {
+System.out.println("check11");            			
             			if (i == 0) {
+System.out.println("check12");
             				sb.append("<div class='section1_bg'><section class='section1'>\n");
             				if (portletType == 0) {
             					if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            						portletMoveURL = getPortletConfigItem(portletUID, "URL");
+            						portletMoveURL = getPortletConfigItem("URL",portletUID);
             						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
             					}
             				} else {
@@ -1938,6 +1975,7 @@ System.out.println("sb:"+sb.toString());
             					sb.append("</section>\n");
             				}
             			} else {
+System.out.println("check13");				
             				if (gTableViewOption.equals("T") && loadFlag) {
             					sb.append("<div id='Center' style=' margin-top: 15px; '>");
                                 sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
@@ -1947,11 +1985,13 @@ System.out.println("sb:"+sb.toString());
             				sb.append("<TR>");
             				
             				if (portletType == 0) {
+System.out.println("check14");            					
             					if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            						portletMoveURL = getPortletConfigItem(portletUID, "URL");
+            						portletMoveURL = getPortletConfigItem("URL",portletUID);
             						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
             					}
             				} else {
+System.out.println("여기는");
             					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
             				}
             				sb.append("</TR>\n");
@@ -1984,13 +2024,13 @@ System.out.println("sb:"+sb.toString());
             String parentPortalPageID = pCallingPageID;
             int count = 0;
             
-            strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + "AND OwnerPageUID = '" + getItemLastPageID(parentPortalPageID) ;
+            strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID) + "'" ;
             
             while (count < 10) {
             	parentPortalPageID = getPortalParentUID(parentPortalPageID);
-            	
+System.out.println("parentPortalPageID:"+parentPortalPageID);
             	String param = String.valueOf(count);
-            	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + "AND OwnerPageUID = '" + param +"'";
+            	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
             	count ++;
             }
             
@@ -2000,12 +2040,13 @@ System.out.println("sb:"+sb.toString());
             	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID));
             }
             
-            if (result != null) {
+            if (result == null) {
             	return "";
             }
             
             boolean loadFlag = true;
-            
+  System.out.println("여기!!!!");
+  System.out.println("resultSize:"+result.size());
             for (int i=0; i<result.size(); i++) {
             	int portletType = result.get(i).getPortletType();
             	String portletUID = result.get(i).getuID();
@@ -2028,14 +2069,14 @@ System.out.println("sb:"+sb.toString());
             	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
             	String portletMandatory = result.get(i).getMandatory();
             	String portletMoveURL = "";
-            	
+System.out.println("모드:"+pMode);
             	if (pMode.equals("edit")) {
             		if (portletHeight != 0) {
             			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
             		} else {
             			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
             		}
-            		
+  System.out.println("portletType:"+portletType);
             		if (portletType == 0) {
             			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
             				sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
@@ -2045,10 +2086,12 @@ System.out.println("sb:"+sb.toString());
             		}
             		sb.append("</TR>\n");
             	} else {
+System.out.println("왜안타");
             		if (gTableViewOption.equals("D")) {
+System.out.println("시");
             			if (portletType == 0) {
             				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem(portletUID, "URL");
+            					portletMoveURL = getPortletConfigItem("URL",portletUID);
             					if (portletWidth == 9999) {
             						String portletWidthStr = "100%"; 
             						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
@@ -2057,12 +2100,14 @@ System.out.println("sb:"+sb.toString());
             					}
             				}
             			} else {
+System.out.println("마지막:");
             				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+
             			}
             		} else {
             			if (portletType == 0) {
             				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem(portletUID, "URL");
+            					portletMoveURL = getPortletConfigItem("URL",portletUID);
             					
             					if (portletWidth == 9999) {
             						String portletWidthStr = "100%"; 
@@ -2074,6 +2119,7 @@ System.out.println("sb:"+sb.toString());
             					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
             					}
             				} else {
+System.out.println("여긴타냐");
             					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
             				}
             			}

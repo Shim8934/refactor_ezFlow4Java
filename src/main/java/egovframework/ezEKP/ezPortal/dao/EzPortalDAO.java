@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPortalDAO")
@@ -118,6 +119,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalMenuItemItemsImageVO) select("EzPortalDAO.getImageHtml", map);
 	}
 	
+	public PortalUrlPortletVO urlPortlet (Map<String, Object> map) {
+		return (PortalUrlPortletVO) select("EzPortalDAO.urlPortlet", map);
+	}
+	
 	public String getTopMenuConfigItem(Map<String, Object> map) {
 		return (String) select("EzPortalDAO.getTopMenuConfigItem", map);
 	}
@@ -197,8 +202,12 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (int) select("EzPortalDAO.checkEditRight", map);
 	}
 	
-	public int checkViewRight(Map<String, Object> map) {
+	/*public int checkViewRight(Map<String, Object> map) {
 		return (int) select("EzPortalDAO.checkViewRight", map);
+	}*/
+	
+	public String checkViewRight(Map<String, Object> map) {
+		return (String) select("EzPortalDAO.checkViewRight", map);
 	}
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {

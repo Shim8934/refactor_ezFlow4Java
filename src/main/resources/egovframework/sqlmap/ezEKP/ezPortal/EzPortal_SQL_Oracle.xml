@@ -17,6 +17,8 @@
 	<typeAlias  alias="PortalTBLPortalPageItemsVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO"/>
 	<typeAlias  alias="PortalGetThemeListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
 	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
+	<typeAlias  alias="PortalUrlPortletVO" 										type="egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO"/>
+	<typeAlias  alias="PortalPortletGeneralVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -269,7 +271,28 @@
 		<result property="mandatory"				column="MANDATORY"			columnIndex="20"/>
 	</resultMap>
 	
+<!-- 	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
+		<result property="portletType"				column="PORTLET_TYPE"			columnIndex="4"/>
+		<result property="url"							column="URL"						columnIndex="5"/>
+		<result property="maxUrl"						column="MAXURL"					columnIndex="6"/>
+		<result property="showTitleBar"				column="SHOWTITLEBAR"		columnIndex="7"/>
+		<result property="userType"					column="USERTYPE"				columnIndex="8"/>
+		<result property="height"						column="HEIGHT"					columnIndex="9"/>
+		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="10"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="11"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="12"/>
+		<result property="usePotalGubun"			column="USEPOTALGUBUN"		columnIndex="13"/>
+		<result property="width"						column="WIDTH"					columnIndex="14"/>
+		<result property="frameType"				column="FRAMETYPE"				columnIndex="15"/>
+	</resultMap> -->
 	
+	<resultMap class="PortalUrlPortletVO" id="portalUrlPortletVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
+	</resultMap>
 	
 	<procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
@@ -349,7 +372,13 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CHECKVIEWRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CHECKVIEWRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -502,6 +531,12 @@
 	<procedure id="EzPortalDAO.newMyPortalPageCreate3" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_NEWMYPORTALPAGE_CREATE3(#v_pUSEFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pUSERID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.urlPortlet" parameterClass="Map"  resultMap="portalUrlPortletVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_URLPORTLET(#v_UID#, #v_CREATORID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

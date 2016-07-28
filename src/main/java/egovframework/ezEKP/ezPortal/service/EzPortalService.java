@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 
@@ -60,6 +61,8 @@ public interface EzPortalService {
 	public PortalTBLThemeGeneralVO getThemeInfo (String pUID, String pGubun) throws Exception;
 	
 	public PortalMenuItemItemsImageVO getImageHtml (String pUID, String pParentUID, int pSkinNum) throws Exception;
+	
+	public PortalUrlPortletVO urlPortlet (String uID, String creatorID) throws Exception;
 	
 	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception;
 	
@@ -129,7 +132,9 @@ public interface EzPortalService {
 	
 	public int checkEditRight (String uID, String accessIDList) throws Exception;
 	
-	public int checkViewRight (String uID, String accessIDList) throws Exception;
+	//public int checkViewRight (String uID, String accessIDList) throws Exception;
+	
+	public String checkViewRight (String uID, String accessIDList) throws Exception;
 	
 	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
 	
