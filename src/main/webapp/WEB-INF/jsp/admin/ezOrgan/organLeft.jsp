@@ -51,7 +51,7 @@
 						url = "/myoffice/ezEmail/Admin/Right_DLSentItems.aspx";
 						break;
 					case 9:
-						url = "/myoffice/ezEmail/Admin/mail_Config_Color.aspx";
+						url = "/admin/ezEmail/mailConfigColor.do";
 						break;
 					case 10:
 						url = "/admin/ezOrgan/retireUserManage.do";
