@@ -382,7 +382,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = {"/ezApprovalG/getLineList.do","/ezApprovalG/getTotalAttachInfo.do","/ezApprovalG/getReceiptinfo.do","/ezApprovalG/getOpinionInfo.do"}, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+	public String getLineList(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlPara,HttpServletRequest request, LoginVO userInfo) throws Exception{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);

@@ -6,70 +6,64 @@ function DisplayLineCnt(Resultxml, viewtype) {
 }
 
 function getDataInfo() {
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-
-    if (jobState == "APPROVAL")
-        createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "Mode", "END");
-
-
-    xmlhttp = createXMLHttpRequest();
+	var pUrl = "";
+	
     switch (jobState) {
         case "ATTACH":
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx", true);
+        	pUrl = "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx";
             break;
 
         case "OPINION":
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getOpinionInfo.aspx", true);
+        	pUrl = "/myoffice/ezApprovalG/aspx/getOpinionInfo.aspx";
             break;
 
         case "APPROVAL":
-            xmlhttp.open("POST", "/ezApprovalG/getLineList.do", true);
+        	pUrl = "/ezApprovalG/getLineList.do";
             break;
 
         case "RECIPENT":
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getReceiptinfo.aspx", true);
+        	pUrl = "/myoffice/ezApprovalG/aspx/getReceiptinfo.aspx";
             break;
     }
-    xmlhttp.onreadystatechange = getdoclistSub_after;
-    try {
-        xmlhttp.send(xmlpara);
-    } catch (e) { }
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : true,
+		url : pUrl,
+		data : {
+				docID : DocID,
+				mode  : "END"
+				},
+		success: function(xml){
+			getdoclistSub_after(xml);
+		}        			
+	});
 }
 
-function getdoclistSub_after() {
-    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+function getdoclistSub_after(xml) {
     try {
-        Resultxml = xmlhttp.responseXML;
+        Resultxml = xml;
         if (document.getElementById("lvtDetail").innerHTML != "")
             document.getElementById("lvtDetail").innerHTML = "";
 
-
-        var vRows = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")
-        vWriterID = "";
-        for (var i = 0; i < vRows.length; i++) {
-            if (i == (vRows.length - 1)) {
-                vWriterID = getNodeText(GetChildNodes(GetChildNodes(vRows[i])[0])[4]);
-            }
+        if (xml == "NOTPERMISSTION") {
+            document.getElementById("lvtDetail").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+            document.getElementById("lvtDetail").style.textAlign = "center";
+            return;
         }
-
-
 
         var DocList = new ListView();      
         DocList.SetID("SubDocList");                               
         DocList.SetMulSelectable(false);                        
         DocList.SetRowOnDblClick("lvtDetail_onSel_DBclick");      
-        DocList.DataSource(Resultxml);                             
+        DocList.DataSource(Resultxml);
         DocList.DataBind("lvtDetail");
 
-
-        if (jobState == "APPROVAL") {
-            if (USE_OCS == "YES") {
+        if (USE_OCS == "YES" && jobState == "APPROVAL") {
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
+                setTimeout(check_presence, 100);
+            }
+            else {
                 check_presence();
             }
         }

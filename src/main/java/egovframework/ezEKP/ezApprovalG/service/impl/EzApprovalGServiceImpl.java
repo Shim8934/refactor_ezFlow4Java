@@ -11826,8 +11826,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		sb.append("</DATA>");
 		
-        String writerid = sendoffercheck_enddocinfo.get(0).getWriterID();
-        if(writerid.length()>0){
+		String writerid = null;
+		if (sendoffercheck_enddocinfo.size()>0){
+         writerid = sendoffercheck_enddocinfo.get(0).getWriterID();
+		}
+		if(writerid==null){
+			writerid = "";
+		}
+        if(writerid.length()>0 && writerid != null && writerid != ""){
         	String tempUserID = makeListField(writerid);
         	String tempDocType = makeListField(sendoffercheck_enddocinfo.get(0).getDocType());
         	
