@@ -259,44 +259,54 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
 		
-		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-				
-		long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+		IMAPAccess ia = null;
 		
-		double mailboxUsage = storageUsageAndLimit[0]; // in KBs
-		double mailboxQuota = storageUsageAndLimit[1]; // in KBs
-		int mailPercent;
-		String mailboxDetail;
-		String mailboxQuotaStr;
+		int mailPercent = 0;
+		String mailboxDetail = "";
+		String mailboxQuotaStr = "";
 		
-		logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+			
+			if (mailboxUsage < mailboxQuota) {
+				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+			}
+			else {
+				mailPercent = 100;
+			}
+			
+			if (mailboxUsage >= 1024) {
+				mailboxDetail = (int)(mailboxUsage/1024) + "MB";
+			}
+			else {
+				mailboxDetail = (int)mailboxUsage + "KB";
+			}
+	
+			if (mailboxQuota >= 1024*1024) {
+				mailboxQuotaStr = (int)(mailboxQuota/(1024*1024)) + "G";
+			}
+			else if (mailboxQuota >= 1024) {
+				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
+			}
+			else {
+				mailboxQuotaStr = (int)mailboxQuota + "KB";
+			}
 		
-		if (mailboxUsage < mailboxQuota) {
-			mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+		} catch (Exception e) {
+			
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		else {
-			mailPercent = 100;
-		}
-		
-		if (mailboxUsage >= 1024) {
-			mailboxDetail = (int)(mailboxUsage/1024) + "MB";
-		}
-		else {
-			mailboxDetail = (int)mailboxUsage + "KB";
-		}
-
-		if (mailboxQuota >= 1024*1024) {
-			mailboxQuotaStr = (int)(mailboxQuota/(1024*1024)) + "G";
-		}
-		else if (mailboxQuota >= 1024) {
-			mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
-		}
-		else {
-			mailboxQuotaStr = (int)mailboxQuota + "KB";
-		}
-		
-		ia.close();
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		sb.append("<ROW>");
