@@ -30,7 +30,7 @@
 	<!-- 포탈 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortal_SQL_Oracle.xml"/>
 	<!-- 퍼스널 -->
-	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPersonal_SQL_Oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonal_SQL_Oracle.xml"/>
 	
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
