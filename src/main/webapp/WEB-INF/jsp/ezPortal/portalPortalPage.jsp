@@ -1684,9 +1684,23 @@
 						${pThemeSelectObject}
 					</select>
 				</td>
+				<td bgcolor="#F5f5f5" ><spring:message code="ezPortal.t2000" /></td>
+				 <td bgcolor="#F5f5f5">
+					<select id="Optioninfo">
+                    	<option value="D" selected>
+                        	div(<spring:message code="ezPortal.t2001" />)
+						</option>
+                        <option value="T">
+                        	Table(<spring:message code="ezPortal.t2002" />)
+						</option>
+					</select>
+				</td>
 			</tr>
-			</table>
-			<table class="box">
+			<tr height="20">
+				<td bgcolor="#F5f5f5" colspan="5">&nbsp;<spring:message code="ezPortal.t2003" /></td>
+			</tr>
+		</table>
+		<table class="box">
 				<tr>
 					<td id="td_mainframe" style="width:820px;HEIGHT:320px" valign="top">
 						<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:320px">
@@ -1702,6 +1716,16 @@
 		</body>
 	<% } else { %>
 		<body class="mainbg" ID="_MainBody" runat="server">    
+			<%= strHTML %>
     	</body>
 	<% } %>
+	<% if (mode.equals("view")) { %>
+    <aside style="position:fixed;">
+    <p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    <p class="btn_quick" id="btn_quick_Up" onclick="QuickMove('UP')"><img src="/images/kr/main/quickmenu_btn_up.gif" ></p>
+    <ul class="quickmenu" id="QuickUl">
+     </ul>
+	<p class="btn_quick" id="btn_quick_Down" onclick="QuickMove('DOWN')"><img src="/images/kr/main/quickmenu_btn_down.gif" ></p>
+    </aside>
+    <%} %>
 </html>
