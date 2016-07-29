@@ -32,7 +32,7 @@ var pBigFileUpload = "N";
 function open_userinfo(cn) {
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo_Cross.aspx?id=" + cn, "", feature);
+    window.open("/ezCommon/showPersonInfo.do?id=" + cn, "", feature);
 }
 
 var g_progresswin;
@@ -799,10 +799,7 @@ function event_SaveonClick() {
                         } catch (e) { }
                     }
                     else {
-                        if (result.lastIndexOf("초과합니다.") > 0) {
-                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
-                        }
-                        else if (result.lastIndexOf("초과했습니다.") > 0) {
+                        if (result.indexOf("A4 NO APPEND failed.") > -1) {
                             alert("사서함이 최대 사서함 크기를 초과했습니다.");
                         }
                         else if (result.lastIndexOf("not be created.") > 0) {
@@ -2523,7 +2520,7 @@ function GetGroupEmail(pAddressId) {
         if (pAddressId.indexOf("|!|") > 0) {
             var pItemId = pAddressId.split("|!|")[0];
             var pFolderType = pAddressId.split("|!|")[1];
-            var pUrl = "/myoffice/ezAddress/remoteEWS/address_get_groupemaillist.aspx?id=" + encodeURIComponent(pItemId) + "&foldertype=" + pFolderType;
+            var pUrl = "/ezAddress/addressGetGroupEmailList.do?id=" + encodeURIComponent(pItemId) + "&foldertype=" + pFolderType;
             xmlHttp.open("GET", pUrl, false);
             xmlHttp.send("");
         }
