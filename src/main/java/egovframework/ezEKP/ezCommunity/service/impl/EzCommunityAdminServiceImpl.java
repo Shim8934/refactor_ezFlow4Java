@@ -215,7 +215,6 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STRSELECT", select.toUpperCase());
 		map.put("v_STRQUERY", query);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityAdminDAO.aspSearchKeyGet2(map);
 	}

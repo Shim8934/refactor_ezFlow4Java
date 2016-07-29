@@ -78,6 +78,10 @@ public interface EzApprovalGAdminService {
 
 	public String getSealDeptlList(String listFlag, String deptID, String companyID, String lang) throws Exception;
 	
+	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception;
+
+	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
 	
@@ -85,8 +89,6 @@ public interface EzApprovalGAdminService {
 
 
 
-	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception;
 
-	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception;
 
 }

@@ -2621,7 +2621,6 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_USERINFO_USERID", id);
-		map.put("v_pCount", 0);
 		
 		if (ezCommunityDAO.checkOneLineOwner(map) > 0) {
 			return "OK_MINE";
@@ -3461,7 +3460,6 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 	public Integer boardPropertyGet(String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BOARDID", boardID);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.boardPropertyGet(map);
 	}
@@ -3668,7 +3666,6 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 		Map<String , Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.adminMemberListOkGetE(map);
 	}
@@ -4465,7 +4462,6 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 		map.put("v_PEXCLUDEBOARDID", pExcludeBoardID);
 		map.put("v_PCLUBNO", pClubNo);
 		map.put("v_STRLANG", strLang);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.getBoardTreeGet1(map);
 	}
@@ -4620,21 +4616,18 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 	public int checkIfLeafBoardGet(String boardID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.checkIfLeafBoardGet(map);
 	}
 	
 	public int commMakeOkGet2() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.commMakeOkGet2(map);
 	}
 	
 	public int commMakeOkGet4() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.commMakeOkGet4(map);
 	}
@@ -4642,7 +4635,6 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 	public int commHomeGet2(String code) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_pCount", 0);
 		
 		return ezCommunityDAO.commHomeGet2(map);
 	}

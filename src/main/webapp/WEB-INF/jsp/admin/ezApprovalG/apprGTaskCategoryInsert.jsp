@@ -26,7 +26,8 @@
 		    reParam[3] = "";
 		    reParam[4] = "";
 		    reParam[5] = "";
-		    window.onload = function () {
+		    
+		    $(document).ready(function(){
 		        tbCateName.focus();
 
 		        try {
@@ -87,7 +88,7 @@
 		        if (CateLevel == "1") {
 		            document.getElementById("btnSelPCode").disabled = true;
 		        }
-		    }
+		    });
 		    
 		    function trim(parm_str) {
 		        if (parm_str == "") {

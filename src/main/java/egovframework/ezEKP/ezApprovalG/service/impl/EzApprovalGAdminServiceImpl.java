@@ -656,7 +656,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
-		map.put("v_pCount", 0);
 		map.put("companyID", companyID);
 		
 		try {
@@ -706,7 +705,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
-		map.put("v_pCount", 0);
 		map.put("companyID", companyID);
 		
 		try {
@@ -751,7 +749,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TASKCODE", taskCode);
-		map.put("v_pCount", 0);
 		map.put("companyID", companyID);
 		
 		try {
@@ -895,7 +892,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		map.put("v_TASKCODE", taskCode);
 		map.put("v_DEPTID", deptID);
-		map.put("v_pCount", 0);
 		map.put("companyID", companyID);
 		
 		try {

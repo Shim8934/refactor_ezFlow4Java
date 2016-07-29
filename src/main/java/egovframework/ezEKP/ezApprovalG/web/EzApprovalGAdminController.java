@@ -490,7 +490,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 분류추가,분류수정 메뉴 화면 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 분류추가,분류수정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCategoryInsert.do")
 	public String taskCategoryInsert(Locale locale, HttpServletRequest request, Model model) {
@@ -908,6 +908,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
 		File dir = new File(realPath + dirPath);
+		
         if (!dir.exists()) {
         	dir.mkdirs();
         }
@@ -1136,5 +1137,54 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGAdminService.deleteDeptSealInfo(pSealNum, deptID, companyID);
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 문서유통암호화설정 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageSendInfo.do")
+	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		return "/admin/ezApprovalG/apprGManageSendInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 문서유통암호화설정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/saveOptionInfo.do")
+	@ResponseBody
+	public String saveOptionInfo(HttpServletRequest request) {
+		String optionValue1 = request.getParameter("optionValue1");
+		String optionValue2 = request.getParameter("optionValue2");
+		String optionValue3 = request.getParameter("optionValue3");
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = config.getProperty("upload_approvalG.ROOT");
+		
+//		파일 추가 
+		
+		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";
+		
+		return "";
 	}
 }
