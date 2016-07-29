@@ -175,7 +175,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 	}
 	
 	@Override
-	public PortalTBLPortalPageGeneralVO getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception {
+	public List<PortalTBLPortalPageGeneralVO> getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOUNT", pCount);
 		map.put("v_pUSEFLAG", useFlag);
@@ -999,11 +999,13 @@ System.out.println("right:"+right);
 			
 			int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y");
 			
-			PortalTBLPortalPageGeneralVO resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag);
+			List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag);
 			
 			String result = "";
-			result += "<DATA>";
-			result += commonUtil.getQueryResult(resultXML); 
+			result = "<DATA>";
+			for (int i=0; i<resultXML.size(); i++) {
+				result += commonUtil.getQueryResult(resultXML.get(i));
+			}
 			result += "</DATA>";
 			return result;
 		} catch (Exception e) {
@@ -1585,18 +1587,18 @@ System.out.println("resultXML:"+resultXML);
 				}
 				String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo));
 System.out.println("cacheValue:"+cacheValue);
-				/*if (cacheValue != null && !cacheValue.trim().equals("")) {
+				if (cacheValue != null && !cacheValue.trim().equals("")) {
 					return cacheValue;
-				}*/
+				}
 			}
-System.out.println("하하");			
+		
 			StringBuilder sb = new StringBuilder();
             String strXML = "";
             String pageUID, pageParentUID, pageDisplayName, pageWidth, pageHeight, pageRowLength, pageColumnLength, pageRowSplit, pageColumnSplit;
 
 
             String RootParentUID = getTopParentPageIDStr(pPortalPageID);
-System.out.println("하하1");
+
             String boarderValue = "0";
             int i= 0;
             if (pPortalPageID.equals(RootParentUID)) {

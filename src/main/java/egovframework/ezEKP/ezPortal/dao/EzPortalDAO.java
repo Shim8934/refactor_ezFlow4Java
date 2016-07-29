@@ -102,6 +102,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalGetPortletParametersVO>) list("EzPortalDAO.getPortletPrameters", uID);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageGeneralVO> getUserInfo5 (Map<String, Object> map) {
+		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.getUserInfo5", map);
+	}
+	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
@@ -112,10 +117,6 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (Map<String, Object> map) {
 		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedPortalPageHtml", map);
-	}
-	
-	public PortalTBLPortalPageGeneralVO getUserInfo5 (Map<String, Object> map) {
-		return (PortalTBLPortalPageGeneralVO) select("EzPortalDAO.getUserInfo5", map);
 	}
 	
 	public PortalTBLUserInfoVO topGetUserInfo (Map<String, Object> map) {

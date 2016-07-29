@@ -57,11 +57,11 @@ public interface EzPortalService {
 	
 	public List<PortalGetPortletParametersVO> getPortletParametres (String pUID) throws Exception;
 	
+	public List<PortalTBLPortalPageGeneralVO> getUserInfo5 (int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception;
+	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID) throws Exception;
-	
-	public PortalTBLPortalPageGeneralVO getUserInfo5 (int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception;
 	
 	public PortalTBLUserInfoVO topGetUserInfo (String pUserID) throws Exception;
 	

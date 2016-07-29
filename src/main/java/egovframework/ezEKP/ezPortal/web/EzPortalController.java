@@ -441,7 +441,7 @@ System.out.println("i4:"+i);
 					parentPageID = "top";
 				}
 			}
-			
+System.out.println("parentPageID:"+parentPageID);
 			// 마이포탈페이지 ID
 			if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
 				myPortalPageID = req.getParameter("myPortalPageID");
@@ -577,13 +577,13 @@ System.out.println("strHTML:"+strHTML);
 			String pMoveURL = "";
 			String pUserThemeUID = "";
 			
-			if (!("").equals(req.getParameter("mode")) && req.getParameter("mode") != null) {
+			if (req.getParameter("mode") != null &&  !(req.getParameter("mode")).equals("")) {
 				mode = req.getParameter("mode");
 			}
-			if (!("").equals(req.getParameter("gubunFlag")) && req.getParameter("gubunFlag") != null) {
+			if (req.getParameter("gubunFlag") != null && !(req.getParameter("gubunFlag")).equals("")) {
 				gubunFlag = req.getParameter("gubunFlag");
 			}
-			if (req.getParameter("resetMyParentPageID") != null && req.getParameter("resetMyParentPageID").length() != 0) {
+			if (req.getParameter("resetMyParentPageID") != null && !req.getParameter("resetMyParentPageID").equals("")) {
 				resetMyParentPageID = req.getParameter("resetMyParentPageID");
 			}
 			
@@ -682,7 +682,7 @@ System.out.println("???");
 				resp.getWriter().flush();
 			}
 			
-			if (("").equals(resetMyParentPageID.trim()) && ("edit").equals(mode.trim())) {
+			if (resetMyParentPageID != null && (resetMyParentPageID.trim()).equals("") && mode != null && (mode.trim()).equals("edit")) {
 				pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 			} else {
 				String mainUrl = ezPortalService.getMainUrl(pUserThemeUID);
