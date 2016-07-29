@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletHtmlPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
@@ -23,7 +29,6 @@ import egovframework.let.user.login.vo.LoginVO;
 
 
 public interface EzPortalService {
-	//List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany) throws Exception;
 	public List<PortalTBLTopMenuItemsVO> getTBLTopMenuItems (String strSQL) throws Exception;
 	
 	public List<PortalTBLPortalPageItemsVO> getTBLPortalPageItemsT (String strSQL) throws Exception;
@@ -48,6 +53,10 @@ public interface EzPortalService {
 	
 	public List<PortalGetThemeListVO> getThemeList (String pCompanyID) throws Exception;
 	
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception;
+	
+	public List<PortalGetPortletParametersVO> getPortletParametres (String pUID) throws Exception;
+	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID) throws Exception;
@@ -64,7 +73,15 @@ public interface EzPortalService {
 	
 	public PortalUrlPortletVO urlPortlet (String uID, String creatorID) throws Exception;
 	
-	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception;
+	public PortalPortletGeneralVO getPorletProperties (String pUID) throws Exception;
+	
+	public PortalTBLPortletURLVO getTBLPortletURL (String pUID) throws Exception;
+	
+	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage (String pUID) throws Exception;
+	
+	public PortalTBLPortletImageVO getTBLPortletImage (String pUID) throws Exception;
+	
+	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) throws Exception;
 	
 	public String getTopMenuConfigItem (String itemName, String uID) throws Exception;
 	
@@ -126,15 +143,21 @@ public interface EzPortalService {
 	
 	public String getTopUrl (String pUID) throws Exception;
 	
+	public String getPorletPropertiesStr(String pUID) throws Exception;
+	
+	public String getPortletSubProperties (String pUID, String pType) throws Exception;
+	
+	public String getPortletParameters (String pUID) throws Exception;
+	
+	public String checkViewRight (String uID, String accessIDList) throws Exception;
+	
+	public String loadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
 	
 	public int checkEditRight (String uID, String accessIDList) throws Exception;
-	
-	//public int checkViewRight (String uID, String accessIDList) throws Exception;
-	
-	public String checkViewRight (String uID, String accessIDList) throws Exception;
 	
 	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
 	

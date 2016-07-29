@@ -6,14 +6,20 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletHtmlPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
@@ -91,6 +97,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalDAO.getPortalPageCategory"); 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalGetPortletParametersVO> getPortletParametres (String uID) {
+		return (List<PortalGetPortletParametersVO>) list("EzPortalDAO.getPortletPrameters", uID);
+	}
+	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
@@ -121,6 +132,30 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public PortalUrlPortletVO urlPortlet (Map<String, Object> map) {
 		return (PortalUrlPortletVO) select("EzPortalDAO.urlPortlet", map);
+	}
+	
+	public PortalPortletGeneralVO getPorletProperties (Map<String, Object> map) {
+		return (PortalPortletGeneralVO) select("EzPortalDAO.getPorletProperties", map);
+	}
+	
+	public PortalTBLPortletURLVO getTBLPortletURL (String pUID) {
+		return (PortalTBLPortletURLVO) select("EzPortalDAO.getTBLPortletURL", pUID);
+	}
+	
+	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage (String pUID) {
+		return (PortalTBLPortletHtmlPageVO) select("EzPortalDAO.getTBLPortletHtmlPage", pUID);
+	}
+	
+	public PortalTBLPortletImageVO getTBLPortleImage (String pUID) {
+		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortleImage", pUID);
+	}
+	
+	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) {
+		return (PortalTBLPortletBoardVO) select("EzPortalDAO.getTBLPortletBoard", pUID);
+	}
+	
+	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {
+		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", map);
 	}
 	
 	public String getTopMenuConfigItem(Map<String, Object> map) {
@@ -183,9 +218,16 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getMainUrl", pUID);
 	}
 	
-	public int getUserInfo4(Map<String, Object> map) {
-		select("EzPortalDAO.getUserInfo4", map);
-		return (int) map.get("v_pCount");
+	public String checkViewRight(Map<String, Object> map) {
+		return (String) select("EzPortalDAO.checkViewRight", map);
+	}
+	
+	public String getParentUID (String parentTopMenuID) {
+		return (String) select("EzPortalDAO.getParentUID", parentTopMenuID);
+	}
+	
+	public String getPortalParentUID (String temp) {
+		return (String) select("EzPortalDAO.getPortalParentUID", temp);
 	}
 	
 	public int getMenuItemHtml(Map<String, Object> map) {
@@ -202,24 +244,9 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (int) select("EzPortalDAO.checkEditRight", map);
 	}
 	
-	/*public int checkViewRight(Map<String, Object> map) {
-		return (int) select("EzPortalDAO.checkViewRight", map);
-	}*/
-	
-	public String checkViewRight(Map<String, Object> map) {
-		return (String) select("EzPortalDAO.checkViewRight", map);
-	}
-	
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {
-		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", map);
-	}
-	
-	public String getParentUID (String parentTopMenuID) {
-		return (String) select("EzPortalDAO.getParentUID", parentTopMenuID);
-	}
-	
-	public String getPortalParentUID (String temp) {
-		return (String) select("EzPortalDAO.getPortalParentUID", temp);
+	public int getUserInfo4(Map<String, Object> map) {
+		select("EzPortalDAO.getUserInfo4", map);
+		return (int) map.get("v_pCount");
 	}
 	
 	public void deleteCacheValue(Map<String, Object> map) {
