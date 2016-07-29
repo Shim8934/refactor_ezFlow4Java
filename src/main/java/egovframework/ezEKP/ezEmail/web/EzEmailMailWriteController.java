@@ -73,6 +73,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -2087,7 +2088,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	        pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
 	        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
         
-		} catch (MessagingException e) {
+		} catch (Exception e) {
+			pResult = e.getMessage();
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -2361,6 +2363,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailNameCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pOrganSearchList = "";
 		String pOrganCellList = "displayname";
 		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
@@ -2427,7 +2431,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType);
         String dlXML = getOrganDLSearch(pDLSearchList, pDLCellList, pDLPropList, pDLListType);
-        String addressXML = getAddressSearch(pAddressFilter);
+        String addressXML = getAddressSearch(pAddressFilter, userInfo);
         return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
 	}
 	
@@ -2682,7 +2686,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
     }
 	
 	/**
-	 * 사원 DL 정보 호출 함수
+	 * 공용배포그룹 정보 호출 함수
 	 */
 	private String getOrganDLSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
         String pResult = "";
@@ -2698,31 +2702,38 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
     }
 	
 	/**
-	 * 사원 Address 정보 호출 함수
+	 * 주소록 정보 호출 함수
 	 */
-	private String getAddressSearch(String pFilter) {
-        String pResult = "";
+	private String getAddressSearch(String pFilter, LoginVO userInfo) {
+        String returnValue = "";
         try {
-        	//TODO : ezAddress 만들어지면 연결
-//            XmlDocument xmldom = new XmlDocument();
-//            StringBuilder Rvalue = new StringBuilder("");
-//            GetSearcAddressInfo(pFilter, "P", ref Rvalue);
-//            string _field = "STYPE,AddressID, SNAME,'DB' AS FLODERTYPE , SEMAIL, SCOMPANY, SDEPT, STITLE";
-//            //ezAddress.AddressInfo _ezAddress = new ezAddress.AddressInfo();
-//            string DBSearchList = _ezAddress.GetSearchList(userinfo.CompanyID + "," + userinfo.DeptID, "", "SNAME LIKE '%" + pFilter + "%'", _field, 0, 100, 0, "");
-//            xmldom = GetXmlReaderString(DBSearchList);
-//            if (xmldom.SelectNodes("DATA/ROW").Count > 0) {
-//                foreach (XmlNode Node in xmldom.SelectNodes("DATA/ROW")) {
-//                    Rvalue.Append(Node.OuterXml);
-//                }
-//            }
-//            pResult = Rvalue.ToString();
-        	pResult = "";
+            
+            String field = "STYPE, AddressID, SNAME, SEMAIL, SCOMPANY, SDEPT, STITLE";
+            pFilter = "SNAME LIKE '%" + pFilter + "%'";
+            
+            List<AddressInfoVO> addressInfoList = ezAddressService.getSearchList("'" + userInfo.getCompanyID() + "', '" + userInfo.getDeptID() + "'", "", pFilter, field, 0, 100, 0);
+            
+            StringBuilder sb = new StringBuilder();
+            
+            for (AddressInfoVO addressInfo : addressInfoList) {
+            	sb.append("<ROW>");
+            	sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+            	sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
+            	sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
+            	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
+            	sb.append("<SEMAIL>" + addressInfo.getsEmail() + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + addressInfo.getsCompany() + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + addressInfo.getsDept() + "</SDEPT>");
+            	sb.append("<STITLE>" + addressInfo.getsTitle() + "</STITLE>");
+            	sb.append("</ROW>");
+            }
+            
+            returnValue = sb.toString();
         } catch (Exception e) {
         	e.printStackTrace();
-            pResult = "EXCEPTION";
+        	returnValue = "EXCEPTION";
         }
-        return pResult;
+        return returnValue;
     }
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
