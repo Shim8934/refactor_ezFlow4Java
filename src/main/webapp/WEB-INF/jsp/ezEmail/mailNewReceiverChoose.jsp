@@ -1247,7 +1247,7 @@
 	                rgParams["deptid"] = "";
 	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 	                feature = feature + GetShowModalPosition(540, 460);
-	                window.showModalDialog("/myoffice/ezPersonal/PersonSearch/checkName2_cross.aspx", rgParams, feature);
+	                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 	
 	                if (rgParams["deptid"] != "") {
 	                    bSearch = true;
@@ -1721,7 +1721,7 @@
 	            if (length > 0) {
 	                var id = GetAttribute(selectdata[0], "DATA2");
 	                var dept = GetAttribute(selectdata[0], "DATA10");
-	                window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }
 	        function ListViewNodeDblClick() {
@@ -1989,7 +1989,7 @@
 	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        }
 	        function open_userinfo(cn) {
-	            window.showModalDialog("/myoffice/common/ShowPersonInfo_Cross.aspx?id=" + cn, "", "dialogHeight=500px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
+	            window.showModalDialog("/ezCommon/showPersonInfo.do?id=" + cn, "", "dialogHeight=500px;dialogWidth=420px;status:no;scroll:auto; help:no; edge:sunken");
 	        }
 	        var mail_select_dlmember_cross_dialogArguments = new Array();
 	        function dlmember_click() {
@@ -2214,11 +2214,12 @@
 	            var FolderType = GetAttribute(listview[0], "DATA4");
 	            var ID = GetAttribute(listview[0], "DATA1");
 	            var Url = "";
-	            if(FolderType =="P")
+	            /* if(FolderType =="P")
 	                Url = "../ezAddress/RemoteEWS/address_select_groupemaillist.aspx?id=" + encodeURIComponent(ID) + "&foldertype=" + escape(FolderType);
 	            else
-	                Url = "../ezAddress/Remote/address_select_groupemaillist.aspx?id=" + encodeURIComponent(ID) + "&foldertype=" + escape(FolderType);
-	
+	                Url = "../ezAddress/Remote/address_select_groupemaillist.aspx?id=" + encodeURIComponent(ID) + "&foldertype=" + escape(FolderType); */
+	            Url = "/ezAddress/addressSelectGroupMailList.do?id=" + encodeURIComponent(ID) + "&foldertype=" + encodeURI(FolderType);
+	            
 	            if (ReturnFunction != null)
 	            {
 	                var rtnValue = { "name": new Array(), "email": new Array() };
@@ -2441,7 +2442,7 @@
 	        var xmlHTTP = null;
 	        function get_Address_FullTree() {
 	            xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("POST", "/myoffice/ezAddress/Remote/address_get_fulltree.aspx", true);
+	            xmlHTTP.open("POST", "/ezAddress/addressGetFullTree.do", true);
 	            xmlHTTP.onreadystatechange = event_get_Address_FullTree;
 	            xmlHTTP.send();
 	        }
@@ -2695,10 +2696,13 @@
                 createNodeAndInsertText(xmlpara, objNode, "PAGE", page);
                 createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", pagesize);
                 createNodeAndInsertText(xmlpara, objNode, "SEARCHGUBUN", searchgubun);
-                if(foldertype =="P")
+                
+                /* if(foldertype =="P")
                     xmlhttp.open("POST", "/myoffice/ezAddress/remoteEWS/address_get_list_mailCall.aspx", false);
                 else
-                    xmlhttp.open("POST", "/myoffice/ezAddress/remote/address_get_list_mailCall.aspx", false);
+                    xmlhttp.open("POST", "/myoffice/ezAddress/remote/address_get_list_mailCall.aspx", false); */
+                xmlhttp.open("POST", "/ezAddress/addressGetListMailCall.do", false);
+                
                 xmlhttp.send(xmlpara);
                 if(CrossYN())
                     return xmlhttp.responseXML;

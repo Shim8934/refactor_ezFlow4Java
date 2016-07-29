@@ -44,7 +44,7 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailGeneral.do";
 	                    break;
 	                case "MailEnv_div2":
-	                        document.getElementById("MailEnv_ifrm").src = "/myoffice/ezAddress/address_config.aspx";
+	                        document.getElementById("MailEnv_ifrm").src = "/ezAddress/addressConfig.do";
 	                    break;
 	                case "MailEnv_div3":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailPop3.do";

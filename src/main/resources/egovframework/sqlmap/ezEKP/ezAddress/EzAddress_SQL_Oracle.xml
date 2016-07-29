@@ -4,7 +4,10 @@
 <sqlMap namespace="ezAddress">
 	
 	<typeAlias  alias="AddressVO"					type="egovframework.ezEKP.ezAddress.vo.AddressVO"/>
-	<typeAlias  alias="SimpleAddressVO"					type="egovframework.ezEKP.ezAddress.vo.SimpleAddressVO"/>
+	<typeAlias  alias="SimpleAddressVO"				type="egovframework.ezEKP.ezAddress.vo.SimpleAddressVO"/>
+	<typeAlias  alias="SubTreeInfoVO"				type="egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO"/>
+	<typeAlias  alias="AddressInfoVO"				type="egovframework.ezEKP.ezAddress.vo.AddressInfoVO"/>
+	
 	
 	<resultMap id="addressList" class="AddressVO">
 		<result property="zipcode" 					column="zipcode" 				columnIndex="1"/>
@@ -15,8 +18,16 @@
 	</resultMap>
 	
 	<resultMap id="simpleAddressVO" class="SimpleAddressVO">
-		<result property="name" 					column="name" 				columnIndex="1"/>
+		<result property="name" 					column="name" 					columnIndex="1"/>
 		<result property="email" 					column="email" 					columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="subTreeInfoVO" class="SubTreeInfoVO">
+		<result property="folderId" 				column="folderid" 				columnIndex="1"/>
+		<result property="ownerId" 					column="ownerid" 				columnIndex="2"/>
+		<result property="folderType" 				column="foldertype" 			columnIndex="3"/>
+		<result property="folderName" 				column="foldername" 			columnIndex="4"/>
+		<result property="childCount" 				column="childcount" 			columnIndex="5"/>
 	</resultMap>
 	
 	<procedure id="EzAddressDAO.getSimpleAddress" parameterClass="Map" resultMap="simpleAddressVO">
@@ -25,6 +36,89 @@
 	
 	<procedure id="EzAddressDAO.setSimpleAddress" parameterClass="Map">
 		{CALL EZADDRESS.EZSP_SET_SIMPLE_ADDRESS(#v_USERID#, #v_SN#, #v_NAME#, #v_EMAIL#, #v_STATUS#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getListType" parameterClass="Map" resultClass="String">
+		{CALL EZADDRESS.EZSP_GETLISTTYPE(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getListCnt" parameterClass="Map" resultClass="String">
+		{CALL EZADDRESS.EZSP_GETLISTCNT(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getAddressCount" parameterClass="Map" resultClass="String">
+		{CALL EZADDRESS.EZSP_GETADDRESSCOUNT(#v_POWNERID#, #v_PFOLDERID#, #v_PFILTER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getAddressList" parameterClass="Map" resultClass="AddressInfoVO">
+		{CALL EZADDRESS.EZSP_GETADDRESSLIST(#v_POWNERID#, #v_PFOLDERID#, #v_PORDERNAME#, #v_PORDER1#, #v_PORDER2#, #v_PFILTER#, #v_PFIELDLIST#, #v_PTOTAL#, #v_PSTART#, #v_PCOUNT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getAddressInfo2" parameterClass="Map" resultClass="AddressInfoVO">
+		{CALL EZADDRESS.EZSP_GETADDRESSINFO(#v_PADDRESSID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getSearchCount" parameterClass="Map" resultClass="Integer">
+		{CALL EZADDRESS.EZSP_GETSEARCHCOUNT(#v_PIDLIST#, #v_PFILTER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.insertAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_INSERTADDRESS(
+			#v_POWNERID#, #v_PFOLDERID#, #v_PCREATORID#, #v_PCREATORNAME#, 
+			#v_PCREATORNAME2#, #v_PPHOTOPATH#, #v_PSNAME#, #v_PSCOMPANY#, #v_PSDEPT#, 
+			#v_PSTITLE#, #v_PSCOMPANYPHONE#, #v_PSFAX#, #v_PSMOBILE#, #v_PSEMAIL#, 
+			#v_PSHOMEPAGE#, #v_PSCOMPANYZIP#, #v_PSCOMPANYADDR#, #v_PSHOMEZIP#, #v_PSHOMEADDR#, 
+			#v_PSMEMO#, #v_PSTYPE#, #v_PHASATTACH#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.updateAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_UPDATEADDRESS(
+			#v_PMODIFIERID#, #v_PMODIFIERNAME#, #v_PMODIFIERNAME2#, #v_PPHOTOPATH#, #v_PSNAME#, 
+			#v_PSCOMPANY#, #v_PSDEPT#, #v_PSTITLE#, #v_PSCOMPANYPHONE#, #v_PSFAX#, 
+			#v_PSMOBILE#, #v_PSEMAIL#, #v_PSHOMEPAGE#, #v_PSCOMPANYZIP#, #v_PSCOMPANYADDR#, 
+			#v_PSHOMEZIP#, #v_PSHOMEADDR#, #v_PSMEMO#, #v_PHASATTACH#, #v_PADDRESSID#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.deleteAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_DELETEADDRESS(#v_PADDRESSID#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.setAddressConfig" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_SETADDRESSCONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PLISTTYPE#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.moveAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_MOVEADDRESS(#v_PADDRESSID#, #v_PFOLDERID#, #v_POWNERID#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.copyAddress" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_COPYADDRESS(#v_PADDRESSID#, #v_PFOLDERID#, #v_POWNERID#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.insertFolder" parameterClass="Map" resultClass="String">
+		{CALL EZADDRESS.EZSP_INSERTFOLDER(
+			#v_PPARENTID#, #v_POWNERID#, #v_PFOLDERTYPE#, #v_PFOLDERNAME#, #v_PFOLDERNAME2#, #v_PMAXSEQ#, 
+			#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.updateFolder" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_UPDATEFOLDER(#v_PFOLDERID#, #v_PFOLDERNAME#, #v_PFOLDERNAME2#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.deleteFolder" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_DELETEFOLDER(#v_PFOLDERID#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.moveFolder" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_MOVEFOLDER(#v_PFOLDERID#, #v_PNEWPARENTID#, #v_PNEWOWNERID#, #v_PNEWFOLDERTYPE#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.copyFolder" parameterClass="Map" resultClass="String">
+		{CALL EZADDRESS.EZSP_COPYFOLDER(#v_PFOLDERID#, #v_PNEWPARENTID#, #v_PNEWOWNERID#, #v_PNEWFOLDERTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzAddressDAO.getSearchList" parameterClass="Map" resultClass="AddressInfoVO">
+		{CALL EZADDRESS.EZSP_GETSEARCHLIST(#v_PIDLIST#, #v_PORDERNAME#, #v_PORDER1#, #v_PORDER2#, #v_PFILTER#, #v_PFIELDLIST#, #v_PTOTAL#, #v_PSTART#, #v_PCOUNT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzAddressDAO.getAddressInfo" resultMap="addressList">
@@ -42,5 +136,40 @@
 			ORDER BY dong
 		]]>
 	</select>	
+	
+	<select id="EzAddressDAO.getSubTreeInfo" parameterClass="Map" resultMap="subTreeInfoVO">
+		<![CDATA[
+			SELECT
+				A.folderid, 
+				A.ownerid, 
+				A.foldertype, 
+				A.foldername, 
+				COUNT(B.folderid) as childcount
+			FROM
+				ezAddress.tblfoldertree A,
+				ezAddress.tblfoldertree B
+			WHERE 
+				A.folderid = B.parentid(+) 
+				AND A.parentid=#v_PARENTID# 
+				AND A.ownerid=#v_OWNERID#
+			GROUP BY 
+				A.folderid, 
+				A.ownerid, 
+				A.foldertype, 
+				A.foldername
+		]]>
+	</select>
+	
+	<select id="EzAddressDAO.getMaxSeq" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(MAX(seq), '0') 
+			FROM 
+				ezAddress.tblfoldertree
+			WHERE 
+				parentid = #v_PPARENTID#
+				and ownerid = #v_POWNERID#
+		]]>
+	</select>
 	
 </sqlMap>

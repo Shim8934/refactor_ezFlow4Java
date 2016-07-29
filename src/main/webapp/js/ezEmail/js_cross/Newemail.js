@@ -858,7 +858,7 @@ function CCDetail_view(obj) {
 function show_personinfo(email) {
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo.aspx?email=" + encodeURI(email), "", feature);
+    window.open("/ezCommon/showPersonInfo.do?email=" + encodeURI(email), "", feature);
 }
 function MailReadOpen() {
     var pItemID;

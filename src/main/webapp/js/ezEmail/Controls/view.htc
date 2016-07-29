@@ -1,0 +1,65 @@
+﻿<!--Copyright (c) 2000 Microsoft Corporation.  All rights reserved. -->
+
+<property	name="acceptLang"		get="get_AcceptLang"    put="put_AcceptLang"/>
+<property	name="query"			get="get_Query" />
+<property name="viewDescriptor"		put="put_xslSrc"	    get="get_xslSrc" />
+<property name="storeType"			put="put_iStoreType"    get="get_iStoreType" />
+<property name="url"				put="put_szURL"		    get="get_szURL" />
+<property name="viewClass"			put="put_szViewClass"   get="get_szViewClass"	/>
+<property name="timezone"			put="put_timezone"      get="get_timezone"	/>
+<property name="itemCount" />
+<property name="pageCount" />
+<property name="rowsPerPage"	    put="put_rowsPerPage"   get="get_rowsPerPage" />
+<property name="linkSpec"		    put="put_linkSpec"	    get="get_linkSpec"	/>
+<property name="target"			    put="put_target"	    get="get_target" />
+<property name="emptyURL"		    put="put_emptyURL"	    get="put_emptyURL"/>
+
+<!-- veritas & yiilyoul-->
+<property name="showMessage"            put="put_showMessage"   get="get_showMessage" />
+<property name="selectColor"            put="put_selectColor" />
+<property name="hotTrackColor"          put="put_hotTrackColor" />
+<property name="readMailDlgUrl"         put="put_readDlgUrl" />
+<property name="xmlObjDescription"		get="get_xmlObjDescription" />
+<property name="imgBaseRoot"	        put="put_baseRoot" />
+<property name="DisplayType"            put="put_DisplayTyep" />
+<property name="XSLFile"			    put="put_XSLFile" />
+<property name="position"			    put="put_position"      get="get_position" />
+<property name="bselectRow"		        put="put_bselectRow" />
+<property name="viewselectindex"        put="put_viewselectindex" />
+
+<method	  name="update"					internalName="f_Update"	 />	
+<method	  name="deleteSelectedItems"	internalName="f_deleteSelectedItems" />
+<method	  name="refreshPage"			internalName="f_refreshPage"/>
+<method	  name="gotoPage"				internalName="f_gotoPage" />
+<method	  name="nextPage"				internalName="f_nextPage" />
+<method	  name="previousPage"			internalName="f_previousPage" />
+<method	  name="openMessage"			internalName="f_openMessage" />
+<method	  name="getSelectedXML"			internalName="f_getSelectedCollection"	/>
+<method   name="docReady"               internalName="MailListInit" />
+<method   name="xmlViewStyle"           internalName="f_XmlViewStyle" />
+<method   name="unboldRow"		        internalName="mf_unboldRow" />
+<method   name="getNextRow" />
+<method   name="getCurrentRow" />
+<method   name="seekURL"					internalName="f_seekURL"/>
+<event id="_ideventOnSelectItem"	name="onSelectItem"	/>
+<event id="_ideventOnKeyDown"		name="onkeydown" />
+<event id="_ideventonRefreshPage"	name="onRefreshPage" />
+<event id="_ideventonPageChange"	name="onPageChange"	/>
+<event id="_ideventonExpandGroup"	name="onExpandGroup" />
+<event id="_ideventonChangeSort"	name="onChangeSort"	/> 
+<event id="_ideventonBeforeDelete"  name="onbeforedelete" />
+<event id="__ideventonError"		name="onerror" />
+
+<attach	event="ondragstart"		handler="event_ondragstart"	/>
+<attach	event="ondblclick"		handler="event_ondblclick" />
+<attach	event="onmousedown"		handler="event_onmousedown"	/>
+<attach	event="onmouseup"		handler="event_onmouseup" />
+
+<!-- veritas -->
+<attach event="onmouseover" handler="event_onmouseover" />
+<attach event="onmouseout"  handler="event_onmouseout" />
+<attach event="onclick"     handler="event_onclick" />
+
+<attach	id="_ideventonkeydown" event="onkeydown" handler="event_onkeydown"/>
+<attach	id="_ideventonselectstart" event="onselectstart" handler="event_onselectstart"/>
+<SCRIPT	LANGUAGE=JavaScript src="./Controls/view.js" ></SCRIPT>

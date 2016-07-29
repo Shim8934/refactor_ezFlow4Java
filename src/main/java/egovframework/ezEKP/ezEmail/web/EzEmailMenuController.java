@@ -32,6 +32,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -69,7 +70,11 @@ public class EzEmailMenuController {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		StringBuilder rootFolderXML = new StringBuilder();
+		StringBuilder rootAddressXML = new StringBuilder();
 		
 		IMAPAccess ia = null;
 		try {
@@ -143,11 +148,22 @@ public class EzEmailMenuController {
 			}
 		}
 		
+		rootAddressXML.append("<tree>");
+		rootAddressXML.append("<nodes>");
+        String xmlFormat = "<node imgidx=\"%s\" caption=\"%s\" ownerid=\"%s\" type=\"%s\" folderid=\"%s\" changekey=\"%s\" hassub=\"%s\"></node>";
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000038", locale), user.getId(), "P", "0", "", "1"));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000039", locale), user.getDeptID(), "D", "0", "", "1"));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000040", locale), user.getCompanyID(), "C", "0", "", "1"));
+        rootAddressXML.append("</nodes>");
+        rootAddressXML.append("</tree>");
+		
+		
 		String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		model.addAttribute("use_ArchiveMailBox", use_ArchiveMailBox);
 		model.addAttribute("mailServerAddress", mailServerAddress);
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
+		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		return "ezEmail/mailLeft";
 	}
 	

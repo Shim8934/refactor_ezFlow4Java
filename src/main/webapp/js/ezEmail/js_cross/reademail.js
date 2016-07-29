@@ -571,7 +571,7 @@ function show_senderprofile() {
 
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo_Cross.aspx?email=" + g_fromEmail, "", feature);
+    window.open("/ezCommon/showPersonInfo.do?email=" + g_fromEmail, "", feature);
 }
 function show_personinfo(email) {
     if (g_notiSSO == "1")
@@ -579,7 +579,7 @@ function show_personinfo(email) {
 
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/myoffice/common/ShowPersonInfo_Cross.aspx?email=" + encodeURI(email), "", feature);
+    window.open("/ezCommon/showPersonInfo.do?email=" + encodeURI(email), "", feature);
 }
 function attach_SelectAll() {
     if (CrossYN()) {

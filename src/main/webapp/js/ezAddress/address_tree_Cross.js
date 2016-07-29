@@ -3,13 +3,16 @@ function get_Address_childXML(parentid, ownerid, foldertype)
 {
     var strXML = "<DATA><PARENTID>" + parentid + "</PARENTID><OWNERID>" + ownerid + "</OWNERID><FOLDERTYPE>" + foldertype + "</FOLDERTYPE></DATA>";
     AddressTreeHttp = createXMLHttpRequest();
-    if (foldertype == "P")
-        AddressTreeHttp.open("POST", "/myoffice/ezAddress/RemoteEWS/address_get_childtree.aspx", false);
-    else
-        AddressTreeHttp.open("POST", "/myoffice/ezAddress/remote/address_get_subtree.aspx", false);
+    
+    /*if(foldertype=="P")
+    	AddressTreeHttp.open("POST", "/myoffice/ezAddress/RemoteEWS/address_get_childtree.aspx", false);
+	else
+    	AddressTreeHttp.open("POST", "/myoffice/ezAddress/remote/address_get_subtree.aspx", false);*/
+    AddressTreeHttp.open("POST", "/ezAddress/addressGetSubTree.do", false);
+    
     AddressTreeHttp.send(strXML);
     if (AddressTreeHttp.status == 200) {
-        if (foldertype == "P") {
+        /*if (foldertype == "P") {
             var IDNodes = AddressTreeHttp.responseXML.getElementsByTagName("FOLDERID");
             var ChangeKeyNodes = AddressTreeHttp.responseXML.getElementsByTagName("CHANGEKEY");
             var OwnerNodes = AddressTreeHttp.responseXML.getElementsByTagName("OWNERID");
@@ -34,7 +37,7 @@ function get_Address_childXML(parentid, ownerid, foldertype)
             }
             return childXML;
         }
-        else {
+        else {*/
             var IDNodes = AddressTreeHttp.responseXML.getElementsByTagName("FOLDERID");
             var OwnerNodes = AddressTreeHttp.responseXML.getElementsByTagName("OWNERID");
             var TypeNodes = AddressTreeHttp.responseXML.getElementsByTagName("FOLDERTYPE");
@@ -57,7 +60,7 @@ function get_Address_childXML(parentid, ownerid, foldertype)
             }
 
             return childXML;
-        }
+        /*}*/
     }
     else {
         AddressTreeHttp = null;

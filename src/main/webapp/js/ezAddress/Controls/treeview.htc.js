@@ -1,6 +1,4 @@
-﻿window['treeview.htc'] = {
-'TreeView' : 
-(function TreeView(thisobjid, elobjid) {
+﻿function TreeView(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
     var element = document.getElementById(elobjid); // 추가
@@ -123,7 +121,7 @@
             var childel = document.getElementById(g_childid + nodeIdx);
 
             if (childel.style.display == "none") {
-                childel.style.display = "";
+                childel.style.display = "inline-block";
                 if (toggleel.getAttribute('src').indexOf(g_baseImage["plus_normal"]) >= 0)
                     toggleel.setAttribute('src', g_baseImage["minus_normal"]);
                 else
@@ -158,7 +156,7 @@
                 return;
 
             if (element.all(g_childid + nodeIdx).style.display == "none") {
-                element.all(g_childid + nodeIdx).style.display = "";
+                element.all(g_childid + nodeIdx).style.display = "inline-block";
                 if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) >= 0)
                     element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"];
                 else
@@ -295,16 +293,25 @@
             }
             else {
                 var childXML = new DOMParser().parseFromString("<nodes>" + childxml + "</nodes>", "text/xml");
+                //편지함관리에서 추가 후 해당 노드 유지 하도록 변경
+                if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length > 0)
+                    g_nodeArray["nodeXML"][nodeIdx].removeChild(g_nodeArray["nodeXML"][nodeIdx].childNodes.item(0));
 
                 g_nodeArray["nodeXML"][nodeIdx].appendChild(
                     childXML.documentElement.cloneNode(true)
                     );
 
+                if (childXML.documentElement.childNodes.length) {
+                    if (toggleel.getAttribute('src').indexOf(g_baseImage["dot_normal"]) >= 0)
+                        toggleel.setAttribute('src', g_baseImage["minus_normal"]);
+                }
                 childXML = null;
                 childel.innerHTML = make_childHtml(nodeIdx);
+                
             }
         }).call(this,nodeIdx, childxml) :
         (function(nodeIdx, childxml) {
+            // IE
             if (childxml == "") {
                 element.all(g_childid + nodeIdx).style.display = "none";
                 if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
@@ -376,8 +383,13 @@
                     imgnode = null;
                 }
             }
-            else
-                node.parentElement.removeChild(node);
+            else {
+                if (node.parentElement.parentElement.childNodes.length == 1) {
+                    node.parentElement.parentElement.remove();
+                }
+                else
+                    node.parentElement.remove();
+            }
 
             g_nodeArray["nodeXML"][nodeIdx].parentNode.removeChild(g_nodeArray["nodeXML"][nodeIdx]);
             g_nodeArray["nodeXML"][nodeIdx] = null;
@@ -454,13 +466,15 @@
 
             var depth = g_nodeArray["depth"][nodeIdx].length;
             var node = document.getElementById(g_nodeid + nodeIdx)
-            var childNodes = document.getElementById(g_nodeid + nodeIdx).parentElement.parentElement.children.item(1);
+            var childNodes = document.getElementById(g_nodeid + nodeIdx).parentElement.parentElement.parentElement.childNodes[1];
 
             if (childNodes.innerHTML == "") {
                 var imgnode = node.parentElement.children.item(depth - 1);
 
-                if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_normal"]) >= 0)
+                if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_normal"]) >= 0) {
                     imgnode.setAttribute('src', g_baseImage["plus_normal"]);
+                    imgnode.style.cursor = "pointer";
+                }
                 else if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_end"]) >= 0)
                     imgnode.setAttribute('src', g_baseImage["plus_end"]);
 
@@ -469,21 +483,21 @@
             else {
 
                 var childXML = createXmlDom(); 
-                childXML.loadXMLString(nodeXML);
+                childXML = loadXMLString(nodeXML);
                 var depth = g_nodeArray["depth"][nodeIdx].length;
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div style='height:16px;overflow-y:hidden;white-space:nowrap;'><nobr>";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
-                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "'>");
+                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='16' height='16' >");
                     else
                         nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
 
                 if (childXML.documentElement.attributes.getNamedItem("hassub") != null)
-                    nodeHtml += ("<img src='" + g_baseImage["plus_end"]);
+                    nodeHtml += ("<img style = 'cursor:pointer' src='" + g_baseImage["plus_end"]);
                 else
                     nodeHtml += ("<img src='" + g_baseImage["dot_end"]);
 
@@ -493,9 +507,9 @@
 
                 nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
 					    g_baseClass["normal"] + "'");
-                nodeHtml += ">";
+                nodeHtml += " style='display:inline-block;'>";
 
-                nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").textContent) + "</span></div>");
+                nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").textContent) + "</span></nobr></div>");
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
 
                 var nodeDIV = document.createElement("DIV");
@@ -503,21 +517,21 @@
                 childNodes.children.item(0).appendChild(nodeDIV);
 
                 var prelastnode = childNodes.children.item(0).children.item(childNodes.children.item(0).children.length - 2);
-                if (prelastnode.children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["dot_end"]) >= 0) {
-                    prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["dot_normal"]);
+                if (prelastnode.children.item(0).children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["dot_end"]) >= 0) {
+                    prelastnode.children.item(0).children.item(0).children.item(depth).setAttribute('src', g_baseImage["dot_normal"]);
                 }
                 else {
-                    if (prelastnode.children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["plus_end"]) >= 0)
-                        prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["plus_normal"]);
+                    if (prelastnode.children.item(0).children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["plus_end"]) >= 0)
+                        prelastnode.children.item(0).children.item(0).children.item(depth).setAttribute('src', g_baseImage["plus_normal"]);
                     else
-                        prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["minus_normal"]);
+                        prelastnode.children.item(0).children.item(0).children.item(depth).setAttribute('src', g_baseImage["minus_normal"]);
 
                     changeRecursiveImg(prelastnode.children.item(1), false, depth, 0);
                 }
 
-                var depthlist = g_nodeArray["depth"][prelastnode.children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]];
+                var depthlist = g_nodeArray["depth"][prelastnode.children.item(0).children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]];
                 depthlist = depthlist.substr(0, depthlist.length - 1) + "1";
-                g_nodeArray["depth"][prelastnode.children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]] = depthlist;
+                g_nodeArray["depth"][prelastnode.children.item(0).children.item(0).children.item(depth + 2).id.split(g_nodeid)[1]] = depthlist;
 
                 g_nodeArray["nodeXML"][g_nodeCount] = g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement);
                 g_nodeArray["depth"][g_nodeCount] = g_nodeArray["depth"][nodeIdx] + "0";
@@ -555,7 +569,7 @@
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div style='height:16px;overflow-y:hidden;white-space:nowrap;' >";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
                         nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "'>");
@@ -574,7 +588,7 @@
 
                 nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
 					    g_baseClass["normal"] + "'");
-                nodeHtml += ">";
+                nodeHtml += " style='display:inline-block;'>";
 
                 nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").text) + "</span></div>");
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
@@ -714,14 +728,15 @@
             var targetEl = event.target;
             var elementid = targetEl.id;
             if (elementid.indexOf(g_nodeid) == 0) {
-                this.onnodedblclick();     
+                this.onnodedblclick();         
             }
         }).call(this, event) :
         (function() {
+            // IE
             var elementid = window.event.srcElement.id;
 
             if (elementid.indexOf(g_nodeid) == 0) {
-                this.onnodedblclick();  
+                this.onnodedblclick();        
             }
         }).call(this);            
     }
@@ -929,7 +944,7 @@
 
 
 
-    function make_childHtml(nodeIdx) {
+    function make_childHtml(nodeIdx) {        
         return (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function(nodeIdx) {
             if (nodeIdx == 0) {
@@ -941,14 +956,19 @@
                 var depth = g_nodeArray["depth"][nodeIdx];
             }
 
+            
             var childHtml = "<div>";
             var childLength = nodeXML.getElementsByTagName('nodes').item(0).childElementCount;
             var childNode = nodeXML.getElementsByTagName('nodes').item(0).firstElementChild;
             var i = 0;
+            var depthCount = 0;
+            
             while (childNode) {
                 g_nodeCount++;
+                           
+
                 var mydepth = depth;
-                var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div style='white-space: nowrap;'><div style='height:16px;'><nobr>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
@@ -961,7 +981,6 @@
                 var bEndNode = (i == childLength - 1) ? true : false;
                 if (childNode.attributes.getNamedItem("hassub") != null)
                     bParent = true;
-
                 nodeHtml += "<img src='";
                 if (bParent) {
                     if (!bEndNode) {
@@ -992,22 +1011,22 @@
                     var _imgsrc = null;
                     var _foldername = node.getAttribute('href') != null ? node.getAttribute('FullCaption') : null;
                     switch (_foldername) {
-                        case 'Inbox':
+                        case '_INBOX':
                             _imgsrc = '/images/ImgIcon/inbox.gif';
                             break;
-                        case 'SentItems':
+                        case '_SENT':
                             _imgsrc = '/images/ImgIcon/outbox.gif';
                             break;
-                        case 'Drafts':
+                        case '_DRAFT':
                             _imgsrc = '/images/ImgIcon/drafts.gif';
                             break;
-                        case 'JunkEmail':
+                        case '_JUNK':
                             _imgsrc = '/images/ImgIcon/junkemail.gif';
                             break;
-                        case 'DeletedItems':
+                        case '_DELETE':
                             _imgsrc = '/images/ImgIcon/deleted.gif';
                             break;
-                        case 'PERSONAL':
+                        case '_PERSONAL':
                             _imgsrc = '/images/ImgIcon/sentitems.gif';
                             break;
                         default:
@@ -1019,20 +1038,20 @@
                     return _imgsrc;
 
                 };
-
+                
                 nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + g_images_func(childNode) + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
 					    g_baseClass["normal"] + "' ");
 
                 if (childNode.attributes.getNamedItem("style") != null)
-                    nodeHtml += ("style='" + childNode.attributes.getNamedItem("style").nodeValue + "'");
+                    nodeHtml += ("style='display:inline-block;" + childNode.attributes.getNamedItem("style").nodeValue + "'");
 
                 if (childNode.attributes.getNamedItem("title") != null)
-                    nodeHtml += ("title='" + childNode.attributes.getNamedItem("title").nodeValue + "'>");
+                    nodeHtml += (" style='display:inline-block;' title='" + childNode.attributes.getNamedItem("title").nodeValue + "'>");
                 else
                     nodeHtml += ">";
-
-                nodeHtml += (MakeHTMLStr(childNode.attributes.getNamedItem("caption").nodeValue) + "</span></div>");
+                
+                nodeHtml += (MakeHTMLStr(childNode.attributes.getNamedItem("caption").nodeValue) + "</span></nobr></div>");
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
                 nodeHtml += "</div>"
 
@@ -1059,14 +1078,16 @@
                 var depth = g_nodeArray["depth"][nodeIdx];
             }
 
+
+            //alert(depth);
             var childHtml = "<div>";
             var childLength = nodeXML.length;
 
             for (var i = 0; i < childLength; i++) {
                 g_nodeCount++;
-                var mydepth = depth;
+                var mydepth = depth;                
                 var childNode = nodeXML.item(i);
-                var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div><div style='height:16px;overflow-y:hidden;white-space:nowrap;'>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
@@ -1109,22 +1130,22 @@
                 var _imgsrc;
                 var _foldername = childNode.getAttribute('href') != null ? childNode.getAttribute('FullCaption') : null;
                 switch (_foldername) {
-                    case 'Inbox':
+                    case '_INBOX':
                         _imgsrc = '/images/ImgIcon/inbox.gif';
                         break;
-                    case 'SentItems':
+                    case '_SENT':
                         _imgsrc = '/images/ImgIcon/outbox.gif';
                         break;
-                    case 'Drafts':
+                    case '_DRAFT':
                         _imgsrc = '/images/ImgIcon/drafts.gif';
                         break;
-                    case 'JunkEmail':
+                    case '_JUNK':
                         _imgsrc = '/images/ImgIcon/junkemail.gif';
                         break;
-                    case 'DeletedItems':
+                    case '_DELETE':
                         _imgsrc = '/images/ImgIcon/deleted.gif';
                         break;
-                    case 'PERSONAL':
+                    case '_PERSONAL':
                         _imgsrc = '/images/ImgIcon/sentitems.gif';
                         break;
                     default:
@@ -1137,10 +1158,10 @@
 					    g_baseClass["normal"] + "' ");
 
                 if (childNode.attributes.getNamedItem("style") != null)
-                    nodeHtml += ("style='" + childNode.attributes.getNamedItem("style").text + "'");
+                    nodeHtml += ("style='display:inline-block;" + childNode.attributes.getNamedItem("style").text + "'");
 
                 if (childNode.attributes.getNamedItem("title") != null)
-                    nodeHtml += ("title='" + childNode.attributes.getNamedItem("title").text + "'>");
+                    nodeHtml += ("style='display:inline-block;' title='" + childNode.attributes.getNamedItem("title").text + "'>");
                 else
                     nodeHtml += ">";
 
@@ -1278,6 +1299,7 @@
                 
                 g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
                 g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+        		
         	} else {
         		var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
                 for (var i = 0; i < bimageNodes.length; i++)
@@ -1300,7 +1322,7 @@
                 g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
                 g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
         	}
-            
+
         }).call(this);
     }
 
@@ -1314,6 +1336,7 @@
     }
 
 
+   
     function IsOwaPremiumBrowser() {
         var b = navigator.userAgent, c = navigator.appVersion, g = c.indexOf("Mac") != -1, h = c.indexOf("Win") != -1 || c.indexOf("NT") != -1, f = b.indexOf("MSIE ") != -1, d = b.indexOf("Firefox/") != -1 && b.indexOf("Gecko/") != -1 && Array.every, e = b.indexOf("Safari") != -1 && b.indexOf("WebKit") != -1, a = 2;
         if (f) a = parseFloat(b.replace(/^.*MSIE /, ""));
@@ -1332,6 +1355,4 @@
 
     }
 
-})
-
-};
+}

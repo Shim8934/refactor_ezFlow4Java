@@ -362,7 +362,7 @@
 	        }
 	        var AddressTreeView = null;
 	        function LoadAddressTree() {
-	            /* if (AddressTreeView == null) { //주소록할때 주석풀기
+	            if (AddressTreeView == null) {
 	                AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
 	
 	                AddressTreeView.attachEvent('requestdata', requestdata_address);
@@ -392,7 +392,7 @@
 	                }
 	                else
 	                    AddressTreeView.select(1);
-	            } */
+	            }
 	        }
 	        function requestdata_address(event) {
 	            if (!event) {
@@ -410,20 +410,20 @@
 	        }
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
-	            var url = "/myoffice/ezAddress/address_mainlist.aspx?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&ownerid=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "ownerid")) + "&type=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "type"));
+	            var url = "/ezAddress/addressMainList.do?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&ownerid=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "ownerid")) + "&type=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "type"));
 	            window.open(url, "right");
 	        }
 	        var address_foldermanage_dialogArguments = new Array();
 	        function address_foldermanage() {
 	            address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
-	            var OpenWin = window.open("/myoffice/ezAddress/address_foldermanage.aspx", "address_foldermanage", GetOpenWindowfeature(450, 500));
+	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(450, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) LoadAddressTree();
 	        }
 	        function address_Search() {
-	            window.open("/myoffice/ezAddress/address_mainsearch.aspx", "right");
+	            window.open("/ezAddress/addressMainSearch.do", "right");
 	        }
 	        function Email_Menu_Click() {
 	            PostTreeView.select(1);
@@ -461,7 +461,7 @@
 	    ${rootFolderXML}
 	    </xml>
 	    <xml id="AddressFolderXML" style="display: none;">
-	    <%--=RootAddressXML --%>
+	    ${rootAddressXML}
 	    </xml>
 	</body>
 </html>

@@ -24,7 +24,7 @@ function baseColorTable_onClick()
 
 function manyColorShow()
 {
-	var color = showModalDialog("../htm/manyColor.aspx", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
+	var color = showModalDialog("/admin/ezEmail/manyColor.do", null, "dialogHeight:290px; dialogWidth:286px; status:no;scroll:no; help:no; edge:sunken");
 	
 	if(typeof(color) != "undefined")
 	{	
