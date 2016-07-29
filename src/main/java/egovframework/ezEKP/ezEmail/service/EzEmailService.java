@@ -42,5 +42,6 @@ public interface EzEmailService {
 	public String savePop3(String pUserId, String pRet) throws Exception;
 	public void setMailPOP3(String pUserId, String pPop3Server, String pPop3UserId, String pMessageId, String pPop3DupMsg) throws Exception;
 	public List<String> getMailPOP3List(String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
+	public void setMailColor(String pImportanceColor, String pInColor, String pOutColor) throws Exception;
 	
 }

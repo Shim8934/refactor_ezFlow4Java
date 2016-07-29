@@ -152,4 +152,8 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		return (List<String>)list("EzEmailDAO.getMailPOP3List", map);
 	}
 	
+	public void setMailColor(Map<String, Object> map) throws Exception{
+		insert("EzEmailDAO.setMailColor", map);
+	}
+	
 }

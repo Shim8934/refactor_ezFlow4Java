@@ -1,35 +1,13 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.security.PrivateKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.UIDFolder;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,39 +18,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.mail.pop3.POP3Folder;
-
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
-import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
-import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
-import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
-import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.string.EgovStringUtil;
 
 /**
  * @Description [Controller] 메일 환경설정
@@ -426,4 +387,70 @@ public class EzEmailAdminController {
 		return result;
 	}
 	
+	/**
+	 * 메일 기본설정 (관리자) 화면 호출 함수
+	 */
+	@RequestMapping(value="/admin/ezEmail/mailConfigColor.do")
+	public String mailConfigColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		return "admin/ezEmail/mailConfigColor";
+	}
+	
+	/**
+	 * 메일 색상설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/admin/ezEmail/mailColor.do")
+	public String mailColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String importanceColor = "#ff0000";
+		String inColor = "#808080";
+		String outColor = "#0080ff";
+		
+		try {
+			MailColorVO mailColor = ezEmailService.getMailColor();
+			
+			importanceColor = mailColor.getImportanceColor();
+			inColor = mailColor.getInmailColor();
+			outColor = mailColor.getOutmailColor();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("importanceColor", importanceColor);
+		model.addAttribute("inColor", inColor);
+		model.addAttribute("outColor", outColor);
+		
+		return "admin/ezEmail/mailColor";
+	}
+	
+	/**
+	 * 메일 색상선택 화면 호출 함수
+	 */
+	@RequestMapping(value="/admin/ezEmail/manyColor.do")
+	public String manyColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		return "admin/ezEmail/manyColor";
+	}
+	
+	/**
+	 * 메일 색상설정 저장 실행 함수
+	 */
+	@RequestMapping(value="/admin/ezEmail/mailSaveColor.do")
+	@ResponseBody
+	public String mailSaveColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "OK";
+		
+		try {
+			Document doc = commonUtil.convertRequestToDocument(request);
+			String importanceColor = doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
+			String inColor = doc.getElementsByTagName("INCOLOR").item(0).getTextContent();
+			String outColor = doc.getElementsByTagName("OUTCOLOR").item(0).getTextContent();
+			
+			ezEmailService.setMailColor(importanceColor, inColor, outColor);
+			
+		} catch (Exception e) {
+			returnValue = "ERROR:" + e.getMessage();
+			e.printStackTrace();
+		}
+		
+		return returnValue;
+	}
 }

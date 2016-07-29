@@ -389,5 +389,15 @@ Map<String, Object> map = new HashMap<String, Object>();
 		
 		return ezEmailDAO.getMailPOP3List(map);
 	}
+
+	@Override
+	public void setMailColor(String pImportanceColor, String pInColor, String pOutColor) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_IMPORTANCE", pImportanceColor);
+		map.put("v_INMAIL", pInColor);
+		map.put("v_OUTMAIL", pOutColor);
+		
+		ezEmailDAO.setMailColor(map);
+	}
 	
 }

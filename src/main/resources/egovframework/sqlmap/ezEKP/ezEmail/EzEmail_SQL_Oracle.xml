@@ -201,6 +201,10 @@
 		{CALL EZEMAIL.EZSP_GETMAILPOP3LIST(#v_PUSERID#, #v_PPOP3SERVER#, #v_PPOP3USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzEmailDAO.setMailColor" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILCOLOR(#v_IMPORTANCE#, #v_INMAIL#, #v_OUTMAIL#)}
+	</procedure>
+	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 
