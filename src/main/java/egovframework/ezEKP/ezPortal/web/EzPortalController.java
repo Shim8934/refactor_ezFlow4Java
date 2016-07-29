@@ -14,11 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
@@ -50,6 +53,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
+	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -697,6 +703,9 @@ System.out.println("???");
 	}
 	
 	
+	/**
+	 * 포탈 - urlPortlet 호출 함수
+	 */
 	@RequestMapping(value = "/ezPortal/urlPortlet.do")
 	public void urlPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -757,6 +766,23 @@ System.out.println("gubunFlag:"+gubunFlag);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart NewImage 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewImage.do")
+	public String wpNewImage(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			List<PersonalGetSliderListVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+			
+			model.addAttribute("sliderList", sliderList);
+			return "/ezPortal/portalWpNewImage";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	

@@ -2,7 +2,12 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezPersonal">
+	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
 	
-	
+	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>	
 </sqlMap>
 
