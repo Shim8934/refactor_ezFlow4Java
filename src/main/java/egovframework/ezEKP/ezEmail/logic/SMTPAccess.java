@@ -23,6 +23,7 @@ public class SMTPAccess {
 	private String userName;
 	private String password;
 	private Session session;
+	private final int TIMEOUT = 10000;
 	
 	private SMTPAccess(String host, String port, String userName, String password){
 		this.host = host;
@@ -44,6 +45,10 @@ public class SMTPAccess {
 	    props.put("mail.smtp.starttls.enable", "true");
 	    props.put("mail.smtp.host", host);
 	    props.put("mail.smtp.port", port);
+	    
+	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
+	    props.put("mail.smtp.timeout", TIMEOUT);
+	    
 	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 	    	protected PasswordAuthentication getPasswordAuthentication() {
 	    		return new PasswordAuthentication(userName, password);

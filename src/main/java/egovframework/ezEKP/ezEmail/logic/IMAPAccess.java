@@ -73,8 +73,8 @@ public class IMAPAccess {
 			properties.setProperty("mail.imap.partialfetch", "false");
 			properties.setProperty("mail.imaps.partialfetch", "false");
 			
-			properties.put("mail.pop3s.connectiontimeout", TIMEOUT);
-			properties.put("mail.pop3s.timeout", TIMEOUT);
+			properties.put("mail.imap.connectiontimeout", TIMEOUT);
+			properties.put("mail.imap.timeout", TIMEOUT);
 			
 			Session session = Session.getDefaultInstance(properties);
 
