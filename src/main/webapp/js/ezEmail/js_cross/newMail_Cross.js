@@ -715,7 +715,14 @@ function event_SaveonClick() {
         	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
 //        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(1).textContent;
         }
-        if (pRtnMessage != "FULL") {
+        
+        if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
+            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+            MailSend_Hidden_Progress();
+            g_saveHttp = null;
+            MailStatus = "NO";
+        }
+        else if (pRtnMessage != "FULL") {
             if (g_saveHttp.status < 200 || g_saveHttp.status > 300 || pRtnMessage.substr(0, 5) == "ERROR") {
                 var result = "";
                 if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
@@ -799,7 +806,10 @@ function event_SaveonClick() {
                         } catch (e) { }
                     }
                     else {
-                        if (result.indexOf("A4 NO APPEND failed.") > -1) {
+                    	if (result.lastIndexOf("초과합니다.") > 0) {
+                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                        }
+                        else if (result.lastIndexOf("초과했습니다.") > 0) {
                             alert("사서함이 최대 사서함 크기를 초과했습니다.");
                         }
                         else if (result.lastIndexOf("not be created.") > 0) {
@@ -822,7 +832,6 @@ function event_SaveonClick() {
                 }
                 else {
                     if (event_SaveonClick.savemode == "tempsave") {
-
                         if (navigator.userAgent.indexOf("MSIE") != -1) {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }

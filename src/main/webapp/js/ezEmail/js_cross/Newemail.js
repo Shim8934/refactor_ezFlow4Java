@@ -358,13 +358,19 @@ function Mail_CopyPostSend(Mode, Url, szItemID) {
 function event_Mail_CopyPostSend() {
     if (xmlhttp_mailCopy != null && xmlhttp_mailCopy.readyState == 4) {
         if (xmlhttp_mailCopy.status >= 200 && xmlhttp_mailCopy.status < 300) {
-        	MailListRefresh();
-            refreshUnreadCount();
-            if(event_Mail_CopyPostSend.mode=="MOVE") {
-            	alert(MoveMsg);
-            } else if (event_Mail_CopyPostSend.mode=="COPY") {
-            	alert(CopyMsg);
-            }
+        	pRtnMessage = xmlhttp_mailCopy.responseText;
+        	
+        	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
+        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+        	} else {
+	        	MailListRefresh();
+	            refreshUnreadCount();
+	            if(event_Mail_CopyPostSend.mode=="MOVE") {
+	            	alert(MoveMsg);
+	            } else if (event_Mail_CopyPostSend.mode=="COPY") {
+	            	alert(CopyMsg);
+	            }
+        	}
         }
         else {
             alert(strLang5);
