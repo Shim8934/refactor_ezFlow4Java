@@ -258,5 +258,6 @@ public interface EzApprovalGService {
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
+	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang) throws Exception;
 
 }

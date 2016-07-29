@@ -29,7 +29,7 @@ function getDataInfo() {
             break;
 
         case "APPROVAL":
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezaprline/aspx/GetLineList.aspx", true);
+            xmlhttp.open("POST", "/ezApprovalG/getLineList.do", true);
             break;
 
         case "RECIPENT":
@@ -114,11 +114,10 @@ function check_presence() {
 }
 
 function processRowClick(tr) {
-    if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
+	if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
         ChkCabRoleInfo(tr);
 
     if (DocList_Flag != "CABINET") {
-
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
@@ -180,8 +179,7 @@ function processRowClick(tr) {
                 break;
 
             case "APPROVAL":
-            	alert("adsad");
-                Approval_onclick();
+            	Approval_onclick();
                 break;
 
             case "RECIPENT":

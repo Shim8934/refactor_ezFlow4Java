@@ -11810,5 +11810,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return doc;
 	}
+	
+	@Override
+	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String GFlag = getCode2Name("A35", "002", companyID, lang).toUpperCase().trim();
+		map.put("v_DOCID", docID.trim());
+		map.put("companyID", companyID);
+		List<ApprGDocListVO> sendoffercheck_enddocinfo = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < sendoffercheck_enddocinfo.size(); i++) {
+			sb.append(commonUtil.getQueryResult(sendoffercheck_enddocinfo.get(i)));
+		}
+		sb.append("</DATA>");
+		
+        String writerid = sendoffercheck_enddocinfo.get(0).getWriterID();
+        if(writerid.length()>0){
+        	String tempUserID = makeListField(writerid);
+        	String tempDocType = makeListField(sendoffercheck_enddocinfo.get(0).getDocType());
+        	
+        	if(tempUserID.trim()==""){
+        		sb.append("<RESULT>NOUSER</RESULT>");
+        	}else if(tempUserID.toUpperCase() != userID.toUpperCase() &&string =="MUST"){
+        		sb.append("<RESULT>OTHERUSER</RESULT>");
+        	}else if(staDTDraftDoc != tempDocType){
+        		sb.append("<RESULT>NODOC</RESULT>");
+        	}
+        }else{
+        	sb.append("<RESULT>NOUSER</RESLUT>");
+        }
 
+		
+		return sb.toString();
+	}
 }

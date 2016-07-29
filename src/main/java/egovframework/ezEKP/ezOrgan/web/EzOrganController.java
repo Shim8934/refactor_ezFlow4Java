@@ -261,5 +261,18 @@ public class EzOrganController {
 		//TODO LDAP 이라 보류중
 		return "";
 	}
-
+//	/**
+//	 * 조직도 부서 및 사원정보 함수
+//	 */
+	@RequestMapping(value = "/ezOrgan/getADInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getADInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cn = userInfo.getId();
+		String infoXML = ezOrganService.getPropertyValue(cn, "extensionattribute4");
+		
+		 infoXML="<RESULT>" + infoXML + "</RESULT>";
+		return infoXML;
+	}
 }

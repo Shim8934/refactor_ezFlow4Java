@@ -785,5 +785,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public void doCallBack(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.doCallBack", map);
 	}
-
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> sendoffercheck_enddocinfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.sendoffercheck_enddocinfo", map);
+	}
 }

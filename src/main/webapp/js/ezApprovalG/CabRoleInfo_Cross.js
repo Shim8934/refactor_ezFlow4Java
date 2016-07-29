@@ -93,7 +93,7 @@ function IsDocDept(pDeptCode) {
     createNodeAndInsertText(xmlpara, objNode, "CN", pDeptCode);
     createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute4");
 
-    xmlhttp.open("POST", "/ezOrgan/getADInfo.aspx", false);
+    xmlhttp.open("POST", "/ezOrgan/getADInfo.do", false);
     xmlhttp.send(xmlpara);
 
     var ResultXML = xmlhttp.responseXML;
