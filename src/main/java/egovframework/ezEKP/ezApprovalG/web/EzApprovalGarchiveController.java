@@ -51,7 +51,7 @@ public class EzApprovalGarchiveController {
 	/*
 	 * 기록물대장 메뉴 
 	 */
-	@RequestMapping(value = "/ezApprovalG/cabinetmain.do"  ,produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/cabinetMain.do"  ,produces="text/xml;charset=utf-8")
 	public String cabinetmain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 
@@ -107,6 +107,7 @@ public class EzApprovalGarchiveController {
         String pDocID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
         String pUserID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
         String result=ezApprovalGService.sendOfferCheck(pDocID, pUserID, "MUST", userInfo.getCompanyID(), userInfo.getLang());
+        
 		return "ezApprovalG/apprGcabinetMain";
 	}
 	
