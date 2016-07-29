@@ -60,7 +60,7 @@
 		    var userLang = "<c:out value = '${userInfo.lang} '/>";
 		    var UserLang = "<c:out value = '${userInfo.lang} '/>";
 		    
-		    window.onload = function () {
+		    $(document).ready(function(){
 		        document.getElementById("SCompID").value = CompanyID;
 		        OrganID = CompanyID;
 		        PageSize = -1;
@@ -72,10 +72,10 @@
 		        
 		        if (!bTreeInit) {
 		            Tree_setconfig();
-		            TreeViewinitialize("", CompanyID, "", "<%=request.getServerName()%>");
+		            TreeViewinitialize("", CompanyID, "", "<c:out value='${serverName}'/>");
 		            bTreeInit = true;
 		        }
-		    };
+		    });
 	
 		    function Tree_setconfig() {
 		        var xmlHTTP = createXMLHttpRequest();
@@ -193,7 +193,7 @@
 		    function selectCompanyID() {
 		        if (CompanyID != document.getElementById("SCompID").value) {
 		            CompanyID = document.getElementById("SCompID").value;
-		            TreeViewinitialize("", CompanyID, "", "<%=request.getServerName()%>");
+		            TreeViewinitialize("", CompanyID, "", "<c:out value='${serverName}'/>");
 		        }
 		    }
 		</script>

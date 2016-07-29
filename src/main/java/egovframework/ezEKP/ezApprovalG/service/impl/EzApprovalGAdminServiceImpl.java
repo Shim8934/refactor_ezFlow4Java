@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -1230,6 +1229,85 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("companyID", companyID);
 			
 			ezApprovalGAdminDAO.insertSealInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String getSealDeptlList(String listFlag, String deptID, String companyID, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTFLAG", listFlag);
+		map.put("v_DEPTID", deptID);
+		map.put("companyID", companyID);
+		
+		List<ApprGSealInfoVO> list = ezApprovalGAdminDAO.getSealDeptList(map);
+		
+		sb.append("<ROWS>");
+		
+		for(ApprGSealInfoVO vo : list) {
+			sb.append("<ROW>");
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSealName()) + "</VALUE>");
+			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
+			sb.append("<DATA2>" + vo.getSealPath() + "</DATA2>");
+			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3></CELL>");
+			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+
+			if (lang.equals("1")) {
+				sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
+			} else if (lang.equals("2")) {
+				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
+			}
+			
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS>");
+
+		return sb.toString();
+	}
+	
+	@Override
+	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception {
+		try{
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_SEALNUM", pSealNum);
+			map.put("v_SEALNAME", pSealName);
+			map.put("v_SEALPATH", pSealPath);
+			map.put("v_SEALWIDTH", pSealWidth);
+			map.put("v_SEALHEIGHT", pSealHeight);
+			map.put("v_REGUSERID", pRegUserID);
+			map.put("v_REGUSERNAME", pRegUserName);
+			map.put("v_REGUSERNAME2", pRegUserName2);
+			map.put("v_DEPTID", deptID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.insertDeptSealInfo(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}	
+	}
+	
+	@Override
+	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_SEALNUM", pSealNum);
+			map.put("v_DEPTID", deptID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.deleteDeptSealInfo(map);
 			
 			return "TRUE";
 		} catch (Exception e) {

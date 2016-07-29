@@ -74,6 +74,12 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETSEALLIST(#v_LISTFLAG#, #v_PMULTIDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getSealDeptList"				parameterClass="Map" resultClass="ApprGSealInfoVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
 
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
@@ -189,9 +195,21 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzApprovalGAdmin.deleteDeptSealInfo" 			parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_DELETEDEPTSEALINFO(#v_SEALNUM#, #v_DEPTID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzApprovalGAdmin.insertSealInfo" 				parameterClass="Map">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.insertDeptSealInfo" 			parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, #v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)}
 		]]>	
 	</procedure>
 	

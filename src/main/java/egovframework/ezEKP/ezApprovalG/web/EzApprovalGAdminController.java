@@ -8,14 +8,12 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -677,7 +675,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 분류,단위업무관리 사용부서 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskDeptInfoManage.do")
-	public String taskDeptInfoManage() {
+	public String taskDeptInfoManage(Model model) {
+		String serverName = config.getProperty("config.ServerName");
+		
+		model.addAttribute("serverName", serverName);
+		
 		return "admin/ezApprovalG/apprGTaskDeptInfoManage";
 	}
 	
@@ -771,6 +773,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/taskAdminDept.do")
 	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String serverName = config.getProperty("config.ServerName");
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -784,6 +787,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
 		
 		return "admin/ezApprovalG/apprGTaskAdminDept";
@@ -868,9 +872,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String ezSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean checkIE = commonUtil.checkIE(request);
+		String pDeptYN = request.getParameter("pDeptYN");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("checkIE", checkIE);
+		model.addAttribute("pDeptYN", pDeptYN);
 		
 		return "admin/ezApprovalG/apprGEzSealInfo";
 	}
@@ -881,11 +887,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/addSealInfo.do")
 	public String addSealInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String serverName = config.getProperty("config.ServerName");
 		boolean checkIE = commonUtil.checkIE(request);
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("serverName", serverName);
 		model.addAttribute("checkIE", checkIE);
 		
 		return "admin/ezApprovalG/apprGAddSealInfo";
@@ -967,7 +971,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 관인대장 관인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다.) 
+	 * 전자결재G관리 관인대장 관인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다. db에서만 삭제 파일삭제X) 
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -984,8 +988,153 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 부서별관인대장 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageDeptSeal.do")
-	public String manageDeptSeal() {
+	public String manageDeptSeal(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String serverName = config.getProperty("config.ServerName");
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("list", resultList);
 		
 		return "admin/ezApprovalG/apprGManageDeptSeal";
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 부서에따른 직인목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getDeptSealList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getDeptSealList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String listFlag = request.getParameter("listFlag");
+		String deptID = request.getParameter("deptID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (request.getParameter("companyID") != null) {
+			companyID = request.getParameter("companyID");
+		}
+		
+		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
+		String result = ezApprovalGAdminService.getSealDeptlList(listFlag, deptID, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 직인등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/addDeptSealInfo.do")
+	public String addDeptSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean checkIE = commonUtil.checkIE(request);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("checkIE", checkIE);
+		
+		return "admin/ezApprovalG/apprGAddDeptSealInfo";
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 직인등록 파일등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deptSealUpload.do")
+	public String deptSealUpload (MultipartHttpServletRequest request, Model model) throws Exception {
+		MultipartFile multiFile = request.getFile("file1");
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
+		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
+		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
+		
+		File dir = new File(realPath + dirPath);
+        if (!dir.exists()) {
+        	dir.mkdirs();
+        }
+        
+        int width = 0;
+		int height = 0;
+		String fileName = companyID + "_" + deptID + "_" + currentDate + fileExt;
+		
+		writeUploadedFile(multiFile, fileName, realPath + dirPath);
+		
+		File imageFile = new File(realPath + dirPath + commonUtil.separator + fileName);
+	
+		if (imageFile.exists()) {
+			BufferedImage bi = ImageIO.read(new File(realPath + dirPath + commonUtil.separator + fileName));			    
+			width = bi.getWidth();
+			height = bi.getHeight();
+		}
+		
+		model.addAttribute("fileName", fileName);
+		model.addAttribute("path", dirPath + commonUtil.separator);
+		model.addAttribute("width", width);
+		model.addAttribute("height", height);
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 직인등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/insertDeptSealInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String insertDeptSealInfo(HttpServletRequest request) throws Exception {
+		String pSealNum = request.getParameter("pSealNum");
+		String pSealName = request.getParameter("pSealName");
+		String pSealPath = request.getParameter("pSealPath");
+		String pSealWidth = request.getParameter("pSealWidth");
+		String pSealHeight = request.getParameter("pSealHeight");
+		String pRegUserID = request.getParameter("pRegUserID");
+		String pRegUserName = request.getParameter("pRegUserName");
+		String pRegUserName2 = request.getParameter("pRegUserName2");
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.insertDeptSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, deptID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 직인등록 삭제 실행 함수 (등록하지 않고 종료시 파일 삭제)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deptSealDelete.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deptSealDelete(HttpServletRequest request) throws Exception {
+		String realPath = request.getServletContext().getRealPath("");
+		String dirPath = request.getParameter("dirPath");
+		String fileName = request.getParameter("fileName");
+		
+		String result = ezApprovalGAdminService.sealDelete(realPath, dirPath, fileName);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 부서별관인대장 직인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다.db에서만삭제 파일삭제X) 
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteDeptSealInfo.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deleteDeptSealInfo(HttpServletRequest request) throws Exception {
+		String pSealNum = request.getParameter("pSealNum");
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.deleteDeptSealInfo(pSealNum, deptID, companyID);
+		
+		return result;
 	}
 }

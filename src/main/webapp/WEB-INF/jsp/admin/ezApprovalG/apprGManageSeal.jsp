@@ -24,11 +24,7 @@
 		    var listview = new ListView();
 		    var OrderCell = "";
 		    
-		    window.onload = function () {
-		        if (!CrossYN()) {
-		            document.getElementById("GetEDMSXML").style.display = "";
-		        }
-		        
+		    window.onload = function () {      
 		        SCompID.value = pCompanyID;
 	
 		        InitListView();
@@ -192,7 +188,7 @@
 		        parameter[2] = pCompanyID;
 	
 		        var url = "/admin/ezApprovalG/addSealInfo.do";
-		        var feature = "status:no;dialogWidth:430px;dialogHeight:350px;edge:sunken;scroll:no;help:no"
+		        var feature = "status:no;dialogWidth:430px;dialogHeight:350px;edge:sunken;scroll:no;help:no";
 		        var ret = window.showModalDialog(url, parameter, feature);
 	
 		        if (ret[0] == "OK") {
@@ -267,11 +263,11 @@
 		<div id="mainmenu">
 	  	<ul>
 	  		<b><spring:message code = 'ezApprovalG.t1276' /></b>
-		        <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-		        </SELECT><br /><br />
+	        <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+	        </SELECT><br /><br />
 	    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
 	    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 	  	</ul>

@@ -46,7 +46,7 @@
 		            companyID = RetValue[2];
 		            InitTreeVal = companyID;
 		            Tree_setconfig();
-		            TreeViewinitialize("", companyID, "extensionAttribute2", "<%=request.getServerName()%>");
+		            TreeViewinitialize("", companyID, "extensionAttribute2", "<c:out value='${serverName}'/>");
 		            InitListView();
 	
 		            AprLineInit();

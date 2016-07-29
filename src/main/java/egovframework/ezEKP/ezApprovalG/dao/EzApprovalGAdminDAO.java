@@ -77,6 +77,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (List<ApprGSealInfoVO>) list("EzApprovalGAdmin.getSealList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGSealInfoVO> getSealDeptList(Map<String, Object> map) throws Exception {
+		return (List<ApprGSealInfoVO>) list("EzApprovalGAdmin.getSealDeptList", map);
+	}
+	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
 	}
@@ -158,6 +163,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertDeptInfo", map);
 	}
 	
+	public void insertSealInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertSealInfo", map);
+	}
+	
+	public void insertDeptSealInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertDeptSealInfo", map);
+	}
+	
 	public void updateContainer(Map<String, Object> map) throws Exception{
 		update("EzApprovalGAdmin.updateContainer", map);
 	}
@@ -213,12 +226,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 
 
-	
-
-
-
-	public void insertSealInfo(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.insertSealInfo", map);
+	public void deleteDeptSealInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.deleteSealInfo", map);
 	}
-
 }

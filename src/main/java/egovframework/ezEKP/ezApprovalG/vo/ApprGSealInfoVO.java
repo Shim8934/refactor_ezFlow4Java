@@ -20,6 +20,8 @@ public class ApprGSealInfoVO {
 	String regUserID;
 	/** 등록자이름*/
 	String regUserName;
+	/** 등록자이름(다국어)*/
+	String regUserName2;
 	
 	public String getSealNum() {
 		return sealNum;
@@ -75,4 +77,11 @@ public class ApprGSealInfoVO {
 	public void setRegUserName(String regUserName) {
 		this.regUserName = regUserName;
 	}
+	public String getRegUserName2() {
+		return regUserName2;
+	}
+	public void setRegUserName2(String regUserName2) {
+		this.regUserName2 = regUserName2;
+	}
+	
 }
