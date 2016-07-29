@@ -104,23 +104,32 @@ public class EzEmailMailSearchController {
 		
 		logger.debug("userTimeSet=" + userTimeSet + ",addHour=" + addHour);
 		
-		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
-		
-		List<Folder> topLevelFolders = imapAccess.getTopLevelFolders();		
-		
-		List<String> topLevelFolderNames = new ArrayList<String>();
-		int maxFolderCount = Math.min(5, topLevelFolders.size());
-		
-		for (int i = 0; i < maxFolderCount; i++) {
-			Folder folder = topLevelFolders.get(i);
+		List<String> topLevelFolderNames = null;
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			topLevelFolderNames.add(folder.getName());
+			List<Folder> topLevelFolders = ia.getTopLevelFolders();		
+			
+			topLevelFolderNames = new ArrayList<String>();
+			int maxFolderCount = Math.min(5, topLevelFolders.size());
+			
+			for (int i = 0; i < maxFolderCount; i++) {
+				Folder folder = topLevelFolders.get(i);
+				
+				topLevelFolderNames.add(folder.getName());
+			}
+			
+			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
-		
-		logger.debug("topLevelFolderNames=" + topLevelFolderNames);
-		
-		imapAccess.close();
 		
 		model.addAttribute("userId", userId);
 		model.addAttribute("serverName", serverName);
@@ -168,7 +177,11 @@ public class EzEmailMailSearchController {
 		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		logger.debug("startDateObj=" + startDateObj + ",endDateObj=" + endDateObj);
 		
-		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+		String returnData = "";
+		IMAPAccess ia = null;
+		
+		try {
+		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 						
 		StringBuilder sb = new StringBuilder();
@@ -178,7 +191,7 @@ public class EzEmailMailSearchController {
 		Message[] messages = null;
 		
 		if (mailFolder.equals("ALL")) {
-			List<Folder> topLevelFolders = imapAccess.getTopLevelFolders();		
+			List<Folder> topLevelFolders = ia.getTopLevelFolders();		
 			
 			List<String> topLevelFolderNames = new ArrayList<String>();
 			int maxFolderCount = Math.min(5, topLevelFolders.size());
@@ -192,7 +205,7 @@ public class EzEmailMailSearchController {
 			logger.debug("topLevelFolderNames=" + topLevelFolderNames);		
 			
 			for (String folderName : topLevelFolderNames) {
-				Folder tmpFolder = imapAccess.getFolder(folderName);
+				Folder tmpFolder = ia.getFolder(folderName);
 				
 				if (folder == null) {
 					folder = tmpFolder;
@@ -229,7 +242,7 @@ public class EzEmailMailSearchController {
 			}
 		}
 		else {
-			folder = imapAccess.getFolder(mailFolder);
+			folder = ia.getFolder(mailFolder);
 			folder.open(Folder.READ_ONLY);			
 			messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false);					
 		}
@@ -395,9 +408,16 @@ public class EzEmailMailSearchController {
 		
 		sb.append("</ROWS></DATA>");
 		
-		imapAccess.close();
+		returnData = sb.toString();
 		
-		String returnData = sb.toString();
+		} catch (Exception e) {
+			returnData = "<DATA>ERROR</DATA>";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
 		
 		logger.debug("mailSearch ended");
 		
@@ -433,31 +453,39 @@ public class EzEmailMailSearchController {
 		}
 		String[] folderAndMsgIdArray = uniqueId.split(",");
 					
-		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+		String returnData = "OK";
 		
-		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-			String folderAndMsgId = folderAndMsgIdArray[i];
-			folderId = folderAndMsgId.split("/")[0];
-			String msgId = folderAndMsgId.split("/")[1];
-			long uid = Long.parseLong(msgId);
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-			
-			Message deleteMsg = sourceFolder.getMessageByUID(uid);
-			
-			if (deleteMsg != null) {
-				deleteMsg.setFlag(Flags.Flag.DELETED, true);
-			}
-			
-			sourceFolder.close(true);
-		}	
-		
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String folderAndMsgId = folderAndMsgIdArray[i];
+				folderId = folderAndMsgId.split("/")[0];
+				String msgId = folderAndMsgId.split("/")[1];
+				long uid = Long.parseLong(msgId);
 				
-		imapAccess.close();		
-		
-		String returnData = "";
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+				sourceFolder.open(Folder.READ_WRITE);		
+				
+				Message deleteMsg = sourceFolder.getMessageByUID(uid);
+				
+				if (deleteMsg != null) {
+					deleteMsg.setFlag(Flags.Flag.DELETED, true);
+				}
+				
+				sourceFolder.close(true);
+			}	
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+				
 		logger.debug("mailDelete ended");
 		
 		return returnData;
@@ -487,34 +515,43 @@ public class EzEmailMailSearchController {
 		}
 		
 		String[] folderAndMsgIdArray = uniqueId.split(",");
-				
-		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 		
-		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-			String folderAndMsgId = folderAndMsgIdArray[i];
-			String folderId = folderAndMsgId.split("/")[0];	
-			String msgId = folderAndMsgId.split("/")[1];
-			long uid = Long.parseLong(msgId);
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			
-			IMAPFolder sourceFolder = (IMAPFolder)imapAccess.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);
-			
-			Message message = sourceFolder.getMessageByUID(uid);
-			
-			if (message != null) {
-				IMAPFolder movefolder = (IMAPFolder)imapAccess.getFolder(mfolderId);			
-				sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String folderAndMsgId = folderAndMsgIdArray[i];
+				String folderId = folderAndMsgId.split("/")[0];	
+				String msgId = folderAndMsgId.split("/")[1];
+				long uid = Long.parseLong(msgId);
 				
-				if (cmd.equalsIgnoreCase("MOVE")) {
-					message.setFlag(Flags.Flag.DELETED, true);
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+				sourceFolder.open(Folder.READ_WRITE);
+				
+				Message message = sourceFolder.getMessageByUID(uid);
+				
+				if (message != null) {
+					IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
+					sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+					
+					if (cmd.equalsIgnoreCase("MOVE")) {
+						message.setFlag(Flags.Flag.DELETED, true);
+					}
 				}
+				
+				sourceFolder.close(true);
 			}
-			
-			sourceFolder.close(true);
-		}
 		
-		imapAccess.close();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
 		
 		return "";
 	}
