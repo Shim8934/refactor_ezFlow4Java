@@ -219,7 +219,7 @@ System.out.println("i4:"+i);
 			} else if (!useStartPageURL.trim().equals("NO")) {
 				mainUrl = useStartPageURL;
 			} else {
-				mainUrl = "/myoffice/ezPortal/myportal.aspx";
+				mainUrl = "/ezPortal/myPortal.do";
 			}
 			
 			if (userInfo.getLang().equals("1")) {
@@ -231,8 +231,8 @@ System.out.println("i4:"+i);
 			} else if (userInfo.getLang().equals("4")) {
 				
 			}
-			
-			model.addAttribute("mainURL", mainUrl);
+
+			model.addAttribute("mainUrl", mainUrl);
 			model.addAttribute("topUrl", topUrl);
 			model.addAttribute("topHeight", topHeight);
 		} catch (Exception e) {
