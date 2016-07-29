@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -1109,6 +1110,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
 	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String gOofState = "disabled";
 		String gStartDate = "";
 		String gEndDate = "";
@@ -1116,10 +1119,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String gInternal = "";
 		String gExternal = "";
 
-		//TODO: 디비에서 가져오도록?
-		String userLang = "1";
+		String userLang = userInfo.getLang();
 
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
+		String userId = userInfo.getId();
 		userId = userId + "@" + config.getProperty("config.DomainName");
 
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");

@@ -588,7 +588,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 이동/복사 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do")
 	@ResponseBody
 	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {

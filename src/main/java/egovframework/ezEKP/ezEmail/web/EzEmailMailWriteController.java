@@ -536,7 +536,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
-		                //TODO: 서명
 		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
 		                
 		                if (mailSignatureVO != null) {

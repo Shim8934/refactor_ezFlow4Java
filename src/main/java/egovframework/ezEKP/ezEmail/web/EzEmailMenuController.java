@@ -410,6 +410,7 @@ public class EzEmailMenuController {
 				}
 				
 			} catch (MessagingException e) {
+				strResult = "ERROR : " + e.getMessage();
 				e.printStackTrace();
 			} finally {
 				if (ia != null) {

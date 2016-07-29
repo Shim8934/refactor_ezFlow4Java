@@ -91,12 +91,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReservation.do")
 	public String mailReservation(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		//TODO: draftUrl, useEditor, useIE11Browser, noneActiveX setting
 		String draftUrl = "";
-		String useEditor = "";
+		String useEditor = config.getProperty("config.EDITOR");
 		String useIE11Browser = "";
-		String noneActiveX = "";
-
+		String noneActiveX = "YES";
+		
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+        	useIE11Browser = "CK";
+        }
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String domainName = config.getProperty("config.DomainName");
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userId + "@" + domainName);
