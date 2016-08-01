@@ -6,7 +6,7 @@
 	    <title><spring:message code='ezApprovalG.t1515'/></title>
 	    <style>
 	        .IMG_BTN {
-	            behavior: url("/js/ezApprovalG/ImgBtn.htc");
+	            behavior: url("/css/include/ImgBtn.htc");
 	        }
 	
 	        .pagetd {
@@ -271,7 +271,7 @@
 	    function SelCont_onclick2(cont, ContainerName) {
 	        if (ContainerName == "<spring:message code='ezApprovalG.t1517'/>") {
 	            GamSaFlag = true;
-	            cont = "";
+// 	            cont = "";
 	        }
 	        else {
 	            GamSaFlag = false;

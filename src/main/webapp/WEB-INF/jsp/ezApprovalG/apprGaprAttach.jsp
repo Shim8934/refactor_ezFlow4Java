@@ -5,7 +5,7 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t264'/></title>
 		<style> 
-			.IMG_BTN { behavior:url("../include/ImgBtn.htc") }
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">

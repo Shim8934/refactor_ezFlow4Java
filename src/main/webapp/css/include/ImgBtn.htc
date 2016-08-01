@@ -1,0 +1,101 @@
+﻿<PUBLIC:COMPONENT>
+<PUBLIC:ATTACH EVENT = "ondocumentready" ONEVENT = "Init()" />
+<PUBLIC:ATTACH EVENT = "onmouseover" ONEVENT = "btn_onmouseover()" />
+<PUBLIC:ATTACH EVENT = "onmouseout" ONEVENT = "btn_onmouseout()" />
+<PUBLIC:ATTACH EVENT = "onmousedown" ONEVENT = "btn_onmousedown()" />
+<PUBLIC:ATTACH EVENT = "onmouseup" ONEVENT = "btn_onmouseup()" />
+
+<PUBLIC:PROPERTY NAME = "NormalSrc" />
+<PUBLIC:PROPERTY NAME = "HoverSrc" />
+<PUBLIC:PROPERTY NAME = "DownSrc" />
+<PUBLIC:PROPERTY NAME = "DisableSrc" />
+<PUBLIC:PROPERTY NAME = "Enable" GET = "get_Enable" PUT = "put_Enable" />
+
+<SCRIPT LANGUAGE="JScript">
+
+var normalImage = null;
+var hoverImage = null;
+var downImage = null;
+var disableImage = null;
+
+var varEnable = "true";
+var savedOnClick = null;
+
+function Init()
+{
+  normalImage = new Image;
+//  hoverImage = new Image;
+//  downImage = new Image;
+  disableImage = new Image;
+ 
+  element.style.cursor = "hand";
+  
+  if ( varEnable == "true" )
+    element.src = NormalSrc;
+  else
+    element.src = DisableSrc;
+  
+  normalImage.src = NormalSrc;
+//  hoverImage.src = HoverSrc;
+//  downImage.src = DownSrc;
+  disableImage.src = DisableSrc;  
+}
+
+function get_Enable()
+{
+  return varEnable;
+}
+
+function put_Enable(value)
+{
+  varEnable = value;
+  if ( varEnable != "true" )
+  {
+    element.src = DisableSrc;
+    
+    if ( element.onclick != null )
+      savedOnClick = element.onclick
+//    element.onclick = btn_onclick;
+    element.onclick = null;
+  }
+  else
+  {
+    if ( savedOnClick != null )
+      element.onclick = savedOnClick;
+  
+    element.src = NormalSrc;
+  }
+}
+
+function btn_onmouseover()
+{
+//  if ( varEnable == "true" )
+//    element.src = HoverSrc;
+}
+
+function btn_onmouseout()
+{
+//  if ( varEnable == "true" )
+//    element.src = NormalSrc;
+}
+
+function btn_onmousedown()
+{
+//  if ( varEnable == "true" )
+//    element.src = DownSrc;
+}
+
+function btn_onmouseup()
+{
+//  if ( varEnable == "true" )
+//    element.src = HoverSrc;
+}
+
+function btn_onclick()
+{
+
+}
+
+</SCRIPT>  
+</PUBLIC:COMPONENT>
+

@@ -153,16 +153,16 @@ function GetDocSearch() {
 
 
     for (i = 0; i < condition.length - 1 ; i++) {
-        if (typeof (condition[i]) == "undefined")
+        if (typeof(condition[i]) == "undefined")
             createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
         else
             createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
     }
-
-    if (typeof (ContainerID) == "undefined")
-        createNodeAndInsertText(xmlpara, objNode, "Param24", "");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "Param24", ContainerID);
+    if (typeof(ContainerID) == "undefined") {
+    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "Param24", ContainerID);
+    }
 
 
     createNodeAndInsertText(xmlpara, objNode, "Param25", UserID);   	        
@@ -185,7 +185,7 @@ function GetDocSearch() {
 
     
     if (GamSaFlag){
-    	xmlhttp.open("POST", "aspx/getGamSaSearchDocList.aspx", true);
+    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
     } else {
     	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
     }

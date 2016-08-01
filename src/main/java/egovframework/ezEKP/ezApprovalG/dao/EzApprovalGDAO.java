@@ -444,6 +444,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getGamSaSearchDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getGamSaSearchDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -703,6 +708,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int getContDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getContDocListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getGamSaSearchDocListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getGamSaSearchDocListCount", map);
 		return (int)map.get("v_pCount");
 	}
 	

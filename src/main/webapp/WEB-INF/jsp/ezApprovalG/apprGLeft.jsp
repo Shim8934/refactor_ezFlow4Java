@@ -542,11 +542,11 @@
 		            switch (pthis.id) {
 		                case "admin_sub01":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/TaskManage_Cross.aspx";
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/taskManage.do";
 		                    break;
 		                case "admin_sub02":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/CabTransfer_Cross.aspx";
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/cabTransfer.do";
 		                    break;
 		                case "admin_sub03":
 		                    PresentOpen = "DOC_ADMIN";
@@ -600,7 +600,7 @@
 		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
 		                        break;
 		                    case "m07":
-		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m08":
 		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;

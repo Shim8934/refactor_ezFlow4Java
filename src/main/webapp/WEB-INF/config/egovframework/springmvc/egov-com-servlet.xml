@@ -46,6 +46,7 @@
             <mvc:mapping path="/ez*/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
             <mvc:exclude-mapping path="/user/login/login.do"/>
+            <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>

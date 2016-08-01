@@ -78,7 +78,7 @@ public class EgovFileDownloadController {
      * @param response
      * @throws Exception
      */
-    private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String browser = getBrowser(request);
 
 		String dispositionPrefix = "attachment; filename=";

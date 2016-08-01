@@ -5,7 +5,7 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     para[0] = pDeptCode;
     para[1] = pDeptName;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/SelectTask_Cross.aspx?InitFlag=" + pInitFlag + "&MultiSelect=" + pMultiSelect;
+    var url = "/ezApprovalG/selectTask.do?initFlag=" + pInitFlag + "&multiSelect=" + pMultiSelect;
 
     selecttask_cross_dialogArguments[0] = para;
     if (opentype == undefined && CompleteFunction == undefined) {
@@ -33,7 +33,7 @@ var selectdept_cross_dialogArguments = new Array();
 function SelectDept(opentype, CompleteFunction) {
     var rtn;
     var para = new Array();
-    var url = "/myoffice/ezApprovalG/ezCabinet/SelectDept_Cross.aspx";
+    var url = "/ezApprovalG/selectDept.do";
 
     selectdept_cross_dialogArguments[0] = para;
 

@@ -254,10 +254,16 @@ public interface EzApprovalGService {
 	
 	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
+	public String getGamSaSearchDocList(String containerID, String userID, String deptID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR,
+			String draftFromMONTH, String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR,
+			String apprToMONTH, String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY,
+			String draftDeptName, String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang) throws Exception;
+
 
 }

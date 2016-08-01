@@ -147,7 +147,7 @@ function DisplayTaskList(Resultxml) {
         NodeListLen = GetChildNodes(NodeList).length;
     }
 
-    var xmlDoc
+    var xmlDoc;
     if (PageSize < 0) {
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
@@ -314,7 +314,7 @@ function pagingCount_Task(p_page, p_nowblock) {
                 }
                 else
                 {
-                    strtext = "<b><span style = font-size:'10pt'>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;"
+                    strtext = "<b><span style = font-size:'10pt'>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;";
                     td_Create_Task(strtext);
 
                 }
@@ -329,7 +329,7 @@ function pagingCount_Task(p_page, p_nowblock) {
                 }
                 else
                 {
-                    strtext = "<b><span style = font-size:'10pt';>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;"
+                    strtext = "<b><span style = font-size:'10pt';>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;";
                     td_Create_Task(strtext);
                 }
             }

@@ -83,7 +83,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EgovMessageSource messageSource;
-	
+
 	/**
 	 * 전자결재G 메인화면 호출 Method
 	 */
@@ -116,6 +116,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
+		
 		String sendOutDept = ezApprovalGService.getOptionInfo("A55", "001", userInfo, "CODE");
 		String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
 		
@@ -135,6 +136,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4");
+		
 		List<Object> referenceTemp = new ArrayList<Object>();
 		referenceTemp.add(subTitleString);
 		referenceTemp.add(isSubTitle);
@@ -382,7 +384,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = {"/ezApprovalG/getLineList.do","/ezApprovalG/getTotalAttachInfo.do","/ezApprovalG/getReceiptinfo.do","/ezApprovalG/getOpinionInfo.do"}, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getLineList(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlPara,HttpServletRequest request, LoginVO userInfo) throws Exception{
+	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
@@ -4020,18 +4022,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return rtnVal;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", produces = "application/x-msexcel;charset=utf-8")
-	@ResponseBody
-	public String excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
+	@RequestMapping(value = "/ezApprovalG/excelExportOut.do")
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		StringBuilder resultExcel = new StringBuilder(); 
 		String listType = "";
 		
 		listType = request.getParameter("listType");
-		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment;filename=" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", locale)) + ".xls");
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", locale)) + ".xls\"");
 		
 		String excelValue = "";
 		
@@ -4068,7 +4069,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String P19 = request.getParameter("P19");
             String P20 = request.getParameter("P20");
             String P21 = request.getParameter("P21");
-            String P22 = request.getParameter("P22");
+//            String P22 = request.getParameter("P22");
             String P23 = request.getParameter("P23");
             String P24 = request.getParameter("P24");
             String pageNum = request.getParameter("PN");
@@ -4097,11 +4098,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		resultExcel.append("<table>");
 
 		NodeList objRow = objXML.getElementsByTagName("ROW");
+		
 		for (int k = 0; k < objRow.getLength(); k++) {
 			resultExcel.append("<tr>");
-			
 			Element row = (Element) objRow.item(k);
 			NodeList objCell = row.getElementsByTagName("CELL");
+			
 			for (int p = 0; p < objCell.getLength(); p++) {
 				Element cell = (Element) objCell.item(p);
 				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
@@ -4114,6 +4116,124 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		resultExcel.append("</table>");
 		
-		return resultExcel.toString();
+		response.getWriter().write(resultExcel.toString());
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getGamSaSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getGamSaSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+        String docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        String drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+        String draftFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+        String draftFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String draftFromDAY = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+        String draftToYEAR = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        String draftToMONTH = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+        String draftToDAY = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
+        String apprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
+        String apprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
+        String apprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent();
+        String apprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
+        String apprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
+        String apprToDAY = xmlDom.getDocumentElement().getChildNodes().item(14).getTextContent();
+
+        String myApprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(15).getTextContent();
+        String myApprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
+        String myApprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
+        String myApprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
+        String myApprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
+        String myApprToDAY = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
+        String formID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        String draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent();
+
+        String containerID = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+        String userID = xmlDom.getDocumentElement().getChildNodes().item(25).getTextContent();
+        String deptID = xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent();
+        String pageNum = xmlDom.getDocumentElement().getChildNodes().item(28).getTextContent();
+        String pageSize = xmlDom.getDocumentElement().getChildNodes().item(29).getTextContent();
+        String docState = xmlDom.getDocumentElement().getChildNodes().item(30).getTextContent();
+
+        String subQuery = xmlDom.getDocumentElement().getChildNodes().item(31).getTextContent();
+        String orderCell = xmlDom.getDocumentElement().getChildNodes().item(32).getTextContent();
+        String orderOption = xmlDom.getDocumentElement().getChildNodes().item(33).getTextContent();
+        
+        String result = ezApprovalGService.getGamSaSearchDocList(containerID, userID, deptID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY,
+        		draftToYEAR, draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY,
+        		myApprToYEAR, myApprToMONTH, myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang());
+        
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 단위업무관리 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/taskManage.do")
+	public String taskManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGtaskManage";
+	}
+	
+	/**
+	 * 전자결재G 기록물철인계 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/cabTransfer.do")
+	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGcabTransfer";
+	}
+	
+	/**
+	 * 전자결재G 기록물철인계 단위업무코드 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/selectTask.do")
+	public String selectTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String initFlag = "";
+		String multiSelect = "";
+		
+		if (request.getParameter("initFlag") != null) {
+			initFlag = request.getParameter("initFlag");
+		}
+		if (request.getParameter("multiSelect") != null) {
+			multiSelect = request.getParameter("multiSelect");
+		}
+		
+		if (initFlag.trim().equals("")) {
+			initFlag = "0";
+		}
+		
+		if (multiSelect.trim().equals("")) {
+			multiSelect = "0";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("initFlag", initFlag);
+		model.addAttribute("multiSelect", multiSelect);
+		
+		return "ezApprovalG/apprGselectTask";
+	}
+
+	/**
+	 * 전자결재G 기록물철인계 인수부서 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/selectDept.do")
+	public String selectDept(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGselectDept";
 	}
 }

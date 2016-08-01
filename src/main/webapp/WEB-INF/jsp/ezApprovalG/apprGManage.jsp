@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<style> 
-			.IMG_BTN { behavior:url("/js/ezApprovalG/ImgBtn.htc") }
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }
 			.pcol{padding-top:6px; }
 			.Right_Point01 {

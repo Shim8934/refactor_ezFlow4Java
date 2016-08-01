@@ -6,7 +6,7 @@
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<style>
-			.IMG_BTN { behavior:url("/myoffice/ezApprovalG/include/ImgBtn.htc") }
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 		</style>
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>

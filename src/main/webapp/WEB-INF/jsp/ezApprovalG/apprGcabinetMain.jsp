@@ -8,7 +8,7 @@
     <title><spring:message code='ezApprovalG.t901'/></title>
     <style>
         .IMG_BTN {
-            behavior: url("/js/ezApprovalG/ImgBtn.htc");
+            behavior: url("/css/include/ImgBtn.htc");
         }
 
         .pagetd {
