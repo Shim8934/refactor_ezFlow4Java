@@ -1193,7 +1193,7 @@
 
 		function newpage()
 		{
-			location.href = "TopMenu.aspx?mode=new";
+			location.href = "/ezPortal/topMenu.do?mode=new";
 		}
 
 	
