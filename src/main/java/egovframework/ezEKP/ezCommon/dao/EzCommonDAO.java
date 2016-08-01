@@ -17,6 +17,10 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	public String getContentInfo(Map<String, Object> map) throws Exception{
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
-
+	
+	public String wpCountLoginTime(String userID) throws Exception{
+		return (String) select("EzCommonDAO.wpCountLoginTime", userID);
+	}
+	
 
 }
