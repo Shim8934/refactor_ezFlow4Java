@@ -26,7 +26,7 @@
     				<p class="pic">${userPhoto }</p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
-			 			<dd><strong>${departMent} ${title}</strong></dd>
+			 			<dd><strong>${department} ${title}</strong></dd>
 						<dd><spring:message code="ezHome.t00016" />  ${lastLogin }</dd>
     				</dl>
     				<div class="bottom"></div>
@@ -179,7 +179,7 @@
     		<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
     	<%} %>
 		
-		<script type="text/javascript" src="<spring:message code='ezHome.t00024' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezHome.t00024'/>"></script>
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>   
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
