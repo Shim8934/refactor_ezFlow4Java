@@ -1258,6 +1258,26 @@
 		    if (clickmenusub != "")
 		        document.getElementById(clickmenusub).style.display = "";
 		}
+		
+
+		function submenuover() {
+		    img_onMouseOver(temppNewPath, tempobj);
+		}
+
+		function submenuout() {
+		    img_onMouseOut(tempobj);
+		}
+		window.onresize = function () {
+		    if (clickmenusub != "") {
+		        document.getElementById(clickmenusub).style.left = 0;
+		        var LeftMargin = parseInt(document.getElementsByName(clickmenuName)[0].offsetLeft);
+		        if (window.document.documentElement.clientWidth <= document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth) {
+		            LeftMargin = LeftMargin - (document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth - window.document.documentElement.clientWidth);
+		            LeftMargin = LeftMargin - 30;
+		        }
+		        document.getElementById(clickmenusub).style.left = LeftMargin + "px";
+		    }
+		}
 
 		function sub_toggle(subfolder)
 		{
