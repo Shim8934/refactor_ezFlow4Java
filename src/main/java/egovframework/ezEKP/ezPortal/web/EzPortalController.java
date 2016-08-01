@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -601,6 +602,8 @@ System.out.println("???");
 					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 				} else {
 					String portalPageXml = ezPortalService.searchMyPortalPage(gubunFlag, mode, userInfo, userInfo.getCompanyID());
+System.out.println("portalPageXml:"+portalPageXml);
+					
 					xmlDom = commonUtil.convertStringToDocument(portalPageXml);
 					if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
 						for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -780,6 +783,83 @@ System.out.println("gubunFlag:"+gubunFlag);
 			
 			model.addAttribute("sliderList", sliderList);
 			return "/ezPortal/portalWpNewImage";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 현재시간 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpTime.do")
+	public String wpTime(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			return "/ezPortal/portalWpTime";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart totalSection 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
+	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String langStr = "";
+		String noneActiveX = "";
+		String useEditor = config.getProperty("config.EDITOR");
+		String useIE11Browser = "";
+		String mailAddress = "";
+		String displayName = "";
+		String department = "";
+		String title = "";
+		String companyNm = "";
+		String userApprovalG = "";
+		String lastLogin = "";
+		try {
+			langStr = userInfo.getLang();
+			noneActiveX = "YES";
+		
+			//String userOffset = userInfo.getOs().split("\\|")[1];
+			
+			if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+				useIE11Browser = "CK";
+			}
+			
+			mailAddress = userInfo.getEmail();
+			if (userInfo.getLang().equals("1")) {
+				displayName = userInfo.getDisplayName1();
+				department = userInfo.getDeptName1();
+				title = userInfo.getTitle1();
+				companyNm = userInfo.getCompanyName1();
+			} else {
+				displayName = userInfo.getDisplayName2();
+				department = userInfo.getDeptName2();
+				title = userInfo.getTitle2();
+				companyNm = userInfo.getCompanyName2();
+			}
+			
+			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
+			
+			lastLogin = ezCommonService.wpCountLoginTime(userInfo.getId());
+			
+			model.addAttribute("displayName", displayName);
+			model.addAttribute("department", department);
+			model.addAttribute("title", title);
+			model.addAttribute("companyNm", companyNm);
+			model.addAttribute("userApprovalG", userApprovalG);
+			model.addAttribute("lastLogin", lastLogin);
+			model.addAttribute("noneActiveX", noneActiveX);
+			model.addAttribute("useIE11Browser", useIE11Browser);
+			model.addAttribute("mailAddress", mailAddress);
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("userLang", userInfo.getLang());
+			
+			return "/ezPortal/portalWpTotalSection";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
