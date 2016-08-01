@@ -92,6 +92,10 @@ public class EzEmailUtil {
 		return strSize;
 	}
 	
+	/**
+	 * 메일의 From 헤더로부터 보낸 사람의 이름을 반환한다. 이름을 반환할 수 없는 경우엔 이메일 주소를 대신 반환한다. 
+	 * 예외가 발생하였거나 유효한 From 헤더값이 존재하지 않는 경우엔 empty string을 반환한다.
+	 */
 	public String getFromNameOrAddressOfMessage(Message message) {
 		String addressStr = "";
 		
@@ -102,16 +106,15 @@ public class EzEmailUtil {
 				addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
 				if (addressStr == null) {
 					addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
-				}
-				else {
+				} else {
 					String fromHeader = message.getHeader("From")[0];
 					
+					// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 					if (!isPureAscii(fromHeader)) {
 						byte[] rawBytes = addressStr.getBytes("iso-8859-1");
 						
 						addressStr = decodeNonAsciiBytes(rawBytes);
-					}
-					else {
+					} else {
 						// decoding is needed for the name part
 						// ex) =?UTF-8?B?44WC44WC?=
 						//     =?utf-8?B?Z2lzYTE=?=
@@ -119,17 +122,25 @@ public class EzEmailUtil {
 						addressStr = MimeUtility.decodeText(addressStr);
 					}
 				}
-			}			
-			// in case there is only a name with no email address
-			else {
+			// From 헤더가 존재하더라도 이름만 있고 유효한 이메일 주소가 없는 경우에도 이 부분이 실행될 수 있다.				
+			} else {
 				String[] fromHeaders = message.getHeader("From");
+				
 				if (fromHeaders != null) {
-					addressStr = MimeUtility.decodeText(fromHeaders[0]);
+					String fromHeader = fromHeaders[0];
+					
+					if (!isPureAscii(fromHeader)) {
+						byte[] rawBytes = fromHeader.getBytes("iso-8859-1");
+						
+						addressStr = decodeNonAsciiBytes(rawBytes);
+					} else {
+						addressStr = MimeUtility.decodeText(fromHeader);
+					}					
 				}
 			}			
-		} catch (MessagingException e) {
-		} catch (UnsupportedEncodingException e) {			
-		}		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		
 		return addressStr;
 	}

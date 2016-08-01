@@ -784,13 +784,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
 			Folder f = ia.getFolder(folderPath);
 			
-			if(f != null){
+			if (f != null) {
 				f.open(Folder.READ_WRITE);
 				Message message = null;
-				if(f.isOpen() && f instanceof IMAPFolder){
+				
+				if (f.isOpen() && f instanceof IMAPFolder) {
 					message = ((IMAPFolder)f).getMessageByUID(uid);
 				}
-				if(message != null){
+				
+				if (message != null) {					
 					arrFroms = message.getFrom();
 					
 					if (arrFroms != null) {
@@ -818,6 +820,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = iAddress.getAddress();
 							}
 							else {
+								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
@@ -849,6 +852,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = iAddress.getAddress();
 							}
 							else {
+								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
@@ -891,30 +895,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if(date != null){
 						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
 					}
-	
-					String[] subjectHeaders = message.getHeader("subject");
-					if (subjectHeaders != null) {
-						String fileEncoding = System.getProperty("file.encoding");
-						logger.debug("fileEncoding=" + fileEncoding);
 						
-						String subjectHeader = subjectHeaders[0];
-						byte[] subjectBytes = subjectHeader.getBytes("iso-8859-1");
-						
-						StringBuilder sb = new StringBuilder();
-						
-						for (byte item : subjectBytes) {
-							sb.append(String.format("%02x", item));
-						}
-						
-						logger.debug("subjectBytes=" + sb.toString());
-					}
-					
 					subject = message.getSubject();
 					
 					if (subject != null && !subject.equals("")) {
 						String[] rawHeaders = message.getHeader("subject");
 						String rawHeader = rawHeaders[0];
 						
+						// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 						if (!ezEmailUtil.isPureAscii(rawHeader)) {
 							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
 							
