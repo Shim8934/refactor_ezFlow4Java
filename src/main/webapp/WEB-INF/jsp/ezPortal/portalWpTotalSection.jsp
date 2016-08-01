@@ -398,7 +398,7 @@
 			function getnewapprovalcount() 
 			{
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-				if (("<%=userApprovalG%>").equals("YES"))
+				if (("<%=userApprovalG%>") == ("YES"))
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApprovalG/WebPartFolder/getWebPartCount.aspx", true);
 				else
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApproval/WebPartFolder/getWebPartCount.aspx", true);
@@ -504,7 +504,7 @@
 					case "AprSign" : 		
 						var listType;
 						listType = 1;
-						if (("<%=userApprovalG%>").equals("YES"))
+						if ("<%=userApprovalG%>" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/myoffice/ezApproval/index_approval.aspx?listType=" + listType, "main");
@@ -513,7 +513,7 @@
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
 						var listType;
 						listType = 1;
-						if (("<%=userApprovalG%>").equals("YES"))
+						if ("<%=userApprovalG%>" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/myoffice/ezApproval/index_approval.aspx?listType=" + listType, "main");
@@ -655,7 +655,7 @@
 
 		                var left = (width - wWeight) / 2;
 		                var top = (heigth - wHeight) / 2;
-		                window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Cross.aspx", "",
+		                window.open("/ezBoard/writeBoardSelectModal.do", "",
 		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
 		        }
@@ -681,14 +681,14 @@
 		        var pLeft = (pwidth - 890) / 2;
 
 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        }
 		        else {
 		            if (pUse_Editor == "") {
-		                window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		            }
 		            else {
-		                window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		            }
 		        }
 		    }
@@ -703,10 +703,11 @@
 		        parameter[0] = "${userInfo.deptID}";
 		        parameter[1] = "A01000";
 
-		        if (("<%=userApprovalG%>").equals("YES"))
-		            url = "/myoffice/ezApprovalG/formContainer/getFormCont_Cross.aspx";
-		        else
-		            url = "/myoffice/ezApproval/formContainer/getFormCont_Cross.aspx";
+		        if ("<%=userApprovalG%>" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
 		        
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            getformcont_cross_dialogArguments[0] = parameter;
@@ -738,7 +739,7 @@
 		    function openDraftUI() {
 		        var pArgument = new Array();
 		        var gb = "";
-		        if (("<%=userApprovalG%>").equals("YES"))
+		        if ("<%=userApprovalG%>" == ("YES"))
 		            gb = "G";
 		        
 		        	pArgument[0] = "${userInfo.id}";
