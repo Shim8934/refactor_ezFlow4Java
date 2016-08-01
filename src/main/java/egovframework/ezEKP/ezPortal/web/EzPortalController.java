@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPortal.web;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -9,24 +10,25 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
+
+import com.ibm.icu.util.BytesTrie.Result;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
+import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -57,6 +59,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
+	
+	@Resource(name = "EzQuestionService")
+	private EzQuestionService ezQuestionService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -806,6 +814,7 @@ System.out.println("gubunFlag:"+gubunFlag);
 	/**
 	 * 포탈 - webPart totalSection 화면 호출 함수
 	 */
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -820,11 +829,15 @@ System.out.println("gubunFlag:"+gubunFlag);
 		String companyNm = "";
 		String userApprovalG = "";
 		String lastLogin = "";
+		String pollNum = "";
+		String userPhoto = "";
+		
 		try {
 			langStr = userInfo.getLang();
 			noneActiveX = "YES";
-		
+			
 			//String userOffset = userInfo.getOs().split("\\|")[1];
+			String userOffset = "+09:00";
 			
 			if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
 				useIE11Browser = "CK";
@@ -847,6 +860,20 @@ System.out.println("gubunFlag:"+gubunFlag);
 			
 			lastLogin = ezCommonService.wpCountLoginTime(userInfo.getId());
 			
+			//전자설문
+			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));
+			
+			//유저이미지
+			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2");
+			
+			if (result != null && !result.equals("")) {
+				userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
+			} else {
+				userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
+			}
+			
+			
+			
 			model.addAttribute("displayName", displayName);
 			model.addAttribute("department", department);
 			model.addAttribute("title", title);
@@ -858,6 +885,9 @@ System.out.println("gubunFlag:"+gubunFlag);
 			model.addAttribute("mailAddress", mailAddress);
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("userLang", userInfo.getLang());
+			model.addAttribute("pollNum", pollNum);
+			model.addAttribute("userPhoto", userPhoto);
+			model.addAttribute("userOffset", userOffset);
 			
 			return "/ezPortal/portalWpTotalSection";
 		} catch (Exception e) {
