@@ -51,7 +51,7 @@
 						url = "/admin/ezApprovalG/manageSendInfo.do";
 						break;						
 					case 10:
-					    url = "/myoffice/ezApprovalG/ezStatistics/ezStatistics_Cross.aspx";
+					    url = "/admin/ezApprovalG/EzStatistics.do";
 						break;						
 					case 11:
 					    url = "/myoffice/ezApprovalG/ezStatistics/ezStatisticsforAprdoc_Cross.aspx";

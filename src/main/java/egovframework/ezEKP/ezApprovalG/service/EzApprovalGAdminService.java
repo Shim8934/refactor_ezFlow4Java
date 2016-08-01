@@ -82,13 +82,12 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception;
 	
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
+
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception;
+
 	
-
-
-
-
-
-
 }

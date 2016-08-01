@@ -92,7 +92,6 @@
 	        function OpenAlertUI_Complete() {
 	        }
 	        
-	        //여기부터 하던중
 	        function getSealList() {
 	            $.ajax({
 	            	type : "POST",
@@ -118,29 +117,6 @@
 		        	}
 	            });
 	        }
-	
-	        /* function getSealList_after(result) {
-	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	                if (g_xmlHTTP.statusText == "OK") {
-	                    var listview = new ListView();
-	                    listview.LoadFromID("lvtDocForm");
-	                    listview.SetRowOnDblClick("lvtForm_onDblclick");
-	                    listview.DataSource(loadXMLString(result));
-	                    listview.RowDataBind("lvtForm");
-	
-	                    if (listview.GetDataRows()[0].id.indexOf("noItems") > -1) {
-	                        var listview = new ListView();
-	                        listview.SetID("lvtDocForm");
-	                        listview.DataSource(loadXMLString(LISTHEADER.innerHTML.toUpperCase()));
-	                        listview.RowDataBind("lvtForm");
-	                    }
-	                } else {
-	                    alert("<spring:message code = 'ezApprovalG.t228' />" + g_xmlHTTP.statusText);
-	                }
-
-	            	g_xmlHTTP = null;
-		        }
-		    } */
 
 		    function InsertSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight) {
 		    	var tempRet = "";

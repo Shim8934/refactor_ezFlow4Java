@@ -49,6 +49,8 @@ public class ApprGReceiveDocVO {
 	private String orgHref;
 	/** */
 	private String sn;
+	/** */
+	private String aprCount;
 	
 	public String getOrgDocID() {
 		return orgDocID;
@@ -194,4 +196,11 @@ public class ApprGReceiveDocVO {
 	public void setSn(String sn) {
 		this.sn = sn;
 	}
+	public String getAprCount() {
+		return aprCount;
+	}
+	public void setAprCount(String aprCount) {
+		this.aprCount = aprCount;
+	}
+	
 }

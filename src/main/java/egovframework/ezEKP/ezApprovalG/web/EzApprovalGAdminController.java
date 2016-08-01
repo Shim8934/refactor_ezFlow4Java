@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -1173,18 +1177,108 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/saveOptionInfo.do")
 	@ResponseBody
-	public String saveOptionInfo(HttpServletRequest request) {
-		String optionValue1 = request.getParameter("optionValue1");
-		String optionValue2 = request.getParameter("optionValue2");
-		String optionValue3 = request.getParameter("optionValue3");
+	public String saveOptionInfo(HttpServletRequest request) throws Exception {
+		String optionValue1 = request.getParameter("option1");
+		String optionValue2 = request.getParameter("option2");
+		String optionValue3 = request.getParameter("option3");
 		String companyID = request.getParameter("companyID");
 		String realPath = request.getServletContext().getRealPath("");
 		String dirPath = config.getProperty("upload_approvalG.ROOT");
 		
-//		파일 추가 
-		
 		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";
+		 
+		try {
+			File cFile = new File(realPath + dirPath + commonUtil.separator + companyID);
+			if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdirs();
+				if (!_flag) {
+					throw new IOException("Directory creation Failed ");
+				}
+			}
+			
+			File file = new File(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			writer.write(returnString);
+			writer.flush();
+			writer.close();
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+	
+	/**
+	 * 전자결재G관리 결재건수조회 메뉴 화면 호출 함수
+	 */
+	@RequestMapping("/admin/ezApprovalG/EzStatistics.do")
+	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
-		return "";
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
+		String eDate = EgovDateUtil.getCurrentDate("-");
+		String sDate = EgovDateUtil.addMonth(eDate, -1, "yyyy-MM-dd");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		model.addAttribute("tempPYear", sDate.substring(0, 4));
+		model.addAttribute("tempPMonth", sDate.substring(5, 7));
+		model.addAttribute("tempYear", eDate.substring(0, 4));
+		model.addAttribute("tempMonth", eDate.substring(5, 7));
+		
+		return "admin/ezApprovalG/apprGEzStatistics";
+	}
+	
+	/**
+	 * 전자결재G관리 결재건수조회 처리과별 검색 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getDeptTranSendDocCount.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getDeptTranSendDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sYear = request.getParameter("sYear");
+		String sMonth = request.getParameter("sMonth");
+		String eYear = request.getParameter("eYear");
+		String eMonth = request.getParameter("eMonth");
+		String pMode = request.getParameter("pMode");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 결재건수조회 개인별 검색 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getUserDocCount.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getUserDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sYear = request.getParameter("sYear");
+		String sMonth = request.getParameter("sMonth");
+		String eYear = request.getParameter("eYear");
+		String eMonth = request.getParameter("eMonth");
+		String userFlag = request.getParameter("userFlag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, userFlag, companyID, userInfo.getLang());
+		
+		return result;
 	}
 }

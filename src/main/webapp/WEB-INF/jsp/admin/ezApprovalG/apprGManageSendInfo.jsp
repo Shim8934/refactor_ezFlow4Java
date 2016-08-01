@@ -40,25 +40,6 @@
 	        }
 	        
 	        function SaveOptionInfo(companyID, option1, option2, option3) {
-	            /* var xmlhttp = createXMLHttpRequest()
-	
-	            var xmlpara = createXmlDom();
-	            var xmlRtn = createXmlDom();
-	
-	            var objNode;
-	
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "companyID", companyID);
-	            createNodeAndInsertText(xmlpara, objNode, "Option1", Option1);
-	            createNodeAndInsertText(xmlpara, objNode, "Option2", Option2);
-	            createNodeAndInsertText(xmlpara, objNode, "Option3", Option3);
-	
-	            xmlhttp.open("POST", "aspx/saveOptionInfo.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            if (xmlhttp.responseText == "TRUE") {
-	                alert("<spring:message code = 'ezApprovalG.t1581' />");
-			    } */
 			    $.ajax({
 			    	type : "POST",
 			    	url : "/admin/ezApprovalG/saveOptionInfo.do",

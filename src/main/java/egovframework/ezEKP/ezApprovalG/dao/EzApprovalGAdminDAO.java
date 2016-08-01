@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGAdminDAO")
@@ -88,6 +90,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public ApprGTaskVO getTaskName(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskName", map);
+	}
+	
+	public ApprGReceiveDocVO getDeptTranSendDocCount(Map<String, Object> map) throws Exception {
+		return (ApprGReceiveDocVO) select("EzApprovalGAdmin.getDeptTranSendDocCount", map);
 	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
@@ -200,6 +206,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.deleteSealInfo", map);
 	}
 	
+	public void deleteDeptSealInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.deleteSealInfo", map);
+	}
+	
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
@@ -226,7 +236,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 
 
-	public void deleteDeptSealInfo(Map<String, Object> map) throws Exception {
-		update("EzApprovalGAdmin.deleteSealInfo", map);
+	
+
+
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getUserDocCount(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalGAdmin.getUserDocCount", map);
 	}
 }

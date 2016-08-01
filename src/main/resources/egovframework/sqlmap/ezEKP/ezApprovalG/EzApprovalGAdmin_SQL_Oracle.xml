@@ -9,6 +9,8 @@
 	<typeAlias  alias="ApprGTaskDeptInfoVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO"/>
 	<typeAlias  alias="ApprGTaskCodeHistoryVO"			type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO"/>
 	<typeAlias  alias="ApprGSealInfoVO"					type="egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO"/>
+	<typeAlias  alias="ApprGReceiveDocVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO"/>
+	<typeAlias  alias="ApprGAprLineVO"					type="egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO"/>
 	
 	<!--
 	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
@@ -80,7 +82,7 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
-
+	
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -98,6 +100,19 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKHISTORY(#v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getDeptTranSendDocCount"		remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETDEPTTRANSENDDOCCOUNT(#v_MODE#, #v_FROM#, #v_TO#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.getUserDocCount"				remapResults="true" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETUSERDOCCOUNT(#v_APRTYPE#, #v_FROM#, #v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	
 	<procedure id="EzApprovalGAdmin.deleteContainerType" 			parameterClass="Map" resultClass="String">
 		<![CDATA[

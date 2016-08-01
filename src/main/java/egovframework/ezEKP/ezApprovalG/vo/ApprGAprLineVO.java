@@ -69,6 +69,8 @@ public class ApprGAprLineVO {
 	private String flag;
 	/** */
 	private String gDocID;
+	/** */
+	private String aprCount;
 	
 	public String getUserID() {
 		return userID;
@@ -273,6 +275,12 @@ public class ApprGAprLineVO {
 	}
 	public void setgDocID(String gDocID) {
 		this.gDocID = gDocID;
+	}
+	public String getAprCount() {
+		return aprCount;
+	}
+	public void setAprCount(String aprCount) {
+		this.aprCount = aprCount;
 	}
 	
 }

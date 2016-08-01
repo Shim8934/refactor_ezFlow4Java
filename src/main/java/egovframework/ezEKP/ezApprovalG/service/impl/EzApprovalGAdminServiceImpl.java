@@ -3,22 +3,27 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
@@ -26,12 +31,16 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
-/**
- * @author DC363
- *
- */
 @Service("EzApprovalGAdminService")
 public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
+
+	@Autowired
+	private Properties globals;
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
@@ -43,7 +52,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private EzApprovalGAdminDAO ezApprovalGAdminDAO;
 	
 	@Autowired
-	private CommonUtil commonUtil;
+	private EgovMessageSource egovMessageSource;
 
 	@Override
 	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception {
@@ -1309,6 +1318,172 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} catch (Exception e) {
 			return "FALSE";
 		}
+	}
+
+	@Override
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTTYPE", "108");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			if (pMode.equals("RECV") && i != 0){
+				sb.append("<HEADER>");
+				sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+				sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				sb.append("</HEADER>");
+			} else if (pMode.equals("SEND") && i != 1) {
+				sb.append("<HEADER>");
+				sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+				sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				sb.append("</HEADER>");
+			} else if (pMode.equals("BOTH")){
+				sb.append("<HEADER>");
+				sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+				sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				sb.append("</HEADER>");
+			}
+		}
+		sb.append("</HEADERS><ROWS>");
+		
+		String szFrom = sYear + "-" + sMonth;
+		String szTo = eYear + "-" + eMonth;
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map1.put("v_MODE", pMode);
+		map1.put("v_FROM", szFrom);
+		map1.put("v_TO", szTo);
+		map1.put("v_LANGTYPE", lang);
+		map1.put("companyID", companyID);
+		
+		ApprGReceiveDocVO vo = ezApprovalGAdminDAO.getDeptTranSendDocCount(map1);
+		
+		if (vo != null) {
+			sb.append("<ROW>");
+			
+			if (!pMode.equals("RECV")) {
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSentDeptName()) + "</VALUE></CELL>");
+			}
+			if (!pMode.equals("SEND")) {
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getReceivedDeptName()) + "</VALUE></CELL>");
+			}
+			
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL></ROW>");
+		}
+		
+		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception {
+		StringBuilder sb = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTTYPE", "107");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			
+			if (vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))))) {
+				switch (userFlag) {
+				case "1":
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))));
+					break;
+				case "2":
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1304", new Locale(globals.getProperty("Globals.language"))));
+					break;
+				case "3":
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1305", new Locale(globals.getProperty("Globals.language"))));
+					break;
+				case "4":
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1306", new Locale(globals.getProperty("Globals.language"))));
+					break;
+				default:
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))));
+					break;
+				}
+			}
+			
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}
+		sb.append("</HEADERS><ROWS>");
+		
+		String aprType = "";
+		switch (userFlag) {
+		case "1":
+			aprType = "'018'";
+			break;
+		case "2":
+			aprType = "'019'";
+			break;
+		case "3":
+			aprType = "'008', '009', '011', '012'";
+			break;
+		case "4":
+			aprType = "'001', '004', '016'";
+			break;
+		}
+		
+		String szFrom = sYear + "-" + sMonth;
+		String szTo = eYear + "-" + eMonth;
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map1.put("v_APRTYPE", aprType);
+		map1.put("v_FROM", szFrom);
+		map1.put("v_TO", szTo);
+		map1.put("v_STRLANG", commonUtil.getMultiData(lang));
+		map1.put("companyID", companyID);
+		
+		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
+		
+		for (ApprGAprLineVO vo : list) {
+			sb.append("<ROW>");
+			if (lang.equals("1")) {
+				sb.append("<CELL><VALUE>" + vo.getAprMemberDeptName() + "</VALUE>");
+				sb.append("<DATA1>" + vo.getAprMemberDeptID() + "</DATA1>");
+				sb.append("<DATA2>" + vo.getAprMemberID() + "</DATA2></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprMemberJobTitle() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprMemberName() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprCount() + "</VALUE></CELL>");
+			} else {
+				sb.append("<CELL><VALUE>" + vo.getAprMemberDeptName2() + "</VALUE>");
+				sb.append("<DATA1>" + vo.getAprMemberDeptID() + "</DATA1>");
+				sb.append("<DATA2>" + vo.getAprMemberID() + "</DATA2></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprMemberJobTitle2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprMemberName2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + vo.getAprCount() + "</VALUE></CELL>");
+			}
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		return sb.toString();
 	}
 
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
