@@ -335,7 +335,8 @@ function getCalendarMiniDataSource_after(xmlhttp) {
         tempData = null;
     }
     catch (e) {
-        alert("getCalendarMiniDataSource_after : " + e.description);
+    	// 2016-08-01 schedule_get_list.aspx 구현될때까지 주석처리
+        //alert("getCalendarMiniDataSource_after : " + e.description);
     }
 }
 
