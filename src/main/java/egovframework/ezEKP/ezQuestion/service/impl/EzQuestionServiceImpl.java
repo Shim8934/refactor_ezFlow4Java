@@ -828,5 +828,14 @@ public class EzQuestionServiceImpl implements EzQuestionService{
 		map.put("v_pItemNo", itemNo);
 		ezQuestionDAO.deletePollAttach(map);
 	}
+
+	@Override
+	public int wpCountPollCount(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUSERID", userID);
+		return ezQuestionDAO.wpCountPollCount(map);
+	}
+	
+	
 	
 }

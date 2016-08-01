@@ -186,6 +186,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (int) select("EzQuestionDAO.getResponseDateCnt", map);
 	}
 	
+	public int wpCountPollCount(Map<String, Object> map){
+		select("EzQuestionDAO.wpCountPollCount", map);
+		return (int) map.get("v_pCount");
+	}
+	
 	public Integer resCount(Map<String, Object> map) {
 		return (Integer) select("EzQuestionDAO.resCount", map);
 	}

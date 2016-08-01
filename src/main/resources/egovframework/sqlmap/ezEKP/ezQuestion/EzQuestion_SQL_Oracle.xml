@@ -573,6 +573,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzQuestionDAO.wpCountPollCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZQUESTION.EZSP_WPCONT_POLLCOUNT(#v_pUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="String" resultClass="String">
 		<![CDATA[
 			SELECT 
