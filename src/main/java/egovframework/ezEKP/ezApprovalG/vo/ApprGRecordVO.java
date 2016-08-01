@@ -61,6 +61,40 @@ public class ApprGRecordVO {
 	private String reSendFlag;
 	/** 순서*/
 	private String rowNum_;
+	/** 처리과부서코드*/
+	private String recDeptCode;
+	/** 처리과이름*/
+	private String recDeptName;
+	/**특수목록여부*/
+	private String specialCatalogFlag;
+	/**생산/접수등록번호*/
+	private String recRegSn;
+	/**시행일자*/
+	private String executeDate;
+	/**수신자이름*/
+	private String receiptMemberName;
+	/**문서과 배부번호*/
+	private String deliveryNo;
+	/**생산기관 등록번호*/
+	private String produceDeptregNo;
+	/**변경구분*/
+	private String modifyFlag;
+	/**전자기록물여부*/
+	private String electronicRecFlag;
+	/**신/구 기록물 구분*/
+	private String oldRecordFlag;
+	/**구기록물철생산기관*/
+	private String createOrganName;
+	/**구기록물문서번호*/
+	private String recordNo;
+	/**구기록물보존기간*/
+	private String recKp;
+	/**요약*/
+	private String summary;
+	/**기록물형태*/
+	private String recordType;
+	/**쪽수*/
+	private String numOfPage;
 	
 	public String getRecordID() {
 		return recordID;
@@ -241,6 +275,108 @@ public class ApprGRecordVO {
 	}
 	public void setRowNum_(String rowNum_) {
 		this.rowNum_ = rowNum_;
+	}
+	public String getRecDeptCode() {
+		return recDeptCode;
+	}
+	public void setRecDeptCode(String recDeptCode) {
+		this.recDeptCode = recDeptCode;
+	}
+	public String getRecDeptName() {
+		return recDeptName;
+	}
+	public void setRecDeptName(String recDeptName) {
+		this.recDeptName = recDeptName;
+	}
+	public String getSpecialCatalogFlag() {
+		return specialCatalogFlag;
+	}
+	public void setSpecialCatalogFlag(String specialCatalogFlag) {
+		this.specialCatalogFlag = specialCatalogFlag;
+	}
+	public String getRecRegSn() {
+		return recRegSn;
+	}
+	public void setRecRegSn(String recRegSn) {
+		this.recRegSn = recRegSn;
+	}
+	public String getExecuteDate() {
+		return executeDate;
+	}
+	public void setExecuteDate(String executeDate) {
+		this.executeDate = executeDate;
+	}
+	public String getReceiptMemberName() {
+		return receiptMemberName;
+	}
+	public void setReceiptMemberName(String receiptMemberName) {
+		this.receiptMemberName = receiptMemberName;
+	}
+	public String getDeliveryNo() {
+		return deliveryNo;
+	}
+	public void setDeliveryNo(String deliveryNo) {
+		this.deliveryNo = deliveryNo;
+	}
+	public String getProduceDeptregNo() {
+		return produceDeptregNo;
+	}
+	public void setProduceDeptregNo(String produceDeptregNo) {
+		this.produceDeptregNo = produceDeptregNo;
+	}
+	public String getModifyFlag() {
+		return modifyFlag;
+	}
+	public void setModifyFlag(String modifyFlag) {
+		this.modifyFlag = modifyFlag;
+	}
+	public String getElectronicRecFlag() {
+		return electronicRecFlag;
+	}
+	public void setElectronicRecFlag(String electronicRecFlag) {
+		this.electronicRecFlag = electronicRecFlag;
+	}
+	public String getOldRecordFlag() {
+		return oldRecordFlag;
+	}
+	public void setOldRecordFlag(String oldRecordFlag) {
+		this.oldRecordFlag = oldRecordFlag;
+	}
+	public String getCreateOrganName() {
+		return createOrganName;
+	}
+	public void setCreateOrganName(String createOrganName) {
+		this.createOrganName = createOrganName;
+	}
+	public String getRecordNo() {
+		return recordNo;
+	}
+	public void setRecordNo(String recordNo) {
+		this.recordNo = recordNo;
+	}
+	public String getRecKp() {
+		return recKp;
+	}
+	public void setRecKp(String recKp) {
+		this.recKp = recKp;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	public String getRecordType() {
+		return recordType;
+	}
+	public void setRecordType(String recordType) {
+		this.recordType = recordType;
+	}
+	public String getNumOfPage() {
+		return numOfPage;
+	}
+	public void setNumOfPage(String numOfPage) {
+		this.numOfPage = numOfPage;
 	}
 	
 }

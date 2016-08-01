@@ -1139,7 +1139,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                 para2[0] = selRow.getAttribute("DATA6");
                 para2[1] = selRow.getAttribute("DATA8");
 
-                var url = "/myoffice/ezApprovalG/FormContainer/contDocView_NoDoc.aspx?DocID=" + encodeURI(DocID) + "&g_RecID=" + encodeURI(para2[0]) + "&g_SepAttNo=" + encodeURI(para2[1]);
+                var url = "/ezApprovalG/contDocView_NoDoc.do?docID=" + encodeURI(DocID) + "&g_RecID=" + encodeURI(para2[0]) + "&g_SepAttNo=" + encodeURI(para2[1]);
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;
                 var left = 0;
@@ -1183,7 +1183,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                 }
                 else {
                     if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_Cross.aspx";
+                        openLocation = "/ezApprovalG/contDocView.do";
                     }
                     else {
                         if (pUse_Editor == "") {
@@ -1193,7 +1193,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                             openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                         }
                     }
-                    openLocation = openLocation + "?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
+                    openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
                 }
             }
             openwindow(openLocation, "", 880, 570);
@@ -1259,11 +1259,21 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 
             pleftpos = parseInt(width) - 967;
             heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
             width = parseInt(width) - pleftpos;
             left = pleftpos / 2;
         }
         else {
             heigth = parseInt(heigth) - 30;
+            if (CrossYN())
+                heigth = parseInt(heigth) - 25;
+
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+                heigth = parseInt(heigth) - 40;
             width = parseInt(width) - 10;
         }
 

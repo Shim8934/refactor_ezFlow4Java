@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -152,33 +153,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception{
 		String listHeader = getListHeader("106", userInfo.getCompanyID(), userInfo.getLang());
 		List<ApprGLeftVO> apprGLeftVOList = new ArrayList<ApprGLeftVO>();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("deptID", userInfo.getDeptID());
 		map.put("companyID", userInfo.getCompanyID());
 		
-		if (!ownFlag.equals("1")) {
-			apprGLeftVOList = ezApprovalGDAO.getUseContInfo1(map);
-		} else {
+		if (ownFlag.equals("1")) {
 			apprGLeftVOList = ezApprovalGDAO.getUseContInfo2(map);
+		} else if (ownFlag.equals("2")) {
+			apprGLeftVOList = ezApprovalGDAO.getUseContInfo3(map);
+		} else {
+			apprGLeftVOList = ezApprovalGDAO.getUseContInfo1(map);
 		}
-		
-		//이상함 되지도 않는 소스
-//		if (ownFlag.equals("1")) {
-//			apprGLeftVOList = ezApprovalGDAO.getUseContInfo2(map);
-//		} else if (ownFlag.equals("2")) {
-//			apprGLeftVOList = ezApprovalGDAO.getUseContInfo3(map);
-//			
-//			for (int k = 0; k < apprGLeftVOList.size(); k++) {
-//				if (userInfo.getLang().equals("1")) {
-//					apprGLeftVOList.get(k).setContainerTypeName(makeListField(ezOrganService.getPropertyValue(makeListField(apprGLeftVOList.get(k).getContainerOwnDepID()),
-//							"displayName" + "_" + makeListField(apprGLeftVOList.get(k).getContainerTypeName()))));
-//				} else {
-//					apprGLeftVOList.get(k).setContainerTypeName2(makeListField(ezOrganService.getPropertyValue(makeListField(apprGLeftVOList.get(k).getContainerOwnDepID()),
-//							"displayName" + commonUtil.getMultiData(userInfo.getLang()) + "_" + makeListField(apprGLeftVOList.get(k).getContainerTypeName2()))));
-//				}
-//			}
-//		}
 		
 		Document doc = commonUtil.convertStringToDocument(listHeader);
 		apprGLeftVOList.get(0).setName(doc.getElementsByTagName("NAME").item(0).getTextContent());
@@ -6208,7 +6193,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private String formatVolNum(String strVolNO) {
 		return getNDigitNum(strVolNO, 3);
 	}
-
+//	private String formatDateForTrans(String pDate, int iFlag) {
+//		String rtnVal="";
+//		if(pDate.length()>0){
+//			
+//		}
+//		return "";
+//	}
+	private String getAVTypeString(String pCode, String companyID, String LangType) {
+		try{
+			String [] pCodes = pCode.split(",");
+			String rtnVal="";
+			for(int i = 0; i < pCodes.length; i++){
+				if(pCodes[i].trim().length() >= 1){
+					if(rtnVal.trim() != ""){
+						rtnVal += ",";
+					}
+					if(pCodes[i].substring(0,1).toUpperCase() == "C"){
+						rtnVal += getCabinetCode2Name("009", pCodes[i].toString(), companyID, LangType);
+					}
+					else{
+						rtnVal += getCabinetCode2Name("008", pCodes[i].toString(), companyID, LangType);
+					}
+				}
+			}
+			return rtnVal;
+		}catch(Exception e){	
+			return null;
+		}
+	}
 	private String rollbackSN(String snType1, String snType2, String snType3, String toSN, String companyID, String strLang) throws Exception{
 		String accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, strLang);
 		String result = "";
@@ -12085,5 +12098,77 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		
 		return sb.toString();
+	}
+
+	@Override
+	public String GetRecordInfo(Document xmlDom, String lang)throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		
+		try{
+
+                  			String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+			String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_RECORDID",RecID);
+			map.put("v_SEPATTNO",SepAttachNo);
+			map.put("companyID", companyID);
+			map.put("v_LANGTYPE",lang);
+			List<ApprGRecordVO> docList = ezApprovalGDAO.getRecordInfo(map);
+			
+			StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < docList.size(); i++) {
+				sb.append(commonUtil.getQueryResult(docList.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			Document docXML = commonUtil.convertStringToDocument(sb.toString());
+			
+			if (docXML.getElementsByTagName("ROW").getLength() <= 0) {
+				return "<RESULT>NORECORD</RESULT>";
+			}
+			System.out.println("-------------------"+docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent());
+			resultXML.append("<RECINFO>");
+			resultXML.append("<BASICINFO>");
+			resultXML.append("<RECORDID>" + makeListField(docXML.getElementsByTagName("RECORDID").item(0).getTextContent()) + "</RECORDID>");
+			resultXML.append("<SEPATTACHNO>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(0).getTextContent()) + "</SEPATTACHNO>");
+			resultXML.append("<TITLE>" + makeListField(docXML.getElementsByTagName("RECTITLE").item(0).getTextContent()) + "</TITLE>");
+			resultXML.append("<REGTYPE>" + getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()),companyID, lang) + "</REGTYPE>");
+			resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
+			resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
+			
+			resultXML.append("<REGNO>" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()),makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent())) + "</REGNO>");
+			
+			resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
+			resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
+			resultXML.append("<REGDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),0) + "</REGDATE>");
+			resultXML.append("<SPECIALFLAG>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent()) + "</SPECIALFLAG>");
+			resultXML.append("</BASICINFO>");
+
+			resultXML.append("<EXTRAINFO>");
+			resultXML.append("<EXECUTEDATE>" + makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()) + "</EXECUTEDATE>");
+			resultXML.append("<RECEIPTMEMBER>" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "</RECEIPTMEMBER>");
+			resultXML.append("<DELIVERYNO>" + makeListField(docXML.getElementsByTagName("DELIVERYNO").item(0).getTextContent()) + "</DELIVERYNO>");
+			resultXML.append("<PRODUCEDEPTSN>" + makeListField(docXML.getElementsByTagName("PRODUCEDEPTREGNO").item(0).getTextContent()) + "</PRODUCEDEPTSN>");
+			resultXML.append("<MODIFYFLAG>" + makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(0).getTextContent()) + "</MODIFYFLAG>");
+			resultXML.append("<REJECTFLAG>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(0).getTextContent()) + "</REJECTFLAG>");
+			resultXML.append("<ELECTRONICFLAG>" + makeListField(docXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent()) + "</ELECTRONICFLAG>");
+			resultXML.append("<OLDFLAG>" + makeListField(docXML.getElementsByTagName("OLDRECORDFLAG").item(0).getTextContent()) + "</OLDFLAG>");
+			resultXML.append("<OLDPRODUCEDEPT>" + makeListField(docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent()) + "</OLDPRODUCEDEPT>");
+			resultXML.append("<OLDRECNO>" + makeListField(docXML.getElementsByTagName("RECORDNO").item(0).getTextContent()) + "</OLDRECNO>");
+			
+			resultXML.append("<OLDRECKP>" + makeListField(docXML.getElementsByTagName("RECKP").item(0).getTextContent()) + "</OLDRECKP>");
+			resultXML.append("<AVSUMMARY>" +  makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent()) + "</AVSUMMARY>");
+			resultXML.append("<AVTYPE>" + getAVTypeString(makeListField(docXML.getElementsByTagName("RECORDTYPE").item(0).getTextContent()), companyID, lang) + "</AVTYPE>");
+			resultXML.append("<NUMOFPAGE>" +makeListField(docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent()) + "</NUMOFPAGE>");
+			resultXML.append("</EXTRAINFO>");
+			resultXML.append("</RECINFO>");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return resultXML.toString();
 	}
 }

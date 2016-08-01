@@ -111,4 +111,73 @@ public class EzApprovalGarchiveController {
 		return "ezApprovalG/apprGcabinetMain";
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/contDocView_NoDoc.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String contDocView_NoDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String docID=request.getParameter("docID");
+		String docHref=request.getParameter("docHref");
+		String docType=request.getParameter("docType");
+		String orgDocID=request.getParameter("orgDocID");
+		String formID=request.getParameter("formID");;
+		String endDir=request.getParameter("endDir");
+		String docTitle=request.getParameter("docTitle");
+		String listSusin=request.getParameter("listSusin");
+		String susinAdmin=request.getParameter("susinAdmin");
+		
+		
+		String g_RecID=request.getParameter("g_RecID");
+		String g_SepAttNo=request.getParameter("g_SepAttNo");
+		String nonActiveX="YES";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1)
+			susinAdmin = "YES";
+        else
+        	susinAdmin = "NO";
+		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+		String pass=ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+		
+		if(pass.equals("<RESULT>TRUE</RESULT>")){
+			String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +
+                    "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
+                    "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName1()) +
+                    "</USERNAME><USERTITLE>" + makeXMLString(userInfo.getTitle1()) +
+                    "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) +
+                    "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName1()) +
+                    "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
+                    "</COMPANYID><USERNAME2>" + makeXMLString(userInfo.getDisplayName2()) +
+                    "</USERNAME2><USERTITLE2>" + makeXMLString(userInfo.getTitle2()) +
+                    "</USERTITLE2><DEPTNAME2>" + makeXMLString(userInfo.getDeptName2()) +
+                    "</DEPTNAME2></PARAMETER>";
+			ezApprovalGService.saveRecReadHist(readRecXML);
+		}
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("nonActiveX", nonActiveX);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("docType", docType);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("endDir", endDir);
+		model.addAttribute("docTitle", docTitle);
+		model.addAttribute("listSusin", listSusin);
+		model.addAttribute("g_RecID", g_RecID);
+		model.addAttribute("g_SepAttNo",g_SepAttNo);
+		return "ezApprovalG/apprGcontDocView_NoDoc";
+	}
+	
+	public String makeXMLString(String orgString) throws Exception{
+		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+	@RequestMapping(value = "/ezApprovalG/getRecordInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getLang());
+		
+		return result;
+	}
+	
 }

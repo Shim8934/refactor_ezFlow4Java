@@ -265,5 +265,7 @@ public interface EzApprovalGService {
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang) throws Exception;
 
+	public String GetRecordInfo(Document xmlDom, String lang)throws Exception;
+
 
 }

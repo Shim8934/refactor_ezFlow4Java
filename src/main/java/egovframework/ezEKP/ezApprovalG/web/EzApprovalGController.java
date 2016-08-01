@@ -1802,7 +1802,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID");
 		String title = request.getParameter("title");
 		
-		if (!orgDocID.equals("")) {
+		if(orgDocID == null){
+			orgDocID ="";
+		}
+		if (!orgDocID.equals("") && orgDocID!=null) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
 		

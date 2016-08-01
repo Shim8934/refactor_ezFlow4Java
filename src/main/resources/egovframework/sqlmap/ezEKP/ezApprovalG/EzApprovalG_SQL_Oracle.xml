@@ -42,6 +42,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_SENDOFFERCHECK_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getRecordInfo" parameterClass="Map" resultClass="ApprGRecordVO" >
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECORDINFO(#v_RECORDID#,#v_SEPATTNO#,#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRLINEINFO(#v_DOCID#, #v_FLAG#, #v_USERID#, #v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -338,10 +342,6 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getGamSaSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETGAMSASEARCHDOCLIST(#v_CONTID#, #v_USERID#, #v_DEPTID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -556,10 +556,6 @@
 	
 	<procedure id="EzApprovalG.getContDocListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETCONTDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzApprovalG.getGamSaSearchDocListCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETGAMSASEARCHDOCLISTCOUN(#v_CONTID#, #v_USERID#, #v_DEPTID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_LANGTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">

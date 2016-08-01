@@ -9,7 +9,9 @@ function getDataInfo() {
 	var pUrl = "";
 	
     switch (jobState) {
+   
         case "ATTACH":
+        	 alert(jobState);
         	pUrl = "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx";
             break;
 

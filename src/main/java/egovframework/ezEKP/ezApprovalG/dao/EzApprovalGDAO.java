@@ -799,4 +799,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGDocListVO> sendoffercheck_enddocinfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.sendoffercheck_enddocinfo", map);
 	}
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> getRecordInfo(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordInfo", map);
+	}
 }
