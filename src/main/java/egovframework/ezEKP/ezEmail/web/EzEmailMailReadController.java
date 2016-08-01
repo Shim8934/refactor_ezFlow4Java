@@ -16,6 +16,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
@@ -162,6 +163,21 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 				
 				if (message != null) {
+					FetchProfile fp = new FetchProfile();
+					
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);
+					fp.add("Subject");
+					fp.add("From");
+					fp.add("To");
+					fp.add("Cc");
+					fp.add("Bcc");
+					
+					Message[] fetchMessages = new Message[] {message};
+					f.fetch(fetchMessages, fp);
+					
 					// From
 					arrFroms = message.getFrom();
 					
@@ -792,7 +808,23 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					message = ((IMAPFolder)f).getMessageByUID(uid);
 				}
 				
-				if (message != null) {					
+				if (message != null) {				
+					FetchProfile fp = new FetchProfile();
+					
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);
+					fp.add("Subject");
+					fp.add("From");
+					fp.add("To");
+					fp.add("Cc");
+					fp.add("Bcc");
+					fp.add("Importance");
+					
+					Message[] fetchMessages = new Message[] {message};
+					f.fetch(fetchMessages, fp);
+					
 					arrFroms = message.getFrom();
 					
 					if (arrFroms != null) {
