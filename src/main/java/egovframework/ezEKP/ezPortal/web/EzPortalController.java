@@ -156,24 +156,36 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID());
 			xmlDom = commonUtil.convertStringToDocument(strXML);
-System.out.println("strXML:"+strXML);
-System.out.println("length:"+xmlDom.getElementsByTagName("UID_").getLength());
+
 			if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
-				if (("").equals(pageID.trim())) {
-System.out.println("rowLength:"+xmlDom.getElementsByTagName("ROW").getLength());
+				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+
+				String myTopID = "";
+				if (xmlDomTop != null && xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
+					myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
+				}
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+					if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
+						//기본 페이지 ID
+						pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+
+						xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+						//사용자 정보
+						if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
+							skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
+						}
+					}
+				}
+
+				if (pageID == null || pageID.trim().equals("")) {
 					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-System.out.println("i1:"+i);
+	
 						if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
-System.out.println("i2:"+i);
 							pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 							xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
-							
-							if (xmlDom != null) {
-System.out.println("i3:"+i);
-								if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
-System.out.println("i4:"+i);
-									skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
-								}
+								
+							if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
+								skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
 							}
 						}
 					}

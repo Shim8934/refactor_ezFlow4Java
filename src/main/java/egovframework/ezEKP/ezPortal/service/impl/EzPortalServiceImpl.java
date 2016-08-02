@@ -95,7 +95,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 				map.put("v_pUID", temp);
 				parentTopMenuID = ezPortalDAO.topGetTopParentPageID(map);
 				
-				if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+				if (parentTopMenuID != null && parentTopMenuID.toLowerCase().trim().equals("top")) {
 					break;
 				}
 				temp = parentTopMenuID;
@@ -1138,9 +1138,9 @@ System.out.println("right:"+right);
 	public String getUserInfo (String pUserID, String langStr) {
 		try {
 			PortalTBLUserInfoVO result = topGetUserInfo2(pUserID, langStr);
-System.out.println("result1:"+result.toString());
-			String resultXML = commonUtil.getQueryResult(result);
-System.out.println("resultXML:"+resultXML);
+
+			String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+
 			if (resultXML.equals("<DATA></DATA>")) {
 				resultXML = getUserInfo(pUserID);
 			}
@@ -1155,7 +1155,7 @@ System.out.println("resultXML:"+resultXML);
 		try {
 			PortalTBLUserInfoVO result = topGetUserInfo(pUserID);
 				
-			String resultXML = commonUtil.getQueryResult(result);
+			String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 				
 			return resultXML;	
 		} catch (Exception e) {
