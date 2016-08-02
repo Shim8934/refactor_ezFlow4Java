@@ -127,7 +127,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
 			func = req.getParameter("func");	
 		}
-		if (subFunc != null && !subFunc.equals("")) {
+		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
 			subFunc = req.getParameter("subFunc");	
 		}
 		
