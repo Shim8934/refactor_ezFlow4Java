@@ -531,19 +531,19 @@
 						window.open("/myoffice/main/index_pims.aspx?funCode=2","main");
 						break;
 						
-					case "Poll" : 
-						window.open("/myoffice/ezBoardSTD/main.aspx?Func=1","main");
+					case "Poll" :
+						window.open("/ezBoard/boardMain.do?func=1","main");
 						break;
 						
 					case "pollnum" : 
-						window.open("/myoffice/ezBoardSTD_Cross/main.aspx?Func=1","main");
+						window.open("/ezBoard/boardMain.do?func=1","main");
 						break;
 					
 					case "Env" :
 						window.open("/myoffice/main/index_environment.htm","main");
 						break;
 					case "My_Board" :
-						window.open("/myoffice/ezBoardSTD_Cross/main.htm","main");
+						window.open("/ezBoard/boardMain.do","main");
 						break;
 					case "Address" : 
 						window.open("/myoffice/main/index_myoffice.aspx?funCode=4", "main");
@@ -682,17 +682,14 @@
 
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        }
-		        else {
+		        } else {
 		            if (pUse_Editor == "") {
 		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            }
-		            else {
+		            } else {
 		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		            }
 		        }
 		    }
-
 
 		    var formURL = "";
 		    var formDocType = "";
@@ -898,20 +895,16 @@
 		        if (CrossYN()) {
 		            if (document.getElementById("Psch").className == "left_on") {
 		                document.getElementById("Psch").onclick();
-		            }
-		            else {
+		            } else {
 		                document.getElementById("Allsch").onclick();
 		            }
-		        }
-		        else {
+		        } else {
 		            if (document.getElementById("Psch").className == "left_on") {
 		                document.getElementById("Psch").click();
-		            }
-		            else {
+		            } else {
 		                document.getElementById("Allsch").click();
 		            }
 		        }
-
 		    }
 
 		    window_onload_total();
