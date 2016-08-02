@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1280,5 +1282,147 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, userFlag, companyID, userInfo.getLang());
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 결재건수조회 엑셀저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/ezStatistics/excelExportOut.do")
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		StringBuilder resultExcel = new StringBuilder();
+		String excelValue = "";
+		String flag = request.getParameter("flag");
+		String sYear = request.getParameter("p0");
+		String sMonth = request.getParameter("p1");
+		String eYear = request.getParameter("p2");
+		String eMonth = request.getParameter("p3");
+		String mode = request.getParameter("p4");
+		String companyID = request.getParameter("p5");
+		
+		if (flag.equals("USER")) {
+			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang());
+		} else {
+			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang());
+		}
+		
+		Document objXML = commonUtil.convertStringToDocument(excelValue);
+		
+		resultExcel.append("\uFEFF");
+		resultExcel.append("<table><tr>");
+		
+		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
+			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
+			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
+			
+			int width = Integer.parseInt(headerWidth) * 2;
+			
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+		}
+		resultExcel.append("</tr></table>");
+		
+		resultExcel.append("<table>");
+
+		NodeList objRow = objXML.getElementsByTagName("ROW");
+		
+		for (int k = 0; k < objRow.getLength(); k++) {
+			resultExcel.append("<tr>");
+			Element row = (Element) objRow.item(k);
+			NodeList objCell = row.getElementsByTagName("CELL");
+			
+			for (int p = 0; p < objCell.getLength(); p++) {
+				Element cell = (Element) objCell.item(p);
+				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
+				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
+				int width = Integer.parseInt(headerWidth) * 2;
+				
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+			}
+			resultExcel.append("</tr>");
+		}
+		resultExcel.append("</table>");
+		
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser" + ".xls\"");
+		
+		response.getWriter().write(resultExcel.toString());
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(진행문서) 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
+	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", list);
+		
+		return "admin/ezApprovalG/apprGForAprDoc";
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(진행문서) 문서목록 호출 함수
+	 */
+	//TODO 상태코드 추가작업
+	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchAprDocList.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String getStatSearchAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docNumber = request.getParameter("docNumber");
+        String docTitle = request.getParameter("docTitle");
+        String drafter = request.getParameter("drafter");
+        String drafter2 = request.getParameter("drafter2");
+        
+        String draftFromYear = request.getParameter("draftFromYear");
+        String draftFromMonth = request.getParameter("draftFromMonth");
+        String draftFromDay = request.getParameter("draftFromDay");
+
+        String draftToYear = request.getParameter("draftToYear");
+        String draftToMonth = request.getParameter("draftToMonth");
+        String draftToDay = request.getParameter("draftToDay");
+
+        String apprFromYear = request.getParameter("apprFromYear");
+        String apprFromMonth = request.getParameter("apprFromMonth");
+        String apprFromDay = request.getParameter("apprFromDay");
+        
+        String apprToYear = request.getParameter("apprToYear");
+        String apprToMonth = request.getParameter("apprToMonth");
+        String apprToDay = request.getParameter("apprToDay");
+
+        String formID = request.getParameter("formID");
+        String draftDeptName = request.getParameter("deptName1");
+        String draftDeptName2 = request.getParameter("deptName2");
+        String pageNum = request.getParameter("pageNum");
+        String pageSize = request.getParameter("pageSize");
+        String docState = request.getParameter("docState");
+
+        String subQuery = request.getParameter("subQuery");
+        String orderCell = request.getParameter("orderCell");
+        String orderOption = request.getParameter("orderOption");
+        String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
+				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, draftDeptName, 
+				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang());
+		
+		return result; 
 	}
 }

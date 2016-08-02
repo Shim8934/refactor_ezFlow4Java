@@ -6,14 +6,15 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGAdminDAO")
@@ -82,6 +83,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGSealInfoVO> getSealDeptList(Map<String, Object> map) throws Exception {
 		return (List<ApprGSealInfoVO>) list("EzApprovalGAdmin.getSealDeptList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getUserDocCount(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalGAdmin.getUserDocCount", map);
 	}
 	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
@@ -240,8 +246,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 
 
+
+
+	public Integer searchManageAprDocListCount(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.searchManageAprDocListCount", map);
+		return (Integer) map.get("v_pCount");
+	}
+
 	@SuppressWarnings("unchecked")
-	public List<ApprGAprLineVO> getUserDocCount(Map<String, Object> map) throws Exception {
-		return (List<ApprGAprLineVO>) list("EzApprovalGAdmin.getUserDocCount", map);
+	public List<ApprGAprDocInfoVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
 	}
 }

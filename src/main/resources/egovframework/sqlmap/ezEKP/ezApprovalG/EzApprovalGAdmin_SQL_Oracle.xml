@@ -11,6 +11,7 @@
 	<typeAlias  alias="ApprGSealInfoVO"					type="egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO"/>
 	<typeAlias  alias="ApprGReceiveDocVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO"/>
 	<typeAlias  alias="ApprGAprLineVO"					type="egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO"/>
+	<typeAlias  alias="ApprGAprDocInfoVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO"/>
 	
 	<!--
 	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
@@ -83,6 +84,13 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzApprovalGAdmin.searchManageAprDocList" 		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SEARCHMANAGEAPRDOCLIST(#v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -112,7 +120,6 @@
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETUSERDOCCOUNT(#v_APRTYPE#, #v_FROM#, #v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>	
 	</procedure>
-	
 	
 	<procedure id="EzApprovalGAdmin.deleteContainerType" 			parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -147,6 +154,12 @@
 	<procedure id="EzApprovalGAdmin.getTaskCodeDeptCnt" 			parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDEPTCNT(#v_TASKCODE#, #v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.searchManageAprDocListCount" 	parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SEARCHMANAGEAPRDOCLISTCOU(#v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_LANGTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>	
 	</procedure>
 	

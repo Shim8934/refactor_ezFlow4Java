@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -1464,24 +1465,172 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		for (ApprGAprLineVO vo : list) {
 			sb.append("<ROW>");
 			if (lang.equals("1")) {
-				sb.append("<CELL><VALUE>" + vo.getAprMemberDeptName() + "</VALUE>");
-				sb.append("<DATA1>" + vo.getAprMemberDeptID() + "</DATA1>");
-				sb.append("<DATA2>" + vo.getAprMemberID() + "</DATA2></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprMemberJobTitle() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprMemberName() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprCount() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName()) + "</VALUE>");
+				sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
+				sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberJobTitle()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberName()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL>");
 			} else {
-				sb.append("<CELL><VALUE>" + vo.getAprMemberDeptName2() + "</VALUE>");
-				sb.append("<DATA1>" + vo.getAprMemberDeptID() + "</DATA1>");
-				sb.append("<DATA2>" + vo.getAprMemberID() + "</DATA2></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprMemberJobTitle2() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprMemberName2() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + vo.getAprCount() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName2()) + "</VALUE>");
+				sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
+				sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberJobTitle2()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberName2()) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL>");
 			}
 			sb.append("</ROW>");
 		}
 		
 		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		return sb.toString();
+	}
+	
+	
+
+	@Override
+	public String searchManageAprDocList(String docNumber, String docTitle,
+			String drafter, String drafter2, String draftFromYear,
+			String draftFromMonth, String draftFromDay, String draftToYear,
+			String draftToMonth, String draftToDay, String apprFromYear,
+			String apprFromMonth, String apprFromDay, String apprToYear,
+			String apprToMonth, String apprToDay, String formID,
+			String draftDeptName, String draftDeptName2, String pageNum,
+			String pageSize, String docState, String subQuery,
+			String orderCell, String orderOption, String companyID, String lang)
+			throws Exception {
+		String orderOption1 = "";
+		String orderOption2 = "";
+		StringBuilder sb = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTTYPE", "081");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<DOCLIST><LISTVIEWDATA><HEADERS>");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("<COLNAME>" + commonUtil.cleanValue(vo.getColName()) + "</COLNAME>");
+			sb.append("</HEADER>");
+			
+			if (orderCell.equals("") && orderCell.equals(vo.getName())) {
+				if (orderOption.equals("")) {
+					orderOption1 = vo.getColName() + " ";
+					orderOption2 = vo.getColName() + " desc ";
+				} else {
+					orderOption1 = vo.getColName() + " desc ";
+					orderOption2 = vo.getColName() + " ";
+				}
+			}
+		}				
+		sb.append("</HEADERS><ROWS>");
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		map1.put("v_SUBQUERY", subQuery);
+		map1.put("v_DOCNUMBER", docNumber);
+		map1.put("v_DOCTITLE", docTitle);
+		map1.put("v_DRAFTER", drafter);
+		map1.put("v_DRAFTER2", drafter2);
+		map1.put("v_DEPTNAME", draftDeptName);
+		map1.put("v_DEPTNAME2", draftDeptName2);
+		map1.put("v_FORMID", formID);
+		map1.put("v_DOCSTATE", docState);
+		map1.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
+		map1.put("v_STARTDATE2", makeDate(draftFromYear, draftFromMonth, draftFromDay, false));
+		map1.put("v_ENDDATE1", makeDate(apprToYear, apprToMonth, apprToDay, true));
+		map1.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
+		map1.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map1.put("companyID", companyID);
+		
+		Integer totalCount = ezApprovalGAdminDAO.searchManageAprDocListCount(map1);
+		
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+		
+		if (querySize2 >= Integer.parseInt(pageSize)) {
+			querySize2 = Integer.parseInt(pageSize);
+		}
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		map2.put("v_SUBQUERY", subQuery);
+		map2.put("v_PAGESIZE", querySize);
+		map2.put("v_PAGESIZE2", querySize2);
+		map2.put("v_ORDEROPTION", orderOption1);
+		map2.put("v_ORDEROPTION2", orderOption2);
+		map2.put("v_DOCNUMBER", docNumber);
+		map2.put("v_DOCTITLE", docTitle);
+		map2.put("v_DRAFTER", drafter);
+		map2.put("v_DRAFTER2", drafter2);
+		map2.put("v_DEPTNAME", draftDeptName);
+		map2.put("v_DEPTNAME2", draftDeptName2);
+		map2.put("v_FORMID", formID);
+		map2.put("v_DOCSTATE", docState);
+		map2.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
+		map2.put("v_STARTDATE2", makeDate(draftFromYear, draftFromMonth, draftFromDay, false));
+		map2.put("v_ENDDATE1", makeDate(apprToYear, apprToMonth, apprToDay, true));
+		map2.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
+		map2.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map2.put("companyID", companyID);
+		
+		List<ApprGAprDocInfoVO> listBody = ezApprovalGAdminDAO.searchManageAprDocList(map2);
+		
+		for(int i = 0; i < listBody.size(); i ++) {
+			ApprGAprDocInfoVO bodyVo = listBody.get(i);
+			sb.append("<ROW>");
+			
+			for (int j = 0; j < listHeader.size(); j++) {
+				ApprGListHeaderVO headerVo = listHeader.get(j);				
+				String fieldName = headerVo.getColName();
+				String fieldValue = "";
+
+				if (fieldName.toUpperCase().equals("WRITERNAME") || fieldName.toUpperCase().equals("WRITERDEPTNAME") || fieldName.toUpperCase().equals("FORMNAME")){
+					fieldName = fieldName + commonUtil.getMultiData(lang);
+				}
+				
+				for (Field field : bodyVo.getClass().getDeclaredFields()) {
+			        field.setAccessible(true);
+										
+					if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
+						fieldValue = String.valueOf(field.get(bodyVo));
+					}
+			    }
+				
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang)) + "</VALUE>");
+
+				if (j == 0) {
+					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");
+					sb.append("<DATA2>" + bodyVo.getOrgDocID() + "</DATA2>");
+					sb.append("<DATA3>" + bodyVo.getHref() + "</DATA3>");
+					sb.append("<DATA4>" + "" + "</DATA4>");
+					sb.append("<DATA5>" + "" + "</DATA5>");
+					sb.append("<DATA6>" + "" + "</DATA6>");
+					sb.append("<DATA7>" + "" + "</DATA7>");
+					sb.append("<DATA8>" + "" + "</DATA8>");
+					sb.append("<DATA9>" + "0" + "</DATA9>");
+					sb.append("<DATA10>" + bodyVo.getFunctionType() + "</DATA10>");
+					sb.append("<DATA11>" + bodyVo.getHasOptionYN() + "</DATA11>");
+					sb.append("<DATA12>" + bodyVo.getDocState() + "</DATA12>");
+					sb.append("<DATA13>" + bodyVo.getWriterDeptID() + "</DATA13>");
+					sb.append("<DATA14>" + bodyVo.getUrgentApproval() + "</DATA14>");
+				}					
+				sb.append("</CELL>");
+			}
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS></LISTVIEWDATA><TOTALCNT>" + totalCount + "</TOTALCNT></DOCLIST>");
 		
 		return sb.toString();
 	}
@@ -1506,5 +1655,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} catch(Exception e) {
 			return "FALSE";
 		}
+	}
+	
+	public String makeDate (String year, String month, String day, boolean startFlag) {
+		String result = "";
+		
+		if (!year.equals("") && !month.equals("") && !day.equals("")) {
+			result = year + "-" + month + "-" + day;
+			
+			if (startFlag) {
+				result += " 00:00:00";
+			} else {
+				result += " 23:59:59";
+			}
+		}
+		return result;
 	}
 }

@@ -42,50 +42,6 @@ function UserDocCount() {
 		    }
 		}
     });
-
-    /*var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-    var objNode;
-
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "SYEAR", document.getElementById("SYear").value);
-    createNodeAndInsertText(xmlpara, objNode, "SMONTH", document.getElementById("SMonth").value);
-    createNodeAndInsertText(xmlpara, objNode, "EYEAR", document.getElementById("EYear").value);
-    createNodeAndInsertText(xmlpara, objNode, "EMONTH", document.getElementById("EMonth").value);
-    createNodeAndInsertText(xmlpara, objNode, "USERFLAG", pUserFlag);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", pCompanyID);
-
-
-    xmlhttp.open("POST", "aspx/GetUserDocCount.aspx", false);
-    xmlhttp.send(xmlpara);
-    resultXML = xmlhttp.responseXML;
-
-    if (resultXML.xml != "") {
-        StatistList = resultXML;
-        NodeList = SelectNodes(resultXML, "LISTVIEWDATA/ROWS/ROW");
-        Headers = SelectNodes(resultXML, "LISTVIEWDATA/HEADERS/HEADER");
-
-        NodeListLen = 0;
-
-        if (NodeList != null) {
-            NodeListLen = NodeList.length;
-        }
-
-        //if (NodeListLen > 15) {
-        //    //lvtlist.rows.dataSource = null;
-        //    paging(curpage, nowblock);
-        //}
-        //else {
-        //    document.getElementById("PageNum").innerHTML = "";
-            var listview = new ListView();
-            document.getElementById("lvSDoc").innerHTML = "";
-            listview.SetID("lvSDocForm");
-            listview.SetMulSelectable(false);
-            listview.DataSource(resultXML);
-            listview.DataBind("lvSDoc");
-        //}
-    }*/
 }
 
 function DeptDocCount(pMode) {

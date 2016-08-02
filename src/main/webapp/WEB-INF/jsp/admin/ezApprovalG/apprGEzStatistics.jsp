@@ -175,21 +175,21 @@
 	        }
 	        
 	        function btnSave_onclick() {
-	            var url = "/ezApprovalG/excelExportOut.do";
+	            var url = "/admin/ezApprovalG/ezStatistics/excelExportOut.do";
 
 	            if (document.all("condition")[0].checked) {
-	                url += "?FLAG=USER";
+	                url += "?flag=USER";
 	            } else {
-	                url += "?FLAG=DEPT";
+	                url += "?flag=DEPT";
 	            }
 	            
-	            url += "&P0=" + document.getElementById("SYear").value;
-	            url += "&P1=" + document.getElementById("SMonth").value;
-	            url += "&P2=" + document.getElementById("EYear").value;
-	            url += "&P3=" + document.getElementById("EMonth").value;
+	            url += "&p0=" + encodeURI(document.getElementById("SYear").value);
+	            url += "&p1=" + encodeURI(document.getElementById("SMonth").value);
+	            url += "&p2=" + encodeURI(document.getElementById("EYear").value);
+	            url += "&p3=" + encodeURI(document.getElementById("EMonth").value);
 
 	            if (document.all("condition")[0].checked) {
-	                url += "&P4=" + pUserFlag;
+	                url += "&p4=" + encodeURI(pUserFlag);
 	            } else {
 	                if (document.all("Dept")[0].checked) {
 	                    pMode = "SEND";
@@ -199,10 +199,10 @@
 	                    pMode = "BOTH";
 	                }
 	                
-	                url += "&P4=" + pMode;
+	                url += "&p4=" + encodeURI(pMode);
 	            }
 	            
-	            url += "&P5=" + pCompanyID;
+	            url += "&p5=" + encodeURI(pCompanyID);
 
 	            window.frames["saveExcel"].location.href = url;
 	        }
