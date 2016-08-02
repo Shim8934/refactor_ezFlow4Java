@@ -117,6 +117,25 @@ public class EzBoardController extends EgovFileMngUtil{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
 	
 	/**
+	 * 게시판 메인화면 호출 Method
+	 */
+	@RequestMapping(value="/ezBoard/boardMain.do")
+	public String boardMain(HttpServletRequest req, Model model) {
+		String func = "";
+		String subFunc = "";
+
+		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
+			func = req.getParameter("func");	
+		}
+		if (subFunc != null && !subFunc.equals("")) {
+			subFunc = req.getParameter("subFunc");	
+		}
+		
+		model.addAttribute("func", func);
+		model.addAttribute("subFunc", subFunc);
+		return "ezBoard/boardMain";
+	}
+	/**
 	 * 게시판 왼쪽화면 호출 Method
 	 */
 	@RequestMapping(value="/ezBoard/boardLeft.do")
