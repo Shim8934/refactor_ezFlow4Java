@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 
 public interface EzCommonService {
 
@@ -12,6 +13,8 @@ public interface EzCommonService {
 	public String wpCountLoginTime(String userID) throws Exception;
 	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
+	
+	public ApprovPWDVO getApprovPWD(String userID) throws Exception;
 	
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
 

@@ -9,5 +9,10 @@
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>	
+	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZCOMMON.EZSP_INSERTAPPROVPWD(#v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#)}
+		]]>
+	</procedure>	
 </sqlMap>
 

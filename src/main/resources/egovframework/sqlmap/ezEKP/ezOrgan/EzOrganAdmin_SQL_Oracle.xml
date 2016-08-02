@@ -159,7 +159,17 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLDEPTMASTER 
+     			(
+     				SELECT 
+     					cn
+     				FROM
+     					ezHrmaster.TBLUSERMASTER
+     				UNION
+     				SELECT 
+     					cn
+     				FROM
+     					ezHrmaster.TBLDEPTMASTER
+     			 )
       		WHERE  
       			cn = #cn#
 	     ]]> 
@@ -180,8 +190,18 @@
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
-     		FROM 
-     			ezHrmaster.TBLUSERMASTER 
+     		FROM
+     			(
+     				SELECT 
+     					cn
+     				FROM
+     					ezHrmaster.TBLUSERMASTER
+     				UNION
+     				SELECT 
+     					cn
+     				FROM
+     					ezHrmaster.TBLDEPTMASTER
+     			 )
       		WHERE  
       			cn = #cn#
 	     ]]>

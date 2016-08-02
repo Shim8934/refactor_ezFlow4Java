@@ -4025,6 +4025,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return rtnVal;
 	}
 	
+	/**
+	 * 전자결재G 내보내기, 전체내보내기 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/excelExportOut.do")
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -4122,6 +4125,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		response.getWriter().write(resultExcel.toString());
 	}
 	
+	/**
+	 * 전자결재G 결재함 감사함 표출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/getGamSaSearchDocList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getGamSaSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
@@ -4238,5 +4244,77 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		
 		return "ezApprovalG/apprGselectDept";
+	}
+	
+	/**
+	 * 전자결재G 기록물철인계 인계가능여부확인 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUncompleteDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cabinetID = request.getParameter("cabinetID");
+		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기록물철인계 인계버튼 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/transferCab.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String transferCab(@RequestBody String xmlPara) throws Exception{
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String result = ezApprovalGService.transferCabinet(xmlDom);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/adminPage.do")
+	public String adminPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String initFlag = request.getParameter("initFlag");
+		String pageTitle = "";
+		String deptCode = userInfo.getDeptID();
+		String deptName = "";
+		
+		if (userInfo.getLang().equals("1")) {
+			deptName = userInfo.getDeptName1();
+		} else {
+			deptName = userInfo.getDeptName2();
+		}
+		
+		switch (initFlag) {
+		case "0":
+			pageTitle = messageSource.getMessage("ezApprovalG.t520", locale);
+			break;
+		case "1":
+			pageTitle = messageSource.getMessage("ezApprovalG.t521", locale);
+			break;
+		case "2":
+			pageTitle = messageSource.getMessage("ezApprovalG.t522", locale);
+			break;
+		case "3":
+			pageTitle = messageSource.getMessage("ezApprovalG.t523", locale);
+			break;
+		case "4":
+			pageTitle = messageSource.getMessage("ezApprovalG.t559", locale);
+			break;
+		default:
+			pageTitle = messageSource.getMessage("ezApprovalG.t520", locale);
+			break;
+		}
+		
+		model.addAttribute("pageTitle", pageTitle);
+		model.addAttribute("deptCode", deptCode);
+		model.addAttribute("deptName", deptName);
+		model.addAttribute("initFlag", initFlag);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGadminPage";
 	}
 }

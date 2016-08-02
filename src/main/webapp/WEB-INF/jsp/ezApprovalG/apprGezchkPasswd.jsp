@@ -158,7 +158,7 @@
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>		
 		<h2><spring:message code='ezApprovalG.t1746'/></h2>
-		<div class="nobox"><INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
+		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition">
 		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>

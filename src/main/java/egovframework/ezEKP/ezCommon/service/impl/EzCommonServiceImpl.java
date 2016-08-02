@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 
 @Service("EzCommonService")
 public class EzCommonServiceImpl implements EzCommonService {
@@ -41,6 +42,14 @@ public class EzCommonServiceImpl implements EzCommonService {
 		map.put("v_PATTACHFILESN", sn);
 		map.put("v_PCOMPANYID", companyID);
 		return ezCommonDAO.getAttachInfo(map);
+	}
+
+	@Override
+	public ApprovPWDVO getApprovPWD(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		
+		return ezCommonDAO.getApprovPWD(map);
 	}
 
 	@Override

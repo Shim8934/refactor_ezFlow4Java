@@ -108,7 +108,7 @@
 	        else {
 	            xmlpara.documentElement.appendChild(objCabXml.documentElement);
 	        }
-	        XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/Manage/aspx/API_TransferCab.aspx", false);
+	        XmlHttp.open("POST", "/ezApprovalG/transferCab.do", false);
 	        XmlHttp.send(xmlpara);
 	        var rtnVal = getNodeText(XmlHttp.responseXML.documentElement);
 	        if (rtnVal == "NODEPTADMIN") {
@@ -329,15 +329,24 @@
 	    }
 	
 	    function GetUncompleteDocCount(pCabinetID) {
-	        var xmlpara = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	        createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", g_DDeptCode);
-	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	        createNodeAndInsertText(xmlpara, objNode, "CABINETID", pCabinetID);
-	        xmlhttp.open("POST", "aspx/API_GetUncompleteDocCount.aspx", false);
-	        xmlhttp.send(xmlpara);
-	        return getNodeText(xmlhttp.responseXML.documentElement);
+	    	var result = "";
+	    	
+	        $.ajax({
+	    		type : "POST",
+	    		dataType : "xml",
+	    		async : false,
+	    		url : "/ezApprovalG/getUncompleteDocCount.do",
+	    		data : {
+	    				deptCode : g_DDeptCode,
+	    				companyID : CompanyID,
+	    				cabinetID : pCabinetID
+	    				},
+	    		success: function(xml){
+	    			result = xml;
+	    		}        			
+	    	});
+
+	        return getNodeText(result.documentElement);
 	    }
 	
 	    function InitSelCabinetList() {
@@ -407,7 +416,7 @@
 	            </td>
 	            <td style="text-align: center; width: 25px">
 	                <img src="/images/arr_right.gif" name="Image191" width="16" height="16" onclick="return AddCabList_onclick()" style="cursor: pointer">
-	                <img src="/images/arr_left.gif" name="Image201" width="16" height="16" onclick="return DelCabList_onclick()" style="cursor: pointer; padding-left: 5px">
+	                <img src="/images/arr_left.gif" name="Image201" width="16" height="16" onclick="return DelCabList_onclick()" style="padding-top: 5px; padding-left: 0px; cursor: pointer;">
 	                <br>
 	                <br>
 	                <br>

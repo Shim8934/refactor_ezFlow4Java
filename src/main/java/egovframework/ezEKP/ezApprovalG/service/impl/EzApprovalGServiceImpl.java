@@ -2424,9 +2424,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "</DATA6>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()) + "</VALUE>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()), companyID, langType) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
@@ -2871,6 +2868,67 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</DOCLIST>");
 		
 		return resultXML.toString();
+	}
+
+	@Override
+	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID);
+		
+		int resultApr = ezApprovalGDAO.getUncompleteDocCount(map);
+		
+		return "<RESULT>" + resultApr + "</RESULT>";
+	}
+
+	@Override
+	public String transferCabinet(Document xmlDom) throws Exception {
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String deptCode = xmlDom.getElementsByTagName("DDEPTCODE").item(0).getTextContent();
+		String deptName = xmlDom.getElementsByTagName("DDEPTNAME").item(0).getTextContent();
+		String deptName2 = xmlDom.getElementsByTagName("DDEPTNAME").item(0).getTextContent();
+		String taskCode = xmlDom.getElementsByTagName("DTASKCODE").item(0).getTextContent();
+		String taskName = xmlDom.getElementsByTagName("DTASKNAME").item(0).getTextContent();
+		String taskName2 = xmlDom.getElementsByTagName("DTASKNAME2").item(0).getTextContent();
+		String deptMID = xmlDom.getElementsByTagName("DDEPTMID").item(0).getTextContent();
+		String deptMName = xmlDom.getElementsByTagName("DDEPTMNAME").item(0).getTextContent();
+		String deptMName2 = xmlDom.getElementsByTagName("DDEPTMNAME2").item(0).getTextContent();
+		
+		String cabIDList = "";
+		
+		for (int k = 0; k < xmlDom.getElementsByTagName("ID").getLength(); k++) {
+			if (k == 0) {
+				cabIDList += xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim();
+			} else {
+				cabIDList += ", " + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim();
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DDeptCode", deptCode);
+		map.put("v_DDeptName", deptName);
+		map.put("v_DDeptName2", deptName2);
+		map.put("v_DTaskCode", taskCode);
+		map.put("v_DTaskName", taskName);
+		map.put("v_DTaskName2", taskName2);
+		map.put("v_CabIDList", cabIDList);
+		map.put("v_DeptMID", deptMID);
+		map.put("v_DeptMName", deptMName);
+		map.put("v_DeptMName2", deptMName2);
+		
+		String rtnVal = "";
+		
+		try {
+			ezApprovalGDAO.transferCabinet(map);
+			
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
 	}
 
 	private String getGamSaSearchDocList(String containerID, String userID, String deptID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle,

@@ -837,7 +837,7 @@
 	            para[11] = GetAttribute(selnode, "DATA17");
 	            para[12] = GetAttribute(selnode, "DATA18");
 	
-	            var url = "/myoffice/ezApprovalG/ezCabinet/CreateCabinet_Cross.aspx";
+	            var url = "/ezApprovalG/createCabinet.do";
 	
 	            createcabinet_cross_dialogArguments[0] = para;
 	            createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;

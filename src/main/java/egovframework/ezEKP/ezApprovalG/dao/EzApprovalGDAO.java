@@ -716,6 +716,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int getUncompleteDocCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getUncompleteDocCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -730,6 +735,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void addNewVolume(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.addNewVolume", map);
+	}
+	
+	public void transferCabinet(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.transferCabinet", map);
 	}
 	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{

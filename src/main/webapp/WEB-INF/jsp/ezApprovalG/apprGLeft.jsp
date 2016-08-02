@@ -175,7 +175,7 @@
 		                    break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
-		                    window.open("/MyOffice/ezPersonal/PersonInfo/ezApproval_Config_Cross.aspx", "right");
+		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
 		                    break;         
 		                default:
 		                    break;
@@ -550,11 +550,11 @@
 		                    break;
 		                case "admin_sub03":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=4";
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=4";
 		                    break;
 		                case "admin_sub04":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=0";
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=0";
 		                    break;
 		                case "admin_sub05":
 		                    PresentOpen = "DOC_ADMIN";
@@ -606,7 +606,7 @@
 		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
 		                        break;
 		                    case "m09":
-		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                }
 		            }
