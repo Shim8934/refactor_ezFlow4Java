@@ -68,6 +68,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PortalTopLoadGetParametersVO> loadGetParameters (Map<String, Object> map) {
+		return (List<PortalTopLoadGetParametersVO>) list ("EzPortalDAO.loadGetParameters", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml (Map<String, Object> map) {
 		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalDAO.getUtilMenuHtml", map);
 	}

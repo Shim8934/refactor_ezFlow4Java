@@ -43,6 +43,8 @@ public interface EzPortalService {
 	
 	public List<PortalTopLoadGetParametersVO> topLoadGetParameters (String pUID) throws Exception;
 	
+	public List<PortalTopLoadGetParametersVO> loadGetParameters (String pPortletID) throws Exception;
+	
 	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml (String pParentUID, String pOwnerPageID) throws Exception;
 	
 	public List<PortalGetMainMenuHtmlVO> getMainMenuHtml (String pParentUID, String pOwnerPageID, int pSkinNum) throws Exception;
@@ -151,7 +153,13 @@ public interface EzPortalService {
 	
 	public String checkViewRight (String uID, String accessIDList) throws Exception;
 	
-	public String loadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception;
+	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception;
+	
+	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) throws Exception;
+	
+	public String loadGetParametersXML (String pURL, String pXML, LoginVO userInfo) throws Exception;
+	
+	public String getBoardProperty (String pBoardID, String lang) throws Exception;
 	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
@@ -48,6 +50,9 @@ public class EzPortalServiceImpl implements EzPortalService {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -506,6 +511,13 @@ public class EzPortalServiceImpl implements EzPortalService {
 	@Override
 	public List<PortalGetPortletParametersVO> getPortletParametres(String pUID) throws Exception {
 		return ezPortalDAO.getPortletParametres(pUID);
+	}
+	
+	@Override
+	public List<PortalTopLoadGetParametersVO> loadGetParameters(String pPortletID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pPortletID", pPortletID);
+		return ezPortalDAO.loadGetParameters(map);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
@@ -1262,7 +1274,7 @@ System.out.println("right:"+right);
 					}
 					if (imageLinkURL != null && !imageLinkURL.equals("")) {
 						sb.append(" style='cursor:pointer'");
-						sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + loadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
+						sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
 						sb.append(", \"" + imageLinkLocation + "\"");
 						sb.append(", \"" + imageWindowOption + "\")'");
 					
@@ -1292,7 +1304,7 @@ System.out.println("right:"+right);
 		}
 	}
 	
-	public String loadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) {
+	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) {
 		try {
 			List<PortalTopLoadGetParametersVO> result = topLoadGetParameters(pMenuItemID);
 			
@@ -1302,7 +1314,7 @@ System.out.println("right:"+right);
 			
 			for (int i=0; i<result.size(); i++) {
 				if (pURL.indexOf("?") == -1) {
-					if (strParam == null) {
+					if (strParam == null || strParam.equals("")) {
 						strParam += "?";
 					} else {
 						strParam += "&";
@@ -1312,13 +1324,79 @@ System.out.println("right:"+right);
 				}
 				
 				if (result.get(i).getParamType() == 0) {
-					strParam += result.get(i).getParamInfo() + "=" + result.get(i).getParamValue();
+					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
 				} else {
-					strParam += result.get(i).getParamInfo() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
 				}
 				
 			}
+			return strParam;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) {
+		try {
+			List<PortalTopLoadGetParametersVO> result = loadGetParameters(pPortletID);
 			
+			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+			String strParam = "";
+			
+			for (int i=0; i<result.size(); i++) {
+				if (pURL.indexOf("?") == -1) {
+					if (strParam == null || strParam.equals("")) {
+						strParam += "?";
+					} else {
+						strParam += "&";
+					}
+				} else {
+					strParam += "&";
+				}
+				
+				if (result.get(i).getParamType() == 0) {
+					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
+				} else {
+					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+				}
+				
+			}
+			return strParam;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	public String loadGetParametersXML (String pURL, String pXML, LoginVO userInfo) {
+		try {
+			
+			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+			String strParam = "";
+			
+			Document xmlDom = commonUtil.convertStringToDocument(pXML);
+			
+			for (int i=0; i<xmlDom.getElementsByTagName("PARAMNAME").getLength(); i++) {
+				if (pURL.indexOf("?") == -1) {
+					if (strParam == null || strParam.equals("")) {
+						strParam += "?";
+					} else {
+						strParam += "&";
+					}
+				} else {
+					strParam += "&";
+				}
+				
+				if (xmlDom.getElementsByTagName("PARAMTYPE").item(i).getTextContent().equals("0")) {
+					strParam += xmlDom.getElementsByTagName("PARAMNAME").item(i).getTextContent() + "=" + xmlDom.getElementsByTagName("PARAMVALUE").item(i).getTextContent();
+				} else {
+					strParam += xmlDom.getElementsByTagName("PARAMNAME").item(i).getTextContent() + "=" + xmlDomUserInfo.getElementsByTagName(xmlDom.getElementsByTagName("PARAMINFO").item(i).getTextContent()).item(0).getTextContent();
+				}
+				
+			}
 			return strParam;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1358,7 +1436,7 @@ System.out.println("right:"+right);
 						if (i == result.size() - 1) {
 							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
 						} else {
-							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + loadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 							sb.append(", \"" + menuitemLinkLocation + "\"");
 	                        sb.append(", \"" + menuitemWindowOption + "\")'>" + menuitemDisplayName + "</span></li>\n");
 						}
@@ -1407,7 +1485,7 @@ System.out.println("right:"+right);
 					sb.append("<li ");
 					
 					if (!menuitemLinkURL.trim().equals("")) {
-                        sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + loadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+                        sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
 						sb.append(", \"" + menuitemWindowOption + "\")'");
 					}
@@ -1454,7 +1532,7 @@ System.out.println("right:"+right);
 					if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 						sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 					} else {
-						sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + loadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
+						sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
 					}
 				}
 				sb.append("<li class=\"right\"></ul>");
@@ -1527,7 +1605,7 @@ System.out.println("right:"+right);
                     }
                     if (!imageLinkURL.equals("")) {
                         sb.append(" style='cursor:pointer'");
-                        sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + loadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
+                        sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
                         sb.append(", \"" + imageLinkLocation + "\"");
                         sb.append(", \"" + imageWindowOption + "\")'");
                     }
@@ -2278,6 +2356,24 @@ System.out.println("resultF:"+result);
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	public String getBoardProperty (String pBoardID, String lang) {
+		String boardInfo = "";
+		try {
+			BoardPropertyVO result = ezBoardService.getBoardProperty(pBoardID);
+			if (result.getBoardName() != null && !result.getBoardName().equals("")) {
+				if (lang.equals("1")) {
+					boardInfo = result.getBoardName() + ":" + result.getGuBun();
+				} else {
+					boardInfo = result.getBoardName2().equals("") ? result.getBoardName() : result.getBoardName2() + ":" + result.getGuBun();
+				}
+			}
+			return boardInfo;
+		} catch (Exception e) {
+			return "";
+		}
+		
 	}
 }
 

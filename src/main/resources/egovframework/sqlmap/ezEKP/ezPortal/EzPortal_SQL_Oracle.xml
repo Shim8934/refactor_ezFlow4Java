@@ -481,6 +481,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.loadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADGETPARAMETERS(#v_pPortletID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getUtilMenuHtml" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETUTILMENUHTML(#v_pPARENTUID#, #v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
