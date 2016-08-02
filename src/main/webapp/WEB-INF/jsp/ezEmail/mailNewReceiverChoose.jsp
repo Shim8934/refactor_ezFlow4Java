@@ -1198,6 +1198,9 @@
 	            selectedWindow.normalColor = m_titleSelectedColor;
 	            m_selectedWindow = selectedWindow;
 	        }
+	        
+	        var rgParams = new Array();
+	        var checkname2_cross_dialogArguments = new Array();
 	        function deptsearch_click() {
 	
 	            if (keyword.value == "") {
@@ -1242,23 +1245,43 @@
 	                g_xmlHTTP.send(strQuery);
 	            }
 	            else {
-	                var rgParams = new Array();
 	                rgParams["addrBook"] = xmlDom;
 	                rgParams["deptid"] = "";
-	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(540, 460);
-	                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
-	
-	                if (rgParams["deptid"] != "") {
-	                    bSearch = true;
-	                    g_xmlHTTP = createXMLHttpRequest();
-	                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-	                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-	                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-	                    g_xmlHTTP.send(strQuery);
-	                }
+	                
+	                if (CrossYN()){
+		                checkname2_cross_dialogArguments[0] = rgParams;
+		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
+		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
+		                try { OpenWin.focus(); } catch (e) { }
+		            }else{
+		                var feature = "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(600, 340);
+		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
+
+		                if (rgParams["deptid"] != "") {
+		                    bSearch = true;
+		                    g_xmlHTTP = createXMLHttpRequest();
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		                    g_xmlHTTP.send(strQuery);
+		                }
+		            }
+	                
 	            }
 	        }
+	        
+	        function deptsearch_click_Complete() {
+		        if (rgParams["deptid"] != "") {
+		            bSearch = true;
+		            g_xmlHTTP = createXMLHttpRequest();
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+		            g_xmlHTTP.send(strQuery);
+		        }
+		    }
+	        
 	        var nodeIdx;
 	        function TreeViewNodeClick() {
 	            issearch = false;
@@ -1877,9 +1900,9 @@
 	            addrsearh = true;
 	            var xmlHTTP = createXMLHttpRequest();
 	            if(foldertype == "P")
-	                xmlHTTP.open("POST", "/myoffice/ezAddress/remoteews/address_get_list_mailSearchCall.aspx", false);
+	                xmlHTTP.open("POST", "/ezAddress/addressGetListMailSearchCall.do", false);
 	            else
-	                xmlHTTP.open("POST", "/myoffice/ezAddress/remote/address_get_list_mailSearchCall.aspx", false);
+	                xmlHTTP.open("POST", "/ezAddress/addressGetListMailSearchCall.do", false);
 	            xmlHTTP.send(strXML);
 	            if (xmlHTTP.status != 200) {
 	                alert("<spring:message code='ezEmail.t585' />");
@@ -3158,7 +3181,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>
 	
 	                                                </div>

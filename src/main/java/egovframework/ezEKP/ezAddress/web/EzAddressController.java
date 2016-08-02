@@ -1317,4 +1317,94 @@ public class EzAddressController{
 		return "ezAddress/addressSelectGroupMailList";
 	}
 	
+	/**
+	 * 주소록 검색 정보 호출 함수 (수신자 설정)
+	 */
+	@RequestMapping(value = "/ezAddress/addressGetListMailSearchCall.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String addressGetListMailSearchCall(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		String returnValue = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			Document xmldom = commonUtil.convertRequestToDocument(request);
+			String pFolderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+			int pListPageSize = Integer.parseInt(xmldom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
+			int pCurrentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
+			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
+			String pSearchText = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+			String pSearCase = xmldom.getElementsByTagName("CASE").item(0).getTextContent();
+			
+			int start = (pListPageSize * (pCurrentPage - 1));
+			
+			String pOwnerId = userInfo.getCompanyID();
+			if (pFolderType.equals("P")) {
+				pOwnerId = userInfo.getId();
+			} else if (pFolderType.equals("D")) {
+				pOwnerId = userInfo.getDeptID();
+			}
+			
+			String field = "AddressID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
+			
+			String pFilter = "";
+			switch (pSearCase) {
+                case "SNAME":
+                    pFilter = " SNAME Like '%" + pSearchText.trim() + "%'";
+                    break;
+
+                case "SCOMPANY":
+                    pFilter = " SCOMPANY Like '%" + pSearchText.trim() + "%'";
+                    break;
+
+                case "SEMAIL":
+                    pFilter = " SEMAIL Like '%" + pSearchText.trim() + "%'";
+                    break;
+
+                default:
+                    pFilter = " SNAME Like '%" + pSearchText.trim() + "%'";
+                    break;
+            }
+			
+			String totalCount = ezAddressService.getAddressCount(pFolderId, pOwnerId, pFilter);
+			List<AddressInfoVO> addressList = ezAddressService.getAddressList(pFolderId, pOwnerId, "", pFilter, field, Integer.parseInt(totalCount), pListPageSize, start);
+			
+			int pageCount = ((Integer.parseInt(totalCount) + pListPageSize - 1) / pListPageSize);
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("<RTNDATA>");
+			sb.append("<TOTALCN>" + totalCount + "</TOTALCN>");
+			sb.append("<CURRENTPAGE>" + pCurrentPage + "</CURRENTPAGE>");
+			sb.append("<PAGECOUNT>" + pageCount + "</PAGECOUNT>");
+			sb.append("<DATA>");
+			
+			for (AddressInfoVO addressInfo : addressList) {
+				sb.append("<ROW>");
+				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
+				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
+				sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
+				sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
+				sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
+				sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
+				sb.append("<SCOMPANY>" + addressInfo.getsCompany() + "</SCOMPANY>");
+				sb.append("<SCOMPANYPHONE>" + addressInfo.getsCompanyPhone() + "</SCOMPANYPHONE>");
+				sb.append("<SMOBILE>" + addressInfo.getsMobile() + "</SMOBILE>");
+				sb.append("<SEMAIL>" + addressInfo.getsEmail() + "</SEMAIL>");
+				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+				sb.append("<FOLDERTYPE>" + pFolderType + "</FOLDERTYPE>");
+				sb.append("</ROW>");
+			}
+			
+			sb.append("</DATA>");
+			sb.append("</RTNDATA>");
+			
+			returnValue = sb.toString();
+			
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		}
+		return returnValue;
+	}
 }

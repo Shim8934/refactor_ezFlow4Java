@@ -2429,7 +2429,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		}
         
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType);
-        String dlXML = getOrganDLSearch(pDLSearchList, pDLCellList, pDLPropList, pDLListType);
+        String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
 	}
@@ -2687,12 +2687,57 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 공용배포그룹 정보 호출 함수
 	 */
-	private String getOrganDLSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
+	private String getOrganDLSearch(String pSearchList, LoginVO userInfo) {
         String pResult = "";
         try {
-        	//TODO : ezOrganService에 getSearchListDL만들어지면 연결
-            //pResult = ezOrganService.getSearchListDL(pSearchList, pCellList, pPropList, pListType, 100, "");
-        	pResult = "<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>";
+        	pSearchList = pSearchList.split("::")[1];
+        	
+        	String inputParams = "companyId=" + URLEncoder.encode(userInfo.getCompanyID(), "UTF-8");
+        	inputParams += "&filter=" + URLEncoder.encode("AND GROUP_NAME LIKE '%" + pSearchList + "%'", "UTF-8");
+        	
+			logger.debug("inputParams=" + inputParams);
+
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchList";			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+			logger.debug("response=" + response);
+			
+			JSONArray resultArray = null;
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+        	
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			if (resultArray != null) {
+				for (int i = 0; i < resultArray.size(); i++) {
+					sb.append("<ROW><CELL>");
+					
+					Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
+					
+					for (String colName : rowObject.keySet()) {
+						String colValue = rowObject.get(colName);
+						sb.append("<" + colName + ">");
+						sb.append(colValue);
+						sb.append("</" + colName + ">");
+					}
+					
+					sb.append("</CELL></ROW>");
+				}
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+        	
+        	pResult = "<LISTVIEWDATA><ROWS>" + sb.toString() + "</ROWS></LISTVIEWDATA>";
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";
