@@ -20,8 +20,8 @@
 	        var SSCompanyName = "${userInfo.companyName1}";
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
-	        var RedirectBoardGroupID = "";
-	        var RedirectBoardID = "";
+	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
+	        var RedirectBoardID = "${redirectBoardID}";
 	        var Func = "${func}";
 	        var subFunc = "${subFunc}";
 	        var PhotoType = "${photoType}";
@@ -43,6 +43,7 @@
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
+
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -71,6 +72,7 @@
 		                        BoardRedirect();
 		                        return;
 		                    }
+
 		                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
 		                }
 		
@@ -262,6 +264,7 @@
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
+
 		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"));
 		        if (SelectNodes(xmlRtn, "TREEVIEWDATA/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
@@ -342,6 +345,7 @@
 		    var clickFlag = false;
 		    
 		    function TopBoard_onclick(obj, ID) {
+
 		        if (tempID == ID)
 		            clickFlag = true;
 		        else
@@ -378,6 +382,7 @@
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 		            tid = tid.substring(1, 37);
+
 		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
 		            strHTML += "  <ul>";
 		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:auto;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
