@@ -201,10 +201,9 @@
 		        if (SelectNodes(xmlRtn, "TREEVIEWDATA/NODE/VALUE").length > 0) {
 		            if (CrossYN()) {
 		                xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-		            }
-		            else {
+		            } else {
 		                xmlRtn.selectNodes("TREEVIEWDATA/NODE")[0].appendChild(xmlRtn.selectNodes("TREEVIEWDATA/NODE/VALUE")[0]);
-		            }
+		            } 
 		        }
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
