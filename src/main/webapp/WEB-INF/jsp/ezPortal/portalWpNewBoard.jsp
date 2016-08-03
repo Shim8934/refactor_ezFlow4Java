@@ -150,12 +150,12 @@
             	var pLeft = (pwidth - 765) / 2;
 
             	if (pBoardType_NewBoard == "3" || pBoardType_NewBoard == "4")
-	                window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
             	else {
 	                if (CrossYN())
-    	                window.open("/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+    	                window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
         	        else
-            	        window.open("/myoffice/ezBoardSTD/BoardItemView.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+            	        window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
             	}
 	        }
 
@@ -231,7 +231,7 @@
         	}
 
         	function Boardmore_NewBoard_btnClick() {
-	            window.open("/myoffice/ezBoardSTD/main_Redirect.aspx?BoardID=" + pBoardID_NewBoard, "main", "");
+	            window.open("/ezBoard/boardMainRedirect.do?boardID=" + pBoardID_NewBoard, "main", "");
     	    }
 
         	function refresh_onclick() {
