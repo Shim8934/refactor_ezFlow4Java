@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezPortal.web;
 
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -10,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.formula.functions.Index;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +26,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
@@ -944,6 +948,7 @@ System.out.println("portalPageXml:"+portalPageXml);
 				pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[1];
 			}
 			
+			
 			model.addAttribute("pCompanyBoard", pCompanyBoard);
 			model.addAttribute("pCompanyBDNM", pCompanyBDNM);
 			model.addAttribute("pCompanyType", pCompanyType);
@@ -954,6 +959,50 @@ System.out.println("portalPageXml:"+portalPageXml);
 			model.addAttribute("pNewsBDNM", pNewsBDNM);
 			model.addAttribute("pNewsType", pNewsType);
 			return "/ezPortal/portalWpNewBoard";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 우수사원 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewSide.do")
+	public String wpNewSide(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String filePath = "";
+		String displayName = "";
+		String title = "";
+		String description = "";
+		
+		try {
+			Calendar cal = Calendar.getInstance();
+			String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
+			
+			
+			PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term);
+			
+			if (result != null) {
+				if (result.getFilePath() != null && !result.getFilePath().equals("")) {
+					filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
+				} else {
+					filePath = "/images/default_pic.jpg";
+				}
+				
+				if (userInfo.getLang().equals("2")) {
+					displayName = result.getDescription2();
+					title = result.getTitle2();
+					description = result.getDescription2();
+				}
+				
+			}
+			
+			model.addAttribute("displayName", displayName);
+			model.addAttribute("title", title);
+			model.addAttribute("description", description);
+			model.addAttribute("filePath", filePath);
+			model.addAttribute("result", result);
+			return "/ezPortal/portalWpNewSide";
 		} catch (Exception e) {
 			return "";
 		}

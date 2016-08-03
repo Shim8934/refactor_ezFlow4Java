@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -55,5 +56,11 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 		
 		return result;
 	}
+
+	@Override
+	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm) throws Exception {
+		return ezPersonalDAO.getEmpOfMonth(pTerm);
+	}
+	
 	
 }
