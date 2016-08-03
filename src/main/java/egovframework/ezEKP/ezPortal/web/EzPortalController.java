@@ -990,11 +990,14 @@ System.out.println("portalPageXml:"+portalPageXml);
 				}
 				
 				if (userInfo.getLang().equals("2")) {
-					displayName = result.getDescription2();
+					displayName = result.getDisplayName2();
 					title = result.getTitle2();
 					description = result.getDescription2();
+				} else {
+					displayName = result.getDisplayName();
+					title = result.getTitle();
+					description = result.getDescription();
 				}
-				
 			}
 			
 			model.addAttribute("displayName", displayName);
