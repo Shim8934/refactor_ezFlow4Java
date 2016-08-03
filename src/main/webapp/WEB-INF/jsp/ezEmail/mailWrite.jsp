@@ -597,33 +597,38 @@
 	        var objRows;
 	        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
 	        if (xmlhttp.status == "200") {
-	            xmlDoc = loadXMLString(xmlhttp.responseText);
-	
-	            if (CrossYN())
-	                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-	            else
-	                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
-	            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
-	            for (var i = 0; i < filelist.length; i++) {
-	                filename = SelectSingleNodeValue(filelist[i], "NAME");
-	                path = SelectSingleNodeValue(filelist[i], "PATH");
-	                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
-	                size = SelectSingleNodeValue(filelist[i], "SIZE");
-	                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-	                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
-	                if (big_yn == "Y") {
-	                    bigtrue = bigtrue + 1;
-	                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('/')[0]);
-	                }
-	                else {
-	                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
-	                }
-	                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
-	                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
-	                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
-	                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
-	                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
-	            }
+	        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
+	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+	        	}
+		       	else {
+		        	xmlDoc = loadXMLString(xmlhttp.responseText);
+		
+		            if (CrossYN())
+		                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
+		            else
+		                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+		            for (var i = 0; i < filelist.length; i++) {
+		                filename = SelectSingleNodeValue(filelist[i], "NAME");
+		                path = SelectSingleNodeValue(filelist[i], "PATH");
+		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
+		                size = SelectSingleNodeValue(filelist[i], "SIZE");
+		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
+		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
+		                if (big_yn == "Y") {
+		                    bigtrue = bigtrue + 1;
+		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('/')[0]);
+		                }
+		                else {
+		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
+		                }
+		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+		            }
+	        	}
 	        }
 	        else {
 	            alert(xmlhttp.status + " : " + strLang241);

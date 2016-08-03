@@ -498,6 +498,7 @@ public class EzEmailMailSearchController {
 	@ResponseBody
 	public String mailMoveCopyMessageS(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {
+		String returnValue = "OK";
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
@@ -547,13 +548,14 @@ public class EzEmailMailSearchController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+			returnValue = "ERROR : " + e.getMessage();
 		} finally {
 			if (ia != null) {
 				ia.close();
 			}
 		}
 		
-		return "";
+		return returnValue;
 	}
 	
 }

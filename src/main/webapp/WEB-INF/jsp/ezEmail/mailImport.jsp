@@ -114,7 +114,12 @@
 	                window_Close();
 	            }
 	            else {
-	                alert("<spring:message code='ezEmail.t404' />" + e.description);
+	            	if (resultxml.indexOf("NO APPEND failed.") > -1) {
+		        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+	            	}
+	            	else {
+	                	alert("<spring:message code='ezEmail.t404' />" + resultxml);
+	            	}
 	            }
 	        }
 	    </script>

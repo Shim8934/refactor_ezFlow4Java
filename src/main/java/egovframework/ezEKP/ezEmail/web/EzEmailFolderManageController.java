@@ -97,6 +97,8 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
 	@ResponseBody
 	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String returnValue = "OK";
+		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
 		
@@ -232,6 +234,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	        }
 		} catch (MessagingException e) {
+			returnValue = "ERROR : " + e.getMessage();
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -239,6 +242,6 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			}
 		}
         
-		return "";
+		return returnValue;
 	}
 }

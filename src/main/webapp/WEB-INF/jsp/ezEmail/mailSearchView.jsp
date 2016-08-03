@@ -406,16 +406,20 @@
 	            }
 	        }
 	        else {
-	            g_copyItemHttp = null;
-
-	            if (event_copyItemList.cmd == "COPY") {
-	                alert(strLang53);
-	                start_search();
-	            }
-	            else {
-	                alert(strLang53.replace('복사', '이동'));
-	                start_search();
-	            }
+				if (g_copyItemHttp.responseText.indexOf("NO COPY processing failed.") > -1) {
+	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+				}
+				else {
+		            if (event_copyItemList.cmd == "COPY") {
+		                alert(strLang53);
+		                start_search();
+		            }
+		            else {
+		                alert(strLang53.replace('복사', '이동'));
+		                start_search();
+		            }
+				}
+				g_copyItemHttp = null;
 	        }
 	    }
 	}

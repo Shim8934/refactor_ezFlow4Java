@@ -313,12 +313,20 @@
 		                    alert("<spring:message code='ezEmail.t472' />");
 		            }
 		            else {
-		                if (xmlHTTP2.status == 100)
+		                if (xmlHTTP2.status == 100) {
 		                    alert("<spring:message code='ezEmail.t476' />");
-		                else if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300)
-		                    alert("<spring:message code='ezEmail.t478' />");
-		                else
+		                }
+		                else if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+		                	if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
+		    	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+		                	}
+		                	else {
+		                    	alert("<spring:message code='ezEmail.t478' />");
+		                	}
+		                }
+		                else {
 		                    alert("<spring:message code='ezEmail.t477' />");
+		                }
 		            }
 		        }
 		    }
@@ -393,6 +401,10 @@
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
 		        	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
 		        		alert("<spring:message code='ezEmail.t99000086' />");
+		        		return false;
+		        	}
+		        	else if (xmlHTTP.responseText.indexOf("NO COPY processing failed.") > -1) {
+    	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
 		        		return false;
 		        	}
 		            return true;

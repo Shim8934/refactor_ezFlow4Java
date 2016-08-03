@@ -1198,7 +1198,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mailInterAttachCK(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
-        String cmd = "";
+		String returnValue = "";
+		
+		String cmd = "";
         
 		Document xmldom = commonUtil.convertRequestToDocument(request);
 		cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
@@ -1365,8 +1367,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			if (hasAttachFile) {
 		        folder.close(true);
 			}
-		
+			
+			returnValue = commonUtil.convertDocumentToString(xmldom);
+			
 		} catch (MessagingException e) {
+			returnValue = e.getMessage();
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -1374,8 +1379,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 		}
 		
-		String xmldomStr = commonUtil.convertDocumentToString(xmldom);
-		return xmldomStr;
+		return returnValue;
 	}
 	
 	/**
@@ -1999,7 +2003,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                	oldMessage.setFlag(Flags.Flag.DELETED, true);
 		                }
 		            } else {
-		            	Transport.send(message);
+		            	
+		            	boolean isSend = false;
+		            	int sendCount = 0;
+		            	
+		            	do {
+		            		sendCount++;
+		            		if (sendCount == 2) {
+		            			Transport.send(message);
+		            			isSend = true;
+		            		} else {
+			            		try {
+			            			Transport.send(message);
+			            			isSend = true;
+			            		} catch (MessagingException e) {
+			            			e.printStackTrace();
+			            			Thread.sleep(1000);
+			            		}
+		            		}
+		            	} while (!isSend);
 		            	
 		                // this deletion code block has been moved here because
 		                // it needs to be kept in Drafts if an error occurs during the above process.
@@ -2089,6 +2111,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
         
 		} catch (Exception e) {
 			pResult = e.getMessage();
+			logger.error("exception!!!!");
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
