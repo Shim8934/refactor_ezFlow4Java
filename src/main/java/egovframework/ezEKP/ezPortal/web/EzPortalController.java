@@ -1011,4 +1011,20 @@ System.out.println("portalPageXml:"+portalPageXml);
 		}
 	}
 	
+	/**
+	 * 포탈 - webPart 전자결재 & 메일 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewApprMail.do")
+	public String wpNewApprMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		
+		try {
+			
+			return "/ezPortal/portalWpNewApprMail";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
 }
