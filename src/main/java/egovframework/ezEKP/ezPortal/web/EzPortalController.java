@@ -1027,4 +1027,36 @@ System.out.println("portalPageXml:"+portalPageXml);
 		}
 	}
 	
+	/**
+	 * 포탈 - webPart 배너 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewGWBanner.do")
+	public String wpNewGWbanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		
+		try {
+			
+			return "/ezPortal/portalWpNewGWBanner";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 커뮤니티 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewCommunity.do")
+	public String wpNewCommunity(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		
+		try {
+			
+			return "/ezPortal/portalWpNewCommunity";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
 }
