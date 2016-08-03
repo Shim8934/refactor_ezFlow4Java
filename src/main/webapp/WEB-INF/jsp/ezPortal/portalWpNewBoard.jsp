@@ -63,6 +63,8 @@
                 	document.body.style.oUserSelect = 'none';
                 	document.body.style.UserSelect = 'none';
             	}
+    	        // 2016-08-03 첫화면에 공지게시판 불러오기
+				getBoardList_NewBoard();
             	try { top.onresize() } catch (e) { }
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
