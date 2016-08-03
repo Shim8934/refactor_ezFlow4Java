@@ -135,6 +135,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("subFunc", subFunc);
 		return "ezBoard/boardMain";
 	}
+	
+	/**
+	 * 게시판 메인화면 Redirect 호출 Method
+	 */
+	@RequestMapping(value="/ezBoard/boardMainRedirect.do")
+	public String boardMainRedirect(HttpServletRequest req, Model model) {
+		String boardID = "";
+		String photoType = "";
+
+		if (req.getParameter("boardID") != null && !req.getParameter("boardID").equals("")) {
+			boardID = req.getParameter("boardID");	
+		}
+		if (req.getParameter("photoType") != null && !req.getParameter("photoType").equals("")) {
+			photoType = req.getParameter("photoType");	
+		}
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("photoType", photoType);
+		return "ezBoard/boardMainRedirect";
+	}
+	
 	/**
 	 * 게시판 왼쪽화면 호출 Method
 	 */
@@ -155,18 +176,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pCompanyID = loginVO.getCompanyID();
 		String pRollInfo = loginVO.getRollInfo();
 		
-		if (request.getParameter("photoType") != null) {
+		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
 		}
 		
-		if (request.getParameter("boardID") != null) {
+		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
+
 			redirectBoardID  = request.getParameter("boardID");
-			
+
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
 			for (BoardVO i :  leftBoardList) {
 				redirectBoardGroupID += i.getBoardGroupId()+",";
 			}
-			
+
 			if (redirectBoardGroupID.length() != 0)
 				redirectBoardGroupID = redirectBoardGroupID.substring(0, redirectBoardGroupID.length()-1);
 		}
@@ -209,6 +231,8 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("func",func);
         modelMap.addAttribute("subFunc",subFunc);
         modelMap.addAttribute("photoType",photoType);
+        modelMap.addAttribute("redirectBoardID",redirectBoardID);
+        modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
         modelMap.addAttribute("applyFlag",applyFlag);
         
 		return "ezBoard/boardLeft";
@@ -635,7 +659,7 @@ public class EzBoardController extends EgovFileMngUtil{
             
             pBoardName = boardInfo.getBoardName();
         }
-        
+
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
         model.addAttribute("boardID", pBoardID);
@@ -2584,13 +2608,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
 	    String pExcludeBoardID = " ";
-	    if (req.getParameter("rootBoardID") != null) {
+	    if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {
 	    	pRootBoardID = req.getParameter("rootBoardID");
 	    }
-	    if (req.getParameter("subFlag") != null) {
+	    if (req.getParameter("subFlag") != null && !req.getParameter("subFlag").equals("")) {
 	    	pSubFlag = req.getParameter("subFlag");
 	    }
-	    if (req.getParameter("selectFlag") != null) {
+	    if (req.getParameter("selectFlag") != null && !req.getParameter("selectFlag").equals("")) {
 	    	pSelectBy = Integer.parseInt(req.getParameter("selectFlag"));
 	    }
 	    if (req.getParameter("pExcludeBoardID") != null && !req.getParameter("pExcludeBoardID").equals("")) {

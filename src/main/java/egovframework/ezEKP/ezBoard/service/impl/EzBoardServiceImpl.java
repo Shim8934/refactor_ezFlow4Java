@@ -37,7 +37,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 	@Override
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("redirectBoardID", redirectBoardID);
+		map.put("v_REDIRECTBOARDID", redirectBoardID);
 		return ezBoardDAO.getLeft_BoardSTD(map);
 	}	
 
