@@ -69,7 +69,7 @@
 	                        break;
 	
 	                    case "RECIPENT":
-	                        Recipent_onclick()
+	                        Recipent_onclick();
 	                        break;
 	                }
 	            }
@@ -78,7 +78,7 @@
 	        function GetDocList() {
 	            var pDocstate = "000";
 	            if (pChackYN == "FALSE") {
-	                for (i = 0; i < 19; i++) {
+	                for (var i = 0; i < 19; i++) {
 	                    SearchCond[i] = "";
 	                }
 	                //curpage = 1;
@@ -264,23 +264,23 @@
 	            PagingHTML += strtext;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -307,24 +307,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang941 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang941 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang941 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -421,44 +421,46 @@
 	            }
 	        }
 	
-	        function getDataInfo() {
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-	            createNodeAndInsertText(xmlpara, objNode, "Flag", "APR");
-	            createNodeAndInsertText(xmlpara, objNode, "CompanyID", pCompanyID);
-	
+	        function getDataInfo() {	            
+	            var ajaxURL = "";
+	            var ajaxAsync = false;
+	            
 	            switch (jobState) {
 	                case "ATTACH":
-	                    xmlhttp.open("POST", "aspx/GetStatAttachList.aspx", true);
+	                	ajaxURL = "/admin/ezApprovalG/getStatAttachList.do";
+	                	ajaxAsync = true;
 	                    break;
 	
 	                case "OPINION":
-	                    xmlhttp.open("POST", "aspx/GetStatOpinionList.aspx", true);
+	                	ajaxURL = "/admin/ezApprovalG/getStatOpinionList.do";
+	                	ajaxAsync = true;
 	                    break;
 	
 	                case "APPROVAL":
-	                    xmlhttp.open("POST", "aspx/GetStatLineList.aspx", false);
+	                	ajaxURL = "/admin/ezApprovalG/getStatLineList.do";
+	                	ajaxAsync = false;
 	                    break;
 	
 	                case "RECIPENT":
-	                    xmlhttp.open("POST", "aspx/GetStatReceiptList.aspx", true);
+	                	ajaxURL = "/admin/ezApprovalG/getStatReceiptList.do";
+	                	ajaxAsync = true;
 	                    break;
 	            }
 	            
-	            xmlhttp.onreadystatechange = getdoclistSub_after;
-	            xmlhttp.send(xmlpara);
+	            $.ajax({
+	            	type : "POST",
+	            	url : ajaxURL,
+	            	async : ajaxAsync,
+	            	data : {docID : DocID, flag : "APR", companyID : pCompanyID},
+	            	success : function (result) {
+	            		getdoclistSub_after(result);
+	            	}
+	            });
 	        }
 	
-	
-	        function getdoclistSub_after() {
-	            if (xmlhttp == null || xmlhttp.readyState != 4) {
-	            	return;
-	            }
-	            
+	        function getdoclistSub_after(result) {
 	            try {
-	                Resultxml = xmlhttp.responseXML;
+	                Resultxml = loadXMLString(result);
 	                if (document.getElementById("lvAprLine").innerHTML != "") {
 	                    document.getElementById("lvAprLine").innerHTML = "";
 	                }
@@ -468,7 +470,7 @@
 	                DocList.SetMulSelectable(false);
 	                DocList.SetRowOnDblClick("lvtDetail_onSel_DBclick");
 	                DocList.SetUrgentFlag(false);
-	                DocList.DataSource(xmlhttp.responseXML);
+	                DocList.DataSource(Resultxml);
 	                DocList.DataBind("lvAprLine");
 	            }
 	            catch (e) { }
@@ -530,14 +532,13 @@
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                } else {
 	                    if (CrossYN()) {
-	                        var openLocation = "/myoffice/ezApprovalG/AprDocView_Cross.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
-	                        openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
+	                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
+	                        openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
 	                    } else {
 	                        var openLocation = "/myoffice/ezApprovalG/AprDocView.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                        openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                    }
 	                }
-	                
 	                openwindow(openLocation, "", 880, 550);
 	            }
 	        }
@@ -574,7 +575,7 @@
 			
 			var g_progresswin = null;
 			function showProgress() {
-			    g_progresswin = window.showModelessDialog("/myoffice/common/show_progress.aspx?fileinfo=" + escape("<spring:message code = 'ezApprovalG.t628' />"), "", "dialogWidth=390px; dialogHeight:155px; center:yes; status:no; help:no; edge:sunken;");
+			    g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI("<spring:message code = 'ezApprovalG.t628' />"), "", "dialogWidth=390px; dialogHeight:155px; center:yes; status:no; help:no; edge:sunken;");
 			}
 			
 			function hideProgress() {
@@ -604,7 +605,7 @@
 			                var width = window.screen.availWidth;
 			                var left = (parseInt(width) - 420) / 2;
 			                var top = (parseInt(heigth) - 450) / 2;
-			                window.open("/myoffice/common/showpersoninfo_cross.aspx?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+			                window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 			            }
 			        } else if (jobState == "RECIPENT") {
 			            var heigth = window.screen.availHeight;
@@ -619,7 +620,7 @@
 			                feature = feature + GetShowModalPosition(555, 240);
 			                var ret = window.showModalDialog(url, "", feature);
 			            } else {
-			                window.open("../ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(tr.getAttribute("DATA1")) + "&pDocState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			            }
 			        }
 			    }
@@ -638,21 +639,21 @@
 			function SearchCondi_onclick() {
 			    var para;
 			    if (CrossYN()) {
-			        ezStatisticsSearch_Cross_dialogArguments[0] = para
+			        ezStatisticsSearch_Cross_dialogArguments[0] = para;
 			        ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 			
-			        var ezStatisticsSearch_Cross = window.open("ezStatisticsSearch_Cross.aspx?INGFLAG=APR", "ezStatisticsSearch_Cross", GetOpenWindowfeature(500, 340));
+			        var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(500, 340));
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 			        }
 			    } else {
 			        var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=APR";
-			        var feature = "dialogWidth:500px;dialogHeight:280px;status:no;scroll:no;edge:sunken"
+			        var feature = "dialogWidth:500px;dialogHeight:280px;status:no;scroll:no;edge:sunken";
 			
 			        var condition = window.showModalDialog(url, para, feature);
 			        if (condition) {
 			            pChackYN = "SEARCH";
 			            
-			            for (i = 0; i < 19; i++) {
+			            for (var i = 0; i < 19; i++) {
 			                SearchCond[i] = condition[i];
 			            }
 			
@@ -666,7 +667,7 @@
 			    if (condition) {
 			        pChackYN = "SEARCH";
 			        
-			        for (i = 0; i < 19; i++) {
+			        for (var i = 0; i < 19; i++) {
 			            SearchCond[i] = condition[i];
 			        }
 			
@@ -697,7 +698,7 @@
 			    if (document.getElementById("txt_keyword").value != "") {
 			        var radiosearch = document.getElementsByName('searchCheck');
 			
-			        for (i = 0; i < 20; i++) {
+			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = "";
 			        }
 			
@@ -758,13 +759,12 @@
 
     	<div id="tabnav" style="width: 100%">
         	<ul>
-            	<li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code = 'ezApprovalG.t1769' /></span></li>
-            	<li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code = 'ezApprovalG.t950' /></span></li>
+            	<li id="tagsub1"><span onclick="pDocInfoValue='1'; MM_swapImagesub('1', event);Approval_onclick()"><spring:message code = 'ezApprovalG.t1769' /></span></li>
+            	<li id="tagsub2"><span onclick="pDocInfoValue='2'; MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code = 'ezApprovalG.t950' /></span></li>
             	<li id="tagsub3"><span onclick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()"><spring:message code = 'ezApprovalG.t56' /></span></li>
             	<li id="tagsub4"><span onclick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code = 'ezApprovalG.t55' /></span></li>
         	</ul>
     	</div>
-
 
     	<div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
         	<div id="lvAprLine"></div>

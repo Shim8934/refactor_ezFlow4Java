@@ -3410,6 +3410,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		model.addAttribute("expireDays", expireDays);
+		model.addAttribute("startDateTime", startDateTime);
+		model.addAttribute("endDateTime", endDateTime);
 		
 		return "/ezCommunity/communityNewBoardItemPhoto";
 	}

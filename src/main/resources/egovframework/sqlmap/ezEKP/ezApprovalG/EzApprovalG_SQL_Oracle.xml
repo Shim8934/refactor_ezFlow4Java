@@ -62,7 +62,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRUSERAPPLINEINFO(#v_PDOCID#, #v_PAPRUSERID#, #v_PDEPTID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
+	<procedure id="EzApprovalG.getReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIPTINFO(#v_DOCID#, #v_MODE#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	

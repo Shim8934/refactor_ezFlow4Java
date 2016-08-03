@@ -1547,8 +1547,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_FORMID", formID);
 		map1.put("v_DOCSTATE", docState);
 		map1.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
-		map1.put("v_STARTDATE2", makeDate(draftFromYear, draftFromMonth, draftFromDay, false));
-		map1.put("v_ENDDATE1", makeDate(apprToYear, apprToMonth, apprToDay, true));
+		map1.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
+		map1.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map1.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map1.put("v_LANGTYPE", commonUtil.getMultiData(lang));
 		map1.put("companyID", companyID);
@@ -1578,8 +1578,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map2.put("v_FORMID", formID);
 		map2.put("v_DOCSTATE", docState);
 		map2.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
-		map2.put("v_STARTDATE2", makeDate(draftFromYear, draftFromMonth, draftFromDay, false));
-		map2.put("v_ENDDATE1", makeDate(apprToYear, apprToMonth, apprToDay, true));
+		map2.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
+		map2.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map2.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map2.put("v_LANGTYPE", commonUtil.getMultiData(lang));
 		map2.put("companyID", companyID);
@@ -1606,8 +1606,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
-				
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang)) + "</VALUE>");
+
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang)) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");

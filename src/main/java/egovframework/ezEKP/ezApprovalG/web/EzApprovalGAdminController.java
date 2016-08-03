@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +30,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -61,6 +61,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzApprovalGService ezApprovalGService;
 	
 	@Autowired
 	private EzApprovalGAdminService ezApprovalGAdminService;
@@ -1381,8 +1384,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 전체문서조회(진행문서) 문서목록 호출 함수
 	 */
-	//TODO 상태코드 추가작업
-	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchAprDocList.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchAprDocList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getStatSearchAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1424,5 +1426,162 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang());
 		
 		return result; 
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(진행문서) 문서별 결재선 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getStatLineList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getStatLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.getLineInfo(docID, mode, "", "", companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/** 
+	 * 전자결재G관리 전체문서조회(진행문서) 문서별 수신자 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getStatReceiptList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getStatReceiptList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(진행문서) 문서별 첨부 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getStatAttachList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getStatAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.getAttachInfo(docID, mode, "", "", companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(진행문서) 문서별 의견 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getStatOpinionList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getStatOpinionList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.getOpinionInfo(docID, mode, "", "", companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(완료문서) 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/forDoc.do")
+	public String forDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		String useEditor = config.getProperty("config.EDITOR");
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		
+		return "admin/ezApprovalG/apprGForDoc";
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchDocList.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getStatSearchDocLlist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docNumber = request.getParameter("docNumber");
+        String docTitle = request.getParameter("docTitle");
+        String drafter = request.getParameter("drafter");
+        
+        String draftFromYear = request.getParameter("draftFromYear");
+        String draftFromMonth = request.getParameter("draftFromMonth");
+        String draftFromDay = request.getParameter("draftFromDay");
+        
+        String draftToYear = request.getParameter("draftToYear");
+        String draftToMonth = request.getParameter("draftToMonth");
+        String draftToDay = request.getParameter("draftToDay");
+
+        String apprFromYear = request.getParameter("apprFromYear");
+        String apprFromMonth = request.getParameter("apprFromMonth");
+        String apprFromDay = request.getParameter("apprFromDay");
+        
+        String apprToYear = request.getParameter("apprToYear");
+        String apprToMonth = request.getParameter("apprToMonth");
+        String apprToDay = request.getParameter("apprToDay");
+
+        String formID = request.getParameter("formID");
+        String draftDeptName = request.getParameter("deptName1");
+        String pageNum = request.getParameter("pageNum");
+        String pageSize = request.getParameter("pageSize");
+        String docState = request.getParameter("docState");
+
+        String subQuery = request.getParameter("subQuery");
+        String orderCell = request.getParameter("orderCell");
+        String orderOption = request.getParameter("orderOption");
+        String approvUser = request.getParameter("approvUser");
+        String companyID = request.getParameter("companyID");
+        
+        String result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
+				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
+				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser);
+        
+		return result;
+	}
+	
+	/** 
+	 * 전자결재G관리 전체문서조회 검색 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/search.do")
+	public String search(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String ingFlag = request.getParameter("ingFlag");
+		String initDate = EgovDateUtil.getToday("-");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("aprFlag", ingFlag);
+		model.addAttribute("initDate", initDate);
+		
+		return "admin/ezApprovalG/apprGSearch";
 	}
 }
