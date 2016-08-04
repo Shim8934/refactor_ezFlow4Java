@@ -886,7 +886,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnXML.append("<DATA4>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTPARENTS").item(k).getTextContent())) + "</DATA4>");
 				rtnXML.append("<DATA5>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTDESCRIPTION").item(k).getTextContent())) + "</DATA5>");
 				
-                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent() == "ALL") {
+                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
 					rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName").toString())) + "</DATA6>");

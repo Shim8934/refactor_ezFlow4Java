@@ -24,7 +24,7 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    
-		    window.onload = function() {
+		    $(document).ready(function(){
 		        var UserAgentState = navigator.userAgent.toLowerCase();
 		        //if (UserAgentState.indexOf("firefox") > -1)
 		        //    setinnerHTMLProperty();
@@ -46,7 +46,7 @@
 		        TaskCode = RetValue[1];
 		        InitCode();
 		        InitTaskInfo();
-		    }
+		    });
 		    
 		    //function setinnerHTMLProperty() {
 		    //    if (typeof HTMLElement != "undefined" && typeof HTMLElement.prototype.__defineGetter__ != "undefined") {

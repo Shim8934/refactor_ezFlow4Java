@@ -23,13 +23,13 @@
 		    var langType = "<c:out value = '${userInfo.lang}' />";
 		    var listview = new ListView();
 		    
-		    window.onload = function () {
+		    $(document).ready(function(){
 		        document.getElementById("SCompID").value = companyID;
 		        Tree_setconfig();        
 		        getGroupTree(1, 1, 0, true);
 		        InitListView();
 		        getGroupItem("");
-		    }
+		    });
 	
 		    function Tree_setconfig() {
 		        var xmlHTTP = createXMLHttpRequest();

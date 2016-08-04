@@ -28,7 +28,7 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    
-		    window.onload = function () {
+		    $(document).ready(function(){
 		        try {
 		            try {
 		                RetValue = parent.taskdeptinfomanage_cross_dialogArguments[0];
@@ -53,7 +53,7 @@
 		        } catch (ErrMsg) {
 		            alert(ErrMsg.description);
 		        }
-		    };
+		    });
 	
 		    function Tree_setconfig() {
 		        var xmlHTTP = createXMLHttpRequest();

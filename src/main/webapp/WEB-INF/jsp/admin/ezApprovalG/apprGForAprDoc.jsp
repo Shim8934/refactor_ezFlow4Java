@@ -638,6 +638,7 @@
 			var ezStatisticsSearch_Cross_dialogArguments = new Array();
 			function SearchCondi_onclick() {
 			    var para;
+			    
 			    if (CrossYN()) {
 			        ezStatisticsSearch_Cross_dialogArguments[0] = para;
 			        ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;

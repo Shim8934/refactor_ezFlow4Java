@@ -22,7 +22,7 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        
-	        window.onload = function () {
+	        $(document).ready(function(){
 	            var ua = navigator.userAgent;
 	            
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -82,7 +82,7 @@
 	            document.getElementById("tbSubCode").value = PCode;
 	            document.getElementById("tbTaskCode").value = TaskCode;
 	            document.getElementById("tbSubCode").disabled = true;
-	        };
+	        });
 	        
 	        function InitCode() {
 	        	$.ajax({

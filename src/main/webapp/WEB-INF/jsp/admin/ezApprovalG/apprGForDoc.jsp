@@ -611,7 +611,7 @@
 				}
 			}
 			
-			function DisuseItem_onclick() {
+			/* function DisuseItem_onclick() {
 				var SelList = new ListView();
 				SelList.LoadFromID("DocList");
 				var oArrRows = SelList.GetSelectedRows();
@@ -643,7 +643,7 @@
 			            alert("<spring:message code = 'ezApprovalG.t1319' />" + xmlresult.documentElement.text);
 			        }
 				}
-			}
+			} */
 			
 			function SendEDM_onclick() {
 				var tr = lvtDoclist.multiselects(0);
@@ -747,7 +747,7 @@
 	            	</c:forEach>
 		        </SELECT><br /><br />
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
+	            <%-- <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>
 	            <img src="/images/i_bar.gif" align="absmiddle">
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
 	        </ul>

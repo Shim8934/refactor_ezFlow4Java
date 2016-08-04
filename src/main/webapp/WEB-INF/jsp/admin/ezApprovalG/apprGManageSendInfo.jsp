@@ -58,7 +58,7 @@
 			    objXml.async = false;
 			
 			    objXml = loadXMLFile("/files/upload_approvalG/" + companyID + "/encodeinfo.xml");
-			
+
 			    if (getNodeText(objXml) == "") {
 			        SaveOptionInfo(companyID, "Y", "Y", "Y");
 			        document.getElementById("special1").checked = true;

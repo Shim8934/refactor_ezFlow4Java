@@ -18,7 +18,7 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    
-		    window.onload = function () {
+		    $(document).ready(function(){
 		        try {
 		            try {
 		                RetValue = parent.taskhistoryinfo_cross_dialogArguments[0];
@@ -51,31 +51,9 @@
 				            lvAprLineList = null;
 		            	}
 		            });
-	
-		            /* var xmlhttp = createXMLHttpRequest();
-		            var RtnVal = createXmlDom();
-	
-		            var xmlpara = createXmlDom();
-		            var objRoot, objNode;
-	
-		            objRoot = createNodeInsert(xmlpara, objRoot, "ASSIGN");
-		            objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "pDocID", TaskCode);
-		            objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "companyID", companyID);
-	
-		            xmlhttp.open("POST", "aspx/API_GetTaskHistory.aspx", false); 
-		            xmlhttp.send(xmlpara);
-	
-		            RtnVal = xmlhttp.responseXML;
-	
-		            var lvAprLineList = new ListView();
-		            lvAprLineList.SetID("DocList");                               
-		            lvAprLineList.SetMulSelectable(true);                        
-		            lvAprLineList.DataSource(RtnVal);                             
-		            lvAprLineList.DataBind("lvAprLine");                          
-		            lvAprLineList = null; */
 		        } catch (e) {
 		        }
-		    };
+		    });
 		    
 		    function lvAprLine_DBSelChange() {
 		    }

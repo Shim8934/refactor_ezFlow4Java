@@ -52,7 +52,6 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzApprovalGAdminController extends EgovFileMngUtil {
-	
 	@Autowired	
 	private CommonUtil commonUtil;
 	
@@ -88,12 +87,76 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	////////////////////////
+	/**
+	 * 전자결재G관리 양식등록(MHT) 메뉴 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formAdmin.do")
-	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang());
+		String multiData = commonUtil.getMultiData(userInfo.getLang());
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docType", docType);
+		model.addAttribute("multiData", multiData);
+		model.addAttribute("list", resultList);
 		
 		return "admin/ezApprovalG/apprGFormAdmin";
 	}
 	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 기안양식함목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormContInfo(HttpServletRequest request) throws Exception{
+		String id = request.getParameter("id");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 기안양식목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getFormList.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String id = request.getParameter("id");
+		String kind = request.getParameter("kind");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, "", "", "", companyID, userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 기안양식목록 정렬순서 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setFormOrder.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String setFormOrder(HttpServletRequest request) throws Exception {
+		String formContID = request.getParameter("formContID");
+		String boardIDList = request.getParameter("boardIDList");
+		
+//		String result = ezApprovalGAdminService.saveBoardOrder(formContID, boardIDList);
+		
+		return "";
+	}
 	///////////////////////
 	
 	/**
@@ -1385,7 +1448,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("list", list);
+		model.addAttribute("list", resultList);
 		
 		return "admin/ezApprovalG/apprGForAprDoc";
 	}
@@ -1527,7 +1590,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("list", list);
+		model.addAttribute("list", resultList);
 		
 		return "admin/ezApprovalG/apprGForDoc";
 	}

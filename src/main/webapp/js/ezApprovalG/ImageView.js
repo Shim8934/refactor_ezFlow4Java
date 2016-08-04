@@ -33,7 +33,7 @@ function AddImage(Imagesrc) {
         signWidth = signWidth;
         sighHeight = signWidth
     }
-    pIMG = "<img src='" + window.document.location.protocol + "//" + window.document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(Imagesrc)
+    pIMG = "<img src='" + window.document.location.protocol + "//" + window.document.location.hostname + "/ezCommon/DownloadAttach.aspx?filePath=" + encodeURI(Imagesrc)
         + "' width=" + signWidth + " height=" + sighHeight + ">";
     SIGNVIEW.innerHTML = pIMG;
 

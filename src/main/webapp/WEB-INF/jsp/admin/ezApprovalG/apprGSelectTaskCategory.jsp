@@ -18,7 +18,8 @@
 			var GValue, PCode, companyID = "";
 	        var RetValue;
 	        var ReturnFunction;
-	        window.onload = function () {
+	        
+	        $(document).ready(function(){
 	            try {
 	                RetValue = parent.selecttaskcategory_cross_dialogArguments[0];
 	                ReturnFunction = parent.selecttaskcategory_cross_dialogArguments[1];
@@ -45,7 +46,7 @@
 		        document.getElementById("tdPCode").innerText = PCode;
 		        Tree_setconfig();
 		        getGroupTree(1, 1, 0, true);
-		    }
+		    });
 	        
 			function Tree_setconfig() {
 			    var xmlHTTP = createXMLHttpRequest();

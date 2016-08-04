@@ -24,12 +24,12 @@
 		    var listview = new ListView();
 		    var OrderCell = "";
 		    
-		    window.onload = function () {      
+		    $(document).ready(function(){
 		        SCompID.value = pCompanyID;
 	
 		        InitListView();
 		        getSealList();
-		    }
+		    });
 	
 		    function InitListView() {
 		        var xmlTree = createXmlDom();

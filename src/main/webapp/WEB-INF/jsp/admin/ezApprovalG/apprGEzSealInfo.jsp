@@ -31,8 +31,8 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        
-	        window.onload = function () {
-	            try {
+	        $(document).ready(function(){
+// 	            try {
 	                try {
 	                    RetValue = parent.ezsealinfo_dialogArguments[0];
 	                    ReturnFunction = parent.ezsealinfo_dialogArguments[1];
@@ -59,6 +59,7 @@
 	                    document.getElementById("SealName").textContent = pSealName;
 	                    document.getElementById("SealSize").textContent = pSealWidth + "mm * " + pSealHeight + "mm";
 	                    document.getElementById("RegDate").textContent = pRegDate;
+
 	                    if (pDelDate == "") {
 	                        document.getElementById("DelDate").textContent = "--";
 	                    } else {
@@ -84,10 +85,10 @@
 	                } else {
 	                	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
 	                }
-	            } catch (e) {
-	                alert("window_onload : " + e.description);
-	            }
-	        }
+// 	            } catch (e) {
+// 	                alert("window_onload : " + e.description);
+// 	            }
+	        });
 	        
 	        function openUserInfo(tempUserID) {
 	            if (CrossYN()) {
@@ -159,18 +160,18 @@
 	
 	<%--    <div class="nobox" id="sealsign" name="sealsign" style="width: 480px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">--%>
 	
-		<c:choose>
-			<c:when test="${checkIE == true}">
+		<%-- <c:choose>
+			<c:when test="${checkIE == true}"> --%>
 				<div class="nobox" id="Div2" name="sealsign" style="width: 470px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">
 	        		<img id="signimage" alt="" src="about:blank" />
 	        	</div>
-			</c:when>
+			<%-- </c:when>
 			<c:otherwise>
 				<div class="nobox" id="Div1" name="sealsign" style="width: auto;height:auto ;margin-top: 5px; text-align: center;overflow:auto">
 				
 	        		<div id="SIGNVIEW" class="IMAGEVIEW" style="overflow:auto;BORDER: #b6b6b6 1px solid; FONT-SIZE: 9pt; WIDTH: auto; PADDING-TOP: 10px; HEIGHT: 150px; background-color: white;text-align:center;"></div>
 	        	</div>
 			</c:otherwise>
-		</c:choose>	
+		</c:choose>	 --%>
 	</body>
 </html>
