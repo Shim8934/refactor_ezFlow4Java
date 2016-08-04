@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -11048,15 +11049,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		if (docXML.getElementsByTagName("DOCID").item(0) != null) {
-			docXML.getElementsByTagName("DOCID").item(0).getTextContent();
+			rtnDocID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
 		}
 		
 		if (docXML.getElementsByTagName("FLAG").item(0) != null) {
-			docXML.getElementsByTagName("FLAG").item(0).getTextContent();
+			rtnDocFlag = docXML.getElementsByTagName("FLAG").item(0).getTextContent();
 		}
 		
 		if (docXML.getElementsByTagName("GDOCID").item(0) != null) {
-			docXML.getElementsByTagName("GDOCID").item(0).getTextContent();
+			rtnGDocID = docXML.getElementsByTagName("GDOCID").item(0).getTextContent();
 		}
 		
 		rtnXML = "<RESULT><DOCID>" + rtnDocID + "</DOCID><FLAG>" + rtnDocFlag + "</FLAG><GDOCID>" + rtnGDocID + "</GDOCID></RESULT>"; 
