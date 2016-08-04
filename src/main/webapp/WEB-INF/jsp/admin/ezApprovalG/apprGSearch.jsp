@@ -17,6 +17,7 @@
 			var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
 	        var initdate = "<c:out value = '${initDate}' />";
+	        var aprFlag = "<c:out value = '${aprFlag}' />";
 	        
 	        var ReturnFucntion;
 	        
@@ -34,7 +35,7 @@
 	                KeEventControl(document.getElementById("drafterdept"));
 	            }
 	
-	            if ("${aprFlag == 'END'}") {
+	            if (aprFlag == 'END') {
 	                document.getElementById("ENDDATETR").style.display = "";
 	                document.getElementById("DOCNUM").style.display = "";
 	            } else {
@@ -288,7 +289,7 @@
 		        RtnVal[1] = document.getElementById("DocTitle").value;
 		        RtnVal[2] = document.getElementById("drafter").value;
 		
-		        if ("${aprFlag == 'END'}") {
+		        if (aprFlag == 'END') {
 		            RtnVal[3] = "";
 		            RtnVal[4] = "";
 		            RtnVal[5] = "";
@@ -375,7 +376,7 @@
 		        RtnVal[1] = document.getElementById("DocTitle").value;
 		        RtnVal[2] = document.getElementById("drafter").value;
 		        
-		        if ("${aprFlag == 'END'}") {
+		        if (aprFlag == 'END') {
 			        RtnVal[3] = "";
 			        RtnVal[4] = "";
 			        RtnVal[5] = "";
@@ -474,7 +475,7 @@
 			    RtnVal[1] = document.getElementById("DocTitle").value;
 			    RtnVal[2] = document.getElementById("drafter").value;
 			    
-		    	if ("${aprFlag == 'END'}") {
+		    	if (aprFlag == 'END') {
 		            RtnVal[3] = "";
 		            RtnVal[4] = "";
 		            RtnVal[5] = "";

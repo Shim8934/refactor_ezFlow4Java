@@ -87,6 +87,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "/admin/ezApprovalG/apprGLeft";
 	}
 	
+	////////////////////////
+	@RequestMapping(value = "/admin/ezApprovalG/formAdmin.do")
+	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) {
+		
+		return "admin/ezApprovalG/apprGFormAdmin";
+	}
+	
+	///////////////////////
+	
 	/**
 	 * 전자결재G관리 문서함관리 메뉴 호출 함수
 	 */
@@ -1561,7 +1570,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String orderOption = request.getParameter("orderOption");
         String approvUser = request.getParameter("approvUser");
         String companyID = request.getParameter("companyID");
-        
+
         String result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
 				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser);
