@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -1041,11 +1042,11 @@ System.out.println(strSQL + strSize);
 	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
-		map.put("v_PROXYUSERID", userID);
-		map.put("v_PROXYUSERNAME", userID);
-		map.put("v_PROXYUSERDEPTID", userID);
-		map.put("v_STARTDATE", userID);
-		map.put("v_ENDDATE", userID);
+		map.put("v_PROXYUSERID", proxyUserID);
+		map.put("v_PROXYUSERNAME", proxyUserName);
+		map.put("v_PROXYUSERDEPTID", proxyUserDeptID);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
 		
 		try {
 			ezOrganDAO.setProxyUserInfo(map);
@@ -1054,6 +1055,24 @@ System.out.println(strSQL + strSize);
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	@Override
+	public String getProxyUserInfo(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		
+		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < organProxyVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(organProxyVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 
 }

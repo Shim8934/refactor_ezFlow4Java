@@ -494,7 +494,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			fileName = fileName.replace(";", "%3b");
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
 			fileName = userID + "_" + guid + ".";
-			
+
 			if (mode.equals("PICTURE")) {
 				serverPath = thumbPath;
 			} else if (mode.equals("TEMP")) {
@@ -529,7 +529,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
             //임시 저장 파일 삭제
             deleteFile(tempPath + fileName + extension);
             
-            return fileName + "png";            
+            return fileName + "png";
 			
 		}catch(Exception e) {
 			return "UPLOAD_ERROR";

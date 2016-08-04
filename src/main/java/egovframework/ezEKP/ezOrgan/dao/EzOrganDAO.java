@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -32,14 +33,15 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);		
 	}
 	
-	public String getMemberListCount(Map<String, Object> map) throws Exception{
-		return (String) select("EzOrganDAO.getMemberListCount", map);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> organSearch(Map<String, Object> map) throws Exception {		
 		return (List<OrganDeptVO>) list("EzOrganDAO.organSearch", map);
 	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganProxyVO> getProxyUserInfo(Map<String, Object> map) throws Exception{
+		return (List<OrganProxyVO>) list("EzOrganDAO.getProxyUserInfo", map);
+	}
 
 	public OrganUserVO getTBLUserMaster(Map<String, Object> map) throws Exception {
 		return (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
@@ -55,6 +57,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
 		return (OrganUserVO) select("EzOrganDAO.getUserInfo", map);
+	}
+	
+	public String getMemberListCount(Map<String, Object> map) throws Exception{
+		return (String) select("EzOrganDAO.getMemberListCount", map);
 	}
 	
 	public String getPropertyValue(Map<String, Object> map) throws Exception{

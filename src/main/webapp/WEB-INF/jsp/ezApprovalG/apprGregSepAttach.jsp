@@ -217,11 +217,11 @@
 // 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='1']"));
 // 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='2']"));
 							Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
-							Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
+							Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
 		                    break;
 		                case "2":
 		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
-		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[3]);
+		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
 // 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='3']"));
 // 		                    Root.appendChild(objCodeInfo.documentElement.selectSingleNode("REGISTERTYPE/CODE[CODENUM='4']"));
 		                    break;
@@ -233,10 +233,11 @@
 		                    break;
 		                case "5":
 		                	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
-		                    Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[7]);
+		                    Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
 		                    break; 
 		            }
 		        }
+
 		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
 		        SelectOption(selRegisterType, g_RegType);
 		

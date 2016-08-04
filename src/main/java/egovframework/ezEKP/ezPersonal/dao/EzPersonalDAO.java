@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -17,12 +18,21 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalGetSliderListVO>) list("EzPersonalDAO.getSliderList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig", map);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
 	}
 
 	public void setApprovalPwd(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.setApprovalPwd", map);
+	}
+
+	public void setApprovNotiMail(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.setApprovNotiMail", map);
 	}
 	
 }

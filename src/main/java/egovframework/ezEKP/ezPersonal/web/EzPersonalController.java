@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPersonal.web;
 
 import java.security.PrivateKey;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -21,6 +23,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -97,7 +100,7 @@ public class EzPersonalController {
 			if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId());
 			} else {
-				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3], proxyInfo.split(":")[4]);
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3].replace("/", ":"), proxyInfo.split(":")[4].replace("/", ":"));
 			}
 		}
 		
@@ -122,14 +125,18 @@ public class EzPersonalController {
 	@RequestMapping(value = "/ezPersonal/approvalConfig.do")
 	public String approvalConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+		String flag = "";
+		String pwd = "";
+		String pwdType = "";
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		ApprovPWDVO approvPWDVO = ezCommonService.getApprovPWD(userInfo.getId());
 		
-		String flag = approvPWDVO.getFlag();
-		String pwd = approvPWDVO.getPwd();
-		String pwdType = approvPWDVO.getPwdType();
+		if (approvPWDVO != null) {
+			flag = approvPWDVO.getFlag();
+			pwd = approvPWDVO.getPwd();
+			pwdType = approvPWDVO.getPwdType();
+		}
 		
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
@@ -174,7 +181,7 @@ public class EzPersonalController {
 	@ResponseBody
 	public String saveConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	
@@ -188,5 +195,172 @@ public class EzPersonalController {
 		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType);
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재 결재환경설정 부재자설정 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/manageBujaeG.do")
+	public String manageBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = "";
+		String deptID = "";
+		String startDate = "";
+		String endDate = "";
+		String bReason = "";
+		String textName = "";
+		String proxyUserID = "";
+		String proxyDeptID = "";
+		String proxyUserName = "";
+		String textProxyName = "";
+		String initDate = EgovDateUtil.getTodayTime();
+		
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5");
+		
+		if (result != null && !result.equals("")) {
+			String[] info = result.split(":");
+			
+			userID = info[0];
+			textName = info[1];
+			deptID = info[2];
+			startDate = info[3];
+			endDate = info[4];
+			
+			if (info.length > 5) {
+				bReason = info[5];
+			}
+		}
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
+			result = ezOrganService.getProxyUserInfo(userInfo.getId());
+			
+			Document xmlDom = commonUtil.convertStringToDocument(result);
+			
+			if (xmlDom.getElementsByTagName("PROXYUSERID").getLength() > 0) {
+				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
+				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
+				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
+				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
+				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
+
+				textProxyName = proxyUserName;
+			}
+		}
+		
+		if (bReason.trim().equals("")) {
+			bReason = messageSource.getMessage("ezPersonal.t35", locale);
+		}
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("userID", userID);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("bReason", bReason);
+		model.addAttribute("proxyUserID", proxyUserID);
+		model.addAttribute("proxyDeptID", proxyDeptID);
+		model.addAttribute("proxyUserName", proxyUserName);
+		model.addAttribute("initDate", initDate);
+		model.addAttribute("textName", textName);
+		model.addAttribute("textProxyName", textProxyName);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezPersonal/persManageBujae";
+	}
+	
+	/**
+	 * 전자결재 결재환경설정 부재자설정 지정 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/selectPerson.do")
+	public String selectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		
+		model.addAttribute("type", type);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezPersonal/persSelectPerson";
+	}
+	
+	/**
+	 * 전자결재 결재환경설정 부재자설정 조직도 관련 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/checkName2.do")
+	public String checkName2() throws Exception{
+		return "ezPersonal/persCheckName2";
+	}
+	
+	/**
+	 * 전자결재 결재환경설정 알림메일설정 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/setApprovNoticeMail.do")
+	public String setApprovNoticeMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String alert = "0";
+        String complite = "0";
+        String bansong = "0";
+        String hesong = "0";
+        String callBack = "0";
+        String saveMailFlag = "0";
+        
+        String result = ezPersonalService.getApprovNotiConfig(userInfo.getId());
+        
+        Document xmlDom = commonUtil.convertStringToDocument(result);
+        
+        if (xmlDom.getElementsByTagName("ALERT").getLength() > 0) {
+        	alert = xmlDom.getElementsByTagName("ALERT").item(0).getTextContent();
+            complite = xmlDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
+            bansong = xmlDom.getElementsByTagName("BANSONG").item(0).getTextContent();
+            hesong = xmlDom.getElementsByTagName("HESONG").item(0).getTextContent();
+            callBack = xmlDom.getElementsByTagName("CALLBACK").item(0).getTextContent();
+            saveMailFlag = xmlDom.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent();
+        }
+        
+        model.addAttribute("alert", alert);
+        model.addAttribute("complite", complite);
+        model.addAttribute("bansong", bansong);
+        model.addAttribute("hesong", hesong);
+        model.addAttribute("callBack", callBack);
+        model.addAttribute("saveMailFlag", saveMailFlag);
+        model.addAttribute("userInfo", userInfo);
+        
+		return "ezPersonal/persSetApprovNoticeMail";
+	}
+	
+	/**
+	 * 전자결재 결재환경설정 알림메일설정 표출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/setPersonalNotiMail.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setPersonalNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String[] flagList = request.getParameter("email").split(";");
+		String saveMailFlag = request.getParameter("sentBoxSave");
+		
+		String result = ezPersonalService.setApprovNotiMail(userInfo.getId(), flagList[0], flagList[1], flagList[2], flagList[3], flagList[4], saveMailFlag);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezPersonal/signimageConfig.do")
+	public String signimageConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String signPath = "APPROVALSIGN";
+		String signImageSize = "4";
+		
+		if (config.getProperty("config.UserInfo_ApprovalG").equals("YES")) {
+			signPath = "APPROVALGSIGN";
+		}
+		
+		signImageSize = config.getProperty("config.SignImageSizeLimit");
+		
+		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("signPath", signPath);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezPersonal/persSignimageConfig";
 	}
 }

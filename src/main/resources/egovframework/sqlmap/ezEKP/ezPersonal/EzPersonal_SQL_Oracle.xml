@@ -3,17 +3,31 @@
 
 <sqlMap namespace="ezPersonal">
 	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
+	<typeAlias  alias="PersonalApprovMailVO" 						    type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
 	<typeAlias  alias="PersonalGetEmpOfMonthVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
 	
 	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>	
+	</procedure>
+		
+	<procedure id="EzPersonalDAO.getApprovNotiConfig" parameterClass="Map"  resultClass="PersonalApprovMailVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETAPPROVNOTIINFO(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+		
 	
 	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZCOMMON.EZSP_INSERTAPPROVPWD(#v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#)}
+		]]>
+	</procedure>	
+		
+	<procedure id="EzPersonalDAO.setApprovNotiMail" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_SAVEAPPROVNOTIMAIL(#v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#)}
 		]]>
 	</procedure>	
 	

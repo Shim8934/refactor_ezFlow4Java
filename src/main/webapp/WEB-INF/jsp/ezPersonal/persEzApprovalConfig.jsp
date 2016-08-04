@@ -76,7 +76,7 @@
 		    }
 		     function Approval_config_ini()
 		    {
-		         document.getElementById("mainframe").src = "/myoffice/ezPersonal/PersonInfo/Approval_config_Cross.aspx";
+		         document.getElementById("mainframe").src = "/ezPersonal/approvalConfig.do";
 		    }
 		     function ManageBujae_ini()
 		    {
@@ -84,15 +84,15 @@
 		    }
 		     function ManageBujaeG_ini()
 		    {
-		         document.getElementById("mainframe").src = "/myoffice/ezPersonal/BujaeConf/managebujaeg_cross.aspx";
+		         document.getElementById("mainframe").src = "/ezPersonal/manageBujaeG.do";
 		    }
 		     function SetApprovNoticeMail_ini()
 		    {
-		         document.getElementById("mainframe").src = "/MyOffice/ezPersonal/PersonInfo/SetApprovNoticeMail_cross.aspx";
+		         document.getElementById("mainframe").src = "/ezPersonal/setApprovNoticeMail.do";
 		     }
 		     function sign_ini()
 		     {
-		         document.getElementById("mainframe").src = "/MyOffice/ezPersonal/PersonInfo/signimage_config.aspx";
+		         document.getElementById("mainframe").src = "/ezPersonal/signimageConfig.do";
 		     }
 		      
 		</script>

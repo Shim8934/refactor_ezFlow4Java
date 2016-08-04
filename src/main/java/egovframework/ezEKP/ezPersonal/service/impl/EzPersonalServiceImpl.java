@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -52,6 +53,47 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 			result = "OK";
 		} catch (Exception e) {
 			result = "ERROR " + e.getMessage();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public String getApprovNotiConfig(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		
+		List<PersonalApprovMailVO> approvMailVOList = ezPersonalDAO.getApprovNotiConfig(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < approvMailVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(approvMailVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag) throws Exception {
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PALERT", alert);
+		map.put("v_PCOMPLETE", complete);
+		map.put("v_PBANSONG", bansong);
+		map.put("v_PCALLBACK", callBack);
+		map.put("v_PHESONG", hesong);
+		map.put("v_PSAVEMAILFLAG", saveMailFlag);
+		
+		try {
+			ezPersonalDAO.setApprovNotiMail(map);
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = e.getMessage();
 		}
 		
 		return result;

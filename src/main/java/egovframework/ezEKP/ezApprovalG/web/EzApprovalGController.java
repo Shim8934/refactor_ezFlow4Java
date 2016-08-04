@@ -2233,7 +2233,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		signatureDir = signatureDir + commonUtil.separator + "signimgs" + commonUtil.separator + fileName.split("_")[0];
 		
 		String result = signatureDir + commonUtil.separator + fileName;
-		
+System.out.println(result);		
 		ezCommonService.responseAttach(result, fileName, true, request, response);
 	}
 	
