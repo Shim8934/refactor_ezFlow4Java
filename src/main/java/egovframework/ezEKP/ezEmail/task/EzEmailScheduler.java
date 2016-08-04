@@ -130,36 +130,35 @@ public class EzEmailScheduler {
 		logger.debug("10분 주기로 호출이 됩니다.");
 		Locale locale = Locale.getDefault();
 
-		//DB에 있는 예약발송리스트 가져와서 for문돌리기
+		//DB에 있는 예약발송리스트 가져와서 Loop
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		for (MailReservationVO vo : list) {
-
-			String userId = vo.getConnUrl();
-			int index = userId.indexOf("@");
-			if (index > -1) {
-				userId = userId.substring(0, index);
-			}
-			String password = config.getProperty("config.JMochaSuperPassword");
-
+			
+			IMAPAccess ia = null;
 			FileInputStream fis = null;
-
-			String realPath = config.getProperty("data_root");
-			String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
-			pDirPath = realPath + commonUtil.separator + pDirPath;
-
-			File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-			if (f.exists()) {
+			try {
 				
-				IMAPAccess ia = null;
-				try {
+				String userId = vo.getConnUrl();
+				int index = userId.indexOf("@");
+				if (index > -1) {
+					userId = userId.substring(0, index);
+				}
+				String password = config.getProperty("config.JMochaSuperPassword");
+	
+				String realPath = config.getProperty("data_root");
+				String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+				pDirPath = realPath + commonUtil.separator + pDirPath;
+	
+				File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				if (f.exists()) {
 					fis = new FileInputStream(f);
-
+	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userId + "@"+config.getProperty("config.DomainName"), password);
-
+	
 					MimeMessage message = sa.readMimeMessage(fis);
 					Transport.send(message);
-
+	
 					//보낸편지함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
@@ -169,26 +168,25 @@ public class EzEmailScheduler {
 						folder.appendMessages(new Message[]{message});
 						folder.close(true);
 					}
-					
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
-					if (fis != null) {
-						fis.close();
-					}
+	
+					//파일시스템의 eml파일 삭제
+					f.delete();
 				}
-
-				//파일시스템의 eml파일 삭제
-				f.delete();
+	
+				//DB에서 삭제
+				ezEmailService.deleteMailReserved(vo.getMessageId());
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+				if (fis != null) {
+					fis.close();
+				}
 			}
-
-			//DB에서 삭제
-			ezEmailService.deleteMailReserved(vo.getMessageId());
+			
 		}
 	}
 
