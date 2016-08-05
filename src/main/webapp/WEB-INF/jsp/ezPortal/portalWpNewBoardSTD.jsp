@@ -70,6 +70,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        GetMyBoardItem();
 		        getTabList();
 		        getBoardList_NewBoardSTD();
 		    }
@@ -187,6 +188,7 @@
 		                xmldom = xml;
 
 		                var RowCnt = xmldom.getElementsByTagName("ROW").length;
+
 		                if (RowCnt > 0) {
 		                    if (RowCnt > 4)
 		                        RowCnt = 4;
@@ -274,21 +276,21 @@
 		            }
 		        }
 
-		        //function openDoc(pItemID) {
-		        //    var pheight = window.screen.availHeight;
-		        //    var pwidth = window.screen.availWidth;
-		        //    var pTop = (pheight - 720) / 2;
-		        //    var pLeft = (pwidth - 765) / 2;
+		        function openDoc(pItemID) {
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - 720) / 2;
+		            var pLeft = (pwidth - 765) / 2;
 
-		        //    if (pBoardType_NewBoardSTD == "3" || pBoardType_NewBoardSTD == "4")
-		        //        window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-		        //    else {
-		        //        if (CrossYN())
-		        //            window.open("/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		        //        else
-		        //            window.open("/myoffice/ezBoardSTD/BoardItemView.aspx?ShowAdjacent=&ItemID=" + pItemID + "&BoardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		        //    }
-		        //}
+		            if (pBoardType_NewBoardSTD == "3" || pBoardType_NewBoardSTD == "4")
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&ItemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            else {
+		                if (CrossYN())
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&ItemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                else
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&ItemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            }
+		        }
 
 		        var xmlhttp_getContent_NewBoardSTD = createXMLHttpRequest();
 		        function getContent(pItemID) {
