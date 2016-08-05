@@ -1052,7 +1052,7 @@ System.out.println("portalPageXml:"+portalPageXml);
 	
 		
 		try {
-			
+			model.addAttribute("userInfo", userInfo);
 			return "/ezPortal/portalWpNewCommunity";
 		} catch (Exception e) {
 			return "";
@@ -1075,4 +1075,67 @@ System.out.println("portalPageXml:"+portalPageXml);
 		}
 	}
 	
+	/**
+	 * 포탈 - webPart 설문참여 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		try {
+			
+			model.addAttribute("userLang", userInfo.getLang());
+			return "/ezPortal/portalWpNewPoll";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 결재 통계 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewGraph.do")
+	public String wpNewGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		try {
+			
+			model.addAttribute("userLang", userInfo.getLang());
+			return "/ezPortal/portalWpNewGraph";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 썸네일게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewPhoto.do")
+	public String wpNewPhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		try {
+			
+			model.addAttribute("userLang", userInfo.getLang());
+			return "/ezPortal/portalWpNewPhoto";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 포탈 - webPart 이달의생일 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewBirth.do")
+	public String wpNewBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		try {
+			
+			model.addAttribute("userLang", userInfo.getLang());
+			return "/ezPortal/portalWpNewBirth";
+		} catch (Exception e) {
+			return "";
+		}
+	}
 }
