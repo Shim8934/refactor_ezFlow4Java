@@ -90,6 +90,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (List<ApprGAprLineVO>) list("EzApprovalGAdmin.getUserDocCount", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprDocInfoVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
+	}
+	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
 	}
@@ -132,6 +137,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public Integer getTaskCodeDeptCnt(Map<String, Object> map) throws Exception {
 		select("EzApprovalGAdmin.getTaskCodeDeptCnt", map);
+		return (Integer) map.get("v_pCount");
+	}
+	
+	public Integer searchManageAprDocListCount(Map<String, Object> map) throws Exception {
+		select("EzApprovalGAdmin.searchManageAprDocListCount", map);
 		return (Integer) map.get("v_pCount");
 	}
 	
@@ -216,6 +226,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.deleteSealInfo", map);
 	}
 	
+	public void setFormOrder(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.setFormOrder", map);
+	}
+	
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
@@ -242,19 +256,4 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 
 
-	
-
-
-
-
-
-	public Integer searchManageAprDocListCount(Map<String, Object> map) throws Exception {
-		select("EzApprovalGAdmin.searchManageAprDocListCount", map);
-		return (Integer) map.get("v_pCount");
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGAprDocInfoVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
-		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
-	}
 }

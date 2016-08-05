@@ -85,8 +85,6 @@ public interface EzApprovalGAdminService {
 	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception;
 	
 	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception;
-	
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
 	public String searchManageAprDocList(String docNumber, String docTitle,
 			String drafter, String drafter2, String draftFromYear,
@@ -96,5 +94,9 @@ public interface EzApprovalGAdminService {
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String lang) throws Exception;	
+			String orderCell, String orderOption, String companyID, String lang) throws Exception;
+
+	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
+	
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 }

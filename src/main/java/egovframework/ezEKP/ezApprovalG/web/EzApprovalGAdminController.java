@@ -147,16 +147,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록(MHT) 기안양식목록 정렬순서 저장 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/setFormOrder.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/setFormOrder.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String setFormOrder(HttpServletRequest request) throws Exception {
 		String formContID = request.getParameter("formContID");
 		String boardIDList = request.getParameter("boardIDList");
+		String companyID = request.getParameter("companyID");
 		
-//		String result = ezApprovalGAdminService.saveBoardOrder(formContID, boardIDList);
+		String result = ezApprovalGAdminService.setFormOrder(formContID, boardIDList, companyID);
 		
-		return "";
+		return result;
 	}
+	
+	/**
+	 * 전자결재G관리 양식함추가 화면 호출 함수
+	 */
+	
 	///////////////////////
 	
 	/**

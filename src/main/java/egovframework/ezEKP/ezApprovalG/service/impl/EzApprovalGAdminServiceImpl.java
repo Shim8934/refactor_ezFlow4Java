@@ -1635,6 +1635,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return sb.toString();
 	}
 
+	@Override
+	public String setFormOrder(String formContID, String formIDList, String companyID) throws Exception {
+		try {
+			int formListCount = formIDList.split(";").length;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_pFORMIDLIST", formIDList);
+			map.put("v_pFORMLISTCOUNT", formListCount);
+			map.put("v_pFORMCONTID", formContID);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.setFormOrder(map);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+		
+	}
+
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		

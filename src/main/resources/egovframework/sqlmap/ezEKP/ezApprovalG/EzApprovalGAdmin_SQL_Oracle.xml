@@ -240,6 +240,12 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzApprovalGAdmin.setFormOrder" 					parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #v_ERR_CD#)}
+		]]>	
+	</procedure>
+	
 	<select id="EzApprovalGAdmin.getContTypeInfo" 					parameterClass="String" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 

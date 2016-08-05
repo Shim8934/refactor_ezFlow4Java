@@ -412,9 +412,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/setFormOrder.do",
 		        	async : false,
-		        	data : {formContID : nodeIdx.GetNodeData("DATA1"), boardIDList : strFormList},
+		        	data : {formContID : nodeIdx.GetNodeData("DATA1"), boardIDList : strFormList, companyID : companyID},
 		        	success : function(result) {
-		        		if (result == "<RESULT>OK</RESULT>") {
+		        		alert(result);
+		        		if (result == "OK") {
 				            alert("<spring:message code = 'ezApprovalG.t1581' />");
 				        } else {
 				            alert("<spring:message code = 'ezApprovalG.t426' />");
