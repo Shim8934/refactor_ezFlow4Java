@@ -232,10 +232,8 @@
 		                        document.getElementById("BoardList").innerHTML = listHTML;
 		                        if (FboardType != "4" && FboardType != "3") {
 		                            if (FboardMainContent != "") {
-alert("1");
 		                                document.getElementById("content").innerHTML = FboardMainContent;
 		                            } else {
-alert("2");
 		                                getContent(pfirstItemID);
 		                            }
 		                        } else {
@@ -297,8 +295,7 @@ alert("2");
 		            xmlhttp_getContent_NewBoardSTD = createXMLHttpRequest();
 		            var xmlpara = createXmlDom();
 		            var objNode;
-alert("pBoardID:"+pBoardID_NewBoardSTD);
-alert("pItemID:"+pItemID);
+
 		            createNodeInsert(xmlpara, objNode, "PARAMETER");
 		            createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoardSTD);
 		            createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
