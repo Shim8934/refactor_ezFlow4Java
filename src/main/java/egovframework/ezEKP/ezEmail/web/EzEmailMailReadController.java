@@ -423,9 +423,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password = userInfo.get(1);
 
-		// retrieve user info from db.
-		OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
-		
 		// retrieve the passed in parameters
 		long uid = Long.parseLong(request.getParameter("iptURL"));
 		String folderPath = request.getParameter("iptFolderPath");
@@ -461,6 +458,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						// send an MDN to the sender.
 						if (!ezEmailUtil.hasMDNSentFlag(message)) {
 							logger.debug("MDNSentFlag isn't set");
+							
+							// retrieve user info from db.
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 																	myEmailAddress, password);
@@ -999,9 +999,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		// retrieve user info from db.
-		OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
-		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
 		long uid = 0;
@@ -1041,6 +1038,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						// send an MDN to the sender.
 						if (!ezEmailUtil.hasMDNSentFlag(message)) {
 							logger.debug("MDNSentFlag isn't set");
+							
+							// retrieve user info from db.
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 																	myEmailAddress, password);
