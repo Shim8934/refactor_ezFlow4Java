@@ -1059,4 +1059,20 @@ System.out.println("portalPageXml:"+portalPageXml);
 		}
 	}
 	
+	/**
+	 * 포탈 - webPart 게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewBoardSTD.do")
+	public String wpNewBoardSTD(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		try {
+			
+			model.addAttribute("userLang", userInfo.getLang());
+			return "/ezPortal/portalWpNewBoardSTD";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
 }
