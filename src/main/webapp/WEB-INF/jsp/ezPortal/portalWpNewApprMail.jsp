@@ -531,23 +531,23 @@
 	        }
 	        else {            
 	            if (CrossYN()) {
-	                openLocation = "/myoffice/ezApprovalG/AprDocView_CK.aspx?DocID=";
+	                openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	            }
 	            else {
 	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                    openLocation = "/myoffice/ezApprovalG/AprDocView_TFI.aspx?DocID=";
+	                    openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	                else
 	                {
 	                    if (pUse_IE11Browser == "CK")
-	                        openLocation = "/myoffice/ezApprovalG/AprDocView_IE.aspx?DocID=";
+	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	                    else
-	                        openLocation = "/myoffice/ezApprovalG/AprDocView.aspx?DocID=";
+	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	                }
 	            }
-	            openLocation = openLocation + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	            openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+	            openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+	            openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
 	            openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
+	            openLocation = openLocation + "&listType=" + escape(pArgument[7]);
 	        }
 
 	        openwindow(openLocation, "", 880, 570);
@@ -588,21 +588,21 @@
 	        else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
 	            
 	            if (CrossYN()) {
-	                openLocation = "/myoffice/ezApprovalG/DraftUI/DraftUI_Cross.aspx?formURL=";
+	                openLocation = "/ezApprovalG/draftui.do?formURL=";
 	            }
 	            else {
 	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                    openLocation = "/myoffice/ezApprovalG/DraftUI/draftui_TFI.aspx?formURL=";
+	                    openLocation = "/ezApprovalG/draftui.do?formURL=";
 	                else {
 	                    if (pUse_IE11Browser == "CK")
-	                        openLocation = "/myoffice/ezApprovalG/DraftUI/draftui_IE.aspx?formURL=";
+	                        openLocation = "/ezApprovalG/draftui.do?formURL=";
 	                    else
-	                        openLocation = "/myoffice/ezApprovalG/DraftUI/draftui.aspx?formURL=";
+	                        openLocation = "/ezApprovalG/draftui.do?formURL=";
 	                }
 	            }
 
-	            openLocation = openLocation + escape(pArgument[1]) + "&DraftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&DocState=" + escape(pArgument[5]) + "&ListType=1&AprState=" + escape(pArgument[6]);
+	            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+	            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
 	            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 	        }
 	        else {
@@ -672,22 +672,22 @@
 	            }
 	            else {                
 	                if (CrossYN()) {
-	                    openLocation = "/myoffice/ezApprovalG/ApprovUI/ApprovUI_Cross.aspx?DocID=";
+	                    openLocation = "/ezApprovalG/approvui.do?docID=";
 	                }
 	                else {
 	                    if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                        openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_TFI.aspx?DocID=";
+	                        openLocation = "/ezApprovalG/approvui.do?docID=";
 	                    else {
 	                        if (pUse_IE11Browser == "CK")
-	                            openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_IE.aspx?DocID=";
+	                            openLocation = "/ezApprovalG/approvui.do?docID=";
 	                        else
-	                            openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui.aspx?DocID=";
+	                            openLocation = "/ezApprovalG/approvui.do?docID=";
 	                    }
 	                }
 
 	                openLocation = openLocation + escape(pArgument[0]);
-	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
+	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
+	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
 	            }
 	            openwindow(openLocation, "", 880, 550);       
 	    }
@@ -745,16 +745,16 @@
 	        if ("<%=userApprovalG%>" == "YES")
 	        {
 	            if (pListTypeValue != "2")
-	                window.open("/myoffice/ezApprovalG/index_approval.aspx?listType=1", "main");
+	                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
 	            else
-	                window.open("/myoffice/ezApprovalG/index_approval.aspx?listType=2", "main");
+	                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
 	        }
 	        else
 	        {
 	            if (pListTypeValue != "2")
-	                window.open("/myoffice/ezApproval/index_approval.aspx?listType=1", "main");
+	                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
 	            else
-	                window.open("/myoffice/ezApproval/index_approval.aspx?listType=2", "main");
+	                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
 	        }
 	    }
 
@@ -840,10 +840,10 @@
 	        var newwin;
 	        var pURI;
 	        if (navigator.userAgent.indexOf("MSIE") > -1) {
-	            pURI = "/myoffice/ezEmail/mail_read.aspx?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
+	            pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
 	        }
 	        else {
-	            pURI = "/myoffice/ezEmail/mail_read_CK.aspx?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
+	            pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
 	        }
 
 	        newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
