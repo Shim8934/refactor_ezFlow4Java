@@ -20,14 +20,14 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-
+	            
 	            try { top.onresize() } catch (e) { }
 	        }
 	        function Copmore_btnClick() {
-	            window.open("/myoffice/ezCommunity/index_community.aspx?funCode=5", "main", "");
+	            window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
 	        }
 	        function go_best(idx, clubgubun) {
-	            var xmlhttp = createXMLHttpRequest();
+	         /*    var xmlhttp = createXMLHttpRequest();
 	            var xmldom = createXmlDom();
 	            var objNode;
 
@@ -35,7 +35,7 @@
 	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
 	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
 
-	            xmlhttp.open("POST", "/myoffice/ezCommunity/remote/GetACL.aspx", false);
+	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
 	            xmlhttp.send(xmldom);
 
 	            if (xmlhttp.responseText == "ERR" || clubgubun == "1") {
@@ -51,7 +51,33 @@
 	                var top = (heigth - wHeight) / 2 - 30;
 
 	                var ret = window.open("/myOffice/ezCommunity/Check_commhome.aspx?communityCD=" + idx + "&UserLevel=1", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-	            }
+	            }  */
+	            
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/remote/getACL.do",
+					data : { cID	:	idx,
+							 uID	:	"${userInfo.id}"
+					},
+					success: function(result){
+						if (result == "ERR" || clubgubun == "1") {
+							OpenAlertUI("<spring:message code='ezHome.t1004' /><br><spring:message code='ezHome.t1005' />", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
+						} else {
+							var wWeight = "1300";
+			                var wHeight = "900";
+
+			                var heigth = window.screen.availHeight;
+			                var width = window.screen.availWidth;
+
+			                var left = (width - wWeight) / 2;
+			                var top = (heigth - wHeight) / 2 - 30;
+
+			                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx + "&userLevel=1", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+						}
+					}
+				});
 	        }
 
 	        var ezapralert_cross_dialogArguments = new Array();
@@ -67,11 +93,11 @@
 
 	                var windowopenfeature = "height=205px,width=330px,status=no,toolbar=no,menubar=no,location=no,resizable=1";
 	                windowopenfeature = windowopenfeature + GetOpenPosition(205, 330);
-	                window.open("/myoffice/ezCommunity/htm/ezAPRALERT_Cross.aspx", NewWinName, windowopenfeature);
+	                window.open("/ezCommunity/ezAprAlert.do", NewWinName, windowopenfeature);
 	            } else {
 	                var windowshomodalDialogfeature = "status:no;dialogWidth:330px;dialogHeight:207px;help:no;scroll:no;edge:sunken";
 	                windowshomodalDialogfeature = windowshomodalDialogfeature + GetShowModalPosition(330, 205);
-	                var RtnVal = window.showModalDialog("/myoffice/ezCommunity/htm/ezAPRALERT.aspx", parameter, windowshomodalDialogfeature);
+	                var RtnVal = window.showModalDialog("/ezCommunity/ezAprAlert.do", parameter, windowshomodalDialogfeature);
 	            }
 	        }
 
