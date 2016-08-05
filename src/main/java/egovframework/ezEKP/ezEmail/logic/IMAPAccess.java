@@ -43,7 +43,7 @@ public class IMAPAccess {
 	private String password;
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
-	private final int TIMEOUT = 10000;
+	private final int TIMEOUT = 20000;
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale){
 		this.host = host;

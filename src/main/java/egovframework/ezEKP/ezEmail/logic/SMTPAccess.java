@@ -23,7 +23,7 @@ public class SMTPAccess {
 	private String userName;
 	private String password;
 	private Session session;
-	private final int TIMEOUT = 10000;
+	private final int TIMEOUT = 20000;
 	
 	private SMTPAccess(String host, String port, String userName, String password){
 		this.host = host;

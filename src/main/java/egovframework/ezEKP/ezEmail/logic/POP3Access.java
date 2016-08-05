@@ -21,7 +21,7 @@ public class POP3Access {
 	private String userName;
 	private String password;
 	private String useSsl;
-	private final int TIMEOUT = 10000;
+	private final int TIMEOUT = 20000;
 	
 	private POP3Access(String host, String port, String userName, String password, String useSsl){
 		this.host = host;
