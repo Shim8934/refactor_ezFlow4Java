@@ -1018,9 +1018,11 @@ System.out.println("portalPageXml:"+portalPageXml);
 	public String wpNewApprMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 	
-		
 		try {
 			
+			model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
+			model.addAttribute("userLang", userInfo.getLang());
+			model.addAttribute("userInfo", userInfo);
 			return "/ezPortal/portalWpNewApprMail";
 		} catch (Exception e) {
 			return "";
