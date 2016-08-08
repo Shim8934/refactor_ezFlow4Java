@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12823,7 +12825,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
-		String strSQL = "";
+		
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String userIDs = "'" + makeRightField(userID) + "'";
@@ -12832,7 +12834,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (proxyOption.equals("1")) {
 			userIDs = getProxyUser(userID, strLang);
 		}
-		String strMultiData = commonUtil.getMultiData(strLang);
 		
 		resultXML.append("<DOCLIST>");
 		resultXML.append("<LISTVIEWDATA>");
@@ -12845,35 +12846,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		int totalCount = getAprPortletDocCount(pListType, userDeptID, userID, userIDs, "", pSubQuery, companyID);
-		
-		if (orderOption1 != null && !orderOption1.equals("")) {
-			if (orderOption1.length() >= 9) {
-				if (orderOption1.substring(0, 9).toLowerCase().equals("startdate")) {
-					strSQL += " order by " + orderOption1 + " ";
-				} else {
-					strSQL += " order by " + orderOption1 + ", a.startDate desc";
-				}
-			} else {
-				strSQL += " order by " + orderOption1 + " ";
-			}
-		} else {
-			strSQL += " order by a.startDate desc";
-		}
-		
-		
-		if (orderOption2 != null && !orderOption2.equals("")) {
-			if (orderOption2.length() >= 9) {
-				if (orderOption2.substring(0, 9).toLowerCase().equals("startdate")) {
-					strSQL += " order by " + orderOption2 + " ";
-				} else {
-					strSQL += " order by " + orderOption2 + ", startDate";
-				}
-			} else {
-				strSQL += " order by " + orderOption2 + ", startDate";
-			}
-		} else {
-			strSQL += " order by startDate ";
-		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PLISTTYPE", pListType.trim());
@@ -12918,10 +12890,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (pReceivedDate == null || pReceivedDate.equals("")) {
 					pReceivedDate = docList.get(j).getStartDate();
 				}
-				
+
 				// hourGap
-				double hourGap = 5;
+				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String now = date.format(new Date());
 				
+				Date nowDate = date.parse(now);
+				Date endDate = date.parse(pReceivedDate);
+				
+				long diff = nowDate.getTime() - endDate.getTime();
+				
+				// 시간단위로 현재시간 - 받은시간
+				long hourGap = diff / (60 * 60 * 1000);
+
 				if (hourGap <= 6) {
 					sixHgap += 1;
 				} else if (hourGap <= 24) {
@@ -12947,9 +12928,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
-		
-		
-			
 		
 		return resultXML.toString();
 	}
