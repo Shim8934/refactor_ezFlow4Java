@@ -290,6 +290,8 @@ public interface EzApprovalGService {
 	public String getRecReadHistory(Document xmlDom, String companyID, String lang, String docID) throws Exception;
 
 	public String getRecordClassInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	
+	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception;
 
 
 }
