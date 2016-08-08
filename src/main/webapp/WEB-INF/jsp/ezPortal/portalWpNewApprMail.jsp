@@ -161,8 +161,8 @@
 	    var arr_userinfo = new Array();
 	    arr_userinfo[0] = "user";
 	    arr_userinfo[1] = "${userInfo.id}";
-	    arr_userinfo[2] = "${userInfo.displayName}";
-	    arr_userinfo[3] = "${userInfo.title}";
+	    arr_userinfo[2] = "${userInfo.displayName1}";
+	    arr_userinfo[3] = "${userInfo.title1}";
 	    arr_userinfo[4] = "${userInfo.deptID}";
 	    arr_userinfo[5] = "${userInfo.deptName1}";
 	    arr_userinfo[6] = "${userInfo.jikChek}";
@@ -183,6 +183,7 @@
 	            document.body.style.oUserSelect = 'none';
 	            document.body.style.UserSelect = 'none';
 	        }
+	        getApprGraph();
 	        try { top.onresize() } catch (e) { }
 	    }
 
@@ -201,7 +202,7 @@
 
 	    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 	    function getApprGraph() {
-	        var xmlpara = createXmlDom();
+<%-- 	        var xmlpara = createXmlDom();
 
 	        var objNode;
 	        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -221,27 +222,74 @@
 	        xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 	        
 	        if ("<%=userApprovalG%>" == "YES")
-	            xmlhttp_getApprGraph_NewApprMail.open("POST", "/myoffice/ezApprovalG/aspx/getportletaprdoclist.aspx", true);
+	            xmlhttp_getApprGraph_NewApprMail.open("POST", "/ezApprovalG/getPortletAprDocList.do", true);
 	        else
 	            xmlhttp_getApprGraph_NewApprMail.open("POST", "/myoffice/ezApproval/aspx/getportletaprdoclist.aspx", true);
 	        xmlhttp_getApprGraph_NewApprMail.onreadystatechange = getDocList_after;
-	        xmlhttp_getApprGraph_NewApprMail.send(xmlpara);
+	        xmlhttp_getApprGraph_NewApprMail.send(xmlpara); --%>
+        	if ("<%=userApprovalG%>" == "YES") {
+        	      $.ajax({
+      	        	type : "POST",
+      	        	dataType : "xml",
+      	        	url : "/ezApprovalG/getPortletAprDocList.do",
+      	        	data : {
+      	        		pListTypeName   : pListTypeValue, 
+      	        		pDocTypeName 	 : "A01000", 
+      	        		pUserID 	 : pUserID, 
+      	        		pUserDeptID 	 : arr_userinfo[4], 
+      	        		pPageSize : "1000",
+      	        		pPageNum : "1",
+      	        		companyID : companyID,
+      	        		orderCell : "",
+      	        		orderOption : "",
+      	        		searchQuery : "",
+      	        		subQuery : ""
+      	        	},
+      	        	success : function(xml){		        		
+      	        		getDocList_after(xml);
+      	        	},
+      	        	error : function(error){
+      	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+      	        	}
+      	        });
+        	} else {
+        		 $.ajax({
+       	        	type : "POST",
+       	        	dataType : "xml",
+       	        	url : "/ezApproval/getPortletAprDocList.do",
+       	        	data : {
+       	        		pListTypeName   : pListTypeValue, 
+       	        		pDocTypeName 	 : "A01000", 
+       	        		pUserID 	 : pUserID, 
+       	        		pUserDeptID 	 : arr_userinfo[4], 
+       	        		pPageSize : "1000",
+       	        		pPageNum : "1",
+       	        		companyID : companyID,
+       	        		orderCell : "",
+       	        		orderOption : "",
+       	        		searchQuery : "",
+       	        		subQuery : ""
+       	        	},
+       	        	success : function(xml){		        		
+       	        		getDocList_after(xml);
+       	        	},
+       	        	error : function(error){
+       	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+       	        	}
+       	        });	
+        	}
 	    }
 
-	    function getDocList_after() {
+	    function getDocList_after(xml) {
 
-	        if (xmlhttp_getApprGraph_NewApprMail == null || xmlhttp_getApprGraph_NewApprMail.readyState != 4) return;
+	        if (xml == null) return;
 
 	        try {
-	          
-	          
 	            document.getElementById("ApprList").innerHTML = "";
 	          
-
 	            var xmldom = createXmlDom();
-	            xmldom = xmlhttp_getApprGraph_NewApprMail.responseXML;
+	            xmldom = xml;
 
-	            
 	                var listHTML = "";
 	                if (pListTypeValue == "1") {
 	                    document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
