@@ -90,6 +90,13 @@
 		]]>	
 	</procedure>
 	
+	
+	<procedure id="EzApprovalGAdmin.getGroupDept" 					parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONTAINERUSEGROUP(#v_FORMCONTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" 			remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -242,9 +249,15 @@
 	
 	<procedure id="EzApprovalGAdmin.setFormOrder" 					parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #v_ERR_CD#)}
+			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #cv_1#)}
 		]]>	
-	</procedure>
+	</procedure>	
+	
+	<procedure id="EzApprovalGAdmin.insertFormContainerConti"		parameterClass="String" resultClass="String">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTFORMCONTAINER_CONTI(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>	
 	
 	<select id="EzApprovalGAdmin.getContTypeInfo" 					parameterClass="String" resultClass="ApprGLeftVO">
 		<![CDATA[
@@ -401,6 +414,36 @@
 				EZAPPROVALG_$companyID$.TBTASKCODE
 			WHERE
 				taskcode = #taskCode#
+	     ]]> 
+	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertFormContainer"				parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBFORMCONTAINER(
+				FormContID,
+				FormContName,
+				FormContName2,
+				FormContOwnDepID,
+				FormContParents,
+				FormContdescription
+			) VALUES (
+				#pID#,
+				#contName#,
+				#contName2#,
+				#contDept#,
+				#contParent#,
+				#contDescript#)
+	     ]]> 
+	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertFormContainerGroup"			parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP(
+				FormContID,
+				FormContUserDepID
+			) VALUES (
+				#pID#,
+				#deptID#)
 	     ]]> 
 	</insert>
 	

@@ -133,7 +133,7 @@
 		            return;
 		        }
 	
-		        var url = "FormContMain.aspx?TCheck=FContIns&companyID=" + escape(companyID);
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID);
 		        var retVal = window.showModalDialog(url, para, "dialogWidth:685px;dialogHeight:555px;status:no;help:no;scroll:no;edge:sunken");
 	
 		        if (retVal[0] == "TRUE") {
@@ -173,7 +173,7 @@
 		            para[8] = nodeIdx.GetNodeData("DATA7");
 		            para[9] = g_multiDataNum;
 	
-		            var url = "FormContMain.aspx?TCheck=FContmod&companyID=" + escape(companyID);
+		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID);
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:685px;dialogHeight:555px;status:no;help:no;scroll:no;edge:sunken");
 	
 		            if (retVal[0] == "TRUE") {

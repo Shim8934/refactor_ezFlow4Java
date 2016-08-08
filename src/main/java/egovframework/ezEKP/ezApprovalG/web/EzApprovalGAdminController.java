@@ -162,7 +162,88 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식함추가 화면 호출 함수
 	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
+	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String serverName = config.getProperty("config.ServerName");
+		String tCheck = request.getParameter("tCheck");
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary= config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String title = "", topID = "";
+		
+		if (tCheck.equals("fContIns")) {
+			title = egovMessageSource.getMessage("ezApprovalG.t1623", locale);
+		} else {
+			title = egovMessageSource.getMessage("ezApprovalG.t1627", locale); 
+		}
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("tCheck", tCheck);
+		model.addAttribute("title", title);
+		model.addAttribute("topID", topID);
+		
+		return "admin/ezApprovalG/apprGFormContMain";
+	}
 	
+	/**
+	 * 전자결재G관리 양식함추가 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setFormContIns.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String setFormContIns(HttpServletRequest request) throws Exception {
+		String contName = request.getParameter("fContName");
+		String contName2 = request.getParameter("fContName2");
+		String contDescript = request.getParameter("fContDescript");
+		String contParent = request.getParameter("fContParent");
+		String contDept = request.getParameter("fContDept");
+		String deptList = request.getParameter("deptList");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.insertFormContainer(contName, contName2, contDescript, contParent, contDept, deptList, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식함수정 사용부서목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getGroupDept.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String getGroupDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String contID = request.getParameter("fContID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang()), companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식함수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setFormContMod.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String setFormContMod(HttpServletRequest request) throws Exception {
+		String contName = request.getParameter("fContName");
+		String contName2 = request.getParameter("fContName2");
+		String contDescript = request.getParameter("fContDescript");
+		String contParent = request.getParameter("fContParent");
+		String contDept = request.getParameter("fContDept");
+		String deptList = request.getParameter("deptList");
+		String companyID = request.getParameter("companyID");
+		
+		return "";
+	}
 	///////////////////////
 	
 	/**

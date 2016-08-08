@@ -98,5 +98,11 @@ public interface EzApprovalGAdminService {
 
 	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
 	
+	public String insertFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String deptList, String companyID) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	public String getGroupDept(String contID, String lang, String companyID) throws Exception;
+
+	
 }

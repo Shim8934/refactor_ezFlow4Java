@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
@@ -29,6 +30,8 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -42,6 +45,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
@@ -1652,7 +1658,82 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} catch (Exception e) {
 			return "ERROR" + e.getMessage();
 		}
+	}
+
+	@Override
+	public String insertFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String deptList, String companyID) throws Exception {
+		contParent = (contParent.equals("") ? "ROOT" : contParent);
+		contDept = (contDept.equals("") ? " " : contDept);
 		
+		String pID = ezApprovalGAdminDAO.insertFormContainerConti(companyID);
+		pID = (pID == null ? "null" : pID);
+		
+		if (pID.substring(0,  4).equals(EgovDateUtil.getToday("-").substring(0, 4))) {
+			int tempID = Integer.parseInt(pID) + 1;
+			pID = Integer.toString(tempID);
+		} else {
+			pID = EgovDateUtil.getToday("-").substring(0, 4) + "000001";
+		}
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("pID", pID);
+			map.put("contName", contName);
+			map.put("contName2", contName2);
+			map.put("contDept", contDept);
+			map.put("contParent", contParent);
+			map.put("contDescript", contDescript);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.insertFormContainer(map);
+			
+			if (!contDept.equals("ALL")) {
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("pID", pID);
+				map2.put("companyID", companyID);
+				
+				for(String deptID : deptList.split(";")) {
+					map2.put("deptID", deptID);
+					
+					ezApprovalGAdminDAO.insertFormContainerGroup(map2);
+				}
+			}
+			
+			return "<PARAMETER><FContID>" + pID + "</FContID></PARAMETER>";
+		} catch(Exception e) {
+			return "<PARAMETER><FContID>FALSE</FContID></PARAMETER>";
+		}
+	}
+
+	@Override
+	public String getGroupDept(String contID, String lang, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMCONTID", contID);
+		map.put("companyID", companyID);
+		
+		List<ApprGFormVO> list = ezApprovalGAdminDAO.getGroupDept(map);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<PARAMETER>");
+		
+		for(ApprGFormVO vo : list) {
+			sb.append("<ID" + list.indexOf(vo) + ">");
+			sb.append(commonUtil.cleanValue(vo.getFormContUserDepID()));
+			sb.append("</ID" + list.indexOf(vo) + ">");
+			sb.append("<NAME" + list.indexOf(vo) + ">");
+			
+			if (!lang.equals("2")) {
+				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname"));
+			} else {
+				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2"));
+			}
+			
+			sb.append("</NAME" + list.indexOf(vo) + ">");
+		}
+		
+		sb.append("</PARAMETER>");
+		
+		return sb.toString();
 	}
 
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {

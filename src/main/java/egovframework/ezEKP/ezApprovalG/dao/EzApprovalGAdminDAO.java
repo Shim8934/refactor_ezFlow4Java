@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
@@ -115,6 +116,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalGAdmin.insertContainerContID", companyID);
 	}
 	
+	public String insertFormContainerConti(String companyID) throws Exception {
+		return (String) select("EzApprovalGAdmin.insertFormContainerConti", companyID);
+	}
+	
 	public Integer getTaskCategoryDuplicate(Map<String, Object> map) throws Exception {
 		select("EzApprovalGAdmin.getTaskCategoryDuplicate", map);
 		return (Integer) map.get("v_pCount");
@@ -193,6 +198,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertDeptSealInfo", map);
 	}
 	
+	public void insertFormContainer(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertFormContainer", map);
+	}
+
+	public void insertFormContainerGroup(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertFormContainerGroup", map);
+	}
+	
 	public void updateContainer(Map<String, Object> map) throws Exception{
 		update("EzApprovalGAdmin.updateContainer", map);
 	}
@@ -252,6 +265,16 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void removeTaskCategory(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.removeTaskCategory", map);
+	}
+
+
+	
+	
+
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getGroupDept(Map<String, Object> map) {
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getGroupDept", map);
 	}
 
 

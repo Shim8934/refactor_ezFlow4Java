@@ -29,6 +29,8 @@ public class ApprGFormVO {
 	private String formContParents;
 	/** 양식함설명*/
 	private String formContDescription;
+	/** 양식함사용중인 그룹아이디*/
+	private String formContUserDepID;
 	
 	public String getFormContID() {
 		return formContID;
@@ -113,6 +115,12 @@ public class ApprGFormVO {
 	}
 	public void setFormContDescription(String formContDescription) {
 		this.formContDescription = formContDescription;
+	}
+	public String getFormContUserDepID() {
+		return formContUserDepID;
+	}
+	public void setFormContUserDepID(String formContUserDepID) {
+		this.formContUserDepID = formContUserDepID;
 	}
 
 }
