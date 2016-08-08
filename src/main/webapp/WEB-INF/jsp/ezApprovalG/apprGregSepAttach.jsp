@@ -424,7 +424,7 @@
 		        var para = new Array();
 		        para[0] = g_TaskCode;
 		        para[1] = g_CabinetID;
-		        var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinetInTask_Cross.aspx";
+		        var url = "/ezApprovalG/selectCabinetInTask.do";
 		
 		        if (CrossYN() || NonActiveX == "YES") {
 		            selectcabinetintask_cross_dialogArguments[0] = para;

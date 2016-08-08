@@ -1172,14 +1172,14 @@ function ViewDoc_onclick_Complete(Rtn) {
             else {
                 if (g_uFlag == "m03") {
                     if (CrossYN() || NonActiveX == "YES")
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_Cross.aspx";
+                        openLocation = "/ezApprovalG/contDocView.do";
                     else {
                         if (pUse_Editor == "")
                             openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
                         else
                             openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                     }
-                    openLocation = openLocation + "?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=&orgDocid=&uFlag=" + g_uFlag;
+                    openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
                 }
                 else {
                     if (CrossYN() || NonActiveX == "YES") {

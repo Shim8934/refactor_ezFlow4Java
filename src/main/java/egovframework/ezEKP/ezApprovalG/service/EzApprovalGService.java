@@ -263,6 +263,18 @@ public interface EzApprovalGService {
 	
 	public String transferCabinet(Document xmlDom) throws Exception;
 	
+	public String gongRamUpdate(String docID, String userID, String companyID, String lang) throws Exception;
+	
+	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID) throws Exception;
+	
+	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID) throws Exception;
+	
+	public String chkIfNotArrangedCabExist(String deptID, String companyID) throws Exception;
+	
+	public String confirmClassify(String deptID, String companyID) throws Exception;
+	
+	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;

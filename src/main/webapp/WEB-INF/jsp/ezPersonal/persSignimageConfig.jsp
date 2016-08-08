@@ -179,6 +179,20 @@
 		        else {
 		            alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
 		        }
+		        
+		        var imagelist = "";
+		        
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var Rowcnt = DocList.GetDataRows();
+		        for (var i = 0; i < Rowcnt.length; i++) {
+		            imagelist += Rowcnt[i].getAttribute("data1") + ";";
+		        }
+
+		        if (imagelist == "")
+		            imagelist = fileName;
+		        else
+		            imagelist += fileName;
 		
 		        $.ajax({
 					type : "POST",
@@ -188,7 +202,7 @@
 							parentCn 	: "", 
 							cn 			: userid, 
 							prop 		: "", 
-							extensionAttribute3 : fileName
+							extensionAttribute3 : imagelist
 							},
 					success : function(result){
 						if(result != "OK"){

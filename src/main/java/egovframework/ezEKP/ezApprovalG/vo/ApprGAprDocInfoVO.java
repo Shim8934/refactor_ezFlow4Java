@@ -35,6 +35,7 @@ public class ApprGAprDocInfoVO {
 	private String formName;
 	/** */
 	private String formName2;
+	
 	public String getDocID() {
 		return docID;
 	}

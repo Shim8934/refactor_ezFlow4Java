@@ -335,17 +335,26 @@
 	        }
 	    }
 	function DelayCabEndY(CabClassList, Flag) {
-	    var xmlhttp = createXMLHttpRequest();
-	    var xmlpara = createXmlDom();
-	    var objNode;
-	    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", DeptID);
-	    createNodeAndInsertText(xmlpara, objNode, "CABCLASSLIST", CabClassList);
-	    createNodeAndInsertText(xmlpara, objNode, "FLAG", Flag);
-	    xmlhttp.open("POST", "aspx/API_DelayCabEndY.aspx", false);
-	    xmlhttp.send(xmlpara);
-	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+		var result = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : false,
+			url : "/ezApprovalG/delayCabEndY.do",
+			data : {
+				companyID : CompanyID,
+				deptCode  : DeptID,
+				flag 	  : Flag,
+				cabClassList  : CabClassList
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+		
+	    var dataNodes = GetChildNodes(result);
+	    
 	    return getNodeText(dataNodes[0]);
 	}
 	function btnConfirmTargetCab_onclick() {
@@ -400,26 +409,45 @@
 	        }
 	    }
 	}
-	function GetUncabinetedDocCount() {
-	    var xmlpara = createXmlDom();
-	    var objNode;
-	    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", DeptID);
-	    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	    xmlhttp.open("POST", "aspx/API_GetUncabinetedDocCount.aspx", false);
-	    xmlhttp.send(xmlpara);
-	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	function GetUncabinetedDocCount() { 
+		var result = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : false,
+			url : "/ezApprovalG/getUncabinetedDocCount.do",
+			data : {
+				companyID : CompanyID,
+				deptCode  : DeptID,
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+		
+	    var dataNodes = GetChildNodes(result);
+	    
 	    return getNodeText(dataNodes[0]);
 	}
 	function chkIfNotArrangedCabExist() {
-	    var xmlpara = createXmlDom();
-	    var objNode;
-	    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	    createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", DeptID);
-	    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	    xmlhttp.open("POST", "aspx/API_chkIfNotArrangedCabExist.aspx", false);
-	    xmlhttp.send(xmlpara);
-	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+		var result = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : false,
+			url : "/ezApprovalG/chkIfNotArrangedCabExist.do",
+			data : {
+				companyID : CompanyID,
+				deptCode  : DeptID,
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+		
+	    var dataNodes = GetChildNodes(result);
 	    var rtnTxt = getNodeText(dataNodes[0]);
 	    if (rtnTxt == "FALSE") {
 	        OpenAlertUI("<spring:message code='ezApprovalG.t486'/>");
@@ -436,31 +464,40 @@
 	            }
 	        }
 	}
-	        function chkIfNotArrangedCabExist_Complete(bCon) {
-	            if (bCon) {
-	                ConfirmClassfy(DeptID);
-	                if (DocList_Flag == "CABINET") {
-	                    GetCaninetList();
-	                }
-	                else if (DocList_Flag == "RECORD") {
-	                    GetRecordList();
-	                }
-	            }
-	        }
-	    function ConfirmClassfy(pDeptCode) {
-	        var xmlpara = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	        createNodeAndInsertText(xmlpara, objNode, "DEPTCODE", pDeptCode);
-	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-	        xmlhttp.open("POST", "aspx/API_ConfirmClassfy.aspx", false);
-	        xmlhttp.send(xmlpara);
-	        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-	        var rtnTxt = getNodeText(dataNodes[0]);
-	        if (rtnTxt == "FALSE") {
-	            OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
-	    }
-	
+    function chkIfNotArrangedCabExist_Complete(bCon) {
+        if (bCon) {
+            ConfirmClassfy(DeptID);
+            if (DocList_Flag == "CABINET") {
+                GetCaninetList();
+            }
+            else if (DocList_Flag == "RECORD") {
+                GetRecordList();
+            }
+        }
+    }
+    function ConfirmClassfy(pDeptCode) {
+		var result = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : false,
+			url : "/ezApprovalG/confirmClassfy.do",
+			data : {
+				companyID : CompanyID,
+				deptCode  : pDeptCode,
+			},
+			success: function(xml){
+				result = xml;
+			}        			
+		});
+		
+        var dataNodes = GetChildNodes(result);
+        var rtnTxt = getNodeText(dataNodes[0]);
+       
+        if (rtnTxt == "FALSE") {
+            OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
+    	}
 	}
 	function btnProdReportRecList_onclick() {
 	    DocList_Flag = "RECORD";

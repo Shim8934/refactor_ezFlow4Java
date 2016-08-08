@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -2871,7 +2870,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CABINETID", cabinetID);
@@ -2925,6 +2923,325 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
 			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String gongRamUpdate(String docID, String userID, String companyID, String lang) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_USERID", userID);
+		map.put("v_FLAG", "1");
+		
+		boolean rtnVal = false;
+		
+		try {
+			ezApprovalGDAO.gongRamUpdate(map);
+			
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		rtnVal = gonRamActivate(docID, companyID, lang);
+		
+		if (!rtnVal) {
+			map.put("v_FLAG", "2");
+			
+			try {
+				ezApprovalGDAO.gongRamUpdate(map);
+				
+				rtnVal = true;
+			} catch (Exception e) {
+				rtnVal = false;
+			}
+			
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		map.put("v_FLAG", "3");
+		
+		try {
+			ezApprovalGDAO.gongRamUpdate(map);
+			
+			return "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	@Override
+	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		String rtnVal = "";
+
+        if (flag.equals("1")) { 				// 모두 연기일 경우
+			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N', ");
+			strSQL.append("ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS char(4)) ");
+			strSQL.append("Where OwnerDeptID = '" + makeRightField(deptCode) + "' " + " And TBCABINETCLASS.DelayEndYFlag = 'Y' " + 
+					"And TBCABINETCLASS.TerminateFlag = '0' And TBCABINETCLASS.ConfirmFlag = '0'" + ";");
+		} else if (flag.equals("0")) { 		// 선택된 철만 연기일 경우
+			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N', ");
+			strSQL.append("ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS char(4)) ");
+			strSQL.append("Where CabinetClassNo IN (Select Value From TABLE(fn_StringToTable('");
+			strSQL.append(cabClassList + "', ',')) );");
+		} else if (flag.equals("2")) {  		// 연기취소일 경우
+			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N' Where ");
+			strSQL.append("CabinetClassNo IN (Select Value From TABLE(fn_StringToTable('");
+          strSQL.append(cabClassList + "', ',')));");
+		}
+        
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+			map.put("companyID", companyID);
+			
+			ezApprovalGDAO.transactionSQL(map);
+			
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID) throws Exception {
+		String deptInfos = ezOrganService.getPropertyValue(deptID, "extensionAttribute4");
+		String[] deptList = deptInfos.split(";");
+		String deptInfo = "'" + deptID.trim() + "'";
+		
+		for (int k = 0; k < deptList.length; k++) {
+			deptInfo += ", '" + deptList[k].trim() + "'";
+		}
+		
+		if (confirmYN.trim().equals("")) {
+			confirmYN = EgovDateUtil.getTodayTime().substring(0, 4);
+		}
+		
+		confirmYN += "-12-31 23:59:59";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DEPTINFO", deptInfo);
+		map.put("v_UNTILYEAR", confirmYN);
+		
+		int result = ezApprovalGDAO.getUncabinetedDocCount(map);
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+
+	@Override
+	public String chkIfNotArrangedCabExist(String deptID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DEPTCODE", deptID);
+		
+		int result = ezApprovalGDAO.chkIfNotArrangedCabExist(map);
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+
+	@Override
+	public String confirmClassify(String deptID, String companyID) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DEPTCODE", deptID);
+		
+		try {
+			ezApprovalGDAO.confirmClassify(map);
+			
+			return "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	@Override
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String basicOrder = getCode2Name("A18", "001", companyID, userLang);
+		String basicOrderReverse = "desc";
+		
+		if (basicOrder.toLowerCase().equals("desc")) {
+			basicOrderReverse = "";
+		} else {
+			basicOrder = "";
+		}
+		
+		String listString = "";
+		
+		listString = getListHeader("007", companyID, userLang);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		int totalCount = getSendOutDocListCount(mode, companyID);
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+        int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+
+        if (querySize2 >= Integer.parseInt(pageSize)) {
+        	querySize2 = Integer.parseInt(pageSize);
+        }
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (sortOption.equals("")) {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				} else {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID);
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("FORMNAME")) {
+						fieldName = fieldName + commonUtil.getMultiData(userLang);
+				}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + getListField(fieldName, fieldValue, companyID, userLang) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + "" + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("PROCESSYN").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6>" + "" + "</DATA6>");
+					resultXML.append("<DATA7>" + "" + "</DATA7>");
+					resultXML.append("<DATA8>" + "" + "</DATA8>");
+					resultXML.append("<DATA9>" + "" + "</DATA9>");
+					resultXML.append("<DATA10>" + "" + "</DATA10>");
+					resultXML.append("<DATA11>" + "" + "</DATA11>");
+					resultXML.append("<DATA12>" + "" + "</DATA12>");
+					resultXML.append("<DATA13>" + "" + "</DATA13>");
+					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		return resultXML.toString();
+	}
+
+	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_MODE", mode);
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTION2", orderOption2);
+		map.put("v_BASICORDER", basicOrder);
+		map.put("v_BASICORDER2", basicOrderReverse);
+		
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getSendOutDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	private int getSendOutDocListCount(String mode, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_MODE", mode);
+		
+		int totalCount = ezApprovalGDAO.getSendOutDocListCount(map);
+		
+		return totalCount;
+	}
+
+	private boolean gonRamActivate(String docID, String companyID, String lang) throws Exception{
+		String gongRamOption = getCode2Name("A56", "001", companyID, lang);
+		
+		boolean rtnVal = true;
+		
+		if (gongRamOption.toUpperCase().trim().equals("Y")) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", companyID);
+			map.put("v_DOCID", docID.trim());
+			map.put("v_APRMEMBERSN", 0);
+			map.put("v_FLAG", "1");
+			
+			try {
+				ezApprovalGDAO.gongRamActivateAprState(map);
+				
+				rtnVal = true;
+			} catch (Exception e) {
+				rtnVal = false;
+			}
+		} else {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", companyID);
+			map.put("v_DOCID", docID.trim());
+			
+			int gongRamCount = ezApprovalGDAO.gongRamActivateCount(map);
+			
+			if (gongRamCount == 0) {
+				ApprGLineTempletVO apprGLineTempletVOList = ezApprovalGDAO.gongRamActivateLineInfo(map);
+				
+				if (apprGLineTempletVOList != null) {
+					sendMsg(docID, apprGLineTempletVOList.getAprMemberID(), "ING", companyID, lang);
+					
+					map.put("v_APRMEMBERSN", apprGLineTempletVOList.getAprMemberSN());
+					map.put("v_FLAG", "2");
+					
+					try {
+						ezApprovalGDAO.gongRamActivateAprState(map);
+						
+						rtnVal = true;
+					} catch (Exception e) {
+						rtnVal = false;
+					}
+				}
+			}
 		}
 		
 		return rtnVal;

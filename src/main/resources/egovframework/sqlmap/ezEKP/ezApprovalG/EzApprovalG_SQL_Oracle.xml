@@ -342,6 +342,14 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.gongRamActivateLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GONGRAMACTIVATE_LINEINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETSENDOUTDOCLIST(#v_MODE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -562,6 +570,22 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETUNCOMPLETEDOCCOUNT(#v_CABINETID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.gongRamActivateCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GONGRAMACTIVATE_COUNT(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getUncabinetedDocCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETUNCABINETEDDOCCOUNT(#v_DEPTINFO#, #v_UNTILYEAR#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.chkIfNotArrangedCabExist" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_CHKIFNOTARRANGEDCABEXIST(#v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getSendOutDocListCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETSENDOUTDOCLISTCOUNT(#v_MODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
 	</procedure>
@@ -580,6 +604,10 @@
 	
 	<procedure id="EzApprovalG.createNewDoc" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_CREATENEWDOC(#v_DOCID#, #v_FORMID#, #v_COMPANYID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.confirmClassify" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_CONFRIMCLASSIFY(#v_DEPTCODE#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.updateHistoryForAttach" parameterClass="Map">
@@ -604,6 +632,14 @@
 	
 	<procedure id="EzApprovalG.setJijung" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.gongRamUpdate" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GONGRAMUPDATE(#v_DOCID#, #v_USERID#, #v_FLAG#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.gongRamActivateAprState" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GONGRAMACTIVATE_APRSTATE(#v_DOCID#, #v_APRMEMBERSN#, #v_FLAG#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.delUserFormInfo" parameterClass="Map">

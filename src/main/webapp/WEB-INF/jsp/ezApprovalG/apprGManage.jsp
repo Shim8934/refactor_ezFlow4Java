@@ -414,14 +414,14 @@
 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 		                else {
 		                    if (CrossYN() || NonActiveX == "YES")
-		                        openLocation = "./formContainer/contDocView_Cross.aspx";
+		                        openLocation = "/ezApprovalG/contDocView.do";
 		                    else {
 		                        if (pUse_Editor == "")
 		                            openLocation = "./formContainer/contDocView.aspx";
 		                        else
 		                            openLocation = "./formContainer/contDocView_IE.aspx";
 		                    }
-		                    openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&ListSusin=";
+		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		                }
 		                openwindow(openLocation, "", 880, 570);
 		            }
@@ -511,7 +511,7 @@
 		            }
 		            else {
 		                if (CrossYN() || NonActiveX == "YES")
-		                    openLocation = "./formContainer/contDocView_Cross.aspx";
+		                    openLocation = "/ezApprovalG/contDocView.do";
 		                else
 		                {
 		                    if (pUse_Editor == "")

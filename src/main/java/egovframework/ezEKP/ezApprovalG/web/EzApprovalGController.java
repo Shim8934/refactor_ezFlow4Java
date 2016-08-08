@@ -2228,12 +2228,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/approvalGSign.do")
 	public void approvalGSign(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String fileName = request.getParameter("fileName");
-		String signatureDir = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT");
+		String signatureDir = config.getProperty("upload_approvalG.SIGNIMGS");
 		
-		signatureDir = signatureDir + commonUtil.separator + "signimgs" + commonUtil.separator + fileName.split("_")[0];
+		signatureDir = signatureDir + commonUtil.separator + fileName.split("_")[0];
 		
 		String result = signatureDir + commonUtil.separator + fileName;
-System.out.println(result);		
+
 		ezCommonService.responseAttach(result, fileName, true, request, response);
 	}
 	
@@ -4273,6 +4273,9 @@ System.out.println(result);
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 관리자 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/adminPage.do")
 	public String adminPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -4316,5 +4319,109 @@ System.out.println(result);
 		model.addAttribute("userInfo", userInfo);
 		
 		return "ezApprovalG/apprGadminPage";
+	}
+	
+	/**
+	 * 전자결재G 분리첨부 철변경 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do")
+	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "ezApprovalG/apprGselectCabinetInTask";
+	}
+
+	/**
+	 * 전자결재G 공람문서 공람승인 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/gongRamUpdate.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String gongRamUpdate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		String result = ezApprovalGService.gongRamUpdate(docID, userID, userInfo.getCompanyID(), userInfo.getLang());
+				
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 종료연기 신청,취소 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/delayCabEndY.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delayCabEndY(HttpServletRequest request) throws Exception{
+		String companyID = request.getParameter("companyID");
+		String deptCode = request.getParameter("deptCode");
+		String flag = request.getParameter("flag");
+		String cabClassList = request.getParameter("cabClassList");
+		
+		String result = ezApprovalGService.delayCabEndY(deptCode, flag, cabClassList, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리자 편철확정 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getUncabinetedDocCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUncabinetedDocCount(HttpServletRequest request) throws Exception{
+		String deptID = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		int confirmYN = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4)) - 1;
+		String result = ezApprovalGService.getUncabinetedDocCount(deptID, String.valueOf(confirmYN), companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 관리자 편철확정 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/chkIfNotArrangedCabExist.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String chkIfNotArrangedCabExist(HttpServletRequest request) throws Exception{
+		String deptID = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGService.chkIfNotArrangedCabExist(deptID, companyID);
+		
+		return result;
+	}
+
+	/**
+	 * 전자결재G 관리자 편철확정 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/confirmClassfy.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String confirmClassfy(HttpServletRequest request) throws Exception{
+		String deptID = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGService.confirmClassify(deptID, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 전자결재 발송대장 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getSendOutDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSendOutDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String deptID = request.getParameter("deptID");
+		String susinManagerFlag = request.getParameter("susinManagerFlag");
+		String pageSize = request.getParameter("pageSize");
+		String pageNum  = request.getParameter("pageNum");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		
+		String result = ezApprovalGService.getSendOutDocList(userID, deptID, susinManagerFlag, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
 	}
 }

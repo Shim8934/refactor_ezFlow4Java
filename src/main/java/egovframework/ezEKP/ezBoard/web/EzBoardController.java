@@ -750,11 +750,11 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
-		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
-		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
-		    } else {
+//		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
+		    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"", "&quot;"));
+//		    } else {
 		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
-		    }
+//		    }
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());

@@ -99,17 +99,23 @@
 		        getHistory();
 		    }
 		    function btnGongRam_onclick() {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-		        createNodeAndInsertText(xmlpara, objNode, "UserID", ListSusin);
-		
-		        xmlhttp.open("Post", "ReceivUI/aspx/GongRamUpdate.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+		        var result = "";
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "xml",
+		    		async : false,
+		    		url : "/ezApprovalG/gongRamUpdate.do",
+		    		data : {
+		    			docID : DocID,
+		    			userID: ListSusin
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+		        
+		        var dataNodes = GetChildNodes(result);
 		        var tempValue = getNodeText(dataNodes[0]);
 		
 		        if (tempValue == "TRUE") {

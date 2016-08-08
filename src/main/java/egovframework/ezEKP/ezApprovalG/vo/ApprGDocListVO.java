@@ -122,7 +122,13 @@ public class ApprGDocListVO {
 	private String edmsYN;
 	/** */
 	private String containerID;
-
+	/** */
+	private String receiptPointName;
+	/** */
+	private String receiptPointName2;
+	/** */
+	private String processYN;
+	
 	public String getDocID() {
 		return docID;
 	}
@@ -482,6 +488,24 @@ public class ApprGDocListVO {
 	}
 	public void setContainerID(String containerID) {
 		this.containerID = containerID;
+	}
+	public String getReceiptPointName() {
+		return receiptPointName;
+	}
+	public void setReceiptPointName(String receiptPointName) {
+		this.receiptPointName = receiptPointName;
+	}
+	public String getReceiptPointName2() {
+		return receiptPointName2;
+	}
+	public void setReceiptPointName2(String receiptPointName2) {
+		this.receiptPointName2 = receiptPointName2;
+	}
+	public String getProcessYN() {
+		return processYN;
+	}
+	public void setProcessYN(String processYN) {
+		this.processYN = processYN;
 	}
 	
 }

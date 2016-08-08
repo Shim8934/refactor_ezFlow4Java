@@ -55,8 +55,8 @@
         var NodeList, nowblock, totalPage, block, p_page, p_nowblock, Init_Flag, DocList_Flag, DocTitle, AdminYN;
         var DeptAdminYN;
 	    var contFlag = "${contType}";
-        var pSusinManagerFlag = "user"
-        var pChackYN, WriterID
+        var pSusinManagerFlag = "user";
+        var pChackYN, WriterID;
         var docdir = "";
 	    var pEndDocHref = '${dirPath}';
         var szRoleInfo = "<c:out value = '${userInfo.rollInfo}' />";
@@ -64,7 +64,7 @@
         var CompanyID = "<c:out value = '${userInfo.companyID}' />";
         var DeptID = "<c:out value = '${userInfo.deptID} '/>";
         var deptName = "<c:out value = '${userInfo.deptName1}' />";
-        var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen
+        var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
         var arr_userinfo = new Array();
         arr_userinfo[0] = "user";
 	    arr_userinfo[0]  = "user";
@@ -156,7 +156,7 @@
             }
             catch (e) {
             }
-        }
+        };
         var isPeriodYear = true;
         function LoadList() {
             switch (g_sFlag) {
@@ -314,7 +314,7 @@
                 if (jobState == "ATTACH") {
                     return;
 
-                    var para = ""
+                    var para = "";
                     var url = tr.getAttribute("DATA1");
                     var feature;
                     feature = window.open(url);
@@ -362,19 +362,19 @@
         SendOffer(UserID);
     }
     function Approval_onclick() {
-        jobState = "APPROVAL"
+        jobState = "APPROVAL";
         getDataInfo();
     }
     function Attach_onclick() {
-        jobState = "ATTACH"
+        jobState = "ATTACH";
         getDataInfo();
     }
     function Recipent_onclick() {
-        jobState = "RECIPENT"
+        jobState = "RECIPENT";
         getDataInfo();
     }
     function Opinion_onclick() {
-        jobState = "OPINION"
+        jobState = "OPINION";
         getDataInfo();
     }
     function MM_swapImagesub(nSel, e) {
@@ -734,7 +734,7 @@
             }
 
             if (ReqDelayCabEndY(CabClassList, "Y") == "TRUE") {
-                OpenAlertUI("<spring:message code='ezApprovalG.t914'/>")
+                OpenAlertUI("<spring:message code='ezApprovalG.t914'/>");
                 DelayEndYRequest_onclick();
             }
             else {
@@ -849,7 +849,7 @@
             var tr = selRow[0];
             SwapSubMenuDisplay("1");
             InitGlobals("RECORD", "0", "1");
-            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID>" + tr.getAttribute("DATA1") + "</CABINETID></CABINET></CABINETINFO>"
+            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID>" + tr.getAttribute("DATA1") + "</CABINETID></CABINET></CABINETINFO>";
             GetRecordList();
         }
         else {
@@ -1089,7 +1089,7 @@
             CabListXml = loadXMLString(pCabListXml);
 
             var objCabs = SelectNodes(CabListXml, "CABINET");
-            len = objCabs.length
+            len = objCabs.length;
 
             if (idx < len) {
                 rtnArr[0] = getNodeText(SelectNodes(CabListXml, "CABINETID")[idx]);
@@ -1207,7 +1207,7 @@
         GetRecordList();
     }
     window.onunload = function () {
-    }
+    };
     function GongRamDocInfo() {
         var DocList = new ListView();
         DocList.LoadFromID("DocList");

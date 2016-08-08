@@ -343,7 +343,7 @@
 		            para[0] = g_TaskCode;		
 		            para[1] = GetAttribute(selnode[0], "DATA1");		
 		
-		            var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinetInTask_Cross.aspx";
+		            var url = "/ezApprovalG/selectCabinetInTask.do";
 		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
 		            feature = feature + GetShowModalPosition(480, 430);
 		

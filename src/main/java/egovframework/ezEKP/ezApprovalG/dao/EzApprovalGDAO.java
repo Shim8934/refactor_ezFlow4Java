@@ -449,6 +449,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSendOutDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getSendOutDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -456,6 +461,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception{
 		return (List<String>) list("EzApprovalG.getLeftDocCount", map);
+	}
+	
+	public ApprGLineTempletVO gongRamActivateLineInfo(Map<String, Object> map) throws Exception{
+		return (ApprGLineTempletVO) list("EzApprovalG.gongRamActivateLineInfo", map);
 	}
 	
 	public String getCode2Name(Map<String, Object> map) throws Exception{
@@ -721,6 +730,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int gongRamActivateCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.gongRamActivateCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getUncabinetedDocCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getUncabinetedDocCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int chkIfNotArrangedCabExist(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.chkIfNotArrangedCabExist", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getSendOutDocListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getSendOutDocListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -739,6 +768,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void transferCabinet(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transferCabinet", map);
+	}
+	
+	public void confirmClassify(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.confirmClassify", map);
 	}
 	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{
@@ -775,6 +808,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
+	}
+	
+	public void gongRamUpdate(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.gongRamUpdate", map);
+	}
+	
+	public void gongRamActivateAprState(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.gongRamActivateAprState", map);
 	}
 
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
