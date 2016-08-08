@@ -64,6 +64,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getAprPortletDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getAprLineInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getAprLineInfo", map);
 	}
@@ -747,6 +752,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int getSendOutDocListCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getSendOutDocListCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public int getAprPortletDocCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getAprPortletDocCount", map);
 		return (int)map.get("v_pCount");
 	}
 	

@@ -4424,4 +4424,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G 포틀릿 결재리스트 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getPortletAprDocList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getPortletAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		String pListType = request.getParameter("pListTypeName");
+		String pDocType = request.getParameter("pDocTypeName");
+		String pUserID = request.getParameter("pUserID");
+		String pUserDeptID = request.getParameter("pUserDeptID");
+		String pPageSize = request.getParameter("pPageSize");
+		String pPageNum = request.getParameter("pPageNum");
+		String companyID = request.getParameter("companyID");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String searchQuery = request.getParameter("searchQuery");
+		String subQuery = request.getParameter("subQuery");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = ezApprovalGService.getAprDocList(pListType, pUserID, pUserDeptID, pPageSize, pPageNum, orderCell, orderOption, companyID, searchQuery, userInfo.getLang());
+		
+		return result;
+	}
 }

@@ -12821,4 +12821,151 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 	
+	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		String strSQL = "";
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String userIDs = "'" + makeRightField(userID) + "'";
+		String proxyOption = getIsUse("A23", "001", companyID, strLang);
+		
+		if (proxyOption.equals("1")) {
+			userIDs = getProxyUser(userID, strLang);
+		}
+		String strMultiData = commonUtil.getMultiData(strLang);
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<ROWS>");
+		
+		if (pListType.equals("1")) {
+			resultXML.append("<TOTALCNT1>" + getAprPortletDocCount("1", userDeptID, userID, userIDs, "", pSubQuery, companyID) + "</TOTALCNT1>");
+			resultXML.append("<TOTALCNT2>" + getAprPortletDocCount("2", userDeptID, userID, userIDs, "", pSubQuery, companyID) + "</TOTALCNT2>");
+			resultXML.append("<TOTALCNT3>" + getAprPortletDocCount("4", userDeptID, userID, userIDs, "", pSubQuery, companyID) + "</TOTALCNT3>");
+		}
+		
+		int totalCount = getAprPortletDocCount(pListType, userDeptID, userID, userIDs, "", pSubQuery, companyID);
+		
+		if (orderOption1 != null && !orderOption1.equals("")) {
+			if (orderOption1.length() >= 9) {
+				if (orderOption1.substring(0, 9).toLowerCase().equals("startdate")) {
+					strSQL += " order by " + orderOption1 + " ";
+				} else {
+					strSQL += " order by " + orderOption1 + ", a.startDate desc";
+				}
+			} else {
+				strSQL += " order by " + orderOption1 + " ";
+			}
+		} else {
+			strSQL += " order by a.startDate desc";
+		}
+		
+		
+		if (orderOption2 != null && !orderOption2.equals("")) {
+			if (orderOption2.length() >= 9) {
+				if (orderOption2.substring(0, 9).toLowerCase().equals("startdate")) {
+					strSQL += " order by " + orderOption2 + " ";
+				} else {
+					strSQL += " order by " + orderOption2 + ", startDate";
+				}
+			} else {
+				strSQL += " order by " + orderOption2 + ", startDate";
+			}
+		} else {
+			strSQL += " order by startDate ";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PLISTTYPE", pListType.trim());
+		map.put("v_PUSERDEPTID", userDeptID.trim());
+		map.put("v_PUSERID", userID.trim());
+		map.put("v_PUSERIDS", userIDs.trim());
+		map.put("v_PLISTCOUNT", Integer.parseInt(pageSize));
+		map.put("v_PPAGECOUNT", Integer.parseInt(pageNum));
+		map.put("v_PTOTALCOUNT", totalCount);
+		map.put("iv_PORDERBYSUB", orderOption1.trim());
+		map.put("iv_PORDERBYMAIN", orderOption2.trim());
+		map.put("v_PSUBQUERY", pSubQuery.trim());
+		map.put("companyID", companyID);
+		List<ApprGDocListVO> docList = ezApprovalGDAO.getAprPortletDocList(map);
+		
+		int dLength = docList.size();
+		if (!pListType.equals("") && dLength > 7) {
+			dLength = 7;
+		}
+		
+		resultXML.append("<ROW>");
+		int docCnt = 0, sixHgap = 0, oneDgap = 0, sevenDgap = 0, oneMgap = 0, other = 0;
+		for (int j=dLength-1; j>=0; j--) {
+			docCnt += 1;
+			if (docCnt <= 7) {
+				resultXML.append("<CELL>");
+				resultXML.append("<DOCTITLE>"+docList.get(j).getDocTitle()+"</DOCTITLE>");
+				resultXML.append("<WRITERNAME>"+docList.get(j).getWriterName()+"</WRITERNAME>");
+				resultXML.append("<STARTDATE>"+docList.get(j).getStartDate()+"</STARTDATE>");
+				resultXML.append("<DOCID>"+docList.get(j).getDocID()+"</DOCID>");
+				resultXML.append("<HREF>"+docList.get(j).getHref()+"</HREF>");
+				resultXML.append("<APRMEMBERID>"+docList.get(j).getAprMemberID()+"</APRMEMBERID>");
+				resultXML.append("<APRMEMBERNAME>"+docList.get(j).getAprMemberName()+"</APRMEMBERNAME>");
+				resultXML.append("<APRMEMBERDEPTID>"+docList.get(j).getAprMemberDeptID()+"</APRMEMBERDEPTID>");
+				resultXML.append("<DOCSTATE>"+docList.get(j).getDocState()+"</DOCSTATE>");
+				resultXML.append("<FUNCTIONTYPE>"+docList.get(j).getFunctionType()+"</FUNCTIONTYPE>");
+				resultXML.append("</CELL>");
+			}
+			
+			if (pListType.equals("1")) {
+				String pReceivedDate = docList.get(j).getReceivedDate();
+				if (pReceivedDate == null || pReceivedDate.equals("")) {
+					pReceivedDate = docList.get(j).getStartDate();
+				}
+				
+				// hourGap
+				double hourGap = 5;
+				
+				if (hourGap <= 6) {
+					sixHgap += 1;
+				} else if (hourGap <= 24) {
+					oneDgap += 1;
+				} else if(hourGap <= 168) {
+					sevenDgap += 1;
+				} else if (hourGap <= 720) {
+					oneMgap += 1;
+				} else {
+					other += 1;
+				}
+			}
+		}
+		resultXML.append("</ROW>");
+		if (pListType.equals("1")) {
+			resultXML.append("<SIXHGAP>"+sixHgap+"</SIXHGAP>");
+			resultXML.append("<ONEDGAP>"+oneDgap+"</ONEDGAP>");
+			resultXML.append("<SEVENDGAP>"+sevenDgap+"</SEVENDGAP>");
+			resultXML.append("<ONEMGAP>"+oneMgap+"</ONEMGAP>");
+			resultXML.append("<OTHER>"+other+"</OTHER>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		
+			
+		
+		return resultXML.toString();
+	}
+	
+	private int getAprPortletDocCount (String pListType, String pUserDeptID, String pUserID, String pUserIDs, String pUserFlag, String pSubQuery, String companyID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PLISTTYPE", pListType);
+		map.put("v_PUSERDEPTID", pUserDeptID);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PUSERIDS", pUserIDs);
+		map.put("v_PUSERFLAG", pUserFlag);
+		map.put("v_PSUBQUERY", pSubQuery);
+		map.put("companyID", companyID);
+		
+		int rtnValue = ezApprovalGDAO.getAprPortletDocCount(map);
+		
+		return rtnValue;
+	}
 }

@@ -38,6 +38,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRDOCLIST(#v_LISTTYPE#, #v_USERID#, #v_USERIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #iv_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getAprPortletDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRPORTLETDOCLIST(#v_PLISTTYPE#, #v_PUSERDEPTID#, #v_PUSERID#, #v_PUSERIDS#, #v_PLISTCOUNT#, #v_PPAGECOUNT#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #iv_PORDERBYMAIN#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.sendoffercheck_enddocinfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_SENDOFFERCHECK_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -596,6 +600,10 @@
 	
 	<procedure id="EzApprovalG.getSendOutDocListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSENDOUTDOCLISTCOUNT(#v_MODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getAprPortletDocCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRPORTLETDOCCOUNT(#v_PLISTTYPE#, #v_PUSERDEPTID#, #v_PUSERID#, #v_PUSERIDS#, #v_PUSERFLAG#, #v_PSUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getUserRight" parameterClass="Map" resultClass="int">
