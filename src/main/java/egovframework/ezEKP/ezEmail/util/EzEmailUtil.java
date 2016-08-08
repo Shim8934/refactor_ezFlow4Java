@@ -37,6 +37,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
@@ -343,254 +344,287 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint){
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
-		try {
-			String htmlBody = "";
-			String pAttachListHtml = "";
-			String filesize = "0";
-			String filecnt = "0";
-			String isAttach = "";
+		String htmlBody = "";
+		String pAttachListHtml = "";
+		String filesize = "0";
+		String filecnt = "0";
+		String isAttach = "";
+		
+		logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
+		
+		if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
+			String filename = part.getFileName();
+			double size = part.getSize();
+			String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
+			if (encodingHeaders != null && encodingHeaders.length > 0) {
+				String encodingName = encodingHeaders[0];
+				logger.debug("Content-Transfer-Encoding=" + encodingName);
+				if (encodingName.equalsIgnoreCase("base64")) {
+					// decrease the size because base64 increases the size to 4/3 times.
+					size = (int)(size*0.75); 
+				}
+			}										
+			String strSize = getSizeWithUnit(size);
 			
-			logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
-			
-			if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
-				String filename = part.getFileName();
-				double size = part.getSize();
-				String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
-				if (encodingHeaders != null && encodingHeaders.length > 0) {
-					String encodingName = encodingHeaders[0];
-					logger.debug("Content-Transfer-Encoding=" + encodingName);
-					if (encodingName.equalsIgnoreCase("base64")) {
-						// decrease the size because base64 increases the size to 4/3 times.
-						size = (int)(size*0.75); 
-					}
-				}										
-				String strSize = getSizeWithUnit(size);
-				
-				if (filename != null) {
-					if (!isPureAscii(filename)) {
-						byte[] rawBytes = filename.getBytes("iso-8859-1");
-						
-						filename = decodeNonAsciiBytes(rawBytes);
-					}
-					else {
-						filename = MimeUtility.decodeText(filename);
-					}
+			if (filename != null) {
+				if (!isPureAscii(filename)) {
+					byte[] rawBytes = filename.getBytes("iso-8859-1");
+					
+					filename = decodeNonAsciiBytes(rawBytes);
 				}
 				else {
-					filename = "";
+					filename = MimeUtility.decodeText(filename);
 				}
-				
-				if (attachedFileList != null) {
-					Map<String, String> attachedFileInfo = new HashMap<String, String>();
-					attachedFileInfo.put("filename", filename);
-					attachedFileInfo.put("size", String.valueOf(size));
-					attachedFileList.add(attachedFileInfo);
-				}
-				
-				if (forPrint) {
-					pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-					pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
-					pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
-				} else {
-					String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-					pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
-				}
-				
-				isAttach = "OK";
-				filesize = (Double.parseDouble(filesize) + size) + "";
-				filecnt = (Integer.parseInt(filecnt) + 1) + "";
-			} else if(part.isMimeType("text/html")){
-				String strContent = null;
-				
-				try {
-					strContent = part.getContent().toString();
-				}
-				catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-					
-					InputStream is = part.getInputStream();
-					
-					if (is.available() > 0) {
-						byte[] buf = new byte[is.available()];
-						is.read(buf);
-						
-						strContent = decodeNonAsciiBytes(buf);						
-					}
-				}
-				
-				// process in-line images
-				int index1 = -1;
-				int index2 = -1;
-				while((index1 = strContent.indexOf("src=\"cid:")) > -1 || (index2 = strContent.indexOf("src='cid:")) > -1){
-					char quoteChar;
-					int index;
-					if (index1 > -1) {
-						quoteChar = '"';
-						index = index1;
-					}
-					else {
-						quoteChar = '\'';
-						index = index2;
-					}
-					
-					int lastindex = index+9;
-					while(true){
-						if(lastindex>=strContent.length()){
-							lastindex = -1;
-							break;
-						}						
-						char c = strContent.charAt(lastindex);
-						if(c == quoteChar){
-							break;
-						}
-						++lastindex;
-					}
-					if(lastindex == -1){
-						break;
-					}
-					String cid = strContent.substring(index+9, lastindex);
-					String contentId = "<"+cid+">";
-					String orgSrc = "src=" + quoteChar + "cid:" + cid + quoteChar;
-					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8") + "\"");						
-				}
-				htmlBody += strContent;
-				
-				htmlBody = stripScriptTags(htmlBody);
-				htmlBody = addTargetBlank(htmlBody);				
-			} else if(part.isMimeType("text/plain")){
-				String strContent = "";
-				String[] headers = part.getHeader("Content-Type");
-				
-				if (headers == null) {
-					logger.debug("no Content-Type header");
-					
-					InputStream is = part.getInputStream();
-					
-					if (is.available() > 0) {
-						byte[] buf = new byte[is.available()];
-						is.read(buf);
-						
-						strContent = decodeNonAsciiBytes(buf);						
-					}					
-				}
-				else {
-					strContent = part.getContent().toString();
-				}
-				
-				htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
-				
-				htmlBody = changeURLsToAnchorTags(htmlBody);	
-				htmlBody = stripScriptTags(htmlBody);
-				htmlBody = addTargetBlank(htmlBody);
-			} else if(part.isMimeType("multipart/alternative")){
-				Multipart mp = (Multipart)part.getContent();
-				int count = mp.getCount();
-				Part p = null;
-				for (int i = 0; i < count; i++) {
-					p = mp.getBodyPart(i);
-					logger.debug("contentType=" + p.getContentType());
-					if(!p.isMimeType("text/plain")){
-						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
-						htmlBody += tempList.get(0);
-						pAttachListHtml += tempList.get(1);
-						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
-						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-						if(tempList.get(4).equals("OK")){
-							isAttach = "OK";
-						}
-					}
-				}
-				if(htmlBody.equals("")){
-					for (int i = 0; i < count; i++) {
-						p = mp.getBodyPart(i);
-						if(p.isMimeType("text/plain")){
-							htmlBody += p.getContent().toString();
-						}
-					}
-				}
-			} else if (part.isMimeType("multipart/mixed")) { //재귀
-				Multipart mp = (Multipart)part.getContent();
-				int count = mp.getCount();
-				Part p = null;
-				for (int i = 0; i < count; i++) {
-					p = mp.getBodyPart(i);
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
-					htmlBody += tempList.get(0);
-					pAttachListHtml += tempList.get(1);
-					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
-					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-					if(tempList.get(4).equals("OK")){
-						isAttach = "OK";
-					}
-				}
-			} else if(part.isMimeType("multipart/related")){
-				Multipart mp = (Multipart)part.getContent();
-				int count = mp.getCount();
-				for(int i = 0; i < count; i++) {
-					Part p = mp.getBodyPart(i);
-					if(!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))){
-						List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
-						htmlBody += tempList.get(0);
-						pAttachListHtml += tempList.get(1);
-						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
-						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-						if(tempList.get(4).equals("OK")){
-							isAttach = "OK";
-						}
-					}
-				}
-			} else if(part.isMimeType("multipart/*")){
-				Multipart mp = (Multipart)part.getContent();
-				int count = mp.getCount();
-				for(int i = 0; i < count; i++) {
-					Part p = mp.getBodyPart(i);
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
-					htmlBody += tempList.get(0);
-					pAttachListHtml += tempList.get(1);
-					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
-					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
-					if(tempList.get(4).equals("OK")){
-						isAttach = "OK";
-					}
-				}
-			} else if(part.isMimeType("message/rfc822")){
-				Message nestedMessage = (Message)part.getContent();
-				
-				double size = part.getSize();
-				String strSize = getSizeWithUnit(size);
-				
-				String filename = nestedMessage.getSubject();
-				filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				
-				if (forPrint) {
-					pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-					pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
-					pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
-				} else {
-					pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-					pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
-					pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
-				}
-				
-				isAttach = "OK";
-				filesize = (Double.parseDouble(filesize) + size) + "";
-				filecnt = (Integer.parseInt(filecnt) + 1) + "";				
+			}
+			else {
+				filename = "";
 			}
 			
-			resultList.add(htmlBody);
-			resultList.add(pAttachListHtml);
-			resultList.add(filesize);
-			resultList.add(filecnt);
-			resultList.add(isAttach);
-		} catch (Exception e) {
-			e.printStackTrace();
+			if (attachedFileList != null) {
+				Map<String, String> attachedFileInfo = new HashMap<String, String>();
+				attachedFileInfo.put("filename", filename);
+				attachedFileInfo.put("size", String.valueOf(size));
+				attachedFileList.add(attachedFileInfo);
+			}
+			
+			if (forPrint) {
+				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
+				pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+			} else {
+				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+			}
+			
+			isAttach = "OK";
+			filesize = (Double.parseDouble(filesize) + size) + "";
+			filecnt = (Integer.parseInt(filecnt) + 1) + "";
+		} else if(part.isMimeType("text/html")){
+			String strContent = null;
+			
+			try {
+				strContent = part.getContent().toString();
+			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				InputStream is = null; 
+					
+				try {
+					is = part.getInputStream();
+				// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+				// 예) Content-Type: Text/Html; Charset="utf-8"
+				//	  Content-Transfer-Encoding: 
+				} catch (IOException ioe) {
+					// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+					if (part instanceof MimeBodyPart) {
+						is = ((MimeBodyPart)part).getRawInputStream();
+					} else if (part instanceof MimeMessage) {
+						is = ((MimeMessage)part).getRawInputStream();
+					}
+					else {
+						throw ioe;
+					}
+				}
+				
+				if (is.available() > 0) {
+					byte[] buf = new byte[is.available()];
+					is.read(buf);
+					
+					strContent = decodeNonAsciiBytes(buf);						
+				}
+			}
+			
+			// process in-line images
+			int index1 = -1;
+			int index2 = -1;
+			while((index1 = strContent.indexOf("src=\"cid:")) > -1 || (index2 = strContent.indexOf("src='cid:")) > -1){
+				char quoteChar;
+				int index;
+				if (index1 > -1) {
+					quoteChar = '"';
+					index = index1;
+				}
+				else {
+					quoteChar = '\'';
+					index = index2;
+				}
+				
+				int lastindex = index+9;
+				while(true){
+					if(lastindex>=strContent.length()){
+						lastindex = -1;
+						break;
+					}						
+					char c = strContent.charAt(lastindex);
+					if(c == quoteChar){
+						break;
+					}
+					++lastindex;
+				}
+				if(lastindex == -1){
+					break;
+				}
+				String cid = strContent.substring(index+9, lastindex);
+				String contentId = "<"+cid+">";
+				String orgSrc = "src=" + quoteChar + "cid:" + cid + quoteChar;
+				strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&contentId="+URLEncoder.encode(contentId,"UTF-8") + "\"");						
+			}
+			htmlBody += strContent;
+			
+			htmlBody = stripScriptTags(htmlBody);
+			htmlBody = addTargetBlank(htmlBody);				
+		} else if(part.isMimeType("text/plain")){
+			String strContent = "";
+			String[] headers = part.getHeader("Content-Type");
+			
+			// Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
+			// 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
+			if (headers == null) {
+				logger.debug("no Content-Type header");
+				
+				InputStream is = null; 
+				
+				try {
+					is = part.getInputStream();
+				// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+				// 예) Content-Transfer-Encoding: 
+				} catch (IOException ioe) {
+					// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+					if (part instanceof MimeBodyPart) {
+						is = ((MimeBodyPart)part).getRawInputStream();
+					} else if (part instanceof MimeMessage) {
+						is = ((MimeMessage)part).getRawInputStream();
+					}
+					else {
+						throw ioe;
+					}
+				}
+				
+				if (is.available() > 0) {
+					byte[] buf = new byte[is.available()];
+					is.read(buf);
+					
+					strContent = decodeNonAsciiBytes(buf);						
+				}					
+			}
+			else {
+				strContent = part.getContent().toString();
+			}
+			
+			htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+			
+			htmlBody = changeURLsToAnchorTags(htmlBody);	
+			htmlBody = stripScriptTags(htmlBody);
+			htmlBody = addTargetBlank(htmlBody);
+		} else if(part.isMimeType("multipart/alternative")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			Part p = null;
+			for (int i = 0; i < count; i++) {
+				p = mp.getBodyPart(i);
+				logger.debug("contentType=" + p.getContentType());
+				if(!p.isMimeType("text/plain")){
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					htmlBody += tempList.get(0);
+					pAttachListHtml += tempList.get(1);
+					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					if(tempList.get(4).equals("OK")){
+						isAttach = "OK";
+					}
+				}
+			}
+			if(htmlBody.equals("")){
+				for (int i = 0; i < count; i++) {
+					p = mp.getBodyPart(i);
+					if(p.isMimeType("text/plain")){
+						htmlBody += p.getContent().toString();
+					}
+				}
+			}
+		} else if (part.isMimeType("multipart/mixed")) { //재귀
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			Part p = null;
+			for (int i = 0; i < count; i++) {
+				p = mp.getBodyPart(i);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				htmlBody += tempList.get(0);
+				pAttachListHtml += tempList.get(1);
+				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+				if(tempList.get(4).equals("OK")){
+					isAttach = "OK";
+				}
+			}
+		} else if(part.isMimeType("multipart/related")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			for(int i = 0; i < count; i++) {
+				Part p = mp.getBodyPart(i);
+				if(!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))){
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					htmlBody += tempList.get(0);
+					pAttachListHtml += tempList.get(1);
+					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					if(tempList.get(4).equals("OK")){
+						isAttach = "OK";
+					}
+				}
+			}
+		} else if(part.isMimeType("multipart/*")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			for(int i = 0; i < count; i++) {
+				Part p = mp.getBodyPart(i);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				htmlBody += tempList.get(0);
+				pAttachListHtml += tempList.get(1);
+				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+				if(tempList.get(4).equals("OK")){
+					isAttach = "OK";
+				}
+			}
+		} else if(part.isMimeType("message/rfc822")){
+			Message nestedMessage = (Message)part.getContent();
+			
+			double size = part.getSize();
+			String strSize = getSizeWithUnit(size);
+			
+			String filename = nestedMessage.getSubject();
+			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
+			String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+			
+			if (forPrint) {
+				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
+				pAttachListHtml += filename + " (" + strSize + ")</span></span></br>";
+			} else {
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + filename + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + filename + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
+			}
+			
+			isAttach = "OK";
+			filesize = (Double.parseDouble(filesize) + size) + "";
+			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
+		
+		resultList.add(htmlBody);
+		resultList.add(pAttachListHtml);
+		resultList.add(filesize);
+		resultList.add(filecnt);
+		resultList.add(isAttach);
+			
 		return resultList;
 	}
 	
