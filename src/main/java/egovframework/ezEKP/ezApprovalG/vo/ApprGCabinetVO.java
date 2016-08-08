@@ -79,7 +79,15 @@ public class ApprGCabinetVO {
 	private String keepingMethod;
 	/** */
 	private String keepingPlace;
-	
+	private String limitRange;
+	private String specialRecordCode;
+	private String publicityCode;
+	private String catalogTransferFlag;
+	private String catalogTransferYear;
+	private String docTransferFlag;
+	private String docTransferYear;
+	private String cabDeptCode;
+	private String cabTitle;
 	public String getCabinetID() {
 		return cabinetID;
 	}
@@ -302,4 +310,59 @@ public class ApprGCabinetVO {
 	public void setKeepingPlace(String keepingPlace) {
 		this.keepingPlace = keepingPlace;
 	}
+	public String getLimitRange() {
+		return limitRange;
+	}
+	public void setLimitRange(String limitRange) {
+		this.limitRange = limitRange;
+	}
+	public String getSpecialRecordCode() {
+		return specialRecordCode;
+	}
+	public void setSpecialRecordCode(String specialRecordCode) {
+		this.specialRecordCode = specialRecordCode;
+	}
+	public String getPublicityCode() {
+		return publicityCode;
+	}
+	public void setPublicityCode(String publicityCode) {
+		this.publicityCode = publicityCode;
+	}
+	public String getCatalogTransferFlag() {
+		return catalogTransferFlag;
+	}
+	public void setCatalogTransferFlag(String catalogTransferFlag) {
+		this.catalogTransferFlag = catalogTransferFlag;
+	}
+	public String getCatalogTransferYear() {
+		return catalogTransferYear;
+	}
+	public void setCatalogTransferYear(String catalogTransferYear) {
+		this.catalogTransferYear = catalogTransferYear;
+	}
+	public String getDocTransferFlag() {
+		return docTransferFlag;
+	}
+	public void setDocTransferFlag(String docTransferFlag) {
+		this.docTransferFlag = docTransferFlag;
+	}
+	public String getDocTransferYear() {
+		return docTransferYear;
+	}
+	public void setDocTransferYear(String docTransferYear) {
+		this.docTransferYear = docTransferYear;
+	}
+	public String getCabDeptCode() {
+		return cabDeptCode;
+	}
+	public void setCabDeptCode(String cabDeptCode) {
+		this.cabDeptCode = cabDeptCode;
+	}
+	public String getCabTitle() {
+		return cabTitle;
+	}
+	public void setCabTitle(String cabTitle) {
+		this.cabTitle = cabTitle;
+	}
+	
 }

@@ -283,5 +283,13 @@ public interface EzApprovalGService {
 
 	public String GetRecordInfo(Document xmlDom, String lang)throws Exception;
 
+	public String getRecViewer(Document xmlDom, String companyID, String lang)throws Exception;
+
+	public String saveRecUserRoleInfo(Document xmlDom, String companyID, String lang)throws Exception;
+
+	public String getRecReadHistory(Document xmlDom, String companyID, String lang, String docID) throws Exception;
+
+	public String getRecordClassInfo(Document xmlDom, String companyID, String lang) throws Exception;
+
 
 }

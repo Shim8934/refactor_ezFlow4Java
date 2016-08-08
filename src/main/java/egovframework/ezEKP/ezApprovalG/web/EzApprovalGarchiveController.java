@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -177,6 +179,110 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getLang());
 		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/regRecord.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String regRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useEditor=config.getProperty("config.EDITOR");
+		String useIE11Browser=config.getProperty("config.IE11EDITOR");
+		String nonActiveX="YES";
+		
+	     if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
+	    	 useIE11Browser ="CK";
+	     }
+	     Date dt = new Date();
+	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm"); 
+	     String regY=sdf.format(dt).toString().substring(0,4);
+	     String regM=sdf.format(dt).toString().substring(5,7);
+	     String regD=sdf.format(dt).toString().substring(8,10);
+	     String regH=sdf.format(dt).toString().substring(11,13);
+	     String regMi=sdf.format(dt).toString().substring(14,16);
+	     model.addAttribute("userInfo", userInfo);
+	     model.addAttribute("useEditor", useEditor);
+	     model.addAttribute("regY", regY);
+	     model.addAttribute("regM", regM);
+	     model.addAttribute("regD", regD);
+	     model.addAttribute("regH", regH);
+	     model.addAttribute("regMi", regMi);
+	     return "ezApprovalG/apprGregrecord";
+	}
+	 
+	@RequestMapping(value = "/ezApprovalG/setRecUserRole.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String setRecUserRole(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		  model.addAttribute("userInfo", userInfo);
+		return "ezApprovalG/apprGsetRecUserRole";
+	}
+	@RequestMapping(value = "/ezApprovalG/getRecViewerInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecViewerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		System.out.println(xmlPara);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result=ezApprovalGService.getRecViewer(xmlDom,userInfo.getCompanyID(),userInfo.getLang());
+		
+	   
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/saveRecUserRole.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveRecUserRole(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result=ezApprovalGService.saveRecUserRoleInfo(xmlDom,userInfo.getCompanyID(),userInfo.getLang());
+	   
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/viewRecReadHistory.do"  ,produces="text/xml;charset=utf-8")
+	public String viewRecReadHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+	   
+		return "ezApprovalG/apprGviewRecReadHistory";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getRecReadHistory.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecordHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String docID= xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String result=ezApprovalGService.getRecReadHistory(xmlDom, userInfo.getCompanyID(),userInfo.getLang(),docID);
+	   
+		return result;
+	}
+	
+	/** 기록물등록대장 등록정보 화면 호출*/
+	@RequestMapping(value = "/ezApprovalG/viewRecInfo.do"  ,produces="text/xml;charset=utf-8")
+	public String viewRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+	    String Use_IE11Browser = "";
+		userInfo = commonUtil.userInfo(loginCookie);
+		   if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && Use_IE11Browser.equals("CK")) {
+			   Use_IE11Browser ="CK";
+	        }
+		   model.addAttribute("userInfo", userInfo);
+		return "ezApprovalG/apprGviewRecInfo";
+	}
+	
+	/** 기록물등록대장 등록정보 화면 분류정보 탭*/
+	@RequestMapping(value = "/ezApprovalG/getRecClassInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecClassInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result=ezApprovalGService.getRecordClassInfo(xmlDom, userInfo.getCompanyID(),userInfo.getLang());
 		return result;
 	}
 	

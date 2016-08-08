@@ -12238,7 +12238,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return orgStr;
 		}
 	}
-
+	
+   public String getSpecialRecString(String pCode, String companyID, String lang){
+	   String rtnVal = "";
+	   try{
+	   for(int i=1; i<=pCode.length(); i++){
+		   if(pCode.substring(i-1,1)=="Y"){
+			   if (rtnVal.trim() != ""){
+				   rtnVal += ",";   
+			   }
+			       rtnVal += getCabinetCode2Name("005", pCode, companyID, lang);
+		   }
+	   }
+	   return rtnVal;
+	   }
+	   catch(Exception e){
+	   }
+	   return rtnVal;		   
+	   }
+   public String getPublicCodeString(String pCode, String companyID, String lang) throws Exception{
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("pCode", pCode);
+			map.put("companyID", companyID);
+			map.put("lang", lang);
+			String rtnVal =ezApprovalGDAO.getPublicCodeString(map);
+			return rtnVal;
+   } 
 	public String convertDate(String date) {
 		if (date.trim().equals("")) {
 			return date;
@@ -12480,7 +12505,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		try{
 
-                  			String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+            String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 			String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 			
@@ -12545,4 +12570,255 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		return resultXML.toString();
 	}
+
+	@Override
+	public String getRecViewer(Document xmlDom, String companyID, String lang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
+		String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_RECORDID",RecID);
+		map.put("v_SEPATTNO",SepAttachNo);
+		map.put("companyID", companyID);
+		
+		int getUserRight = ezApprovalGDAO.getUserRight(map);
+		
+		if (getUserRight <=0 ){
+		    getUserRight = 0;	
+		}
+		
+		 List<ApprGRecordVO> docList =ezApprovalGDAO.getRecViewer(map);  
+		 
+	     StringBuffer sb = new StringBuffer();
+	     sb.append("<DATA>");
+	        
+	     for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		 }
+			sb.append("</DATA>");
+			
+		 Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		 int dlength = docXML.getElementsByTagName("ROW").getLength();
+		 resultXML.append("<ROLEINFO>");
+		 resultXML.append("<ALLALLOWED>"+ getUserRight + "</ALLALLOWED>");
+		 resultXML.append("<LISTVIEWDATA>");
+		 resultXML.append("<HEADERS>");
+		 resultXML.append("<HEADER>");
+		 resultXML.append("<NAME>");
+		 String name="";
+		 String dept="";
+		 String title="";
+		 if(lang.equals("1")){
+			 name="성명";
+			 dept="부서";
+			 title="직위";
+		 }else{
+			 name="NAME";
+			 dept="Dept";
+			 title="Title";
+		 }
+		 resultXML.append(name);
+		 resultXML.append("</NAME>");
+		 resultXML.append("<WIDTH>" + "70" + "</WIDTH>");
+		 resultXML.append("</HEADER>");
+		 resultXML.append("<HEADER>");
+		 resultXML.append("<NAME>");
+		 resultXML.append(dept);
+		 resultXML.append("</NAME>");
+		 resultXML.append("<WIDTH>" + "100" + "</WIDTH>");
+		 resultXML.append("</HEADER>");
+		 resultXML.append("<HEADER>");
+		 resultXML.append("<NAME>");
+		 resultXML.append(title);
+		 resultXML.append("</NAME>");
+		 resultXML.append("<WIDTH>" + "100" + "</WIDTH>");
+		 resultXML.append("</HEADER>");
+		 resultXML.append("</HEADERS>");
+		 for (int j=0; j<dlength; j++){
+			 resultXML.append("<ROWS>");
+			 resultXML.append("<ROW>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERNAME"+commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DEPTCODE").item(j).getTextContent()) + "</DATA1>");
+			 resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("USERID").item(j).getTextContent()) + "</DATA2>");
+			 resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("USERNAME").item(j).getTextContent()) + "</DATA3>");
+			 resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("USERNAME2").item(j).getTextContent()) + "</DATA4>");
+			 resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("USERTITLE").item(j).getTextContent()) + "</DATA5>");
+			 resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("USERTITLE2").item(j).getTextContent()) + "</DATA6>");
+			 resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("DEPTNAME").item(j).getTextContent()) + "</DATA7>");
+			 resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("DEPTNAME2").item(j).getTextContent()) + "</DATA8>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("DEPTNAME" + commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERTITLE" + commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("</ROW>");
+			 resultXML.append("</ROWS>");
+			
+		 }
+		
+		 
+		 resultXML.append("</LISTVIEWDATA>");
+		 resultXML.append("</ROLEINFO>");
+			
+		return resultXML.toString();
+	}
+
+	@Override
+	public String saveRecUserRoleInfo(Document xmlDom, String companyID, String lang) throws Exception {
+			StringBuilder strSQL = new StringBuilder();
+			String rtnVal = "<RESULT>TRUE</RESULT>";
+		    String Flag	= "0";
+			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
+			String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
+			
+			strSQL.append("Delete TBRECROLEINFO WHERE RecordID = '" + RecID);
+            strSQL.append("' And SeperateAttachNo = '" + SepAttachNo + "' ;\n");
+			if(Flag.equals("0")){
+				 strSQL.append("Insert Into TBRECROLEINFO (RecordID, SeperateAttachNo, UserID, ");
+                 strSQL.append("UserRight, UserName, UserName2) Values ('"+RecID + "', '");
+				 strSQL.append(SepAttachNo + "', 'All_User', 1, '모든 이용자', 'All User') ;\n");
+			}else{
+				strSQL.append("Insert Into TBRECROLEINFO (RecordID, SeperateAttachNo, UserID, ");
+                strSQL.append("UserRight, UserName, UserName2) Values ('" + RecID + "', '");
+				strSQL.append(SepAttachNo + "', 'All_User', 0, '모든 이용자', 'All User');\n");
+			}
+			for( int i=0; i<xmlDom.getElementsByTagName("USER").getLength(); i++){
+				strSQL.append("Insert Into TBRECROLEINFO (RecordID, SeperateAttachNo, ");
+                strSQL.append("UserID, UserRight, UserName, UserName2, UserTitle, UserTitle2, DeptCode, DeptName, DeptName2) Values ('");
+				strSQL.append(RecID + "', '" + SepAttachNo + "', '");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("ID").item(i).getTextContent()) + "', 1, '");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("NAME").item(i).getTextContent())+ "', '");
+                strSQL.append(makeRightField(xmlDom.getElementsByTagName("NAME2").item(i).getTextContent())+ "', '");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("TITLE").item(i).getTextContent()) + "', '");
+                strSQL.append(makeRightField(xmlDom.getElementsByTagName("TITLE2").item(i).getTextContent()) + "', '");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("DEPTCODE").item(i).getTextContent().trim()) + "', '");
+                strSQL.append(makeRightField(xmlDom.getElementsByTagName("DEPTNAME").item(i).getTextContent()) + "', '");
+                strSQL.append(makeRightField(xmlDom.getElementsByTagName("DEPTNAME2").item(i).getTextContent())  + "');\n");
+			}
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", companyID);
+			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+			
+			try {
+				ezApprovalGDAO.transactionSQL(map);
+				
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				rtnVal = "<RESULT>FALSE</RESULT>";
+			}
+		return rtnVal;
+	}
+
+	@Override
+	public String getRecReadHistory(Document xmlDom, String companyID, String lang , String docID) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		
+		 List<ApprGHistoryDocVO> docList =ezApprovalGDAO.getRecReadHistory(map); 
+		 StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < docList.size(); i++) {
+				sb.append(commonUtil.getQueryResult(docList.get(i)));
+			}
+			sb.append("</DATA>");
+		 Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		 String listHeader = getListHeader("104", companyID, lang);
+		 Document listXML = commonUtil.convertStringToDocument(listHeader);
+		 resultXML.append("<LISTVIEWDATA>");
+		 resultXML.append("<HEADERS>");
+		 int hlength = listXML.getElementsByTagName("NAME").getLength();
+		 for ( int i = 0; i < hlength; i++){
+			 resultXML.append("<HEADER>");
+			 resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() +"</NAME>");
+			 resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() +"</WIDTH>");
+			 resultXML.append("</HEADER>");
+		 }
+		 resultXML.append("</HEADERS>");
+		 resultXML.append("<ROWS>");
+		 int dlength = docXML.getElementsByTagName("ROW").getLength();
+		 for(int j=0; j<dlength; j++){
+			 resultXML.append("<ROW>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(convertDate(docXML.getElementsByTagName("READDATE").item(j).getTextContent())) + "</VALUE>");
+			 resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(j).getTextContent())+ "</DATA1>");
+			 resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("USERID").item(j).getTextContent())+ "</DATA2>");
+			 resultXML.append("</CELL>");  
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERNAME" + commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("DEPTNAME" + commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERTITLE" + commonUtil.getMultiData(lang)).item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("</ROW>");
+		 }
+		 resultXML.append("</ROWS>");
+		
+		 resultXML.append("</LISTVIEWDATA>");
+		 
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getRecordClassInfo(Document xmlDom, String companyID,	String lang) throws Exception {
+		try{
+		StringBuilder resultXML = new StringBuilder();
+		String rtnVal = "<RESULT>NORECORD</RESULT>";
+		String SepAttachNo =xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_RECORDID", RecID);
+		map.put("v_SEPATTNO", SepAttachNo);
+		
+		 List<ApprGCabinetVO> docList =ezApprovalGDAO.getRecordClassInfo(map);
+	     StringBuffer sb = new StringBuffer();
+	     sb.append("<DATA>");
+	        
+	     for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		 }
+			sb.append("</DATA>");
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		if(docXML.getElementsByTagName("ROW").getLength() <=0 ){
+			 return rtnVal;
+		 }
+		resultXML.append("<RECINFO>");
+		resultXML.append("<CLASSINFO>");
+		resultXML.append("<CABCLASSID>" + getCabinetNo(makeListField(docXML.getElementsByTagName("CABDEPTCODE").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "</CABCLASSID>");
+		resultXML.append("<CABTITLE>" + makeListField(docXML.getElementsByTagName("CABTITLE").item(0).getTextContent()) + "</CABTITLE>");
+		resultXML.append("<SPECIALRECCODE>" + getSpecialRecString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()), companyID, lang) + "</SPECIALRECCODE>");
+		resultXML.append("<PUBLICCODE>" + getPublicCodeString((docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()), companyID, lang) + "</PUBLICCODE>");
+		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
+		resultXML.append("<CONFIRMFLAG>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent()) + "</CONFIRMFLAG>");
+		resultXML.append("<CATATRANSFLAG>" + makeListField(docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent()) + "</CATATRANSFLAG>");
+		resultXML.append("<CATATRANSYEAR>" + makeListField(docXML.getElementsByTagName("CATALOGTRANSFERYEAR").item(0).getTextContent()) + "</CATATRANSYEAR>");
+		resultXML.append("<DOCTRANSFLAG>" + makeListField(docXML.getElementsByTagName("DOCTRANSFERFLAG").item(0).getTextContent()) + "</DOCTRANSFLAG>");
+		resultXML.append("<DOCTRANSYEAR>" + makeListField(docXML.getElementsByTagName("DOCTRANSFERYEAR").item(0).getTextContent()) + "</DOCTRANSYEAR>");
+		resultXML.append("</CLASSINFO>");
+		resultXML.append("</RECINFO>");
+		
+		return resultXML.toString();
+		}
+		catch(Exception e){
+			return "<RESULT>NORECORD</RESULT>";
+		}
+	}
+	
 }

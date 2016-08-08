@@ -1,4 +1,4 @@
-﻿var g_CabListXml;
+﻿﻿var g_CabListXml;
 var bSpecialFlag = "0";
 var g_szSCListXml = "";
 var g_arrSCName = new Array();
@@ -22,12 +22,11 @@ function InitCabinetInfo() {
 }
 
 function InitCabClassInfo(objCabInfoXml) {
-    bSpecialFlag = SelectSingleNodeValue(objCabInfoXml.documentElement, "SCFLAG");
-    g_RecTypeCode = SelectSingleNodeValue(objCabInfoXml.documentElement, "RECTYPE");
-
-    g_arrSCName[0] = SelectSingleNodeValue(objCabInfoXml.documentElement, "SCINFO/LIST1");
-    g_arrSCName[1] = SelectSingleNodeValue(objCabInfoXml.documentElement, "SCINFO/LIST2");
-    g_arrSCName[2] = SelectSingleNodeValue(objCabInfoXml.documentElement, "SCINFO/LIST3");
+    bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
+    g_RecTypeCode = objCabInfoXml.getElementsByTagName("RECTYPE")[0].textContent;
+    g_arrSCName[0] = objCabInfoXml.getElementsByTagName("LIST1")[0].textContent;
+    g_arrSCName[1] = objCabInfoXml.getElementsByTagName("LIST2")[0].textContent;
+    g_arrSCName[2] = objCabInfoXml.getElementsByTagName("LIST3")[0].textContent;
 
     InitRegisterType();
 
@@ -41,53 +40,50 @@ function InitRegisterType() {
     var objRoot, objNode;
 
     objRoot = createNodeInsert(RegTypeCodeXml, objRoot, "REGISTERTYPE");
-
-    var objCodeInfo = createXmlDom();
-    objCodeInfo = loadXMLString(g_CodeInfoXml)
-
     switch (g_RecTypeCode) {
+
         case "1":
             if (ListTypeFlag == "10") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='2']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
             }
             else if (ListTypeFlag == "11") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='1']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             else {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='1']"));
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='2']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             break;
 
         case "2":
             if (ListTypeFlag == "10") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='4']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[3]);
             }
             else if (ListTypeFlag == "11") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='3']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);;
             }
             else {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='3']"));
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='4']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
             }
             break;
 
         case "3":
-            objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='5']"));
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
             break;
 
         case "4":
-            objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='6']"));
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
             break;
 
         case "5":
 
             if (ListTypeFlag == "10" || ListTypeFlag == "0") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='7']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
 
             if (ListTypeFlag == "11" || ListTypeFlag == "0") {
-                objRoot.appendChild(SelectSingleNodeNew(objCodeInfo, "CODELIST/REGISTERTYPE/CODE[CODENUM='8']"));
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
 
             break;
@@ -111,27 +107,35 @@ function InitSCInputBox() {
 }
 
 function InitCode() {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); 
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCodeList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var result = xmlhttp.responseXML;
-    g_CodeInfoXml = getXmlString(result);
-
+    var result = "";
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getCodeList.do",
+		data : {
+			companyID : CompanyID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    g_CodeInfoXml = result;
+    
     if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
         alert(strLang615);
     }
     else {
-        var nodesRegType = SelectNodes(result, "REGISTERTYPE/CODE");
+        var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
+        var nodesRegType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE");
         InitCodeSelectBox(nodesRegType, selRegisterType);
 
-        g_NodesRcdgAVType = SelectNodes(result, "RECORDINGAVTYPE/CODE");
-
-        g_NodesPhotoAVType = SelectNodes(result, "PHOTOAVTYPE/CODE");
+//        g_NodesRcdgAVType = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
+        g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
+        g_NodesRcdgAVType = SelectNodes(result, "CODELIST/RECORDINGAVTYPE/CODE");
+        
+        InitCodeSelectBox(nodesRegType, selRegisterType);
     }
 }
 
@@ -273,7 +277,7 @@ var selectcabinet_cross_dialogArguments = new Array();
 function btnChangeCabinet_onclick() {
     var para = new Array();
     para[0] = g_CabID;
-    var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1";
+    var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
 
     selectcabinet_cross_dialogArguments[0] = para;
     selectcabinet_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;

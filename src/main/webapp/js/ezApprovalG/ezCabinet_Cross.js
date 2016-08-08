@@ -970,7 +970,7 @@ function btnViewRecInfo_onclick() {
         para[0] = selRow[0].getAttribute("DATA6");
         para[1] = selRow[0].getAttribute("DATA8");	
 
-        var url = "/myoffice/ezApprovalG/ezCabinet/ViewRecInfo_Cross.aspx";
+        var url = "/ezApprovalG/viewRecInfo.do";
 
         viewrecinfo_cross_dialogArguments[0] = para;
 
@@ -1432,7 +1432,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
     para[1] = pSepAttNo;	
     para[2] = pDeptCode;	
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/SetRecUserRole_Cross.aspx";
+    var url = "/ezApprovalG/setRecUserRole.do";
 
     setrecuserrole_cross_dialogArguments[0] = para;
 

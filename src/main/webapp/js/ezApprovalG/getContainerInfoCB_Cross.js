@@ -11,12 +11,11 @@ function getDataInfo() {
     switch (jobState) {
    
         case "ATTACH":
-        	 alert(jobState);
-        	pUrl = "/myoffice/ezApprovalG/aspx/getTotalAttachInfo.aspx";
+        	pUrl = "/ezApprovalG/getTotalAttachInfo.do";
             break;
 
         case "OPINION":
-        	pUrl = "/myoffice/ezApprovalG/aspx/getOpinionInfo.aspx";
+        	pUrl = "/ezApprovalG/getOpinionInfo.do";
             break;
 
         case "APPROVAL":
@@ -24,7 +23,7 @@ function getDataInfo() {
             break;
 
         case "RECIPENT":
-        	pUrl = "/myoffice/ezApprovalG/aspx/getReceiptinfo.aspx";
+        	pUrl = "/ezApprovalG/getReceiptinfo.do";
             break;
     }
     $.ajax({

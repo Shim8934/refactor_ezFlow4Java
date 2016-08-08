@@ -174,6 +174,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLVFIELDINFO(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getRecordClassInfo" parameterClass="Map" resultClass="ApprGCabinetVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECORDCLASSINFO(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO">
 		{CALL EZAPPROVALG_$companyID$.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -272,6 +276,14 @@
 	
 	<procedure id="EzApprovalG.getTotalAttachSize" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETTOTALATTACHSIZE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getRecViewer" parameterClass="Map" resultClass="ApprGRecordVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECVIEWER(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getRecReadHistory" parameterClass="Map" resultClass="ApprGHistoryDocVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECREADHISTORY(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.compareLineHistory1" parameterClass="Map" resultClass="ApprGAprLineVO">
@@ -586,6 +598,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSENDOUTDOCLISTCOUNT(#v_MODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getUserRight" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETUSERRIGHT(#v_RECORDID#, #v_SEPATTNO#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
 	</procedure>
@@ -835,4 +851,43 @@
       			userid = #v_PUSERID#
         ]]>
 	</select>
+	
+	<select id ="EzApprovalG.getPublicCodeString" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT EZAPPROVALG_$companyID$.GetPublicityCodeConvert (#pCode#, #lang#) FROM DUAL
+	     ]]> 
+	</select>
+	
+	<delete id="EzApprovalG.deleteRoleInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+        		EZAPPROVALG_$companyID$.TBRECROLEINFO
+        	WHERE
+        		recordid = #v_RECORDID#	
+        	AND
+        	    SeperateAttachNo =#v_SEPATTNO#
+        	    
+	     ]]> 
+	</delete>
+	
+	<insert id ="EzApprovalG.insertRoleInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO	EZAPPROVALG_$companyID$.TBRECROLEINFO  (
+			  RecordID, SeperateAttachNo, UserRight, UserID , UserName, UserName2
+			)Values( 
+			  #v_RECORDID#, #v_SEPATTNO# , #userRight#, 'All_User',  '모든 이용자', 'All User'
+			)
+	     ]]> 
+	</insert>
+	
+	<insert id ="EzApprovalG.insertMultiRoleInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO	EZAPPROVALG_$companyID$.TBRECROLEINFO  (
+			  RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, UserTitle2, DeptCode, DeptName, DeptName2
+			)Values( 
+			  #v_RECORDID#, #v_SEPATTNO# , 'All_User', #userRight# , '모든 이용자', 'All User' , 'a','a','A','b'
+			)
+	     ]]> 
+	</insert>
+
 </sqlMap>

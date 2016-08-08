@@ -96,6 +96,71 @@ public class ApprGRecordVO {
 	/**쪽수*/
 	private String numOfPage;
 	
+	private String userId;
+	private String userRight;
+	private String userName;
+	private String userName2;
+	private String userTitle;
+	private String userTitle2;
+	private String deptCode;
+	private String deptName;
+	private String deptName2;
+	
+	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserRight() {
+		return userRight;
+	}
+	public void setUserRight(String userRight) {
+		this.userRight = userRight;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	public String getUserTitle() {
+		return userTitle;
+	}
+	public void setUserTitle(String userTitle) {
+		this.userTitle = userTitle;
+	}
+	public String getUserTitle2() {
+		return userTitle2;
+	}
+	public void setUserTitle2(String userTitle2) {
+		this.userTitle2 = userTitle2;
+	}
+	public String getDeptCode() {
+		return deptCode;
+	}
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	public String getDeptName2() {
+		return deptName2;
+	}
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
 	public String getRecordID() {
 		return recordID;
 	}

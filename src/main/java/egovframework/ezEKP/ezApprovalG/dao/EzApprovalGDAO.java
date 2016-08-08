@@ -854,4 +854,40 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		// TODO Auto-generated method stub
 		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordInfo", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> getRecViewer(Map<String, Object> map) throws Exception{
+		return (List<ApprGRecordVO>) list("EzApprovalG.getRecViewer", map);
+	}
+	@SuppressWarnings("unchecked")
+	public List<ApprGHistoryDocVO> getRecReadHistory(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		return (List<ApprGHistoryDocVO>) list("EzApprovalG.getRecReadHistory", map);
+	}
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> getRecordClassInfo(Map<String, Object> map) throws Exception{
+		// TODO Auto-generated method stub
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getRecordClassInfo", map);
+	}
+	public void deleteRoleInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteRoleInfo", map);
+	}
+
+	public void insertRoleInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertRoleInfo", map);
+	}
+
+	public void insertMultiRoleInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertMultiRoleInfo", map);
+	}
+
+	public String getPublicCodeString(Map<String, Object> map)throws Exception{
+		return (String)select("EzApprovalG.getPublicCodeString", map);
+	}
+	
+	public int getUserRight(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getUserRight", map);
+		return (int)map.get("v_pCount");
+	}
+	
 }

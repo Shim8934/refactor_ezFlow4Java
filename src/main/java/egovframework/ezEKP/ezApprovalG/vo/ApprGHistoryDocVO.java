@@ -27,6 +27,26 @@ public class ApprGHistoryDocVO {
 	private String changeDate;
 	/** 사용안함*/
 	private String chkFlag;
+	/**년번*/
+	private String serialNo;
+	/** 사용자 id*/
+	private String userId;
+	/** 사용자 이름*/
+	private String userName;
+	/** 사용자 이름 다국어*/
+	private String userName2;
+	/** 사용자 직위*/
+	private String userTitle;
+	/** 사용자 직위 다국어*/
+	private String userTitle2;
+	/** 사용자 부서 코드*/
+	private String deptCode;
+	/** 사용자 부서 이름*/
+	private String deptName;
+	/** 사용자 부서 이름 다국어*/
+	private String deptName2;
+	/** 조회 일자*/
+	private String readDate;
 	
 	public String getDocID() {
 		return docID;
@@ -105,6 +125,66 @@ public class ApprGHistoryDocVO {
 	}
 	public void setChkFlag(String chkFlag) {
 		this.chkFlag = chkFlag;
+	}
+	public String getSerialNo() {
+		return serialNo;
+	}
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	public String getUserTitle() {
+		return userTitle;
+	}
+	public void setUserTitle(String userTitle) {
+		this.userTitle = userTitle;
+	}
+	public String getUserTitle2() {
+		return userTitle2;
+	}
+	public void setUserTitle2(String userTitle2) {
+		this.userTitle2 = userTitle2;
+	}
+	public String getDeptCode() {
+		return deptCode;
+	}
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	public String getDeptName2() {
+		return deptName2;
+	}
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+	public String getReadDate() {
+		return readDate;
+	}
+	public void setReadDate(String readDate) {
+		this.readDate = readDate;
 	}
 
 }

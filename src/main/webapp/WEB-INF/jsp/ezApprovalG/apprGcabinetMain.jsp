@@ -85,7 +85,7 @@
 	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
 	    var CompanyID = "${userInfo.companyID}";
         var g_DeptInfo = "${deptInfo}";
-	    var useOcs = "${useOcs}";
+	    var USE_OCS = "${useOcs}";
 	    var Udomain = "${userEmail}";
         var UserLang = "${userInfo.lang}";
         var g_DeliveryXmlhttp = createXMLHttpRequest();
@@ -895,7 +895,7 @@
             para[1] = ListTypeFlag;
 
             if (CrossYN() || NonActiveX == "YES") {
-                var url = "/myoffice/ezApprovalG/ezCabinet/RegRecord_Cross.aspx?SelCabXml=" + g_SelCabXml + "&TypeFlag=" + ListTypeFlag;
+                var url = "/ezApprovalG/regRecord.do?SelCabXml=" + g_SelCabXml + "&TypeFlag=" + ListTypeFlag;
 
                 var wWeight = "";
                 var wHeight = "";
@@ -922,9 +922,10 @@
                 } 
                 if (url != "")
                     var ret = window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+                    GetRecordList();
             }
             else {
-                var url = "/myoffice/ezApprovalG/ezCabinet/RegRecord.aspx";
+                var url = "/ezApprovalG/regRecord.do";
 
                 if ("${userInfo.lang}" == "1")
               { 
@@ -938,12 +939,9 @@
                     var rtn = window.showModalDialog(url, para, feature);
 
                 if (rtn[0] == "TRUE") {
-                    GetRecordList();
+                   GetRecordList();
                 }
             }
-            //if (rtn[0] == "TRUE") {
-            //    GetRecordList();
-            //}
         }
     var regsepattach_cross_dialogArguments = new Array();
     function btnRegAttach_onclick() {
@@ -980,12 +978,12 @@
 
         var para = new Array();
         var rtn;
-        var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=0";
+        var url = "/ezApprovalG/selectCabinet.do?initFlag=0";
 
         selectcabinet_cross_dialogArguments[0] = para;
         selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 
-        var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(850, 460));
+        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(850, 460));
         try { OpenWin.focus(); } catch (e) { }
     }
 
@@ -1143,7 +1141,7 @@
             var para = new Array();
             para[0] = tr.getAttribute("DATA1");
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/ViewRecReadHistory_Cross.aspx";
+            var url = "/ezApprovalG/viewRecReadHistory.do";
 
             viewrecreadhistory_cross_dialogArguments[0] = para;
 
