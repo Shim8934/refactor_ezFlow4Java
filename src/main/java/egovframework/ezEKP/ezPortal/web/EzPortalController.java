@@ -1051,10 +1051,11 @@ System.out.println("portalPageXml:"+portalPageXml);
 	@RequestMapping(value = "/ezPortal/wpNewCommunity.do")
 	public String wpNewCommunity(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-	
+		String strHTML = ezPortalService.addBestTable(userInfo);
 		
 		try {
 			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("strHTML", strHTML);
 			return "/ezPortal/portalWpNewCommunity";
 		} catch (Exception e) {
 			return "";

@@ -293,6 +293,10 @@
 		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET3_PHO(#v_PPARENTWRITEDATE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.getCateDetailViewGet4"		parameterClass="Map"		resultClass="CommunityCClubUserVO">
+		{CALL EZCOMMUNITY.EZSP_CATE_DETAIL_VIEW_GET4(#v_STRNO#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>

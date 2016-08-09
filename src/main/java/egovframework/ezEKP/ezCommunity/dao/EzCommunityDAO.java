@@ -400,6 +400,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityClubVO) select("EzCommunityDAO.boardItemListPhotoGet1", map);
 	}
 	
+	public CommunityCClubUserVO getCateDetailViewGet4(Map<String, Object> map) throws Exception {
+		return (CommunityCClubUserVO) select("EzCommunityDAO.getCateDetailViewGet4", map);
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
