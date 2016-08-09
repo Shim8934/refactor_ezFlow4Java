@@ -63,7 +63,7 @@
 					},
 					success: function(result){
 						if (result == "ERR" || clubgubun == "1") {
-							OpenAlertUI("<spring:message code='ezHome.t1004' /><br><spring:message code='ezHome.t1005' />", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
+							OpenAlertUI("<spring:message code='ezHome.t1004'/><br><spring:message code='ezHome.t1005'/>", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
 						} else {
 							var wWeight = "1300";
 			                var wHeight = "900";
@@ -86,6 +86,7 @@
 
 	            if (CrossYN()) {
 	                ezapralert_cross_dialogArguments[0] = parameter;
+
 	                if (NewWinCallFunction != undefined || NewWinCallFunction != null)
 	                    ezapralert_cross_dialogArguments[1] = CompleteFunction;
 	                else
@@ -93,6 +94,7 @@
 
 	                var windowopenfeature = "height=205px,width=330px,status=no,toolbar=no,menubar=no,location=no,resizable=1";
 	                windowopenfeature = windowopenfeature + GetOpenPosition(205, 330);
+
 	                window.open("/ezCommunity/ezAprAlert.do", NewWinName, windowopenfeature);
 	            } else {
 	                var windowshomodalDialogfeature = "status:no;dialogWidth:330px;dialogHeight:207px;help:no;scroll:no;edge:sunken";
@@ -116,7 +118,7 @@
                 	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='ezHome.t1008' />" >
             	</span>
         	</div>
-        	<div id="tblBest" class="communitycont" runat="server"></div>
+        	<div id="tblBest" class="communitycont" runat="server">${strHTML}</div>
         	<div class="guide"><span class="lb"></span><span class="rb"></span></div>
     	</article>
 	</body>	
