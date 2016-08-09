@@ -582,7 +582,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
+
 			map.put("v_MAINID", groupID);
 			map.put("companyID", companyID);
 			
@@ -598,8 +598,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
-			Map<String, Object> map = new HashMap<String, Object>();
 			
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_CATETYPE", categoryType);
 			map.put("v_PARENTID", parentID);
 			map.put("companyID", companyID);
@@ -648,7 +648,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String langType = doc.getElementsByTagName("LANGTYPE").item(0).getTextContent();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_SUBCATECODE", pSCateCode);
 		map.put("companyID", companyID);
 		
@@ -669,7 +668,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
 		map.put("companyID", companyID);
@@ -718,7 +716,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
 		map.put("companyID", companyID);
@@ -745,7 +742,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				return "EXIST";
 			} else {
 				Map<String, Object> map = new HashMap<String, Object>();
-				
 				map.put("v_CATETYPE", categoryType);
 				map.put("v_CATECODE", categoryCode);
 				map.put("companyID", companyID);
@@ -763,7 +759,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_TASKCODE", taskCode);
 		map.put("companyID", companyID);
 		
@@ -783,7 +778,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_DEPTCODE", pDeptCode);
 		map.put("v_TASKCODE", pTaskCode);
 		map.put("companyID", companyID);
@@ -810,7 +804,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		try {
 			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID).equals("TRUE")) {
 				Map<String, Object> map = new HashMap<String, Object>();
-				
 				map.put("v_TASKCODE", vo.getTaskCode());
 				map.put("companyID", companyID);
 				
@@ -844,7 +837,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}
                 
                 Map<String, Object> map1 = new HashMap<String, Object>();
-                
                 map1.put("v_TASKCODE", vo.getTaskCode());
                 map1.put("v_TASKNAME", vo.getTaskName());
                 map1.put("v_TASKNAME2", vo.getTaskName2());
@@ -873,7 +865,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 }
                 
                 Map<String, Object> map2 = new HashMap<String, Object>();
-                
                 map2.put("v_TASKCODE", vo.getTaskCode());
                 map2.put("v_TASKNAME", vo.getTaskName());
                 map2.put("v_TASKNAME2", vo.getTaskName2());
@@ -905,7 +896,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_TASKCODE", taskCode);
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
@@ -932,7 +922,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				return "EXIST";
 			} else {
 				Map<String, Object> map = new HashMap<String, Object>();
-				
 				map.put("v_TASKCODE", taskCode);
 				map.put("companyID", companyID);
 				
@@ -945,7 +934,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}
 				
 				Map<String, Object> map1 = new HashMap<String, Object>();
-				
 				map1.put("taskCode", taskCode);
 				map1.put("now", EgovDateUtil.getCurrentDate("-"));
 				map1.put("companyID", companyID);
@@ -964,7 +952,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LISTTYPE", "102");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
@@ -985,7 +972,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</HEADERS><ROWS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
 		map1.put("v_TASKCODE", taskCode);
 		map1.put("companyID", companyID);
 		
@@ -1000,7 +986,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<VALUE>" + (lang.equals("1") ? vo.getProcessDeptName() : vo.getProcessDeptName2()) + "</VALUE>");
 			sb.append("</CELL></ROW>");
 		}
-		
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
 		return sb.toString();
@@ -1010,7 +995,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_TASKCODE", taskCode);
 			map.put("companyID", companyID);
 			
@@ -1023,7 +1007,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			
 			Map<String, Object> map1 = new HashMap<String, Object>();
-			
 			map1.put("v_TASKCODE", taskCode);
 			map1.put("v_DEPTCODE", deptCode);
 			map1.put("v_pCount", 0);
@@ -1032,7 +1015,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			Integer tempCount = ezApprovalGAdminDAO.getTaskCodeDeptCnt(map1);
 
 			Map<String, Object> map2 = new HashMap<String, Object>();
-			
 			map2.put("taskCode", taskCode);
 			map2.put("deptCode", deptCode);
 			map2.put("deptName", deptName);
@@ -1044,6 +1026,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			} else {
 				ezApprovalGAdminDAO.insertDeptInfo(map2);
 			}
+			
 			return "TRUE";
 		} catch(Exception e) {
 			return "FALSE";
@@ -1054,7 +1037,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_TASKCODE", taskCode);
 			map.put("companyID", companyID);
 			
@@ -1067,7 +1049,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			
 			Map<String, Object> map1 = new HashMap<String, Object>();
-			
 			map1.put("taskCode", taskCode);
 			map1.put("deptCode", deptCode);
 			map1.put("companyID", companyID);
@@ -1085,7 +1066,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LISTTYPE", "093");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
@@ -1105,7 +1085,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</HEADERS><ROWS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
 		map1.put("v_TASKCODE", taskCode);
 		map1.put("v_LANGTYPE", lang);
 		map1.put("companyID", companyID);
@@ -1133,7 +1112,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			sb.append("</ROW>");
 		}
-		
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
 		return sb.toString();
@@ -1143,8 +1121,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
-			Map<String, Object> map = new HashMap<String, Object>();
 			
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DEPTCODE", deptCode);
 			map.put("companyID", companyID);
 
@@ -1155,7 +1133,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			for (ApprGTaskVO vo : list) {
 				sb.append(commonUtil.getQueryResult(vo));
 			}
-
 			sb.append("</DATA>");
 			
 			String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType);
@@ -1169,8 +1146,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getSealList(String listFlag, String companyID, String lang) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTFLAG", listFlag);
 		map.put("v_PMULTIDATA", lang);
 		map.put("companyID", companyID);
@@ -1213,7 +1190,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String deleteSealInfo(String pSealNum, String companyID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_SEALNUM", pSealNum);
 			map.put("companyID", companyID);
 			
@@ -1229,7 +1205,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID) throws Exception {
 		try{
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_SEALNAME", pSealName);
 			map.put("v_SEALPATH", pSealPath);
@@ -1251,8 +1226,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getSealDeptlList(String listFlag, String deptID, String companyID, String lang) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTFLAG", listFlag);
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
@@ -1290,7 +1265,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception {
 		try{
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_SEALNAME", pSealName);
 			map.put("v_SEALPATH", pSealPath);
@@ -1314,7 +1288,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_DEPTID", deptID);
 			map.put("companyID", companyID);
@@ -1332,7 +1305,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LISTTYPE", "108");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
@@ -1367,7 +1339,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String szTo = eYear + "-" + eMonth;
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
 		map1.put("v_MODE", pMode);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
@@ -1397,9 +1368,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception {
 		StringBuilder sb = new StringBuilder();
-
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "107");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
@@ -1459,7 +1429,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String szTo = eYear + "-" + eMonth;
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
 		map1.put("v_APRTYPE", aprType);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
@@ -1511,7 +1480,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LISTTYPE", "081");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
@@ -1542,7 +1510,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</HEADERS><ROWS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
 		map1.put("v_SUBQUERY", subQuery);
 		map1.put("v_DOCNUMBER", docNumber);
 		map1.put("v_DOCTITLE", docTitle);
@@ -1569,7 +1536,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		
 		map2.put("v_SUBQUERY", subQuery);
 		map2.put("v_PAGESIZE", querySize);
 		map2.put("v_PAGESIZE2", querySize2);
@@ -1645,8 +1611,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String setFormOrder(String formContID, String formIDList, String companyID) throws Exception {
 		try {
 			int formListCount = formIDList.split(";").length;
-			Map<String, Object> map = new HashMap<String, Object>();
 			
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pFORMIDLIST", formIDList);
 			map.put("v_pFORMLISTCOUNT", formListCount);
 			map.put("v_pFORMCONTID", formContID);
@@ -1665,19 +1631,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		contParent = (contParent.equals("") ? "ROOT" : contParent);
 		contDept = (contDept.equals("") ? " " : contDept);
 		
-		String pID = ezApprovalGAdminDAO.insertFormContainerConti(companyID);
-		pID = (pID == null ? "null" : pID);
+		String contID = ezApprovalGAdminDAO.insertFormContainerConti(companyID);
+		contID = (contID == null ? "null" : contID);
 		
-		if (pID.substring(0,  4).equals(EgovDateUtil.getToday("-").substring(0, 4))) {
-			int tempID = Integer.parseInt(pID) + 1;
-			pID = Integer.toString(tempID);
+		if (contID.substring(0,  4).equals(EgovDateUtil.getToday("-").substring(0, 4))) {
+			int tempID = Integer.parseInt(contID) + 1;
+			contID = Integer.toString(tempID);
 		} else {
-			pID = EgovDateUtil.getToday("-").substring(0, 4) + "000001";
+			contID = EgovDateUtil.getToday("-").substring(0, 4) + "000001";
 		}
 		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("pID", pID);
+			map.put("contID", contID);
 			map.put("contName", contName);
 			map.put("contName2", contName2);
 			map.put("contDept", contDept);
@@ -1689,7 +1655,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!contDept.equals("ALL")) {
 				Map<String, Object> map2 = new HashMap<String, Object>();
-				map2.put("pID", pID);
+				map2.put("contID", contID);
 				map2.put("companyID", companyID);
 				
 				for(String deptID : deptList.split(";")) {
@@ -1699,7 +1665,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}
 			}
 			
-			return "<PARAMETER><FContID>" + pID + "</FContID></PARAMETER>";
+			return "<PARAMETER><FContID>" + contID + "</FContID></PARAMETER>";
 		} catch(Exception e) {
 			return "<PARAMETER><FContID>FALSE</FContID></PARAMETER>";
 		}
@@ -1736,9 +1702,61 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return sb.toString();
 	}
 
+	@Override
+	public String updateFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String contID, String deptList, String companyID) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("contName", contName);
+			map.put("contName2", contName2);
+			map.put("contDept", contDept);
+			map.put("contParent", contParent);
+			map.put("contID", contID);
+			map.put("contDescript", contDescript);
+			map.put("companyID", companyID);
+			
+			ezApprovalGAdminDAO.updateFormContainer(map);
+			
+			if (!contDept.equals("ALL")) {
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("contID", contID);
+				map2.put("companyID", companyID);
+				
+				ezApprovalGAdminDAO.deleteFormContUserGroup(map2);
+				
+				Map<String, Object> map3 = new HashMap<String, Object>();
+				map3.put("contID", contID);
+				map3.put("companyID", companyID);
+
+				for(String deptID : deptList.split(";")) {
+					map3.put("deptID", deptID);
+
+					ezApprovalGAdminDAO.insertFormContainerGroup(map3);
+				}
+			}
+			
+			return "<PARAMETER><RTNVALUE>" + contID + "</RTNVALUE></PARAMETER>";
+		} catch(Exception e) {
+			return "<PARAMETER><RTNVALUE>FALSE</RTNVALUE></PARAMETER>";
+		}
+	}
+
+	@Override
+	public String deleteFormContainer(String contID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FORMCONTID", contID);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGAdminDAO.deleteFormContainer(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_APPLYDATE", EgovDateUtil.getCurrentDate("-"));
 		map.put("v_TASKCODE", taskCode);
 		map.put("v_TASKNAME", taskName);

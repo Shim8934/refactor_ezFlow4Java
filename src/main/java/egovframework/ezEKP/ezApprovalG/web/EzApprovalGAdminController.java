@@ -239,10 +239,27 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contDescript = request.getParameter("fContDescript");
 		String contParent = request.getParameter("fContParent");
 		String contDept = request.getParameter("fContDept");
+		String contID = request.getParameter("fContID");
 		String deptList = request.getParameter("deptList");
 		String companyID = request.getParameter("companyID");
+
+		String result = ezApprovalGAdminService.updateFormContainer(contName, contName2, contDescript, contParent, contDept, contID, deptList, companyID);
 		
-		return "";
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식함삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delFormCont.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String delFormCont(HttpServletRequest request) throws Exception {
+		String contID = request.getParameter("id");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.deleteFormContainer(contID, companyID);
+		
+		return result;
 	}
 	///////////////////////
 	

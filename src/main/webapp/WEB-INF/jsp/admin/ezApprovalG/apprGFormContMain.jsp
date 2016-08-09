@@ -24,6 +24,85 @@
 			var gParantName2 = "";
 			var gMultiDataNum = "";
 			
+			//ShowModalDialog Chrome 적용
+			(function() {
+				window._smdName = window._smdName || Math.round(Math.random() * 1000000000);
+				window.spawn = window.spawn || function(gen) {
+					function continuer(verb, arg) {
+			    		var result;
+				    	
+				      	try {
+				        	result = generator[verb](arg);
+				      	} catch (err) {
+				        return Promise.reject(err);
+				      	}
+				      	
+				      	if (result.done) {
+				        	return result.value;
+				      	} else {
+				        	return Promise.resolve(result.value).then(onFulfilled, onRejected);
+				      	}
+				    }
+					
+			    	var generator = gen();
+				    var onFulfilled = continuer.bind(continuer, 'next');
+				    var onRejected = continuer.bind(continuer, 'throw');
+				    
+				    return onFulfilled();
+				};
+				  
+				window.showModalDialog = window.showModalDialog || function(url, arg, opt) {
+					url = url || '';                                         // URL of a dialog
+				    arg = arg || null ;                                      // arguments to a dialog
+				    opt = opt || 'dialogWidth: 300px; dialogHeight: 200px';  // options: dialogTop;dialogLeft;dialogWidth;dialogHeight or CSS styles
+				    opt = opt
+				      .replace(/dialog/gi, '')                               // remove all of dialog strings
+				      .replace(/ /g, '')                                     // remove all blank characters
+				      .replace(/:/g, '= ')                                   // replace all of ':' to '= '
+				      .replace(/,|;/g, ', ')                                 // replace all of ',' or ';' to ', '
+				      .replace(/width/gi, 'width')                           // replace all 'width' to lowercase
+				      .replace(/height/gi, 'height')                         // replace all 'height' to lowercase
+				      .replace(/(\d+)px/g, '$1');                            // remove all of 'px'
+				    console.log(opt);
+				    var caller = showModalDialog.caller.toString();
+				    var dialog = window.open(url, 'smd_dialog_' + window._smdName, opt, false);
+				    dialog.dialogArguments = arg;
+				    dialog.addEventListener('unload', function(e) {
+				    	e.preventDefault();
+				    });
+				    // if using yield
+				    if (caller.indexOf('yield') >= 0) {
+				    	return new Promise(function(resolve, reject) {
+				        	dialog.addEventListener('unload', function() {
+				          		var returnValue = dialog.returnValue;
+				          		resolve(returnValue);
+				        	});
+				      	});
+				    }
+				    // if using eval
+				    var isNext = false;
+				    var nextStmts = caller
+				    	.replace(/(window\.)?showModalDialog\([^)]+\)/g, 'showModalDialog(%%%%%%%)')
+				      	.split('\n')
+				      	.filter(function(stmt) {
+				      		if (isNext || stmt.indexOf('showModalDialog(') >= 0)
+				          		return isNext = true;
+				        	return false;
+				      	});
+				    	var unloadEventHandler = function() {
+				        
+				    		if (dialog.location.href == 'about:blank') {
+				            	return setTimeout(function() { dialog.addEventListener('unload', unloadEventHandler); }, 250);
+				        	}
+				        	var returnValue = dialog.returnValue;
+				        	nextStmts[0] = nextStmts[0].replace(/(window\.)?showModalDialog\(%%%%%%%\)/g, JSON.stringify(returnValue));
+				        	eval('{\n' + nextStmts.join('\n'));
+				        };
+				    	dialog.addEventListener('unload', unloadEventHandler);
+				    	throw 'Execution stopped until showModalDialog is closed';
+				};
+			})();
+			
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {
 			        window.focus();
@@ -77,6 +156,7 @@
 			    	document.getElementById("rdGroup").checked = true;
 			        rdGroup_onclick();
 			        document.getElementById("tbManage").value = Para[6];
+			        gManageID = Para[3];
 			        
 			        $.ajax({
 			        	type : "POST",
@@ -177,28 +257,6 @@
 			}
 			
 			function UpFcontTotal() {
-			    /* var xmlpara = createXmlDom();
-			    var xmlRtn = createXmlDom(); //결과값 처리
-			
-			    var objNode;
-			    var objRoot = createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    objRoot.setAttribute("COMPANYID", companyID);
-			    createNodeAndInsertText(xmlpara, objNode, "FContName", document.getElementById("tbFormContName").value);            //양식함 이름 (Primary)
-			    createNodeAndInsertText(xmlpara, objNode, "FContDescript", document.getElementById("tbDescript").value);                  //양식함 설명
-			    createNodeAndInsertText(xmlpara, objNode, "FContparant", gParant);                             //상위양식함ID
-			    createNodeAndInsertText(xmlpara, objNode, "FContDept", "ALL");                                  // 관리 부서ID    
-			    createNodeAndInsertText(xmlpara, objNode, "FContID", document.getElementById("tbFormContID").value);                    //양식함 ID
-			    createNodeAndInsertText(xmlpara, objNode, "FContName2", document.getElementById("tbFormContName2").value);        //양식함 이름 (Secondary)
-			
-			    xmlhttp.open("POST", "aspx/Set_FormCont_Mod.aspx", false);
-			    xmlhttp.send(xmlpara);
-			    xmlRtn = loadXMLString(xmlhttp.responseText);
-			
-			    if (xmlhttp.responseText.indexOf("FALSE") > -1) {
-			        RtnState = false;
-			    } else {
-			        RtnState = true;
-			    } */
 			    $.ajax({
 			    	type : "POST",
 			    	url : "/admin/ezApprovalG/setFormContMod.do",
@@ -206,11 +264,11 @@
 			    	data : {fContName : document.getElementById("tbFormContName").value, //양식함 이름 (Primary)
 			    			fContName2 : document.getElementById("tbFormContName2").value, //양식함 이름(다국어)
 			    			fContDescript : document.getElementById("tbDescript").value, //양식함 설명
-			    			fContparent : gParant, //상위양식함ID
+			    			fContParent : gParant, //상위양식함ID
 			    			fContDept : "ALL", //관리부서 ID
 			    			fContID : document.getElementById("tbFormContID").value, //양식함 ID
 			    			companyID : companyID},
-			    	syccess : function(result) {
+			    	success : function(result) {
 			    		if (result.indexOf("FALSE") > -1) {
 					        RtnState = false;
 					    } else {
@@ -221,36 +279,33 @@
 			}
 			
 			function UpFContGroup() {
-			    var xmlpara = createXmlDom();
-			    var xmlRtn = createXmlDom(); //결과값 처리
-			    var ParaName, ParaValue;
-			
-			    var objNode;
-			    var objRoot = createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    objRoot.setAttribute("COMPANYID", companyID);
-			    createNodeAndInsertText(xmlpara, objNode, "FContName", document.getElementById("tbFormContName").value);            //양식함 이름
-			    createNodeAndInsertText(xmlpara, objNode, "FContDescript", document.getElementById("tbDescript").value);                  //양식함 설명
-			    createNodeAndInsertText(xmlpara, objNode, "FContparant", gParant);                             //상위양식함ID
-			    createNodeAndInsertText(xmlpara, objNode, "FContDept", gManageID);                          // 관리 부서ID    
-			    createNodeAndInsertText(xmlpara, objNode, "FContID", document.getElementById("tbFormContID").value);                    //양식함 ID
-			    createNodeAndInsertText(xmlpara, objNode, "FContName2", document.getElementById("tbFormContName2").value);        //양식함 이름 (Secondary)
-			
 			    var Count = document.getElementById("selDept").length;
+			    var selDept = "";
 			    for (var i = 0; i < Count; i++) {
-			        ParaName = "Dept" + i;
-			        ParaValue = document.getElementById("selDept").item(i);
-			        createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+			        ParaValue = document.getElementById("selDept").item(i).value;
+			        selDept += ParaValue + ";";
 			    }
 			    
-			    xmlhttp.open("POST", "aspx/Set_FormCont_Mod.aspx", false);
-			    xmlhttp.send(xmlpara);
-			    xmlRtn = loadXMLString(xmlhttp.responseText);
-			
-			    if (xmlhttp.responseText.indexOf("FALSE") > -1) {
-			        RtnState = false;
-			    } else {
-			        RtnState = true;
-			    }
+				$.ajax({
+			    	type : "POST",
+			    	url : "/admin/ezApprovalG/setFormContMod.do",
+			    	async : false,
+			    	data : {fContName : document.getElementById("tbFormContName").value, //양식함 이름 (Primary)
+			    			fContName2 : document.getElementById("tbFormContName2").value, //양식함 이름(다국어)
+			    			fContDescript : document.getElementById("tbDescript").value, //양식함 설명
+			    			fContParent : gParant, //상위양식함ID
+			    			fContDept : gManageID, //관리부서 ID
+			    			fContID : document.getElementById("tbFormContID").value, //양식함 ID
+			    			deptList : selDept, //선택된부서
+			    			companyID : companyID},
+			    	success : function(result) {
+			    		if (result.indexOf("FALSE") > -1) {
+			    			RtnState = false;
+					    } else {
+					    	RtnState = true;
+					    }
+			    	}
+			    });
 			}
 			
 			function initTreeInfo() {

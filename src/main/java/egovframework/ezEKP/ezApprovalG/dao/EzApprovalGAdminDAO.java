@@ -96,6 +96,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getGroupDept(Map<String, Object> map) {
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getGroupDept", map);
+	}
+	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
 	}
@@ -272,9 +277,18 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 
 
-	@SuppressWarnings("unchecked")
-	public List<ApprGFormVO> getGroupDept(Map<String, Object> map) {
-		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getGroupDept", map);
+	
+
+	public void updateFormContainer(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.updateFormContainer", map);
+	}
+
+	public void deleteFormContUserGroup(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteFormContUserGroup", map);
+	}
+
+	public void deleteFormContainer(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteFormContainer", map);
 	}
 
 

@@ -27,6 +27,85 @@
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
 		    var OrderCell = "";
 		    
+		  	//ShowModalDialog Chrome 적용
+			(function() {
+				window._smdName = window._smdName || Math.round(Math.random() * 1000000000);
+				window.spawn = window.spawn || function(gen) {
+					function continuer(verb, arg) {
+			    		var result;
+				    	
+				      	try {
+				        	result = generator[verb](arg);
+				      	} catch (err) {
+				        return Promise.reject(err);
+				      	}
+				      	
+				      	if (result.done) {
+				        	return result.value;
+				      	} else {
+				        	return Promise.resolve(result.value).then(onFulfilled, onRejected);
+				      	}
+				    }
+					
+			    	var generator = gen();
+				    var onFulfilled = continuer.bind(continuer, 'next');
+				    var onRejected = continuer.bind(continuer, 'throw');
+				    
+				    return onFulfilled();
+				};
+				  
+				window.showModalDialog = window.showModalDialog || function(url, arg, opt) {
+					url = url || '';                                         // URL of a dialog
+				    arg = arg || null ;                                      // arguments to a dialog
+				    opt = opt || 'dialogWidth: 300px; dialogHeight: 200px';  // options: dialogTop;dialogLeft;dialogWidth;dialogHeight or CSS styles
+				    opt = opt
+				      .replace(/dialog/gi, '')                               // remove all of dialog strings
+				      .replace(/ /g, '')                                     // remove all blank characters
+				      .replace(/:/g, '= ')                                   // replace all of ':' to '= '
+				      .replace(/,|;/g, ', ')                                 // replace all of ',' or ';' to ', '
+				      .replace(/width/gi, 'width')                           // replace all 'width' to lowercase
+				      .replace(/height/gi, 'height')                         // replace all 'height' to lowercase
+				      .replace(/(\d+)px/g, '$1');                            // remove all of 'px'
+				    console.log(opt);
+				    var caller = showModalDialog.caller.toString();
+				    var dialog = window.open(url, 'smd_dialog_' + window._smdName, opt, false);
+				    dialog.dialogArguments = arg;
+				    dialog.addEventListener('unload', function(e) {
+				    	e.preventDefault();
+				    });
+				    // if using yield
+				    if (caller.indexOf('yield') >= 0) {
+				    	return new Promise(function(resolve, reject) {
+				        	dialog.addEventListener('unload', function() {
+				          		var returnValue = dialog.returnValue;
+				          		resolve(returnValue);
+				        	});
+				      	});
+				    }
+				    // if using eval
+				    var isNext = false;
+				    var nextStmts = caller
+				    	.replace(/(window\.)?showModalDialog\([^)]+\)/g, 'showModalDialog(%%%%%%%)')
+				      	.split('\n')
+				      	.filter(function(stmt) {
+				      		if (isNext || stmt.indexOf('showModalDialog(') >= 0)
+				          		return isNext = true;
+				        	return false;
+				      	});
+				    	var unloadEventHandler = function() {
+				        
+				    		if (dialog.location.href == 'about:blank') {
+				            	return setTimeout(function() { dialog.addEventListener('unload', unloadEventHandler); }, 250);
+				        	}
+				        	var returnValue = dialog.returnValue;
+				        	nextStmts[0] = nextStmts[0].replace(/(window\.)?showModalDialog\(%%%%%%%\)/g, JSON.stringify(returnValue));
+				        	eval('{\n' + nextStmts.join('\n'));
+				        };
+				    	dialog.addEventListener('unload', unloadEventHandler);
+				    	throw 'Execution stopped until showModalDialog is closed';
+				};
+			})();
+		    
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function() {
 		          window.focus();
@@ -200,7 +279,7 @@
 		    }
 	
 		    function DelFCont() {
-		        var xmlpara = createXmlDom();
+		       /*  var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -217,7 +296,7 @@
 		                listview.LoadFromID("lvtForm");
 	
 		                var Rows = listview.GetDataRows();
-		                if (Rows[0].id.indexOf('TR_noItems') > 0) {	
+		                if (Rows[0].id.indexOf('TR_noItems') > 0) {
 		                    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
 		                    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
 	
@@ -239,23 +318,60 @@
 		            } else {
 		                window.alert("<spring:message code = 'ezApprovalG.t1614' />");
 		            }
+		        } */
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+
+		        var nodeIdx = treeView.GetSelectNode();
+		        if (nodeIdx != null) {
+		            var ID = nodeIdx.GetNodeData("DATA1");
+
+		            if (!CheckSubFormCont(ID, nodeIdx)) {
+		                var listview = new ListView();
+		                listview.LoadFromID("lvtForm");
+	
+		                var Rows = listview.GetDataRows();
+
+		                if (Rows[0].id.indexOf('TR_noItems') > 0) {
+		                    var tempRet = "";
+
+		                	$.ajax({
+		                    	type : "POST",
+		                    	url : "/admin/ezApprovalG/delFormCont.do",
+		                    	async : false,
+		                    	data : {id : ID, companyID : companyID},
+		                    	success : function(result) {
+		                    		tempRet = result;
+		                    	}
+		                    });
+	
+		                    if (tempRet == "TRUE") {
+		                        Tree_setconfig();
+		                        InitFormCont();
+		                    } else {
+		                        window.alert("<spring:message code = 'ezApprovalG.t1615' />");
+		                    }
+		                } else {
+		                    window.alert("<spring:message code = 'ezApprovalG.t1613' />");
+		                }
+		            } else {
+		                window.alert("<spring:message code = 'ezApprovalG.t1614' />");
+		            }
 		        }
 		    }
 	
 		    function CheckSubFormCont(ID, pNodeIdx) {
-		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
-	
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-		        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-	
-		        xmlhttp.open("POST", "aspx/Get_FormContinfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-	
-		        xmlRtn = loadXMLString(xmlhttp.responseText);
-	
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/getFormContInfo.do",
+		        	async : false,
+		        	data : {id : ID, companyID : companyID},
+		        	success : function(result) {
+		        		xmlRtn = result;
+		        	}
+		        });
+		        
 		        if (SelectNodes(xmlRtn, "NODES/NODE").length > 0) {
 		            return true;
 		        }
@@ -272,7 +388,7 @@
 		        if (nodeIdx != null) {
 		            if (nodeIdx.GetNodeData("DATA1") != "ROOT") {
 		                var url = "";
-		               <%--  if("<%= isHWP %>" == "true") {
+		                <%-- if("<%= isHWP %>" == "true") {
 		                    url = "/myoffice/ezApprovalG/ezViewHWP/FormMain_HWP.aspx?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
 		                } else {
 		                    url = "FormMain.aspx?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
@@ -414,7 +530,6 @@
 		        	async : false,
 		        	data : {formContID : nodeIdx.GetNodeData("DATA1"), boardIDList : strFormList, companyID : companyID},
 		        	success : function(result) {
-		        		alert(result);
 		        		if (result == "OK") {
 				            alert("<spring:message code = 'ezApprovalG.t1581' />");
 				        } else {

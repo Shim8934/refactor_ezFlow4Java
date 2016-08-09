@@ -100,9 +100,17 @@ public interface EzApprovalGAdminService {
 	
 	public String insertFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String deptList, String companyID) throws Exception;
 	
+	public String getGroupDept(String contID, String lang, String companyID) throws Exception;
+	
+	public String updateFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String contID, String deptList, String companyID) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
-	public String getGroupDept(String contID, String lang, String companyID) throws Exception;
+	
+
+	
+
+	public String deleteFormContainer(String contID, String companyID) throws Exception;
 
 	
 }
