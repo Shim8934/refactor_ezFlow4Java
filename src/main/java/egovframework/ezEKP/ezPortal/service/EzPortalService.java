@@ -161,6 +161,8 @@ public interface EzPortalService {
 	
 	public String getBoardProperty (String pBoardID, String lang) throws Exception;
 	
+	public String addBestTable (LoginVO userInfo) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
