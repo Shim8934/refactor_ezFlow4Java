@@ -11,15 +11,14 @@
 		
 		
 		<script type="text/javascript">
-		<!--
+		
 			function btn_OpinionOK_onclick() {
 		        window.close();
 		        window.parent.parent.close();
 		    }
 	
 		    window.onload = function () {
-		        pMessageContent.innerHTML = parent.ezapralert_cross_dialogArguments[0];
-	
+		        pMessageContent.innerHTML = opener.ezapralert_cross_dialogArguments[0];
 		        //IE 이외에 브라우져에서 창크기 다시 조절
 		        var UserAgentState = navigator.userAgent.toLowerCase();
 		        
@@ -33,7 +32,7 @@
 		            }
 		        }
 		    }
-		//-->
+		//
 		</script>
 	</head>
 	<body style="overflow:hidden;">
