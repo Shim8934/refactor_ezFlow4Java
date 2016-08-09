@@ -287,7 +287,7 @@ public class LoginVO implements Serializable{
 		this.deptPathCode = deptPathCode;
 	}
 	public String getRollInfo() {
-		return rollInfo;
+		return rollInfo == null ? "" : rollInfo;
 	}
 	public void setRollInfo(String rollInfo) {
 		this.rollInfo = rollInfo;
