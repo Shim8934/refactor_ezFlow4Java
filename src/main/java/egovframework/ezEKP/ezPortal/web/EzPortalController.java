@@ -530,7 +530,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
 				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
+					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
