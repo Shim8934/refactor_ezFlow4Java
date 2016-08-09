@@ -844,7 +844,7 @@ function MoveRecord(pRecID, pSepAttNo, pNewCabID, pFlag) {
     createNodeAndInsertText(xmlpara, objNode, "NEWCABID", pNewCabID);
     createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);
 
-    XmlHttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_MoveRecord.aspx", false);
+    XmlHttp.open("POST", "/ezApprovalG/moveRecord.do", false);
     XmlHttp.send(xmlpara);
 
     var rtn = getNodeText(GetChildNodes(XmlHttp.responseXML)[0]);
@@ -948,7 +948,7 @@ function btnViewRecHistory_onclick() {
         var para = new Array();
         para[0] = selRow[0].getAttribute("DATA6");
         para[1] = selRow[0].getAttribute("DATA8");
-        var url = "/myoffice/ezApprovalG/ezCabinet/ViewRecHistory_Cross.aspx";
+        var url = "/ezApprovalG/viewRecHistory.do";
 
         viewrechistory_cross_dialogArguments[0] = para;
 

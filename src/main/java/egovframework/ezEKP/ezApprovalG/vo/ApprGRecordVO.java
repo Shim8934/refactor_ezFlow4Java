@@ -39,8 +39,12 @@ public class ApprGRecordVO {
 	private String registerDate;
 	/** 결재권자*/
 	private String aprMemberTitle;
+	/** 결재권자*/
+	private String 	aprMemberTitle2;
 	/** 기안자이름*/
 	private String drafterName;
+	/** 기안자이름(다국어)*/
+	private String drafterName2;
 	/** 첨부여부*/
 	private String attachFlag;
 	/** */
@@ -73,6 +77,8 @@ public class ApprGRecordVO {
 	private String executeDate;
 	/**수신자이름*/
 	private String receiptMemberName;
+	/**수신자이름2*/
+	private String receiptMemberName2;
 	/**문서과 배부번호*/
 	private String deliveryNo;
 	/**생산기관 등록번호*/
@@ -96,17 +102,93 @@ public class ApprGRecordVO {
 	/**쪽수*/
 	private String numOfPage;
 	
+	/**기록물 권한*/
+	/**사용자id*/
 	private String userId;
+	/**사용자권한*/
 	private String userRight;
+	/**사용자 이름*/
 	private String userName;
+	/**사용자 이름(다국어)*/
 	private String userName2;
+	/**사용자 직위*/
 	private String userTitle;
+	/**사용자 직위(다국어)*/
 	private String userTitle2;
+	/**부서 코드*/
 	private String deptCode;
+	/**부서 이름*/
 	private String deptName;
+	/**부서 이름(다국어)*/
 	private String deptName2;
 	
+	/**기록물철 변경이력*/
+	/**제목*/
+	private String title;
+	/**기안자*/
+	private String drafter;
+	/**기안자(다국어)*/
+	private String drafter2
+	/**변경 일자*/;
+	private String modifyDate;
+	/**변경 사유*/
+	private String modifyReason;
+	/**변경자이름*/
+	private String modifierName;
+	/**변경자이름(다국어)*/
+	private String modifierName2;
+	/**변경자id*/
+	private String modifierId;
+	/**기록물철버전*/
+	private String version;
 	
+	private String specialRecordCode;
+	private String publiCityCode;
+	private String limitRange;
+	private String manualRegFlag;
+	
+	public String getLimitRange() {
+		return limitRange;
+	}
+	public String getDrafterName2() {
+		return drafterName2;
+	}
+	public void setDrafterName2(String drafterName2) {
+		this.drafterName2 = drafterName2;
+	}
+	public void setLimitRange(String limitRange) {
+		this.limitRange = limitRange;
+	}
+	public String getManualRegFlag() {
+		return manualRegFlag;
+	}
+	public void setManualRegFlag(String manualRegFlag) {
+		this.manualRegFlag = manualRegFlag;
+	}
+	public String getPubliCityCode() {
+		return publiCityCode;
+	}
+	public void setPubliCityCode(String publiCityCode) {
+		this.publiCityCode = publiCityCode;
+	}
+	public String getSpecialRecordCode() {
+		return specialRecordCode;
+	}
+	public void setSpecialRecordCode(String specialRecordCode) {
+		this.specialRecordCode = specialRecordCode;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -442,6 +524,60 @@ public class ApprGRecordVO {
 	}
 	public void setNumOfPage(String numOfPage) {
 		this.numOfPage = numOfPage;
+	}
+	public String getAprMemberTitle2() {
+		return aprMemberTitle2;
+	}
+	public void setAprMemberTitle2(String aprMemberTitle2) {
+		this.aprMemberTitle2 = aprMemberTitle2;
+	}
+	public String getReceiptMemberName2() {
+		return receiptMemberName2;
+	}
+	public void setReceiptMemberName2(String receiptMemberName2) {
+		this.receiptMemberName2 = receiptMemberName2;
+	}
+	public String getDrafter() {
+		return drafter;
+	}
+	public void setDrafter(String drafter) {
+		this.drafter = drafter;
+	}
+	public String getDrafter2() {
+		return drafter2;
+	}
+	public void setDrafter2(String drafter2) {
+		this.drafter2 = drafter2;
+	}
+	public String getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(String modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+	public String getModifyReason() {
+		return modifyReason;
+	}
+	public void setModifyReason(String modifyReason) {
+		this.modifyReason = modifyReason;
+	}
+	public String getModifierName() {
+		return modifierName;
+	}
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
+	}
+	public String getModifierName2() {
+		return modifierName2;
+	}
+	public void setModifierName2(String modifierName2) {
+		this.modifierName2 = modifierName2;
+	}
+	public String getModifierId() {
+		return modifierId;
+	}
+	public void setModifierId(String modifierId) {
+		this.modifierId = modifierId;
 	}
 	
 }

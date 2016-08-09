@@ -899,5 +899,29 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		select("EzApprovalG.getUserRight", map);
 		return (int)map.get("v_pCount");
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> getRecordHistory(Map<String, Object> map) {
+		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordHistory", map);
+	}
+
+	public void moveRecord(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		update("EzApprovalG.moveRecord", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> getRecordSimpleInfo(Map<String, Object> map) {
+		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordSimpleInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> getRecScInfo(Map<String, Object> map) {
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getRecScInfo", map);
+	}
+
+	public void changeRecordInfo(Map<String, Object> map) {
+		update("EzApprovalG.changeRecordInfo", map);
+	}
 	
 }

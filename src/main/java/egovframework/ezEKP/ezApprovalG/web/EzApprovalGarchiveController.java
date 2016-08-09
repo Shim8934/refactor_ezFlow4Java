@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -254,7 +256,7 @@ public class EzApprovalGarchiveController {
 	
 	@RequestMapping(value = "/ezApprovalG/getRecReadHistory.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getRecordHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
+	public String getRecReadHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -286,4 +288,77 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 기록물등록대장 변경이력 화면*/
+	@RequestMapping(value = "/ezApprovalG/viewRecHistory.do"  ,produces="text/xml;charset=utf-8")
+	public String viewRecHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+	    String Use_IE11Browser = "";
+		userInfo = commonUtil.userInfo(loginCookie);
+		   if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && Use_IE11Browser.equals("CK")) {
+			   Use_IE11Browser ="CK";
+	        }
+		   model.addAttribute("userInfo", userInfo);
+			return "ezApprovalG/apprGviewRecHistory";
+	}
+	
+	/** 기록물등록대장 변경이력 화면 상세정보*/
+	@RequestMapping(value = "/ezApprovalG/getRecordHistory.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecordHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,Locale locale, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String result=ezApprovalGService.getRecordHistory(xmlDom, userInfo.getCompanyID(),userInfo.getLang());
+		Document xmlResult = commonUtil.convertStringToDocument(result);
+		
+		if (xmlResult.getElementsByTagName("ROW") != null){
+			for (int k = 0; k < xmlResult.getElementsByTagName("ROW").getLength(); k++) {
+				if (!xmlResult.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim().equals("")) {
+				xmlResult.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getChildNodes().item(0).setTextContent(messageSource.getMessage(("ezApprovalG."+xmlResult.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim()),locale));
+				}
+			}
+		}
+		return commonUtil.convertDocumentToString(xmlResult);
+	}
+	
+	/** 기록물등록대장 이동 */
+	@RequestMapping(value = "/ezApprovalG/moveRecord.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String moveRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,Locale locale, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result=ezApprovalGService.moveRecord(xmlDom, userInfo.getCompanyID(),userInfo.getLang());
+		Document xmlResult = commonUtil.convertStringToDocument(result);
+		
+		return commonUtil.convertDocumentToString(xmlResult);
+	}
+	
+	/** 기록물등록대장 수정 */
+	@RequestMapping(value = "/ezApprovalG/changeRecordInfo.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String changeRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		String NonActiveX = "Yes";
+		userInfo = commonUtil.userInfo(loginCookie);
+		  model.addAttribute("userInfo", userInfo);
+		return "ezApprovalG/apprGchangeRecordInfo";
+	}
+	
+	/** 기록물등록대장 수정 상세화면 */
+	@RequestMapping(value = "/ezApprovalG/getRecordSimpleInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecordSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String result = ezApprovalGService.getRecordSimpleInfo(xmlDom, userInfo.getCompanyID(),userInfo.getLang());
+		return result;
+	}
+	
+	/** 기록물등록대장 수정 상세화면 저장 */
+	@RequestMapping(value = "/ezApprovalG/changeRecInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String changeRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String result = ezApprovalGService.changeRecordInfo(xmlDom, userInfo.getCompanyID(),userInfo.getLang());
+		return result;
+	}
 }

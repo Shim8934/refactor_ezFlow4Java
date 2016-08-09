@@ -999,7 +999,7 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
-    } catch (e) {alert(e.message); }
+    } catch (e) {}
 }
 
 function DivPopUpHidden() {
@@ -1007,7 +1007,7 @@ function DivPopUpHidden() {
         document.getElementById("mailPanel").style.display = "none";
         document.getElementById("iFramePanel").style.display = "none";
         document.getElementById("iFrameLayer").src = "/blank.htm";
-    } catch (e) {alert(e.message); }
+    } catch (e) {}
 }
 
 function DivPopUpShow_sub(popUpW, popUpH, URL) {

@@ -1009,7 +1009,7 @@
             var SepAttNo = tr.getAttribute("DATA8");
 
             var para = new Array();
-            var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1";
+            var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
 
             selectcabinet_cross_dialogArguments[0] = para;
             selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
@@ -1055,7 +1055,7 @@
         var ezapropinion_cross_dialogArguments = new Array();
     function OpenInformationUI(pInformationContent, CompleteFunction) {
         var parameter = pInformationContent;
-        var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+        var url = "/ezApprovalG/ezAprOpinion.do";
 
         if (CrossYN() || NonActiveX == "YES") {
             ezapropinion_cross_dialogArguments[0] = parameter;
@@ -1113,7 +1113,7 @@
             para[3] = arr_userinfo[2];
             para[4] = g_bRecAdmin;
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/ChangeRecordInfo_Cross.aspx";
+            var url = "/ezApprovalG/changeRecordInfo.do";
 
             changerecordinfo_cross_dialogArguments[0] = para;
             changerecordinfo_cross_dialogArguments[1] = btnChangeRecInfo_onclick_Complete;
@@ -1563,6 +1563,9 @@
     </script>
 
     <div id="tdDebug"></div>
-
+    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 </body>
 </html>

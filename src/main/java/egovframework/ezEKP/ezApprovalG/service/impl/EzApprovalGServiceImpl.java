@@ -6569,13 +6569,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private String formatVolNum(String strVolNO) {
 		return getNDigitNum(strVolNO, 3);
 	}
-//	private String formatDateForTrans(String pDate, int iFlag) {
-//		String rtnVal="";
-//		if(pDate.length()>0){
-//			
-//		}
-//		return "";
-//	}
+	private String formatDateForTrans(String pDate, int iFlag) {
+		String rtnVal="";
+		if(pDate.length()>0){
+			rtnVal=getNDigitNum(pDate.substring(0,4),4) + getNDigitNum(pDate.substring(5,7),2) + getNDigitNum(pDate.substring(8,10), 2);
+			if(iFlag==1){
+				rtnVal += getNDigitNum(pDate,2) + getNDigitNum(pDate, 2);
+			}
+		    return rtnVal;
+		    }
+			else{
+				return "";
+			}
+		}
 	private String getAVTypeString(String pCode, String companyID, String LangType) {
 		try{
 			String [] pCodes = pCode.split(",");
@@ -12822,7 +12828,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>NORECORD</RESULT>";
 		}
 	}
-	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		
@@ -12946,4 +12951,401 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return rtnValue;
 	}
+
+	@Override
+	public String getRecordHistory(Document xmlDom, String companyID, String lang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_RECORDID", RecID);
+		map.put("v_SEPATTNO", SepAttachNo);
+		List<ApprGRecordVO> docList =ezApprovalGDAO.getRecordHistory(map);
+		 StringBuffer sb = new StringBuffer();
+	     sb.append("<DATA>");
+	        
+	     for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		 }
+			sb.append("</DATA>");
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+	
+		 resultXML.append("<LISTVIEWDATA>");
+		 resultXML.append("<HEADERS>");
+		 String listHeader = getListHeader("103", companyID, lang);
+		 Document listXML = commonUtil.convertStringToDocument(listHeader);
+		 for ( int i=0; i<listXML.getElementsByTagName("NAME").getLength(); i++){
+			 resultXML.append("<HEADER>");
+			 resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() +"</NAME>");
+			 resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() +"</WIDTH>");
+			 resultXML.append("</HEADER>");
+		 }
+		 resultXML.append("</HEADERS>");
+		 resultXML.append("<ROWS>");
+		 //다국어 때문에 1인경우 빈칸으로(컬럼에 1이 안써있음)
+		 if(lang.equals("1")){
+			 lang="";
+		 }
+		 for (int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++){
+			 resultXML.append("<ROW>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VERSION").item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("RECORDID").item(j).getTextContent()) + "</DATA1>");
+			 resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(j).getTextContent()) + "</DATA2>");
+			 resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("MODIFYREASON").item(j).getTextContent()) + "</DATA3>");
+			 resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("VERSION").item(j).getTextContent()) + "</DATA4>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("TITLE").item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(j).getTextContent()),1) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("NUMOFPAGE").item(j).getTextContent()) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE"+ lang).item(j).getTextContent() ) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("DRAFTER"+ lang).item(j).getTextContent() ) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + formatDateForView(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(j).getTextContent()),1) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME"+ lang).item(j).getTextContent() ) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 if( makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")){
+				 resultXML.append("<VALUE>" + "t1783" + "</VALUE>");
+			 }
+			 else if(makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("")){
+				 resultXML.append("<VALUE>" + "" + "</VALUE>");
+			 }else{
+				 resultXML.append("<VALUE>" + "t1784" + "</VALUE>");
+			 }
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MODIFIERNAME"+ lang).item(j).getTextContent() ) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("<CELL>");
+			 resultXML.append("<VALUE>" + formatDateForView(makeListField(docXML.getElementsByTagName("MODIFYDATE").item(j).getTextContent()),1) + "</VALUE>");
+			 resultXML.append("</CELL>");
+			 resultXML.append("</ROW>");
+		 }
+		 resultXML.append("</ROWS>");
+		 resultXML.append("</LISTVIEWDATA>");
+		return resultXML.toString();
+	}
+
+	@Override
+	public String moveRecord(Document xmlDom, String companyID, String lang) throws Exception {
+		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String NewCabID = xmlDom.getElementsByTagName("NEWCABID").item(0).getTextContent().trim();
+		String Flag = xmlDom.getElementsByTagName("FLAG").item(0).getTextContent().trim();
+		String rtnVal="";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_RECORDID", RecID);
+		map.put("v_SEPATTNO", SepAttachNo);
+		map.put("v_CABINETID", NewCabID);
+		map.put("v_FLAG", Flag);
+		try {
+		 ezApprovalGDAO.moveRecord(map);
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			e.getStackTrace();
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String getRecordSimpleInfo(Document xmlDom, String companyID, String lang) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+
+		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_RECORDID", RecID);
+		map.put("v_SEPATTNO", SepAttachNo);
+		
+		List<ApprGRecordVO> docList =ezApprovalGDAO.getRecordSimpleInfo(map);
+		 StringBuffer sb = new StringBuffer();
+	     sb.append("<DATA>");
+	        
+	     for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		 }
+			sb.append("</DATA>");
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if(docXML.getElementsByTagName("ROW").getLength()<=0){
+			return "<RESULT>NORECORD</RESULT>";
+		}
+		resultXML.append("<RESULT>");
+		resultXML.append("<RECORDID>" + makeListField(docXML.getElementsByTagName("RECORDID").item(0).getTextContent()) + "</RECORDID>");
+		resultXML.append("<TITLE>"  + makeListField(docXML.getElementsByTagName("TITLE").item(0).getTextContent()) + "</TITLE>");
+		resultXML.append("<NUMOFPAGE>" + makeListField(docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent()) + "</NUMOFPAGE>");
+		resultXML.append("<REGISTERTYPE>" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()) + "</REGISTERTYPE>");
+		resultXML.append("<REGISTERDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),1) + "</REGISTERDATE>");
+		resultXML.append("<REGISTERDATERAW>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),0) + "</REGISTERDATERAW>");
+		resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
+		resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
+		resultXML.append("<EXECUTEDATE>" + formatDateForTrans(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()),0) + "</EXECUTEDATE>");
+		resultXML.append("<RECEIPTMEMBER>" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "</RECEIPTMEMBER>");
+		resultXML.append("<ELECTRONICRECFLAG>" + makeListField(docXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent()) + "</ELECTRONICRECFLAG>");
+		resultXML.append("<SPECIALRECCODE>" + makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()) + "</SPECIALRECCODE>");
+		resultXML.append("<PUBLICCODE>" + makeListField(docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()) + "</PUBLICCODE>");
+		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
+		resultXML.append("<MANUALREGFLAG>" + makeListField(docXML.getElementsByTagName("MANUALREGFLAG").item(0).getTextContent()) + "</MANUALREGFLAG>");
+		resultXML.append("<SEPATTACHNO>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(0).getTextContent()) + "</SEPATTACHNO>");
+		String SCFlag =makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent());
+		resultXML.append("<SPECIALFLAG>" + SCFlag + "</SPECIALFLAG>");
+		resultXML.append("<SCINFO>");
+		
+		if(SCFlag.equals("2")){
+		List<ApprGCabinetVO> docList2 =ezApprovalGDAO.getRecScInfo(map);
+		
+		 StringBuffer sb2 = new StringBuffer();
+	     sb2.append("<DATA>");
+	        
+	     for (int i = 0; i < docList2.size(); i++) {
+			sb2.append(commonUtil.getQueryResult(docList2.get(i)));
+		 }
+			sb2.append("</DATA>");
+		Document docXML2 = commonUtil.convertStringToDocument(sb2.toString());
+		
+		if(docXML2.getElementsByTagName("ROW").getLength()<=0){
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		
+		
+		
+		for (int k=0; k<docXML2.getElementsByTagName("ROW").getLength(); k++){
+			String SepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(k).getTextContent().trim());
+		
+			if(SepAttSN.equals("000")){
+				resultXML.append("<NAME>");
+				resultXML.append("<SN>" + SepAttSN + "</SN>");
+				resultXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(k).getTextContent()) + "</LIST1>");
+				resultXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(k).getTextContent()) + "</LIST2>");
+				resultXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(k).getTextContent()) + "</LIST3>");
+				resultXML.append("</NAME>");
+			}
+			else{
+				resultXML.append("<DATALIST>");
+				resultXML.append("<DATA>");
+				resultXML.append("<SN>" + SepAttSN + "</SN>");
+				resultXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(k).getTextContent()) + "</LIST1>");
+				resultXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(k).getTextContent()) + "</LIST2>");
+				resultXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(k).getTextContent()) + "</LIST3>");
+				resultXML.append("</DATA>");
+				resultXML.append("</DATALIST>");
+			}
+		}
+		}
+		resultXML.append("<APRMEMBER2>"  + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent()) + "</APRMEMBER2>" );
+		resultXML.append("<DRAFTER2>"  + makeListField(docXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent()) + "</DRAFTER2>" );
+		resultXML.append("<RECEIPTMEMBER2>"  + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(0).getTextContent()) + "</RECEIPTMEMBER2>" );
+		resultXML.append("</SCINFO>");                                                          
+		resultXML.append("</RESULT>");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String changeRecordInfo(Document xmlDom, String companyID, String lang) throws Exception {
+		String pChangeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent().trim();
+		StringBuilder strSQL = new StringBuilder("");
+		if(pChangeType.equals("0")){
+			try{
+				String RecType = xmlDom.getElementsByTagName("RECORDTYPE").item(0).getTextContent().trim();
+				String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+				String SepAttNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+				String UserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+				String UserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+				String UserName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent().trim();
+				String Title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim();
+				String RegDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
+				String NumOfPage = xmlDom.getElementsByTagName("NUMOFPAGE").item(0).getTextContent().trim();
+				String AprMember = xmlDom.getElementsByTagName("APRMEMBER").item(0).getTextContent().trim();
+				String AprMember2 = xmlDom.getElementsByTagName("APRMEMBER2").item(0).getTextContent().trim();
+				String Drafter = xmlDom.getElementsByTagName("DRAFTER").item(0).getTextContent().trim();
+				String Drafter2 = xmlDom.getElementsByTagName("DRAFTER2").item(0).getTextContent().trim();
+				String ExeDate = xmlDom.getElementsByTagName("EXECUTEDATE").item(0).getTextContent().trim();
+				String ReceiptMember = xmlDom.getElementsByTagName("RECEIPTMEMBER").item(0).getTextContent().trim();
+				String ReceiptMember2 = xmlDom.getElementsByTagName("RECEIPTMEMBER2").item(0).getTextContent().trim();
+				String SendingMember = xmlDom.getElementsByTagName("SENDINGMEMBER").item(0).getTextContent().trim();
+				String SendingMember2 = xmlDom.getElementsByTagName("SENDINGMEMBER2").item(0).getTextContent().trim();
+				String ElecFlag = xmlDom.getElementsByTagName("ELECTRONICFLAG").item(0).getTextContent().trim();
+				String ChangeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent().trim();
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("companyID", companyID);
+				map.put("v_RECORDID", RecID);
+				map.put("v_SEPATTNO", SepAttNo);
+				map.put("v_RECTYPE", RecType);
+				map.put("v_NUMOFPAGE", NumOfPage);
+				map.put("v_TITLE", Title);
+				map.put("v_REGDATE", RegDate);
+				map.put("v_APRMEMTITLE", AprMember);
+				map.put("v_APRMEMTITLE2", AprMember2);
+				map.put("v_DRAFTER", Drafter);
+				map.put("v_DRAFTER2", Drafter2);
+				map.put("v_EXEDATE", ExeDate);
+				map.put("v_RECEIPTMEM", ReceiptMember);
+				map.put("v_RECEIPTMEM2", ReceiptMember2);
+				map.put("v_ELECFLAG", ElecFlag);
+				map.put("v_CHANGEREASON", ChangeReason);
+				map.put("v_USERID", UserID);
+				map.put("v_USERNAME", UserName);
+				map.put("v_USERNAME2", UserName2);
+				
+				ezApprovalGDAO.changeRecordInfo(map);
+				
+			}
+			catch(Exception e){
+				return  "<RESULT>FALSE</RESULT>";
+			}
+			return "<RESULT>TRUE</RESULT>";
+		}
+		else{
+			try{
+			String RecType = xmlDom.getElementsByTagName("RECORDTYPE").item(0).getTextContent().trim();
+			String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+			String SepAttNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+			String UserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+			String UserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+			String UserName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent().trim();
+			String SpecialRec = xmlDom.getElementsByTagName("SPECIALRECCODE").item(0).getTextContent().trim();
+			String PubCode = xmlDom.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();
+			String LimitRange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
+			String ChangeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent().trim();
+			String SCFlag = xmlDom.getElementsByTagName("SCFLAG").item(0).getTextContent().trim();
+			
+			NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+			
+            strSQL.append("Declare v_NewVersion Number := 0;\n v_NewVersion2 Number := 0; \n BEGIN \n");
+            strSQL.append("BEGIN \n Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBRECORDHISTORY ");
+			strSQL.append("Where RecordID = '" + makeRightField(RecID) + "' And SeperateAttachNo = '");
+			strSQL.append(makeRightField(SepAttNo) + "';\n END; \n");
+			strSQL.append("IF v_NewVersion < 2 THEN\n");
+			strSQL.append("BEGIN \n ");
+			strSQL.append("Insert Into TBRECORDHISTORY (Version, RecordID, SeperateAttachNo, RegisterDate, ");
+            strSQL.append("Title, NumOfPage, AprMemberTitle, AprMemberTitle2, Drafter, Drafter2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, ");
+            strSQL.append("ModifyDate, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag) ");
+			strSQL.append("Select v_NewVersion, TBSEPERATEATTACH.RecordID, TBSEPERATEATTACH.SeperateAttachNo, ");
+			strSQL.append("RegisterDate, TBSEPERATEATTACH.Title, TBSEPERATEATTACH.NumOfPage, ");
+            strSQL.append("AprMemberTitle, AprMemberTitle2, DrafterName, DrafterName2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, ");
+            strSQL.append("UTILS.CONVERT_TO_CHAR(TBSEPERATEATTACH.CreateDate,8,p_style=>112), NULL, NULL, NULL, NULL, '1' ");
+			strSQL.append("From TBSEPERATEATTACH Inner Join TBRECORD ON TBSEPERATEATTACH.RecordID = TBRECORD.RecordID ");
+			strSQL.append("Where TBSEPERATEATTACH.RecordID = '" + makeRightField(RecID) + "' And SeperateAttachNo = '");
+            strSQL.append(makeRightField(SepAttNo) + "'; \n END; \n END IF; \n");
+
+			// '분리첨부 테이블의 ModifyFlag를 1로 설정
+			strSQL.append("Update TBSEPERATEATTACH Set ModifyFlag = '1' Where RecordID = '");
+			strSQL.append(makeRightField(RecID) + "' And SeperateAttachNo = '");
+			strSQL.append(makeRightField(SepAttNo) + "';\n ");
+           
+			//    '## 기록물 테이블을 업데이트 한다.
+			//    '## RecType
+			//    '0:전자결재문서- 모든 분류등록항목 수정가능
+			//    '1:수기등록문서- 모든 분류등록항목 수정가능
+			//    '2:분리첨부- 분류등록 항목은 수정 불가
+
+			strSQL.append("Update TBRECORD SET SpecialRecordCode = '" + makeRightField(SpecialRec));
+			strSQL.append("', PublicityCode = '" + makeRightField(PubCode) + "', LimitRange = '");
+			strSQL.append(makeRightField(LimitRange) + "' Where RecordID = '" + makeRightField(RecID) + "';\n");
+
+
+            strSQL.append("Update TBEXPENDAPRDOCINFO SET SpecialRecordCode = '" + makeRightField(SpecialRec));
+            strSQL.append("', PublicityCode = '" + makeRightField(PubCode) + "', LimitRange = '");
+            strSQL.append(makeRightField(LimitRange) + "' Where DOCID = (SELECT DOCID FROM TBRECORD Where RecordID = '" + makeRightField(RecID) + "');\n");
+
+
+            
+            strSQL.append("BEGIN \n Select NVL(max(Version), 0)+1 INTO v_NewVersion2 From TBRECORDHISTORY ");
+			strSQL.append("Where RecordID = '" + makeRightField(RecID) + "' And SeperateAttachNo = '");
+			strSQL.append(makeRightField(SepAttNo) + "'; \n END; \n");
+			strSQL.append("Insert Into TBRECORDHISTORY (Version, RecordID, SeperateAttachNo, ");
+            strSQL.append("RegisterDate, Title, NumOfPage, AprMemberTitle, AprMemberTitle2, Drafter, Drafter2, ExecuteDate, ");
+            strSQL.append("ReceiptMemberName, ReceiptMemberName2, ModifyDate, ModifyReason, ModifierID, ModifierName, ModifierName2, ");
+			strSQL.append("ModifyFlag) Select v_NewVersion2, TBSEPERATEATTACH.RecordID, ");
+			strSQL.append("TBSEPERATEATTACH.SeperateAttachNo, RegisterDate, TBSEPERATEATTACH.Title, ");
+            strSQL.append("TBSEPERATEATTACH.NumOfPage, AprMemberTitle, AprMemberTitle2, DrafterName, DrafterName2, ExecuteDate, ");
+            strSQL.append("ReceiptMemberName, ReceiptMemberName2, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), '" + makeRightField(ChangeReason));
+			strSQL.append("', '" + makeRightField(UserID) + "', '" + makeRightField(UserName) + "', '" + makeRightField(UserName2));
+            strSQL.append("', '1' From TBSEPERATEATTACH Inner Join TBRECORD ");
+			strSQL.append("ON TBSEPERATEATTACH.RecordID = TBRECORD.RecordID Where TBSEPERATEATTACH.RecordID = '");
+			strSQL.append(makeRightField(RecID) + "' And SeperateAttachNo = '" + makeRightField(SepAttNo) + "';\n END; \n");
+			
+			if(SCFlag.equals("2")){
+				
+				String subSQL=ChangeSpecialInfo_Rec(RecID,xmlDom);
+			
+				if (subSQL.toString() != "FALSE"){
+					strSQL.append(subSQL);
+			    }
+			}
+			
+			}catch(Exception e){
+				 return "<RESULT>FALSE</RESULT>";
+			}
+			Boolean result = ExecuteTransactionSQL(strSQL, companyID);
+			if(result){
+				return "<RESULT>TRUE</RESULT>";
+			}
+			else{
+				return "<RESULT>FALSE</RESULT>";
+			}
+		}
+	}
+
+	private Boolean ExecuteTransactionSQL(StringBuilder strSQL, String companyID) {
+		StringBuilder pSQL = new StringBuilder("");
+		try
+		{
+            pSQL.append("BEGIN DECLARE CNT Number := 0; BEGIN utils.incrementTrancount; BEGIN " + strSQL + " EXCEPTION WHEN OTHERS THEN CNT := SQLCODE; END; IF CNT <> 0 THEN BEGIN ROLLBACK; utils.resetTrancount; END; ELSE BEGIN utils.commit_transaction; END; END IF; CNT :=0; END; END;");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sqlString",pSQL.toString());
+			map.put("companyID", companyID);
+			
+			ezApprovalGDAO.transactionSQL(map);
+			
+			return true;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+
+	private String ChangeSpecialInfo_Rec(String RecID, Document xmlDom) {
+		try{
+			StringBuilder subSQL = new StringBuilder("");
+			subSQL.append("DELETE FROM TBSPECIALCATALOGINFO_REC WHERE RECORDID = '" + makeRightField(RecID) + "' AND SERIALNO != '000'\n");
+			if(xmlDom.getElementsByTagName("SCDATA").getLength() >0){
+				for(int i=0; i<xmlDom.getElementsByTagName("SCDATA").getLength(); i++){
+					subSQL.append("INSERT INTO TBSPECIALCATALOGINFO_REC (RECORDID, SERIALNO, SC1, SC2, SC3) VALUES ('");
+					subSQL.append(makeRightField(RecID) + "', '");
+					subSQL.append(makeRightField(xmlDom.getElementsByTagName("SN").item(0).getTextContent().trim()) + "', '");
+					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST1").item(0).getTextContent().trim()) + "', '");
+					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST2").item(0).getTextContent().trim()) + "', '");
+					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST3").item(0).getTextContent().trim()) + "')\n");
+				}
+			}
+			return subSQL.toString();
+			}
+			catch(Exception e){
+				return "FALSE";
+			}
+	}
+
 }
