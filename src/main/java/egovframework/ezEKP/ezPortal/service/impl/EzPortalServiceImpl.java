@@ -226,14 +226,6 @@ public class EzPortalServiceImpl implements EzPortalService {
 		return ezPortalDAO.searchMyPortalPage2(map);
 	}
 	
-	/*@Override
-	public int checkViewRight(String uID, String accessIDList) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_UID", uID);
-		map.put("v_ACCESSIDLIST", accessIDList);
-		return ezPortalDAO.checkViewRight(map);
-	}*/
-	
 	@Override
 	public String checkViewRight(String uID, String accessIDList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -557,7 +549,6 @@ public class EzPortalServiceImpl implements EzPortalService {
 			} else {
 				ret = pDeptPathCode;
 			}
-System.out.println("ret:"+ret);
 			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -945,8 +936,8 @@ System.out.println("ret:"+ret);
 	public boolean checkViewRightBln (String pUID, String pAccessIDList) {
 		try {
 			for (int i=0; i<pAccessIDList.split("\\,").length; i++) {
-				String right = checkViewRight(pUID, pAccessIDList.split("\\,")[i].trim());
-				
+				String right = checkViewRight(pUID, pAccessIDList.split(",")[i].trim());
+
 				if (right != null && right.equals("2")) {
 					return true;
 				}
@@ -1883,15 +1874,15 @@ System.out.println("ret:"+ret);
 		try {
 			String temp = pPortalPageID;
 			String parentPortalPageID = "";
-			String previousPageID = parentPortalPageID;
+			String previousPageID = pPortalPageID;
 			int count = 0;
 			while (count < 10) {
 				parentPortalPageID = getTopParentPageID(temp);
 				
-				if (parentPortalPageID.toLowerCase().trim().equals("top")) {
+				if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
 					break;
 				}
-				if (parentPortalPageID.trim().equals("")) {
+				if (parentPortalPageID == null || parentPortalPageID.trim().equals("")) {
 					temp = previousPageID;
 					break;
 				} else {

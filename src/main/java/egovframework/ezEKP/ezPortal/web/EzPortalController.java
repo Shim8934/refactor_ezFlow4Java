@@ -468,7 +468,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					parentPageID = "top";
 				}
 			}
-System.out.println("parentPageID:"+parentPageID);
+			
 			// 마이포탈페이지 ID
 			if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
 				myPortalPageID = req.getParameter("myPortalPageID");
@@ -515,7 +515,7 @@ System.out.println("parentPageID:"+parentPageID);
 			}
 			
 			// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
-			if (!pClassID.trim().equals("")) {
+			if (pClassID != null && !pClassID.trim().equals("")) {
 				userInfo.setId(pClassID);
 				userInfo.setDisplayName1(pClassName);
 			}
@@ -530,7 +530,7 @@ System.out.println("parentPageID:"+parentPageID);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
 				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
+					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
@@ -568,15 +568,12 @@ System.out.println("parentPageID:"+parentPageID);
 	            
 				}
 					
-System.out.println("strHTML:"+strHTML);
-
 				model.addAttribute("strHTML", strHTML);
 				model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 				model.addAttribute("displayName", displayName);
 				model.addAttribute("displayName2", displayName2);
 				model.addAttribute("mode", mode);
 				model.addAttribute("parentPageID", parentPageID);
-				model.addAttribute("baseType", baseType);
 				model.addAttribute("baseType", baseType);
 				model.addAttribute("langPrimary", langPrimary);
 				model.addAttribute("langSecondary", langSecondary);
@@ -616,11 +613,10 @@ System.out.println("strHTML:"+strHTML);
 			
 			// 권한이 있는 Root페이지 정보를 가져온다.
 			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID());
-			
+
 			Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
-System.out.println("reset:"+resetMyParentPageID);
-			if (resetMyParentPageID.length() == 0) {
-System.out.println("???");
+
+			if (resetMyParentPageID == null || resetMyParentPageID.trim().equals("")) {
 				if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
 					pageID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 					gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
@@ -628,8 +624,7 @@ System.out.println("???");
 					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 				} else {
 					String portalPageXml = ezPortalService.searchMyPortalPage(gubunFlag, mode, userInfo, userInfo.getCompanyID());
-System.out.println("portalPageXml:"+portalPageXml);
-					
+
 					xmlDom = commonUtil.convertStringToDocument(portalPageXml);
 					if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
 						for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -651,7 +646,7 @@ System.out.println("portalPageXml:"+portalPageXml);
 			} else {
 				//권한이 있는 페이지에 대하여 개인마이페이지
 				String gubunFlag2 = "1c";
-				pageID = UUID.randomUUID().toString();
+				pageID = UUID.randomUUID().toString();								
 				String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
 				pMoveURL = "/ezPortal/portalPage.do?mode=edit&pageID=" + pageID + "&parentPageID=" + resetMyParentPageID;
 				
@@ -664,7 +659,7 @@ System.out.println("portalPageXml:"+portalPageXml);
 				//resp.getWriter().flush();
 			}
 			
-			if (("").equals(pageID)) {
+			if (pageID == null || ("").equals(pageID)) {
 				//권한이 있는 포탈페이지가 없을 경우
 				String commentHtml = "<!DOCTYPE html><HTML>" +
                         "<HEAD>" +
@@ -711,7 +706,7 @@ System.out.println("portalPageXml:"+portalPageXml);
 				resp.getWriter().flush();
 			}
 			
-			if (resetMyParentPageID != null && (resetMyParentPageID.trim()).equals("") && mode != null && (mode.trim()).equals("edit")) {
+			if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
 				pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 			} else {
 				String mainUrl = ezPortalService.getMainUrl(pUserThemeUID);
