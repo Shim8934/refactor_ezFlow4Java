@@ -338,7 +338,7 @@
 			var ret = window.showModalDialog("portalpage_search.aspx?mode=load");
 			if (typeof(ret) == "undefined") return;
 			
-			document.location.href = "PortalPage.aspx?pageid=" + ret[0];
+			document.location.href = "/ezPortal/portalPage.do?pageID=" + ret[0];
 		}
 		
 		// 상속
@@ -347,7 +347,7 @@
 			var ret = window.showModalDialog("portalpage_search.aspx?mode=inherit", "", "dialogHeight:300px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken");
 			if (typeof(ret) == "undefined") return;
 			
-			document.location.href = "PortalPage.aspx?parentpageid=" + ret[0];
+			document.location.href = "/ezPortal/portalPage.do?parentPageID=" + ret[0];
 		}
 
 		function CopyPortlet(pPortletID, pSourcePageID, pDestPageID)
