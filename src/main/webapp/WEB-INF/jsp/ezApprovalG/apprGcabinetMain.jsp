@@ -797,7 +797,7 @@
             para[0] = tr.getAttribute("DATA1");
             para[1] = tr.getAttribute("DATA2");
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/EndCabProduce_Cross.aspx";
+            var url = "/ezApprovalG/endCabProduce.do";
 
             endcabproduce_cross_dialogArguments[0] = para;
             endcabproduce_cross_dialogArguments[1] = btnEndProduce_onclick_Complete;

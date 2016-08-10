@@ -161,21 +161,25 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 }
 
 function EndCabProduce(pCabClassNo, pExpYear, pFlag) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID); 
-    createNodeAndInsertText(xmlpara, objNode, "CABCLASSNO", pCabClassNo);
-    createNodeAndInsertText(xmlpara, objNode, "CABCLASSLIST", pCabClassNo);
-    createNodeAndInsertText(xmlpara, objNode, "EXPYEAR", pExpYear);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", pFlag);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_EndCabProduce.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/endCabProduce.do",
+		data : {
+			companyID  : CompanyID,
+			cabClassNO : pCabClassNo,
+			expYear    : pExpYear,
+			flag       : pFlag
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    var dataNodes = GetChildNodes(result);
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn != "TRUE")

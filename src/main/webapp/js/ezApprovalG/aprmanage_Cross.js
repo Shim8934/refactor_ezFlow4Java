@@ -253,7 +253,7 @@ function getReceivedDocList(p_FormCd) {
 				},
 		success: function(xml){
 			getReceivedDocList_after(xml);
-		}        			
+		}
 	});
 
     //ShowMailProgress();
@@ -262,8 +262,7 @@ function getReceivedDocList(p_FormCd) {
 }
 
 function getReceivedDocList_after(xml) {
-//    try {
-//        if (xmlhttp.responseText == "") return;
+    try {
         SelYearFlag = false;
         var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
         var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
@@ -350,10 +349,10 @@ function getReceivedDocList_after(xml) {
             parent.frames["left"].getAprCount();
             parent.frames["left"].setPresentValue("");
         } catch (e) { }
-//    }
-//    catch (e) {
-//        alert("getReceivedDocList_after" + " " + e.description);
-//    }
+    }
+    catch (e) {
+        alert("getReceivedDocList_after" + " " + e.description);
+    }
 }
 
 function getSendOutDocList() {    
