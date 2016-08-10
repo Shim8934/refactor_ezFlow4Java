@@ -128,11 +128,9 @@
     		<div style="overflow:auto;height:325px;width:auto">
   				<div class="question" style="width:223px;overflow-y:auto">
 					<p><spring:message code='ezPersonal.t2000' />:</p>
-    				<asp:label id="LabelPollTitle" Runat="server"></asp:label>
     				${labelPollTitle}
   				</div>
   				<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto">
-    				<asp:literal id="LiteralAnswer" Runat="server"></asp:literal>
     				${literalAnswer}
   				</div>
   				<div style="text-align:center;padding-top:10px">
