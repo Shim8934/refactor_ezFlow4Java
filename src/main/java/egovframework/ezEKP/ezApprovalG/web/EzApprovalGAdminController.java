@@ -46,7 +46,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  *    수정일        수정자         수정내용
  *    ----------    ------    -------------------
  *    2016.05.04    장진혁         신규작성
- *	  2016.07.13	이효진		추가작성
+ *	  2016.07.13	이효진	         추가작성
  * @see
  */
 
@@ -86,7 +86,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "/admin/ezApprovalG/apprGLeft";
 	}
 	
-	////////////////////////
 	/**
 	 * 전자결재G관리 양식등록(MHT) 메뉴 호출 함수
 	 */
@@ -197,7 +196,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식함추가 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/setFormContIns.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/setFormContIns.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String setFormContIns(HttpServletRequest request) throws Exception {
 		String contName = request.getParameter("fContName");
@@ -216,7 +215,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식함수정 사용부서목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getGroupDept.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getGroupDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getGroupDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -231,7 +230,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식함수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/setFormContMod.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/setFormContMod.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String setFormContMod(HttpServletRequest request) throws Exception {
 		String contName = request.getParameter("fContName");
@@ -251,7 +250,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식함삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/delFormCont.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/delFormCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String delFormCont(HttpServletRequest request) throws Exception {
 		String contID = request.getParameter("id");
@@ -261,6 +260,82 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G관리 양식등록,양식수정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
+	public String formMain(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		//관리자 권한 체크
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String tCheck = request.getParameter("tCheck");
+		String contID = request.getParameter("contID");
+		String formID = request.getParameter("formID");
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang());
+		String companyID = request.getParameter("companyID");
+		
+		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", locale) : egovMessageSource.getMessage("ezApprovalG.t1668", locale));
+		
+		model.addAttribute("topID", userInfo.getCompanyID());
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("title", title);
+		model.addAttribute("isInsUp", tCheck);
+		model.addAttribute("contID", contID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("docType", docType);
+		model.addAttribute("companyID", companyID);
+		
+		return "admin/ezApprovalG/apprGFormMain";
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록,양식수정 양식기본정보 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String formID = request.getParameter("formID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getFormContent(formID, userInfo.getLang(), companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String delForm(HttpServletRequest request) throws Exception {
+		String formID = request.getParameter("formID");
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/getFormRecvAdmin.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String getFormRecvAdmin(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String formID = request.getParameter("node1");
+		
+		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), userInfo.getCompanyID());
+
+		return result;
+	}
+	
 	///////////////////////
 	
 	/**
@@ -273,7 +348,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
-				
+		
 		String lang = config.getProperty("config.primary");
 		String serverName = config.getProperty("config.ServerName");
 				

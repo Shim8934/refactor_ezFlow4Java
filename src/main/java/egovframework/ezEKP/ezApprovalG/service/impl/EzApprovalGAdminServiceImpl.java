@@ -30,7 +30,6 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -1755,6 +1754,85 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 
+	@Override
+	public String getFormContent(String formID, String lang, String companyID) throws Exception {
+		Map<Object, String> map = new HashMap<Object, String>();
+		map.put("v_PFORMID", formID);
+		map.put("v_PLANG", lang);
+		map.put("companyID", companyID);
+		
+		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
+		String result = commonUtil.getQueryResult(vo);
+		
+		System.out.println(result);
+		
+		return result;
+	}
+
+	@Override
+	public String delForm(String formID, String companyID, String realPath) throws Exception {
+		String result = deleteForm(formID, companyID);
+		
+		try {
+			if (result.equals("TRUE")) {
+				deleteFile(realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
+			}
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
+	}
+
+	@Override
+	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception {
+		StringBuilder sb = new StringBuilder();		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_LISTTYPE", "105");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}
+		sb.append("</HEADERS><ROWS>");
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_FORMID", formID);
+		map1.put("companyID", companyID);
+		
+		List<ApprGFormVO> listBody = ezApprovalGAdminDAO.getFormRecvAdmin(map1);
+		
+		for (int i = 0; i < listBody.size(); i++) {
+			ApprGFormVO bodyVo = listBody.get(i);
+			
+			for (int j = 0; j < listHeader.size(); j++) {	
+				sb.append("<ROW>");
+				sb.append("<CELL><VALUE>" + ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + commonUtil.getMultiData(lang)) + "</VALUE>");
+
+				if (j == 0) {
+					sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1></CELL></ROW>");
+				} else {
+					sb.append("</CELL></ROW>");
+				}
+			}
+		}
+		
+		sb.append("</ROWS></LISTVIEWDATA>");
+
+		return sb.toString();
+	}
+
 	public String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_APPLYDATE", EgovDateUtil.getCurrentDate("-"));
@@ -1789,5 +1867,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 		}
 		return result;
+	}
+	
+	public String deleteForm(String formID, String companyID) throws Exception {
+		Map<Object, String> map = new HashMap<Object, String>();
+		map.put("v_FORMID", formID);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGAdminDAO.deleteForm(map);
+			
+			return "TRUE";
+		} catch (Exception e) {
+			return "FALSE";
+		}
 	}
 }

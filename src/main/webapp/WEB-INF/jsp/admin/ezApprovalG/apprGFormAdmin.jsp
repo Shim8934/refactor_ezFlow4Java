@@ -26,6 +26,7 @@
 		    var ListIdx;
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
 		    var OrderCell = "";
+		    var isHWP = false;
 		    
 		  	//ShowModalDialog Chrome 적용
 			(function() {
@@ -279,46 +280,6 @@
 		    }
 	
 		    function DelFCont() {
-		       /*  var xmlpara = createXmlDom();
-		        var xmlRtn = createXmlDom();
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-	
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-	
-		        var nodeIdx = treeView.GetSelectNode();
-		        if (nodeIdx != null) {
-		            var ID = nodeIdx.GetNodeData("DATA1");
-	
-		            if (!CheckSubFormCont(ID, nodeIdx)) {
-		                var listview = new ListView();
-		                listview.LoadFromID("lvtForm");
-	
-		                var Rows = listview.GetDataRows();
-		                if (Rows[0].id.indexOf('TR_noItems') > 0) {
-		                    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-		                    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-	
-		                    xmlhttp.open("POST", "aspx/Del_FormCont.aspx", false);
-		                    xmlhttp.send(xmlpara);
-		                    xmlRtn = loadXMLString(xmlhttp.responseText);
-	
-		                    var objNode = xmlRtn.documentElement.childNodes;
-	
-		                    if (getNodeText(GetChildNodes(xmlRtn.documentElement)[0]) == "TRUE") {
-		                        Tree_setconfig();
-		                        InitFormCont();
-		                    } else {
-		                        window.alert("<spring:message code = 'ezApprovalG.t1615' />");
-		                    }
-		                } else {
-		                    window.alert("<spring:message code = 'ezApprovalG.t1613' />");
-		                }
-		            } else {
-		                window.alert("<spring:message code = 'ezApprovalG.t1614' />");
-		            }
-		        } */
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 
@@ -364,7 +325,7 @@
 		        var xmlRtn = createXmlDom();
 		        $.ajax({
 		        	type : "POST",
-		        	url : "/admin/getFormContInfo.do",
+		        	url : "/admin/ezApproval/getFormContInfo.do",
 		        	async : false,
 		        	data : {id : ID, companyID : companyID},
 		        	success : function(result) {
@@ -388,11 +349,11 @@
 		        if (nodeIdx != null) {
 		            if (nodeIdx.GetNodeData("DATA1") != "ROOT") {
 		                var url = "";
-		                <%-- if("<%= isHWP %>" == "true") {
+		                if(isHWP == true) {
 		                    url = "/myoffice/ezApprovalG/ezViewHWP/FormMain_HWP.aspx?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
 		                } else {
-		                    url = "FormMain.aspx?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
-		                } --%>
+		                    url = "/admin/ezApprovalG/formMain.do?tCheck=fIns&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURI(companyID);
+		                }
 		                
 		                var retVal = window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 	
@@ -434,7 +395,7 @@
 		            if (GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") >  0) {
 		                url = "/myoffice/ezApprovalG/ezViewHWP/FormMain_HWP.aspx?TCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
 		            } else {
-		                url = "FormMain.aspx?TCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
+		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURI(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURI(companyID);
 		            }
 		            
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
@@ -444,24 +405,25 @@
 		        }
 		    }
 	
-		    function DelForm() {
-		        var xmlpara = createXmlDom();
-		        var xmlRtn = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-	
+		    function DelForm() {	
 		        var listview = new ListView();
 		        listview.LoadFromID("lvtForm");
 	
 		        var selRow = listview.GetSelectedRows();
 		        if (selRow) {
 		            if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
-		                createNodeAndInsertText(xmlpara, objNode, "ID", GetAttribute(selRow[0], "DATA1"));
-		                createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-		                xmlhttp.open("POST", "aspx/Del_Form.aspx", false);
-		                xmlhttp.send(xmlpara);
-		                xmlRtn = loadXMLString(xmlhttp.responseText);
-	
+		                var xmlRtn = createXmlDom();
+		                
+		                $.ajax({
+		                	type : "POST",
+		                	url : "/admin/ezApprovalG/delForm.do",
+		                	async : false,
+		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID},
+		                	success : function (result) {
+		                		xmlRtn = loadXMLString(result);
+		                	}
+		                });
+		                
 		                if (getNodeText(SelectNodes(xmlRtn, "RESULT")[0]) == "TRUE") {
 		                    listview.DeleteRow(GetAttribute(selRow[0], "id"));
 		                    descrip.innerText = "";
@@ -550,7 +512,6 @@
 	
 		        var url = "Form_Preview.aspx?href=" + escape(GetAttribute(tr, "DATA4"));
 		        var retVal = window.showModalDialog(url, "", "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
-	
 		    }
 		</script>
 	

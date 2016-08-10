@@ -112,6 +112,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public ApprGReceiveDocVO getDeptTranSendDocCount(Map<String, Object> map) throws Exception {
 		return (ApprGReceiveDocVO) select("EzApprovalGAdmin.getDeptTranSendDocCount", map);
 	}
+	
+	public ApprGFormVO getFormContent(Map<Object, String> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalGAdmin.getFormContent", map);
+	}
 
 	public String deleteContainerType(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
@@ -248,6 +252,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.setFormOrder", map);
 	}
 	
+	public void updateFormContainer(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.updateFormContainer", map);
+	}
+	
 	public void deleteContainerDocState(String companyID) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
@@ -272,23 +280,31 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.removeTaskCategory", map);
 	}
 
-
-	
-	
-
-
-	
-
-	public void updateFormContainer(Map<String, Object> map) throws Exception {
-		update("EzApprovalGAdmin.updateFormContainer", map);
-	}
-
 	public void deleteFormContUserGroup(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteFormContUserGroup", map);
 	}
 
 	public void deleteFormContainer(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteFormContainer", map);
+	}
+	
+	public void deleteForm(Map<Object, String> map) {
+		delete("EzApprovalGAdmin.deleteForm", map);
+	}
+
+	
+
+	
+
+	
+
+
+
+
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormRecvAdmin(Map<String, Object> map) throws Exception {
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getFormRecvAdmin", map);
 	}
 
 

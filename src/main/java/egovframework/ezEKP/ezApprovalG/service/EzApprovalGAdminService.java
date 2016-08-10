@@ -104,13 +104,24 @@ public interface EzApprovalGAdminService {
 	
 	public String updateFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String contID, String deptList, String companyID) throws Exception;
 	
+	public String deleteFormContainer(String contID, String companyID) throws Exception;
+	
+	public String getFormContent(String formID, String lang, String companyID) throws Exception;
+	
+	public String delForm(String formID, String companyID, String realPath) throws Exception;
+	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
 	
+	
+	
+
+	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception;
 
 	
 
-	public String deleteFormContainer(String contID, String companyID) throws Exception;
+
+	
 
 	
 }

@@ -31,7 +31,10 @@ public class ApprGFormVO {
 	private String formContDescription;
 	/** 양식함사용중인 그룹아이디*/
 	private String formContUserDepID;
-	
+	/** 양식별 고정수신처*/
+	private String deptID;
+	/** 양식별 고정수신처 순번*/
+	private String deptSn;
 	public String getFormContID() {
 		return formContID;
 	}
@@ -122,5 +125,16 @@ public class ApprGFormVO {
 	public void setFormContUserDepID(String formContUserDepID) {
 		this.formContUserDepID = formContUserDepID;
 	}
-
+	public String getDeptID() {
+		return deptID;
+	}
+	public void setDeptID(String deptID) {
+		this.deptID = deptID;
+	}
+	public String getDeptSn() {
+		return deptSn;
+	}
+	public void setDeptSn(String deptSn) {
+		this.deptSn = deptSn;
+	}
 }
