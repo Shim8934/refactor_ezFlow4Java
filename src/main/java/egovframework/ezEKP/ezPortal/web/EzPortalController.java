@@ -1127,7 +1127,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						}
 						pPollResultList.add(list.get(i).getResult());
 						pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + list.get(i).getResult() + "." + strAnswer + " (" + 
-						"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("ezPersonal.t20000", locale) +
+						"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("ezHome.t20000", locale) +
 						"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
 						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
 						"</dl>";
