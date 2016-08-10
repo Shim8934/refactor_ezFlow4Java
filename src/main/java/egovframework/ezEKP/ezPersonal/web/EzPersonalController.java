@@ -486,7 +486,7 @@ public class EzPersonalController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		
-		return "ezPersonal/persPollResultr";
+		return "ezPersonal/persPollResult";
 	}
 	
 }
