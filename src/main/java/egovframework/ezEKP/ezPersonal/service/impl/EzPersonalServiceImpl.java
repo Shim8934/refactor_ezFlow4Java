@@ -13,7 +13,9 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -103,6 +105,30 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm) throws Exception {
 		return ezPersonalDAO.getEmpOfMonth(pTerm);
 	}
-	
-	
+
+	@Override
+	public int getPollCount(String pComapnyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", pComapnyID);
+		map.put("v_pMode", "U");
+		return ezPersonalDAO.getPollCount(map);
+	}
+
+	@Override
+	public List<PersonalGetPollListUserVO> getPollListUser(String pComapnyID, int pTotal, int pCount, int pStart) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", pComapnyID);
+		map.put("v_pTotal", pTotal);
+		map.put("v_pCount", pCount);
+		map.put("v_pStart", pStart);
+		return ezPersonalDAO.getPollListUser(map);
+	}
+
+	@Override
+	public PersonalGetCurrentPollVO getCurrentPoll(String pUserID, String pCompanyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUserID", pUserID);
+		map.put("v_pCompanyID", pCompanyID);
+		return ezPersonalDAO.getCurrentPoll(map);
+	}
 }

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPersonal.web;
 
 import java.security.PrivateKey;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -21,6 +22,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -61,6 +64,9 @@ public class EzPersonalController {
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
@@ -344,6 +350,7 @@ public class EzPersonalController {
 		return result;
 	}
 	
+	
 	@RequestMapping(value = "/ezPersonal/signimageConfig.do")
 	public String signimageConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -363,4 +370,67 @@ public class EzPersonalController {
 		
 		return "ezPersonal/persSignimageConfig";
 	}
+	
+	/**
+	 * 포탈 설문조사 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/homePollListUser.do")
+	public String homePollListUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int currentPage;
+		int pageSize = 10;
+		boolean isPollEmpty = false;
+		String votePoll = "";
+		
+		if (req.getParameter("page") != null && !req.getParameter("page").equals("")) {
+			currentPage = Integer.parseInt(req.getParameter("page"));
+		} else {
+			currentPage = 1;
+		}
+		
+		int totalCount = ezPersonalService.getPollCount(userInfo.getCompanyID());
+		
+		List<PersonalGetPollListUserVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize);
+		
+		int pageCount = ((totalCount + pageSize - 1) / pageSize);
+		
+		if (list.size() == 0) {
+			isPollEmpty = true;
+		} else {
+			for (int i=0; i<list.size(); i++) {
+				if (list.get(i).getEndDate().indexOf("1900-01-01") > -1) {
+					list.get(i).setEndDate(egovMessageSource.getMessage("ezPersonal.t244",locale));
+				} else {
+					list.get(i).setEndDate(list.get(i).getEndDate().substring(0, 10));
+				}
+				list.get(i).setStartDate(list.get(i).getStartDate().substring(0, 10));
+				
+				if (userInfo.getLang().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
+					list.get(i).setPollTitle(list.get(i).getPollTitle2());
+				}
+				
+				PersonalGetCurrentPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+				
+				if (result != null) {
+					if (result.getResult().equals("0")) {
+						votePoll = String.valueOf(result.getItemSeq());
+					} else {
+						votePoll = "";
+					}
+				}
+			}
+		}
+		
+		model.addAttribute("list", list);
+		model.addAttribute("votePoll", votePoll);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("isPollEmpty", isPollEmpty);
+		
+		return "ezPersonal/persHomePollListUser";
+	}
+	
+	
 }

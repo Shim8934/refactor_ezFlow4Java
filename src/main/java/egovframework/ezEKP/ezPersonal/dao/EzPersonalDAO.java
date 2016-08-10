@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -23,8 +25,22 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetPollListUserVO> getPollListUser(Map<String, Object> map) throws Exception{
+		return (List<PersonalGetPollListUserVO>) list("EzPersonalDAO.getPollListUser", map);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
+	}
+	
+	public PersonalGetCurrentPollVO getCurrentPoll (Map<String, Object> map) {
+		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getCurrentPoll", map);
+	}
+	
+	public int getPollCount(Map<String, Object> map) {
+		select("EzPersonalDAO.getPollCount", map);
+		return (int) map.get("v_pCount");
 	}
 
 	public void setApprovalPwd(Map<String, Object> map) throws Exception{

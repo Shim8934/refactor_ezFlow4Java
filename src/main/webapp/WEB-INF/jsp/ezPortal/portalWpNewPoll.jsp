@@ -45,9 +45,9 @@
 		        var pTop = (pheight - 420) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if(CrossYN())
-		            window.open("/myoffice/ezPersonal/Poll/homePollListUser.aspx", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
 		else
-		            window.open("/myoffice/ezPersonal/Poll/homePollListUser.aspx", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    function vote_poll() {
 		        if (votepoll == "") {
@@ -56,9 +56,9 @@
 		            var pTop = (pheight - 370) / 2;
 		            var pLeft = (pwidth - 300) / 2;
 		            if (CrossYN())
-		                window.open("/myoffice/ezPersonal/WebPartFolder/wp_LightPoll_Cross.aspx", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
 		            else
-		                window.open("/myoffice/ezPersonal/WebPartFolder/wp_LightPoll_Cross.aspx", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		        else {
 		            var heigth = window.screen.availHeight;
@@ -66,7 +66,7 @@
 
 		            var left = (width - 455) / 2;
 		            var top = (heigth - 400) / 2;
-		            window.open("/myoffice/ezPersonal/Poll/PollResult_Cross.aspx?itemseq=" + itemseq, "", "height=400px,width=455, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
+		            window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 		        }
 		    }
 		</script>

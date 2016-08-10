@@ -3,8 +3,10 @@
 
 <sqlMap namespace="ezPersonal">
 	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
-	<typeAlias  alias="PersonalApprovMailVO" 						    type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
-	<typeAlias  alias="PersonalGetEmpOfMonthVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalApprovMailVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
+	<typeAlias  alias="PersonalGetEmpOfMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalGetPollListUserVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/>
+	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
 	
 	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
@@ -17,7 +19,6 @@
 			{CALL EZPERSONAL.EZSP_GETAPPROVNOTIINFO(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
-		
 	
 	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
 		<![CDATA[
@@ -29,13 +30,33 @@
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_SAVEAPPROVNOTIMAIL(#v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#)}
 		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLCOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
 	</procedure>	
+	
+	<procedure id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalGetPollListUserVO"  remapResults="true">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLLISTUSER(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalGetCurrentPollVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETCURRENTPOLL(#v_pUserID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
 	<procedure id="EzPersonalDAO.getEmpOfMonth" parameterClass="String"  resultClass="PersonalGetEmpOfMonthVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETEMPOFMONTH(#v_PTERM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>	
+	
+	
 	
 </sqlMap>
 
