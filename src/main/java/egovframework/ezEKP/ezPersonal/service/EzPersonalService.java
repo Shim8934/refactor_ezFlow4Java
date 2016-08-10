@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 
 public interface EzPersonalService {
@@ -12,10 +13,12 @@ public interface EzPersonalService {
 	
 	public List<PersonalGetPollListUserVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart) throws Exception;
 	
+	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) throws Exception;
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	
 	public PersonalGetCurrentPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
-
+	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
 
 	public String getApprovNotiConfig(String userID) throws Exception;

@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -28,6 +29,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<PersonalGetPollListUserVO> getPollListUser(Map<String, Object> map) throws Exception{
 		return (List<PersonalGetPollListUserVO>) list("EzPersonalDAO.getPollListUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) {
+		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResultOrderResult", pItemSeq);
 	}
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {

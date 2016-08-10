@@ -432,5 +432,50 @@ public class EzPersonalController {
 		return "ezPersonal/persHomePollListUser";
 	}
 	
+	/**
+	 * 포탈 설문조사 투표화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/wpLightPoll.do")
+	public String wpLightPoll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String labelPollTitle = "";
+		String answer = "";
+		String literalAnswer = "";
+		String pollSeq = "";
+		PersonalGetCurrentPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+		
+		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
+		
+		if (result.getItemSeq() == 0) {
+			labelPollTitle = egovMessageSource.getMessage("ezPersonal.t385", locale);
+		} else {
+			if (userInfo.getLang().equals("2") && result.getPollTitle2() != null && !result.getPollTitle2().equals("")) {
+				labelPollTitle = result.getPollTitle2();
+			} else {
+				labelPollTitle = result.getPollTitle();
+			}
+			
+			pollSeq = String.valueOf(result.getItemSeq());
+			int count = result.getPollSelectionCount();
+			
+			for (int i=0; i<count; i++) {
+				answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+			}
+			
+			literalAnswer = answer;
+			
+			if (result.getResult().equals("0")) {
+				
+			} else {
+				
+			}
+		}
+		
+		model.addAttribute("pollSeq", pollSeq);
+		model.addAttribute("literalAnswer", literalAnswer);
+		model.addAttribute("labelPollTitle", labelPollTitle);
+		return "ezPersonal/persWpLightPoll";
+	}
+	
 	
 }

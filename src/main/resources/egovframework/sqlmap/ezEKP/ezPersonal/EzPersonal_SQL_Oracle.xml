@@ -7,6 +7,7 @@
 	<typeAlias  alias="PersonalGetEmpOfMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
 	<typeAlias  alias="PersonalGetPollListUserVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/>
 	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
+	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
 	
 	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
@@ -53,6 +54,12 @@
 	<procedure id="EzPersonalDAO.getEmpOfMonth" parameterClass="String"  resultClass="PersonalGetEmpOfMonthVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETEMPOFMONTH(#v_PTERM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>	
+	
+	<procedure id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalGetPollResultOrderResultVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLRESULTORDERRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>	
 	

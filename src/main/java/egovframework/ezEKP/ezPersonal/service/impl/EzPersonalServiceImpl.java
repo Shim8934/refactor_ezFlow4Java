@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -131,4 +132,11 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 		map.put("v_pCompanyID", pCompanyID);
 		return ezPersonalDAO.getCurrentPoll(map);
 	}
+
+	@Override
+	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult(int pItemSeq) throws Exception {
+		return (List<PersonalGetPollResultOrderResultVO>) ezPersonalDAO.getPollResultOrderResult(pItemSeq);
+	}
+	
+	
 }
