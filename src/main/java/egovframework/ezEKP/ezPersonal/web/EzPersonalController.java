@@ -471,6 +471,7 @@ public class EzPersonalController {
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pollSeq", pollSeq);
 		model.addAttribute("literalAnswer", literalAnswer);
 		model.addAttribute("labelPollTitle", labelPollTitle);
