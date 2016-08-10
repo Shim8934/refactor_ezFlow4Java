@@ -478,5 +478,15 @@ public class EzPersonalController {
 		return "ezPersonal/persWpLightPoll";
 	}
 	
+	/**
+	 * 포탈 설문조사 결과화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/pollResult.do")
+	public String pollResult(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		
+		return "ezPersonal/persPollResultr";
+	}
 	
 }
