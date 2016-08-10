@@ -530,7 +530,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
 				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
+					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
@@ -566,17 +566,18 @@ public class EzPortalController extends EgovFileMngUtil {
 	            portalPageCategoryXML += "</DATA>";
 	            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 	            
-				}
+			}
 					
-				model.addAttribute("strHTML", strHTML);
-				model.addAttribute("pThemeSelectObject", pThemeSelectObject);
-				model.addAttribute("displayName", displayName);
-				model.addAttribute("displayName2", displayName2);
-				model.addAttribute("mode", mode);
-				model.addAttribute("parentPageID", parentPageID);
-				model.addAttribute("baseType", baseType);
-				model.addAttribute("langPrimary", langPrimary);
-				model.addAttribute("langSecondary", langSecondary);
+			model.addAttribute("strHTML", strHTML);
+			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+			model.addAttribute("displayName", displayName);
+			model.addAttribute("displayName2", displayName2);
+			model.addAttribute("mode", mode);
+			model.addAttribute("parentPageID", parentPageID);
+			model.addAttribute("pageID", pageID);
+			model.addAttribute("baseType", baseType);
+			model.addAttribute("langPrimary", langPrimary);
+			model.addAttribute("langSecondary", langSecondary);
 			
 			return "/ezPortal/portalPortalPage";
 		} catch (Exception e) {

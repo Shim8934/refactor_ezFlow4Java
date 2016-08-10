@@ -653,7 +653,7 @@
       								FROM 
       									ezPortal.TBL_PortalPage_Items_Change
       								WHERE 
-      									UID_ = A.UID_ AND PageUID = A.PageUID AND OwnerPageUID = A.OwnerPageUID AND CreatorID = $pUserID$ AND OwnerPageUID = $pTopParentPageID$ AND ChangeFlag = '2'
+      									UID_ = A.UID_ AND PageUID = A.PageUID AND OwnerPageUID = A.OwnerPageUID AND CreatorID = '$pUserID$' AND OwnerPageUID = '$pTopParentPageID$' AND ChangeFlag = '2'
       								)	
       		ORDER BY
       			A.RowPos

@@ -407,8 +407,8 @@ public class EzPortalServiceImpl implements EzPortalService {
 	public void updateCacheValue(String portalPageID, String accessIDList, String renderedHtml) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PORTALPAGEID", portalPageID);
-		map.put("v_ACCESSIDLIST", accessIDList);
-		map.put("v_RENDEREDHTML", renderedHtml);
+		map.put("v_ACCESSIDLIST", portalPageID);
+		map.put("v_RENDEREDHTML", renderedHtml.replace("'", "''"));
 		ezPortalDAO.updateCacheValue(map);
 	}
 	
@@ -580,7 +580,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 		try {
 			if (mode.equals("view")) {
 				String cacheValue = checkCacheValue(topMenuID, getAccessList(userInfo));
-				if (cacheValue != null) {
+				if (cacheValue != null && !cacheValue.equals("")) {
 					return cacheValue;
 				}
 			}
@@ -682,7 +682,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			 String strPage = sb.toString();
 			 sb = null;
 			 if (mode.equals("view")) {
-				 //updateCacheValue
+				 updateCacheValue(topMenuID, getAccessList(userInfo), strPage);
 			 }
 			 return strPage;
 		} catch (Exception e) {
@@ -1645,9 +1645,9 @@ public class EzPortalServiceImpl implements EzPortalService {
             dsb.append("</tr></table>");
             
             String defaultValue = dsb.toString();
-  
+
             PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
-            
+
             if (result == null) {
             	return defaultValue;
             }
@@ -1727,7 +1727,7 @@ public class EzPortalServiceImpl implements EzPortalService {
             	if (pMode.equals("view")) {
             		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString());
             	}
-            
+
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1906,16 +1906,17 @@ public class EzPortalServiceImpl implements EzPortalService {
             
             String parentPortalPageID = pPortalPageID;
             int count = 0;
-            
+
             strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex;
             
             while (count < 10) {
             	parentPortalPageID = getPortalParentUID(parentPortalPageID);
 
-            	if (parentPortalPageID.toLowerCase().trim().equals("top")) {
+            	if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
             		break;
             	}
-            	String param = String.valueOf(count);
+            	//String param = String.valueOf(count);
+            	String param = parentPortalPageID;
             	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + pColumnIndex;
             	count ++;
             }
@@ -1923,9 +1924,10 @@ public class EzPortalServiceImpl implements EzPortalService {
             if (bRootPage == true) {
             	result = getTBLPortalPageItemsT(strSQL);
             } else {
-            	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID));
+            	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID));
+
             }
-            
+
             if (result == null) {
             	return "";
             }
@@ -2056,7 +2058,7 @@ public class EzPortalServiceImpl implements EzPortalService {
             while (count < 10) {
             	parentPortalPageID = getPortalParentUID(parentPortalPageID);
 
-            	String param = String.valueOf(count);
+            	String param = parentPortalPageID;
             	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
             	count ++;
             }
