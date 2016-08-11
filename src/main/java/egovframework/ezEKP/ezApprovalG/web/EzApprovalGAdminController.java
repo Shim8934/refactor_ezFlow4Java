@@ -325,6 +325,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G관리 양식등록,양식수정 양식별 고정수신처목록 호출 함수
+	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormRecvAdmin.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String getFormRecvAdmin(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1019,9 +1022,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getTaskHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String taskCode = request.getParameter("taskCode");
+		String taskCode = request.getParameter("docID");
 		String companyID = request.getParameter("companyID");
-		
+
 		String result = ezApprovalGAdminService.getTaskHistory(taskCode, companyID, userInfo.getLang());
 		
 		return result;
