@@ -2001,10 +2001,6 @@ function chk_Passwd(pPwd, CompleteFunction) {
     DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
 }
 
-function chk_Passwd_Complete() {
-    DivPopUpHidden();
-}
-
 function sendMail() {
     var AddressList = makeAddress();
 

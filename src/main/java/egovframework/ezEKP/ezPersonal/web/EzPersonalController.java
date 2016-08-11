@@ -149,6 +149,7 @@ public class EzPersonalController {
         model.addAttribute("pwdType", pwdType);
         model.addAttribute("pwd", pwd);
         model.addAttribute("flag", flag);
+        model.addAttribute("userID", userInfo.getId());
         
 		return "ezPersonal/persApprovalConfig";
 	}
@@ -162,6 +163,7 @@ public class EzPersonalController {
 		String result = "";
 		String oldPass = request.getParameter("oldPassword");
 		String newPass = request.getParameter("newPassword");
+		String userID = request.getParameter("userID");
 		
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
@@ -169,7 +171,7 @@ public class EzPersonalController {
     	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPass);
-		String newPassword = EgovFileScrty.encryptPassword(newTempPass, "unknown");
+		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userID);
 	
 		if (oldPass.trim().equals(newPassword)) {
 			result = "OK";
@@ -197,7 +199,7 @@ public class EzPersonalController {
 		String newPWD = request.getParameter("newPWD");
 		String pwdType = request.getParameter("pwdType");
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
-		String newPassword = EgovFileScrty.encryptPassword(newTempPass, "unknown");
+		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
 		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType);
 		
 		return result;

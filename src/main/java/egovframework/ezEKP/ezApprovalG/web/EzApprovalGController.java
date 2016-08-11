@@ -2445,27 +2445,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String dPassWd = EgovFileScrty.decryptRsa(pk, ePassWd);
 		String dUserID = EgovFileScrty.decryptRsa(pk, eUserID);
-		String password = EgovFileScrty.encryptPassword(dPassWd, "unknown");
+		String password = EgovFileScrty.encryptPassword(dPassWd, dUserID);
 		String flag = ezApprovalGService.getApprovalPWD(dUserID);
 		
 		if (flag != null) {
 			if (flag.equals("Y")) {
 				String dbPassword = ezApprovalGService.getApprovalPWD1(dUserID);
 				
-				if (dbPassword.equals(password)) {
+				if (dbPassword.trim().equals(password)) {
 					result = "1";
 				}
 			} else {
 				orgPassword = ezOrganService.getEncPassword(dUserID);
 				
-				if (orgPassword.equals(password)) {
+				if (orgPassword.trim().equals(password)) {
 					result = "1";
 				}
 			}
 		} else {
 			orgPassword = ezOrganService.getEncPassword(dUserID);
 			
-			if (orgPassword.equals(password)) {
+			if (orgPassword.trim().equals(password)) {
 				result = "1";
 			}
 		}
@@ -2473,7 +2473,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (result.equals("1")) {
 			return "true";
 		} else {
-			return "false";
+			return "False";
 		}
 	}
 	
@@ -2694,8 +2694,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getSignDate.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSignDate() throws Exception{
-		String month = EgovDateUtil.getTodayTime().substring(6, 7);
-		String day = EgovDateUtil.getTodayTime().substring(9, 10);
+		String month = EgovDateUtil.getTodayTime().substring(5, 7);
+		String day = EgovDateUtil.getTodayTime().substring(8, 10);
 		String gyulJaeDate = month + "/" + day;
 		
 		return gyulJaeDate;
@@ -3233,6 +3233,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	//잘못만들었지만 쓰일수도있어서 냅둠
 //	@RequestMapping(value = "/ezApprovalG/recevG.do")
 //	public String recevG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 //		userInfo = commonUtil.userInfo(loginCookie);

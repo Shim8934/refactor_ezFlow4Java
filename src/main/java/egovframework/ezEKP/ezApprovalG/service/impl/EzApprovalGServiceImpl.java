@@ -7870,7 +7870,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID);
+				subSQL = setCabinetRec(docID, companyID, lang);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -7941,7 +7941,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID);
+				subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -8006,7 +8006,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID);
+				subSQL = setCabinetRec(docID, companyID, lang);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -8053,9 +8053,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strSQL.append(subSQL);
 					}
 				}
-				
+
 				if (rtnVal) {
-					subSQL = setCabinetRec(docID, companyID);
+					subSQL = setCabinetRec(docID, companyID, lang);
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -8599,7 +8599,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
-	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID) throws Exception{
+	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID, String lang) throws Exception{
 		String strSQL = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8657,7 +8657,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
-					"0", numOfPage, hasAttach, seperateAttachXML, companyID);
+					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang);
 		} else {
 			return "FALSE";
 		}
@@ -8695,7 +8695,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return strSQL;
 	}
 
-	public String setCabinetRec(String docID, String companyID) throws Exception{
+	public String setCabinetRec(String docID, String companyID, String lang) throws Exception{
 		String strSQL = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8753,7 +8753,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
-					"0", numOfPage, hasAttach, seperateAttachXML, companyID);
+					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang);
 		} else {
 			return "FALSE";
 		}
@@ -8763,7 +8763,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String regDocToCabinet(String manualFlag, String docID, String regSN, String cabinetID, String title, String deptCode, String deptName, String deptName2, String registerType, String aprMemberTitle, String aprMemberTitle2,
 			String drafterName, String drafterName2, String executeDate, String receiptMember, String receiptMember2, String deleveryNo, String electronic, String sourceDocID, String specialRec, String publicCode, String limitRange, String rejectFlag,
-			String numOfPage, String attachFlag, String seperateAttachXML, String companyID) throws Exception{
+			String numOfPage, String attachFlag, String seperateAttachXML, String companyID, String lang) throws Exception{
 		String strSQL = "";
 		StringBuilder resultXML = new StringBuilder();
 		
@@ -8771,6 +8771,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<MANUALFLAG>" + manualFlag + "</MANUALFLAG>");
 		resultXML.append("<DOCID>" + docID + "</DOCID>");
 		resultXML.append("<REGSN>" + regSN + "</REGSN>");
+		resultXML.append("<CABINETID>" + cabinetID + "</CABINETID>");
 		if (title.length() > 50) {
 			resultXML.append("<TITLE>" + title.substring(0, 50) + "</TITLE>");
 		} else {
@@ -8787,7 +8788,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<EXECUTEDATE>" + executeDate + "</EXECUTEDATE>");
 		resultXML.append("<RECEIPTMEMBER>" + receiptMember + "</RECEIPTMEMBER>");
 		resultXML.append("<RECEIPTMEMBER2>" + receiptMember2 + "</RECEIPTMEMBER2>");
-		resultXML.append("<DELEVERYNO>" + deleveryNo + "</DELEVERYNO>");
+		resultXML.append("<DELIVERYNO>" + deleveryNo + "</DELIVERYNO>");
 		resultXML.append("<ELECTRONICRECFLAG>" + electronic + "</ELECTRONICRECFLAG>");
 		resultXML.append("<ORIGINREGSN>" + sourceDocID + "</ORIGINREGSN>");
 		resultXML.append("<SPECIALREC>" + specialRec + "</SPECIALREC>");
@@ -8812,6 +8813,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		resultXML.append("</SEPATTACHINFO>");
+		resultXML.append("<LANGTYPE>" + lang + "</LANGTYPE>");
 		resultXML.append("<COMPANYID>" + companyID + "</COMPANYID>");
 		resultXML.append("</PARAMETERS>");
 		
@@ -8891,9 +8893,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String specialRec = objParam.getElementsByTagName("SPECIALREC").item(0).getTextContent();
 		String publicCode = objParam.getElementsByTagName("PUBLICCODE").item(0).getTextContent();
 		String limitRange = objParam.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
-		String docType = objParam.getElementsByTagName("DOCTYPE").item(0).getTextContent();
-		String visualAudioDesc = objParam.getElementsByTagName("VISUALAUDIODESC").item(0).getTextContent();
-		String visualAudioType = objParam.getElementsByTagName("VISUALAUDIOTYPE").item(0).getTextContent();
+		String docType = "";
+		String visualAudioDesc = "";
+		String visualAudioType = "";
 		String originRegSN = objParam.getElementsByTagName("ORIGINREGSN").item(0).getTextContent();
 		String oldFlag = "1";
 		String recordID = deptCode + regYear + regSN;

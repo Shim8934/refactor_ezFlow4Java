@@ -71,6 +71,14 @@ public class ApprGAprLineVO {
 	private String gDocID;
 	/** */
 	private String aprCount;
+	/** */
+	private String docType;
+	/** */
+	private String docState;
+	/** */
+	private String orgDocID;
+	/** */
+	private String companyID;
 	
 	public String getUserID() {
 		return userID;
@@ -281,6 +289,30 @@ public class ApprGAprLineVO {
 	}
 	public void setAprCount(String aprCount) {
 		this.aprCount = aprCount;
+	}
+	public String getDocType() {
+		return docType;
+	}
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+	public String getDocState() {
+		return docState;
+	}
+	public void setDocState(String docState) {
+		this.docState = docState;
+	}
+	public String getOrgDocID() {
+		return orgDocID;
+	}
+	public void setOrgDocID(String orgDocID) {
+		this.orgDocID = orgDocID;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	
 }

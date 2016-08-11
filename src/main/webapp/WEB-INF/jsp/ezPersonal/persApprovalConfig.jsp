@@ -47,7 +47,8 @@
 		    		url : "/ezPersonal/confirmPassword.do",
 		    		data : {
 			    			newPassword  : NewPassword,
-			    			oldPassword  : OldPassword
+			    			oldPassword  : OldPassword,
+			    			userID       : "${userID}"
 		    				},
 		    		success: function(text){
 		    			result = text;
