@@ -6,6 +6,8 @@ public class PersonalGetCurrentPollVO {
 	/** */
 	private String startDate;
 	/** */
+	private String endDate;
+	/** */
 	private int pollSelectionCount;
 	/** */
 	private String pollTitle;
@@ -45,6 +47,12 @@ public class PersonalGetCurrentPollVO {
 	}
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 	public int getPollSelectionCount() {
 		return pollSelectionCount;
@@ -130,6 +138,5 @@ public class PersonalGetCurrentPollVO {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	
 	
 }

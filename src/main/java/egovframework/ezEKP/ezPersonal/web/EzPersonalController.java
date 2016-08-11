@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezPersonal.web;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -24,6 +26,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -487,7 +490,88 @@ public class EzPersonalController {
 	public String pollResult(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String title = "";
+		int totalCount = 0;
+		String subject = "";
 		
+		String itemSeq = req.getParameter("itemSeq");
+		
+		if (req.getParameter("answer") != null && !req.getParameter("answer").equals("")) {
+			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")));
+		}
+		
+		PersonalGetCurrentPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq)); 
+		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(pollInfo)+"</DATA>");
+		List<PersonalGetPollResultOrderResultVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq));
+		
+		if (userInfo.getLang().equals("2") && pollInfo.getPollTitle2() != null && !pollInfo.getPollTitle2().equals("")) {
+			subject = pollInfo.getPollTitle2();
+		} else {
+			subject = pollInfo.getPollTitle();
+		}
+		
+		if (pollInfo.getEndDate().indexOf("1900-01-01") > -1) {
+			title = pollInfo.getStartDate() + " - " + egovMessageSource.getMessage("ezPersonal.t244", locale);
+		} else {
+			title = pollInfo.getStartDate() + " - " + pollInfo.getEndDate();
+		}
+		
+		int count = pollInfo.getPollSelectionCount();
+		
+		String listXML = "";
+		for (int i=1; i<=count; i++) {
+			listXML += "<ROW><TITLE>" + i + ". " + xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent() + "</TITLE><COUNT>0</COUNT><PERCENT>0</PERCENT></ROW>";
+		}
+		
+		Document resultDom = commonUtil.convertStringToDocument("<DATA>"+listXML+"</DATA>");
+		
+		for (int i=0; i<pollResultList.size(); i++) {
+			int index = pollResultList.get(i).getResult();
+			resultDom.getElementsByTagName("COUNT").item(index - 1).setTextContent(String.valueOf(pollResultList.get(i).getCount()));
+			totalCount += pollResultList.get(i).getCount();
+		}
+		
+		if (totalCount != 0) {
+			for (int i=0; i<resultDom.getElementsByTagName("COUNT").getLength(); i++) {
+				double temp = Double.parseDouble(resultDom.getElementsByTagName("COUNT").item(i).getTextContent()) * 100.0 / totalCount;
+				String temp1 = String.valueOf(temp);
+				if (temp1.indexOf("\\.") > -1) {
+					if (temp1.split("\\.")[1].length() > 1) {
+						String temp2 = temp1.split("\\.")[1].substring(1, 1);
+						int temp3 = 0;
+						if (Integer.parseInt(temp2) >= 5) {
+							temp3 = Integer.parseInt(temp1.split("\\.")[1].substring(0, 1)) + 1;
+						} else {
+							temp3 = Integer.parseInt(temp1.split("\\.")[1].substring(0, 1));
+						}
+						
+						temp2 = temp1.split("\\.")[0] + "." + temp3;
+						temp = Double.parseDouble(temp2);
+					}
+				}
+				
+				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.valueOf(temp));
+			}
+			
+			subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+		}
+		
+		String strHtml = "";
+		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
+			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
+			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
+			strHtml += "<tr>";
+			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:#68bbef'></td>";
+			strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
+			strHtml += "</tr>";
+			strHtml += "</table>";
+			strHtml += "<br>";
+		}
+		
+		model.addAttribute("listPoll", resultDom);
+		model.addAttribute("subject", subject);
+		model.addAttribute("strHtml", strHtml);
+		model.addAttribute("title", title);
 		return "ezPersonal/persPollResult";
 	}
 	

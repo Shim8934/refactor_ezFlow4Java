@@ -36,12 +36,21 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResultOrderResult", pItemSeq);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) {
+		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResult", pItemSeq);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
 	}
 	
 	public PersonalGetCurrentPollVO getCurrentPoll (Map<String, Object> map) {
 		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getCurrentPoll", map);
+	}
+	
+	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) {
+		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
 	}
 	
 	public int getPollCount(Map<String, Object> map) {
@@ -55,6 +64,10 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 
 	public void setApprovNotiMail(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.setApprovNotiMail", map);
+	}
+	
+	public void insertResult(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.insertResult", map);
 	}
 	
 }

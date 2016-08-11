@@ -137,6 +137,25 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult(int pItemSeq) throws Exception {
 		return (List<PersonalGetPollResultOrderResultVO>) ezPersonalDAO.getPollResultOrderResult(pItemSeq);
 	}
+
+	@Override
+	public void insertResult(int pItemSeq, String pUserID, int pResult) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemSeq", pItemSeq);
+		map.put("v_pUserID", pUserID);
+		map.put("v_pResult", pResult);
+		ezPersonalDAO.insertResult(map);
+	}
+
+	@Override
+	public PersonalGetCurrentPollVO getPollInfo(int pItemSeq) throws Exception {
+		return ezPersonalDAO.getPollInfo(pItemSeq);
+	}
+
+	@Override
+	public List<PersonalGetPollResultOrderResultVO> getPollResult(int pItemSeq) throws Exception {
+		return ezPersonalDAO.getPollResult(pItemSeq);
+	}
 	
 	
 }

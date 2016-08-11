@@ -1,3 +1,4 @@
+<%@page import="org.w3c.dom.Document"%>
 <%@page import="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -6,7 +7,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezPersonal.t380' /></title>
+		<title><spring:message code='ezPersonal.t246' />${title}</title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
 		<script src="/js/mouseefect.js" type="text/javascript" ></script>
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
@@ -59,17 +60,7 @@
         	<tr style="height:100%">
             	<td>
                 	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:410px" class="box"> 
-                    	<%-- <asp:repeater id="ListPoll" Runat="server"> 
-                      		<ItemTemplate> 
-                       			<span class="txt"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText) %></b>(<b><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COUNT").InnerText %></b><spring:message code='ezPersonal.t247' /><span class="point"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PERCENT").InnerText %></span>%)</span>
-                          		<table style="border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);"> 
-									<tr> 
-                                		<td style="width:<%# Convert.ToDouble(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PERCENT").InnerText)*4 %>px;background-color:#68bbef""></td> 
-                                		<td style="width:<%# 400-Convert.ToDouble(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("PERCENT").InnerText)*4 %>px;"></td> 
-                              		</tr> 
-                            	</table><br>
-                      		</ItemTemplate> 
-                    	</asp:repeater>  --%>
+						${strHtml}                    	
                 	</div>
             	</td>
         	</tr>

@@ -33,6 +33,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPersonalDAO.insertResult" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_INSERTRESULT(#v_pItemSeq#, #v_pUserID#, #v_pResult#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLCOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -61,7 +67,19 @@
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLRESULTORDERRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>	
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getPollInfo" parameterClass="Integer"  resultClass="PersonalGetCurrentPollVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>		
+	
+	<procedure id="EzPersonalDAO.getPollResult" parameterClass="Integer"  resultClass="PersonalGetPollResultOrderResultVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
 	
 	

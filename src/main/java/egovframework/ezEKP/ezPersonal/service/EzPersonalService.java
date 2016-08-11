@@ -15,9 +15,13 @@ public interface EzPersonalService {
 	
 	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) throws Exception;
 	
+	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) throws Exception;
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	
 	public PersonalGetCurrentPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
+	
+	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) throws Exception;
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
 
@@ -26,4 +30,6 @@ public interface EzPersonalService {
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag) throws Exception;
 	
 	public int getPollCount (String pComapnyID) throws Exception;
+	
+	public void insertResult (int pItemSeq, String pUserID, int pResult) throws Exception;
 }
