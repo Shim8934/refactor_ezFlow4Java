@@ -23,6 +23,8 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -74,6 +76,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -313,23 +318,23 @@ public class EzPortalController extends EgovFileMngUtil {
 			langSecondary = config.getProperty("config.lang_Secondary1" + userInfo.getLang());
 			mode = "edit";
 			
-			if (!("").equals(req.getParameter("pageID"))) {
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				pageID = req.getParameter("pageID");
 			} else {
 				pageID = UUID.randomUUID().toString();
 			}
 			
-			if (!("").equals(req.getParameter("parentPageID"))) {
+			if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
 				parentPageID = req.getParameter("parentPageID");
 			} else {
-				if (!("").equals(req.getParameter("pageID"))) {
+				if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 					parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID);
 				} else {
 					parentPageID = "top";
 				}
 			}
 			
-			if (!("").equals(req.getParameter("mode"))) {
+			if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 				mode = req.getParameter("mode");
 			}
 
@@ -344,7 +349,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 				
-			if ("edit".equals(mode)) {
+			if (("edit").equals(mode)) {
 				if (req.getParameter("pageID").equals("") && !req.getParameter("parentPageID").equals("")) {
 					if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("parentPageID").trim().toLowerCase().equals("top")) {
 						editMode = "new_inherit";
@@ -363,7 +368,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 				
 			//스킨정보
-			if (!("").equals(req.getParameter("skinNum"))) {
+			if (req.getParameter("skinNum") != null && !req.getParameter("skinNum").equals("")) {
 				skinNum = req.getParameter("skinNum");
 			}
 				
@@ -414,7 +419,10 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("langSecondary", langSecondary);
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("lang", userInfo.getLang());
-			model.addAttribute("mode", "view");
+			model.addAttribute("mode", mode);
+			model.addAttribute("noneActiveX", noneActiveX);
+			model.addAttribute("skinExist", skinExist);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1179,14 +1187,42 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewGraph.do")
 	public String wpNewGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int dMaxCount = 0;
+		int sMaxCount = 0;
+		float draftPercent = 0;
+		float susinPercent = 0;
+		
+		Calendar cal = Calendar.getInstance();
+		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
+		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH)-1, cal.get(Calendar.YEAR)) + " 23:59:59";
 	
-		try {
+		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getLang(), userInfo.getCompanyID());
+		
+		String dMax = "1";
+		if (list.size() > 0) {
+			for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
+				dMax = dMax + "0";
+			}
 			
-			model.addAttribute("userLang", userInfo.getLang());
-			return "/ezPortal/portalWpNewGraph";
-		} catch (Exception e) {
-			return "";
+			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			
+			for (int i=0; i<list.size(); i++) {
+				draftPercent = list.get(i).getDraftCount() / dMaxCount * 100;
+				susinPercent = list.get(i).getSusinCount() / dMaxCount * 100;
+			}
+		} else {
+			dMax = "0";
+			dMaxCount = 0;
 		}
+		
+		model.addAttribute("dMaxCount", dMaxCount);
+		model.addAttribute("list", list);
+		
+		return "/ezPortal/portalWpNewGraph";
+		
+	
 	}
 	
 	/**

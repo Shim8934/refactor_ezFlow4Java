@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3211,6 +3212,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		return rtnVal;
+	}
+	
+	@Override
+	public List<ApprGgetDeptStacticsVO> getDeptStactics(String pStartDate, String pEndDate, String pLang ,String  companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pStartDate", pStartDate);
+		map.put("v_pEndDate", pEndDate);
+		map.put("iv_pLang", pLang);
+		map.put("companyID", companyID);
+		return ezApprovalGDAO.getDeptStactics(map);
 	}
 
 	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID) throws Exception{
@@ -13396,5 +13407,5 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				return "FALSE";
 			}
 	}
-
+	
 }

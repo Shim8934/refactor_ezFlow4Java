@@ -29,6 +29,7 @@
 	<typeAlias  alias="ApprGAdminReceiveVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO"/>
 	<typeAlias  alias="ApprGHistoryAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO"/>
 	<typeAlias  alias="ApprGDocAttachInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO"/>
+	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	
 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -364,6 +365,10 @@
 	
 	<procedure id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETSENDOUTDOCLIST(#v_MODE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETDEPTSTACTICS(#v_pStartDate#, #v_pEndDate#, #iv_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">

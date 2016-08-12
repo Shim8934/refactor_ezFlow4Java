@@ -6,11 +6,14 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
 
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception;
+	
+	public List<ApprGgetDeptStacticsVO> getDeptStactics (String pStartDate, String pEndDate, String pLang, String companyID) throws Exception;
 
 	public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception;
 
@@ -302,5 +305,5 @@ public interface EzApprovalGService {
 	public String getRecordSimpleInfo(Document xmlDom, String companyID, String lang) throws Exception;
 
 	public String changeRecordInfo(Document xmlDom, String companyID, String lang)  throws Exception;
-
+	
 }

@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -456,6 +457,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getSendOutDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getSendOutDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGgetDeptStacticsVO> getDeptStactics(Map<String, Object> map) throws Exception{
+		return (List<ApprGgetDeptStacticsVO>) list("EzApprovalG.getDeptStactics", map);
 	}
 	
 	@SuppressWarnings("unchecked")

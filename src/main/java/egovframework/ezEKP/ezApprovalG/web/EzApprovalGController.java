@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -39,6 +40,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -4645,6 +4647,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getPortletAprDocList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPortletAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pListType = request.getParameter("pListTypeName");
 		String pDocType = request.getParameter("pDocTypeName");
 		String pUserID = request.getParameter("pUserID");

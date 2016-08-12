@@ -14,23 +14,28 @@
     				<!-- UI Object -->
         			<div class="v_graph">
         				<%-- <% if(xmldom.SelectNodes("DATA/ROW").Count > 0 ){ %> --%>
-        					<span class="r_arrow"> ^</span>
-        					<span class="l_arrow"> ^</span>
-        					<span class="maxtxt">${dMaxCount } max</span>
-	        				<ul>
-                				<%-- <% for (int i = 0; i < xmldom.SelectNodes("DATA/ROW").Count; i++){ %> --%>
-						            <li>
-  					                    <%-- <span class="g_term"><%= xmldom.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("DISPLAYNAME").InnerText %></span>
-					                    <span class="g_bar1" style="height:<%= xmldom.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("DRAFTCOUNT").InnerText %>%"></span>
-					                    <span class="g_bar2" style="height:<%= xmldom.SelectNodes("DATA/ROW").Item(i).SelectSingleNode("SUSINCOUNT").InnerText%>%"></span></li> --%> 
-				                <%-- <%} %> --%>
-	        				</ul>
-        					<%-- <% } else { %> --%>
+        				<c:choose>
+        					<c:when test="${not empty list}">
+        						<span class="r_arrow"> ^</span>
+	        					<span class="l_arrow"> ^</span>
+    	    					<span class="maxtxt">${dMaxCount } max</span>
+	        					<ul>
+				                	<c:forEach var="item" items="${list}">
+			                			<li>
+											<span class="g_term">${item.displayName}</span>
+				                    		<span class="g_bar1" style="height:${item.draftCount}%"></span>
+				                    		<span class="g_bar2" style="height:${item.susinCount}%"></span>
+										</li> 
+				               		</c:forEach>
+	        					</ul>
+        					</c:when>
+        					<c:otherwise>
         						<div class="nodata_portlet">
         							<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
         							<p><spring:message code='ezHome.t00026' /></p>
         						</div>
-       					<%-- <% } %> --%>
+        					</c:otherwise>
+        				</c:choose>
         			</div>
 					<!-- //UI Object -->
     			</div>

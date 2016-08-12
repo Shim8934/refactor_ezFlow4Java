@@ -171,6 +171,8 @@ public interface EzPortalService {
 	
 	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
 	
+	public int daysInMonth (int month, int year) throws Exception;
+	
 	public void deleteCacheValue (String uID, String accessListID) throws Exception;
 	
 	public void getUserInfo3 (String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName, String accessID, String accessName, int viewRight, int editRight, int depth, String companyID) throws Exception;
