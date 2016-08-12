@@ -907,27 +907,36 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGRecordVO> getRecordHistory(Map<String, Object> map) {
+	public List<ApprGRecordVO> getRecordHistory(Map<String, Object> map) throws Exception{
 		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordHistory", map);
 	}
 
-	public void moveRecord(Map<String, Object> map) {
+	public void moveRecord(Map<String, Object> map) throws Exception{
 		// TODO Auto-generated method stub
 		update("EzApprovalG.moveRecord", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGRecordVO> getRecordSimpleInfo(Map<String, Object> map) {
+	public List<ApprGRecordVO> getRecordSimpleInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordSimpleInfo", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGCabinetVO> getRecScInfo(Map<String, Object> map) {
+	public List<ApprGCabinetVO> getRecScInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.getRecScInfo", map);
 	}
 
-	public void changeRecordInfo(Map<String, Object> map) {
+	public void changeRecordInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.changeRecordInfo", map);
+	}
+
+	public int getDeliveryListCount(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.getDeliveryListCount", map);
+		return (int)map.get("v_pCount");
+	}
+
+	public String getDeliveryList(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getDeliveryList", map);
 	}
 	
 }

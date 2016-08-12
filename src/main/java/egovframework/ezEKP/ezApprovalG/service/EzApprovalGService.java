@@ -294,7 +294,7 @@ public interface EzApprovalGService {
 
 	public String getRecReadHistory(Document xmlDom, String companyID, String lang, String docID) throws Exception;
 
-	public String getRecordClassInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	public String getRecordClassInfo(Document xmlDom, String lang) throws Exception;
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception;
 
@@ -304,6 +304,13 @@ public interface EzApprovalGService {
 
 	public String getRecordSimpleInfo(Document xmlDom, String companyID, String lang) throws Exception;
 
-	public String changeRecordInfo(Document xmlDom, String companyID, String lang)  throws Exception;
+	public String changeRecordInfo(Document xmlDom, String companyID, String lang) throws Exception;
+
+	public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate,	String debenturer, String isdocprint) throws Exception;
+
+	public String getNewID(String companyID) throws Exception;
+
+	public String registerRecord(Document xmlDom)throws Exception;
+
 	
 }

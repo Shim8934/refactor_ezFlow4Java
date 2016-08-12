@@ -8,7 +8,6 @@
             strValue = getNodeText(GetChildNodes(nodeXml[i])[0]);
             strText = getNodeText(GetChildNodes(nodeXml[i])[1]);
 
-
             selOption[i] = new Option(strText, strValue);
             selOption[i].id = strValue;
             objSel.options[i] = selOption[i];
@@ -161,20 +160,10 @@ function PrintMetaData(pFlag, pID1, pID2) {
     para[1] = pID1;
     para[2] = pID2;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/PrintForm/PrintMetaInfo.aspx";
-    if (CrossYN()) {
-        url = "/myoffice/ezApprovalG/ezCabinet/PrintForm/PrintMetaInfo_CK.aspx";
+    var url = "/ezApprovalG/printMetaInfo.do";
         printmetainfo_ck_dialogArguments[0] = para;
         var OpenWin = window.open(url, "PrintMetaInfo_CK", GetOpenWindowfeature(850, 550));
         try { OpenWin.focus(); } catch (e) { }
-    }
-    else {
-        var feature = "dialogWidth:850px;dialogHeight:550px;scroll:no;resizable:no; status:no; help:no;edge:sunken";
-        feature = feature + GetShowModalPosition(850, 550);
-
-        if (url != "")
-            window.showModalDialog(url, para, feature);
-    }
 }
 
 function get_length(chkstr) {

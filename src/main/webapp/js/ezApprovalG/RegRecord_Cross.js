@@ -9,13 +9,13 @@ var g_TaskCode;
 function InitCabinetInfo() {
     var CabXml = createXmlDom();
     CabXml = loadXMLString(g_CabListXml);
-
     g_CabID = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETID");
 
     g_TaskCode = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "TASKCODE");
     tdCabinetName.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETNAME");
     tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
     tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
+    
     tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
 
     InitCabClassInfo(GetCabinetClassInfo(g_CabID));
@@ -44,14 +44,14 @@ function InitRegisterType() {
 
         case "1":
             if (ListTypeFlag == "10") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1].innerHTML);
             }
             else if (ListTypeFlag == "11") {
             	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0].innerHTML);
             }
             break;
 
@@ -63,27 +63,27 @@ function InitRegisterType() {
             	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);;
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2].innerHTML);
             }
             break;
 
         case "3":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4].innerHTML);
             break;
 
         case "4":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5].innerHTML);
             break;
 
         case "5":
 
             if (ListTypeFlag == "10" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6].innerHTML);
             }
 
             if (ListTypeFlag == "11" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6].innerHTML);
             }
 
             break;
@@ -164,6 +164,7 @@ function RegisterRecord() {
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DRAFTERNAME2", txtDrafter.value);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "EXECUTEDATE", GetExecuteDate());
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "RECEIPTMEMBER", txtReceiptMember.value);
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "RECEIPTMEMBER2", txtReceiptMember.value);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "SENDINGMEMBER", "");
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DELIVERYNO", txtDeliveryNo.value);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "ORIGINREGSN", txtOriginSN.value);
@@ -254,14 +255,15 @@ function RegisterRecord() {
 
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "COMPANYID", CompanyID);   
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCID", pDocID);   
-
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "LANGTYPE", UserLang); 
+    
     var AttachFlag = '0';
     if (document.all.lstAttachLink.innerHTML != "")
         AttachFlag = '1';
 
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "ATTACHFLAG", AttachFlag);
 
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_RegisterRecord.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/registerRecord.do", false);
     xmlhttp.send(xmlpara);
 
     var rtnXml = xmlhttp.responseXML;

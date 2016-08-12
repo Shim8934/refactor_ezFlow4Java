@@ -245,11 +245,10 @@
         if (CheckInputField()) {
             if (pDocID == "")
                 pDocID = createNewDocID();
-// alert(RegisterRecord());
+
             if (RegisterRecord()) {
                 rtnVal[0] = "TRUE";
                 rtnVal[1] = g_CabListXml;
-                alert(rtnVal[1]);
                 window.opener.GetRecordList();
                 window.close();
             }
@@ -269,7 +268,6 @@
     }
     function createNewDocID() {
         try {
-        	alert("adasd111");
             var objRoot;
             var objNode;
 
@@ -278,9 +276,9 @@
 
             var objNode;
             createNodeInsert(xmlpara, objNode, "PARAMETER");
-            createNodeAndInsertText(xmlpara, objNode, "xdocid", "");
+            createNodeAndInsertText(xmlpara, objNode, "docID", "");
 
-            xmlhttp.open("POST", "../aspx/createnewdocid.aspx", false);
+            xmlhttp.open("POST", "/ezApprovalG/createNewDocId.do", false);
             xmlhttp.send(xmlpara);
 
             if (xmlhttp.responseText == "") {
@@ -296,7 +294,7 @@
     }
     function openFileAttachUI() {
         try {
-            DivPopUpShow(570, 285, "/myoffice/ezApprovalG/ezAPRATTACH/RegRecord_Attach_cross.aspx?Docid=" + pDocID);
+            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID);
         }
         catch (e) {
             alert("openFileAttachUI()" + e.description);
@@ -329,6 +327,7 @@
     }
     function selRegisterType_onchange() {
         var Val = selRegisterType.value;
+        
         if (Val == "5" || Val == "6") {
             divAudioVisualDummy.style.display = "none";
             divAudioVisual.style.display = "";
@@ -387,7 +386,7 @@
             para[0] = g_SepAttachLVXml;
             para[1] = g_CabID;
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/InsSepAttach_Cross.aspx";
+            var url = "/ezApprovalG/insSepAttach.do";
 
             inssepattach_cross_dialogArguments[0] = para;
             inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;

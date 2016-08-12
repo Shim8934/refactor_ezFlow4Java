@@ -12839,11 +12839,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordClassInfo(Document xmlDom, String companyID,	String lang) throws Exception {
+	public String getRecordClassInfo(Document xmlDom ,	String lang) throws Exception {
 		try{
 		StringBuilder resultXML = new StringBuilder();
 		String rtnVal = "<RESULT>NORECORD</RESULT>";
-		String SepAttachNo =xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -13408,4 +13409,304 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 	}
 	
+	@Override
+	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint) throws Exception {
+		StringBuffer resultXML = new StringBuffer();
+		String OrderOption1 = "";
+		String OrderOption2 = "";
+		
+		String listString = getListHeader("067", companyID, lang);
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DEPTID", p_DeptID);
+		map.put("v_SUBQUERY", pQuery);
+		map.put("v_MANAGEDEPTID", deptcode);
+		map.put("v_ORGANID", deptcode2);
+		map.put("v_DOCTITLE", title);
+		map.put("v_CHARGENAME", debenturer);
+		map.put("v_SREGDATE", sregdate);
+		map.put("v_EREGDATE", eregdate);
+		
+		int totalCount = ezApprovalGDAO.getDeliveryListCount(map);
+        int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+        int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum)-1);
+		
+        if(querySize2 >= Integer.parseInt(pageSize)){
+        	querySize2 = Integer.parseInt(pageSize);
+        }
+        
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALDOCCOUNT>" + totalCount + "</TOTALDOCCOUNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		resultXML.append("<ROWS>");
+		
+		int i=0;
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		for(i=0; i<hlength; i++){
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
+			
+			if(!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())){
+				if(SortOption.equals("")){
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() +" ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc ";
+				}
+				else{
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() +" desc ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " ";
+				}
+			}
+		}
+
+        if(isdocprint.equals("TRUE")){
+        	map.put("iv_PAGESIZE", pageNum);
+    		map.put("iv_PAGESIZE2", pageSize);
+        }
+        else{
+        	map.put("iv_PAGESIZE", querySize);
+    		map.put("iv_PAGESIZE2", querySize2);
+        }
+        
+    	map.put("v_ORDEROPTION", OrderOption1);
+		map.put("v_ORDEROPTION2", OrderOption2);
+		map.put("v_ISDOCPRINT", isdocprint);
+		
+        String docList =ezApprovalGDAO.getDeliveryList(map);
+        Document docXML = commonUtil.convertStringToDocument(docList);
+    	String fieldName = "";
+		String fieldValue = "";
+		
+		for(int j=docXML.getElementsByTagName("ROW").getLength()-1; j>=0; j--){
+			resultXML.append("<ROW>");
+			
+			for(i=0; i<hlength; i++){
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>");
+			   
+				fieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
+				
+				if(fieldName.toUpperCase().equals("ORGAN") || fieldName.toUpperCase().equals("MANAGEDEPT") || fieldName.toUpperCase().equals("CHARGENAME")){
+					fieldName=fieldName + commonUtil.getMultiData(lang);
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent();
+				resultXML.append(getListField(fieldName, fieldValue, companyID, lang) + "</VALUE>");
+				
+				if(i==0){
+					resultXML.append("<DATA1>" + makeRightField(docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim())+ "</DATA1>");
+					resultXML.append("<DATA2>" + makeRightField(docXML.getElementsByTagName("HREF").item(j).getTextContent().trim())+ "</DATA2>");
+					resultXML.append("<DATA3>" + makeRightField(docXML.getElementsByTagName("SN").item(j).getTextContent().trim())+ "</DATA3>");
+					resultXML.append("<DATA4>" + makeRightField(docXML.getElementsByTagName("MANAGEDEPTID").item(j).getTextContent().trim())+ "</DATA4>");
+					resultXML.append("<DATA5>" + makeRightField(docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim())+ "</DATA5>");
+					resultXML.append("<DATA6>" + makeRightField(docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim())+ "</DATA6>");
+					resultXML.append("<DATA7>" + makeRightField(docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim())+ "</DATA7>");
+					
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		return resultXML.toString();
+	}
+
+	@Override
+	public String registerRecord(Document xmlDom) throws Exception {
+		StringBuilder strSQL = new StringBuilder("");
+		StringBuilder subSQL2 = new StringBuilder();
+		String subSQL= "";
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		String cabID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
+		String manualFlag = xmlDom.getElementsByTagName("MANUALFLAG").item(0).getTextContent().trim();
+		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim();
+		String deptName = xmlDom.getElementsByTagName("DEPTNAME").item(0).getTextContent().trim();
+		String deptName2 = xmlDom.getElementsByTagName("DEPTNAME2").item(0).getTextContent().trim();
+		String registerType = xmlDom.getElementsByTagName("REGISTERTYPE").item(0).getTextContent().trim();
+		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
+		
+		String registerDate; // 4
+		String specialCatalogFlag; // 21
+		String regSn; // 22
+		String rejectFlag = "0"; // 24
+		String attachFlag = "0"; // 25
+		String docID = ""; // 26
+		
+		if(manualFlag.equals("1")){// 수기등록 문서이면
+			//(2007.08.10 김상건) : 수기기록물이고 첨부파일이 있을 경우 docid 필요
+			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
+			registerDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
+			specialCatalogFlag = xmlDom.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent().trim();
+			
+			// 2011.04.04 수기등록시 첨부등록 추가
+			attachFlag = xmlDom.getElementsByTagName("ATTACHFLAG").item(0).getTextContent().trim();
+			regSn = getSerialNum("002", deptCode, "", companyID, langType);
+			if(regSn.equals("")){
+				return "<RESULT>FALSE</RESULT>";
+			}
+		}
+		else{
+			registerDate = EgovDateUtil.getTodayTime();
+			specialCatalogFlag = getRecordSCFlag(cabID, companyID);
+			regSn = xmlDom.getElementsByTagName("REGSN").item(0).getTextContent().trim();
+			rejectFlag = xmlDom.getElementsByTagName("REJECTFLAG").item(0).getTextContent().trim();
+			attachFlag = xmlDom.getElementsByTagName("ATTACHFLAG").item(0).getTextContent().trim();
+			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
+		}
+		
+		if(!regSn.trim().equals("")){
+			regSn=formatSerialNum(regSn);
+		}
+		
+		//동국대학교 수정(2007.07.26 김상건) : 회계년도가 3월 ~ 익년 2월까지이므로 RegYear 년도는 회계년도 값을 가져야 한다.
+        //string RegYear = DateTime.Parse(REGISTERDATE).Year.ToString();	// 5 -- 원본
+        String regYear = getAccountingYear(registerDate, companyID, langType);    // -- 수정           
+        
+        String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim(); // 6
+        String numOfPage = xmlDom.getElementsByTagName("NUMOFPAGE").item(0).getTextContent().trim();	// 7
+        String aprMemberTitle = xmlDom.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent().trim();	// 8
+        // 2010.08.03 다국어
+        String aprMemberTitle2 = xmlDom.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent().trim();	// 8
+        String drafterName = xmlDom.getElementsByTagName("DRAFTERNAME").item(0).getTextContent().trim();	// 9
+        // 2010.08.03 다국어
+        String drafterName2 = xmlDom.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent().trim();	// 9
+        String executeDate = xmlDom.getElementsByTagName("EXECUTEDATE").item(0).getTextContent().trim();// 10
+        String receiptMember = xmlDom.getElementsByTagName("RECEIPTMEMBER").item(0).getTextContent().trim();	// 11
+        // 2010.08.03 다국어
+        String receiptMember2 = xmlDom.getElementsByTagName("RECEIPTMEMBER2").item(0).getTextContent().trim();	// 11
+        String deliveryNo = xmlDom.getElementsByTagName("DELIVERYNO").item(0).getTextContent().trim();	// 12
+		if (deliveryNo.trim() != "")
+			deliveryNo = formatSerialNum(deliveryNo);
+
+		String electronicRecFlag = xmlDom.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent().trim();	// 13
+		String specialRec = xmlDom.getElementsByTagName("SPECIALREC").item(0).getTextContent().trim();	// 15
+		String publicCode = xmlDom.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();	// 16
+		String limiTrange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();	// 17
+		String docType = "";
+		String visualAudioDesc= "";
+		String visualAudioType ="";
+		try{
+			//등록대장 : listType=0일때는 들어갈 필요가 없다.NullPointException 무시하려고 try..catch
+			docType = xmlDom.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();	// 18
+		}
+		catch(Exception e){
+		}
+	    try{
+	    	visualAudioDesc = xmlDom.getElementsByTagName("VISUALAUDIODESC").item(0).getTextContent().trim();	// 19
+			visualAudioType = xmlDom.getElementsByTagName("VISUALAUDIOTYPE").item(0).getTextContent().trim();	// 20
+	    }
+	    catch(Exception e){
+	    }
+		String originRegSn = xmlDom.getElementsByTagName("ORIGINREGSN").item(0).getTextContent().trim();	// 23
+
+		// 특수목록 정보 노드
+		NodeList nodeSL = xmlDom.getElementsByTagName("SPECIALCATALOGINFO");
+		// 분리첨부 정보 노드
+		String nodeSepAtta = xmlDom.getElementsByTagName("SEPATTACHINFO").item(0).getTextContent();
+
+		String OldFlag = "1";
+		String CreateDate = EgovDateUtil.getTodayTime();
+
+		//'기록물 ID=처리과기관코드+생산년도+등록일련번호
+		String recordID = deptCode + regYear + regSn;
+		//'생산등록번호(처리과기관코드+등록일련번호)
+		String registerSN = deptCode + regSn;
+		
+		 // 기록물 테이블에 저장하는 쿼리.
+        strSQL.append("Insert Into TBRECORD(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, ");
+        strSQL.append("RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2, DrafterName, DrafterName2, ExecuteDate, ");
+        strSQL.append("ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, ");
+		strSQL.append("SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate, ");
+		strSQL.append("DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag, ManualRegFlag, ");
+		strSQL.append("DocType) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
+		strSQL.append("', N'" + makeRightField(deptName) + "', N'" + makeRightField(deptName2) + "', '" + makeRightField(deptCode));
+		strSQL.append("', '" + makeRightField(regYear) + "', SYSDATE" );
+        strSQL.append(", '" + makeRightField(registerSN) + "', N'" + makeRightField(aprMemberTitle) + "', N'" + makeRightField(aprMemberTitle2));
+		strSQL.append("', N'" + makeRightField(drafterName) + "', N'" + makeRightField(drafterName2) + "', TO_DATE('" + makeRightField(executeDate));
+		strSQL.append("','YYYY-MM-DD HH24:MI:SS'), N'" + makeRightField(receiptMember) + "', N'" + makeRightField(receiptMember2) + "', NULL, NULL, '" + makeRightField(deliveryNo));
+		strSQL.append("', '" + makeRightField(originRegSn) + "', '" + makeRightField(electronicRecFlag));
+		strSQL.append("', '" + makeRightField(specialRec) + "', '" + makeRightField(publicCode));
+		strSQL.append("', '" + makeRightField(limiTrange) + "', '" + makeRightField(OldFlag));
+		strSQL.append("', NULL, '" + makeRightField("0") + "', '" + makeRightField(specialCatalogFlag));
+		strSQL.append("', '" + makeRightField(attachFlag) + "', SYSDATE");
+		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
+		strSQL.append("', '" + makeRightField(docType) + "');\n");
+        // '## 기록물 분리첨부 테이블에 저장
+		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"));
+		
+        if (subSQL.equals("FALSE")){
+        	return "<RESULT>FALSE</RESULT>";
+        }
+		else{
+			strSQL.append(subSQL);
+		}
+        // 2011.04.04 수기등록시 첨부등록 추가
+                     
+        // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
+        if (manualFlag == "1")
+        {
+            if (docID != "")
+            {
+                subSQL2.append(" INSERT INTO TBENDATTACHINFO (DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, ");
+                subSQL2.append("	AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2) ");
+                subSQL2.append(" SELECT '" + docID + "', AttachFileSN,AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , ");
+                subSQL2.append(" AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2");
+                subSQL2.append(" FROM TBAPRATTACHINFO WHERE DOCID = '" + docID + "' ;\n");
+
+                subSQL2.append(" DELETE FROM TBAPRATTACHINFO WHERE DOCID = '" + docID + "' ;\n");
+
+                strSQL.append(subSQL2.toString());
+            }
+        }
+        
+     // '## 분리첨부 추가저장
+		if (nodeSepAtta != null)
+		{
+//			<SEPATTACHINFO>
+//				<SEPATTACH>
+//					<CABINETID>S907001e00000052004000013001</CABINETID>
+//					<TITLE>분리첨부1</TITLE>
+//					<NUMOFPAGE>123</NUMOFPAGE>
+//					<REGTYPE>1</REGTYPE>
+//					<SUMMARY></SUMMARY>
+//					<SUMMARY></SUMMARY>
+//				</SEPATTACH>
+//			</SEPATTACHINFO>
+			NodeList nodeSepAtt = xmlDom.getElementsByTagName("SEPATTACH");
+	        if (xmlDom.getElementsByTagName("SEPATTACH").getLength() > 0) {
+	        	for (int k = 0; k < xmlDom.getElementsByTagName("SEPATTACH").getLength(); k++) {
+	        		int tempValue = k + 1;
+	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)));
+	        		
+	        		if (subSQL.equals("FALSE")) {
+	        			return "FALSE";
+	        		} else {
+	        			strSQL.append(subSQL);
+	        		}
+	        	}
+	        }
+		}
+		// '특수목록 정보 저장
+		if (specialCatalogFlag == "2" && nodeSL != null)
+		{
+			subSQL = saveSpecialInfoRec(recordID, cabID, xmlDom);
+			if (subSQL == "FALSE")
+				return "<RESULT>FALSE</RESULT>";
+			else
+				strSQL.append(subSQL);
+		}
+
+		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
+
+		if (result)
+			return "<RESULT>TRUE</RESULT>";
+		else
+			return "<RESULT>FALSE</RESULT>";
+	}
+
+
 }

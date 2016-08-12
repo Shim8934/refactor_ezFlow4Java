@@ -1044,7 +1044,7 @@ function DocListPrinter_onclick() {
 
     para[11] = NodeListLen
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/DocListView_Cross.aspx"
+    var url = "/ezApprovalG/docListView.do"
 
     doclistview_cross_dialogArguments[0] = para;
 

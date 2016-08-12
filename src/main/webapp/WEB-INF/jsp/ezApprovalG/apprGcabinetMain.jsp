@@ -956,7 +956,7 @@
             para[2] = tr.getAttribute("DATA7");
             para[3] = "";
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/RegSepAttach_Cross.aspx";
+            var url = "/ezApprovalG/regSepAttach.do";
 
             regsepattach_cross_dialogArguments[0] = para;
             regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
@@ -1216,7 +1216,7 @@
             var width = window.screen.availWidth;
             var left = (parseInt(width) - 600) / 2;
             var top = (parseInt(heigth) - 270) / 2;
-            window.open("../ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA1") + "&pDeptID=&pDocState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
     }
     var aprgongramline_cross_dialogArguments = new Array();
@@ -1351,7 +1351,7 @@
             pDocID = tr[0].getAttribute("DATA1");
         }
 
-        var url = "../TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=END";
+        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
         var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
         feature = feature + GetOpenPosition(600, 450);
         window.open(url, "", feature);
