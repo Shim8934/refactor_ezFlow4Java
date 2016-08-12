@@ -1673,11 +1673,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String subQuery = request.getParameter("subQuery");
         String orderCell = request.getParameter("orderCell");
         String orderOption = request.getParameter("orderOption");
+        String approvUser = request.getParameter("approvUser");
         String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
+        String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, draftDeptName, 
-				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang());
+				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang(), approvUser);
 		
 		return result; 
 	}

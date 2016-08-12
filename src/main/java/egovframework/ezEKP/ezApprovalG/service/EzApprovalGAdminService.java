@@ -94,7 +94,7 @@ public interface EzApprovalGAdminService {
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String lang) throws Exception;
+			String orderCell, String orderOption, String companyID, String lang, String approvUser) throws Exception;
 
 	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
 	

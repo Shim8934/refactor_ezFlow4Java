@@ -546,7 +546,7 @@
 				        var left = (parseInt(width) - 540) / 2;
 				        var top = (parseInt(heigth) - 220) / 2;
 				        var isExtYN = tr.getAttribute("DATA3");
-				        
+//TODO 외부부서일때 isExtYN ==Y
 			        	if (isExtYN.toUpperCase() == "Y") {
 				            var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(tr.getAttribute("DATA1"));
 				            var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";

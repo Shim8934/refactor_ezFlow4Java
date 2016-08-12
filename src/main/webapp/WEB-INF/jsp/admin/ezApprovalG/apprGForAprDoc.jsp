@@ -78,7 +78,7 @@
 	        function GetDocList() {
 	            var pDocstate = "000";
 	            if (pChackYN == "FALSE") {
-	                for (var i = 0; i < 19; i++) {
+	                for (var i = 0; i < 20; i++) {
 	                    SearchCond[i] = "";
 	                }
 	                //curpage = 1;
@@ -120,6 +120,7 @@
 	            		subQuery : SearchCond[18],
 	            		orderCell : "",
 	            		orderOption : "",
+	            		approvUser : SearchCond[19],
 	            		companyID : pCompanyID
 	            	},
 	            	success : function(result) {
@@ -613,7 +614,7 @@
 			            var left = (parseInt(width) - 540) / 2;
 			            var top = (parseInt(heigth) - 220) / 2;
 			            var isExtYN = tr.getAttribute("DATA3");
-			            
+//TODO 외부부서일때 isExtYN ==Y
 			            if (isExtYN.toUpperCase() == "Y") {
 			                var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(tr.getAttribute("DATA1"));
 			                var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
@@ -654,7 +655,7 @@
 			        if (condition) {
 			            pChackYN = "SEARCH";
 			            
-			            for (var i = 0; i < 19; i++) {
+			            for (var i = 0; i < 20; i++) {
 			                SearchCond[i] = condition[i];
 			            }
 			
@@ -668,7 +669,7 @@
 			    if (condition) {
 			        pChackYN = "SEARCH";
 			        
-			        for (var i = 0; i < 19; i++) {
+			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = condition[i];
 			        }
 			

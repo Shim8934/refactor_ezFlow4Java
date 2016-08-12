@@ -1472,7 +1472,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String lang)
+			String orderCell, String orderOption, String companyID, String lang, String approvUser)
 			throws Exception {
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -1523,6 +1523,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map1.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map1.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map1.put("v_APPROVUSER", approvUser);
 		map1.put("companyID", companyID);
 		
 		Integer totalCount = ezApprovalGAdminDAO.searchManageAprDocListCount(map1);
@@ -1553,6 +1554,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map2.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map2.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map2.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map2.put("v_APPROVUSER", approvUser);
 		map2.put("companyID", companyID);
 		
 		List<ApprGAprDocInfoVO> listBody = ezApprovalGAdminDAO.searchManageAprDocList(map2);
@@ -1763,8 +1765,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		String result = commonUtil.getQueryResult(vo);
-		
-		System.out.println(result);
 		
 		return result;
 	}
