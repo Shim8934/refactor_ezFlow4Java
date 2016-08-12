@@ -1068,7 +1068,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
 		
-		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType, companyID);
+		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID);
 
 		Document xmldoc = commonUtil.convertStringToDocument(listXML);
 	
