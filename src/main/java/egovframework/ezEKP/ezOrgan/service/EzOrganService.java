@@ -46,5 +46,7 @@ public interface EzOrganService {
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;
 
+	public String getCNByEmail(String email) throws Exception;
+
  
 }

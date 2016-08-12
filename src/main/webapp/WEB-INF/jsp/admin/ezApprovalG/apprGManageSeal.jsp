@@ -48,7 +48,7 @@
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
 		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            var ezAPRALERT_Cross = window.open("/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		        } else {
 		            var parameter = pAlertContent;
@@ -172,8 +172,8 @@
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
 		          //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI(pInformationString);
-		            alert(pInformationString);
+		            OpenAlertUI(pInformationString);
+// 		            alert(pInformationString);
 		            return;
 		        }
 		    }
@@ -198,21 +198,21 @@
 		                if (RtnVal == "TRUE") {
 		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
 		                  //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
-//		 		            OpenAlertUI(pInformationString);
-				            alert(pInformationString);
+		 		            OpenAlertUI(pInformationString);
+// 				            alert(pInformationString);
 		                    getSealList();
 		                } else {
 		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
 		                  //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
-//		 		            OpenAlertUI(pInformationString);
-				            alert(pInformationString);
+		 		            OpenAlertUI(pInformationString);
+// 				            alert(pInformationString);
 		                    return;
 		                }
 		            } else {
 		                var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
 		              //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
-//	 		            OpenAlertUI(pInformationString);
-			            alert(pInformationString);
+	 		            OpenAlertUI(pInformationString);
+// 			            alert(pInformationString);
 		                return;
 		            }
 		        }

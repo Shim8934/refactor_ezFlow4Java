@@ -1075,6 +1075,15 @@ System.out.println(strSQL + strSize);
 		return sb.toString();
 	}
 
+	//TODO eMail 값으로 ID 를 찾는 함수
+	@Override
+	public String getCNByEmail(String email) throws Exception {
+			String result = ezOrganDAO.getCNByEmail(email);
+			
+			return result;
+	}
+
+	
 }
 
 

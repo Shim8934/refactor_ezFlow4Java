@@ -348,4 +348,15 @@
 				cn = #userID#
 		]]>
 	</select>
+	
+	<select id="EzOrganDAO.getCNByEmail"	parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				cn
+			FROM
+				ezHrmaster.TBLUSERMASTER
+			WHERE
+				mail = #email#
+		]]>
+	</select>
 </sqlMap>

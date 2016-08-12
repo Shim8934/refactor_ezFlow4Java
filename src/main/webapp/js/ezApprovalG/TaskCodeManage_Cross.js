@@ -182,7 +182,7 @@ var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent) {
     ezapralert_cross_dialogArguments[0] = pAlertContent;
     ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-    var ezAPRALERT_Cross = window.open("/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+    var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
     try { ezAPRALERT_Cross.focus(); } catch (e) {
     }
 }

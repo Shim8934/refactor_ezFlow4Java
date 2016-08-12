@@ -111,4 +111,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		delete("EzOrganDAO.delProxyUserInfo", map);
 	}
 
+	public String getCNByEmail(String email) throws Exception{
+		return (String) select("EzOrganDAO.getCNByEmail", email);
+	}
+
 }

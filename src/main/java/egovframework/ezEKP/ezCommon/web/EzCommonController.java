@@ -1025,13 +1025,12 @@ public class EzCommonController extends EgovFileMngUtil{
         	pDeptID = request.getParameter("dept");
         }
         
-        /*if (id.equals("")) {
+        if (id.equals("")) {
         	
         	if (!email.equals("")) {
         		id = ezOrganService.getCNByEmail(email);
-        		
         	}
-        }*/
+        }
         
         if (!id.equals("")) {
         	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getLang());

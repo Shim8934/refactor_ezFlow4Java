@@ -170,15 +170,11 @@
 			            window.close();
 			        } else {
 			            var pAlertContent = "<spring:message code = 'ezApprovalG.t694' />";
-			          	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 			            OpenAlertUI(pAlertContent);
-			            alert(pAlertContent);
+			            OpenAlertUI(pAlertContent);
 			        }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t695' />";
-		          	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+		            OpenAlertUI(pAlertContent);
 		        }
 			}
 	        
@@ -186,7 +182,7 @@
 		    function OpenAlertUI(pAlertContent) {
 		        ezapralert_cross_dialogArguments[0] = pAlertContent;
 		        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		        var ezAPRALERT_Cross = window.open("../../ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		    }
 			

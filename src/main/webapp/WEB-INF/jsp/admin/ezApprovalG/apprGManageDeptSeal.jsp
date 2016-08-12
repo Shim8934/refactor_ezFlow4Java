@@ -78,7 +78,7 @@
 	            if (CrossYN()) {
 	                ezapralert_cross_dialogArguments[0] = pAlertContent;
 	                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-	                var ezAPRALERT_Cross = window.open("/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+	                var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 	                try { ezAPRALERT_Cross.focus(); } catch (e) {
 	                }
 	            } else {
@@ -173,8 +173,8 @@
 		        listview.LoadFromID("lvtDocForm");
 		
 		        var selRow = listview.GetSelectedRows();
-		
-		        if (selRow) {
+
+		        if (selRow!="") {
 		            parameter[0] = selRow[0].getAttribute("DATA1");
 		            parameter[1] = selRow[0].cells[0].innerText;
 		            parameter[2] = encodeURI("/files" + selRow[0].getAttribute("DATA2"));
@@ -199,9 +199,8 @@
 		            }
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
-		          //2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI(pInformationString);
-		            alert(pInformationString);
+		            OpenAlertUI(pInformationString);
+		            
 		            return;
 		        }
 		    }
@@ -226,22 +225,19 @@
 	                    RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
 	                    if (RtnVal == "TRUE") {
 	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1269' />";
-	                      //2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-//	     		            OpenAlertUI(pInformationString);
-		                    alert(pInformationString);
+	     		            OpenAlertUI(pInformationString);
+		                    
 		                    getSealList();
 		                } else {
 		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1270' />";
-		                  //2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-//		 		            OpenAlertUI(pInformationString);
-		                    alert(pInformationString);
+		 		            OpenAlertUI(pInformationString);
+		                    
 		                    return;
 		                }
 		            } else {
 		                var pInformationString = "<spring:message code = 'ezApprovalG.t1270' />";
-		              //2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-//	 		            OpenAlertUI(pInformationString);
-		                alert(pInformationString);
+	 		            OpenAlertUI(pInformationString);
+		                
 		                return;
 	            	}
 	        	}
