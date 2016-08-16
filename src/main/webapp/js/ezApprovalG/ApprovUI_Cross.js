@@ -1470,7 +1470,7 @@ function ReAprLineSingMapping(ret) {
             if (referCnt == 1) {
                 refer = "";
                 refer = refer + OrderName[i];
-                referCnt = referCnt + 1
+                referCnt = referCnt + 1;
             }
             else
                 refer = refer + ", " + OrderName[i];
@@ -1483,9 +1483,9 @@ function ReAprLineSingMapping(ret) {
             field.textContent = refer;
         }
     }
-    var susinSN = ""
+    var susinSN = "";
     if (pDraftFlag == "SUSIN") {
-        susinSN = pSusinSN
+        susinSN = pSusinSN;
     }
     for (i = startIdx; i < 10; i++) {
         fieldname = susinSN + "jikwe" + i;
@@ -1513,11 +1513,11 @@ function ReAprLineSingMapping(ret) {
         }
     }
     for (i = 1; i < 50; i++) {
-        name = susinSN + "habyuisign" + i
+        name = susinSN + "habyuisign" + i;
         field = message.GetListItem(fields, name);
         if (field) {
             if (!trim(field.textContent)) {
-                name = susinSN + "habyui" + i
+                name = susinSN + "habyui" + i;
                 field = message.GetListItem(fields, name);
                 if (field) {
                     field.textContent = " ";
@@ -1571,7 +1571,7 @@ function ReAprLineSingMapping(ret) {
         }
     }
 
-    var tempLastSignSN = OrderType.length
+    var tempLastSignSN = OrderType.length;
     for (i = 1; i < OrderType.length; i++) {
         if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType16 || OrderType[i] == strAprType3) 
             tempLastSignSN = i;
@@ -1614,9 +1614,9 @@ function ReAprLineSingMapping(ret) {
                 for (k = 1; k < 10; k++) {
                     //if(pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU") 
                     if (pDraftFlag == "SUSIN")
-                        signID = pSusinSN + "sign" + k
+                        signID = pSusinSN + "sign" + k;
                     else
-                        signID = "sign" + k
+                        signID = "sign" + k;
 
                     field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
                     if (field)
@@ -2061,9 +2061,9 @@ function setMenuBar(id, flag) {
     var strCmd, display_Value
 
     if (flag)
-        display_Value = ""
+        display_Value = "";
     else
-        display_Value = "none"
+        display_Value = "none";
 
     if (document.getElementById(id) != null)
         document.getElementById(id).style.display = display_Value;
@@ -2170,7 +2170,7 @@ function putSignXML(SignXML) {
                     else {
                         var img = SignCont.split("::");
                         var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-                        var signHeight = parseInt(field.offsetHeight) - 4
+                        var signHeight = parseInt(field.offsetHeight) - 4;
                         signWidth = 50;
                         signHeight = 28;
 

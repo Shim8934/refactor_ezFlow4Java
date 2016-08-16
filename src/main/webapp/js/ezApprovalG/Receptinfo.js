@@ -2650,7 +2650,6 @@ function GetEntryInfo(_DEPTID) {
     	});
     	
         ReceiveDocument = SelectSingleNodeValueNew(result, "DATA/EXTENSIONATTRIBUTE11").trim();
-
     } catch (e) {
         alert(e.description);
     } 

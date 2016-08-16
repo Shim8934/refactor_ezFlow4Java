@@ -259,9 +259,9 @@
 		            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
 		
 		            if (tempUserID == tempUserDeptID) {
-		                window.open("../ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tempDocID + "&pDeptID=" + tempUserDeptID + "&pDocState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 270));
+		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 270));
 		            } else {
-		                window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + tempUserID, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            }
 		        }
 		        else {

@@ -864,6 +864,8 @@
 	                    selTaskMCategory_onchange();
 	                }
 	            }
+	        } else {
+	            alert("<spring:message code='ezApprovalG.t478'/>");
 	        }
 	    }
 	

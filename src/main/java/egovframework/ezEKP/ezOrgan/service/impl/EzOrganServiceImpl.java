@@ -846,13 +846,12 @@ System.out.println(strSQL + strSize);
 
 	@Override
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
-		//TODO LDAP 으로 되어있어서 보류
+		//TODO LDAP 으로 되어있어서 보류 외부수신처
 		return null;
 	}
 
 	@Override
 	public String getEncPassword(String dUserID) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", dUserID);
 		

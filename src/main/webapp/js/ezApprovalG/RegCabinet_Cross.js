@@ -196,16 +196,16 @@ function btnDisplayInfo_onclick() {
     var para = new Array();
     para[0] = arrDisplayInfo[0];
     para[1] = arrDisplayInfo[1];
-
+    
     InsDisplayInfo_Cross_dialogArguments[0] = para;
     InsDisplayInfo_Cross_dialogArguments[1] = btnDisplayInfo_onclick_Complete;
     var url = "/ezApprovalG/insDisplayInfo.do";
+    
     //var feature = "dialogWidth:350px;dialogHeight:242px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
     //feature = feature + GetShowModalPosition(350, 242);
     //if (url != "")
     //    var rtn = window.showModalDialog(url, para, feature);
-
-    DivPopUpShow(350, 242, "/ezApprovalG/ezAprAllAlert.do");
+    DivPopUpShow(350, 242, url);
 }
 
 function btnDisplayInfo_onclick_Complete(rtn) {

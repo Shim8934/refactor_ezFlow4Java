@@ -2449,7 +2449,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dUserID = EgovFileScrty.decryptRsa(pk, eUserID);
 		String password = EgovFileScrty.encryptPassword(dPassWd, dUserID);
 		String flag = ezApprovalGService.getApprovalPWD(dUserID);
-		
+
 		if (flag != null) {
 			if (flag.equals("Y")) {
 				String dbPassword = ezApprovalGService.getApprovalPWD1(dUserID);
@@ -2540,7 +2540,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 						
 						for (int j = 0; j < proxyUserArray.length; j++) {
-							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
 								checkPermission = false;
 								break;
 							}
@@ -2908,7 +2908,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName.replace("@%$^&!#()", "11") + ".zip";
+		String zipFilePath = config.getProperty("upload_common.DOCDOWNLOAD") + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
 
 		byte[] buffer = new byte[1024];
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
@@ -2918,8 +2918,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			FileInputStream inpStream = new FileInputStream(new File(realPath + filePaths[k]));
 			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
 	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-			
-			fileName = fileName.replace("@%$^&!#()", "11") + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
+
+			if (fileName.indexOf("." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1)) == -1) {
+				fileName = fileName + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
+			}
 			zout.putNextEntry(new ZipEntry(fileName));
 
 			int length = 0;
@@ -4650,7 +4652,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pListType = request.getParameter("pListTypeName");
-		String pDocType = request.getParameter("pDocTypeName");
 		String pUserID = request.getParameter("pUserID");
 		String pUserDeptID = request.getParameter("pUserDeptID");
 		String pPageSize = request.getParameter("pPageSize");
@@ -4659,7 +4660,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
-		String subQuery = request.getParameter("subQuery");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -4667,4 +4667,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+
+	/**
+	 * 전자결재G 철생성 비치기록물 변경 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/insDisplayInfo.do")
+	public String insDisplayInfo() throws Exception{
+		return "ezApprovalG/apprGinsDisplayInfo";
+	}
+	
 }

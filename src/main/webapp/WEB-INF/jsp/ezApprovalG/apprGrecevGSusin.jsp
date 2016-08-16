@@ -646,7 +646,6 @@
 		    }
 		
 		    function chk_Passwd_Complete(chkpass) {
-alert(200);
 		        DivPopUpHidden();
 		        if (chkpass == "False") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";

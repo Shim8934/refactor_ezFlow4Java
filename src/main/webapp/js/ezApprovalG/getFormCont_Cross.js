@@ -51,15 +51,15 @@ function GetFormContInfo(ID, DeptID, eventflag) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getFormContainer.do",
 		data : {
 				id : ID,
 				deptID  : DeptID
 				},
-		success: function(xml){
-			result = xml;
+		success: function(text){
+			result = text;
 		}        			
 	});
 

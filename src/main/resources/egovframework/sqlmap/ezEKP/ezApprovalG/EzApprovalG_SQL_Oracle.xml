@@ -383,7 +383,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETNAME2CODE(#v_CODE1#, #v_NAME#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String">
+	<procedure id="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETACCESSYNG(#v_DOCID#, #v_FLAG#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	

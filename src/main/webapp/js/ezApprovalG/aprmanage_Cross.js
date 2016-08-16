@@ -652,13 +652,13 @@ function openUserInfo() {
             var pDocID = GetAttribute(tr, "DATA3");
             var pDeptID = GetAttribute(tr, "DATA4");
             if (pCheckval == "Y") {
-                window.open("ezDocInfo/ezLineInfo.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID + "&pDocState=012", "", "height=220px,width=540px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(540, 220));
+                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=220px,width=540px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(540, 220));
             } else {
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;
                 var left = (width - 500) / 2;
                 var top = (heigth - 400) / 2;
-                window.open("/myoffice/common/showpersoninfo_cross.aspx?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                window.open("/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
             }
         }
         else {
@@ -671,7 +671,7 @@ function openUserInfo() {
         var width = window.screen.availWidth;
         var left = (width - 500) / 2;
         var top = (heigth - 400) / 2;
-        window.open("/myoffice/common/showpersoninfo_cross.aspx?id=" + GetAttribute(tr, "DATA1"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+        window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA1"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
     }
 }
 

@@ -311,7 +311,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (publicityFlag.equals("ALL") && mode.substring(1, 1).equals("Y")) {
+		if (publicityFlag.equals("ALL") && mode.substring(1, 2).equals("Y")) {
 			String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6");
 			
 			if (userSecurityCode.trim().equals("")) {
@@ -341,7 +341,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (!rtnVal && mode.substring(2, 1).equals("Y")) {
+		if (!rtnVal && mode.substring(2).equals("Y")) {
 			map.put("v_FLAG", "006");
 			String allUserRight = ezApprovalGDAO.getAccessYNG(map);
 			
@@ -4499,9 +4499,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
+		
 		if (docID == null || docID.equals("")) {
 			return "<DATA></DATA>";
 		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
@@ -7347,7 +7349,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //			String tempDocState = ezApprovalGDAO.doApproveDocState(map1);
 //		}
 		
-		if (proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
+		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
 			subSQL = insertProxyUserInfo(docID, curAprMemberSN, userID, proxyUserID, companyID, lang);
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
@@ -12182,10 +12184,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
-				if (fieldName.equals("DOCTITLE")) {
-					fieldValue = commonUtil.cleanValue(fieldValue);
-				}
-				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang)) + "</VALUE>");
 				
 				if (p == 0) {
@@ -12450,7 +12448,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							rtnVal = "'" + makeRightField(doc.getElementsByTagName("DATA2").item(k).getTextContent()) + "'";
 							chkFirst = true;
 						} else {
-							rtnVal = ", '" + makeRightField(doc.getElementsByTagName("DATA2").item(k).getTextContent()) + "'";
+							rtnVal += ", '" + makeRightField(doc.getElementsByTagName("DATA2").item(k).getTextContent()) + "'";
 						}
 					}
 				}
@@ -12459,7 +12457,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!chkFirst) {
 				rtnVal = "'" + makeRightField(userID) + "'";
 			} else {
-				rtnVal = ", '" + makeRightField(userID) + "'";
+				rtnVal += ", '" + makeRightField(userID) + "'";
 			}
 		} else {
 			rtnVal = "'" + makeRightField(userID) + "'";
