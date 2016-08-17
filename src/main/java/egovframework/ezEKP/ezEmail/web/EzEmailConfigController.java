@@ -292,7 +292,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			}
 	
 			if (mailboxQuota >= 1024*1024) {
-				mailboxQuotaStr = (int)(mailboxQuota/(1024*1024)) + "G";
+				mailboxQuotaStr = String.format("%.2fG", mailboxQuota/(1024*1024));
 			}
 			else if (mailboxQuota >= 1024) {
 				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
