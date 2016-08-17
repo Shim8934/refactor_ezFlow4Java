@@ -101,10 +101,15 @@ function InitFormCont() {
 
 function OpenAlertUI(pAlertContent)
 {
-	var parameter = pAlertContent;
-	var url = "../ezAPRALERT.aspx";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	feature =  feature + GetShowModalPosition(330, 205);
-	var RtnVal = window.showModalDialog(url,parameter,feature);
+//	var parameter = pAlertContent;
+//	var url = "../ezAPRALERT.aspx";
+//	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+//	feature =  feature + GetShowModalPosition(330, 205);
+//	var RtnVal = window.showModalDialog(url,parameter,feature);
+	
+	ezapralert_cross_dialogArguments[0] = pAlertContent;
+	var url = "/ezApprovalG/ezAprAlert.do";
+	var RtnVal = window.open(url, "", GetOpenWindowfeature(330, 205));
+	try { RtnVal.focus(); } catch(e) {}
 }
 

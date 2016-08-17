@@ -116,7 +116,7 @@
 		    }
 		    
 		    function DuplicateAprDeptCheck(DeptID) {
-		        var AprDeptLIst;
+		        var AprDeptList;
 		        var AprDeptListLen;
 		        var deptID;
 
@@ -364,6 +364,85 @@
 		        	}
 		        });
 			}
+		    
+		    var ezapropinion_cross_dialogArguments = new Array();
+	        function OpenInformationUI(pInformationContent) {
+	            if (CrossYN()) {
+	                ezapropinion_cross_dialogArguments[0] = pInformationContent;
+	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	                var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
+	                try { ezAPROPINION_Cross.focus(); } catch (e) {
+	                }
+	            }
+	            else {
+	                var parameter = pInformationContent;
+	                var url = "../ezAPROPINION_Cross.aspx";
+	                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	                var RtnVal = window.showModalDialog(url, parameter, feature);
+	                if (!RtnVal)
+	                    return;
+
+	                treeView.LoadFromID("FromTreeView");
+	                var nodeIdx = treeView.GetSelectNode();
+	                var treeNode = new TreeNode();
+	                treeNode.LoadFromID(nodeIdx.NodeID);
+
+	                if (nodeIdx.NodeID != null) {
+	                    chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("DISPLAYNAME1"), treeNode.GetNodeData("DISPLAYNAME2"), treeNode.GetNodeData("EXTENSIONATTRIBUTE2"));
+	                    getAdminReceivItem(p_groupid);
+	                }
+	            }
+	        }
+
+	        function OpenInformationUI_Complete(RtnVal) {
+	            if (!RtnVal) {
+	                return;
+	            }
+	            
+	            treeView.LoadFromID("FromTreeView");
+	            var nodeIdx = treeView.GetSelectNode();
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(nodeIdx.NodeID);
+
+	            if (nodeIdx.NodeID != null) {
+	                chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("DISPLAYNAME1"), treeNode.GetNodeData("DISPLAYNAME2"), treeNode.GetNodeData("EXTENSIONATTRIBUTE2"));
+	                getAdminReceivItem(p_groupid);
+	            }
+	        }
+	        
+	        function chkAllDept(aDeptID, aDeptName, aDeptName2, aCompanyID) {
+	        	var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
+	        	
+	        	if (DuplicateFlag) {
+	        		AddDept(aDeptID, aDeptName, aDeptName2, aCompanyID);
+	            }
+
+	            var xmlHTTP = createXMLHttpRequest();
+	            var strQuery = "<DATA><DEPTID>" + aDeptID + "</DEPTID><PROP>extensionAttribute2;displayName</PROP></DATA>";
+	            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+	            xmlHTTP.send(strQuery);
+
+	            var xmlNodes;
+	            xmlNodes = SelectNodes(xmlHTTP.responseXML, "NODES/NODE");
+	            if (xmlNodes.length > 0) {
+	                var i = 0;
+	                for (i = 0; i < xmlNodes.length; i++) {
+	                    chkAllDept(SelectSingleNodeValue(xmlNodes.item(i), "CN"), SelectSingleNodeValue(xmlNodes.item(i), "DISPLAYNAME1"), SelectSingleNodeValue(xmlNodes.item(i), "DISPLAYNAME2"), SelectSingleNodeValue(xmlNodes.item(i), "EXTENSIONATTRIBUTE2"));
+	                }
+	            }
+	            return;
+	        }
+	        
+	        function AddDept(aDeptID, aDeptName, aDeptName2, aCompanyID) {
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezApprovalG/setGroupSubItemInfo.do",
+	            	async : false,
+	            	data : { node1 : p_groupid, node2 : aDeptID, node3 : aDeptName, node4 : document.getElementById("SCompID").value, node5 : aCompanyID, node6 : aDeptName2 },
+	            	success : function(result) {
+	            	}
+	            });
+	        }
 		</script>
 	</head>
 	<body class="mainbody">

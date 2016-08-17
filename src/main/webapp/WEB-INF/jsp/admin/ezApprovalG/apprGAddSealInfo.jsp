@@ -25,12 +25,16 @@
 		    var fileName = "";
 		    var dirPath = "";
 		    var ret = new Array("");
+		    var ezapralert_cross_dialogArguments = new Array();
+		    var ReturnFunction;
 		    
 		    $(document).ready(function(){
 		        try {
-		            pRegUserID = dialogArguments[0];
-		            pRegUserName = dialogArguments[1];
-		            pCompanyID = dialogArguments[2];
+		        	para = opener.ezaddSeal_cross_dialogArguments[0];
+		        	ReturnFunction = opener.ezaddSeal_cross_dialogArguments[1];
+		            pRegUserID = para[0];
+		            pRegUserName = para[1];
+		            pCompanyID = para[2];
 		            tbRegUser.innerText = pRegUserName;
 	
 		            ret[0] = "cancel";
@@ -39,7 +43,7 @@
 		            ret[3] = pSealPath;
 		            ret[4] = pSealWidth;
 		            ret[5] = pSealHeight;
-		            window.returnValue = ret;
+		            ReturnFunction(ret);
 		            
 		            document.getElementById("companyID").value = pCompanyID;
 		        } catch (e) {
@@ -63,7 +67,7 @@
 		            return;
 		        }
 	
-		        pSealWidth = tbSealWidth.value;
+		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
 		        if (pSealWidth == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1258' />";
 		            OpenAlertUI(pInformationString);
@@ -71,7 +75,7 @@
 		            return;
 		        }
 	
-		        pSealHeight = tbSealHeight.value;
+		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
 		        if (pSealHeight == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1259' />";
 		            OpenAlertUI(pInformationString);
@@ -85,7 +89,7 @@
 		        ret[3] = pSealPath.split("/files")[1];
 		        ret[4] = pSealWidth;
 		        ret[5] = pSealHeight;
-		        window.returnValue = ret;
+		        ReturnFunction(ret);
 		        window.close();
 		    }
 		    
@@ -98,8 +102,8 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-		        pSealWidth = tbSealWidth.value;
-		        pSealHeight = tbSealHeight.value;
+		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
+		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
 	
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1260' />";
@@ -109,18 +113,16 @@
 		        }
 		        
 		        if(CrossYN()){
-                	document.getElementById("signimage").style.width = pSealWidth + "mm";
-	                document.getElementById("signimage").style.height = pSealHeight + "mm";
+                	document.getElementById("signimage").style.width = pSealWidth + "px";
+	                document.getElementById("signimage").style.height = pSealHeight + "px";
 	                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
                 } else {
                 	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
                 }
 		    }
 		    
-		    var ezapralert_cross_dialogArguments = new Array();
 		    function OpenAlertUI(pAlertContent) {
 		        ezapralert_cross_dialogArguments[0] = pAlertContent;
-		        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		    }
@@ -155,8 +157,8 @@
 		            	contentType : false,
 		            	success : function(result) {
 		            		fileName = result["fileName"];
-		            		tbSealWidth.value = result["width"];
-		            		tbSealHeight.value = result["height"];
+		            		document.getElementsByName("tbSealWidth")[0].value = result["width"];
+		            		document.getElementsByName("tbSealHeight")[0].value = result["height"];
 		            		dirPath = result["path"];
 		            		
 		            		try {
@@ -225,18 +227,14 @@
 	    		<td id="tbRegUser"> </td>
 	  		</tr>
 		</table>
-
-	    <c:choose>
-			<c:when test="${checkIE == true}">
-				<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
-	        		<img id="signimage" alt="" src="" />
-	        	</div>
-			</c:when>
-			<c:otherwise>
-				<div class="nobox" id="Div1" name="sealsign" style="width: 410px; margin-top: 5px">
-	        		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle></div>
-	        	</div>
-			</c:otherwise>
-		</c:choose>	
+			<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
+				<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle>
+        			<img id="signimage" alt="" src="" style=/>
+        		</div>
+        	</div>
+        	
+			<!-- <div class="nobox" id="Div1" name="sealsign" style="width: 410px; margin-top: 5px">
+        		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle></div>
+        	</div> -->
 	</body>
 </html>

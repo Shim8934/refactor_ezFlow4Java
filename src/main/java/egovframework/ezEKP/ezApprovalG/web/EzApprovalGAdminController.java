@@ -272,6 +272,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
+		String formProcSpelling = config.getProperty("config.FormProcSpelling"); 
 		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
 		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		String tCheck = request.getParameter("tCheck");
@@ -282,6 +283,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", locale) : egovMessageSource.getMessage("ezApprovalG.t1668", locale));
 		
+		model.addAttribute("formProcSpelling", formProcSpelling);
 		model.addAttribute("topID", userInfo.getCompanyID());
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);

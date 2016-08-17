@@ -26,17 +26,19 @@
 	            GetOptionInfo(document.getElementById("SCompID").value);
 	        });
 			
+			var ezapralert_cross_dialogArguments = new Array();
 	        function OpenAlertUI(pAlertContent) {
-	            var parameter = pAlertContent;
-	            
-	            if (CrossYN()) {
-	                var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+        		if (CrossYN()) {
+		        	ezapralert_cross_dialogArguments[0] = pAlertContent;
+	                var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
+	                try { ezAPRALERT_Cross.focus(); } catch (e) {
+	                }
 	            } else {
+	                var parameter = pAlertContent;
 	                var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
+	                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	                var RtnVal = window.showModalDialog(url, parameter, feature);
 	            }
-	            
-	            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	            var RtnVal = window.showModalDialog(url, parameter, feature);
 	        }
 	        
 	        function SaveOptionInfo(companyID, option1, option2, option3) {

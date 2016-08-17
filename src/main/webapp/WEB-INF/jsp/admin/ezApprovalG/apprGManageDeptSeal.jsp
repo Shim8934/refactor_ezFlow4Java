@@ -77,7 +77,6 @@
 	        function OpenAlertUI(pAlertContent) {
 	            if (CrossYN()) {
 	                ezapralert_cross_dialogArguments[0] = pAlertContent;
-	                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 	                var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 	                try { ezAPRALERT_Cross.focus(); } catch (e) {
 	                }
@@ -87,9 +86,6 @@
 	                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	                var RtnVal = window.showModalDialog(url, parameter, feature);
 	            }
-	        }
-	        
-	        function OpenAlertUI_Complete() {
 	        }
 	        
 	        function getSealList() {
@@ -187,7 +183,6 @@
 		
 		            if (CrossYN()) {
 		                ezsealinfo_dialogArguments[0] = parameter;
-		                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
 		
 		                var ezSealInfo = window.open("/admin/ezApprovalG/ezSealInfo.do?pDeptYN=Y", "ezSealInfo", GetOpenWindowfeature(500, 420));
 		                try { ezSealInfo.focus(); } catch (e) {
@@ -204,10 +199,8 @@
 		            return;
 		        }
 		    }
-	
-	        function btnInfo_onclick_Complete() {
-	        }
-	
+			
+		    var ezaddSeal_cross_dialogArguments = new Array();
 	        function btnAdd_onclick() {
 	            var parameter = new Array();
 	            parameter[0] = pUserID;
@@ -215,11 +208,19 @@
 	            parameter[2] = pDeptID;
 	            parameter[3] = pCompanyID;
 	
+	            ezaddSeal_cross_dialogArguments[0] = parameter;
+	            ezaddSeal_cross_dialogArguments[1] = btnAdd_onclick_complete;
+	            
 	            var url = "/admin/ezApprovalG/addDeptSealInfo.do";
-	            var feature = "status:no;dialogWidth:430px;dialogHeight:360px;edge:sunken;scroll:no;help:no";
-	            var ret = window.showModalDialog(url, parameter, feature);
+	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(430, 360));
+	            try { addSealWindow.focus(); } catch (e) {}
+	            
 	
-	            if (ret[0] == "OK") {
+	            
+	    	}
+	        
+	        function btnAdd_onclick_complete(ret) {
+	        	if (ret[0] == "OK") {
 	                var RtnVal = DeleteSealInfo("");
 	                if (RtnVal == "TRUE") {
 	                    RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
@@ -241,7 +242,7 @@
 		                return;
 	            	}
 	        	}
-	    	}
+	        }
 	        
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {

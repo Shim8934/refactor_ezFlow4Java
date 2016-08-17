@@ -79,8 +79,8 @@
 	                document.getElementById("RegUser").innerHTML = "<span style=\"cursor:pointer\" onclick='return openUserInfo(\"" + pRegUserID + "\")'>" + pRegUserName + "</span>";
 	                
 	                if(CrossYN()){
-	                	document.getElementById("signimage").style.width = pSealWidth + "mm";
-		                document.getElementById("signimage").style.height = pSealHeight + "mm";
+	                	document.getElementById("signimage").style.width = pSealWidth + "px";
+		                document.getElementById("signimage").style.height = pSealHeight + "px";
 		                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
 	                } else {
 	                	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
@@ -157,21 +157,11 @@
 	            <td id="RegUser"></td>
 	        </tr>
 	    </table>
-	
-	<%--    <div class="nobox" id="sealsign" name="sealsign" style="width: 480px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">--%>
-	
-		<%-- <c:choose>
-			<c:when test="${checkIE == true}"> --%>
-				<div class="nobox" id="Div2" name="sealsign" style="width: 470px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">
-	        		<img id="signimage" alt="" src="about:blank" />
-	        	</div>
-			<%-- </c:when>
-			<c:otherwise>
-				<div class="nobox" id="Div1" name="sealsign" style="width: auto;height:auto ;margin-top: 5px; text-align: center;overflow:auto">
-				
-	        		<div id="SIGNVIEW" class="IMAGEVIEW" style="overflow:auto;BORDER: #b6b6b6 1px solid; FONT-SIZE: 9pt; WIDTH: auto; PADDING-TOP: 10px; HEIGHT: 150px; background-color: white;text-align:center;"></div>
-	        	</div>
-			</c:otherwise>
-		</c:choose>	 --%>
+	    
+		<div class="nobox" id="Div2" name="sealsign" style="width: 470px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">
+			<div id="SIGNVIEW" class="IMAGEVIEW" style="overflow:auto;BORDER: #b6b6b6 1px solid; FONT-SIZE: 9pt; WIDTH: auto; PADDING-TOP: 10px; HEIGHT: 150px; background-color: white;text-align:center;">
+       			<img id="signimage" alt="" src="about:blank" />
+       		</div>
+       	</div>
 	</body>
 </html>

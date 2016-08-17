@@ -23,85 +23,7 @@
 			var companyID;
 			var gParantName2 = "";
 			var gMultiDataNum = "";
-			
-			//ShowModalDialog Chrome 적용
-			(function() {
-				window._smdName = window._smdName || Math.round(Math.random() * 1000000000);
-				window.spawn = window.spawn || function(gen) {
-					function continuer(verb, arg) {
-			    		var result;
-				    	
-				      	try {
-				        	result = generator[verb](arg);
-				      	} catch (err) {
-				        return Promise.reject(err);
-				      	}
-				      	
-				      	if (result.done) {
-				        	return result.value;
-				      	} else {
-				        	return Promise.resolve(result.value).then(onFulfilled, onRejected);
-				      	}
-				    }
-					
-			    	var generator = gen();
-				    var onFulfilled = continuer.bind(continuer, 'next');
-				    var onRejected = continuer.bind(continuer, 'throw');
-				    
-				    return onFulfilled();
-				};
-				  
-				window.showModalDialog = window.showModalDialog || function(url, arg, opt) {
-					url = url || '';                                         // URL of a dialog
-				    arg = arg || null ;                                      // arguments to a dialog
-				    opt = opt || 'dialogWidth: 300px; dialogHeight: 200px';  // options: dialogTop;dialogLeft;dialogWidth;dialogHeight or CSS styles
-				    opt = opt
-				      .replace(/dialog/gi, '')                               // remove all of dialog strings
-				      .replace(/ /g, '')                                     // remove all blank characters
-				      .replace(/:/g, '= ')                                   // replace all of ':' to '= '
-				      .replace(/,|;/g, ', ')                                 // replace all of ',' or ';' to ', '
-				      .replace(/width/gi, 'width')                           // replace all 'width' to lowercase
-				      .replace(/height/gi, 'height')                         // replace all 'height' to lowercase
-				      .replace(/(\d+)px/g, '$1');                            // remove all of 'px'
-				    console.log(opt);
-				    var caller = showModalDialog.caller.toString();
-				    var dialog = window.open(url, 'smd_dialog_' + window._smdName, opt, false);
-				    dialog.dialogArguments = arg;
-				    dialog.addEventListener('unload', function(e) {
-				    	e.preventDefault();
-				    });
-				    // if using yield
-				    if (caller.indexOf('yield') >= 0) {
-				    	return new Promise(function(resolve, reject) {
-				        	dialog.addEventListener('unload', function() {
-				          		var returnValue = dialog.returnValue;
-				          		resolve(returnValue);
-				        	});
-				      	});
-				    }
-				    // if using eval
-				    var isNext = false;
-				    var nextStmts = caller
-				    	.replace(/(window\.)?showModalDialog\([^)]+\)/g, 'showModalDialog(%%%%%%%)')
-				      	.split('\n')
-				      	.filter(function(stmt) {
-				      		if (isNext || stmt.indexOf('showModalDialog(') >= 0)
-				          		return isNext = true;
-				        	return false;
-				      	});
-				    	var unloadEventHandler = function() {
-				        
-				    		if (dialog.location.href == 'about:blank') {
-				            	return setTimeout(function() { dialog.addEventListener('unload', unloadEventHandler); }, 250);
-				        	}
-				        	var returnValue = dialog.returnValue;
-				        	nextStmts[0] = nextStmts[0].replace(/(window\.)?showModalDialog\(%%%%%%%\)/g, JSON.stringify(returnValue));
-				        	eval('{\n' + nextStmts.join('\n'));
-				        };
-				    	dialog.addEventListener('unload', unloadEventHandler);
-				    	throw 'Execution stopped until showModalDialog is closed';
-				};
-			})();
+			var returnFunction
 			
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {
@@ -111,7 +33,8 @@
 			
 			$(document).ready(function () {
 			    var RtnVal = new Array();
-			    var Para = dialogArguments;
+			    var Para = opener.formContMain_dialogArguments[0];
+			    returnFunction = opener.formContMain_dialogArguments[1];
 			    Flag = Para[0];
 			    gParant = Para[1];
 			    gParantName = Para[2];
@@ -134,7 +57,7 @@
 			    initTreeInfo();
    
 			    RtnVal[0] = "FALSE";
-			    window.returnValue = RtnVal;
+			    returnFunction(RtnVal);
 			});
 			
 			function InitValue(Para) {
@@ -151,6 +74,10 @@
 			    gParant = Para[4];
 			    gManageID = Para[3];
 			    companyID = Para[7];
+			    
+			    $("#btnManage").css("pointer-events", "none");
+			    $("#btnUseDept").css("pointer-events", "none");
+			    $("#btnDelDept").css("pointer-events", "none");
 			    
 			    if (Para[3] != "ALL") {
 			    	document.getElementById("rdGroup").checked = true;
@@ -331,18 +258,18 @@
 			    document.getElementById("rdTotal").checked = false;
 			    gManageID = "";
 			    
-			    document.getElementById("btnManage").disabled = false;
-			    document.getElementById("btnUseDept").disabled = false;
-			    document.getElementById("btnDelDept").disabled = false;
+			    $("#btnManage").css("pointer-events", "auto");
+			    $("#btnUseDept").css("pointer-events", "auto");
+			    $("#btnDelDept").css("pointer-events", "auto");
 			}
 			
 			function rdTotal_onclick() {
 			    document.getElementById("rdGroup").checked = false;
 			    gManageID = "ALL";
 			
-			    document.getElementById("btnManage").disabled = true;
-			    document.getElementById("btnUseDept").disabled = true;
-			    document.getElementById("btnDelDept").disabled = true;
+			    $("#btnManage").css("pointer-events", "none");
+			    $("#btnUseDept").css("pointer-events", "none");
+			    $("#btnDelDept").css("pointer-events", "none");
 			}
 			
 			function btnManage_onclick() {
@@ -460,7 +387,8 @@
 					}
 				}
 				
-				window.returnValue = RtnVal;
+// 				window.returnValue = RtnVal;
+				returnFunction(RtnVal);
 				window.close();
 			}
 			
@@ -468,7 +396,8 @@
 				var RtnVal = new Array();
 				
 				RtnVal[0] = "FALSE";
-				window.returnValue = RtnVal;
+// 				window.returnValue = RtnVal;
+				returnFunction(RtnVal);
 				window.close();
 			}
 			
@@ -534,9 +463,9 @@
 	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 100%; HEIGHT: 288px; BACKGROUND-COLOR: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td align="center" style="width:10%">
-	               <a class="imgbtn"><span disabled id="btnManage" onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
-	               <a class="imgbtn"><span disabled id="btnUseDept" onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
-	               <a class="imgbtn"><span disabled id="btnDelDept" onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
+	               <a class="imgbtn"><span id="btnManage" onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
+	               <a class="imgbtn"><span id="btnUseDept" onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
+	               <a class="imgbtn"><span id="btnDelDept" onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
 	            </td>
 	            <td valign="top" style="width:45%">
 	                <input type="text" id="tbManage" name="tbManage" style="Width: 295px" readonly>

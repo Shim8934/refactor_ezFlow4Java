@@ -150,7 +150,7 @@
 		            minscontmain_cross_dialogArguments[0] = para;
 		            minscontmain_cross_dialogArguments[1] = btnIns_onclick_Complete;
 
-		            var OpenWin = window.open(url, "MinsContMain_Cross", GetOpenWindowfeature(580, 455));
+		            var OpenWin = window.open(url, "MinsContMain", GetOpenWindowfeature(580, 455));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            alert("<spring:message code='ezApprovalG.t1589'/>");
@@ -191,7 +191,7 @@
 	            }
 	        }
 	        
-	        function btnUpdate_onclick_Complete() {
+	        function btnUpdate_onclick_Complete(tempDeptID) {
 	        	getContInfo(tempDeptID);
 	        }
 	        

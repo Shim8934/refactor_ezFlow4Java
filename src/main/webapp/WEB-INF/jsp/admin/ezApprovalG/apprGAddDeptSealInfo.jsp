@@ -26,13 +26,17 @@
 		    var fileName = "";
 		    var dirPath = "";
 		    var ret = new Array("");
+		    var ezapralert_cross_dialogArguments = new Array();
+		    var ReturnFunction;
 		    
 		    $(document).ready(function(){
 		        try {
-		            pRegUserID = dialogArguments[0];
-		            pRegUserName = dialogArguments[1];
-		            pDeptID = dialogArguments[2];
-		            pCompanyID = dialogArguments[3];
+		        	para = opener.ezaddSeal_cross_dialogArguments[0];
+		        	ReturnFunction = opener.ezaddSeal_cross_dialogArguments[1];
+		            pRegUserID = para[0];
+		            pRegUserName = para[1];
+		            pDeptID = para[2];
+		            pCompanyID = para[3];
 		            tbRegUser.innerText = pRegUserName;
 	
 		            ret[0] = "cancel";
@@ -41,7 +45,7 @@
 		            ret[3] = pSealPath;
 		            ret[4] = pSealWidth;
 		            ret[5] = pSealHeight;
-		            window.returnValue = ret;
+		            ReturnFunction(ret);
 		            
 		            document.getElementById("companyID").value = pCompanyID;
 		            document.getElementById("deptID").value = pDeptID;
@@ -88,7 +92,7 @@
 		        ret[3] = pSealPath.split("/files")[1];
 		        ret[4] = pSealWidth;
 		        ret[5] = pSealHeight;
-		        window.returnValue = ret;
+		        ReturnFunction(ret);
 		        window.close();
 		    }
 		    
@@ -142,18 +146,6 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-/* 		        pSealWidth = tbSealWidth.value;
-		        pSealHeight = tbSealHeight.value;
-	
-		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1248' />";
-		            OpenAlertUI(pInformationString);
-		            
-		            return;
-		        }
-		        
-		        SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight); */
-		        
 		        pSealWidth = tbSealWidth.value;
 		        pSealHeight = tbSealHeight.value;
 	
@@ -173,29 +165,14 @@
                 }
 		    }
 		    
-		    var ezapralert_cross_dialogArguments = new Array();
 		    function OpenAlertUI(pAlertContent) {
 		        ezapralert_cross_dialogArguments[0] = pAlertContent;
-		        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		        
 		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		    }
 		    
 		    window.onbeforeunload = function () {
-/* 		        if ((ret[0] == "cancel") && (pSealPath != "")) {
-		            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		            var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-		            var objRoot = xmlpara.createNode(1, "PARAMETER", "");
-		            xmlpara.appendChild(objRoot);
-	
-		            var objNode = xmlpara.createNode(1, "pSealNum", "");
-		            objNode.text = pSealPath.replace("/Upload_ApprovalG/SealImg/", "");
-		            xmlpara.documentElement.appendChild(objNode);
-	
-		            xmlhttp.open("POST", "aspx/DeptSealDelete.aspx", false);
-		            xmlhttp.send(xmlpara);
-		        } */
-		        
 		        if ((ret[0] == "cancel") && (pSealPath != "")) {
 		        	$.ajax({
 		        		type : "POST",
@@ -209,7 +186,7 @@
 		        		}
 		        	});
 		        }
-		    }
+		    };
 		    
 		    function btn_AttachAdd_onclick() {
 		        if (document.form.file1.value != "") {
@@ -297,17 +274,10 @@
 		  	</tr>
 		</table>
 		
-		<c:choose>
-			<c:when test="${checkIE == true}">
-				<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
-	        		<img id="signimage" alt="" src="" />
-	        	</div>
-			</c:when>
-			<c:otherwise>
-				<div class="nobox" id="Div1" name="sealsign" style="width: 410px; margin-top: 5px">
-	        		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle></div>
-	        	</div>
-			</c:otherwise>
-		</c:choose>	
+		<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
+       		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle>
+       			<img id="signimage" alt="" src="" />
+       		</div>
+       	</div>	
 	</body>
 </html>

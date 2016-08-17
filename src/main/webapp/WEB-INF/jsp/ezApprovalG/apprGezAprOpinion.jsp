@@ -6,13 +6,38 @@
 		<title><spring:message code='ezApprovalG.t20'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-				<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script ID="clientEventHandlersJS" type="text/javascript">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		
+		<script type="text/javascript">
+			var RetValue;
+		    var ReturnFunction;
+		    window.onload = function () {
+		        try {
+		            RetValue = parent.ezapropinion_cross_dialogArguments[0];
+		            ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
+		        } catch (e) {
+		            try {
+		                RetValue = opener.ezapropinion_cross_dialogArguments[0];
+		                ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
+		            } catch (e) {
+		                RetValue = window.dialogArguments;
+		            }
+		        }
+		        document.getElementById("pMessageContent").innerHTML = RetValue;
+		        document.getElementById("Submit1").focus();
+		
+		        if (MACSAFARIYN()) {
+		            window.resizeTo(330, 251);
+		        }
+		    };
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
 		        };
 		    }
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent)) {
 		        window.resizeTo(347, 270);
 		    }
@@ -42,26 +67,6 @@
 		            window.returnValue = false;
 		            window.close();
 		        }
-		    }
-		    var RetValue;
-		    var ReturnFunction;
-		    window.onload = function () {
-		        try {
-		            RetValue = parent.ezapropinion_cross_dialogArguments[0];
-		            ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
-		        } catch (e) {
-		            try {
-		                RetValue = opener.ezapropinion_cross_dialogArguments[0];
-		                ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
-		            } catch (e) {
-		                RetValue = window.dialogArguments;
-		            }
-		        }
-		        document.getElementById("pMessageContent").innerHTML = RetValue;
-		        document.getElementById("Submit1").focus();
-		
-		        if (MACSAFARIYN())
-		            window.resizeTo(330, 251);
 		    }
 		</script>
 	</head>

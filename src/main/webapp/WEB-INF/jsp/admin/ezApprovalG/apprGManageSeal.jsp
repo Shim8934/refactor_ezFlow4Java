@@ -181,17 +181,22 @@
 		    function btnInfo_onclick_Complete() {
 		    }
 	
+		    var ezapralert_cross_dialogArguments = new Array();
 		    function btnAdd_onclick() {
 		        var parameter = new Array();
 		        parameter[0] = pUserID;
 		        parameter[1] = pUserName;
 		        parameter[2] = pCompanyID;
 	
+		        ezapralert_cross_dialogArguments[0] = parameter;
+		        ezapralert_cross_dialogArguments[1] = btnAdd_onclick_complete;
+		        
 		        var url = "/admin/ezApprovalG/addSealInfo.do";
-		        var feature = "status:no;dialogWidth:430px;dialogHeight:350px;edge:sunken;scroll:no;help:no";
-		        var ret = window.showModalDialog(url, parameter, feature);
-	
-		        if (ret[0] == "OK") {
+				window.open(url, "", GetOpenWindowfeature(430, 350));
+		    }
+		    
+		    function btnAdd_onclick_complete(ret) {
+		    	if (ret[0] == "OK") {
 		            var RtnVal = DeleteSealInfo("");
 		            if (RtnVal == "TRUE") {
 		                RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);

@@ -10,7 +10,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
-                //document.getElementById("TForm").style.display = "none";
+                document.getElementById("TForm").style.display = "none";
             }
             break;
         case "ApvForm_div2":    // 양식 작성
@@ -20,7 +20,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "800px";
-                //document.getElementById("TForm").style.display = "";
+                document.getElementById("TForm").style.display = "";
             }
             break;
         case "ApvForm_div3":    // 연동정보
@@ -30,7 +30,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
-                //document.getElementById("TForm").style.display = "none";
+                document.getElementById("TForm").style.display = "none";
             }
             break;
         case "ApvForm_div4":    // Workflow
@@ -42,7 +42,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("TForm").style.height = "0px";
-                //document.getElementById("TForm").style.display = "none";
+                document.getElementById("TForm").style.display = "none";
             }
             break;
     }
@@ -98,10 +98,16 @@ function OpenInformationUI(pInformationContent) {
 }
 
 function OpenAlertUI(pAlertContent) {
-    var parameter = pAlertContent;
-    var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
+	//TODO 이효진 showModalDialog 크로스버전에서 실행안됨 -> open으로 수정
+    /*var parameter = pAlertContent;
+    var url = "/ezApprovalG/ezAprAlert.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-    var RtnVal = window.showModalDialog(url, parameter, feature);
+    var RtnVal = window.showModalDialog(url, parameter, feature);*/
+	ezapralert_cross_dialogArguments[0] = pAlertContent;
+	var url = "/ezApprovalG/ezAprAlert.do";
+	window.open(url, "", GetOpenWindowfeature(330,205));
+	
+	
 }
 
 var xmlhttp = createXMLHttpRequest();

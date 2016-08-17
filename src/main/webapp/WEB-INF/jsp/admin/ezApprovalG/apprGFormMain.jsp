@@ -6,14 +6,15 @@
 	<head>
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<!-- <script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script> -->
+		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
@@ -31,6 +32,7 @@
 		    var g_toggleFlag = false;
 		    var formURL = "";
 		    var beforeHTML = "";
+		    var FormProcSpelling = "<c:out value = '${formProcSpelling}' />";
 	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -72,7 +74,9 @@
 		            flag = true;
 	
 		            if (formURL != "") {
+alert(1);
 		                pzFormProc.LoadURL(formURL);
+alert(2);
 		            }
 		        }
 		    }
@@ -87,7 +91,7 @@
 		        }
 		    }
 	
-		    function ReturnFormConnXML() {        
+		    function ReturnFormConnXML() {
 		        if (pzFormProc.editor.DOM.all.conn) {            
 		            txt_OpinionContent.innerText = pzFormProc.editor.DOM.all.conn.innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '');
 		        }
@@ -102,13 +106,13 @@
 		        	success : function(result) {
 		        		if (result != "") {
 			                var xmldom = loadXMLString(result);
-		
-			                tbFormName.value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]);
-			                tbFormName2.value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
-			                tbDescript.value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
-			                selFormKind.value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
-			                formURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
-		
+
+			                document.getElementsByName("tbFormName")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]);
+			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
+			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
+			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
+			                formURL = document.location.protocol + "//" + document.location.hostname + ":8082" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
+
 			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }                
@@ -208,19 +212,7 @@
 		        treeNode.LoadFromID(TreeIdx);
 		    }
 	
-		    function getFormRecv() {
-		        /* var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-	
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "NODE1", formID);
-	
-		        xmlhttp.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/getFormRecvAdmin.aspx", false);
-		        xmlhttp.send(xmlpara);
-		        xmlpara = loadXMLString(xmlhttp.responseText); */
-		        
-		         
+		    function getFormRecv() {		         
 		        var xmlpara = createXmlDom();
 		        
 		        $.ajax({
@@ -241,7 +233,8 @@
 		        listview.DataSource(xmlpara);
 		        listview.DataBind("divlvtForm");        
 		    }
-	
+		    
+		    var ezapralert_cross_dialogArguments = new Array();
 		    function insertCont_onclick() {
 		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
 
@@ -252,13 +245,13 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
-	
+		    
 		    function insertAllCont_onclick() {
 		        var pAlertContent = "<spring:message code = 'ezApprovalG.t1361' /><br><spring:message code = 'ezApprovalG.t1362' />";
 		        var Ans = OpenInformationUI(pAlertContent);
-	
+		        
 		        if (!Ans) {
-		            return;
+		        	return;
 		        }
 		        
 		        chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
@@ -447,10 +440,10 @@
 		            alert("XML <spring:message code = 'ezApprovalG.t1459' />");
 		        }
 		    }
-	
+		    
 		    function OpenInformationUI(pInformationContent) {
-		        var parameter = pInformationContent;
-		        var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
+		    	var parameter = pInformationContent;
+		        var url = "/ezApprovalG/ezAprOpinion.do";
 		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		        return RtnVal;
@@ -557,15 +550,13 @@
 		        isPublic.selectedIndex = 0;
 		        setAutoItemCode.checked = false;
 		    }
-	
+		    
 		</script>
 		<script language="javascript" for="pzFormProc" event="FieldsAvailable">
 		    pzFormProc_FieldsAvailable();
 		</script>
 		<script language="javascript" for="pzFormProc" event="DocumentComplete">
-		<!--
 		    pzFormProc_DocumentComplete();
-		    //-->
 		</script>
 		<script language="javascript" for="pzFormProc" event="BlurTDElement">
 		<!--
@@ -729,10 +720,7 @@
         <table id="TForm" style="height:0px;">
             <tr>
                 <td valign="top">
-                    <!-- <OBJECT classid="CLSID:999C3A80-04F3-44B7-8815-36ADF2319B98" id=' + idName + ' style="HEIGHT: 100%; WIDTH: ' + width + '" VIEWASTEXT>
-    					<PARAM NAME="StartMode" VALUE="' + stratMode + '">
-    					<PARAM NAME="SpellVal" VALUE="' + FormProcSpelling + '">
-    				</OBJECT> -->
+                    <script language='JavaScript'>FormProc_ActiveX3("pzFormProc", "2", "845px");</script>
                 </td>
                 <td id="rootTD"></td>
             </tr>

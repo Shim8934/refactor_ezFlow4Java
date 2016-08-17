@@ -50,7 +50,7 @@
 	        
 			function Tree_setconfig() {
 			    var xmlHTTP = createXMLHttpRequest();
-			    xmlHTTP.open("GET", "/xml/ezApprovalG/conttree_config.xml", false);
+			    xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
 			    xmlHTTP.send();
 			
 			    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {

@@ -597,6 +597,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
+			String isLeaf = "FALSE";
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_CATETYPE", categoryType);
@@ -607,7 +608,21 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<NODES>");
 			
 			for (ApprGTaskVO vo : list) {
-				sb.append("<NODE><EXPANDED>FALSE</EXPANDED><ISLEAF>FALSE</ISLEAF>");
+				switch (vo.getCategoryType()) {
+					case "1":
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID);
+						break;
+					case "2":
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID);
+						break;
+					case "3":
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID);
+						break;
+				}
+				isLeaf = isLeaf.equals("TRUE") ? "FALSE" : "TRUE";
+
+				sb.append("<NODE><EXPANDED>FALSE</EXPANDED>");
+				sb.append("<ISLEAF>" + isLeaf + "</ISLEAF>");
 				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
 				sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
 				sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");

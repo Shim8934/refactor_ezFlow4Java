@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-			var labelcolor = "gray"
+			var labelcolor = "gray";
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
 		    var gState, gDeptID;
@@ -26,7 +26,7 @@
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
-		        }
+		        };
 		    }
 		    
 		    $(document).ready(function(){
@@ -82,7 +82,7 @@
 		        	success : function(result){
 						xmlRtn = loadXMLString(result);
 						
-						for (Cnt = 0; Cnt < xmlRtn.getElementsByTagName("VALUE").length ; Cnt++) {
+						for (var Cnt = 0; Cnt < xmlRtn.getElementsByTagName("VALUE").length ; Cnt++) {
 				            Add_ContType(xmlRtn.getElementsByTagName("VALUE")[Cnt].childNodes[0].nodeValue, xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue);
 				        }        		 
 		        	}
@@ -91,8 +91,8 @@
 		    
 		    function Add_ContType(Name, ID) {
 		        var oOption = document.createElement("OPTION");
-		        oOption.text = Name
-		        oOption.value = ID
+		        oOption.text = Name;
+		        oOption.value = ID;
 		        var sOption = document.getElementById("selContName");
 
 		        sOption.add(oOption, null);
@@ -120,7 +120,7 @@
 				            document.getElementsByName("chkUseDept")[0].checked = true;
 				            chkUseDept_onclick();
 
-				            for (Cnt = 0; Cnt < objNode.length / 2 ; Cnt++) {
+				            for (var Cnt = 0; Cnt < objNode.length / 2 ; Cnt++) {
 				                if (SelectSingleNodeValueNew(xmlRtn, "PARAMETER/NAME" + Cnt) == "") {
 				                    break;
 				                }
@@ -145,13 +145,13 @@
 		    
 		    function Add_Group(Name, ID) {
 		        var oOption = document.createElement("OPTION");
-		        oOption.text = Name
-		        oOption.value = ID
+		        oOption.text = Name;
+		        oOption.value = ID;
 		        document.all.selUseDept.add(oOption);
 		    }
 		    
 		    function btnAppdept_onclick() {
-		        var selDeptID, selDeptName
+		        var selDeptID, selDeptName;
 		        var oOption = document.createElement("OPTION");
 		        var selnode = TreeView.selectedIndex;
 		        var treeView = new TreeView();
@@ -227,14 +227,14 @@
 			        if (typeof (rtnVal) != "undefined") {
 			            if (rtnVal) {
 			                ReturnFunction();
-			                window.returnValue = "TRUE"
+			                window.returnValue = "TRUE";
 			                window.close();
 			            } else {
-			                window.returnValue = "FALSE"
+			                window.returnValue = "FALSE";
 			                window.close();
 			            }
 			        } else {
-			            window.returnValue = "FALSE"
+			            window.returnValue = "FALSE";
 			            window.close();
 			        }
 		    	}
@@ -243,7 +243,7 @@
 		    function insCont(state) {
 		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
-		        var ParaName, ParaValue
+		        var ParaName, ParaValue;
 
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
 		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
@@ -252,9 +252,9 @@
 		        if (state == "G") {
 		            var Count = selUseDept.length;
 		            
-		            for (i = 0; i < Count; i++) {
-		                ParaName = "Dept" + i
-		                ParaValue = selUseDept.item(i)
+		            for (var i = 0; i < Count; i++) {
+		                ParaName = "Dept" + i;
+		                ParaValue = selUseDept.item(i);
 		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
 		            }
 		        }
@@ -273,7 +273,7 @@
 		    
 		    function UpdateCont(state) {
 		        var xmlpara = createXmlDom();
-		        var ParaName, ParaValue
+		        var ParaName, ParaValue;
 
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
 		        createNodeAndInsertText(xmlpara, objNode, "CONTID", document.getElementById("tbContID").value);
@@ -283,9 +283,9 @@
 		        if (state == "G") {
 		            var Count = selUseDept.length;
 		            
-		            for (i = 0; i < Count; i++) {
-		                ParaName = "Dept" + i
-		                ParaValue = selUseDept.item(i)
+		            for (var i = 0; i < Count; i++) {
+		                ParaName = "Dept" + i;
+		                ParaValue = selUseDept.item(i);
 		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
 		            }
 		        }
@@ -303,7 +303,7 @@
 		    }
 		    
 		    function btncancel_onclick() {
-		        window.returnValue = "FALSE"
+		        window.returnValue = "FALSE";
 		        window.close();
 		    }
 			    
