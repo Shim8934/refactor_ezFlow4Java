@@ -1264,7 +1264,7 @@ var strLang1101 = "해당 부서에 수발신 담당자가 존재하지 않아 "
 var strLang1102 = "수신처에 등록할 수 없는 부서 입니다."
 var strLang1103 = "한글양식은 기안 또는 재기안을 지원하지 않습니다."
 
-var strLangFromFile = "ezFormInfo.xml";
+var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
 /* 2015-06-30 표준모듈:추가 - KSK */
 var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
 var strLang1105 = "결재문서를 수신하지 않는 부서 입니다.\n추가 할 수 없습니다.";

@@ -186,9 +186,10 @@ function SaveFormInfo() {
         document.getElementById("1tab5").click();
         return;
     }
-    xmlhttp.open("POST", "aspx/FormSave.aspx", true);
+    
+    xmlhttp.open("POST", "/admin/ezApprovalG/formSave.do", true);
     xmlhttp.onreadystatechange = SaveFormInfo_after;
-    xmlhttp.send(xmlpara);
+    xmlhttp.send(new XMLSerializer().serializeToString(xmlpara));
 }
 
 function MakeFormInfoXML() {
@@ -227,8 +228,8 @@ function MakeFormInfoXML_Detail() {
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "Y"); // 연동양식 체크 
     else
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
-
-    return xmlpara.xml;
+    
+    return new XMLSerializer().serializeToString(xmlpara);
 }
 
 function MakeFormMHTXML() {
@@ -293,7 +294,7 @@ function MakeFormMHTXML_Detail() {
 
         createNodeInsert(xmlpara, objNode, "FORMMHT");
         createNodeAndInsertText(xmlpara, objNode, "FormData", pzFormProc.DocumentHTML); // 양식데이터(MHT binary)         
-        return xmlpara.xml;
+        return new XMLSerializer().serializeToString(xmlpara);
     }
     else {
         return "";
@@ -344,7 +345,7 @@ function MakeFormConnXML() {
                     for (var j = 0; j < pConnArray.length; j++) {
                         var key = pConnArray[j].toString(); // make it an associative array
                         if (!results[key]) {
-                            results[key] = 1
+                            results[key] = 1;
                         } else {
                             results[key] = results[key] + 1;
                         }
@@ -387,7 +388,7 @@ function MakeFormConnXML_Detail() {
     var objNode;
     createNodeInsert(xmlpara, objNode, "CONNXML");    
     createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.innerText)); // 연동 XML
-    return xmlpara.xml;
+    return new XMLSerializer().serializeToString(xmlpara);
 }
 
 
@@ -437,7 +438,7 @@ function MakeFormRecevGroupXML_Detail() {
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
         }
     }
-    return xmlpara.xml;
+    return new XMLSerializer().serializeToString(xmlpara);
 }
 
 function btnClose_onclick() {

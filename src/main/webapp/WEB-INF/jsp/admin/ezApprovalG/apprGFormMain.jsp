@@ -13,8 +13,8 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
@@ -74,9 +74,7 @@
 		            flag = true;
 	
 		            if (formURL != "") {
-alert(1);
 		                pzFormProc.LoadURL(formURL);
-alert(2);
 		            }
 		        }
 		    }
@@ -111,7 +109,7 @@ alert(2);
 			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
 			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
 			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
-			                formURL = document.location.protocol + "//" + document.location.hostname + ":8082" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
+			                formURL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
 
 			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
@@ -401,9 +399,9 @@ alert(2);
 		    function button() {
 		        var str;
 		        if (g_toggleFlag != true) {
-		            property.childNodes(0).innerText = "<spring:message code = 'ezApprovalG.t999934' />";
+		            $('property span').html("<spring:message code = 'ezApprovalG.t999934' />");
 		        } else {
-		            property.childNodes(0).innerText = "<spring:message code = 'ezApprovalG.t999935' />";
+		        	$('property span').html("<spring:message code = 'ezApprovalG.t999935' />");
 		        }
 		    }
 	
@@ -553,10 +551,14 @@ alert(2);
 		    
 		</script>
 		<script language="javascript" for="pzFormProc" event="FieldsAvailable">
+		<!--
 		    pzFormProc_FieldsAvailable();
+		//-->
 		</script>
 		<script language="javascript" for="pzFormProc" event="DocumentComplete">
+		<!--
 		    pzFormProc_DocumentComplete();
+		//-->
 		</script>
 		<script language="javascript" for="pzFormProc" event="BlurTDElement">
 		<!--

@@ -341,6 +341,20 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G관리 양식등록,양식수정 양식작성기 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSave (@RequestBody String data, HttpServletRequest request) {
+		Document doc = commonUtil.convertStringToDocument(data);
+		String realPath = request.getServletContext().getRealPath("");
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		
+		String result = ezApprovalGAdminService.formSave(doc, realPath, companyID);
+		
+		return result;
+	}
 	///////////////////////
 	
 	/**

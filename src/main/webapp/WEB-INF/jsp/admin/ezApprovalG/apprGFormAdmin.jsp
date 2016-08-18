@@ -44,6 +44,12 @@
 		    };
 			
 		    $(document).ready(function(){
+		    	var ua = navigator.userAgent;
+		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
+		    		$('#btnInsForm').hide();
+			    	$('#btnUpForm').hide();
+		    	}
+
 		    	companyID = SCompID.value;
 			    Tree_setconfig();
 			    InitFormCont();
@@ -212,7 +218,7 @@
 	                nodeIdx.SetNodeData("DATA7", retVal[5]);
 	            }
 		    }
-	
+
 		    function btnDelFcont_onclick() {
 		        DelFCont();
 		    }
