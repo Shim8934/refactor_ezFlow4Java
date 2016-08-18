@@ -1231,14 +1231,22 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewPhoto.do")
 	public String wpNewPhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-	
-		try {
-			
-			model.addAttribute("userLang", userInfo.getLang());
-			return "/ezPortal/portalWpNewPhoto";
-		} catch (Exception e) {
-			return "";
+		String pPhotoGalleryID = "";
+		
+		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
+			pPhotoGalleryID = req.getParameter("photoGalleryID");
 		}
+		
+		if (pPhotoGalleryID != null && !pPhotoGalleryID.equals("")) {
+			model.addAttribute("pExist", "true");
+		} else {
+			model.addAttribute("pExist", "false");
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
+		return "/ezPortal/portalWpNewPhoto";
+		
 	}
 	
 	/**

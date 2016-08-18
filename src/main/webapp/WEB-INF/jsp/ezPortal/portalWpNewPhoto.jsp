@@ -74,6 +74,7 @@
 	            	document.body.style.oUserSelect = 'none';
 	            	document.body.style.UserSelect = 'none';
 	        	}
+	        	getBoardList_NewPhoto();
 
 	        	try { top.onresize() } catch (e) { }
 	    	}
@@ -89,7 +90,7 @@
 
 		        xmlhttp_getBoardList_NewPhoto = null;
 		        xmlhttp_getBoardList_NewPhoto = createXMLHttpRequest();
-	    	    xmlhttp_getBoardList_NewPhoto.open("POST", "/myoffice/ezBoardSTD/aspx/Get_ImagePortletList.aspx", true);
+	    	    xmlhttp_getBoardList_NewPhoto.open("POST", "/ezBoard/getImagePortletList.do", true);
 	        	xmlhttp_getBoardList_NewPhoto.onreadystatechange = getBoardList_NewPhoto_after;
 	        	xmlhttp_getBoardList_NewPhoto.send(xmlpara);
 	    	}
@@ -122,8 +123,10 @@
 	    	            var _li = document.createElement("li");
 	        	        var _span1 = document.createElement("span");
 	            	    _span1.className = "photo";
-
-	                	var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
+						
+	            	    //2016-08-18 urc 수정
+	                	//var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
+						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
 
 	                	_span1.innerHTML = "<img src=\"" + imgSrc + "\" width=\"80\" height=\"80\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + BoardID + "\" DATA2=\"" + ItemID + "\">";
 

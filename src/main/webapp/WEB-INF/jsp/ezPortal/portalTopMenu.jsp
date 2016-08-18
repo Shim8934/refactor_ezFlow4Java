@@ -1170,10 +1170,6 @@
 			newrow.appendChild(TD);
 			//newrow.innerHTML = strInnerHTML;
 
-
-
-
-
 			//var newcell = newrow.insertCell();
 			//newcell.id = "subtd" + GetID();
 			//newcell.uid = GetGUID();
@@ -1191,12 +1187,10 @@
 			AttachEvents(document.getElementById(subGetId))
 		}
 
-		function newpage()
-		{
+		function newpage() {
 			location.href = "/ezPortal/topMenu.do?mode=new";
 		}
 
-	
 		/* 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */
 		var curImg = new Image;
 		var oldPath = "";

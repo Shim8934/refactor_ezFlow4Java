@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzBoardService")
 public class EzBoardServiceImpl implements EzBoardService {
@@ -1093,5 +1094,109 @@ public class EzBoardServiceImpl implements EzBoardService {
 		map.put("PPASSWORD", password);
 		ezBoardDAO.saveOneLineReply(map);
 	}
+	
+	public String getThumbListXML (String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang) throws Exception {
+		BoardListVO boardListVO = new BoardListVO();
+		BoardVO ezBoardVO = new BoardVO();
+		ezBoardVO.setBoardType(pBoardType);
+		ezBoardVO.setLang(strLang);
+		
+		
+		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		myFavoriteVO.setBoardId(pBoardID);
+		myFavoriteVO.setUserId(pUserID);
+        myFavoriteVO.setType(pBoardType);
+		
+		StringBuilder sb = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		
+		String strMultiData = commonUtil.getMultiData(strLang);
+		
+		List<BoardListHeaderVO> list = getListHeader(ezBoardVO);
+		
+		int i = 0;
+		int hLength = list.size();
+		
+		int boardCount = getThumbNailCount(myFavoriteVO);
+		int personalCount = 5;
+		
+		sb.append("<DOCLIST>");
+		sb.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
+		sb.append("<PAGECNT>"+boardCount+"</PAGECNT>");
+		sb.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
+		sb.append("<LISTVIEWDATA>");
+		sb.append("<ROWS>");
+		
+		BoardConfigVO pCount = getPersonalCount(pUserID);
+		
+		int startRow = 1;
+		int endRow = 0;
+		String fieldName = "";
+		String fieldValue = "";
+		
+		startRow = (personalCount * (pPageNum - 1)) + 1;
+		endRow = personalCount * pPageNum;
+		
+		BoardVO boardVO = new BoardVO();
+		
+		boardListVO.setUserID(pUserID);
+		boardListVO.setBoardID(pBoardID);
+		boardListVO.setStartRow(startRow);
+		boardListVO.setEndRow(endRow);
+		boardListVO.setTotalCount(boardCount);
+		boardListVO.setOrderBySub(orderOption1.trim());
+		boardListVO.setOrderByMain(orderOption2.trim());
+		boardVO.setType("1");
+		boardVO.setBoardId(pBoardID);
+		List<HashMap<String, Object>> boardList = getThumbnailList(boardListVO, boardVO);
+		
+		int dLength = boardList.size();
+		
+		for (int j=0; j<dLength; j++) {
+			sb.append("<ROW>");
+			for (i =0; i < hLength; i++) {
+				sb.append("<CELL>");
+				fieldName = list.get(i).getColName().toUpperCase();
+				
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					fieldName = fieldName + strMultiData;
+				}
+				
+				if (fieldName.equals("WRITEDATE")) {
+					fieldValue =(String)boardList.get(j).get(fieldName);
+                	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+				} else {
+					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
+				}
+				
+				sb.append("<VALUE>"+fieldValue+"</VALUE>");
+				
+				if (i == 0) {
+					sb.append("<DATA1>"+boardList.get(j).get("BOARDID")+"</DATA1>");
+                	sb.append("<DATA2>"+boardList.get(j).get("ITEMID")+"</DATA2>");
+        			sb.append("<DATA3>"+boardList.get(j).get("WRITERID")+"</DATA3>");
+        			String nowDate = EgovDateUtil.getTodayTime();
+				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+				    
+					if (boardList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
+						sb.append("<DATA4>Y</DATA4>");
+					} else {
+						sb.append("<DATA4>N</DATA4>");
+					}
+					sb.append("<DATA5>"+boardList.get(j).get("FILEPATH")+"</DATA5>");
+					sb.append("<DATA6>"+ boardList.get(j).get("MAINCONTENT") +"</DATA6>");
+				}
+				sb.append("</CELL>");
+			}
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS>");
+		sb.append("</LISTVIEWDATA>");
+		sb.append("</DOCLIST>");
+		return sb.toString();
+	}
+	
 
 }

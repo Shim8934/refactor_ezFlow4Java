@@ -6097,4 +6097,25 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return strXML;
 	}
+	
+	/**
+	 * 포탈 포토갤러리 포틀릿 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getImagePortletList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String pBoardType = xmlDom.getElementsByTagName("pBoardType").item(0).getTextContent();
+		String pBoardID = xmlDom.getElementsByTagName("pBoardID").item(0).getTextContent();
+		int pPageNum = Integer.parseInt(xmlDom.getElementsByTagName("pPageNum").item(0).getTextContent());
+		String pOrderCell = xmlDom.getElementsByTagName("orderCell").item(0).getTextContent();
+		String pOrderOption = xmlDom.getElementsByTagName("orderOption").item(0).getTextContent();
+		
+		String boardXML = ezBoardService.getThumbListXML(userInfo.getId(), pBoardType, pBoardID, pPageNum, pOrderCell, pOrderOption, userInfo.getLang());
+		return boardXML;
+	}
+	
+	
 } 

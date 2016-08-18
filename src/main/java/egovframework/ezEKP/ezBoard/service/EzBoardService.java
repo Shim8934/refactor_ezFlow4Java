@@ -121,6 +121,8 @@ public interface EzBoardService {
 	
 	public String checkOneLineOwner(String replyID, String userID) throws Exception;
 	
+	public String getThumbListXML (String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang) throws Exception;
+	
 	public int getReservedItemListCount(String userID) throws Exception;
 	
 	public int getNewItemListCount(String userID) throws Exception;
