@@ -145,7 +145,7 @@
         if (ListTypeFlag == 2 || ListTypeFlag == 3 || ListTypeFlag == 4)
             xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetTransList.aspx", true);
         else
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetList.aspx", true);
+            xmlhttp.open("POST", "/ezApprovalG/getCabinetList.do", true);
 
         xmlhttp.onreadystatechange = listviewbind;
         RequestXMLinfo = xmlpara;

@@ -4,7 +4,7 @@ package egovframework.ezEKP.ezApprovalG.vo;
  * @author YOON
  *
  */
-public class ApprGCabinetVO {
+public class ApprGCabinetVO{
 	/** 기록물철ID*/
 	private String cabinetID; 
 	/** 등록일련번호*/
@@ -88,6 +88,86 @@ public class ApprGCabinetVO {
 	private String docTransferYear;
 	private String cabDeptCode;
 	private String cabTitle;
+	/** 순서*/
+	private String rowNum_;
+	private String dispClassNo;
+	private String endYear;
+	private String displayRecFlag;
+	private String delayFlag;
+	private String transferFlag;
+	private String version;
+	private String modifyReason;
+	private String modifierName;
+	private String modifyDate;
+	private String modifierName2;
+	
+	
+	public String getModifierName2() {
+		return modifierName2;
+	}
+	public void setModifierName2(String modifierName2) {
+		this.modifierName2 = modifierName2;
+	}
+	public String getModifierName() {
+		return modifierName;
+	}
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
+	}
+	public String getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(String modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+	public String getModifyReason() {
+		return modifyReason;
+	}
+	public void setModifyReason(String modifyReason) {
+		this.modifyReason = modifyReason;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	public String getTransferFlag() {
+		return transferFlag;
+	}
+	public void setTransferFlag(String transferFlag) {
+		this.transferFlag = transferFlag;
+	}
+	public String getDelayFlag() {
+		return delayFlag;
+	}
+	public void setDelayFlag(String delayFlag) {
+		this.delayFlag = delayFlag;
+	}
+	public String getDisplayRecFlag() {
+		return displayRecFlag;
+	}
+	public void setDisplayRecFlag(String displayRecFlag) {
+		this.displayRecFlag = displayRecFlag;
+	}
+	public String getEndYear() {
+		return endYear;
+	}
+	public void setEndYear(String endYear) {
+		this.endYear = endYear;
+	}
+	public String getDispClassNo() {
+		return dispClassNo;
+	}
+	public void setDispClassNo(String dispClassNo) {
+		this.dispClassNo = dispClassNo;
+	}
+	public String getRowNum_() {
+		return rowNum_;
+	}
+	public void setRowNum_(String rowNum_) {
+		this.rowNum_ = rowNum_;
+	}
 	public String getCabinetID() {
 		return cabinetID;
 	}

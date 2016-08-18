@@ -938,5 +938,45 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public String getDeliveryList(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getDeliveryList", map);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> getCabinetList(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getCabinetList", map);
+	}
+
+	public int getCabinetListCount(Map<String, Object> map1) throws Exception{
+		select("EzApprovalG.getCabinetListCount", map1);
+		return (int)map1.get("v_pCount");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCabinetDetailInfo(Map<String, Object> map) {
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCabinetDetailInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCabScInfo(Map<String, Object> map) {
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCabScInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCabinetSimpleInfo(Map<String, Object> map) {
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCabinetSimpleInfo", map);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCabinetSimpleInfo2(Map<String, Object> map) {
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCabinetSimpleInfo2", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> getCabinetHistory(Map<String, Object> map) {
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getCabinetHistory", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> getTaskCharger(Map<String, Object> map) {
+		return (List<ApprGRecordVO>) list("EzApprovalG.getTaskCharger", map);
+	}
 }

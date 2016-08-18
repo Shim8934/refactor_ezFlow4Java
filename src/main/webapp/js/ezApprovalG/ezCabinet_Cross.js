@@ -25,7 +25,7 @@ function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
     var MenuType;
-
+    
     if (selRow != null) {
         if (ListTypeFlag == "2" || ListTypeFlag == "3") {
             MenuCtl_Trans();
@@ -593,7 +593,7 @@ function GetCaninetListXml() {
     g_szParamXml = getXmlString(xmlpara);
 
     g_CabListXmlhttp = createXMLHttpRequest();
-    g_CabListXmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetCabinetList.aspx", true);
+    g_CabListXmlhttp.open("POST", "/ezApprovalG/getCabinetList.do", true);
     g_CabListXmlhttp.onreadystatechange = onreadystatechange_CabList;
     g_CabListXmlhttp.send(xmlpara);
 }
@@ -657,7 +657,7 @@ function InsertToCabListView(Resultxml) {
                 NodeListLen = 0;
         }
 
-        var xmlDoc
+        var xmlDoc;
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -679,9 +679,9 @@ function InsertToCabListView(Resultxml) {
         DocList.SetRowOnClick("lvtDoclist_SelChange");           
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
-        DocList.SetTitleIdx(0);                                  
+        DocList.SetTitleIdx(0);
 
-        DocList.DataSource(ListViewData);                             
+        DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
 
@@ -991,7 +991,7 @@ function btnViewCabInfo_onclick() {
         para[0] = selRow[0].getAttribute("DATA1");		
         para[1] = selRow[0].getAttribute("DATA2");	
 
-        var url = "/myoffice/ezApprovalG/ezCabinet/ViewCabInfo_Cross.aspx";
+        var url = "/ezApprovalG/viewCabInfo.do";
         viewcabinfo_cross_dialogArguments[0] = para;
 
         var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 630));
@@ -1011,7 +1011,7 @@ function btnViewCabHistory_onclick() {
         var para = new Array();
         para[0] = selRow[0].getAttribute("DATA2");	
 
-        var url = "/myoffice/ezApprovalG/ezCabinet/ViewCabHistory_Cross.aspx";
+        var url = "/ezApprovalG/viewCabHistory.do";
 
         viewcabhistory_cross_dialogArguments[0] = para;
 
@@ -1488,7 +1488,7 @@ function SearchCabinet(pInitFlag) {
     para[2] = deptName;
     para[3] = pInitFlag;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/SearchCab_Cross.aspx";
+    var url = "/ezApprovalG/searchCab.do";
 
     searchcab_cross_dialogArguments[0] = para;
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;

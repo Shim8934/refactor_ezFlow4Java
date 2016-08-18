@@ -13706,5 +13706,1118 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>FALSE</RESULT>";
 	}
 
+	@Override
+	public String getCabinetList(Document xmlDom, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		StringBuilder strSQL2 = new StringBuilder();
+		StringBuilder resultXML = new StringBuilder();
+		
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+ 		String deptCode = xmlDom.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim();
+ 		String listFlag = xmlDom.getElementsByTagName("LISTFLAG").item(0).getTextContent().trim();
+ 		String orderBy = xmlDom.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
+ 		String pageSize = xmlDom.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim();
+ 		String pageNo = xmlDom.getElementsByTagName("PAGENO").item(0).getTextContent().trim();
+ 		
+ 		String listType = "001";
+ 		String listTypeConst = "";
+	    String constraint = "";
+		switch(listFlag)
+		{
+			case "0" :	// 기록물철 대장
+				listType = "002";
+				break;
+			case "1" :	// 편철확정대상 기록물철
+				listTypeConst =" And TBCABINETCLASS.TerminateFlag='1' And TBCABINETCLASS.ConfirmFlag='0'";
 
+				listType = "002";
+				break;
+
+			case "2" :	// 기록물철 생산현황
+				listTypeConst = " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM SYSDATE)";
+				listType = "004";
+				break;
+
+			case "3" :	// 목록이관 대상
+				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='1' " + 
+						"And ( ( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+			            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM SYSDATE) " +
+			            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+			            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM SYSDATE) ) " + 
+						") ) And CatalogTransferFlag='0' ";
+				listType = "006";
+				break;
+
+			case "4" :	// 파일이관 대상
+				listTypeConst = " And CatalogTransferFlag='1' " +
+			            "And DocTransferFlag='0' And CatalogTransferYear=(Select Max(CatalogTransferYear) From TBCABINET ) ";
+				listType = "006";
+				break;
+
+			case "5" :	// 이관목록
+				listTypeConst =  " And DocTransferFlag='1' " +
+			            "And DocTransferYear=EXTRACT(YEAR FROM SYSDATE) ";
+
+				listType = "006";
+				break;
+    
+			case "6" :	// 연기신청목록
+				listTypeConst = "And TBCABINETCLASS.KeepingPlace='1' " +
+			            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+			            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM SYSDATE) ) " +
+			            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM SYSDATE) ) OR " +
+			            " ( TBCABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBCABINET ) ) ) ";
+				listType = "008";
+				break;
+    
+			case "7" :	// 폐기대상 기록물철
+
+				String DFlag = getCode2Name("A35", "003", companyID, lang).toUpperCase().trim();
+				if (DFlag == "Y")
+				{
+					// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
+					listTypeConst = " AND TBCABINETCLASS.TerminateFlag = '1' " + 
+							"AND @YEAR - TBCABINETCLASS.ExpirationYear > TBCABINETCLASS.KeepingPeriod ".replace("@YEAR", EgovDateUtil.getTodayTime().substring(0, 4));
+				}
+				else
+				{
+					// 일반 G버전. 폐기 대상은 이관된 기록물.
+					listTypeConst =  " And DocTransferFlag='1' ";
+				}
+
+				listType = "002";
+				break;
+    
+			case "8" :	// 정리대상 기록물철
+                //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.//////////////
+                //원본
+                //ListTypeConst = g_Const_ArrangeTargetCabConst;
+				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='0' " +
+	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID, lang)+ "'" ;
+				
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                listType = "009";
+				break;
+    
+			case "9" :	// 인계기록물철
+				listType = "002";
+				break;
+    
+			case "10" :	// 종료연기 신청 대상 기록물철(업무담당자)
+                //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.//////////////
+                //ListTypeConst = "And TBCABINETCLASS.ExpirationYear=Cast(DatePart(yyyy,GetDate()) AS char(4)) "; 
+                String regYear = getAccountingYear(EgovDateUtil.getToday(""), companyID, lang);
+                listTypeConst = "And TBCABINETCLASS.ExpirationYear='" + regYear + "'  ";
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                listType = "010";
+				break;
+    
+			case "11" :	// 종료연기 확인 대상 기록물철(기록물 관리 책임자)
+				listTypeConst = " And TBCABINETCLASS.DelayEndYFlag = 'Y' " + 
+						"And TBCABINETCLASS.TerminateFlag = '0' And TBCABINETCLASS.ConfirmFlag = '0'";;
+				listType = "010";
+				break;
+
+			case "12" :	// 미정리 기록물철
+                //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.//////////////
+                //ListTypeConst = g_Const_NotArrangedCabConst;
+				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='0' " +
+	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID, lang) + "' And TBCABINETCLASS.TerminateFlag='0' ";
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                listType = "009";
+				break;
+
+			default : 
+				listType = "002";
+				break;
+		}
+		
+		String arrListInfo = getLVFieldInfo(listType, companyID, lang);
+		Document arrList = commonUtil.convertStringToDocument(arrListInfo);
+		String extraSelectClause = "";
+		String  selectClause =" SELECT TBCABINET.CabinetID, " + 
+				"TBCABINETCLASS.RegSerialNo, TBCABINETCLASS.ProductionYear, TBCABINET.VolumeNo, " +
+				"TBCABINETCLASS.ModifyFlag, TBCABINET.CabinetTransferFlag, TBCABINETCLASS.ConfirmFlag, " +
+	            "TBCABINETCLASS.TaskCode, TBCABINETCLASS.TaskName, TBCABINETCLASS.TaskName2, TBCABINETCLASS.ProcessDeptCode, " + 
+				"TBCABINETCLASS.ProcessDeptName,TBCABINETCLASS.ProcessDeptName2, TBCABINET.CabinetClassNo, TBCABINETCLASS.RecTypeCode as RecTypeCode, " + 
+				"TBCABINETCLASS.CreateDate AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
+				"TBCABINETCLASS.SpecialCatalogFlag, TBCABINETCLASS.TerminateFlag, " + 
+				"TBCABINETCLASS.OwnerDeptID, TBCABINETCLASS.OwnerTask, TBCABINETCLASS.TransDelayFlag ";
+		for (int i = 0; i < arrList.getElementsByTagName("SELECTFIELD").getLength(); i++) {
+			if (!makeListField(arrList.getElementsByTagName("COLNAME").item(i).getTextContent()).equals("")) {
+				if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase().trim()) < 0) {
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
+				} else if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLALIAS").item(i).getTextContent().toUpperCase().trim()) < 0) {
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
+				}
+			}
+		}
+		if (listFlag == "9")		// 인계 기록물철 조회 시
+		{
+			constraint += " AND ((OwnerDeptID = '" + deptCode + 
+				"' And ConfirmFlag = '0') OR (TBCABINETCLASS.ProcessDeptCode = '" +
+				deptCode + "' AND ConfirmFlag='1') ) ";
+		}
+		else
+		{
+			if (xmlDom.getElementsByTagName("DEPTCODE").item(0) != null && xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0){
+				constraint += " AND TBCABINETCLASS.OwnerDeptID = '" + xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim() + "' ";
+
+			}
+			else if (deptCode.length() > 0) {
+				constraint += " AND TBCABINETCLASS.OwnerDeptID = '" + deptCode + "' ";
+			}
+		}
+
+		//    '검색조건
+		//    'SParamRec(0)  '제목
+		//    'SParamRec(1)  '단위업무코드
+		//    'SParamRec(2)  '생산연도 시작
+		//    'SParamRec(3)  '생산연도 끝
+		//    'SParamRec(4)  '종료연도 시작
+		//    'SParamRec(5)  '종료연도 끝
+		//    'SParamRec(6)  '기록물 형태
+		//    'SParamRec(7)  '보존연한
+		//    'SParamRec(8)  '보존방법
+		//    'SParamRec(9)  '보존장소
+		//    'SParamRec(10)  '업무담당자
+		//    'SParamRec(11)  '처리과코드
+		//    'SParamRec(12)  '보존기간경과
+
+         if (xmlDom.getElementsByTagName("TITLE").item(0) != null && xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().length() > 0)
+        {
+            if(lang.equals("1"))
+                constraint += " AND TBCABINETCLASS.Title Like '%" + makeSearchField(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim()) + "%' ";
+            else
+                constraint += " AND TBCABINETCLASS.Title2 Like '%" + makeSearchField(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim()) + "%' ";
+        }
+
+		if (xmlDom.getElementsByTagName("TASKCODE").item(0) != null && xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.TaskCode IN (" + xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent() + ")";
+		}
+		if (xmlDom.getElementsByTagName("SPRODUCEY").item(0) != null && xmlDom.getElementsByTagName("SPRODUCEY").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.ProductionYear >= '" + makeRightField(xmlDom.getElementsByTagName("SPRODUCEY").item(0).getTextContent().trim()).substring(0, 4) + "' ";
+		}
+		if (xmlDom.getElementsByTagName("EPRODUCEY").item(0) != null && xmlDom.getElementsByTagName("EPRODUCEY").item(0).getTextContent().length() > 0){
+            constraint += " AND TBCABINETCLASS.ProductionYear <= '" + makeRightField(xmlDom.getElementsByTagName("EPRODUCEY").item(0).getTextContent().trim()).substring(0, 4) + "' ";
+		}
+		if (xmlDom.getElementsByTagName("SENDY").item(0) != null && xmlDom.getElementsByTagName("SENDY").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.ExpirationYear >= '" + makeRightField(xmlDom.getElementsByTagName("SENDY").item(0).getTextContent().trim()).substring(0, 4) + "' ";
+		}
+		if (xmlDom.getElementsByTagName("EENDY").item(0) != null && xmlDom.getElementsByTagName("EENDY").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.ExpirationYear <= '" + makeRightField( xmlDom.getElementsByTagName("EENDY").item(0).getTextContent().trim()).substring(0, 4) + "' ";
+		}
+		if (xmlDom.getElementsByTagName("RECTYPECODE").item(0) != null && xmlDom.getElementsByTagName("RECTYPECODE").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.RecTypeCode = '" + makeRightField(xmlDom.getElementsByTagName("RECTYPECODE").item(0).getTextContent().trim()) + "' ";
+		}
+		if (xmlDom.getElementsByTagName("KEEPPERIOD").item(0) != null && xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.KeepingPeriod = '" + makeRightField(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim()) + "' ";
+		}
+		
+		if (xmlDom.getElementsByTagName("KEEPMETHOD").item(0) != null && xmlDom.getElementsByTagName("KEEPMETHOD").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.KeepingMethod = '" + makeRightField(xmlDom.getElementsByTagName("KEEPMETHOD").item(0).getTextContent().trim()) + "' ";
+		}
+		
+		if (xmlDom.getElementsByTagName("KEEPPLACE").item(0) != null && xmlDom.getElementsByTagName("KEEPPLACE").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.KeepingPlace = '" + makeRightField(xmlDom.getElementsByTagName("KEEPPLACE").item(0).getTextContent().trim()) + "' ";
+		}
+		
+		if (xmlDom.getElementsByTagName("CHARGER").item(0) != null && xmlDom.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0){
+			constraint += " AND TBCABINETCLASS.CabinetClassNo IN (select CabinetClassNo " +
+                    "From TBCABROLEINFO WHERE User_ID IN (" + xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().trim() + ") ) ";		
+		}
+		
+		if (xmlDom.getElementsByTagName("TRANSEXPIRE").item(0) != null && xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0){
+		   
+			 if(!(getAccountingYear(EgovDateUtil.getToday(""), companyID, lang).equals(""))){
+				 constraint = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
+                         "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+                         " And TBCABINETCLASS.ConfirmYear < '" + (Integer.parseInt(getAccountingYear(EgovDateUtil.getToday(""), companyID, lang)) - 1) + "'" +
+                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And RTRIM(DISPLAYENDDATE) <> '' AND TBCABINETCLASS.DisplayEndDate<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID, lang) + "') " +
+                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<'" + (Integer.parseInt(getAccountingYear(EgovDateUtil.getToday(""), companyID, lang)) - 1) + "') " +
+                         " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
+			 }
+			 else{
+				 constraint =  " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
+                         "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
+                         " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM SYSDATE-(INTERVAL '1' YEAR)) " +
+                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
+                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) ) " +
+                         " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
+			 }
+		}
+		
+		if(orderBy.equals("")){
+			orderBy = " Order By CreateDate DESC, CabinetID DESC ";
+		}
+		
+
+        // 수정(2008.03.03) : 기록물철 목록 쿼리 시 Top으로 가져오도록 수정
+        /*int iTopCnt = 0;
+        if (GetParamText(objParam.DocumentElement, "ISDOCPRINT") == "TRUE")
+            iTopCnt = int.Parse(PageNo);
+        else
+            iTopCnt = int.Parse(PageSize) * int.Parse(PageNo);
+         * */
+
+        //2011.05.11  기록물등록부 페이징 오류 처리
+        //strSQL.Append(g_Const_CabinetSelectClause.Replace("SELECT ", "SELECT TOP " + iTopCnt.ToString() + " ") + ExtraSelectClause + g_Const_CabinetFromClause);
+		
+		strSQL.append(" SELECT * FROM ( SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_, N.*  FROM ( SELECT "+ "TBCABINET.CabinetID, "+ 
+				"TBCABINETCLASS.RegSerialNo, TBCABINETCLASS.ProductionYear, TBCABINET.VolumeNo, " +
+				"TBCABINETCLASS.ModifyFlag, TBCABINET.CabinetTransferFlag, TBCABINETCLASS.ConfirmFlag, " +
+	            "TBCABINETCLASS.TaskCode, TBCABINETCLASS.TaskName, TBCABINETCLASS.TaskName2, TBCABINETCLASS.ProcessDeptCode, " + 
+				"TBCABINETCLASS.ProcessDeptName,TBCABINETCLASS.ProcessDeptName2, TBCABINET.CabinetClassNo, TBCABINETCLASS.RecTypeCode as RecTypeCode, " + 
+				"TBCABINETCLASS.CreateDate AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
+				"TBCABINETCLASS.SpecialCatalogFlag, TBCABINETCLASS.TerminateFlag, " + 
+				"TBCABINETCLASS.OwnerDeptID, TBCABINETCLASS.OwnerTask, TBCABINETCLASS.TransDelayFlag " + extraSelectClause + " From TBCABINETCLASS  Inner Join " +
+	            "TBCABINET  On TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo " );
+		
+		 strSQL2.append("SELECT COUNT(*) " + " From TBCABINETCLASS  Inner Join " +
+		            "TBCABINET  On TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo ");
+		 
+		 if(listFlag.equals("9")){
+			 strSQL.append( " Where TBCABINET.DelFlag = '0' " +
+						"AND TBCABINETCLASS.DelFlag = '0' AND TBCABINET.CabinetTransferFlag = '2'" + constraint + listTypeConst);
+			 strSQL2.append( " Where TBCABINET.DelFlag = '0' " +
+						"AND TBCABINETCLASS.DelFlag = '0' AND TBCABINET.CabinetTransferFlag = '2'" + constraint + listTypeConst);
+		 }
+		 else{
+			 strSQL.append(  " Where TBCABINET.DelFlag = '0' " + 
+						"AND TBCABINETCLASS.DelFlag = '0' AND NOT (TBCABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') " + constraint + listTypeConst);
+			 strSQL2.append(  " Where TBCABINET.DelFlag = '0' " + 
+						"AND TBCABINETCLASS.DelFlag = '0' AND NOT (TBCABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') " + constraint + listTypeConst);
+		 }
+		 
+		 int start = 0;
+ 		 int end = 0;
+		 
+ 		 if(xmlDom.getElementsByTagName("ISDOCPRINT").item(0)!=null && xmlDom.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().equals("TRUE") ){
+			 end = Integer.parseInt(xmlDom.getElementsByTagName("PAGENO").item(0).getTextContent());
+			 start = Integer.parseInt(xmlDom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
+		 }
+		 else{
+			 end = Integer.parseInt(pageSize)* Integer.parseInt(pageNo);
+		     start = end - Integer.parseInt(pageSize) + 1;
+		 }
+		 
+		 
+		 if (xmlDom.getElementsByTagName("ISDOCPRINT").item(0)!=null && xmlDom.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().equals("TRUE") && start < 0){
+             strSQL.append(" ) N ) A ");  //PageSize를 음수를 주면 모든 페이지를 가져온다.
+		 }
+         else{
+             strSQL.append(" ) N ) A WHERE ROWNUM_ BETWEEN " + start + " AND " + end);
+         }
+		 
+	        Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sqlString", strSQL.toString());
+ 			map.put("companyID", companyID);
+
+	        List<ApprGCabinetVO> apprGCabinetList = ezApprovalGDAO.getCabinetList(map);
+	        
+ 	        StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < apprGCabinetList.size(); i++) {
+				sb.append(commonUtil.getQueryResult(apprGCabinetList.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			Document docXML = commonUtil.convertStringToDocument(sb.toString());
+			
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("sqlString", strSQL2.toString());
+			map1.put("companyID", companyID);
+			
+ 			int docCount = ezApprovalGDAO.getCabinetListCount(map1);
+			
+			resultXML.append("<DOCLIST>");
+			resultXML.append("<TOTALDOCCOUNT>" + docCount + "</TOTALDOCCOUNT>");
+			resultXML.append("<LISTVIEWDATA>");
+			resultXML.append("<HEADERS>");
+			for(int j = 0; j< arrList.getElementsByTagName("ROW").getLength(); j++){
+				resultXML.append("<HEADER>");
+				resultXML.append("<NAME>" + arrList.getElementsByTagName("NAME").item(j).getTextContent().trim()+"</NAME>");
+				resultXML.append("<WIDTH>" + arrList.getElementsByTagName("WIDTH").item(j).getTextContent().trim()+"</WIDTH>");
+				resultXML.append("</HEADER>");
+			}
+			resultXML.append("</HEADERS>");
+			resultXML.append("<ROWS>");
+			for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++){
+				resultXML.append("<ROW>");
+				for (int k=0; k< arrList.getElementsByTagName("COLALIAS").getLength(); k++){
+					String fieldName = arrList.getElementsByTagName("COLALIAS").item(k).getTextContent().trim().toUpperCase();
+					
+					if(fieldName.toUpperCase().equals("DREFTNAME") || fieldName.toUpperCase().equals("RECIVENAME") || fieldName.toUpperCase().equals("SENDDEPTNAME") || fieldName.toUpperCase().equals("RECIVEDEPTNAME")){
+						fieldName = fieldName + commonUtil.getMultiData(lang);
+					}
+					resultXML.append("<CELL>");
+					resultXML.append("<VALUE>");
+					
+					switch(arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()){
+					
+						case "dtSerialNum" :
+       							System.out.println(docXML.getTextContent());
+							resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
+						break;
+							
+						case "dtCabClassNo" :
+							resultXML.append(getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(j).getTextContent(),makeListField(docXML.getElementsByTagName("TASKCODE").item(j).getTextContent()),
+									makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(j).getTextContent()),makeListField(docXML.getElementsByTagName("REGSERIALNO").item(j).getTextContent()),makeListField(docXML.getElementsByTagName("VOLUMENO").item(j).getTextContent())));
+								break;
+						case "dtRecTypeCode" :						// 기록물 형태
+							resultXML.append(getRecordTypeString(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()),companyID, lang));
+							break;
+
+						case "dtKeepPeriod" :						// 보존년한
+							resultXML.append(getKeepPeriodString(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()), companyID, lang));
+							break;
+
+						case "dtKeepMethod" :						// 보존방법
+							resultXML.append(getKeepMethodString(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()), companyID, lang));
+							break;
+
+						case "dtKeepPlace" :						// 보존장소
+							resultXML.append(getKeepPlaceString(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()), companyID, lang));
+							break;
+
+						case "dtBool" :								// Y/N 형식의 데이터 타입
+ 							String tempValue = makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent().trim());
+							if (tempValue.equals("1"))
+								resultXML.append("Y");
+							else
+								resultXML.append("N");
+							break;
+
+						case "dtDate" :								// 날짜 타입(시간제외)
+							resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()), 1));
+							break;
+
+						case "dtDateTime" :								// 날짜 타입(시간포함)
+							resultXML.append(formatDateForView(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()), 0));
+							break;
+
+						default:
+							resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()));
+							break;
+					}		
+					resultXML.append("</VALUE>");
+					
+				
+					if (k == 0)
+					{
+						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETID").item(j).getTextContent()) + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(j).getTextContent()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("OWNERID").item(j).getTextContent()) + "</DATA3>");
+						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(j).getTextContent()) + "</DATA4>");
+						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(j).getTextContent()) + "</DATA5>");
+						resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("TERMINATEFLAG").item(j).getTextContent()) + "</DATA6>");
+						resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("TRANSDELAYFLAG").item(j).getTextContent()) + "</DATA7>");
+					}
+					resultXML.append("</CELL>");
+				}
+				resultXML.append("</ROW>");
+			}		
+			resultXML.append("</ROWS>");
+			resultXML.append("</LISTVIEWDATA>");
+			resultXML.append("</DOCLIST>");
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getCabinetDetailInfo(Document xmlDom) throws Exception {
+		
+		StringBuilder strXML = new StringBuilder();
+		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String strType = xmlDom.getElementsByTagName("STRTYPE").item(0).getTextContent();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID.trim());
+		
+		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getCabinetDetailInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGTaskVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGTaskVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("ROW").getLength() <= 0) {
+			return "<RESULT>NORECORD</RESULT>";
+		}
+		
+		strXML.append("<CABINFO>");
+		strXML.append("<BASICINFO>");
+		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");
+		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");
+		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>");
+		strXML.append("<CABCLASSID>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), docXML.getElementsByTagName("TASKCODE").item(0).getTextContent(), docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent(), docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent(), docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent()) + "</CABCLASSID>");
+		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID , strType) + "</RECTYPE>");
+		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent() + "</DEPTNAME>");
+		strXML.append("<TASKNAME>" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent() + "</TASKNAME>");
+		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>");
+		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>");
+		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>");
+		strXML.append("<REGDATE>" + formatDateForView(docXML.getElementsByTagName("CREATEDATE").item(0).getTextContent(),0) + "</REGDATE>");
+		strXML.append("<SCFLAG>" + docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent() + "</SCFLAG>");
+		strXML.append("</BASICINFO>");
+		strXML.append("<EXTRAINFO>");
+		strXML.append("<NUMOFREC>" + docXML.getElementsByTagName("NUMOFREC").item(0).getTextContent() + "</NUMOFREC>");
+		strXML.append("<NUMOFPAGE>" + docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent() + "</NUMOFPAGE>");
+		strXML.append("<NUMOFFILE>" + docXML.getElementsByTagName("NUMOFFILE").item(0).getTextContent() + "</NUMOFFILE>");
+		strXML.append("<MODIFYFLAG>" + docXML.getElementsByTagName("MODIFYFLAG").item(0).getTextContent() + "</MODIFYFLAG>");
+		strXML.append("<OLDFLAG>" + docXML.getElementsByTagName("OLDCABINETFLAG").item(0).getTextContent() + "</OLDFLAG>");
+		strXML.append("<OLDCREATEORGAN>" + (docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent()== null ? "":docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent()) + "</OLDCREATEORGAN>");
+		strXML.append("<OLDCLASSNO>" + docXML.getElementsByTagName("CLASSIFICATIONNO").item(0).getTextContent() + "</OLDCLASSNO>");
+		strXML.append("</EXTRAINFO>");
+		strXML.append("<CLASSINFO>");
+		strXML.append("<ENDY>" + (docXML.getElementsByTagName("EXPIRATIONYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("EXPIRATIONYEAR").item(0).getTextContent()) + "</ENDY>");
+		strXML.append("<KEEPPERIOD>" + getKeepPeriodString(docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent(),companyID,strType) + "</KEEPPERIOD>");
+		strXML.append("<KEEPMETHOD>" + getKeepMethodString(docXML.getElementsByTagName("KEEPINGMETHOD").item(0).getTextContent(),companyID,strType) + "</KEEPMETHOD>");
+		strXML.append("<KEEPPLACE>" + getKeepPlaceString(docXML.getElementsByTagName("KEEPINGPLACE").item(0).getTextContent(),companyID,strType) + "</KEEPPLACE>");
+		strXML.append("<DISPENDDATE>" + (docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent()) + "</DISPENDDATE>");
+		strXML.append("<DISPREASON>" + (docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent())  + "</DISPREASON>");
+		strXML.append("<CABCHARGER>" + docXML.getElementsByTagName("CABCHARGER").item(0).getTextContent() + "</CABCHARGER>");
+		strXML.append("<CONFIRMFLAG>" + docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent() + "</CONFIRMFLAG>");
+		strXML.append("<CATATRANSFLAG>" + docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent() + "</CATATRANSFLAG>");
+		strXML.append("<CATATRANSYEAR>" + docXML.getElementsByTagName("CATALOGTRANSFERYEAR").item(0).getTextContent() + "</CATATRANSYEAR>");
+		strXML.append("<DOCTRANSFLAG>" + docXML.getElementsByTagName("DOCTRANSFERFLAG").item(0).getTextContent() + "</DOCTRANSFLAG>");
+		strXML.append("<DOCTRANSYEAR>" + docXML.getElementsByTagName("DOCTRANSFERYEAR").item(0).getTextContent() + "</DOCTRANSYEAR>");
+		strXML.append("</CLASSINFO>");
+		
+		strXML.append("<TRANSINFO>");
+		strXML.append("<CABTRANSFLAG>" + docXML.getElementsByTagName("CABINETTRANSFERFLAG").item(0).getTextContent() + "</CABTRANSFLAG>");
+		strXML.append("<TCABID>" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "</TCABID>");
+		strXML.append("<TCABNAME>" + (docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent())+ "</TCABNAME>");
+		strXML.append("<TDEPTNAME>" + (docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent() ==null ? "" : docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent())+ "</TDEPTNAME>");
+		strXML.append("<TDEPTCODE>" + (docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() == null ? "" :  docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent()) + "</TDEPTCODE>");
+		strXML.append("<TTASKNAME>" + (docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(strType)).item(0).getTextContent()) + "</TTASKNAME>");
+		strXML.append("<TTASKCODE>" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "</TTASKCODE>");
+		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");
+		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()) + "</TREGSN>");
+		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</TVOLNO>");
+		strXML.append("<TRANSDATE>" + formatDateForView(docXML.getElementsByTagName("TRANSFERDATE").item(0).getTextContent(),1) + "</TRANSDATE>");
+		strXML.append("</TRANSINFO>");
+		strXML.append("</CABINFO>");
+		return strXML.toString();
+	}
+
+	@Override
+	public String getCabScInfo(Document xmlDom) throws Exception {
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent();
+		StringBuilder strXML = new StringBuilder();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID.trim());
+		
+		List<ApprGTaskVO> docList = ezApprovalGDAO.getCabScInfo(map);
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("ROW").getLength() <= 0) {
+			return "<RESULT>NORECORD</RESULT>";
+		}
+		
+		strXML.append("<LISTVIEWDATA>");
+		strXML.append("<HEADERS>");
+		strXML.append("<ROWS>");
+		boolean[] scYn = new boolean[3];
+		for(int j=0; j < docXML.getElementsByTagName("ROW").getLength(); j++){
+			String scSn = docXML.getElementsByTagName("SERIALNO").item(j).getTextContent().trim();
+			
+			if(scSn.equals("000")){
+				strXML.append("<HEADER>");
+				strXML.append("<NAME>" + "Serial NO." +"</NAME>");
+				strXML.append("<WIDTH>" + "100" + "</WIDTH>");
+				strXML.append("</HEADER>");
+				
+				// '제 1 특수목록
+				if(makeListField(docXML.getElementsByTagName("SC1").item(j).getTextContent()).equals("")){
+				   scYn[0]=false;
+				}
+				else{
+					scYn[0]=true;
+					strXML.append("<HEADER>");
+					strXML.append("<NAME>" + makeListField(docXML.getElementsByTagName("SC1").item(j).getTextContent()) +"</NAME>");
+					strXML.append("<WIDTH>" + "250" + "</WIDTH>");
+					strXML.append("</HEADER>");
+				}
+				// '제 2 특수목록
+				if(makeListField(docXML.getElementsByTagName("SC2").item(j).getTextContent()).equals("")){
+				   scYn[1]=false;
+				}
+				else{
+					scYn[1]=true;
+					strXML.append("<HEADER>");
+					strXML.append("<NAME>" + makeListField(docXML.getElementsByTagName("SC2").item(j).getTextContent()) +"</NAME>");
+					strXML.append("<WIDTH>" + "250" + "</WIDTH>");
+					strXML.append("</HEADER>");
+				}
+				// '제 3 특수목록
+				if(makeListField(docXML.getElementsByTagName("SC3").item(j).getTextContent()).equals("")){
+				   scYn[2]=false;
+				}
+				else{
+					scYn[2]=true;
+					strXML.append("<HEADER>");
+					strXML.append("<NAME>" + makeListField(docXML.getElementsByTagName("SC3").item(j).getTextContent()) +"</NAME>");
+					strXML.append("<WIDTH>" + "250" + "</WIDTH>");
+					strXML.append("</HEADER>");
+				}	
+			}
+			else{ // 리스트뷰 Rows 부분이다.
+				strXML.append("<ROW>");
+				strXML.append("<CELL>");
+				strXML.append("<VALUE>" + scSn + "</VALUE>");
+				strXML.append("</CELL>");
+				if(scYn[0]){
+					strXML.append("<CELL>");
+					strXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SC1").item(j).getTextContent()) + "</VALUE>");
+					strXML.append("</CELL>");
+				}
+				if(scYn[1]){
+					strXML.append("<CELL>");
+					strXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SC2").item(j).getTextContent()) + "</VALUE>");
+					strXML.append("</CELL>");
+				}
+				if(scYn[2]){
+					strXML.append("<CELL>");
+					strXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SC3").item(j).getTextContent()) + "</VALUE>");
+					strXML.append("</CELL>");
+				}
+				strXML.append("</ROW>");
+			}
+			
+		}
+		strXML.append("</ROWS>");
+		strXML.append("</HEADERS>");
+		strXML.append("</LISTVIEWDATA>");
+		
+		
+		return strXML.toString();
+	}
+
+	@Override
+	public String getCabinetPrintInfo(Document xmlDom, String lang)	throws Exception {
+		StringBuilder strXML = new StringBuilder();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
+		String langType = xmlDom.getElementsByTagName("STRTYPE").item(0).getTextContent().trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID.trim());
+		
+		List<ApprGTaskVO> docList = ezApprovalGDAO.getCabinetDetailInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("ROW").getLength() <= 0) {
+			return "<RESULT>NORECORD</RESULT>";
+		}
+		
+		strXML.append("<CABINFO>");
+		strXML.append("<BASICINFO>");
+		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");  // '기록물철 아이디
+		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");  // '기록물철 분류번호
+		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>"); // '제목
+		strXML.append("<CABCLASSID>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), // '기록물철 분류기호
+				makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
+				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "</CABCLASSID>");
+		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType) + "</RECTYPE>");// '기록물형태
+		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</DEPTNAME>"); // '처리과 이름
+		strXML.append("<TASKNAME>" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TASKNAME>"); // '단위업무 이름
+		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>"); // '생산년도
+		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>"); 	// '등록연번
+		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>"); // '권호수
+		strXML.append("<REGDATE>" + formatDateForView(docXML.getElementsByTagName("CREATEDATE").item(0).getTextContent(),0) + "</REGDATE>"); // '등록일자
+		strXML.append("<SCFLAG>" + docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent() + "</SCFLAG>"); // '특수목록 플래그
+		strXML.append("</BASICINFO>");
+		
+		strXML.append("<EXTRAINFO>");
+		strXML.append("<NUMOFREC>" + docXML.getElementsByTagName("NUMOFREC").item(0).getTextContent() + "</NUMOFREC>"); // '기록물등록건수
+		strXML.append("<NUMOFPAGE>" + docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent() + "</NUMOFPAGE>"); // '기록물쪽수
+		strXML.append("<NUMOFFILE>" + docXML.getElementsByTagName("NUMOFFILE").item(0).getTextContent() + "</NUMOFFILE>"); // ''전자파일갯수
+		strXML.append("<MODIFYFLAG>" + docXML.getElementsByTagName("MODIFYFLAG").item(0).getTextContent() + "</MODIFYFLAG>"); // '수정여부
+		strXML.append("<OLDFLAG>" + docXML.getElementsByTagName("OLDCABINETFLAG").item(0).getTextContent() + "</OLDFLAG>"); // '구기록물 여부
+		strXML.append("<OLDCREATEORGAN>" + docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent() + "</OLDCREATEORGAN>");// '구기록물철 생산기관
+		strXML.append("<OLDCLASSNO>" + docXML.getElementsByTagName("CLASSIFICATIONNO").item(0).getTextContent() + "</OLDCLASSNO>"); // '구기록물 여부
+		strXML.append("</EXTRAINFO>");
+		
+		strXML.append("<CLASSINFO>");
+		strXML.append("<ENDY>" + docXML.getElementsByTagName("EXPIRATIONYEAR").item(0).getTextContent() + "</ENDY>"); // 종료년도
+		strXML.append("<KEEPPERIOD>" + getKeepPeriodString(docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent(),companyID,langType) + "</KEEPPERIOD>"); // 보존기간
+		strXML.append("<KEEPMETHOD>" + getKeepMethodString(docXML.getElementsByTagName("KEEPINGMETHOD").item(0).getTextContent(),companyID,langType) + "</KEEPMETHOD>"); // 보존방법
+		strXML.append("<KEEPPLACE>" + getKeepPlaceString(docXML.getElementsByTagName("KEEPINGPLACE").item(0).getTextContent(),companyID,langType) + "</KEEPPLACE>"); // 보존장소
+		strXML.append("<DISPENDDATE>" + docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent() + "</DISPENDDATE>"); 	// 비치종결일자
+		strXML.append("<DISPREASON>" + docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent() + "</DISPREASON>"); // 비치사유
+		strXML.append("<CABCHARGER>" + docXML.getElementsByTagName("CABCHARGER").item(0).getTextContent() + "</CABCHARGER>");// 업무담당자
+		strXML.append("<CONFIRMFLAG>" + docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent() + "</CONFIRMFLAG>"); // 편철확정여부
+		strXML.append("<CATATRANSFLAG>" + docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent() + "</CATATRANSFLAG>"); // 목록이관여부
+		strXML.append("<CATATRANSYEAR>" + docXML.getElementsByTagName("CATALOGTRANSFERYEAR").item(0).getTextContent() + "</CATATRANSYEAR>"); // 목록이관연도
+		strXML.append("<DOCTRANSFLAG>" + docXML.getElementsByTagName("DOCTRANSFERFLAG").item(0).getTextContent() + "</DOCTRANSFLAG>"); // 파일이관여부
+		strXML.append("<DOCTRANSYEAR>" + docXML.getElementsByTagName("DOCTRANSFERYEAR").item(0).getTextContent() + "</DOCTRANSYEAR>"); // 파일이관연도
+		strXML.append("</CLASSINFO>");
+		
+		strXML.append("<TRANSINFO>");
+		strXML.append("<CABTRANSFLAG>" + docXML.getElementsByTagName("CABINETTRANSFERFLAG").item(0).getTextContent() + "</CABTRANSFLAG>"); // 인수인계 구분
+		strXML.append("<TCABID>" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "</TCABID>"); // 인수 기록물철 아이디
+		strXML.append("<TCABNAME>" + docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TCABNAME>"); // 인수 기록물철 이름
+		strXML.append("<TDEPTNAME>" + docXML.getElementsByTagName("TDEPTNAME"+ commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TDEPTNAME>"); // 인수 기록물철 처리과명
+		strXML.append("<TDEPTCODE>" + docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() + "</TDEPTCODE>"); // 인수 기록물철 처리과 코드
+		strXML.append("<TTASKNAME>" + docXML.getElementsByTagName("TASKNAME").item(0).getTextContent() + "</TTASKNAME>"); // 인수기록물철 단위업무명
+		strXML.append("<TTASKCODE>" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "</TTASKCODE>");// 인수기록물철 단위업무 코드
+		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");// 인수기록물철 생산연도
+		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()) + "</TREGSN>");// 인수기록물철 등록연번
+		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</TVOLNO>");// 인수기록물철 권호수
+		strXML.append("<TRANSDATE>" + formatDateForView(docXML.getElementsByTagName("TRANSFERDATE").item(0).getTextContent(),1) + "</TRANSDATE>");// 인수/인계일자
+		strXML.append("</TRANSINFO>");
+		strXML.append("</CABINFO>");
+		return strXML.toString();
+	}
+
+	@Override
+	public String getCabinetSimpleInfo(Document xmlDom) throws Exception {
+		StringBuilder strXML = new StringBuilder();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String cabinetID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent();
+		String langType = xmlDom.getElementsByTagName("STRTYPE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID.trim());
+		
+		List<ApprGTaskVO> docList = ezApprovalGDAO.getCabinetSimpleInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if (docXML.getElementsByTagName("ROW").getLength() <= 0) {
+			return "<RESULT>NORECORD</RESULT>";
+		}
+		strXML.append("<RESULT>");
+		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");  
+		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");  
+		strXML.append("<TASKCODE>" + docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() + "</TASKCODE>"); 
+		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>"); 
+		strXML.append("<RECTYPECODE>" + docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent() + "</RECTYPECODE>"); 
+		strXML.append("<RECTYPEDES>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType) + "</RECTYPEDES>"); 	
+		strXML.append("<KEEPPERIOD>" + docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent() + "</KEEPPERIOD>"); 
+		strXML.append("<DISPLAYFLAG>" + (docXML.getElementsByTagName("DISPLAYRECFLAG").getLength() <= 0 ? "2" : docXML.getElementsByTagName("DISPLAYRECFLAG").item(0).getTextContent().trim()) + "</DISPLAYFLAG>"); 
+		strXML.append("<DISPLAYENDDATE>" + docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent().trim() + "</DISPLAYENDDATE>");
+		strXML.append("<DISPLAYREASON>" + docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent() + "</DISPLAYREASON>"); 
+		strXML.append("<SPECIALFLAG>" + docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent() + "</SPECIALFLAG>"); 
+		strXML.append("<SCINFO>"); 
+		if(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent().equals("1")){
+			map.put("v_CABCLASSNO", docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent());
+			
+			List<ApprGTaskVO> docList2 = ezApprovalGDAO.getCabinetSimpleInfo2(map);
+			StringBuffer sb2 = new StringBuffer();
+	        sb2.append("<DATA>");
+	        
+	        for (int i = 0; i < docList2.size(); i++) {
+				sb2.append(commonUtil.getQueryResult(docList2.get(i)));
+			}
+			sb2.append("</DATA>");
+			
+			Document docXML2 = commonUtil.convertStringToDocument(sb2.toString());
+			strXML.append("<NAME>");
+			strXML.append("<DATALIST>");
+			
+			for(int j=0; j<docXML2.getElementsByTagName("ROW").getLength();j++){
+				String sepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(j).getTextContent());
+			
+				if(sepAttSN.trim().equals("000")){
+					strXML.append("<SN>" + sepAttSN + "</SN>");
+					strXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(j).getTextContent()) +"</LIST1>");
+					strXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(j).getTextContent()) +"</LIST2>");
+					strXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(j).getTextContent()) +"</LIST3>");
+				}
+				else{
+					strXML.append("<DATA>");
+					strXML.append("<SN>" + sepAttSN + "</SN>");
+					strXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(j).getTextContent()) +"</LIST1>");
+					strXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(j).getTextContent()) +"</LIST2>");
+					strXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(j).getTextContent()) +"</LIST3>");
+					strXML.append("</DATA>");
+				}
+			}
+			strXML.append("</DATALIST>");
+			strXML.append("</NAME>");
+		
+		}
+		strXML.append("</SCINFO>");
+		strXML.append("</RESULT>");
+		return strXML.toString();
+	}
+
+	@Override
+	public String changeCabinetInfo(Document xmlDom) throws Exception {
+ 		StringBuilder strSQL = new StringBuilder();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+ 		String changeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent();
+		
+		if(changeType.equals("0")){ // 기본등록사항 변경 시
+			strSQL = ChangeCabBasicInfo(xmlDom);
+		}
+		else{
+			strSQL = ChangeCabExtraInfo(xmlDom);
+		}
+		if(strSQL.equals("FALSE")){
+			return "<RESULT>FALSE</RESULT>";
+		}
+		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
+		
+		if(result){
+			return "<RESULT>TRUE</RESULT>";
+		}
+		else{
+			return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	private StringBuilder ChangeCabExtraInfo(Document xmlDom) {
+		StringBuilder strSQL = new StringBuilder();
+		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
+		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
+		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
+		String usreName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
+		String keepPeriod = xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
+		String displayEndDate = xmlDom.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent().trim();
+		String displayReason = xmlDom.getElementsByTagName("DISPLAYREASON").item(0).getTextContent();
+		String changeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent();
+		
+		NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+		
+		 strSQL.append("Declare v_NewVersion Number := 0;\n BEGIN \n ");
+         strSQL.append("Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBCABINETHISTORY  ");
+		 strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
+		 strSQL.append("IF v_NewVersion < 2 THEN\n");
+		 strSQL.append("BEGIN \n ");
+		 strSQL.append("Insert Into TBCABINETHISTORY (Version, CabinetClassNo, Title, RecTypeCode, ");
+		 strSQL.append("ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ");
+         // 2010.08.02 다국어 
+         strSQL.append("ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) ");
+		 strSQL.append("Select v_NewVersion, CabinetClassNo, Title, RecTypeCode, ");
+         strSQL.append("UTILS.CONVERT_TO_CHAR(CreateDate,8,p_style=>112), KeepingPeriod, DisplayEndDate, ");
+         // 2010.08.02 다국어 
+         strSQL.append("DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, '1', '0' ");
+         strSQL.append("From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '");
+		 strSQL.append(makeRightField(cabClassNo) + "'; \n END; \n END IF; \n");
+
+			// '기록물철 분류정보 테이블을 업데이트 한다.
+		strSQL.append("Update TBCABINETCLASS Set KeepingPeriod = '");
+		strSQL.append(makeRightField(keepPeriod) + "', DisplayEndDate = '");
+		strSQL.append(makeRightField(displayEndDate) + "', DisplayReason='");
+		strSQL.append(makeRightField(displayReason) + "', ModifyFlag = '1' ");
+		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n ");
+
+		strSQL.append("Insert Into TBCABINETHISTORY (Version, CabinetClassNo, Title, ");
+		strSQL.append("RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ");
+        strSQL.append("ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) Select ");
+        strSQL.append("(Select NVL(MAX(version), 0)+1 From TBCABINETHISTORY  Where ");
+		strSQL.append("CabinetClassNo = '" + makeRightField(cabClassNo) + "'), CabinetClassNo, ");
+        strSQL.append("Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), KeepingPeriod, ");
+		strSQL.append("DisplayEndDate, DisplayReason, N'" + makeRightField(changeReason) + "', '");
+         // 2010.08.02 다국어 
+        strSQL.append(makeRightField(userID) + "', N'" + makeRightField(usreName) + "', N'" + makeRightField(usreName2));
+        strSQL.append("', '1', '0' From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n END; \n ");
+			
+         return strSQL;
+	}
+
+	private StringBuilder ChangeCabBasicInfo(Document xmlDom) {
+		
+		StringBuilder strSQL = new StringBuilder();
+		StringBuilder subSQL = new StringBuilder();
+		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
+		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
+		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
+		String usreName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
+		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String recTypeCode = xmlDom.getElementsByTagName("RECTYPECODE").item(0).getTextContent();
+		String changeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent();
+		NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+		
+		strSQL.append("Declare v_NewVersion Number := 0; \n BEGIN \n");
+        strSQL.append("Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBCABINETHISTORY  ");
+		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
+		strSQL.append("IF v_NewVersion < 2 THEN\n");
+		strSQL.append("BEGIN \n");
+		strSQL.append("Insert Into TBCABINETHISTORY (Version, CabinetClassNo, Title, RecTypeCode, ");
+		strSQL.append("ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ");
+        strSQL.append("ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) Select v_NewVersion, ");
+        strSQL.append("CabinetClassNo, Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(CreateDate,8,p_style=>112), ");
+        // 2010.08.02 다국어 
+        strSQL.append("KeepingPeriod, DisplayEndDate, DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, ");
+        strSQL.append("'0','0' From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '");
+		strSQL.append(makeRightField(cabClassNo) + "'; \n");
+
+		if (nodeSC.equals("1"))
+        {
+			strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, ");
+			strSQL.append("SC1, SC2, SC3) Select v_NewVersion, CabinetClassNo, SerialNo, SC1, ");
+            strSQL.append("SC2, SC3 From TBSPECIALCATALOGINFO_CAB  Where CabinetClassNo = '");
+			strSQL.append(makeRightField(cabClassNo) + "';\n ");
+        }
+
+		strSQL.append("END; \n END IF; \n");
+
+		strSQL.append("Update TBCABINETCLASS Set Title = '" + makeRightField(title));
+		strSQL.append("', RecTypeCode = '" + makeRightField(recTypeCode) + "', ModifyFlag = '1' ");
+		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "' ;\n");
+
+		strSQL.append("Insert Into TBCABINETHISTORY (Version, CabinetClassNo, Title, ");
+		strSQL.append("RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ");
+        strSQL.append("ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) Select ");
+        strSQL.append("(Select NVL(MAX(version), 0)+1 From TBCABINETHISTORY  Where ");
+		strSQL.append("CabinetClassNo = '" + makeRightField(cabClassNo) + "'), CabinetClassNo, ");
+        strSQL.append("Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), KeepingPeriod, ");
+		strSQL.append("DisplayEndDate, DisplayReason, N'" + makeRightField(changeReason) + "', '");
+        // 2010.08.02 다국어 
+        strSQL.append(makeRightField(userID) + "', N'" + makeRightField(usreName) + "', N'" + makeRightField(usreName2));
+        strSQL.append("', '0', '0' From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '");
+		strSQL.append(makeRightField(cabClassNo) + "';\n  END;");
+
+		subSQL = ChangeSpecialInfo_Cab(cabClassNo, xmlDom);
+
+		if (subSQL.equals("FALSE")){
+			return subSQL;
+		}
+		else{
+			strSQL.append(subSQL);
+		}
+
+		return strSQL;
+	}
+
+	private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom) {
+		StringBuilder strSQL = new StringBuilder();
+		// '## 기존의 특수목록을 모두 지운다.
+        strSQL.append("Delete From TBSPECIALCATALOGINFO_CAB Where CabinetClassNo = '");
+		strSQL.append(makeRightField(cabClassNo) + "' And SerialNo != '000';\n");
+
+		// '## 특수목록 데이터 입력
+		NodeList nodesData = xmlDom.getElementsByTagName("SCDATA");
+
+		if (nodesData.getLength() > 0)
+		{
+			for (int i=0; i<nodesData.getLength(); i++)
+			{
+				strSQL.append("INSERT INTO TBSPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3) Values ('");
+				strSQL.append(makeRightField(cabClassNo) + "', '");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("SN").item(i).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST1").item(i).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST2").item(i).getTextContent().trim()) + "', N'");
+                strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST3").item(i).getTextContent().trim()) + "');\n");
+			}
+		}
+		strSQL.append("Declare @NewVersion2 int ;\n");
+        strSQL.append("Set @NewVersion2 = (Select ISNULL(max(Version), 0) From TBCABINETHISTORY WITH (NOLOCK) ");
+		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "');\n");
+		strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3) ");
+		strSQL.append("Select @NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3 ");
+        strSQL.append("From TBSPECIALCATALOGINFO_CAB WITH (NOLOCK) Where CabinetClassNo = '");
+        strSQL.append(makeRightField(cabClassNo) + "';\n ");
+        strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
+        strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBCABINETHISTORY ");
+		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
+		strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3) ");
+		strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3 ");
+        strSQL.append("From TBSPECIALCATALOGINFO_CAB  Where CabinetClassNo = '");
+        strSQL.append(makeRightField(cabClassNo) + "';\n END; \n ");
+               		return strSQL;
+	}
+
+	@Override
+	public String getCabinetHistory(Document xmlDom) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
+		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABCLASSNO", cabClassNo.trim());
+		
+		List<ApprGCabinetVO> docList = ezApprovalGDAO.getCabinetHistory(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		strSQL.append("<LISTVIEWDATA>");
+		strSQL.append("<HEADERS>");
+		
+		String listString = "";
+		listString = getListHeader("099", companyID, langType);
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		for(int i=0; i<listXML.getElementsByTagName("NAME").getLength(); i++){
+			strSQL.append("<HEADER>");
+			strSQL.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
+			strSQL.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
+			strSQL.append("</HEADER>");
+		}
+		strSQL.append("</HEADERS>");
+		strSQL.append("<ROWS>");
+		
+		for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++){
+			strSQL.append("<ROW>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VERSION").item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(j).getTextContent()) + "</DATA1>");
+			strSQL.append("<DATA2>" + makeListField(docXML.getElementsByTagName("VERSION").item(j).getTextContent()) + "</DATA2>");
+			strSQL.append("<DATA3>" + makeListField(docXML.getElementsByTagName("MODIFYREASON").item(j).getTextContent()) + "</DATA3>");
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("TITLE").item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(j).getTextContent()),companyID,langType) + "</VALUE>");
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>"); 
+			if(makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")){
+				strSQL.append(langType.equals("1")? "기본등록사항" : "BasicRegItems");
+			}
+			else{
+				strSQL.append(langType.equals("1")? "보존분류사항" : "PreClassitems");
+			}
+			strSQL.append("</VALUE>") ;
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MODIFIERNAME").item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MODIFYDATE").item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("</CELL>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MODIFIERNAME2").item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("</CELL>");
+			strSQL.append("</ROW>");
+		}
+		strSQL.append("</ROWS>");
+		
+		strSQL.append("</LISTVIEWDATA>");
+		return strSQL.toString();
+	}
+
+	@Override
+	public String getTaskCharger(Document xmlDom, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
+		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		
+		 //2010.07.30 Header로 변경
+		String listString = "";
+		listString = getListHeader("110", companyID, lang);
+		String strMultiData = commonUtil.getMultiData(lang);
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		strSQL.append("<LISTVIEWDATA>");
+		strSQL.append("<HEADERS>");
+		strSQL.append("<ROWS>");
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		for(int i=0; i<hlength; i++){
+			strSQL.append("<HEADER>");
+			strSQL.append("<NAME>" + listXML.getElementsByTagName("NAME").item(0).getTextContent() + "</NAME>");
+			strSQL.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(0).getTextContent() + "</WIDTH>");
+			strSQL.append("</HEADER>");
+		}
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CABCLASSNO", cabClassNo.trim());
+		
+		List<ApprGRecordVO> docList = ezApprovalGDAO.getTaskCharger(map);
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < docList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		for(int j = 0; j< docXML.getElementsByTagName("ROW").getLength(); j++){
+			strSQL.append("<ROW>");
+			strSQL.append("<CELL>");
+			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERNAME" + strMultiData).item(j).getTextContent()) + "</VALUE>");
+			strSQL.append("<DATA1>" + makeListField(docXML.getElementsByTagName("USER_ID" + strMultiData).item(j).getTextContent()) + "</DATA1>");
+			strSQL.append("<DATA2>" + makeListField(docXML.getElementsByTagName("USERNAME" + strMultiData).item(j).getTextContent()) + "</DATA2>");
+			strSQL.append("<DATA3>" + makeListField(docXML.getElementsByTagName("USERNAME2" + strMultiData).item(j).getTextContent()) + "</DATA3>");
+			strSQL.append("</CELL>");
+			strSQL.append("</ROW>");
+		}
+		strSQL.append("</ROWS>");
+		strSQL.append("</HEADERS>");
+		strSQL.append("</LISTVIEWDATA>");
+		return strSQL.toString();
+	}
+
+	@Override
+	public String saveCabRoleInfo(Document xmlDom) throws Exception {
+		StringBuilder strSQL = new StringBuilder("");
+		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
+		String idList = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
+		String nameList = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
+		String nameList2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		
+        strSQL.append("Delete From TBCABROLEINFO Where CabinetClassNo= '" + cabClassNo + "';\n");
+        strSQL.append("Insert Into TBCABROLEINFO(User_ID,UserName, UserName2, CabinetClassNo) ");
+        strSQL.append("Select T1.Value, T1.Value1, T1.Value2, '" + cabClassNo + "' ");
+        strSQL.append("From TABLE(fn_StringToTable1('" + idList + "','" + nameList + "','" + nameList2 + "',',')) T1 ;\n");
+        
+        boolean result = ExecuteTransactionSQL(strSQL , companyID);
+        if(result){
+        	return "<RESULT>TRUE</RESULT>";
+        }
+        else{
+        	return "<RESULT>FALSE</RESULT>";
+        }
+	}
+	
+	
 }

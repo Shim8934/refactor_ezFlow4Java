@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -720,4 +721,419 @@ public class EzApprovalGarchiveController {
 		
 		return "/ezApprovalG/apprGprintFormRecInfo";
 	}
+	
+	/** 기록물철등록부 화면*/
+	@RequestMapping(value = "/ezApprovalG/getCabinetList.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result=ezApprovalGService.getCabinetList(xmlDom,userInfo.getLang());
+			return result;
+	}
+	
+	/** 기록물철등록부 청등록*/
+	@RequestMapping(value = "/ezApprovalG/regCabinet.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String regCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+			return "/ezApprovalG/apprGregCabinet";
+	}
+	
+	/** 기록물철등록부 상세보기*/
+	@RequestMapping(value = "/ezApprovalG/viewCabInfo.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String viewCabInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String IE11="";
+		  if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0)) {
+	        	IE11 ="YES";
+	        }
+		  String a=request.getParameter("cabinetID");
+		model.addAttribute("IE11", IE11);
+		model.addAttribute("userInfo", userInfo);
+			return "/ezApprovalG/apprGviewCabInfo";
+	}
+	
+	/** 기록물철등록부 상세보기*/
+	@RequestMapping(value = "/ezApprovalG/getCabinetDetailInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetDetailInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getCabinetDetailInfo(xmlDom);
+			return result;
+	}
+	
+	/** 기록물철등록부 상세보기 특수목록탭*/
+	@RequestMapping(value = "/ezApprovalG/getCabSCInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabSCInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getCabScInfo(xmlDom);
+			return result;
+	}
+	
+	/** 기록물철등록부 상세보기 인쇄*/
+	@RequestMapping(value = "/ezApprovalG/printFormCabInfo.do"  ,produces="text/xml;charset=utf-8")
+	
+	public String printFormCabInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		  String STRGet_t106 = "";
+          String STRGet_t117 = "";
+          String STRGet_t573 = "";
+          String STRGet_t574 = "";
+          String STRGet_t576 = "";
+          String STRGet_t577 = "";
+          String STRGet_t599 = "";
+          String STRGet_t600 = "";
+          String STRGet_t816 = "";
+          String STRGet_t819 = "";
+          String STRGet_t825 = "";
+          String STRGet_t826 = "";
+          String STRGet_t827 = "";
+          String STRGet_t828 = "";
+          String STRGet_t829 = "";
+          String STRGet_t830 = "";
+          String STRGet_t831 = "";
+          String STRGet_t832 = "";
+          String STRGet_t833 = "";
+          String STRGet_t834 = "";
+          String STRGet_t835 = "";
+          String STRGet_t836 = "";
+          String STRGet_t837 = "";
+          String STRGet_t838 = "";
+          String STRGet_t839 = "";
+          String STRGet_t840 = "";
+          String STRGet_t841 = "";
+          String STRGet_t842 = "";;
+          String STRGet_t843 = "";
+          String STRGet_t844 = "";
+          String STRGet_t845 = "";
+          String STRGet_t846 = "";
+          String STRGet_t847 = "";
+          String STRGet_t848 = "";
+          String STRGet_t849 = "";
+          String STRGet_t850 = "";
+          String STRGet_t851 = "";
+          String STRGet_t852 = "";
+          String STRGet_t853 = "";
+          String STRGet_t854 = "";
+          String STRGet_t855 = "";
+          String STRGet_t856 = "";
+		  userInfo = commonUtil.userInfo(loginCookie);
+		  if(!userInfo.getLang().equals("1")){
+			  STRGet_t106 = "Subject(Title)";
+              STRGet_t117 = "Keeping period";
+              STRGet_t573 = "No.";
+              STRGet_t574 = "Transfer";
+              STRGet_t576 = "Unit business code";
+              STRGet_t577 = "Unit business name";
+              STRGet_t599 = "Preservation methods";
+              STRGet_t600 = "Store locations";
+              STRGet_t816 = "The registration information of the recordable document binder";
+              STRGet_t819 = "Category number";
+              STRGet_t825 = "Default information";
+              STRGet_t826 = "Type of recordable Doc.&nbsp;&nbsp;&nbsp;&nbsp;";
+              STRGet_t827 = "Processing department";
+              STRGet_t828 = "Business of unit";
+              STRGet_t829 = "Producation year";
+              STRGet_t830 = "Year of registration numbers";
+              STRGet_t831 = "Registration date";
+              STRGet_t832 = "Addtional information";
+              STRGet_t833 = "The registered number of the recordable document";
+              STRGet_t834 = "Number of recordable document page.";
+              STRGet_t835 = "Number of e-file";
+              STRGet_t836 = "Modification or not";
+              STRGet_t837 = "Old documentary availability";
+              STRGet_t838 = "Production organ of old filed documentary";
+              STRGet_t839 = "Class number of old filed documentary";
+              STRGet_t840 = "Information of class";
+              STRGet_t841 = "Year of end";
+              STRGet_t842 = "End day of funishing";
+              STRGet_t843 = "Reason of funishing";
+              STRGet_t844 = "Business manager";
+              STRGet_t845 = "Filed";
+              STRGet_t846 = "List transfer year";
+              STRGet_t847 = "List transfer year";
+              STRGet_t848 = "File transfer availability";
+              STRGet_t849 = "File transfer year";
+              STRGet_t850 = "Receipt/Transfer information";
+              STRGet_t851 = "Receipt/Transfer class";
+              STRGet_t852 = "NA";
+              STRGet_t853 = "Receipt";
+              STRGet_t854 = "Receipt/Transfer day.";
+              STRGet_t855 = "Processed dept name.";
+              STRGet_t856 = "Processed dept code.";
+		  }
+		  else{
+			  STRGet_t106 = "제목";
+              STRGet_t117 = "보존기간";
+              STRGet_t573 = "권호수";
+              STRGet_t574 = "인계";
+              STRGet_t576 = "단위업무코드";
+              STRGet_t577 = "단위업무명";
+              STRGet_t599 = "보존방법";
+              STRGet_t600 = "보존장소";
+              STRGet_t816 = "기록물철 등록정보";
+              STRGet_t819 = "분류번호";
+              STRGet_t825 = "기본정보";
+              STRGet_t826 = "기록물형태";
+              STRGet_t827 = "처리과";
+              STRGet_t828 = "단위업무";
+              STRGet_t829 = "생산연도";
+              STRGet_t830 = "등록연번";
+              STRGet_t831 = "등록일자";
+              STRGet_t832 = "부가정보";
+              STRGet_t833 = "기록물 등록건수";
+              STRGet_t834 = "기록물쪽수";
+              STRGet_t835 = "전자파일갯수";
+              STRGet_t836 = "수정여부";
+              STRGet_t837 = "구기록물여부";
+              STRGet_t838 = "구기록물철생산기관";
+              STRGet_t839 = "구기록물철분류번호";
+              STRGet_t840 = "분류정보";
+              STRGet_t841 = "종료연도";
+              STRGet_t842 = "비치종결일자";
+              STRGet_t843 = "비치사유";
+              STRGet_t844 = "업무담당자";
+              STRGet_t845 = "편철확정여부";
+              STRGet_t846 = "목록이관여부";
+              STRGet_t847 = "목록이관연도";
+              STRGet_t848 = "파일이관여부";
+              STRGet_t849 = "파일이관연도";
+              STRGet_t850 = "인수인계정보";
+              STRGet_t851 = "인수/인계구분";
+              STRGet_t852 = "해당없음";
+              STRGet_t853 = "인수";
+              STRGet_t854 = "인수/인계일자";
+              STRGet_t855 = "처리과명";
+              STRGet_t856 = "처리과코드";
+		  }
+			String cabinetID= request.getParameter("ID1");
+			String pXml = "<PARAMETERS><CABINETID>" + makeXMLString(cabinetID.trim()) +
+                    "</CABINETID><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
+                    "</COMPANYID><STRTYPE>" + makeXMLString(userInfo.getLang()) + "</STRTYPE></PARAMETERS>";
+			
+			Document xmlDom = commonUtil.convertStringToDocument(pXml);
+			String resultXML = ezApprovalGService.getCabinetPrintInfo(xmlDom,userInfo.getLang());
+			Document oXml = commonUtil.convertStringToDocument(resultXML);
+			
+			
+			String title = oXml.getElementsByTagName("TITLE").item(0).getTextContent().trim();
+			String cabClassID= oXml.getElementsByTagName("CABCLASSID").item(0).getTextContent().trim();
+			String recType= oXml.getElementsByTagName("RECTYPE").item(0).getTextContent().trim();
+			String deptName= oXml.getElementsByTagName("DEPTNAME").item(0).getTextContent().trim();
+			String taskName= oXml.getElementsByTagName("TASKNAME").item(0).getTextContent().trim();
+			String produceY = oXml.getElementsByTagName("PRODUCEY").item(0).getTextContent().trim();
+			String regSn = oXml.getElementsByTagName("REGSN").item(0).getTextContent().trim();
+			String volNo = oXml.getElementsByTagName("VOLNO").item(0).getTextContent().trim();
+			String regDate = oXml.getElementsByTagName("REGDATE").item(0).getTextContent().trim();
+			String numOfRec = oXml.getElementsByTagName("NUMOFREC").item(0).getTextContent().trim();
+			String numOfPage = oXml.getElementsByTagName("NUMOFPAGE").item(0).getTextContent().trim();
+			String numOfFile = oXml.getElementsByTagName("NUMOFFILE").item(0).getTextContent().trim();
+			
+			String modifyFlag = oXml.getElementsByTagName("MODIFYFLAG").item(0).getTextContent().trim();
+			String oldFlag = oXml.getElementsByTagName("OLDFLAG").item(0).getTextContent().trim();
+			String oldCreateOrgan = oXml.getElementsByTagName("OLDCREATEORGAN").item(0).getTextContent().trim();
+			String oldClassNo = oXml.getElementsByTagName("OLDCLASSNO").item(0).getTextContent().trim();
+			String endY = oXml.getElementsByTagName("ENDY").item(0).getTextContent().trim();
+			String keepPeriod = oXml.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
+			String keepMethod = oXml.getElementsByTagName("KEEPMETHOD").item(0).getTextContent().trim();
+			String keepPlace = oXml.getElementsByTagName("KEEPPLACE").item(0).getTextContent().trim();
+			String dispEndDate = oXml.getElementsByTagName("DISPENDDATE").item(0).getTextContent().trim();
+			String dispReason = oXml.getElementsByTagName("DISPREASON").item(0).getTextContent().trim();
+			String cabCharger = oXml.getElementsByTagName("CABCHARGER").item(0).getTextContent().trim();
+			String confirmFlag = oXml.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent().trim();
+			String cataTransFlag = oXml.getElementsByTagName("CATATRANSFLAG").item(0).getTextContent().trim();
+			String cataTransYear = oXml.getElementsByTagName("CATATRANSYEAR").item(0).getTextContent().trim();
+			String docTransFlag = oXml.getElementsByTagName("DOCTRANSFLAG").item(0).getTextContent().trim();
+			String docTransYear = oXml.getElementsByTagName("DOCTRANSYEAR").item(0).getTextContent().trim();
+			String cabTransFlag = oXml.getElementsByTagName("CABTRANSFLAG").item(0).getTextContent().trim();
+			String transDate = oXml.getElementsByTagName("TRANSDATE").item(0).getTextContent().trim();
+			
+			String tDeptName = oXml.getElementsByTagName("TDEPTNAME").item(0).getTextContent().trim();
+			String tDeptCode = oXml.getElementsByTagName("TDEPTCODE").item(0).getTextContent().trim();
+			String tTaskName = oXml.getElementsByTagName("TTASKNAME").item(0).getTextContent().trim();
+			String tTaskCode = oXml.getElementsByTagName("TTASKCODE").item(0).getTextContent().trim();
+			String tProduceY = oXml.getElementsByTagName("TPRODUCEY").item(0).getTextContent().trim();
+			String tRegSn = oXml.getElementsByTagName("TREGSN").item(0).getTextContent().trim();
+			String tVolNo = oXml.getElementsByTagName("TVOLNO").item(0).getTextContent().trim();
+			
+			model.addAttribute("STRGet_t106", STRGet_t106);
+			model.addAttribute("STRGet_t117", STRGet_t117);
+			model.addAttribute("STRGet_t573", STRGet_t573);
+			model.addAttribute("STRGet_t574", STRGet_t574);
+			model.addAttribute("STRGet_t576", STRGet_t576);
+			model.addAttribute("STRGet_t577", STRGet_t577);
+			model.addAttribute("STRGet_t599", STRGet_t599);
+			model.addAttribute("STRGet_t600", STRGet_t600);
+			model.addAttribute("STRGet_t816", STRGet_t816);
+			model.addAttribute("STRGet_t819", STRGet_t819);
+			model.addAttribute("STRGet_t825", STRGet_t825);
+			model.addAttribute("STRGet_t826", STRGet_t826);
+			model.addAttribute("STRGet_t827", STRGet_t827);
+			model.addAttribute("STRGet_t828", STRGet_t828);
+			model.addAttribute("STRGet_t829", STRGet_t829);
+			model.addAttribute("STRGet_t830", STRGet_t830);
+			model.addAttribute("STRGet_t831", STRGet_t831);
+			model.addAttribute("STRGet_t832", STRGet_t832);
+			model.addAttribute("STRGet_t833", STRGet_t833);
+			model.addAttribute("STRGet_t834", STRGet_t834);
+			model.addAttribute("STRGet_t835", STRGet_t835);
+			model.addAttribute("STRGet_t836", STRGet_t836);
+			model.addAttribute("STRGet_t837", STRGet_t837);
+			model.addAttribute("STRGet_t838", STRGet_t838);
+			model.addAttribute("STRGet_t839", STRGet_t839);
+			model.addAttribute("STRGet_t840", STRGet_t840);
+			model.addAttribute("STRGet_t841", STRGet_t841);
+			model.addAttribute("STRGet_t842", STRGet_t842);
+			model.addAttribute("STRGet_t843", STRGet_t843);
+			model.addAttribute("STRGet_t844", STRGet_t844);
+			model.addAttribute("STRGet_t845", STRGet_t845);
+			model.addAttribute("STRGet_t846", STRGet_t846);
+			model.addAttribute("STRGet_t847", STRGet_t847);
+			model.addAttribute("STRGet_t848", STRGet_t848);
+			model.addAttribute("STRGet_t849", STRGet_t849);
+			model.addAttribute("STRGet_t850", STRGet_t850);
+			model.addAttribute("STRGet_t851", STRGet_t851);
+			model.addAttribute("STRGet_t852", STRGet_t852);
+			model.addAttribute("STRGet_t853", STRGet_t853);
+			model.addAttribute("STRGet_t854", STRGet_t854);
+			model.addAttribute("STRGet_t855", STRGet_t855);
+			model.addAttribute("STRGet_t856", STRGet_t856);
+			model.addAttribute("title", title);
+			model.addAttribute("cabClassID", cabClassID);
+			model.addAttribute("recType", recType);
+			model.addAttribute("deptName", deptName);
+			model.addAttribute("taskName", taskName);
+			model.addAttribute("produceY", produceY);
+			model.addAttribute("regSn", regSn);
+			model.addAttribute("volNo", volNo);
+			
+			model.addAttribute("regDate", regDate);
+			model.addAttribute("numOfRec", numOfRec);
+			model.addAttribute("numOfPage", numOfPage);
+			model.addAttribute("numOfFile", numOfFile);
+			model.addAttribute("modifyFlag", modifyFlag);
+			model.addAttribute("oldFlag", oldFlag);
+			model.addAttribute("oldCreateOrgan", oldCreateOrgan);
+			model.addAttribute("oldClassNo", oldClassNo);
+			model.addAttribute("endY", endY);
+			model.addAttribute("keepPeriod", keepPeriod);
+			model.addAttribute("keepMethod", keepMethod);
+			model.addAttribute("keepPlace", keepPlace);
+			model.addAttribute("dispEndDate", dispEndDate);
+			model.addAttribute("dispReason", dispReason);
+			model.addAttribute("cabCharger", cabCharger);
+			model.addAttribute("confirmFlag", confirmFlag);
+			model.addAttribute("cataTransFlag", cataTransFlag);
+			model.addAttribute("cataTransYear", cataTransYear);
+			model.addAttribute("docTransFlag", docTransFlag);
+			model.addAttribute("docTransYear", docTransYear);
+			model.addAttribute("cabTransFlag",cabTransFlag);
+			model.addAttribute("transDate", transDate);
+			model.addAttribute("tDeptName", tDeptName);
+			model.addAttribute("tDeptCode", tDeptCode);
+			model.addAttribute("tTaskName", tTaskName);
+			model.addAttribute("tTaskCode", tTaskCode);
+			model.addAttribute("tProduceY", tProduceY);
+			model.addAttribute("tRegSn", tRegSn);
+			model.addAttribute("tVolNo", tVolNo);
+			
+			return "/ezApprovalG/apprGprintFormCabInfo";
+	}
+	
+	/** 기록물철등록부 수정버튼*/
+	@RequestMapping(value = "/ezApprovalG/changeCabinetInfo.do"  ,produces="text/xml;charset=utf-8")
+	public String changeCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+			return "/ezApprovalG/apprGchangeCabinetInfo";
+	}
+	
+	/** 기록물철등록부 수정버튼*/
+	@RequestMapping(value = "/ezApprovalG/getCabinetSimpleInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getCabinetSimpleInfo(xmlDom);
+			return result ;
+	}
+	
+	/** 기록물철등록부 수정 등록*/
+	@RequestMapping(value = "/ezApprovalG/changeCabInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String changeCabInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.changeCabinetInfo(xmlDom);
+			return result ;
+	}
+	
+	/** 기록물철등록부 이력보기 화면*/
+	@RequestMapping(value = "/ezApprovalG/viewCabHistory.do"  ,produces="text/xml;charset=utf-8")
+	public String viewCabHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+	return "/ezApprovalG/apprGviewCabHistory";
+	}
+	
+	/** 기록물철등록부 이력보기 화면 상세내용*/
+	@RequestMapping(value = "/ezApprovalG/getCabinetHistory.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getCabinetHistory(xmlDom);
+	return result;
+	}
+	
+	/** 기록물철등록부 검색 화면 */
+	@RequestMapping(value = "/ezApprovalG/searchCab.do"  ,produces="text/xml;charset=utf-8")
+	public String searchCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		StringBuilder yearOption = new StringBuilder("");
+		int curYear = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4));
+		yearOption.append("<Option Value=\"\"></Option>");
+		
+		for (int i=curYear; i>=curYear-5; i--){
+			yearOption.append("<Option Value=\"" + Integer.toString(i) + "\">" + Integer.toString(i) + "</Option>");
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("yearOption", yearOption.toString());
+	return "/ezApprovalG/apprGsearchCab";
+	}
+	
+	/** 기록물철등록부 업무담당자 지정  */
+	@RequestMapping(value = "/ezApprovalG/setTaskChrger.do"  ,produces="text/xml;charset=utf-8")
+	public String setTaskChrger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+	return "/ezApprovalG/apprGsetTaskChrger";
+	}
+	
+	/** 기록물철등록부 업무담당자지정 상세내용  */
+	@RequestMapping(value = "/ezApprovalG/getTaskCharger.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getTaskCharger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getTaskCharger(xmlDom,userInfo.getLang());
+	return result;
+	}
+	
+	/** 기록물철등록부 업무담당자지정 저장  */
+	@RequestMapping(value = "/ezApprovalG/saveCabRoleInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveCabRoleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.saveCabRoleInfo(xmlDom);
+	return result;
+	}
+	
 }

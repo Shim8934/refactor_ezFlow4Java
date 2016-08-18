@@ -924,9 +924,30 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLISTCOUNT(#v_DEPTID# , #v_SUBQUERY#, #v_MANAGEDEPTID#, #v_ORGANID# , #v_DOCTITLE#, #v_CHARGENAME#, #v_SREGDATE#, #v_EREGDATE#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getDeliveryList" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLIST(#v_DEPTID# , #v_SUBQUERY#, #v_ORDEROPTION#, #v_ORDEROPTION2# , #v_MANAGEDEPTID#, #v_ORGANID#, #v_DOCTITLE#, #v_CHARGENAME#, #v_SREGDATE#, #v_EREGDATE#, #v_ISDOCPRINT#, #iv_PAGESIZE#,#iv_PAGESIZE2#)}
+	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO">
+		{CALL EZAPPROVALG_$companyID$.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
 	</procedure>
 	
+	<procedure id="EzApprovalG.getCabinetListCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	
+	</procedure>
+	<procedure id="EzApprovalG.getCabinetDetailInfo" parameterClass="Map" resultClass="ApprGTaskVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCABINETINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getCabScInfo" parameterClass="Map" resultClass="ApprGTaskVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCABSCINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getCabinetSimpleInfo" parameterClass="Map" resultClass="ApprGTaskVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCABINETSIMPLEINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getCabinetSimpleInfo2" parameterClass="Map" resultClass="ApprGTaskVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCABINETSIMPLEINFO2(#v_CABCLASSNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getCabinetHistory" parameterClass="Map" resultClass="ApprGCabinetVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETCABINETHISTORY(#v_CABCLASSNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getTaskCharger" parameterClass="Map" resultClass="ApprGRecordVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCHARGER(#v_CABCLASSNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
 
 </sqlMap>

@@ -671,7 +671,8 @@
 		            <td></td>
 		        </tr>
 		        <tr>
-		          <td style="border:1px solid #b6b6b6;"><div class="listview" style="overflow:auto;border:0;Width:280px; Height:236px;"><%--<DIV id="UserList" style="BEHAVIOR: url(#behavelist1#ListView); border:0;Width:280px; Height:215px" onrowdblclick="list2_onSel_DBclick()" onselchanged="list2_onSel_Click()"></DIV>--%>
+		          <td style="border:1px solid #b6b6b6;"><div class="listview" style="overflow:auto;border:0;Width:280px; Height:236px;">
+		          <%--<DIV id="UserList" style="BEHAVIOR: url(#behavelist1#ListView); border:0;Width:280px; Height:215px" onrowdblclick="list2_onSel_DBclick()" onselchanged="list2_onSel_Click()"></DIV>--%>
 		          <DIV id="UserList" style="border:0;Width:370px; Height:215px;margin:1px 1px 1px 1px;"></DIV>
 		          </div></td>
 		        </tr>

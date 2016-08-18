@@ -21,6 +21,8 @@ public class ApprGTaskVO {
 	private String taskCode;
 	/** 단위업무명*/
 	private String taskName;
+	
+	private String taskName1;
 	/** 단위업무명(다국어)*/
 	private String taskName2;
 	/** 보존년도*/
@@ -98,8 +100,186 @@ public class ApprGTaskVO {
 	/** */
 	private String applyDate;
 	
+	/** 기록물철등록 */
+	private String numOfRec;
+	private String numOfPage;
+	private String numOfFile;
+	private String modifyFlag;
+	private String oldCabinetFlag;
+	private String createOrganName;
+	private String classificationNo;
+	private String expirationYear;
+	private String displayReason;
+	private String cabCharger;
+	private String confirmFlag;
+	private String catalogTransferFlag;
+	private String catalogTransferYear;
+	private String docTransferFlag;
+	private String docTransferYear;
+	private String tCabinetName;
+	private String tCabinetName1;
+	private String tCabinetName2;
+	private String tDeptName;
+	private String tDeptName1;
+	private String tDeptName2;
+	private String tProduceYear;
+	private String tVolumNo;
+	private String transferDate;
+	private String serialNo;
 	
-	
+	public String getSerialNo() {
+		return serialNo;
+	}
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
+	public String gettDeptName() {
+		return tDeptName;
+	}
+	public void settDeptName(String tDeptName) {
+		this.tDeptName = tDeptName;
+	}
+	public String gettCabinetName() {
+		return tCabinetName;
+	}
+	public void settCabinetName(String tCabinetName) {
+		this.tCabinetName = tCabinetName;
+	}
+	public void setCreateOrganName(String createOrganName) {
+		this.createOrganName = createOrganName;
+	}
+	public String getNumOfRec() {
+		return numOfRec;
+	}
+	public void setNumOfRec(String numOfRec) {
+		this.numOfRec = numOfRec;
+	}
+	public String getNumOfPage() {
+		return numOfPage;
+	}
+	public void setNumOfPage(String numOfPage) {
+		this.numOfPage = numOfPage;
+	}
+	public String getNumOfFile() {
+		return numOfFile;
+	}
+	public void setNumOfFile(String numOfFile) {
+		this.numOfFile = numOfFile;
+	}
+	public String getModifyFlag() {
+		return modifyFlag;
+	}
+	public void setModifyFlag(String modifyFlag) {
+		this.modifyFlag = modifyFlag;
+	}
+	public String getOldCabinetFlag() {
+		return oldCabinetFlag;
+	}
+	public void setOldCabinetFlag(String oldCabinetFlag) {
+		this.oldCabinetFlag = oldCabinetFlag;
+	}
+	public String getCreateOrganName() {
+		return createOrganName;
+	}
+	public void setCreateOrgdnName(String createOrganName) {
+		this.createOrganName = createOrganName;
+	}
+	public String getClassificationNo() {
+		return classificationNo;
+	}
+	public void setClassificationNo(String classificationNo) {
+		this.classificationNo = classificationNo;
+	}
+	public String getExpirationYear() {
+		return expirationYear;
+	}
+	public void setExpirationYear(String expirationYear) {
+		this.expirationYear = expirationYear;
+	}
+	public String getDisplayReason() {
+		return displayReason;
+	}
+	public void setDisplayReason(String displayReason) {
+		this.displayReason = displayReason;
+	}
+	public String getCabCharger() {
+		return cabCharger;
+	}
+	public void setCabCharger(String cabCharger) {
+		this.cabCharger = cabCharger;
+	}
+	public String getConfirmFlag() {
+		return confirmFlag;
+	}
+	public void setConfirmFlag(String confirmFlag) {
+		this.confirmFlag = confirmFlag;
+	}
+	public String getCatalogTransferFlag() {
+		return catalogTransferFlag;
+	}
+	public void setCatalogTransferFlag(String catalogTransferFlag) {
+		this.catalogTransferFlag = catalogTransferFlag;
+	}
+	public String getCatalogTransferYear() {
+		return catalogTransferYear;
+	}
+	public void setCatalogTransferYear(String catalogTransferYear) {
+		this.catalogTransferYear = catalogTransferYear;
+	}
+	public String getDocTransferFlag() {
+		return docTransferFlag;
+	}
+	public void setDocTransferFlag(String docTransferFlag) {
+		this.docTransferFlag = docTransferFlag;
+	}
+	public String getDocTransferYear() {
+		return docTransferYear;
+	}
+	public void setDocTransferYear(String docTransferYear) {
+		this.docTransferYear = docTransferYear;
+	}
+	public String gettCabinetName1() {
+		return tCabinetName1;
+	}
+	public void settCabinetName1(String tCabinetName1) {
+		this.tCabinetName1 = tCabinetName1;
+	}
+	public String gettCabinetName2() {
+		return tCabinetName2;
+	}
+	public void settCabinetName2(String tCabinetName2) {
+		this.tCabinetName2 = tCabinetName2;
+	}
+	public String gettDeptName1() {
+		return tDeptName1;
+	}
+	public void settDeptName1(String tDeptName1) {
+		this.tDeptName1 = tDeptName1;
+	}
+	public String gettDeptName2() {
+		return tDeptName2;
+	}
+	public void settDeptName2(String tDeptName2) {
+		this.tDeptName2 = tDeptName2;
+	}
+	public String gettProduceYear() {
+		return tProduceYear;
+	}
+	public void settProduceYear(String tProduceYear) {
+		this.tProduceYear = tProduceYear;
+	}
+	public String gettVolumNo() {
+		return tVolumNo;
+	}
+	public void settVolumNo(String tVolumNo) {
+		this.tVolumNo = tVolumNo;
+	}
+	public String getTransferDate() {
+		return transferDate;
+	}
+	public void setTransferDate(String transferDate) {
+		this.transferDate = transferDate;
+	}
 	public String getCategoryCode() {
 		return categoryCode;
 	}
@@ -387,6 +567,12 @@ public class ApprGTaskVO {
 	}
 	public void setApplyDate(String applyDate) {
 		this.applyDate = applyDate;
+	}
+	public String getTaskName1() {
+		return taskName1;
+	}
+	public void setTaskName1(String taskName1) {
+		this.taskName1 = taskName1;
 	}
 	
 	

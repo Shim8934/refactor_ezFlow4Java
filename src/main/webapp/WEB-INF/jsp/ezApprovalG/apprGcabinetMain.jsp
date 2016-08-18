@@ -24,26 +24,26 @@
             color: #017bec;
         }
     </style>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-    <script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
-    <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
-    <script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
-	<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-    <script type="text/javascript" src="/js/Common.js"></script>
-    <script type="text/javascript" src="/js/NameControl.js"></script> 
-    <script type="text/javascript" src="/js/jquery/jquery.js"></script>
-    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-    <link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-    <link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
-    <script type="text/javascript" id="clientEventHandlersJS">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
+<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+<script type="text/javascript" src="/js/Common.js"></script>
+<script type="text/javascript" src="/js/NameControl.js"></script> 
+<script type="text/javascript" src="/js/jquery/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
+<script type="text/javascript" id="clientEventHandlersJS">
         var OrderCell = "";        
         var g_sFlag = "${sFlag}";
         var g_uFlag = "${sFlag}";
@@ -624,7 +624,7 @@
     function btnRegCabinet_onclick() {
         var para = new Array();
         para[0] = "0";
-        var url = "/myoffice/ezApprovalG/ezCabinet/RegCabinet_Cross.aspx";
+        var url = "/ezApprovalG/regCabinet.do";
 
         regcabinet_cross_dialogArguments[0] = para;
         regcabinet_cross_dialogArguments[1] = btnRegCabinet_onclick_Complete;
@@ -675,7 +675,8 @@
             para[2] = arr_userinfo[1];
             para[3] = arr_userinfo[2];
             para[4] = g_bRecAdmin;
-            var url = "/myoffice/ezApprovalG/ezCabinet/ChangeCabinetInfo_Cross.aspx";
+            para[5] = arr_userinfo[10];
+            var url = "/ezApprovalG/changeCabinetInfo.do";
 
             changecabinetinfo_cross_dialogArguments[0] = para;
             changecabinetinfo_cross_dialogArguments[1] = btnChangeCabinetInfo_onclick_Complete;
@@ -705,7 +706,7 @@
             para[0] = tr.getAttribute("DATA2");
             para[1] = DeptID;
 
-            var url = "/myoffice/ezApprovalG/ezCabinet/SetTaskChrger_Cross.aspx";
+            var url = "/ezApprovalG/setTaskChrger.do";
 
             settaskchrger_cross_dialogArguments[0] = para;
 

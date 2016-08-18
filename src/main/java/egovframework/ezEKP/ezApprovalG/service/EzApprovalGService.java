@@ -312,5 +312,21 @@ public interface EzApprovalGService {
 
 	public String registerRecord(Document xmlDom)throws Exception;
 
-	
+	public String getCabinetList(Document xmlDom, String lang)throws Exception;
+
+	public String getCabinetDetailInfo(Document xmlDom) throws Exception;
+
+	public String getCabScInfo(Document xmlDom) throws Exception;
+
+	public String getCabinetPrintInfo(Document xmlDom, String lang) throws Exception;
+
+	public String getCabinetSimpleInfo(Document xmlDom) throws Exception;
+
+	public String changeCabinetInfo(Document xmlDom) throws Exception;
+
+	public String getCabinetHistory(Document xmlDom) throws Exception;
+
+	public String getTaskCharger(Document xmlDom, String lang) throws Exception;
+
+	public String saveCabRoleInfo(Document xmlDom) throws Exception;
 }

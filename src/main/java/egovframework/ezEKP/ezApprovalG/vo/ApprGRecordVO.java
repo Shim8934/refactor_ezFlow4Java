@@ -146,7 +146,14 @@ public class ApprGRecordVO {
 	private String publiCityCode;
 	private String limitRange;
 	private String manualRegFlag;
+	private String user_Id;
 	
+	public String getUser_Id() {
+		return user_Id;
+	}
+	public void setUser_Id(String user_Id) {
+		this.user_Id = user_Id;
+	}
 	public String getLimitRange() {
 		return limitRange;
 	}

@@ -53,7 +53,7 @@
         var URL, param;
         param = "?ID1=" + g_ID1 + "&ID2=" + g_ID2;
         if (g_Flag == "CABINET") {
-            URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezApprovalG/ezCabinet/PrintForm/PrintForm_CabInfo.aspx" + param;
+            URL = "/ezApprovalG/printFormCabInfo.do" + param;
         }
         else if (g_Flag == "RECORD") {
             URL ="/ezApprovalG/printFormRecInfo.do" + param;
