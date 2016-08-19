@@ -163,6 +163,12 @@ public interface EzPortalService {
 	
 	public String addBestTable (LoginVO userInfo) throws Exception;
 	
+	public String selectTBLPortalACL (String pResult, String pAccessID) throws Exception;
+	
+	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm) throws Exception;
+	
+	public String ezCkAdminACL (String pOwnerPageID) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
@@ -180,5 +186,11 @@ public interface EzPortalService {
 	public void updateCacheValue (String portalPageID, String accessIDList, String renderedHtml) throws Exception;
 	
 	public void newMyPortalPageCreate3 (String pUseFlag, String pUID, String pCompanyID, String pUserID) throws Exception;
+	
+	public void deleteTBLPortalACL (String pResult, String pAccessID) throws Exception;
+	
+	public void insertTBLPortalACL (String pResult, String pAccessID) throws Exception;
+	
+	public void updateTBLPortalACL (String pResult, String pAccessID) throws Exception;
 	
 }
