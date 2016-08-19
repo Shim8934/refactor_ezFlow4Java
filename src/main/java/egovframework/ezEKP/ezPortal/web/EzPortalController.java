@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
@@ -323,7 +325,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			} else {
 				pageID = UUID.randomUUID().toString();
 			}
-			
+
 			if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
 				parentPageID = req.getParameter("parentPageID");
 			} else {
@@ -338,7 +340,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				mode = req.getParameter("mode");
 			}
 
-			if (("edit").equals(mode)) {
+			if (mode.equals("edit")) {
 				//관리자 권한체크
 				boolean auth = commonUtil.checkAdmin(loginCookie);
 				if (!auth) {
@@ -349,8 +351,8 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 				
-			if (("edit").equals(mode)) {
-				if (req.getParameter("pageID").equals("") && !req.getParameter("parentPageID").equals("")) {
+			if (mode.equals("edit")) {
+				if ((req.getParameter("pageID") == null || req.getParameter("pageID").equals("")) && (req.getParameter("parentPageID") != null &&!req.getParameter("parentPageID").equals(""))) {
 					if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("parentPageID").trim().toLowerCase().equals("top")) {
 						editMode = "new_inherit";
 					}
@@ -358,15 +360,15 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 				
 			//미리보기
-			if (req.getParameter("viewMode") != null) {
+			if (req.getParameter("viewMode") != null && !req.getParameter("viewMode").equals("")) {
 				viewMode = req.getParameter("viewMode");
 			}
 				
 			//미리보기인 경우 자기의 캐쉬정보를 삭제한다
-			if (("preView").equals(viewMode)) {
+			if (viewMode.equals("preView")) {
 				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo));
 			}
-				
+
 			//스킨정보
 			if (req.getParameter("skinNum") != null && !req.getParameter("skinNum").equals("")) {
 				skinNum = req.getParameter("skinNum");
@@ -391,18 +393,18 @@ public class EzPortalController extends EgovFileMngUtil {
 			else {
 				if (editMode.equals("new_inherit")) {
 					strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme);
-					//width = ezPortalService.getTopMenuConfigItem(ezPortalService.gett)
-					//height
+					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
+					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
 				} else {
 					strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme);
-					//width = ezPortalService.getTopMenuConfigItem(ezPortalService.gett)
-					//height
+					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID));
+					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 				}
 			}
-			if (width.equals("") || width.equals("-1") || width.equals("0")) {
+			if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
 				width = "100%";
 			}
-			if (height.equals("") || height.equals("-1") || height.equals("0")) {
+			if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
 				height = "100%";
 			}
 			if (!mode.equals("view")) {
@@ -411,6 +413,57 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 				
 			//사용자 영역에서만 팝업 공지사항을 오픈한다.
+			if (mode.equals("view") && !viewMode.equals("preview")) {
+				// 팝업 공지사항
+				List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID());
+				
+				String popUp = "";
+				for (int i=0; i<infoList.size(); i++) {
+					int itemSeq = infoList.get(i).getItemSeq();
+					for (Cookie cookie : req.getCookies()) {
+						if (!cookie.getName().equals("POPUP_"+itemSeq)) {
+							int popUpWidth = infoList.get(i).getWidth();
+							int popUpHeight = infoList.get(i).getHeight();
+							String popUpPosition = infoList.get(i).getPosition();
+							
+							popUp += "openPopup(" + itemSeq + ", " + popUpWidth + ", " + popUpHeight + ", " + popUpPosition + ");";
+						}
+					}
+				}
+				
+				if (popUp != null && !popUp.equals("")) {
+					script1 = "<script language='javascript'>" + popUp + "</script>";
+				}
+				
+				//스킨정보
+				
+				//권한체크
+				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
+	
+				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID);
+
+				if (result.equals("3")) {
+					//삭제 쿼리 실행
+					if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
+						ezPortalService.deleteTBLPortalACL(ezCKAdminACL, userInfo.getId());
+					}
+					
+				} else {
+					//체크 쿼리
+					if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) == null || ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
+						ezPortalService.insertTBLPortalACL(ezCKAdminACL, userInfo.getId());
+					} else {
+						ezPortalService.updateTBLPortalACL(ezCKAdminACL, userInfo.getId());
+					}
+				}
+				
+				strHTML = strHTML.replace("table-layout:fixed;", "");
+				
+				if (!mode.equals("edit") || !mode.equals("view")) {
+					mode = "view";
+				}
+				
+			}
 
 			model.addAttribute("strHTML", strHTML);
 			model.addAttribute("displayName", displayName);
@@ -548,11 +601,11 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 			
-			if (("").equals(width) || ("-1").equals(width) || ("0").equals(0)) {
+			if (width == null || (width).equals("") || (width).equals("-1") || (width).equals("0")) {
 				width = "100%";
 			}
 					
-			if (("").equals(height) || ("-1").equals(height) || ("0").equals(height)) {
+			if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
 				height = "100%";
 			}
 					
@@ -589,6 +642,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("baseType", baseType);
 			model.addAttribute("langPrimary", langPrimary);
 			model.addAttribute("langSecondary", langSecondary);
+			model.addAttribute("pSelectThemeUID", pSelectThemeUID);
+			model.addAttribute("gubunFlag", gubunFlag);
 			
 			return "/ezPortal/portalPortalPage";
 		} catch (Exception e) {
@@ -698,16 +753,17 @@ public class EzPortalController extends EgovFileMngUtil {
                         "    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
                         "    <dd>" +
                         "        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-						if (userInfo.getRollInfo().indexOf("c=1") > -1)
+						if (userInfo.getRollInfo().indexOf("c=1") > -1) {
 							commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
-							commentHtml += "    </dd>" +
-							"    </dl>" +
-							"    </div>" +
-							"    </div>" +
-							"</div>" +
-							"</BODY>" +
-							"</HTML>";
-							resp.getWriter().write(commentHtml);
+						}
+						commentHtml += "    </dd>" +
+						"    </dl>" +
+						"    </div>" +
+						"    </div>" +
+						"</div>" +
+						"</BODY>" +
+						"</HTML>";
+						resp.getWriter().write(commentHtml);
 							//resp.getWriter().flush();
 							//resp.getWriter().close();
 							
@@ -842,7 +898,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String langStr = "";
+		
 		String noneActiveX = "";
 		String useEditor = config.getProperty("config.EDITOR");
 		String useIE11Browser = "";
@@ -857,7 +913,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userPhoto = "";
 		
 		try {
-			langStr = userInfo.getLang();
 			noneActiveX = "YES";
 			
 			//String userOffset = userInfo.getOs().split("\\|")[1];

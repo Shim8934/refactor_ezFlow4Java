@@ -526,6 +526,43 @@ public class EzPortalServiceImpl implements EzPortalService {
 		map.put("v_pPortletID", pPortletID);
 		return ezPortalDAO.loadGetParameters(map);
 	}
+	
+	@Override
+	public String selectTBLPortalACL(String pResult, String pAccessID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pResult", pResult);
+		map.put("pAccessID", pAccessID);
+		return ezPortalDAO.selectTBLPortalACL(map);
+	}
+
+	@Override
+	public void deleteTBLPortalACL(String pResult, String pAccessID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pResult", pResult);
+		map.put("pAccessID", pAccessID);
+		ezPortalDAO.deleteTBLPortalACL(map);
+	}
+
+	@Override
+	public void insertTBLPortalACL(String pResult, String pAccessID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pResult", pResult);
+		map.put("pAccessID", pAccessID);
+		ezPortalDAO.insertTBLPortalACL(map);
+	}
+
+	@Override
+	public void updateTBLPortalACL(String pResult, String pAccessID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pResult", pResult);
+		map.put("pAccessID", pAccessID);
+		ezPortalDAO.updateTBLPortalACL(map);
+	}
+	
+	@Override
+	public String ezCkAdminACL(String pOwnerPageID) throws Exception {
+		return ezPortalDAO.ezCkAdminACL(pOwnerPageID);
+	}
 
 	public String getAccessList(LoginVO userInfo) {
 		try {
@@ -936,7 +973,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 	public boolean checkViewRightBln (String pUID, String pAccessIDList) {
 		try {
 			for (int i=0; i<pAccessIDList.split("\\,").length; i++) {
-				String right = checkViewRight(pUID, pAccessIDList.split(",")[i].trim());
+				String right = checkViewRight(pUID, pAccessIDList.split("\\,")[i].trim());
 
 				if (right != null && right.equals("2")) {
 					return true;
@@ -1247,7 +1284,9 @@ public class EzPortalServiceImpl implements EzPortalService {
 				}
 				
 			}
+
 			return sb.toString();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
@@ -1365,7 +1404,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			String lastLogout = "";
 
 			for (int i=0; i<result.size(); i++) {
-				if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo))) {
+				if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)) == false) {
 					continue;
 				}
 				
@@ -1379,10 +1418,10 @@ public class EzPortalServiceImpl implements EzPortalService {
 					lastLogout = "class='btn_logout'";
 				}
 				
-				if (!(menuitemImageUID.trim()).equals("")) {
+				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 					sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
 				} else {
-					if (!(menuitemLinkURL.trim()).equals("")) {
+					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
 						if (i == result.size() - 1) {
 							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
 						} else {
@@ -2417,5 +2456,40 @@ public class EzPortalServiceImpl implements EzPortalService {
 		} 
 		return days;
 	}
+	
+	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pCN", pCN);
+		String result = ezPortalDAO.ezAclCheck(map);
+		
+		String cnACL = result;
+		String totalAdmin = "0";
+		String companyAdmin = "0";
+		
+		if (cnACL != null && !cnACL.equals("")) {
+			if (cnACL.indexOf("c=1") > -1) {
+				totalAdmin = "1";
+			}
+			if (cnACL.indexOf("k=1") > -1) {
+				companyAdmin = "1";
+			}
+		}
+		
+		String aclResult = "";
+		
+		if (totalAdmin.equals("1")) {
+			aclResult = "1";
+		} else {
+			if (companyAdmin.equals("1")) {
+				aclResult = "2";
+			} else {
+				aclResult = "3";
+			}
+		}
+		return aclResult;
+	}
+	
+	
 }
 

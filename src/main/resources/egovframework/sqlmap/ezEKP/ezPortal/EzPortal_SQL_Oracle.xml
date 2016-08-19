@@ -367,6 +367,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_EZACL_CHECK(#v_pCOMPANYID#, #v_pCN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="String" resultMap="portalGetRenderedTopMenuInsertVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETRENDEREDTOPMENUINSERT(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -595,7 +601,11 @@
 		]]>
 	</procedure>
 	
-	
+	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="String"  resultClass="String" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
 	
 	<select id="EzPortalDAO.getParentUID" parameterClass="String" resultClass="String">
 		<![CDATA[
@@ -608,7 +618,7 @@
 		]]>
 	</select>
 	
-		<select id="EzPortalDAO.getPortalParentUID" parameterClass="String" resultClass="String">
+	<select id="EzPortalDAO.getPortalParentUID" parameterClass="String" resultClass="String">
 		<![CDATA[
 			SELECT
 				ParentUID
@@ -725,6 +735,55 @@
       			UID_ = #pUID#
 		]]>
 	</select>
+	
+	<select id="EzPortalDAO.selectTBLPortalACL" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UID_
+      		FROM
+      			EZPORTAL.TBL_Portal_ACL
+      		WHERE
+      			UID_ = #pResult#
+      		AND
+      			ACCESSID = #pAccessID#	
+		]]>
+	</select>
+	
+	<delete id="EzPortalDAO.deleteTBLPortalACL" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZPORTAL.TBL_Portal_ACL
+      		WHERE
+      			UID_ = #pResult#
+      		AND
+      			ACCESSID = #pAccessID#	
+		]]>
+	</delete>
+	
+	<insert id="EzPortalDAO.insertTBLPortalACL" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZPORTAL.TBL_Portal_ACL(
+				UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT
+			)
+			VALUES (
+				#pResult#,	#pAccessID#,	 #pAccessID#,	'2',	'2'
+			)
+		]]>
+	</insert>
+	
+	 <update id="EzPortalDAO.updateTBLPortalACL" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZPORTAL.TBL_Portal_ACL
+			SET 
+				VIEW_RIGHT = '2' ,
+				EDIT_RIGHT = '2'
+			WHERE
+				UID_ = #pResult#
+			AND
+				ACCESSID = #pAccessID#	   
+		]]>
+	</update>
 	
 	
 </sqlMap>

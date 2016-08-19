@@ -236,6 +236,18 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getPortalParentUID", temp);
 	}
 	
+	public String ezCkAdminACL (String pOwnerPageID) {
+		return (String) select("EzPortalDAO.ezCkAdminACL", pOwnerPageID);
+	}
+	
+	public String ezAclCheck (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.ezAclCheck", map);
+	}
+	
+	public String selectTBLPortalACL (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.selectTBLPortalACL", map);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		select("EzPortalDAO.getMenuItemHtml", map);
 		return (int) map.get("v_pCount");
@@ -259,6 +271,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		delete("EzPortalDAO.deleteCacheValue", map);
 	}
 	
+	public void deleteTBLPortalACL(Map<String, Object> map) {
+		delete("EzPortalDAO.deleteTBLPortalACL", map);
+	}
+	
 	public void getUserInfo3(Map<String, Object> map) {
 		insert("EzPortalDAO.getUserInfo3", map);
 	}
@@ -267,8 +283,17 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		insert("EzPortalDAO.updateCacheValue", map);
 	}
 	
+	public void insertTBLPortalACL(Map<String, Object> map) {
+		insert("EzPortalDAO.insertTBLPortalACL", map);
+	}
+	
 	public void newMyPortalPageCreate3(Map<String, Object> map) {
 		update("EzPortalDAO.newMyPortalPageCreate3", map);
+	}
+	
+	public void updateTBLPortalACL(Map<String, Object> map) {
+System.out.println("pResult1:"+map.get("pResult"));
+		update("EzPortalDAO.updateTBLPortalACL", map);
 	}
 	
 }
