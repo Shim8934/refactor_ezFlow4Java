@@ -6,6 +6,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 
 public interface EzPersonalService {
@@ -16,6 +17,8 @@ public interface EzPersonalService {
 	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) throws Exception;
 	
 	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) throws Exception;
+	
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) throws Exception;
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	

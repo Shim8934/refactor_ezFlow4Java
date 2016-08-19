@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -41,6 +42,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResult", pItemSeq);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) {
+		return (List<PersonalGetPopUpListUserVO>) list("EzPersonalDAO.getPopUpListUser", pComapnyID);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
 	}
@@ -52,7 +58,7 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) {
 		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
 	}
-	
+
 	public int getPollCount(Map<String, Object> map) {
 		select("EzPersonalDAO.getPollCount", map);
 		return (int) map.get("v_pCount");
