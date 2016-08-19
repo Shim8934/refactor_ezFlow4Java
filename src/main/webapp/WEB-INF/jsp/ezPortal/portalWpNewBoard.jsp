@@ -50,8 +50,8 @@
     		var pBoardID_NewBoard = "${pCompanyBoard}";
     		var pBoardType_NewBoard = "";
     		var BoardCnt_NewBoard = 0;
-    		var strLang1_NewBoard = "<spring:message code='ezHome.t00025' />";
-    		var strLang2_NewBoard = "<spring:message code='ezHome.t00026' />";
+    		var strLang1_NewBoard = "<spring:message code='ezHome.t00025'/>";
+    		var strLang2_NewBoard = "<spring:message code='ezHome.t00026'/>";
 
         	document.onselectstart = function () { return false; };
         
