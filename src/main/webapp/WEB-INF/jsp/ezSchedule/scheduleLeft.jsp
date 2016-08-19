@@ -19,7 +19,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/ezAddress/Controls/treeview.htc.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js?version=1.5"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js?version=1.8"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
 	    <script type="text/javascript">
@@ -33,7 +33,7 @@
 			var totalCnt = 0;
 			var xmlhttp;
 			var xmlhttp2;
-
+			
 	   	    var xmlhttp2 = createXMLHttpRequest();
 		    function schedule_get_holiday() {
 		        xmlhttp2 = createXMLHttpRequest();
@@ -87,7 +87,12 @@
 
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
+	            if (pStartday == 1)
+	                DefaultView = 1
+	            else
+	                DefaultView = 0
 	            CalendarMiniView("CalendarMini");
+
 	            schedule_get_holiday();
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -96,10 +101,6 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	            if (pStartday == 1)
-	                DefaultView = 1
-	            else
-	                DefaultView = 0
 
 //	            CalendarMiniView("CalendarMini");
 

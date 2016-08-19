@@ -19,9 +19,11 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -68,7 +70,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleMain.do")
 	public String  main(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		String	funCode = "";	// 업무관리 or 3: 일정관리
+		String	funCode = "";	// 업무관리 or 일정관리(3)
 		String	subCode = "";
 		
         if (request.getParameter("funCode") != null) {
@@ -91,8 +93,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		String	funCode = "";
-		String	subCode = "";
+		String	funCode		= "";	// 일정관리 or 업무관리(3)
+		String	subCode		= "";	// 아직 모름	
+		int	defaultView;			// 일간, 주간, 월간
+		int	startDay;				// 일요일부터 또는 월요일부터
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
@@ -101,11 +105,16 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (request.getParameter("subfunction") != null) {
         	subCode = request.getParameter("subfunction");
         }
+
+        LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId());
+		defaultView = schConfVO.getDefaultView();
+		startDay = schConfVO.getStartDay();
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-		model.addAttribute("defautView", "2");	// 임시
-		model.addAttribute("startDay", "1");	// 임시
+		model.addAttribute("defautView", defaultView);	// 임시
+		model.addAttribute("startDay", startDay);	// 임시
 
 		
 		return "/ezSchedule/scheduleLeft";

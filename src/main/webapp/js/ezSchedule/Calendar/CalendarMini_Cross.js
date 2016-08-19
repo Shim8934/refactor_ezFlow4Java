@@ -132,7 +132,6 @@ function CalendarMiniView(pTagetID) {
 function GetTableMiniBodyObj() {
     var year = document.getElementById("iYear").value;
     var month = parseInt(document.getElementById("iMon").value);
-
     if (DefaultView == 0)
     	dayOfWeeks = strLang5; // 일>토
     else if (DefaultView == 1)

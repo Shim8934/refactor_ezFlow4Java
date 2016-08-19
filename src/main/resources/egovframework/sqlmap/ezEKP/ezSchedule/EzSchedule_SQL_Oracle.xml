@@ -3,21 +3,34 @@
 
 <sqlMap namespace="ezSchedule">
 	<typeAlias  alias="ScheGetHolidayVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO"/>
+	<typeAlias  alias="ScheduleConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
-		<result property="holidayID"				column="HOLIDAYID"				columnIndex="1"/>
-		<result property="holidayName"			column="HOLIDAYNAME"		columnIndex="2"/>
+		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
+		<result property="holidayName"		column="HOLIDAYNAME"		columnIndex="2"/>
 		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
-		<result property="holidayDate"			column="HOLIDAYDATE"			columnIndex="4"/>
-		<result property="isSolar"					column="ISSOLAR"					columnIndex="5"/>
-		<result property="isRepeat"				column="ISREPEAT"					columnIndex="6"/>
-		<result property="isRest"					column="ISREST"						columnIndex="7"/>
-		<result property="isUse"					column="ISUSE"						columnIndex="8"/>
-		<result property="useCompany"			column="USECOMPANY"			columnIndex="9"/>
+		<result property="holidayDate"		column="HOLIDAYDATE"		columnIndex="4"/>
+		<result property="isSolar"			column="ISSOLAR"			columnIndex="5"/>
+		<result property="isRepeat"			column="ISREPEAT"			columnIndex="6"/>
+		<result property="isRest"			column="ISREST"				columnIndex="7"/>
+		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
+		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 	</resultMap>
 	
+	<resultMap class="ScheduleConfigVO" id="scheduleConfigVO">
+		<result property="defaultView"		column="DEFAULTVIEW"		columnIndex="1"/>
+		<result property="startDay"			column="STARTDAY"			columnIndex="2"/>
+		<result property="startTime"		column="STARTTIME"			columnIndex="3"/>
+		<result property="endTime"			column="ENDTIME"			columnIndex="4"/>
+		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
+	</resultMap>
+
 	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
 		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getScheduleConfig" parameterClass="Map" resultMap="scheduleConfigVO" >
+		{CALL EZPIMS.EZSP_GETCONFIGINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 </sqlMap>
