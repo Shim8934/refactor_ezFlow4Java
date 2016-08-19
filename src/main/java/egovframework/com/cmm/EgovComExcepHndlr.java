@@ -27,7 +27,8 @@ public class EgovComExcepHndlr implements ExceptionHandler {
     /**
      * 발생된 Exception을 처리한다.
      */
-    public void occur(Exception ex, String packageName) {
+    @Override
+	public void occur(Exception ex, String packageName) {
 		LOGGER.debug("[HANDLER][PACKAGE]::: {}", packageName);
 		LOGGER.debug("[HANDLER][Exception]:::", ex);
     }
