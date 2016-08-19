@@ -896,7 +896,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			String pageColumnSplit = getTopMenuConfigItem("COLUMNSPLIT",rootParentUID);
 			
 			if (pMode.equals("edit")) {
-				dsb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+				sb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
 				if (!pageWidth.equals("0") && !pageWidth.equals("-1") && !pageWidth.equals("")) {
 					sb.append("width=" + pageWidth + "px ");
 				} else {

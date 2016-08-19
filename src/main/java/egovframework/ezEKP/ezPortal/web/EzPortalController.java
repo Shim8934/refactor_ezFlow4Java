@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPortal.web;
 
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,7 +13,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.formula.functions.Index;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -295,21 +293,21 @@ public class EzPortalController extends EgovFileMngUtil {
 		String displayName2 = "";
 		String width = "";
 		String height = "";
-		String password;
+		//String password;
 		String skinNum = "1";
-		String skinBgFlag = "";
-		String skinBgColor = "";
-		String skinBgImage = "";
-		String skinFontColor = "";
-		String skinFontOverColor = "";
-		String skinBgString = "";
+		//String skinBgFlag = "";
+		//String skinBgColor = "";
+		//String skinBgImage = "";
+		//String skinFontColor = "";
+		//String skinFontOverColor = "";
+		//String skinBgString = "";
 		String skinExist = "NO";
 		String result = "";
-		String portalMenuID = "";
-		String portalMenuXml = "";
-		int pollNum = 0;
-		String script1;
-		String currSkin = "";
+		//String portalMenuID = "";
+		//String portalMenuXml = "";
+		//int pollNum = 0;
+		String script1 = "";
+		//String currSkin = "";
 		String langPrimary = "";
 		String langSecondary = "";
 		String theme = "BASIC";
@@ -376,13 +374,13 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 			if (userInfo.getLang().equals("1")) {
 				//resp.cookies skinnum
-				currSkin = skinNum;
+				//currSkin = skinNum;
 			} else if (userInfo.getLang().equals("2")) {
-				currSkin = skinNum + "_2";
+				//currSkin = skinNum + "_2";
 			} else if (userInfo.getLang().equals("3")) {
-				currSkin = skinNum + "_3";
+				//currSkin = skinNum + "_3";
 			} else if (userInfo.getLang().equals("4")) {
-				currSkin = skinNum + "_4";
+				//currSkin = skinNum + "_4";
 			}
 				
 			//새로만들기
@@ -475,6 +473,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("mode", mode);
 			model.addAttribute("noneActiveX", noneActiveX);
 			model.addAttribute("skinExist", skinExist);
+			model.addAttribute("script1", script1);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -644,6 +643,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("langSecondary", langSecondary);
 			model.addAttribute("pSelectThemeUID", pSelectThemeUID);
 			model.addAttribute("gubunFlag", gubunFlag);
+			model.addAttribute("myPortalPageID", myPortalPageID);
 			
 			return "/ezPortal/portalPortalPage";
 		} catch (Exception e) {
@@ -712,9 +712,9 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			} else {
 				//권한이 있는 페이지에 대하여 개인마이페이지
-				String gubunFlag2 = "1c";
+				//String gubunFlag2 = "1c";
 				pageID = UUID.randomUUID().toString();								
-				String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
+				//String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
 				pMoveURL = "/ezPortal/portalPage.do?mode=edit&pageID=" + pageID + "&parentPageID=" + resetMyParentPageID;
 				
 				resp.setCharacterEncoding("UTF-8");
@@ -787,10 +787,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			resp.getWriter().write("</script>");
 			//resp.getWriter().flush();
 			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
-			
 		}
 	}
 	
@@ -806,7 +804,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 				uID = req.getParameter("uID");
 			}
-			String pCreatorId = "";
+			//String pCreatorId = "";
 			String pMoveURL = "";
 			String gubunFlag = "";
 			String pUserID = userInfo.getId();
@@ -824,7 +822,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
 					
 					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+						//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
 						pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
 					}
 				} else {
@@ -833,7 +831,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
 					
 					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+						//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
 						pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
 					}
 				}
@@ -989,10 +987,10 @@ public class EzPortalController extends EgovFileMngUtil {
         String pNewsBoardID = "";
         String pNewsBDNM = "";
         String pNewsType = "";
-        String pItemID = "";
-        String pDocTitle = "";
-        String pDocContent = "";
-        boolean pExist = true;
+        //String pItemID = "";
+        //String pDocTitle = "";
+       // String pDocContent = "";
+        //boolean pExist = true;
 		try {
 			if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 				pCompanyBoard = req.getParameter("companyBoardID");
@@ -1022,6 +1020,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("pNewsType", pNewsType);
 			return "/ezPortal/portalWpNewBoard";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}
@@ -1244,9 +1243,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int dMaxCount = 0;
-		int sMaxCount = 0;
-		float draftPercent = 0;
-		float susinPercent = 0;
+		//int sMaxCount = 0;
+		//float draftPercent = 0;
+		//float susinPercent = 0;
 		
 		Calendar cal = Calendar.getInstance();
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
@@ -1261,11 +1260,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
-			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			//sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
 			
 			for (int i=0; i<list.size(); i++) {
-				draftPercent = list.get(i).getDraftCount() / dMaxCount * 100;
-				susinPercent = list.get(i).getSusinCount() / dMaxCount * 100;
+				//draftPercent = list.get(i).getDraftCount() / dMaxCount * 100;
+				//susinPercent = list.get(i).getSusinCount() / dMaxCount * 100;
 			}
 		} else {
 			dMax = "0";
