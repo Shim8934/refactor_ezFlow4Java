@@ -1335,7 +1335,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * Receiver HTML 문자열 반환 함수
 	 */
 	private String getReceiverHTML(String name, String address){
-		return "<span style='cursor:pointer' title='" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
+		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
 	
 	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
