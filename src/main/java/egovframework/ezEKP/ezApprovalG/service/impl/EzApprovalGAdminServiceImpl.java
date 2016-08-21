@@ -1,5 +1,10 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -1849,7 +1854,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String formSave(Document doc, String realPath, String companyID) {
+	public String formSave(Document doc, String realPath, String companyID) throws Exception {
 		String contID = doc.getElementsByTagName("FORMCONTID").item(0).getTextContent();
 		String formID = doc.getElementsByTagName("FORMID").item(0).getTextContent();
 		String rtnValue = "";
@@ -1875,7 +1880,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String formMht = "";
 			if (doc.getElementsByTagName("FORMMHT").getLength() > 0) {
 				if (!doc.getElementsByTagName("FORMMHT").item(0).getTextContent().equals("")) {
-					formRecevGroup = doc.getElementsByTagName("FORMMHT").item(0).getTextContent();
+					formMht = doc.getElementsByTagName("FORMMHT").item(0).getTextContent();
 				}
 			}
 			rtnValue = saveFormInfo(contID, formID, formInfo, formConn, formWorkFlow, formRecevGroup, formMht, companyID, realPath);
@@ -1909,7 +1914,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 	
-	private String makeDate (String year, String month, String day, boolean startFlag) {
+	private String makeDate (String year, String month, String day, boolean startFlag) throws Exception {
 		String result = "";
 		
 		if (!year.equals("") && !month.equals("") && !day.equals("")) {
@@ -1938,23 +1943,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 	
-	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath) {
+	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath) throws Exception {
 		String strBeforMHT = "";
-		String path = config.getProperty("config.upload_approvalG.ROOT");
-		
+		String path = config.getProperty("upload_approvalG.ROOT");
 		Document doc = commonUtil.convertStringToDocument(formInfo);
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
-        String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
-        String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
-        String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
-        String formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
-        
-		String connXml = "";
+		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
+		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
+		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		String formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
+
+		//TODO 연동정보
+		String connXML = "";
 		if (!formConnInfo.equals("")) {
 			doc = commonUtil.convertStringToDocument(formConnInfo);
-			connXml = doc.getElementsByTagName("CONNXML").item(0).getTextContent();
+			connXML = doc.getElementsByTagName("CONNXML").item(0).getTextContent();
 		}
-		
+
 		String validationsXML = "";
 		String statusXML = "";
 		if (!formWorkFlow.equals("")) {
@@ -1962,37 +1967,90 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			validationsXML = doc.getElementsByTagName("VALIDATIONS").item(0).getTextContent();
 			statusXML = doc.getElementsByTagName("STATUS").item(0).getTextContent();
 		}
-		
-		 String recevGroupXML = "";
-         if (!formRecevGroup.equals("")) {
-        	 recevGroupXML = formRecevGroup;
-         }
 
-         String pFORMMHT = "";                
-         boolean isUpdate = false;
-         String saveFileName = "";
-         if (!formID.equals("") && !formMhtInfo.equals("")) {
-             isUpdate = true;
-             saveFileName = path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
-             
-             /*try {
-                 if (file.Exists(SaveFileName)) {
-                     strBeforMHT = File.ReadAllText(SaveFileName, System.Text.Encoding.Default);
-                 }
-                 StreamWriter s = new StreamWriter(SaveFileName, false, System.Text.Encoding.Default);
-                 s.Write(FormMhtInfo);
-                 s.Close();
-                 s = null;
-                 
-             }
-             catch (Exception Ex)
-             {
-                 WriteTextLog("FormSave_FormMaker", "SaveFormInfo()", Ex.ToString());
-                 return "ERROR : 양식 저장중 오류가 발생했습니다." + Ex.Message;
-             }*/
-         }
-		
-		
-		return null;
+		String recevGroupXML = "";
+		if (!formRecevGroup.equals("")) {
+			recevGroupXML = formRecevGroup;
+		}
+     
+		boolean isUpdate = false;
+		String saveFileName = "";
+
+		if (!formID.equals("") && !formMhtInfo.equals("")) {
+			isUpdate = true;
+			saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
+			
+			try {
+				File file = new File(saveFileName);
+				if (file.exists()) {
+					BufferedReader br = new BufferedReader(new FileReader(saveFileName));
+
+					StringBuilder sb = new StringBuilder();
+					String line = br.readLine();
+
+					while (line != null) {
+						sb.append(line);
+						sb.append(System.lineSeparator());
+						line = br.readLine();
+					}
+
+					br.close();
+					strBeforMHT = sb.toString();
+				}
+
+				FileWriter fw = new FileWriter(file);
+				fw.append(formMhtInfo);
+				fw.close();
+			} catch (Exception e) {
+				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", new Locale(globals.getProperty("Globals.language"))) + e.getMessage();
+			}
+		}
+
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("iv_PFORMID", formID);
+			map.put("v_PFORMCONTAINERID", contID);
+			map.put("v_PFORMFORMAT", "MHT");
+			map.put("v_PYEAR", EgovDateUtil.getTodayTime().substring(0, 4));
+			map.put("v_PFORMNAME", formName);
+			map.put("v_PFORMNAME2", formName2);
+			map.put("v_PFORMDESCRIPT", formDescript);
+			map.put("v_PFORMKIND", formKind);
+			map.put("v_PCOMPANYID", companyID);
+			map.put("v_PFORMRECVGROUPDATA", recevGroupXML);
+			map.put("v_PFORMCONNFLAG", formConnFlag);
+			map.put("companyID", companyID);
+
+			String result = ezApprovalGAdminDAO.setFormData(map);
+
+			if (result.equals("") || result.indexOf("ERROR") > 0) {
+				if (isUpdate) {
+					saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
+					
+					File file = new File(saveFileName);
+					FileWriter fw = new FileWriter(file);
+					fw.append(formMhtInfo);
+					fw.close();
+				}
+				
+				result = "ERROR";
+			} else {
+				if (formID.equals("") && !isUpdate) {
+					formID = result;
+					
+					if (!formMhtInfo.equals("")) {
+						saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
+						
+						File file = new File(saveFileName);
+						FileWriter fw = new FileWriter(file);
+						fw.append(formMhtInfo);
+						fw.close();
+					}
+				}
+			}
+			return result;
+		} catch (Exception e) {
+			return "";
+		}
 	}
 }

@@ -145,6 +145,12 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzApprovalGAdmin.setFormData" 					parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, #v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, #v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}

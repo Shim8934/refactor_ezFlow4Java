@@ -22,27 +22,27 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContainerInfoManage(Map<String, Object> map) throws Exception{
+	public List<ApprGLeftVO> getContainerInfoManage(Map<String, Object> map) throws Exception {
 		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContainerInfoManage", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContTypeInfo(String companyID) throws Exception{
+	public List<ApprGLeftVO> getContTypeInfo(String companyID) throws Exception {
 		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContTypeInfo", companyID);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContainerUseDeptInfo(Map<String, Object> map) throws Exception{
+	public List<ApprGLeftVO> getContainerUseDeptInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContainerUseDeptInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGDocStateVO> getContainerToDocStateInfo(Map<String, Object> map) throws Exception{
+	public List<ApprGDocStateVO> getContainerToDocStateInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocStateVO>) list("EzApprovalGAdmin.getContainerToDocStateInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGAdminReceiveVO> getReceiveGroupInfo(Map<String, Object> map) {
+	public List<ApprGAdminReceiveVO> getReceiveGroupInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGAdminReceiveVO>) list("EzApprovalGAdmin.getReceiveGroupInfo", map);
 	}
 	
@@ -97,8 +97,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGFormVO> getGroupDept(Map<String, Object> map) {
+	public List<ApprGFormVO> getGroupDept(Map<String, Object> map) throws Exception {
 		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getGroupDept", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormRecvAdmin(Map<String, Object> map) throws Exception {
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getFormRecvAdmin", map);
 	}
 	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
@@ -117,11 +122,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (ApprGFormVO) select("EzApprovalGAdmin.getFormContent", map);
 	}
 
-	public String deleteContainerType(Map<String, Object> map) throws Exception{
+	public String deleteContainerType(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
 	}
 
-	public String insertContainerContID(String companyID) throws Exception{
+	public String insertContainerContID(String companyID) throws Exception {
 		return (String) select("EzApprovalGAdmin.insertContainerContID", companyID);
 	}
 	
@@ -175,11 +180,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertContainerDocState", map);
 	}
 	
-	public void insertReceiveGroupItemInfo(Map<String, Object> map) throws Exception{
+	public void insertReceiveGroupItemInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertReceiveGroupItemInfo", map);
 	}
 	
-	public void insertReceiveGroupInfo(Map<String, Object> map) throws Exception{
+	public void insertReceiveGroupInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertReceiveGroupInfo", map);
 	}
 	
@@ -215,11 +220,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertFormContainerGroup", map);
 	}
 	
-	public void updateContainer(Map<String, Object> map) throws Exception{
+	public void updateContainer(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.updateContainer", map);
 	}
 
-	public void updateReceiveGroupInfo(Map<String, Object> map) throws Exception{
+	public void updateReceiveGroupInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.updateReceiveGroupInfo", map);
 	}
 	
@@ -260,15 +265,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
 	}
 
-	public void deleteContainerUseDep(Map<String, Object> map) throws Exception{
+	public void deleteContainerUseDep(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainerUseDep", map);
 	}
 
-	public void deleteContainer(Map<String, Object> map) throws Exception{
+	public void deleteContainer(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteContainer", map);
 	}
 
-	public void deleteReceiveGroupItemInfo(Map<String, Object> map) throws Exception{
+	public void deleteReceiveGroupItemInfo(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteReceiveGroupItemInfo", map);
 	}
 
@@ -288,7 +293,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteFormContainer", map);
 	}
 	
-	public void deleteForm(Map<Object, String> map) {
+	public void deleteForm(Map<Object, String> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteForm", map);
 	}
 
@@ -302,9 +307,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 
 
-	@SuppressWarnings("unchecked")
-	public List<ApprGFormVO> getFormRecvAdmin(Map<String, Object> map) throws Exception {
-		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getFormRecvAdmin", map);
+	
+
+	public String setFormData(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdmin.setFormData", map);
 	}
 
 

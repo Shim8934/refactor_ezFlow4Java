@@ -13,6 +13,7 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -313,6 +314,21 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재G관리 양식등록,양식수정 양식작성기 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSave (@RequestBody String data, HttpServletRequest request) throws Exception {
+		Document doc = commonUtil.convertStringToDocument(data);
+		String realPath = request.getServletContext().getRealPath("");
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		
+		String result = ezApprovalGAdminService.formSave(doc, realPath, companyID);
+		
+		return result;
+	}
+	
+	/**
 	 * 전자결재G관리 양식삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
@@ -325,6 +341,55 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록,양식수정 연동정보 추가 화면호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
+	public String formConnInfo (HttpServletRequest request, Model model) throws Exception {
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		String path = config.getProperty("upload_approvalG.ROOT");
+		
+		File file = new File(realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
+		
+		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+		
+		List<String> processIdxList = new ArrayList<String>();
+		for (int i = 0; i < doc.getElementsByTagName("PROCESSIDX").getLength(); i ++) {
+			processIdxList.add(doc.getElementsByTagName("PROCESSIDX").item(i).getTextContent());
+		}
+		
+		List<String> processTimeList = new ArrayList<String>();
+		for (int i = 0; i < doc.getElementsByTagName("PROCESSTIME").getLength(); i ++) {
+			processTimeList.add(doc.getElementsByTagName("PROCESSTIME").item(i).getTextContent());
+		}
+		
+		List<String> connStringFlagList = new ArrayList<String>();
+		for (int i = 0; i < doc.getElementsByTagName("CONNSTRINGFLAG").getLength(); i ++) {
+			connStringFlagList.add(doc.getElementsByTagName("CONNSTRINGFLAG").item(i).getTextContent());
+		}
+		
+		List<String> queryTypeList = new ArrayList<String>();
+		for (int i = 0; i < doc.getElementsByTagName("QUERYTYPE").getLength(); i ++) {
+			queryTypeList.add(doc.getElementsByTagName("QUERYTYPE").item(i).getTextContent());
+		}
+		
+		List<String> keyKindList = new ArrayList<String>();
+		for (int i = 0; i < doc.getElementsByTagName("KEYKIND").getLength(); i ++) {
+			keyKindList.add(doc.getElementsByTagName("KEYKIND").item(i).getTextContent());
+		}
+		
+		model.addAttribute("processIdxList", processIdxList);
+		model.addAttribute("processTimeList", processTimeList);
+		model.addAttribute("connStringFlagList", connStringFlagList);
+		model.addAttribute("queryTypeList", queryTypeList);
+		model.addAttribute("keyKindList", keyKindList);
+		
+		model.addAttribute("companyID", companyID);
+		
+		return "admin/ezApprovalG/apprGFormConnInfo";
 	}
 	
 	/**
@@ -341,20 +406,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	/**
-	 * 전자결재G관리 양식등록,양식수정 양식작성기 저장 실행 함수
-	 */
-	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
-	@ResponseBody
-	public String formSave (@RequestBody String data, HttpServletRequest request) {
-		Document doc = commonUtil.convertStringToDocument(data);
-		String realPath = request.getServletContext().getRealPath("");
-		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		
-		String result = ezApprovalGAdminService.formSave(doc, realPath, companyID);
-		
-		return result;
-	}
+	
 	///////////////////////
 	
 	/**

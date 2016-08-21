@@ -118,7 +118,7 @@ public interface EzApprovalGAdminService {
 
 	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception;
 
-	public String formSave(Document doc, String realPath, String companyID);
+	public String formSave(Document doc, String realPath, String companyID) throws Exception;
 
 	
 

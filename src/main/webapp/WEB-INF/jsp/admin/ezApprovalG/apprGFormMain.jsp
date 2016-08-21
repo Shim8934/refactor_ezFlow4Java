@@ -55,12 +55,12 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-	
+		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
-	
+
 		        if (formID != "") {
 		            get_FormInfo();
 		        }
@@ -68,7 +68,7 @@
 		        getDeptFullTree("<c:out value = '${topID}' />");
 		        getFormRecv();
 		    });
-	
+		    
 		    function pzFormProc_DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
@@ -130,6 +130,7 @@
 		            }
 	
 		            try{
+		            	window.close();
 		                window.opener.refreshFormList();
 		            } catch (ee) {
 		            }
@@ -406,7 +407,7 @@
 		    }
 	
 		    function btn_OpinionAdd_onclick() {
-		        var url = "/myoffice/ezApprovalG/ezViewHWP/FormConnInfo.aspx?companyID=" + escape(companyID);
+		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURI(companyID);
 		        var feature = "status:no;dialogWidth:430px;dialogHeight:450px;help:no;scroll:no;edge:sunken";
 		        var ret = window.showModalDialog(url, companyID, feature);
 	
@@ -551,9 +552,7 @@
 		    
 		</script>
 		<script language="javascript" for="pzFormProc" event="FieldsAvailable">
-		<!--
 		    pzFormProc_FieldsAvailable();
-		//-->
 		</script>
 		<script language="javascript" for="pzFormProc" event="DocumentComplete">
 		<!--

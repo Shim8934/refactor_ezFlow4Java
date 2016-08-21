@@ -42,6 +42,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("TForm").style.height = "0px";
+                $("#TForm").hide();
                 document.getElementById("TForm").style.display = "none";
             }
             break;
@@ -223,7 +224,7 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "FormName2", tbFormName2.value); // 양식명 (영어)
     createNodeAndInsertText(xmlpara, objNode, "FormDescript", tbDescript.value); // 양식설명
     createNodeAndInsertText(xmlpara, objNode, "FormKind", selFormKind.value); // 양식종류
-
+    
     if (document.getElementById('setConnFlag').checked)
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "Y"); // 연동양식 체크 
     else
@@ -310,7 +311,7 @@ function MakeFormConnXML() {
         try {
             var xmldom = createXmlDom();
             xmldom = loadXMLString("<CONNINFO>\n" + txt_OpinionContent.innerText + "\n</CONNINFO>");
-
+            
             if (xmldom.getElementsByTagName("conn").length == 0) {
                 // XML로 Parsing이 되며 conn설정이 있는지 확인.
                 pDataCheck = false;
@@ -319,16 +320,17 @@ function MakeFormConnXML() {
             else {
                 var pConnArray = new Array();
                 var pCheck = true;
+
                 for (var i = 0; i < xmldom.getElementsByTagName("conn").length; i++) {
                     pCheck = true;
                     if (xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") == null) { pCheck = false; }
                     if (xmldom.getElementsByTagName("conn")[i].getAttribute("processtime") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("connstring").getAttribute("flag") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("connstring").text == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("query").getAttribute("qtype") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("query").text == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("keys") == null) { pCheck = false; }
-
+                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("connstring")[0].getAttribute("flag") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("connstring")[0].textContent == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("query")[0].getAttribute("qtype") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("query")[0].textContent == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("keys")[0] == null) { pCheck = false; }
+                    
                     if (pCheck) {
                         pConnArray[i] = xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") + xmldom.getElementsByTagName("conn")[i].getAttribute("processtime");
                     }
@@ -388,6 +390,7 @@ function MakeFormConnXML_Detail() {
     var objNode;
     createNodeInsert(xmlpara, objNode, "CONNXML");    
     createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.innerText)); // 연동 XML
+    
     return new XMLSerializer().serializeToString(xmlpara);
 }
 
@@ -408,8 +411,7 @@ function MakeFormRecevGroupXML() {
         retValue[0] = "TRUE";
         retValue[1] = MakeFormRecevGroupXML_Detail();
         retValue[2] = "";
-    }
-    else {
+    } else {
         retValue[0] = "FALSE";
         retValue[1] = "";
         retValue[2] = pErrorMsg;
@@ -419,7 +421,7 @@ function MakeFormRecevGroupXML() {
 
 function MakeFormRecevGroupXML_Detail() {
     var xmlpara = createXmlDom();
-
+    
     var objRoot, objNode, subNode, objNode2;
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
     var objNode = createNodeAndInsertText(xmlpara, objRoot, "DATAS", "");
@@ -428,16 +430,19 @@ function MakeFormRecevGroupXML_Detail() {
     lvtFormView.LoadFromID("lvtForm");
 
     var selRow = lvtFormView.GetDataRows();
-    if (selRow.length > 0) {
-        if (selRow.length == 1 && GetAttribute(selRow[0], "id").indexOf("_TR_noItems") > -1)
-            return;
 
-        for (i = 0; i < selRow.length; i++) {
+    if (selRow.length > 0) {
+        if (selRow.length == 1 && GetAttribute(selRow[0], "id").indexOf("_TR_noItems") > -1) {
+            return "";
+        }
+        
+        for (var i = 0; i < selRow.length; i++) {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
         }
     }
+    
     return new XMLSerializer().serializeToString(xmlpara);
 }
 
