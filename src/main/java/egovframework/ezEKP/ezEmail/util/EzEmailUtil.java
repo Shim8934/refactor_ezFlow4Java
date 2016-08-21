@@ -1049,28 +1049,33 @@ public class EzEmailUtil {
 		
 		return timeOffset;
 	}
-	
+
 	/**
-	 * sends an HTTP POST request and returns the response. 
+     * JMocha Gateway Server로 HTTP POST로 요청을 보내고 그 결과를 반환한다. 
 	 */
 	public String getWebServiceResult(String urlString, String inputParams) throws Exception {
 		String result = null;
 		
 		URL url = new URL(urlString);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		// POST 방식으로 요청한다.
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");	
 		
+		// 입력 패러메터값이 있는 경우엔 HTTP Body로 출력한다.
 		if (inputParams != null) {
 			OutputStream os = conn.getOutputStream();
-			os.write(inputParams.getBytes());
+			// UTF-8로 인코딩한다.
+			os.write(inputParams.getBytes("UTF-8"));
 			os.flush();
 		}
 		
 		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			// Response Body를 UTF-8로서 디코딩한다.			
 			BufferedReader br = new BufferedReader(
-										new InputStreamReader(conn.getInputStream())
+										new InputStreamReader(conn.getInputStream(),"UTF-8")
 										);
 
 			StringBuilder sb = new StringBuilder();
