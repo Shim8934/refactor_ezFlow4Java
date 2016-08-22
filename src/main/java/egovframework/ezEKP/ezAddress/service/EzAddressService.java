@@ -19,7 +19,7 @@ public interface EzAddressService {
 	public List<AddressInfoVO> getAddressList(String pFolderID, String pOwnerID, String pOrderOption, String pFilter, String pFieldList, int pFolderMaxCount, int pListPageSize, int pStart) throws Exception;
 	public AddressInfoVO getAddressInfo2(String pAddressId) throws Exception;
 	public int getSearchCount(String pIdList, String pFilter) throws Exception;
-	public void insertAddress(String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName, String pCreatorName2, String pPhotoPath, String sName,
+	public void insertAddress(String pOwnerId, int pFolderId, String pCreatorId, String pCreatorName, String pCreatorName2, String pPhotoPath, String sName,
 			String sCompany, String sDept, String sTitle, String sCompanyPhone, String sFax, String sMobile, String sEmail, String sHomePage, String sCompanyZip,
 			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType, String pAttachXML) throws Exception;
 	public void updateAddress(String pAddressId, String pModifierID, String pModifierName, String pModifierName2, String pPhotoPath, String sName,
