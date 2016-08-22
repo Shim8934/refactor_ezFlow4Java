@@ -454,8 +454,8 @@
 		        listview.LoadFromID("lvtForm");
 		        var oArrRows = listview.GetSelectedRows();
 		        var tr = oArrRows[0];
-	
-		        var url = "Form_Preview.aspx?href=" + escape(GetAttribute(tr, "DATA4"));
+
+		        var url = "/admin/ezApprovalG/formPreview.do?href=" + encodeURI(GetAttribute(tr, "DATA4"));
 		        var retVal = window.showModalDialog(url, "", "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 		    }
 		</script>

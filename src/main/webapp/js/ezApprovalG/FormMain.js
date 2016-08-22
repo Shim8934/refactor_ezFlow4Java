@@ -42,7 +42,6 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("TForm").style.height = "0px";
-                $("#TForm").hide();
                 document.getElementById("TForm").style.display = "none";
             }
             break;

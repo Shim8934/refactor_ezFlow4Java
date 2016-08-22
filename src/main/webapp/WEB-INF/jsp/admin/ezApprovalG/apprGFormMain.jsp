@@ -13,8 +13,8 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
@@ -47,7 +47,7 @@
 		            return true;
 		    };
 	
-		    $(document).ready(function(){
+		    $(document).ready(function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -59,7 +59,7 @@
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
-		        ChangeTab(document.getElementById("1tab1"));
+// 		        ChangeTab(document.getElementById("1tab1"));
 
 		        if (formID != "") {
 		            get_FormInfo();
@@ -466,7 +466,7 @@
 		        var field = fields.Item("AprLine");
 	
 		        if (!field) {
-		            alert("기안부서 결재영역을 지정하세요.");
+		            alert("<spring:message code  = 'ezApprovalG.lhj04' />");
 		            return false;
 		        }
 	
@@ -557,7 +557,7 @@
 		<script language="javascript" for="pzFormProc" event="DocumentComplete">
 		<!--
 		    pzFormProc_DocumentComplete();
-		//-->
+		    //-->
 		</script>
 		<script language="javascript" for="pzFormProc" event="BlurTDElement">
 		<!--
@@ -678,8 +678,8 @@
                     </th>
                 </tr>
             </table>              
-        </div>        
-
+        </div>
+        
         <!-- WorkFlow -->
         <div id="ApvForm_content4" style="width:100%;height:60%;display:none; padding-top:10px;">            
         </div>
@@ -725,7 +725,8 @@
                 </td>
                 <td id="rootTD"></td>
             </tr>
-        </table> 
+        </table>
+        
         <!-- <form runat="server" id="bodyForm">
             <asp:HiddenField ID="hidCompanyID" runat="server" />
             <asp:HiddenField ID="hidFormID" runat="server" />

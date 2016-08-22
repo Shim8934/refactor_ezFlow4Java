@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -160,7 +161,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식함추가 화면 호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식함추가 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) {
@@ -195,7 +196,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식함추가 실행 함수
+	 * 전자결재G관리 양식등록(MHT) 양식함추가 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setFormContIns.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -214,7 +215,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식함수정 사용부서목록 호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식함수정 사용부서목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getGroupDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -229,7 +230,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식함수정 실행 함수
+	 * 전자결재G관리 양식등록(MHT) 양식함수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setFormContMod.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -249,7 +250,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식함삭제 실행 함수
+	 * 전자결재G관리 양식등록(MHT) 양식함삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/delFormCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -263,7 +264,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록,양식수정 화면 호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
@@ -299,7 +300,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록,양식수정 양식기본정보 호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식기본정보 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -314,7 +315,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록,양식수정 양식작성기 저장 실행 함수
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
@@ -329,22 +330,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식삭제 실행 함수
-	 */
-	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
-	@ResponseBody
-	public String delForm(HttpServletRequest request) throws Exception {
-		String formID = request.getParameter("formID");
-		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
-		
-		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
-		
-		return result;
-	}
-	
-	/**
-	 * 전자결재G관리 양식등록,양식수정 연동정보 추가 화면호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 연동정보 추가 화면호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (HttpServletRequest request, Model model) throws Exception {
@@ -393,7 +379,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록,양식수정 양식별 고정수신처목록 호출 함수
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식별 고정수신처목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormRecvAdmin.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -406,7 +392,36 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 양식삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String delForm(HttpServletRequest request) throws Exception {
+		String formID = request.getParameter("formID");
+		String companyID = request.getParameter("companyID");
+		String realPath = request.getServletContext().getRealPath("");
+		
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
+		
+		return result;
+	}
 	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 미리보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formPreview.do")
+	public String formPreview(HttpServletRequest request, Model model) {
+		String docHref = request.getParameter("href");
+		 
+		model.addAttribute("docHref", docHref);
+		
+		return "admin/ezApprovalG/apprGFormPreview";
+	}
+	
+		
+		
+		
 	///////////////////////
 	
 	/**
