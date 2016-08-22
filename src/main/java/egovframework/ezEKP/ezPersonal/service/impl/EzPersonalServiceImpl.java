@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
+import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
@@ -25,6 +29,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzPersonalServiceImpl implements EzPersonalService{
 	@Resource(name="EzPersonalDAO")
 	private EzPersonalDAO ezPersonalDAO;
+	
+	@Resource(name="EzOrganDAO")
+	private EzOrganDAO ezOrganDAO;
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
@@ -161,6 +168,116 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	@Override
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID) throws Exception {
 		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(pComapnyID);
+	}
+	
+	public String getBirthUserList(String companyID, String curMon) throws Exception {
+		
+		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(companyID); 
+		
+		String solarValue = "";
+		StringBuilder result = new StringBuilder("<DATA>");
+		String[] array = new String[1000];
+		
+		for (OrganUserVO orgranUserInfo : list) {
+			solarValue = orgranUserInfo.getBirth();
+			
+			if (orgranUserInfo.getBirthType().equals("N")) {
+				String[] birthArray = solarValue.split("-");
+				solarValue = changeSolarCalendar(Integer.parseInt(birthArray[0]), Integer.parseInt(birthArray[1]), Integer.parseInt(birthArray[2]), false);
+				
+				if (!solarValue.equals("FALSE")) {
+					solarValue = solarValue.substring(0, 10);
+				}
+			}
+			
+			if (!solarValue.equals("FALSE")) {
+				if (curMon.equals(solarValue.substring(5, 7))) {
+					result.append("<ROW>");
+					
+					for (Field field : orgranUserInfo.getClass().getDeclaredFields()) {
+						field.setAccessible(true);
+						String data = String.valueOf(field.get(orgranUserInfo));
+						
+						if(data == null || data.equals(null) || data.equals("null")){
+							data = "";
+						}
+						if (field.getName().toUpperCase().equals("BIRTH")) {
+							result.append("<" + field.getName().toUpperCase() + ">");
+							result.append(solarValue.substring(5, 10));
+							result.append("</" + field.getName().toUpperCase() + ">");
+							result.append("<BIRTHDAY>");
+							result.append(solarValue.substring(8, 10));
+							result.append("</BIRTHDAY>");
+						} else {
+							result.append("<" + field.getName().toUpperCase() + ">");
+							result.append(commonUtil.cleanValue(data));
+							result.append("</" + field.getName().toUpperCase() + ">");
+						}
+					}
+					
+					result.append("</ROW>");
+						
+				}
+			}
+		}
+		result.append("</DATA>");
+		return result.toString();
+	}
+	
+	public String changeSolarCalendar(int pYear, int mon, int day, boolean bDay) {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int nYoonMonth;
+		
+		//윤달이 껴있는 경우
+		if (monthsInYear(year) > 12) {
+			// 해당 년도의 윤월을 계산 (추후 수정)
+			nYoonMonth = 0;
+			
+			if (bDay) {
+				mon ++;
+			} 
+			if (mon > nYoonMonth) {
+				mon ++;
+			}
+		}
+		
+		if (day > daysInMonth(year, mon)) {
+			return "FALSE";
+		}
+		
+		String result = String.valueOf(year) + String.valueOf(mon) + String.valueOf(day);
+		return result;
+	}
+	
+	//현재 연대에 있는 지정된 연도의 월 수를 반환(윤년, 평년)
+	public int monthsInYear (int year) {
+		int months;
+		
+		if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 != 0)) {
+			months = 13;
+		}  else { 
+			months = 12; 
+		} 
+		return months;
+	}
+	
+	//해당 년도 및 월에 있는 일 수
+	public int daysInMonth (int month, int year) {
+		int days;
+		
+		if (year % 4 == 0 && month == 2) {
+			days = 29;
+		} else if (month == 2) {
+			days = 28;
+		} else if (month == 4 || month == 6 || month == 9 || month == 11) { 
+			days = 30; 
+		} else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) { 
+			days = 31; 
+		} else { 
+			days = 0; 
+		} 
+		return days;
 	}
 	
 }

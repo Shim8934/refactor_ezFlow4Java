@@ -32,6 +32,8 @@ public interface EzPersonalService {
 
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag) throws Exception;
 	
+	public String getBirthUserList(String companyID, String curMon) throws Exception;
+	
 	public int getPollCount (String pComapnyID) throws Exception;
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult) throws Exception;

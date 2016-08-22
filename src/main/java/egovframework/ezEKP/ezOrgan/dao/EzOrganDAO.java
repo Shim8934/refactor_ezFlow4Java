@@ -42,7 +42,12 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganProxyVO> getProxyUserInfo(Map<String, Object> map) throws Exception{
 		return (List<OrganProxyVO>) list("EzOrganDAO.getProxyUserInfo", map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getBirthUserList(String companyID) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganDAO.getBirthUserList", companyID);
+	}
+	
 	public OrganUserVO getTBLUserMaster(Map<String, Object> map) throws Exception {
 		return (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
 	}

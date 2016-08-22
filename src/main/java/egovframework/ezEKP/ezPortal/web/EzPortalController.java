@@ -1309,13 +1309,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewBirth.do")
 	public String wpNewBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 	
-		try {
-			
-			model.addAttribute("userLang", userInfo.getLang());
-			return "/ezPortal/portalWpNewBirth";
-		} catch (Exception e) {
-			return "";
-		}
+		model.addAttribute("curMon", curMon);	
+		model.addAttribute("userLang", userInfo.getLang());
+		return "/ezPortal/portalWpNewBirth";
+	
 	}
 }

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPersonal.web;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -575,4 +576,28 @@ public class EzPersonalController {
 		return "ezPersonal/persPollResult";
 	}
 	
+	/**
+	 * 포탈 메인 생일자 리스트 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String curMon = "";
+		
+		if (req.getParameter("mon") != null && !req.getParameter("mon").equals("")) {
+			curMon = req.getParameter("mon");
+			if (Integer.parseInt(curMon) < 10 && curMon.length() == 1) {
+				curMon = "0" + curMon;
+			}
+		} else {
+			Calendar cal = Calendar.getInstance();
+			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+		}
+		
+		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon);
+	
+		return result;
+	}
 }

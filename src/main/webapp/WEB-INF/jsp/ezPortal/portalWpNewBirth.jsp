@@ -6,6 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<section  class="body_bg1">
 			<article class="portletbox birthbox ">
 				<div class="title">
@@ -75,6 +76,8 @@
 	            	document.body.style.oUserSelect = 'none';
 	            	document.body.style.UserSelect = 'none';
 	        	}
+		        
+		        getbirthUserList();
 
 		        if ("<%=userLang%>" != "1") {
 		            document.getElementById("kordisplay").style.display = "none";
@@ -124,37 +127,54 @@
 	        	getbirthUserList();
 	    	}
 	    	function getbirthUserList() {
-		        window.clearTimeout(timer);
+		        /* window.clearTimeout(timer);
 		        xmlhttp_getbirthUserList_NewBirth = createXMLHttpRequest();
-	    	    xmlhttp_getbirthUserList_NewBirth.open("POST", "/myoffice/ezPersonal/PersonInfo/MainBirthUserList.aspx?mon=" + month, true);
+	    	    xmlhttp_getbirthUserList_NewBirth.open("POST", "/ezPersonal/mainBirthUserList.do?mon=" + month, true);
 		        xmlhttp_getbirthUserList_NewBirth.onreadystatechange = getbirthUserList_after;
-	        	xmlhttp_getbirthUserList_NewBirth.send();
+	        	xmlhttp_getbirthUserList_NewBirth.send(); */
+	        	
+	        	 $.ajax({
+	    	        	type : "POST",
+	    	        	dataType : "xml",
+	    	        	url : "/ezPersonal/mainBirthUserList.do",
+	    	        	data : {
+	    	        		mon   : month, 
+	    	        	},
+	    	        	success : function(xml){		        		
+	    	        		getbirthUserList_after(xml);
+	    	        	},
+	    	        	error : function(error){
+	    	        		alert(error);	
+	    	        	}
+	    	    });
+	        	
 	    	}
 	    	var userLang = "<%=userLang%>";
-	    	function getbirthUserList_after() {
-		        if (xmlhttp_getbirthUserList_NewBirth == null || xmlhttp_getbirthUserList_NewBirth.readyState != 4) return;
+	    	function getbirthUserList_after(xml) {
+
+		        if (xml == null) return;
 
 		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
 
-	    	    if (SelectSingleNodeNew(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW") != null) {
-	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA")).length;
+	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
+	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
 	            	totalPage = Math.ceil(totalCnt / EndCnt);
 	            	document.getElementById("birthcont").style.display = "";
 	            	document.getElementById("nodata_NewBirth").style.display = "none";
 	            	for (var i = 0; i < totalCnt; i++) {
-		                var cn = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "CN");
+		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
 	                    
-		                var birthType = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "BIRTHTYPE");
+		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
 	                    
-	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "BIRTH");
+	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
 	                    
-	        	        var userName = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
 	            	    if (userLang != "1")
-	                	    userName = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "DISPLAYNAME2");
+	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
 
-	                	var userTitle = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "TITLE");
+	                	var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");
 	                	if (userLang != "1")
-		                    userTitle = SelectSingleNodeValue(SelectNodes(xmlhttp_getbirthUserList_NewBirth.responseXML, "DATA/ROW")[i], "TITLE2");
+		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2");
 	                    
 		                var _li = document.createElement("li");
 		                _li.style.display = "none";

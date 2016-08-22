@@ -125,6 +125,10 @@
 		{CALL EZHRMASTER.EZSP_DELPROXYUSERINFO(#v_USERID#)}
 	</procedure>
 	
+	<procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
+		{CALL EZHRMASTER.EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			SELECT 
