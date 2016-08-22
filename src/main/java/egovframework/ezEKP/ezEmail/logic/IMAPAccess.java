@@ -43,7 +43,8 @@ public class IMAPAccess {
 	private String password;
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
-	private final int TIMEOUT = 20000;
+	private int timeout = 20000;
+	private int connectionTimeout = 20000;
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale){
 		this.host = host;
@@ -53,7 +54,17 @@ public class IMAPAccess {
 		this.egovMessageSource = egovMessageSource;
 		this.locale = locale;
 	}
-
+	
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale, int timeout, int connectionTimeout){
+		this.host = host;
+		this.port = port;
+		this.userName = userName;
+		this.password = password;
+		this.egovMessageSource = egovMessageSource;
+		this.timeout = timeout;
+		this.connectionTimeout = connectionTimeout;
+	}
+	
 	private Store getStore(){
 		if(store != null){
 			return store;
@@ -73,10 +84,10 @@ public class IMAPAccess {
 			properties.setProperty("mail.imap.partialfetch", "false");
 			properties.setProperty("mail.imaps.partialfetch", "false");
 			
-			properties.put("mail.imap.connectiontimeout", TIMEOUT);
-			properties.put("mail.imap.timeout", TIMEOUT);
+			properties.put("mail.imap.connectiontimeout", connectionTimeout);
+			properties.put("mail.imap.timeout", timeout);
 			
-			Session session = Session.getDefaultInstance(properties);
+			Session session = Session.getInstance(properties);
 
 			store = session.getStore("imap");
 			store.connect(userName, password);
@@ -295,6 +306,10 @@ public class IMAPAccess {
 	
 	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, Locale locale){
 		return new IMAPAccess(host, port, username, password, egovMessageSource, locale);
+	}
+	
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, Locale locale, int timeout, int connectionTimeout){
+		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, timeout, connectionTimeout);
 	}
 	
 	public static class MessageSubjectComparator implements Comparator<Message> {
