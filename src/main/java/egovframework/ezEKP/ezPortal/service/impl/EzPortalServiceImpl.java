@@ -2454,7 +2454,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 		} else { 
 			days = 0; 
 		} 
-		return days;
+		return days; 
 	}
 	
 	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm) {

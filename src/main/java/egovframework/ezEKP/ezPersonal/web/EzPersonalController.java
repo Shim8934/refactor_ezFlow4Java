@@ -600,4 +600,17 @@ public class EzPersonalController {
 	
 		return result;
 	}
+	
+	/**
+	 * 포탈 직원조회 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/personSearch.do")
+	public String personSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useOCS = config.getProperty("config.USE_OCS");
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("userInfo", userInfo);
+		return "/ezPersonal/persPersonSearch";
+	}
 }
