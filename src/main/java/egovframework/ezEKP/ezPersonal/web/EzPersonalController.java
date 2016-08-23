@@ -607,10 +607,17 @@ public class EzPersonalController {
 	@RequestMapping(value = "/ezPersonal/personSearch.do")
 	public String personSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		
 		String useOCS = config.getProperty("config.USE_OCS");
+		String searchString = "";
+		
+		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
+			searchString = req.getParameter("searchString");
+		}
+		
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("searchString", searchString);
+		
 		return "/ezPersonal/persPersonSearch";
 	}
 }

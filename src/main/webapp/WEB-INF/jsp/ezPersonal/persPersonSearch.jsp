@@ -23,7 +23,7 @@
 	    	var strLang1 = "<spring:message code='ezPersonal.t249'/>";
 	    	var strLang2 = "<spring:message code='ezPersonal.t1003'/>";
 	    	var strLang39 = "<spring:message code='ezPersonal.t10000'/>";
-	    	var strLang40 = "<spring:message code='ezPersonal.t1000'/>";
+	    	var strLang40 = "<spring:message code='ezPersonal.t10001'/>";
 	    	var strSearch = "${searchString}";
 	    	var CurPage = "1";
 
@@ -113,23 +113,10 @@
 	    	}
 	    	var tempDeptID = "";
 	    	function displayUserList(DeptID) {
-		        if (DeptID != undefined)
+		        if (DeptID != undefined) {
 	            	tempDeptID = DeptID;
-	        /* 	var xmlpara = createXmlDom();
-	        	var objRoot, objNode;
-	        	objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
-	        	createNodeAndInsertText(xmlpara, objNode, "DEPTID", tempDeptID);
-	        	createNodeAndInsertText(xmlpara, objNode, "CELL", "company;description;displayName;title;telephoneNumber");
-	        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2");
-	        	createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-	        	createNodeAndInsertText(xmlpara, objNode, "PAGE", CurPage);
-	        	g_xmlHTTP = createXMLHttpRequest();
-	        	g_xmlHTTP.open("POST", "/ezOrgan/getDeptMemberList.do", true);
-	        	g_xmlHTTP.onreadystatechange = event_displayUserList;
-	        	g_xmlHTTP.send(xmlpara); */
-	        	
-	        	
-	        	
+		        }
+
 	        	 $.ajax({
 	  					url : '/ezOrgan/getDeptMemberList.do',
 	  					method : 'POST',
@@ -138,22 +125,21 @@
 	  						deptID : tempDeptID ,
 	  						cell : "company;description;displayName;title;telephoneNumber",
 	  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-	  						//page : CurPage ,
+	  						page : CurPage ,
 	  						type : "user"
 	  					} ,
 	      				success : function(data, textStatus, jqXHR) {
 	      					pListXML_Info = data;
 							pSeach = false;
 	 		                DisplayUserImageList();
-	 		                makePageSelPage();
-alert((new XMLSerializer()).serializeToString(data));	 		                
+	 		                makePageSelPage();	 		                
 	  					},
 	  					error : function(jqXHR, textStatus, errorThrown) {
 	  						alert(error);
 	  					}
 	  				});   
-	        	
 	    	}
+	    	
 	    	function event_displayUserList() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 		            if (g_xmlHTTP.statusText == "OK") {
@@ -222,10 +208,9 @@ alert((new XMLSerializer()).serializeToString(data));
 	    	}
 	    	var pSeach = false;
 	    	function DisplayUserImageList() {
-alert(pListXML_Info);
 		        var xmlRtn = pListXML_Info;
 		        //totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
-		        totalPage = 1;
+		       // totalPage = 1;
 		        totalPage = Math.ceil(new Number(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length / 50));
 	    	    document.getElementById("DeptUserImgList").innerHTML = "";
 	        	document.getElementById("txtlist_Layer").scrollTop = "0";
@@ -488,28 +473,28 @@ alert(pListXML_Info);
 	            	issearch = true;
 	        	}
 
-	        	var xmlHTTP = createXMLHttpRequest();
-	        	var xmlDom = createXmlDom();
-	        	var objNode;
-	        	createNodeInsert(xmlDom, objNode, "DATA");  //Root node
-	        	createNodeAndInsertText(xmlDom, objNode, "SEARCH", document.getElementById("search_type").value + "::" + keyword.value);
-	        	createNodeAndInsertText(xmlDom, objNode, "CELL", "company;description;displayName;title;telephoneNumber" + document.getElementById("search_type").value);
-	        	createNodeAndInsertText(xmlDom, objNode, "PROP", "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2"); //2010.01.25 겸직자 정보 조회 선택된 겸직부서 정보로 표시되도록처리 추가
-	        	createNodeAndInsertText(xmlDom, objNode, "TYPE", "user");
-	        	createNodeAndInsertText(xmlDom, objNode, "PAGE", CurPage);
-
-		        g_xmlHTTP = createXMLHttpRequest();
-	        	g_xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", true);
-	        	var usedefault;
+	        	$.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "xml",
+					data : {
+						search : document.getElementById("search_type").value + "::" + keyword.value,
+						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						page : CurPage ,
+						type : "user"
+					} ,
+   					success : function(data, textStatus, jqXHR) {
+   						pListXML_Info = data;
+						pSeach = true;
+		            	DisplayUserImageList();
+		            	makePageSelPage();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code="ezResource.t2"/>" + textStatus);
+					}
+				}); 
 	        	
-	        	if (browserIE) {
-		            usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
-	        	} else {
-	            usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
-	        	}
-	        	
-	        	g_xmlHTTP.onreadystatechange = event_displayUserList2;
-	        	g_xmlHTTP.send(xmlDom);
 	    	}
 	    	function event_displayUserList2() {
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -551,31 +536,25 @@ alert(pListXML_Info);
 	    	        deptkeyword.focus();
 	        	    return;
 	        	}
-	        	var objNode;
-	        	var xmlHTTP = createXMLHttpRequest();
-	        	var xmlDom = createXmlDom();
-	        	createNodeInsert(xmlDom, objNode, "DATA");  //Root node
-	        	createNodeAndInsertText(xmlDom, objNode, "SEARCH", "displayName::" + deptkeyword.value);
-	        	createNodeAndInsertText(xmlDom, objNode, "CELL", "extensionAttribute3;displayname;extensionAttribute9;");
-	        	createNodeAndInsertText(xmlDom, objNode, "PROP", "");
-	        	createNodeAndInsertText(xmlDom, objNode, "TYPE", "group");
 	        	
-	        	try {
-	            	xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
-	            	xmlHTTP.send(xmlDom);
-	            	if (xmlHTTP.statusText != "OK") {
-		                alert("<spring:message code='ezPersonal.t62'/>" + xmlHTTP.statusText);
-	                	xmlDom = null;
-	                	xmlHTTP = null;
-	            	} else {
-	                	xmlDom = xmlHTTP.responseXML;
-	                	adCount = xmlDom.getElementsByTagName("ROW").length;
-	            	}
-	        	} catch (e) {
-	            	alert("<spring:message code='ezPersonal.t62'/>" + e.description);
-	            	xmlDom = null;
-	            	xmlHTTP = null;
-		        }
+		        var xmlDOM = createXmlDom();
+		        
+	        	 $.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "xml",
+					async : false,
+					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+   					success : function(result) {
+   						xmlDOM = result
+   						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
+	                	adCount = row.length;
+						},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code="ezResource.t2"/>" + textStatus);
+						xmlDOM = null;
+					}
+				}); 
 
 		        if (adCount == 0) {
 	    	        alert("<spring:message code='ezPersonal.t63'/>");
@@ -585,15 +564,15 @@ alert(pListXML_Info);
 	            	g_xmlHTTP = createXMLHttpRequest();
 	            
 	            	if(CrossYN())
-		                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 	            	else
-	                	var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                	var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	            	g_xmlHTTP.send(strQuery);
 	        	} else {
-		            rgParams["addrBook"] = xmlDom;
+		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
 	            	var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 	            	feature = feature + GetShowModalPosition(540, 460);
@@ -601,10 +580,10 @@ alert(pListXML_Info);
 	            	if (CrossYN()) {
 		                checkname2_cross_dialogArguments[0] = rgParams;
 	                	checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-	                	var OpenWin = window.open("/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(540, 460));
+	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(540, 460));
 	             	   try { OpenWin.focus(); } catch (e) { }
 	            	} else {
-	                	window.showModalDialog("/ezOrgan/checkName2.do", rgParams, feature);
+	                	window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 
 	                	if (rgParams["deptid"] != "") {
 		                    bSearch = true;
