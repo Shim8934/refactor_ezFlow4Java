@@ -88,10 +88,8 @@
 			        }
 			    }
 
-				var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-				xmlHTTP.open("POST", "/ezEmail/mailGeneralSave.do?MODE=ALL", false );
-				xmlHTTP.setRequestHeader("Accept-Language:","ko");
-				xmlHTTP.setRequestHeader("Content-type:", "text/xml");
+				var xmlHTTP = createXMLHttpRequest();
+				xmlHTTP.open("POST", "/ezEmail/mailGeneralSave.do?MODE=ALL", false);
 				xmlHTTP.send(
 				"<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
                 "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
