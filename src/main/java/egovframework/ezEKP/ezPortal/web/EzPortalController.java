@@ -973,6 +973,88 @@ public class EzPortalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 포탈 - webPart totalSection2 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpTotalSection2.do")
+	public String wpTotalSection2(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String noneActiveX = "YES";
+		String filePath = "";
+		String displayName = "";
+		String title = "";
+		String description = "";
+		String pCompanyBoard = "";
+		String pCompanyBDNM = "";
+		String pCompanyType = "";
+		String pDeptBoardID = "";
+		String pDeptBDNM = "";
+		String pDeptType = "";
+		String pNewsBoardID = "";
+		String pNewsBDNM = "";
+		String pNewsType = "";
+		
+		List<PersonalGetSliderListVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+		
+		Calendar cal = Calendar.getInstance();
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term);
+		
+		if (result != null) {
+			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
+				filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
+			} else {
+				filePath = "/images/default_pic.jpg";
+			}
+			
+			if (userInfo.getLang().equals("2")) {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
+			} else {
+				displayName = result.getDisplayName();
+				title = result.getTitle();
+				description = result.getDescription();
+			}
+		}
+		
+		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
+			pCompanyBoard = req.getParameter("companyBoardID");
+			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[0];
+			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[1];
+		}
+		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
+			pDeptBoardID = req.getParameter("deptBoardID");
+			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[0];
+			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[1];
+		}
+		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
+			pNewsBoardID = req.getParameter("newsBoardID");
+			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[0];
+			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[1];
+		}
+		
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("title", title);
+		model.addAttribute("description", description);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("pCompanyBoard", pCompanyBoard);
+		model.addAttribute("pCompanyBDNM", pCompanyBDNM);
+		model.addAttribute("pCompanyType", pCompanyType);
+		model.addAttribute("pDeptBoardID", pDeptBoardID);
+		model.addAttribute("pDeptBDNM", pDeptBDNM);
+		model.addAttribute("pDeptType", pDeptType);
+		model.addAttribute("pNewsBoardID", pNewsBoardID);
+		model.addAttribute("pNewsBDNM", pNewsBDNM);
+		model.addAttribute("pNewsType", pNewsType);
+		model.addAttribute("result", result);
+		model.addAttribute("sliderList", sliderList);
+		
+		return "/ezPortal/portalWpTotalSection2";	
+	}
+	
+	/**
 	 * 포탈 - webPart 공지사항 & 뉴스 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewBoard.do")
